@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Uncrowned"
+config/description="An open-world RPG about holding a king to account. The simulation core is engine-agnostic; the view layer is replaceable."
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
-config/description="An open-world RPG about holding a king to account. The simulation core is engine-agnostic; the view layer is replaceable."
 
 [debug]
 
@@ -26,7 +26,7 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
+window/stretch/scale_mode="integer"
 
 [rendering]
 

@@ -4,12 +4,15 @@
 > document disagree, one of them is wrong and you decide which. Leave `TBD`
 > everywhere you're unsure — an empty section is information.
 >
+> **Precedence.** This file wins on *what the game is*. `CLAUDE.md` wins on *how we
+> work* and *which phase we are in*, including any phase exceptions it declares.
+>
 > **Sections marked 🟡 were invented by Claude at Yannick's request** and need his
 > approval or rejection. Everything else came from him.
 
 **Status:** draft — sections 1, 3, 5, 8, 9, 10, 11 populated
 **Last updated:** 2026-09-10
-**Version:** 0.4
+**Version:** 0.6
 **Location:** this file, `uncrowned-game/docs/SPECS.md`, is the single source of
 truth. `SPECS_wild_notes.md` holds the original raw notes for reference only.
 
@@ -123,29 +126,34 @@ levelling closes a 100× gap is a game about levelling.
 
 > Each is a place the player can go, study and damage. The "teaches" column is not
 > flavour — it is the evidence Route C (Exposure) is assembled from.
+>
+> **Naming rule (hard).** These six are referred to **by name** — the Cinderworks,
+> the Wide Acres, the Muster, Greyhold, Harrowgate, the bank — and never as
+> "Pillar N". "Pillar" alone means one of the five design pillars in §1. The
+> numbers below are row labels for this table only; nothing else may cite them.
 
-| # | Pillar | What it is | How it can be weakened | What it teaches |
+| # | Power base | What it is | How it can be weakened | What it teaches |
 |---|---|---|---|---|
-| 1 | **The stone & steel works** | The industry the villages were razed for; the kingdom's furnaces | Sabotage the furnaces; turn the workers; cut its ore supply from the quarry; expose its death toll | The ledger of what the works cost in lives — and that the king kept that ledger himself, and considered the price worth paying |
-| 2 | **The farms** | Consolidated estates feeding the capital and the standing army | Burn stores; organise a withholding; redirect a supply convoy; buy the harvest out from under the crown | That the estates sit on the ground of specific razed villages, named in the land grants. This is where the player can find their own village on paper |
-| 3 | **The military camp** | The standing force, and the officers who executed the clearances | Kill the commander; expose the pay fraud; recruit deserters; destroy the muster rolls | The names of the men who burned the player's village, and the orders they were given, signed |
-| 4 | **The sub-castle** | The regional seat and its lord — the king's enforcer of the wealth-tiered law | Turn the lord; blackmail him; kill him; discredit him publicly | How the tiered law is actually administered, and that the lord privately believes it is indefensible |
-| 5 | **The town** | The civil population whose loyalty the crown assumes | Shift its reputation of the king; expose the tiered law's local effects; provoke or prevent a riot | That consent is manufactured, and how — which is also the mechanism Route C exploits |
-| 6 | **The bank** | Where the war gold sits, and the debts that finance the works | Rob it; expose the debts; ruin its confidence; hand its records to the right person | That the whole industrial project is leveraged, and that the king is personally afraid of one specific creditor |
+| 1 | **The Cinderworks** — stone & steel | The industry the villages were razed for; the kingdom's furnaces | Sabotage the furnaces; turn the workers; cut its ore supply from the quarry; expose its death toll | The ledger of what the works cost in lives — and that the king kept that ledger himself, and considered the price worth paying |
+| 2 | **The Wide Acres** — the farms | Consolidated estates feeding the capital and the standing army | Burn stores; organise a withholding; redirect a supply convoy; buy the harvest out from under the crown | That the estates sit on the ground of specific razed villages, named in the land grants. This is where the player can find their own village on paper |
+| 3 | **The Muster** — the military camp | The standing force, and the officers who executed the clearances | Kill the commander; expose the pay fraud; recruit deserters; destroy the muster rolls | The names of the men who burned the player's village, and the orders they were given, signed |
+| 4 | **Greyhold** — the sub-castle | The regional seat and its lord — the king's enforcer of the wealth-tiered law | Turn the lord; blackmail him; kill him; discredit him publicly | How the tiered law is actually administered, and that the lord privately believes it is indefensible |
+| 5 | **Harrowgate** — the town | The civil population whose loyalty the crown assumes | Shift its reputation of the king; expose the tiered law's local effects; provoke or prevent a riot | That consent is manufactured, and how — which is also the mechanism Route C exploits |
+| 6 | **The bank**, at Cairnwell | Where the war gold sits, and the debts that finance the works | Rob it; expose the debts; ruin its confidence; hand its records to the right person | That the whole industrial project is leveraged, and that the king is personally afraid of one specific creditor |
 
 ### Routes to the confrontation
 
 > Three at launch, each using a different verb.
 
 **Route A — Force.** Reduce the escort, level, equip, fight through the door.
-- Requires knowing: how he fights (from Pillar 3)
+- Requires knowing: how he fights (from the Muster)
 - Requires having: equipment and levels
 - Requires being: nothing — this route accepts a monster
 - How it can fail: arriving too early, escort intact
 
 **Route B — Access.** Be admitted. Become someone the castle lets in — a supplier, a
 lord's man, a hero the crown wants to be seen with.
-- Requires knowing: who grants access, and what they want (Pillars 4, 6)
+- Requires knowing: who grants access, and what they want (Greyhold, the bank)
 - Requires being: a reputation that survives scrutiny
 - How it can fail: a reputation that contradicts itself; someone recognises you
 
@@ -163,7 +171,8 @@ him where it cannot be denied.
 
 > Topology drafted by Claude from Yannick's constraints: start in the south-east,
 > castle centre-north-west, sea to the south and west, mountains to the north and
-> east, 10–20 minutes corner to corner. Names are placeholders — change freely.
+> east, a region crossable in a couple of minutes on a straight line. Names are
+> placeholders — change freely.
 
 ### Bounds and scale
 
@@ -174,9 +183,30 @@ One region, bounded on all four sides so the playable area needs no invisible wa
 - **East** — the Iron Spine, impassable mountains
 - **North** — mountains, with the castle set against them
 
-**Scale target:** 10–20 minutes to walk corner to corner, ignoring encounters. As a
-starting figure, a grid of roughly 9×9 overworld screens at 40×22 tiles each.
-Tunable — walk it early and adjust, this number is a guess until it is played.
+**Scale (settled):** the region is roughly **280 × 200 tiles** — a grid of **7 × 9
+overworld screens at 40 × 22 tiles each** — walked at about **4 tiles per second**.
+The *screens* are a planning unit for laying the region out on paper, not an engine
+concept: the camera scrolls smoothly and follows the player, so tiles-per-screen
+never has to be a whole number (§13).
+
+Two numbers follow from that, and only the second is a design target:
+
+- **Straight-line corner to corner: ~86 seconds.** Movement is **8-way**, so
+  Brindle in the south-east to Blackcairn in the north-west is the true diagonal —
+  √(280² + 198²) = 343 tiles — which at 4 tiles/sec is 1 min 26 s. (The 4-way
+  Manhattan figure, for reference, would be 280 + 198 = 478 tiles, two minutes.)
+  This is *by design*, not a shortfall — the king is reachable from minute one, and
+  a map that took a quarter of an hour to cross would be arguing with Pillar 1.
+- **Actual travel along the King's Road: 4–6 minutes.** The road dog-legs south and
+  west before it turns north, and real travel carries terrain, the river crossings
+  and encounters. **This is the figure to tune**, and the only one worth timing.
+
+> Consequence for Phase 0. The vertical slice has no terrain and no encounters, so
+> the walk it measures is the bare diagonal: expect roughly a minute and a half
+> (343 tiles at 4 tiles/sec), and read that as the instrument reading correctly. What Phase 0 settles is whether 4
+> tiles/sec *feels* right at 40 × 22 tiles a screen — the pace of the walk, not its
+> duration. The 4–6 minute target is measured later, once the road has something on
+> it.
 
 ### The road and the wild
 
@@ -205,15 +235,15 @@ Consistent with Pillar 1: nothing is locked, some things are simply unknown.
 
 ### Zone roster
 
-| # | Zone | Where | Pillar | Its job in the design |
+| # | Zone | Where | Power base | Its job in the design |
 |---|---|---|---|---|
 | 1 | **Brindle** — the ruins | South-east, inland of the coast | — | Where the player wakes. Their village, burned. In sight of the furnaces built on it |
-| 2 | **The Cinderworks** | South-east, on Brindle's ground | 1 — stone & steel | The thing that killed the player's family, running day and night. Holds the death ledger |
-| 3 | **Harrowgate** | South-centre, on the road | 5 — the town | The first town. Market, gossip, the tiered law in daily practice |
-| 4 | **The Wide Acres** | Centre-south | 2 — the farms | Consolidated estates. The land grants naming razed villages, Brindle among them |
-| 5 | **The Muster** | Centre, on the crossroads | 3 — the army | The standing force. Muster rolls, pay fraud, the signed orders |
-| 6 | **Saltmarch & Greyhold** | South-west, on the coast | 4 — the sub-castle | Port town and the lord who administers the tiered law, and privately loathes it |
-| 7 | **Cairnwell** | Centre-north-west | 6 — the bank | The capital. Money, debts, the creditor the king fears |
+| 2 | **The Cinderworks** | South-east, on Brindle's ground | the Cinderworks | The thing that killed the player's family, running day and night. Holds the death ledger |
+| 3 | **Harrowgate** | South-centre, on the road | Harrowgate | The first town. Market, gossip, the tiered law in daily practice |
+| 4 | **The Wide Acres** | Centre-south | the Wide Acres | Consolidated estates. The land grants naming razed villages, Brindle among them |
+| 5 | **The Muster** | Centre, on the crossroads | the Muster | The standing force. Muster rolls, pay fraud, the signed orders |
+| 6 | **Saltmarch & Greyhold** | South-west, on the coast | Greyhold | Port town and the lord who administers the tiered law, and privately loathes it |
+| 7 | **Cairnwell** | Centre-north-west | the bank | The capital. Money, debts, the creditor the king fears |
 | 8 | **Blackcairn** | North-west, against the mountains | — | The castle. The king. Reachable from minute one |
 
 **Optional zones** (cut first if behind): **The Redcut**, the iron quarry in the
@@ -223,11 +253,11 @@ wild and unpatrolled, where things that are not people live.
 ### The opening 🟡
 
 The player wakes in Brindle, and from the first screen can see the Cinderworks
-smoking on their village's ground, half an hour's walk away. No exposition is
+smoking on their village's ground, a minute or two's walk away. No exposition is
 needed: the crime and the industry it served are in the same frame.
 
 The King's Road runs past Brindle toward Harrowgate. A player who follows it
-north-west reaches the castle in ten to twenty minutes and can attempt the king
+north-west reaches the castle in minutes, not hours, and can attempt the king
 immediately, exactly as intended — through ten guards, at 10 HP.
 
 ### Map sketch
@@ -293,7 +323,7 @@ orders himself and can produce them on request.
   sort people by wealth and origin — you don't lift people up by writing down that
   they are worth less. He wanted productivity, and told himself it was compassion.
 - The wealth went upward. The works made the kingdom richer and the workers poor in
-  a new way; the ledger in Pillar 1 shows he knew.
+  a new way; the Cinderworks ledger shows he knew.
 - The player's village is the counterexample and he will say so out loud: *they were
   happy, and poor, and dead at forty.* The player has to decide whether that's an
   answer.
@@ -365,7 +395,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 |---|---|---|
 | **Wren** | A scavenger picking the ruins. Not from Brindle; she arrived after | The Cinderworks' shift patterns — she sells them scrap. The first practical fact in the game |
 
-**The Cinderworks — Pillar 1**
+**The Cinderworks — stone & steel**
 
 | Name | Role | Holds |
 |---|---|---|
@@ -373,7 +403,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Sena** | Furnace worker, lost a hand, organising the others | Copied pages of the ledger. Second source |
 | **Doctor Ivo Marsh** | The works' physician; signs the certificates | The true count, including the ones that never reached the ledger. Third source |
 
-**Harrowgate — Pillar 5, the first town**
+**Harrowgate — the town, and the first one**
 
 | Name | Role | Holds |
 |---|---|---|
@@ -383,7 +413,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Ossa** | Herbalist. Treats everyone, including deserters | Where Kell is hiding |
 | **Garrick** | Caravan master, moves between zones | The ford. Also carries rumour physically across the map |
 
-**The Wide Acres — Pillar 2, the farms**
+**The Wide Acres — the farms**
 
 | Name | Role | Holds |
 |---|---|---|
@@ -391,7 +421,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Nessa Vale** | His steward and daughter; keeps the actual paperwork | The same grants. Second source, and easier to reach |
 | **Old Pell** | Tenant farmer. Worked Brindle's soil before the burning and after | That this ground was Brindle. He knew the player's family. He does not recognise the player |
 
-**The Muster — Pillar 3, the army**
+**The Muster — the army**
 
 | Name | Role | Holds |
 |---|---|---|
@@ -399,7 +429,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Quartermaster Odile** | Running the pay fraud | The muster rolls, and her own crime — leverage |
 | **Kell** | A deserter hiding in the Thornwood. He was at Brindle that night | The orders, from memory. And what actually happened. The closest thing to a witness the player will ever find |
 
-**Saltmarch & Greyhold — Pillar 4**
+**Saltmarch & Greyhold — the sub-castle**
 
 | Name | Role | Holds |
 |---|---|---|
@@ -407,7 +437,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Harbourmaster Til** | Smuggler by preference | What leaves the region, and by whose order |
 | **Mira Sand** | Advocate for the poor under the tiered law | Documented effects, case by case. Evidence with faces on it |
 
-**Cairnwell — Pillar 6, the capital**
+**Cairnwell — the bank, and the capital**
 
 | Name | Role | Holds |
 |---|---|---|
@@ -466,13 +496,29 @@ recovered memories.
 **How facts are acquired:** overheard, told, bought, extorted, read, witnessed,
 recovered as memory.
 
-**Redundancy rule (hard):** every fact required for any route has **at least two
-independent sources**. No single NPC's death may remove a fact from the world.
+**Redundancy rule (hard).** Redundancy applies to **facts** and to
+**route-critical performers** — the people who perform an act a route needs, such
+as Hesper granting papers or Mother Crowe convening a congregation. It applies
+**only to the degree that one route survives**, not to the degree that every route
+does. A fact or a performer with a single source is acceptable when the route it
+serves is not the last one standing.
 
-**Reachability test (hard).** The headless harness must be able to kill every NPC in
-every combination and assert that at least one route to the confrontation remains
-open. Pillar 3 is not a wish; it is a test that runs in milliseconds and fails the
-build.
+**Reachability test (hard).** After any set of deaths, **at least one** route to the
+confrontation remains open. *At least one* — not all three. Losing a route to a
+death is intended and is the design working: kill Mother Crowe and Exposure closes,
+and the player still has Force and Access. What must never happen is the last route
+closing.
+
+The check is a **living-performer-chain walk per route**, not an enumeration of kill
+sets. For each of the three routes, walk its required facts and its required
+performers and ask whether every link still has at least one living or otherwise
+obtainable source; if any route answers yes for every link, the assertion holds.
+That is O(routes × chain length) and runs in milliseconds. The exhaustive sweep it
+replaces — 2²⁵ = 33,554,432 kill sets over the 25-name roster — does not, and
+measures the wrong thing anyway: because killing grants XP and loot, Force gets
+*more* open as the kill set grows, so the interesting cases are never the extremes.
+
+Total permissiveness is not a wish; it is a test that fails the build.
 
 **How the player sees what they know:** TBD — journal, board, memory map?
 
@@ -496,6 +542,25 @@ build.
 
 ### The world tick 🟡
 
+**The tick, defined (settled).** One tick is **one in-game minute**. The simulation
+advances **4 ticks per real second** while the player is in the overworld. So:
+
+| | |
+|---|---|
+| 1 tick | 1 in-game minute |
+| 1 real second | 4 in-game minutes |
+| 1 in-game day | 6 real minutes |
+| `--ticks 5000` | 3.5 in-game days ≈ 21 real minutes |
+
+Every drift rate in the table below is therefore expressed per in-game minute, and
+"over the following in-game days" (§2) means the player watches a pillar's fallout
+land over the next half-hour of play.
+
+**Combat runs beside the sim, and the world clock stops during a fight.** A fight is
+not advanced by world ticks and does not advance them; when it resolves, the sim
+resumes from the tick it stopped on. Real-time combat therefore never needs a second
+world clock, and never drifts prices while the player is blocking.
+
 The world advances on a coarse clock, not a life simulation. Twelve tracked
 quantities drift on their own and are pushed by the player's actions:
 
@@ -509,7 +574,7 @@ quantities drift on their own and are pushed by the player's actions:
 | 6 | Crown treasury | Taxes, war costs | Robbery, exposing debts |
 | 7 | Bank confidence | Treasury, rumour | Robbery, handing over records |
 | 8 | Town sentiment | Prices, patrols, law | Almost everything |
-| 9 | Army strength | Pay, food, desertion | Pillars 2, 3, 6 |
+| 9 | Army strength | Pay, food, desertion | The Wide Acres, the Muster, the bank |
 | 10 | Faction tension | The above | Taking sides |
 | 11 | Rumour spread | Time | Being witnessed |
 | 12 | King's escort | Pillar states | Damaging pillars |
@@ -685,7 +750,7 @@ because most builds won't.
 
 **Death of the player:** TBD
 
-**The king fight:** phases and tells, with knowledge from Pillar 3 changing what the
+**The king fight:** phases and tells, with knowledge from the Muster changing what the
 player can read. TBD in detail.
 
 ---
@@ -758,7 +823,14 @@ amateur-looking game. A validator rejects any asset that is off-palette or off-g
 
 **Approved asset packs:** TBD
 
-**Resolution & pixel grid:** TBD — internal resolution, tile size, character height.
+**Resolution & pixel grid (settled):** internal resolution **640 × 360**, **16 px**
+tiles. Character height TBD.
+
+360 is non-negotiable — it scales ×2 to 720p and ×3 to 1080p, and integer scaling
+matters more than the half tile left over at the viewport edge (360 ÷ 16 = 22.5).
+Because the camera scrolls and follows the player, tiles-per-screen is a planning
+number rather than a constraint, so nothing has to divide evenly. If snapped
+interiors are wanted later, rooms are 40 × 22 tiles centred, with a 4 px letterbox.
 
 **Palette:** TBD — number of colours, ramps, the rule for when a colour is allowed.
 
@@ -820,6 +892,8 @@ dialogue, runtime model, art layer.
 
 ## 19. Open questions
 
+### Register
+
 | # | Question | Raised | Blocking? |
 |---|---|---|---|
 | 1 | The king's name, and the region's | 2026-09-10 | Naming |
@@ -828,10 +902,58 @@ dialogue, runtime model, art layer.
 | 4 | The levelling curve: target endgame HP and damage scaling | 2026-09-10 | Yes — combat |
 | 5 | What happens when the player dies? | 2026-09-10 | Yes |
 | 6 | Trait point pool size (12?) | 2026-09-10 | |
-| 7 | Is the 9×9 screen grid the right scale? Only walking it will say | 2026-09-10 | Tune in Phase 0 |
+| 7 | ~~Is the 9×9 screen grid the right scale?~~ — answered: 7×9 screens, ~280×200 tiles, ~4 tiles/sec. Phase 0 now measures the *pace* of the walk; the 4–6 min road-travel target is timed later | 2026-09-10 | Closed |
 | 8 | The five consequences that specify the reactivity system (§8) | 2026-09-10 | |
 | 9 | Approved asset packs | 2026-09-10 | Blocks the art pass |
-| 10 | Can facts be wrong? Rumours, lies, misinformation | 2026-09-10 | |
+| 10 | Can facts be wrong? Rumours, lies, misinformation | 2026-09-10 | Yes — see Q25 |
+
+> Row 5 is now scoped rather than closed: Phase 0 respawns the player in Brindle and
+> keeps everything (CLAUDE.md, Phase 0 exceptions), but the real death and save
+> policy is still open. Row 6 is still open and its rationale was wrong — see Q22.
+
+### Decision queue — from the 2026-09-10 spec audit
+
+Ranked by how much they block, not by how interesting they are. Recorded unfixed and
+deliberately: none of these is decided. Q1–Q5 block the first test that gets written;
+Q6–Q12 block the simulation core; Q13–Q17 block dialogue; Q18–Q27 block content
+authoring; Q28–Q34 are later phases and bookkeeping.
+
+| # | Decision needed | Where | Blocks |
+|---|---|---|---|
+| Q1 | **Populate the fact table.** §7's fact list is one empty row and §6's `Redundancy` field is unfilled for all 25 NPCs, so the redundancy validator and the reachability test have nothing to read. §6's "Holds" prose already names second sources for four facts — transcription, not invention | §7, §6 | Invariants 6, 7 |
+| Q2 | **Define "a route is open" as a predicate**, per route, as a list of required facts and required performers. Exposure's "enough from at least four power bases" is the worst gap — "enough from one" is defined nowhere | §3, §7 | The reachability test |
+| Q3 | **Who holds "how he fights"?** Force's only required fact has no holder in the roster, and the Muster's "teaches" column does not contain it. Relatedly, §3's "requires knowing / having / being" mixes facts, traits, items and levels in one vocabulary, and redundancy can only apply to facts | §3, §6 | Route A, the test |
+| Q4 | **Where does the authoritative fact list live** — §7's table or `content/facts` — and who fills it? | §7 | The fact base |
+| Q5 | **Quests.** No quest, fact pattern or quest count exists anywhere, though invariant 5 governs them and XP is granted for them | §9, §17 | Invariant 5 |
+| Q6 | **Who witnesses a fight?** Combat now runs beside the sim, so nothing says how the witness set is derived — line-of-sight snapshot at transition, or something else — and whether that snapshot is an event | §8, §10 | Reputation, rumour |
+| Q7 | **§10's "Violence is never mechanically punished" is false against §8**, where patrol density is pushed by "being seen committing violence", guard alertness by "any witnessed crime", and both feed spawn tables. That is a wanted level. Which claim stands? | §8, §10 | Reactivity, pacifist parity |
+| Q8 | **World-tick persistence.** Are the twelve quantities event-sourced, snapshotted or stored? Invariant 3 routes all persistent state through the event log; SPECS never mentions the log | §8 | Save format |
+| Q9 | **Player↔NPC relationships and allies** (§2, §11) are tracked by nothing in §8, and §9's graph edges are NPC-to-NPC only | §8, §9 | Dialogue context |
+| Q10 | **Town sentiment is one global quantity** while §8's own opening says reputation is per town and §9 reads "their town's sentiment" | §8 | Per-town reactivity |
+| Q11 | **Do NPCs have routines?** Wren's shift patterns are "the first practical fact in the game", but §21 cut daily schedules. The tick gives the world a clock; it does not give NPCs a day | §6, §8, §21 | The first fact in the game |
+| Q12 | **Weather and season.** The ford is passable only in dry weeks and no tracked quantity models either | §4, §8 | A knowledge-gated crossing |
+| Q13 | **Cache-miss policy.** §9 names the miss as what breaks determinism and never says what happens on one. No seed, temperature, decode mode or pinned model version anywhere, so invariant 12 is unsatisfiable in the dialogue path | §9 | Invariant 12, §18 |
+| Q14 | **Where the model runs** — local with pinned weights, hosted, or a baked cache with no runtime model at all | §9, §18 | The whole dialogue pipeline |
+| Q15 | **Who authors the option set?** Does `core/rules/` compute the legal intent set and the model only phrase it, or does the model choose which options exist? Invariant 8 against §9's "proposes the player's options" | §9 | Invariant 8 |
+| Q16 | **Prose leakage.** The schema constrains only mechanical output, so model prose can state a fact the fact base is deliberately withholding. What enforces the withholding? | §9 | Locked information |
+| Q17 | **Conversation history against a fixed token budget** — what gets dropped, and does dropping it change the packet hash? | §9 | Cache determinism |
+| Q18 | **Exposure's evidence set does not match the argument it must rebut.** §5 lists four places the king's argument breaks; §3 names four documents. The debts support no break, and the tiered law — the break §5 calls the one that "gives him away" — is in neither list | §3, §5 | Route C content |
+| Q19 | **Four resolutions, three routes, no mapping.** Killed / spared / publicly broken / walked away from, against Force / Access / Exposure — an ending state machine nobody has sized | §5, §17 | Endings |
+| Q20 | **The escort schedule is not integral.** "Roughly one and a half fewer per power base damaged" removes 9 of 10 across six, leaving one guard, not "a bare handful" — and 1.5 is not a person | §3 | The difficulty curve |
+| Q21 | **What is a guard worth?** The king's 1000 HP never changes, so the power bases close "most of" the gap only if the escort carries most of the threat. The third column has no unit | §3, §10 | Combat balance |
+| Q22 | **Trait pool and cap together.** 12 does not force two specialisms — it buys three at 5. No pool size forces a count; only a cap does | §11 | Character creation |
+| Q23 | **Can traits rise after creation?** Attunement gates whether some NPCs will speak at all, which is a creation-time gate. §11 says levelling raises "attributes", never defined against the six traits | §11 | Invariant 4 |
+| Q24 | **Is a document a fact, an item, or both** — and does it survive its holder's death? Decides every performer-chain walk | §7 | The test, inventory |
+| Q25 | **Can facts be wrong?** Rumours already ship in §8. Decides the fact-base type | §7, §8 | The fact base |
+| Q26 | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
+| Q27 | **Kell lives in a zone marked "cut first".** He is one of three sources of the player's own past. The optional zones are "Settled" scope in §17 and absent from §21's cut list | §4, §6, §17, §21 | The player's past |
+| Q28 | **Zone or screen as the loadable unit.** Invariant 3 says "zones unload"; zone boundaries are undefined, and §22's inspirations table is the only place that states how a zone is entered | §4, §22 | Streaming, invariant 3 |
+| Q29 | **The journal screen**, which §15 calls the most important in the game, is TBD — and no save/load screen is listed at all, while §1 commits to save-based play | §15 | The real progression UI |
+| Q30 | **Asset validator inputs:** palette and approved pack list are still TBD. The pixel grid is settled | §13 | The art rule |
+| Q31 | **§8's five consequences** are an empty list declared to be "the specification for the reactivity system", while §17 already marks the twelve quantities "Settled" | §8, §17 | Reactivity |
+| Q32 | **§12 economy is a bare TBD** while money is load-bearing in five places: a weakening lever, a fact-acquisition path, an Exposure failure mode, a leverage type, and five of the twelve tick quantities | §12 | Prices, bribery, the bank |
+| Q33 | **§16 accessibility is a bare TBD** against a real-time, timing-based fighter | §16 | Combat design |
+| Q34 | **Bookkeeping.** The header's populated-sections list is stale; §17 marks rows "Settled" that live in 🟡 unapproved sections; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared `core/ view/ tools/ test/` | header, §17, §20, repo | Nothing — but it misleads readers |
 
 ---
 
@@ -853,6 +975,15 @@ dialogue, runtime model, art layer.
 | 2026-09-10 | Title: *Uncrowned* | Regicide, The Whisper Campaign, Hearsay | Regicide was taken; Uncrowned reads as both threat and outcome |
 | 2026-09-10 | The Cinderworks stands on Brindle's ground, visible from the start | Works elsewhere in the region | The crime and the industry it served share the first frame; no exposition needed |
 | 2026-09-10 | Two ways to cross the map: watched road vs unwatched wild | One road network | Ties the map itself to reputation and rumour |
+| 2026-09-10 | Precedence: SPECS wins on what the game is, CLAUDE.md on how we work and which phase we are in | Single source of truth for everything | The two documents answer different questions; the audit found an agent hitting a cross-document conflict had no rule and was told not to pick |
+| 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
+| 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
+| 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-10 | Movement is 8-way | 4-way, tile-locked | Makes the corner-to-corner diagonal the true 343 tiles (~86 s) rather than the 478-tile Manhattan path, and fixes what Phase 0's stopwatch is compared against |
+| 2026-09-10 | Phase 0 exception: no combat screen — the king kills on contact in the overworld, three touches | Building the side-on combat screen for the slice | §10's screen is the largest unbuilt system in the game and would swallow the slice. Deferred to Phase 3+ and recorded as an exception in CLAUDE.md so nothing generalises from it |
+| 2026-09-10 | Phase 0 exception: death respawns the player in Brindle keeping everything; no save system | Reload-from-save; a death cost | The slice needs a loss the player can retry, not a persistence layer. The real death and save policy stays open (§19 row 5) |
+| 2026-09-10 | Internal resolution 640×360, 16 px tiles, smooth scrolling camera that follows the player | A 640×352 viewport; forcing an integer tile count per screen | 360 scales ×2 to 720p and ×3 to 1080p; integer scaling beats a whole-number tile count. A following camera makes tiles-per-screen a planning unit, not an engine constraint. Snapped interiors, if ever wanted, are 40×22 rooms centred with a 4 px letterbox |
+| 2026-09-10 | Region ~280×200 tiles (7×9 screens of 40×22) at ~4 tiles/sec; the tuned target is 4–6 min of road travel, not corner to corner | 9×9 screens with a 10–20 min corner-to-corner target | The old pair was arithmetically impossible: 478 tiles at 4 tiles/sec is 2 minutes, and 10–20 minutes would have needed a 0.5–0.9 tiles/sec crawl. Corner to corner *should* be short — the king is reachable from minute one — so length belongs in terrain, crossings and encounters on the road, not in the dimensions |
 
 ---
 
