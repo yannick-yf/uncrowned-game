@@ -1,0 +1,7 @@
+# Normalize end-of-line for everything Git considers text.
+* text=auto eol=lf
+
+# Godot binary resources — never merge these by hand.
+*.res binary
+*.scn binary
+*.ctex binary
