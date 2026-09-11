@@ -25,6 +25,63 @@ const CACHE_PATH: String = "user://asset_validator_cache.json"
 ## the approved pack itself.
 const TILE_SOURCE_MARKERS: Array[String] = ["/Tilesets/"]
 
+## Sprite folders that must never exist in assets/ and must never be named in
+## code. CLAUDE.md invariant 10: "There are no children in this game. No child
+## characters, in any role, ever."
+##
+## Enforced by the machine rather than remembered, because remembering is exactly
+## what fails. The pack shipped all four; they are deleted, and this stops them
+## coming back with the next pack update or the next borrowed sprite.
+##
+## Matched as path segments — "Character/Child", not "Child" — so that get_child()
+## and add_child() do not trip it. A denylist that cries wolf gets switched off.
+const FORBIDDEN_SPRITES: Array[String] = ["Child", "EggBoy", "EggGirl", "LionBoy"]
+const SOURCE_ROOTS: Array[String] = ["res://core", "res://view", "res://tools",
+	"res://test", "res://content"]
+const DENYLIST_FILE: String = "res://tools/asset_validator.gd"
+
+
+## Denylisted sprite folders still sitting in assets/.
+static func forbidden_assets() -> PackedStringArray:
+	var found := PackedStringArray()
+	for name: String in FORBIDDEN_SPRITES:
+		for root: String in ["res://assets"]:
+			_find_dirs_named(root, name, found)
+	return found
+
+
+static func _find_dirs_named(dir: String, name: String, out: PackedStringArray) -> void:
+	for sub: String in DirAccess.get_directories_at(dir):
+		var path: String = "%s/%s" % [dir, sub]
+		if sub == name:
+			out.append(path)
+		_find_dirs_named(path, name, out)
+
+
+## Denylisted sprite folders named anywhere in the source.
+static func forbidden_references() -> PackedStringArray:
+	var found := PackedStringArray()
+	for root: String in SOURCE_ROOTS:
+		_scan_source(root, found)
+	return found
+
+
+static func _scan_source(dir: String, out: PackedStringArray) -> void:
+	for sub: String in DirAccess.get_directories_at(dir):
+		_scan_source("%s/%s" % [dir, sub], out)
+	for name: String in DirAccess.get_files_at(dir):
+		if not (name.ends_with(".gd") or name.ends_with(".tscn") or name.ends_with(".json")):
+			continue
+		var path: String = "%s/%s" % [dir, name]
+		# The file that declares the list necessarily names everything on it.
+		if path == DENYLIST_FILE:
+			continue
+		var text: String = FileAccess.get_file_as_string(path)
+		for forbidden: String in FORBIDDEN_SPRITES:
+			if text.contains("Character/%s" % forbidden) or text.contains("\"%s\"" % forbidden):
+				out.append("%s names %s" % [path, forbidden])
+
+
 ## Contact sheets, not assets: scaled marketing composites whose resampling invents
 ## 193 blended colours found in no art file. Excluded from the palette, so also
 ## excluded from the check against it.

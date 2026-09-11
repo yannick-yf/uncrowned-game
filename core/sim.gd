@@ -18,6 +18,14 @@ extends RefCounted
 ## Events submitted while a step is being processed land in the next step. That is
 ## what stops a system cascade from looping forever inside one advance(), and it
 ## means view/ can submit input at any moment without racing the sim.
+##
+## Two kinds of event, and the difference is the whole of replay:
+##   submit() is **external** — a key press, a tool, a test. It is what happened
+##            *to* the world, it goes in the log, and replay re-injects it.
+##   derive() is **derived** — what a system said back. It goes in the log too, so
+##            that a journal can explain why something happened, but replay does
+##            NOT re-inject it: it is recomputed from the same ticks and the same
+##            external events. Replaying both would produce it twice.
 
 const DEFAULT_SEED: int = 0x556E6372
 
@@ -45,6 +53,12 @@ var _systems: Array[SimSystem] = []
 var _inbox: Array[SimEvent] = []
 var _stores: Dictionary = {}
 var _steps_into_tick: int = 0
+var _derived_this_step: int = 0
+## A backstop, not a design. Systems reacting to systems is the point of derive();
+## a system reacting to its own output is a bug, and this is how it announces
+## itself rather than hanging the game.
+const MAX_DERIVED_PER_STEP: int = 256
+var derived_overflows: int = 0
 
 
 func _init(p_seed: int = DEFAULT_SEED) -> void:
@@ -86,6 +100,22 @@ func submit(type: StringName, data: Dictionary = {}) -> SimEvent:
 	return event
 
 
+## Raise a consequence. For systems only, inside advance().
+##
+## The world talking to itself: a killing seen, a rumour arriving, a price moving
+## because an army shrank. Logged for the record, recomputed on replay.
+func derive(type: StringName, data: Dictionary = {}) -> SimEvent:
+	if _derived_this_step >= MAX_DERIVED_PER_STEP:
+		derived_overflows += 1
+		push_error("derived event budget exhausted at step %d: '%s'" % [step, type])
+		return null
+	_derived_this_step += 1
+	var event := SimEvent.new(step, type, data, true)
+	events.append(event)
+	_inbox.append(event)
+	return event
+
+
 func pending_count() -> int:
 	return _inbox.size()
 
@@ -102,6 +132,7 @@ func advance(steps: int = 1) -> void:
 				system.on_event(self, event)
 
 		step += 1
+		_derived_this_step = 0
 		for system: SimSystem in _systems:
 			system.on_step(self, step)
 
@@ -137,6 +168,10 @@ static func replay(
 		sim.add_system(system)
 	for row: Variant in rows:
 		var event := SimEvent.from_dict(row as Dictionary)
+		# Belt and braces: replay is given external rows, and refuses derived ones
+		# even if handed them, because injecting one doubles it.
+		if event.derived:
+			continue
 		if event.step > sim.step:
 			sim.advance(event.step - sim.step)
 		sim._inject(event)

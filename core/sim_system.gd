@@ -9,12 +9,15 @@ extends RefCounted
 ##
 ## Systems never touch the event log directly and never know that view/ exists.
 ##
-## They also never submit events. Events come from outside the sim — the view,
-## tools, tests — because replay re-injects every logged event: a system that
-## submitted one would log it live and submit it again on replay, doubling it. A
-## system's consequences are derived state, and replay recomputes them from the
-## same ticks and the same events. If a system ever genuinely needs to raise an
-## event, the log has to distinguish external events from derived ones first.
+## They never *submit* events — submit() is for things that happen to the world
+## from outside it — but they may **derive** one with sim.derive(). A derived
+## event is what the world says back: a killing seen, a rumour arriving, a price
+## moving because an army shrank. It is logged so that a journal can explain why
+## something happened, and it is recomputed rather than replayed, so the same run
+## rebuilds without doubling it.
+##
+## This is what lets systems react to systems, which is the whole of SPECS §8's
+## second consequence — the world reacting to what you broke rather than to you.
 
 func on_event(_sim: Sim, _event: SimEvent) -> void:
 	pass

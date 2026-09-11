@@ -20,6 +20,10 @@ var player_facing: Vector2i = Vector2i(0, 1)
 var player_tile_last: Vector2i = Vector2i(-1, -1)
 var player_hp: int = MAX_HP
 var invulnerable_until: int = 0
+## The last step on which anything hurt the player, and how far through mending
+## the next point of health is. Both are what RecoverySystem reads.
+var last_hurt_step: int = 0
+var mending_steps: int = 0
 var king_pos: Vector2 = Vector2.ZERO
 var deaths: int = 0
 var touches_taken: int = 0
@@ -66,11 +70,14 @@ func hurt(amount: int, step: int) -> bool:
 		return false
 	player_hp = ContactRules.damage_after(player_hp, amount)
 	touches_taken += 1
+	last_hurt_step = step
+	mending_steps = 0
 	invulnerable_until = step + ContactRules.invulnerable_steps()
 	if not ContactRules.is_dead(player_hp):
 		return false
 	deaths += 1
 	player_hp = MAX_HP
+	mending_steps = 0
 	player_pos = region().brindle_centre()
 	player_dir = Vector2i.ZERO
 	player_tile_last = player_tile()

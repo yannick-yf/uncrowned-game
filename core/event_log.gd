@@ -34,11 +34,30 @@ func of_type(type: StringName) -> Array[SimEvent]:
 	return out
 
 
-## Serialisable form. Round-trips through to_array/from_array without loss.
+func external() -> Array[SimEvent]:
+	var out: Array[SimEvent] = []
+	for event: SimEvent in _events:
+		if not event.derived:
+			out.append(event)
+	return out
+
+
+## Everything, for reading: a journal, an audit, a question about why something
+## happened. Use external_rows() to rebuild a run.
 func to_array() -> Array:
 	var out: Array = []
 	for event: SimEvent in _events:
 		out.append(event.to_dict())
+	return out
+
+
+## What a save file needs, and what replay re-injects: the events that came from
+## outside. Everything the world said back is recomputed rather than restored.
+func external_rows() -> Array:
+	var out: Array = []
+	for event: SimEvent in _events:
+		if not event.derived:
+			out.append(event.to_dict())
 	return out
 
 

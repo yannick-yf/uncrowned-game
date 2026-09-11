@@ -10,7 +10,8 @@
 > **Sections marked 🟡 were invented by Claude at Yannick's request** and need his
 > approval or rejection. Everything else came from him.
 
-**Status:** draft — sections 1, 3, 5, 8, 9, 10, 11 populated
+**Status:** draft. §3's power bases, §6's roster and §8's world tick are approved;
+sections still carrying 🟡 are Claude's and await Yannick's yes or no.
 **Last updated:** 2026-09-10
 **Version:** 0.7
 **Location:** this file, `uncrowned-game/docs/SPECS.md`, is the single source of
@@ -122,10 +123,11 @@ levelling closes a 100× gap is a game about levelling.
 > **Design rule:** the pillars are the difficulty curve. Levelling is the fine
 > adjustment, never the strategy.
 
-### The six pillars of his power 🟡
+### The six pillars of his power
 
-> Each is a place the player can go, study and damage. The "teaches" column is not
-> flavour — it is the evidence Route C (Exposure) is assembled from.
+> Approved 2026-09-11. Each is a place the player can go, study and damage. The
+> "teaches" column is not flavour — it is the evidence Route C (Exposure) is
+> assembled from.
 >
 > **Naming rule (hard).** These six are referred to **by name** — the Cinderworks,
 > the Wide Acres, the Muster, Greyhold, Harrowgate, the bank — and never as
@@ -513,9 +515,9 @@ walked away from — and play continues in a changed region.
 
 ---
 
-## 6. Characters 🟡
+## 6. Characters
 
-> Roster drafted by Claude. 25 named NPCs across 8 zones. Names are placeholders.
+> 25 named NPCs across 8 zones, approved 2026-09-11. Names remain placeholders.
 > ★ = route-critical, and every ★ fact has at least one other source.
 
 **Named NPCs are people with a sheet**: a voice, wants, facts, and social edges.
@@ -561,10 +563,10 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Ossa** | Herbalist. Treats everyone, including deserters | Where Kell is hiding |
 | **Garrick** | Caravan master, moves between zones | The ford. Also carries rumour physically across the map |
 
-> **Proposed, needs approval 🟡 — who tells the player about the pay fraud.**
+> **Who tells the player about the pay fraud (approved 2026-09-11).**
 > §3 lists "expose the pay fraud" as one of four ways to weaken the Muster and
-> §6 gives the fraud to Odile, but **no Harrowgate NPC is specified as knowing
-> about it**, so Phase 1 had to assign it. Nobody new was invented; two people
+> §6 gives the fraud to Odile, but no Harrowgate NPC was specified as knowing
+> about it, so Phase 1 had to assign it. Nobody new was invented; two people
 > already here fit the text:
 >
 > - **Ossa** (primary) — she already "treats everyone, including deserters", and
@@ -574,7 +576,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 >   master who supplied the camp would notice the rolls outrunning the mouths.
 >
 > Two sources, so §7's redundancy rule holds: killing either leaves the fact in
-> the world. Reject this and the chain needs a different first link.
+> the world.
 
 | Name | Role | Holds |
 |---|---|---|
@@ -701,7 +703,7 @@ Total permissiveness is not a wish; it is a test that fails the build.
 - Notoriety — what they have been *seen* doing, by whom
 - What each NPC personally knows about them
 
-### The world tick 🟡
+### The world tick
 
 **The tick, defined (settled).** One tick is **one in-game minute**. The simulation
 advances **4 ticks per real second** while the player is in the overworld. So:
@@ -768,14 +770,96 @@ consequence of *witnessed* actions, never of a quest completion flag.
 **Who witnesses what, and how word travels:** witnesses record what they saw;
 rumours propagate on a delay; a crime nobody saw did not happen.
 
-**The five most satisfying consequences you want a player to notice:**
-> These five are the specification for the reactivity system.
+### The five consequences — the specification for the reactivity system
 
-1.
-2.
-3.
-4.
-5.
+Not examples. Each one exists to prove a different mechanism, and Phase 3 is done
+when all five happen in play. They are also not a closed list: what the system
+should *be* stays open, and these are the five that pin it down first.
+
+**1. Word outruns me.** I kill someone in Harrowgate in front of Maddox. Three days
+later I walk into Cairnwell and a trader I have never met will not sell to me. The
+story got there before I did.
+> *Proves:* witnesses → rumour travelling on a delay → reputation in a town I have
+> never visited.
+
+**2. The world reacts to what I broke, not to me.** I expose the fraud at the
+Muster. A week later grain prices in Harrowgate have risen, because deserters are
+buying food they used to be issued. Nobody mentions me. Nobody thanks me.
+> *Proves:* systems reacting to systems. This is what the external-versus-derived
+> event split unblocks, and it is the most satisfying kind **precisely because the
+> player gets no credit** — the world is not a scoreboard.
+
+**3. Someone who liked me changes.** Ossa helped me once. Later I do something that
+hurts the people she treats. Next time her dialogue options are fewer and colder —
+not hostile, just closed.
+> *Proves:* per-NPC relationship, distinct from town reputation, visibly shaping
+> which lines exist.
+
+**4. Being known opens one door and shuts another.** After exposing the fraud,
+Harrowgate treats me as somebody. The same reputation means the guard at the bridge
+recognises me and will not let me pass.
+> *Proves:* reputation is per-faction and never a single score. This is the heart
+> of §8.
+
+**5. The world moves without me.** I do nothing for a week. I come back to the
+Muster and there are fewer tents. The desertions I started kept going without me.
+> *Proves:* the world tick drifting under its own momentum.
+
+### Every door that shuts opens another (hard rule)
+
+**A reputation change is never only a loss.** Kill the people Ossa treats and she
+closes to you — and someone else, very likely someone worse, approves. Whatever
+standing you lose with one town, faction or person is standing gained with another.
+
+This is what keeps §1's Pillar 3 honest at the level of *reputation* rather than
+only of NPC deaths: permissiveness means the world absorbs what you do and rearranges
+itself around it, not that it punishes you into a corner. A system that only ever
+subtracts turns into a morality meter, and a morality meter has exactly one correct
+way to play.
+
+Practically: every reaction rule names who is offended *and* who is impressed. If a
+change has no counterpart, it is not finished.
+
+### Can the twelve quantities carry these five?
+
+Asked and answered honestly: **one of the five, as they stand.**
+
+| | Consequence | Verdict |
+|---|---|---|
+| 1 | Word outruns me | **No** |
+| 2 | The world reacts to what I broke | **Partly** |
+| 3 | Someone who liked me changes | **No** |
+| 4 | One door opens, another shuts | **No** |
+| 5 | The world moves without me | **Yes, today** |
+
+**The pattern, which matters more than the individual gaps.** The twelve are all
+*how the world is doing* — global scalars, one number each. Four of the five
+consequences are about *the player's standing in the world*, which is a different
+kind of thing: it is indexed by town, by faction and by person. It does not belong
+in the tick table at all, and adding a thirteenth, fourteenth and fifteenth quantity
+would be the wrong repair.
+
+So Phase 3 keeps the twelve as the world's vital signs and adds a **second
+structure** beside them — standing and knowledge, indexed rather than global:
+
+- **Reputation per town** and **per faction**. §8's own opening already says "not
+  one global number", and quantity #8 "Town sentiment" is a single global number,
+  which contradicts it. That contradiction is why consequences 1 and 4 fail.
+- **Relationship per NPC**, which nothing currently tracks. Consequence 3 needs it.
+- **Rumours as travelling items** — each carrying what happened, where, who saw it
+  and how far it has got — not quantity #11's single "rumour spread" scalar. A
+  scalar cannot arrive in Cairnwell three days later.
+- **Witnesses**, recorded per event rather than tracked as a quantity at all. This
+  is event-log data and belongs there.
+
+Two of the twelve also need to stop being global, because consequences 1 and 2 ask
+for them per place: **#1 Grain price** ("prices *in Harrowgate*") and **#8 Town
+sentiment**. Consequence 2 additionally needs an explicit coupling from **#9 Army
+strength** to **#1 Grain price** — desertion is not currently listed among grain's
+inputs, and that link is the whole of the consequence.
+
+Consequence 5 needs nothing new: #9 already drifts on "pay, food, desertion". It
+wants the drift implemented and the Muster's tents drawn from the number.
 
 ---
 
@@ -999,6 +1083,19 @@ version has to be pleasant enough that Yannick wants to play it.
 different artists are never mixed: different palettes, pixel densities and light
 angles do not reconcile, and mixing packs is the most recognisable mark of an
 amateur-looking game. A validator rejects any asset that is off-palette or off-grid.
+
+### Invariant 10 is enforced by the machine (2026-09-11)
+
+The approved pack shipped `Child/`, `EggBoy/`, `EggGirl/` and `LionBoy/` sprite
+folders. **All four are deleted from `assets/`**, and the validator now fails the
+build if any of them reappears or if any source file names one.
+
+CLAUDE.md invariant 10 is absolute and permanent — "no child characters, in any
+role, ever" — and the palette check cannot see it, because a child sprite from the
+approved pack is perfectly on-palette. A rule that depends on remembering is a rule
+that fails the first time somebody is tired. Matched as path segments
+(`Character/Child`, not `Child`) so that `get_child()` does not trip it: a denylist
+that cries wolf gets switched off.
 
 ### Approved asset pack (settled) — exactly one
 
@@ -1228,9 +1325,17 @@ no new dialogue, no interiors, no reputation, no combat screen.
 **Phase 3 — the world reads you.**
 Reputation per town and per faction, not one global number. Witnesses that record
 what they saw. Rumour propagating on a delay. The journal screen §15 calls the most
-important in the game. Pays the **external-versus-derived event debt** — systems
-currently cannot submit events, because replay re-injects everything logged and
-would double them — and cannot be built without paying it.
+important in the game.
+
+**The event debt is paid** (2026-09-11). `submit()` is external — what happened *to*
+the world, logged and replayed. `derive()` is a system's answer — logged so a
+journal can explain why something happened, and recomputed rather than replayed,
+because re-injecting it would produce it twice. That is what lets systems react to
+systems, which is the whole of consequence 2.
+
+The five consequences in §8 are this phase's specification, and four of the five
+need a structure the twelve tracked quantities do not have — standing indexed by
+town, faction and person rather than global scalars. See §8.
 > **Proof:** a killing witnessed in one town changes how a stranger in another town
 > opens a conversation, and the journal tells you why — **and the wild becomes a
 > real choice**, because the slow dangerous track through the trees is now the one
@@ -1303,7 +1408,8 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q7 | **§10's "Violence is never mechanically punished" is false against §8**, where patrol density is pushed by "being seen committing violence", guard alertness by "any witnessed crime", and both feed spawn tables. That is a wanted level. Which claim stands? | §8, §10 | Reactivity, pacifist parity |
 | Q8 | **World-tick persistence.** Are the twelve quantities event-sourced, snapshotted or stored? Invariant 3 routes all persistent state through the event log; SPECS never mentions the log | §8 | Save format |
 | Q9 | **Player↔NPC relationships and allies** (§2, §11) are tracked by nothing in §8, and §9's graph edges are NPC-to-NPC only | §8, §9 | Dialogue context |
-| Q10 | **Town sentiment is one global quantity** while §8's own opening says reputation is per town and §9 reads "their town's sentiment" | §8 | Per-town reactivity |
+| Q10 | **Three of the twelve are global where the five consequences need them per place.** #8 Town sentiment contradicts §8's own opening line; #1 Grain price is asked for "in Harrowgate"; and #9 Army strength needs an explicit coupling to grain, since desertion is not among grain's listed inputs. Analysed in §8 | §8 | Consequences 1, 2 and 4 |
+| Q10old | **Town sentiment is one global quantity** while §8's own opening says reputation is per town and §9 reads "their town's sentiment" | §8 | Per-town reactivity |
 | Q11 | **Do NPCs have routines?** Wren's shift patterns are "the first practical fact in the game", but §21 cut daily schedules. The tick gives the world a clock; it does not give NPCs a day | §6, §8, §21 | The first fact in the game |
 | Q12 | **Weather and season.** The ford is passable only in dry weeks and no tracked quantity models either | §4, §8 | A knowledge-gated crossing |
 | Q13 | **Cache-miss policy.** §9 names the miss as what breaks determinism and never says what happens on one. No seed, temperature, decode mode or pinned model version anywhere, so invariant 12 is unsatisfiable in the dialogue path | §9 | Invariant 12, §18 |
@@ -1360,6 +1466,9 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
 | 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-11 | Events are external or derived: `submit()` from outside the sim is replayed, `derive()` from a system is logged but recomputed | Systems never raising events, as before; replaying everything; not logging derived events at all | Systems reacting to systems is §8's second consequence and cannot be built without it. Logging derived events too is what lets the journal answer "why did this happen"; recomputing rather than replaying them is what stops each one happening twice |
+| 2026-09-11 | Health mends on its own — six calm seconds, then a point per 20 s outside and per 6 s in a town — as a Phase 3 stopgap | Potions and an inventory economy; no healing at all | Without healing the wild's cost ratchets and dying is the only reset; with an item economy it becomes a Phase 4 design problem dragged forward. This is the cheapest thing that makes the wild survivable and a town worth returning to |
+| 2026-09-11 | The four child sprite folders are deleted from the pack, and a denylist fails the build if they return or are named in code | Leaving them unused; relying on review | Invariant 10 is absolute, and the palette validator cannot see it — a child sprite from the approved pack is perfectly on-palette. A rule enforced by memory is a rule that fails once |
 | 2026-09-11 | The wild holds three beasts, all slower than the player, spawned near them and biased toward their heading, keeping a 3-tile margin from the road and a territory of their own | Beasts placed across the whole map; beasts that can outrun you; beasts merely kept off road tiles | Everything slower than the player means anything behind is scenery, so the danger has to be ahead. A margin rather than a tile is what makes the road genuinely safe. Territory is what stops the wood emptying while the player waits — otherwise waiting defeats the whole route |
 | 2026-09-11 | Terrain no longer slows the player: everything walks at the road's 6 tiles/sec. The tuned table is kept behind `TERRAIN_SLOWS_YOU` | Keeping the multipliers; deleting the table outright | A forest should be dangerous, not tiring — the slog was making the interesting route the annoying one. §4's trade-off becomes distance against danger instead of speed against witnesses, which makes the road's dog-leg the whole price of safety rather than a detail |
 | 2026-09-11 | Towns are laid out on the overworld at real size; transitions are reserved for interiors — a change of scale or rules, never of place | Every town its own zone behind a portal, as Harrowgate was; ALttP-style screen-by-screen transitions for the whole overworld | Harrowgate was 45× bigger inside than out, and the doorway itself caused four bugs in two sittings. Screens were rejected separately: the target art direction scrolls, 280×200 does not divide into screens vertically, and a diagonal road with 8-way movement would cross a boundary every few seconds |

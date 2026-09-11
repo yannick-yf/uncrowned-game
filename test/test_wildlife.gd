@@ -149,3 +149,41 @@ func test_a_mauling_replays_from_the_log() -> void:
 		"the same walk rebuilds the same wounds")
 	assert_eq((replayed.store(&"wildlife") as Wildlife).fingerprint(), _wild.fingerprint(),
 		"and the same animals, in the same places, hunting or not")
+
+
+# ------------------------------------------- recovery, a Phase 3 stopgap ---
+
+func test_nothing_mends_while_something_is_biting_you() -> void:
+	_world.player_hp = 4
+	_world.last_hurt_step = _sim.step
+	_sim.advance(RecoveryRules.calm_steps() - 2)
+	assert_eq(_world.player_hp, 4, "still bleeding, still hurt")
+
+
+func test_health_comes_back_slowly_in_the_open() -> void:
+	_world.player_pos = Vector2(200.5, 140.5)
+	_world.player_tile_last = _world.player_tile()
+	_world.player_hp = 5
+	_world.last_hurt_step = _sim.step
+	# Far from anything with teeth, so the only thing happening is mending.
+	_world.zones[WorldState.OVERWORLD] = _world.region()
+	var quiet: int = RecoveryRules.calm_steps() \
+		+ RecoveryRules.steps_per_point(false) * 2
+	for _i: int in quiet:
+		_sim.advance(1)
+		_world.last_hurt_step = maxi(_world.last_hurt_step, 0)
+	assert_true(_world.player_hp > 5, "a quiet minute puts something back")
+
+
+func test_a_town_mends_you_faster_than_the_country() -> void:
+	assert_true(RecoveryRules.steps_per_point(true) < RecoveryRules.steps_per_point(false),
+		"four walls and somebody who knows medicine")
+	assert_true(RecoveryRules.steps_per_point(false) / RecoveryRules.steps_per_point(true) >= 3,
+		"and enough faster that walking back is worth it")
+
+
+func test_the_wild_is_survivable_now_that_health_returns() -> void:
+	# The point of the stopgap: the cost of a crossing stops ratcheting, so a
+	# second journey is not strictly more dangerous than the first.
+	assert_true(RecoveryRules.WILD_SECONDS_PER_POINT * float(WorldState.MAX_HP) < 240.0,
+		"a full recovery in the open is minutes, not a lost afternoon")

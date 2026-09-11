@@ -70,3 +70,28 @@ func test_it_rejects_a_tile_source_off_the_sixteen_pixel_grid() -> void:
 	assert_false(AssetValidator.is_tile_source("res://assets/Pack/Ui/Arrow.png"),
 		"a 13x13 UI arrow is not laid on the tile grid and is not asked to be")
 	assert_true(AssetValidator.is_preview("res://assets/Pack/Items/AllPreview.png"))
+
+
+# ------------------------------------------------- invariant 10, by machine ---
+
+func test_no_child_sprite_survives_in_the_pack() -> void:
+	# CLAUDE.md invariant 10 is absolute and permanent, so it is checked rather
+	# than remembered. The pack shipped four; they are gone, and this is what
+	# stops them returning with the next pack update.
+	var found: PackedStringArray = AssetValidator.forbidden_assets()
+	assert_eq(found.size(), 0, "child sprite folders present: %s" % ", ".join(found))
+
+
+func test_no_code_names_a_child_sprite() -> void:
+	var found: PackedStringArray = AssetValidator.forbidden_references()
+	assert_eq(found.size(), 0, "code references a forbidden sprite: %s" % ", ".join(found))
+
+
+func test_the_casting_table_uses_nothing_forbidden() -> void:
+	# The text scan catches paths; this catches the one place that turns a name
+	# into a path at runtime, where a typo would slip past a grep.
+	var art := Art.new()
+	for role: StringName in Art.CASTING.keys():
+		assert_false(AssetValidator.FORBIDDEN_SPRITES.has(String(Art.CASTING[role])),
+			"%s is cast as a forbidden sprite" % role)
+	assert_true(art.sheet_for(&"player") != null, "and the casting still resolves")

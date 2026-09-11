@@ -54,6 +54,7 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(DialogueSystem.new())
 	systems.append(ArmySystem.new())
 	systems.append(WildlifeSystem.new())
+	systems.append(RecoverySystem.new())
 	systems.append(ArrivalSystem.new())
 	systems.append(ContactSystem.new())
 	return systems
@@ -62,7 +63,7 @@ static func build_systems() -> Array[SimSystem]:
 ## Rebuild a run from its log alone, into a world that starts empty.
 static func replay(sim: Sim) -> Sim:
 	return Sim.replay(
-		sim.events.to_array(),
+		sim.events.external_rows(),
 		sim.rng_seed,
 		build_systems(),
 		sim.step,
