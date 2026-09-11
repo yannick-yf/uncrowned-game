@@ -10,7 +10,7 @@ func on_step(sim: Sim, _step: int) -> void:
 	var world := sim.store(&"world") as WorldState
 	if world == null or world.current_zone != WorldState.OVERWORLD:
 		return
-	if world.region().terrain_at(world.player_tile()) != Region.Terrain.CASTLE:
+	if world.region().zone_at(world.player_tile()) != &"blackcairn":
 		return
 	world.reached_blackcairn = true
 	sim.facts.add_source(&"blackcairn:reached", &"witnessed")

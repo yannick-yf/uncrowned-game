@@ -1,97 +1,157 @@
 {
-  "_note": "Hand-written. No generation, no LLM. Every line here was typed by a person and is shipped as reviewed content (SPECS §9). Trait tags in brackets are display-only until traits exist: the rules layer ignores them.",
-
+  "_note": "Hand-written. No generation, no LLM. Every line here was typed by a person and is shipped as reviewed content (SPECS §9). Trait tags in brackets are display-only until traits exist: the rules layer ignores them. Tiles are overworld coordinates — towns are laid out on the map at their real size rather than entered through a transition.",
   "facts": {
     "muster:pay_fraud": "Quartermaster Odile at the Muster signs for soldiers who are dead or never existed, and keeps the difference.",
     "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks."
   },
-
   "npcs": {
     "maddox": {
       "name": "Maddox",
       "role": "Innkeeper",
-      "zone": "harrowgate",
-      "tile": [22, 13],
+      "zone": "overworld",
+      "tile": [
+        148,
+        172
+      ],
       "sprite": "OldMan",
       "greeting": "You look like you walked here. Nobody walks here.",
       "options": [
-        { "intent": "ask_town", "text": "Who owns this town?",
-          "reply": "Depends on the hour you ask. The Reeve says the crown. The crown says the Reeve. I say whoever settles their tab." },
-        { "intent": "ask_law", "tag": "Wits", "text": "The law here — who does it fall on?",
-          "reply": "Tovin could tell you that. He'd apologise the whole time he was doing it." },
-        { "intent": "ask_soldiers", "tag": "Temper", "text": "Do soldiers still come through?",
-          "reply": "Fewer than they did. Ask Ossa why — she patches the ones who stop going back." }
+        {
+          "intent": "ask_town",
+          "text": "Who owns this town?",
+          "reply": "Depends on the hour you ask. The Reeve says the crown. The crown says the Reeve. I say whoever settles their tab."
+        },
+        {
+          "intent": "ask_law",
+          "tag": "Wits",
+          "text": "The law here — who does it fall on?",
+          "reply": "Tovin could tell you that. He'd apologise the whole time he was doing it."
+        },
+        {
+          "intent": "ask_soldiers",
+          "tag": "Temper",
+          "text": "Do soldiers still come through?",
+          "reply": "Fewer than they did. Ask Ossa why — she patches the ones who stop going back."
+        }
       ]
     },
-
     "tovin": {
       "name": "Tovin the Reeve",
       "role": "Reeve",
-      "zone": "harrowgate",
-      "tile": [27, 19],
+      "zone": "overworld",
+      "tile": [
+        152,
+        177
+      ],
       "sprite": "Inspector",
       "greeting": "If you're here to register, the ledger is inside. If you're here to complain, so is the queue.",
       "options": [
-        { "intent": "ask_law", "text": "How is the law applied here?",
-          "reply": "By tier. What a man pays and where he was born decide what the same act costs him. I read it out, I write it down, and I have never once been asked what I think of it." },
-        { "intent": "ask_tiers", "tag": "Wits", "text": "And you think it is defensible?",
-          "reply": "I think it is written down. Those are different things, and I have a house." },
-        { "intent": "ask_muster", "text": "Does your office cover the Muster?",
-          "reply": "It does not. The army pays its own — or is supposed to. What happens to that money stops being my business the moment it leaves the tax chest." }
+        {
+          "intent": "ask_law",
+          "text": "How is the law applied here?",
+          "reply": "By tier. What a man pays and where he was born decide what the same act costs him. I read it out, I write it down, and I have never once been asked what I think of it."
+        },
+        {
+          "intent": "ask_tiers",
+          "tag": "Wits",
+          "text": "And you think it is defensible?",
+          "reply": "I think it is written down. Those are different things, and I have a house."
+        },
+        {
+          "intent": "ask_muster",
+          "text": "Does your office cover the Muster?",
+          "reply": "It does not. The army pays its own — or is supposed to. What happens to that money stops being my business the moment it leaves the tax chest."
+        }
       ]
     },
-
     "bell": {
       "name": "Bell",
       "role": "Apprentice scribe",
-      "zone": "harrowgate",
-      "tile": [30, 14],
+      "zone": "overworld",
+      "tile": [
+        152,
+        171
+      ],
       "sprite": "Woman",
       "greeting": "Don't lean on that. The ink is wet and the Reeve counts sheets.",
       "options": [
-        { "intent": "ask_tiers", "text": "You know the wealth tiers?",
-          "reply": "All six, forwards. I copy them every quarter. Tier one pays a fine. Tier six pays a hand. Same act." },
-        { "intent": "ask_copy", "tag": "Wits", "text": "Do you ever copy something you shouldn't have seen?",
-          "reply": "I copy what I am given and I remember all of it. That is the job. It is also, I have started to think, a problem for somebody." },
-        { "intent": "ask_soldiers", "text": "Do army papers pass your desk?",
-          "reply": "Never. The Muster keeps its own rolls, which is convenient for the Muster." }
+        {
+          "intent": "ask_tiers",
+          "text": "You know the wealth tiers?",
+          "reply": "All six, forwards. I copy them every quarter. Tier one pays a fine. Tier six pays a hand. Same act."
+        },
+        {
+          "intent": "ask_copy",
+          "tag": "Wits",
+          "text": "Do you ever copy something you shouldn't have seen?",
+          "reply": "I copy what I am given and I remember all of it. That is the job. It is also, I have started to think, a problem for somebody."
+        },
+        {
+          "intent": "ask_soldiers",
+          "text": "Do army papers pass your desk?",
+          "reply": "Never. The Muster keeps its own rolls, which is convenient for the Muster."
+        }
       ]
     },
-
     "ossa": {
       "name": "Ossa",
       "role": "Herbalist",
-      "zone": "harrowgate",
-      "tile": [17, 20],
+      "zone": "overworld",
+      "tile": [
+        147,
+        181
+      ],
       "sprite": "OldWoman",
       "greeting": "Sit if you're bleeding. Stand if you're not, you're blocking the light.",
       "options": [
-        { "intent": "ask_deserters", "text": "They say you treat men who have run.",
-          "reply": "I treat whoever bleeds. I have never once asked a man for his papers before I set his arm, and I am not going to start for you." },
-        { "intent": "ask_why", "tag": "Wits", "text": "Then why are so many of them running?",
+        {
+          "intent": "ask_deserters",
+          "text": "They say you treat men who have run.",
+          "reply": "I treat whoever bleeds. I have never once asked a man for his papers before I set his arm, and I am not going to start for you."
+        },
+        {
+          "intent": "ask_why",
+          "tag": "Wits",
+          "text": "Then why are so many of them running?",
           "reply": "Not the fighting. The pay. There is a Quartermaster at the Muster — Odile — signing for men who are dead or were never born, and keeping the difference. What reaches the living is nothing. You would run too, and you would come here, because I am the only one who does not ask.",
-          "teaches": "muster:pay_fraud" },
-        { "intent": "ask_kell", "text": "Is there one of them you remember?",
-          "reply": "There is one I still see. He does not come into town. That is all you are getting from me today." }
+          "teaches": "muster:pay_fraud"
+        },
+        {
+          "intent": "ask_kell",
+          "text": "Is there one of them you remember?",
+          "reply": "There is one I still see. He does not come into town. That is all you are getting from me today."
+        }
       ]
     },
-
     "garrick": {
       "name": "Garrick",
       "role": "Caravan master",
-      "zone": "harrowgate",
-      "tile": [12, 16],
+      "zone": "overworld",
+      "tile": [
+        137,
+        176
+      ],
       "sprite": "Villager2",
       "greeting": "Mind the wheel. If you want to go somewhere, I'm cheaper than boots and slower than rumour.",
       "options": [
-        { "intent": "ask_ford", "text": "Is the bridge the only way over the Kettle?",
+        {
+          "intent": "ask_ford",
+          "text": "Is the bridge the only way over the Kettle?",
           "reply": "It's the only way the road knows. There's a ford downstream — shallow in a dry week, a drowning in a wet one. Nobody watches it, which is the point of it.",
-          "teaches": "kettle:ford" },
-        { "intent": "ask_muster", "tag": "Wits", "text": "You supply the Muster?",
+          "teaches": "kettle:ford"
+        },
+        {
+          "intent": "ask_muster",
+          "tag": "Wits",
+          "text": "You supply the Muster?",
           "reply": "I did. Now I sell them nothing on credit. Their Quartermaster signs for more men than she feeds — Odile, her name is. The rolls are fat and the camp is thin, and I would rather be owed by someone who isn't already stealing.",
-          "teaches": "muster:pay_fraud" },
-        { "intent": "ask_rumour", "text": "What travels the road besides you?",
-          "reply": "Word does, and faster, and it arrives changed. Whatever you do out there, someone will hear a worse version of it by the time you get back." }
+          "teaches": "muster:pay_fraud"
+        },
+        {
+          "intent": "ask_rumour",
+          "text": "What travels the road besides you?",
+          "reply": "Word does, and faster, and it arrives changed. Whatever you do out there, someone will hear a worse version of it by the time you get back."
+        }
       ]
     }
   }

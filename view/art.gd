@@ -3,30 +3,17 @@ extends RefCounted
 
 ## Where the pictures are, and nothing else.
 ##
-## view/ only. core/ must never learn that a Villager has a sprite sheet — the
-## simulation knows an NPC stands at a tile, and this decides what that looks
-## like. Everything here comes from the one approved pack (SPECS §13).
+## view/ only. core/ must never learn that a furnace has a sprite — the simulation
+## knows a landmark of kind "kiln" stands at a tile, and this decides what that
+## looks like. Everything here comes from the one approved pack (SPECS §13).
 
 const PACK: String = "res://assets/NinjaAdventure/Ninja Adventure - Asset Pack"
 const TILE: int = 16
 
-## Atlas coordinates in TilesetFloor, picked for being flat and unambiguous.
-const GRASS: Vector2i = Vector2i(11, 12)
-const GRASS_TUFT: Vector2i = Vector2i(15, 12)
-const EARTH: Vector2i = Vector2i(11, 19)
-
-## Sprite-sheet columns are directions; rows are animation frames.
 const FACE_DOWN: int = 0
 const FACE_UP: int = 1
 const FACE_LEFT: int = 2
 const FACE_RIGHT: int = 3
-
-## 4x3-tile houses, verified by eye against the atlas.
-const HOUSES: Array[Rect2i] = [
-	Rect2i(0, 0, 64, 48),
-	Rect2i(64, 0, 64, 48),
-	Rect2i(128, 0, 64, 48),
-]
 
 ## Casting. Cosmetic and swappable — no rule depends on any of it.
 ##
@@ -44,27 +31,78 @@ const CASTING: Dictionary = {
 	&"garrick": "Villager2",
 }
 
-var floor_atlas: Texture2D = null
-var house_atlas: Texture2D = null
+var _atlases: Dictionary = {}
 var _sheets: Dictionary = {}
+
+## Terrain -> [atlas, tile column, tile row]. Anything absent is drawn as a flat
+## colour by the caller, which is what the mountains and the town walls get.
+var terrain_tiles: Dictionary = {}
+## Landmark kind -> [atlas, source rect]. Sizes are the sprite's own, not the
+## footprint's: a four-tile building that is five tiles tall should look it.
+var props: Dictionary = {}
 
 
 func _init() -> void:
-	floor_atlas = load("%s/Backgrounds/Tilesets/TilesetFloor.png" % PACK) as Texture2D
-	house_atlas = load("%s/Backgrounds/Tilesets/TilesetHouse.png" % PACK) as Texture2D
+	_load(&"floor", "Backgrounds/Tilesets/TilesetFloor.png")
+	_load(&"floorb", "Backgrounds/Tilesets/TilesetFloorB.png")
+	_load(&"house", "Backgrounds/Tilesets/TilesetHouse.png")
+	_load(&"water", "Backgrounds/Tilesets/TilesetWater.png")
+	_load(&"nature", "Backgrounds/Tilesets/TilesetNature.png")
+	_load(&"camp", "Backgrounds/Tilesets/tileset_camp.png")
+	_load(&"ruin", "Backgrounds/Tilesets/TilesetVillageAbandoned.png")
+	_load(&"field", "Backgrounds/Tilesets/TilesetField.png")
+	_load(&"boat", "Backgrounds/Vehicles/Boat.png")
+
+	terrain_tiles = {
+		Region.Terrain.WILD: [&"floor", 11, 12],
+		Region.Terrain.FOREST: [&"floor", 11, 12],
+		Region.Terrain.ROAD: [&"floor", 11, 19],
+		Region.Terrain.RUINS: [&"floor", 11, 19],
+		Region.Terrain.TOWN: [&"floor", 11, 19],
+		Region.Terrain.CAMP: [&"floor", 11, 19],
+		Region.Terrain.CASTLE: [&"floorb", 1, 1],
+		Region.Terrain.SEA: [&"water", 11, 0],
+		Region.Terrain.WATER: [&"water", 11, 0],
+		Region.Terrain.FORD: [&"water", 0, 5],
+		Region.Terrain.SAND: [&"water", 0, 5],
+		Region.Terrain.MARSH: [&"water", 0, 6],
+		Region.Terrain.FARMLAND: [&"field", 1, 4],
+	}
+
+	props = {
+		&"house_0": [&"house", Rect2i(0, 0, 64, 48)],
+		&"house_1": [&"house", Rect2i(64, 0, 64, 48)],
+		&"house_2": [&"house", Rect2i(128, 0, 64, 48)],
+		&"house_big": [&"house", Rect2i(64, 0, 64, 48)],
+		&"kiln": [&"house", Rect2i(464, 64, 48, 64)],
+		&"tent": [&"camp", Rect2i(96, 0, 48, 48)],
+		&"tent_b": [&"camp", Rect2i(144, 0, 48, 48)],
+		&"ruin_house": [&"ruin", Rect2i(192, 97, 64, 80)],
+		&"overgrowth": [&"ruin", Rect2i(0, 144, 64, 48)],
+		&"tower": [&"ruin", Rect2i(192, 97, 64, 80)],
+		&"boat": [&"boat", Rect2i(0, 0, 80, 32)],
+		&"counting_house": [&"house", Rect2i(400, 224, 64, 80)],
+	}
+
+
+func _load(id: StringName, path: String) -> void:
+	_atlases[id] = load("%s/%s" % [PACK, path]) as Texture2D
+
+
+func atlas(id: StringName) -> Texture2D:
+	return _atlases.get(id, null) as Texture2D
 
 
 func sheet_for(role: StringName) -> Texture2D:
 	if _sheets.has(role):
 		return _sheets[role] as Texture2D
 	var folder: String = String(CASTING.get(role, "Villager"))
-	var texture: Texture2D = load("%s/Actor/Character/%s/SpriteSheet.png" % [PACK, folder]) as Texture2D
-	_sheets[role] = texture
-	return texture
+	_sheets[role] = load("%s/Actor/Character/%s/SpriteSheet.png" % [PACK, folder]) as Texture2D
+	return _sheets[role] as Texture2D
 
 
-static func tile_rect(cell: Vector2i) -> Rect2:
-	return Rect2(cell.x * TILE, cell.y * TILE, TILE, TILE)
+static func tile_rect(column: int, row: int) -> Rect2:
+	return Rect2(column * TILE, row * TILE, TILE, TILE)
 
 
 static func column_for(facing: Vector2i) -> int:
@@ -75,3 +113,37 @@ static func column_for(facing: Vector2i) -> int:
 	if facing.x > 0:
 		return FACE_RIGHT
 	return FACE_DOWN
+
+
+## Scatter — trees, bushes, boulders — is decided per tile rather than stored, so
+## a wood can be dense without the world holding a hundred thousand objects.
+##
+## Deliberately *not* solid. A forest you cannot walk through is a maze, and the
+## Thornwood's cost is meant to be time and blood, not navigation.
+static func scatter_hash(x: int, y: int) -> int:
+	var h: int = (x * 73856093) ^ (y * 19349663)
+	return absi(h) % 1000
+
+
+## [atlas, source rect] for whatever grows on this tile, or an empty array.
+func scatter_at(terrain: int, x: int, y: int) -> Array:
+	var roll: int = scatter_hash(x, y)
+	match terrain:
+		Region.Terrain.FOREST:
+			if roll < 340:
+				return [&"nature", Rect2i(32, 0, 32, 32)]
+			if roll < 420:
+				return [&"nature", Rect2i(0, 0, 32, 32)]
+		Region.Terrain.WILD:
+			if roll < 22:
+				return [&"nature", Rect2i(96, 0, 32, 32)]
+		Region.Terrain.MOUNTAIN:
+			if roll < 170:
+				return [&"nature", Rect2i(258, 84, 60, 44)]
+		Region.Terrain.RUINS:
+			if roll < 90:
+				return [&"nature", Rect2i(64, 0, 32, 32)]
+		Region.Terrain.MARSH:
+			if roll < 60:
+				return [&"nature", Rect2i(96, 0, 32, 32)]
+	return []

@@ -22,20 +22,73 @@ func _walk(dir: Vector2i, quarter_seconds: int) -> void:
 	_sim.advance(quarter_seconds * Sim.STEPS_PER_WORLD_TICK)
 
 
+## Walk to a tile by an actual path, not by pressing into whatever is in the way.
+## Returns false on running out of time; returns true early if the zone changed,
+## because arriving somewhere is the point of walking into a town.
+func _walk_to(target: Vector2i, max_seconds: float) -> bool:
+	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
+	var zone: StringName = _world.current_zone
+	var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
+	if route.is_empty():
+		return false
+	for point: Vector2 in route:
+		while _sim.step < deadline:
+			if _world.current_zone != zone:
+				return true
+			var delta: Vector2 = point - _world.player_pos
+			if delta.length() <= 1.0:
+				break
+			var dir := Vector2i.ZERO
+			if absf(delta.x) >= 0.5:
+				dir.x = 1 if delta.x > 0.0 else -1
+			if absf(delta.y) >= 0.5:
+				dir.y = 1 if delta.y > 0.0 else -1
+			_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
+			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
+		if _sim.step >= deadline:
+			return false
+	_sim.submit(&"move_intent", {"x": 0, "y": 0})
+	_sim.advance(1)
+	return true
+
+
+## Push into a target rather than arriving politely next to it. _walk_to stops
+## a tile and a half out, which is outside the king's reach — you can walk all the
+## way to Blackcairn and stand there unharmed, which is true of the game too.
+func _walk_into(target: Vector2, seconds: float) -> void:
+	var deadline: int = _sim.step + int(seconds * float(Sim.STEPS_PER_REAL_SECOND))
+	var deaths: int = _world.deaths
+	while _sim.step < deadline:
+		# Stop on dying. Without this the helper keeps steering at the king, and a
+		# player respawned in Brindle simply sets off for the castle again.
+		if _world.deaths > deaths:
+			_sim.submit(&"move_intent", {"x": 0, "y": 0})
+			_sim.advance(1)
+			return
+		var delta: Vector2 = target - _world.player_pos
+		var dir := Vector2i.ZERO
+		if absf(delta.x) >= 0.2:
+			dir.x = 1 if delta.x > 0.0 else -1
+		if absf(delta.y) >= 0.2:
+			dir.y = 1 if delta.y > 0.0 else -1
+		_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
+		_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
+
+
 func test_the_region_is_bounded_on_all_four_sides() -> void:
 	var region: Region = _world.region()
 	assert_eq(region.width, 280)
 	assert_eq(region.height, 200)
-	assert_false(region.is_passable(Vector2i(0, 100)), "sea to the west")
-	assert_false(region.is_passable(Vector2i(140, 199)), "sea to the south")
-	assert_false(region.is_passable(Vector2i(279, 100)), "mountains to the east")
-	assert_false(region.is_passable(Vector2i(140, 0)), "mountains to the north")
+	assert_false(region.is_passable(Vector2i(Region.SEA_WEST - 1, 100)), "sea to the west")
+	assert_false(region.is_passable(Vector2i(140, Region.SEA_SOUTH + 1)), "sea to the south")
+	assert_false(region.is_passable(Vector2i(Region.MOUNTAIN_EAST + 1, 100)), "mountains to the east")
+	assert_false(region.is_passable(Vector2i(140, Region.MOUNTAIN_NORTH - 1)), "mountains to the north")
 	assert_false(region.is_passable(Vector2i(-1, -1)), "and outside is not walkable")
 
 
 func test_the_player_wakes_in_brindle_at_full_health() -> void:
 	assert_eq(_world.player_tile(), Region.BRINDLE, "in the ruins of their village")
-	assert_eq(_world.region().terrain_at(_world.player_tile()), Region.Terrain.RUINS)
+	assert_eq(_world.region().zone_at(_world.player_tile()), &"brindle")
 	assert_eq(_world.player_hp, WorldState.MAX_HP)
 	assert_eq(_world.player_hp, 10, "SPECS §3: ten hit points")
 	assert_eq(_world.deaths, 0)
@@ -45,7 +98,7 @@ func test_the_player_wakes_in_brindle_at_full_health() -> void:
 func test_blackcairn_is_north_west_of_brindle() -> void:
 	assert_true(Region.BLACKCAIRN.x < Region.BRINDLE.x, "west")
 	assert_true(Region.BLACKCAIRN.y < Region.BRINDLE.y, "north")
-	assert_eq(_world.region().terrain_at(Region.BLACKCAIRN), Region.Terrain.CASTLE)
+	assert_eq(_world.region().zone_at(Region.BLACKCAIRN), &"blackcairn")
 
 
 func test_the_walk_is_the_length_spec_4_implies() -> void:
@@ -53,17 +106,16 @@ func test_the_walk_is_the_length_spec_4_implies() -> void:
 	assert_true(absf(tiles_per_second - 6.0) < 0.001,
 		"§4's settled walk speed is 6 tiles/sec, got %.2f" % tiles_per_second)
 
-	var tiles: float = _world.region().brindle_to_blackcairn_tiles()
-	var seconds: float = tiles / tiles_per_second
-	assert_true(tiles > 250.0 and tiles < 262.0, "255 tiles, got %.1f" % tiles)
-	assert_true(seconds > 38.0 and seconds < 46.0,
-		"about 43 seconds on a straight line, got %.1f" % seconds)
+	var road: float = _world.region().road_distance()
+	var seconds: float = road / tiles_per_second
+	assert_true(seconds >= 45.0 and seconds <= 90.0,
+		"§4's settled road-travel target is 45-90 s, got %.1f" % seconds)
 
 	# §4's 343 is the map's own diagonal, which no route uses: every settlement sits
 	# inside the impassable border, so it bounds the region rather than measuring it.
 	var corner: float = Vector2(0, 0).distance_to(Vector2(279, 199))
 	assert_true(corner > 340.0 and corner < 345.0, "map diagonal is §4's 343, got %.1f" % corner)
-	assert_true(tiles < corner, "no walk is as long as the diagonal")
+	assert_true(road < corner * 1.2, "and the road does not wander absurdly")
 
 
 func test_a_walkable_route_connects_brindle_to_blackcairn() -> void:
@@ -105,25 +157,32 @@ func test_the_kings_road_runs_between_them() -> void:
 
 
 func test_movement_is_eight_way_and_diagonals_are_not_faster() -> void:
+	# Open grass, far from any road, river or wood: a diagonal that strays onto
+	# different ground would be measuring the speed table, not the movement.
+	var open_ground := Vector2(60.5, 120.5)
+	assert_eq(_world.region().terrain_at(Vector2i(60, 120)), Region.Terrain.WILD)
+
+	_world.player_pos = open_ground
 	var start: Vector2 = _world.player_pos
 	_walk(Vector2i(-1, 0), Game.TICKS_PER_REAL_SECOND)
 	var straight: float = start.distance_to(_world.player_pos)
 
 	before_each()
+	_world.player_pos = open_ground
 	start = _world.player_pos
 	_walk(Vector2i(-1, -1), Game.TICKS_PER_REAL_SECOND)
 	var diagonal: float = start.distance_to(_world.player_pos)
 
-	var expected: float = MovementRules.TILES_PER_SECOND
+	var expected: float = MovementRules.TILES_PER_SECOND * Region.speed_multiplier(Region.Terrain.WILD)
 	assert_true(absf(straight - expected) < 0.001,
-		"one second covers %.1f tiles, got %.3f" % [expected, straight])
+		"one second of grass covers %.1f tiles, got %.3f" % [expected, straight])
 	assert_true(absf(diagonal - expected) < 0.001,
 		"the same distance along a diagonal, got %.3f" % diagonal)
 
 
 func test_walking_into_the_sea_slides_along_it_rather_than_stopping() -> void:
 	# Put the player just north of the southern sea and walk south-west into it.
-	_world.player_pos = Vector2(140.5, float(Region.HEIGHT - Region.BORDER) - 0.5)
+	_world.player_pos = Vector2(140.5, float(Region.SEA_SOUTH) + 0.5)
 	var start_x: float = _world.player_pos.x
 	var start_y: float = _world.player_pos.y
 	_walk(Vector2i(-1, 1), 6)
@@ -181,15 +240,11 @@ func test_standing_in_blackcairn_is_recorded_as_a_fact() -> void:
 
 
 func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
-	# The actual walk, event-driven from end to end: north-west until level with the
-	# castle, then due west into the king, then stand there and be killed. Nothing
-	# is written to the store by hand, so the log owns the entire run.
-	# A normalised diagonal covers the speed over root-2 per axis — the
-	# property the eight-way test pins down — so these counts are the route, not a
-	# guess: 157 ticks north-west draws level with the castle, 18 west arrives.
-	_walk(Vector2i(-1, -1), 157)
-	_walk(Vector2i(-1, 0), 18)
-	_walk(Vector2i(0, 0), 8)
+	# The actual walk, event-driven from end to end: follow the King's Road to the
+	# castle gate, then stand in the king and be killed. Nothing is written to the
+	# store by hand, so the log owns the entire run.
+	assert_true(_walk_to(Region.BLACKCAIRN, 240.0), "walked to Blackcairn")
+	_walk_into(_world.king_pos, 4.0)
 
 	assert_true(_world.reached_blackcairn, "the player got there")
 	assert_eq(_world.deaths, 1, "and lost, once")
@@ -203,7 +258,7 @@ func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 	assert_eq(replayed.facts.fingerprint(), _sim.facts.fingerprint(), "same facts")
 	assert_eq(replayed_world.fingerprint(), _world.fingerprint(),
 		"same world, down to the position — nothing important lives outside the log")
-	assert_eq(replayed.events.size(), 3, "three direction changes is the whole run")
+	assert_true(replayed.events.size() > 3, "a road walk is many steered intents")
 
 
 func test_the_tick_means_what_spec_8_says() -> void:

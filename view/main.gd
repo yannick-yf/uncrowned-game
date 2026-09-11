@@ -16,6 +16,18 @@ const FIGURE: float = 16.0
 ## the whole map for a frame.
 const TELEPORT_TILES: float = 2.0
 
+## Somewhere you cannot enter should still say what it is.
+const ZONE_NAMES: Dictionary = {
+	&"brindle": "Brindle",
+	&"cinderworks": "the Cinderworks",
+	&"harrowgate": "Harrowgate",
+	&"wide_acres": "the Wide Acres",
+	&"muster": "the Muster — an army camp, not a town",
+	&"saltmarch": "Saltmarch",
+	&"cairnwell": "Cairnwell, the capital",
+	&"blackcairn": "Blackcairn",
+}
+
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
@@ -29,17 +41,22 @@ var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
 
 var _terrain_colours: PackedColorArray = PackedColorArray([
-	Color(0.24, 0.32, 0.20),  # WILD
+	Color(0.29, 0.38, 0.23),  # WILD      — open grass
 	Color(0.55, 0.47, 0.33),  # ROAD      — drawn from the atlas, not this
 	Color(0.35, 0.29, 0.27),  # RUINS
 	Color(0.29, 0.27, 0.36),  # CASTLE
-	Color(0.13, 0.20, 0.31),  # SEA
-	Color(0.20, 0.20, 0.23),  # MOUNTAIN
+	Color(0.11, 0.17, 0.28),  # SEA
+	Color(0.22, 0.21, 0.24),  # MOUNTAIN
 	Color(0.45, 0.40, 0.29),  # TOWN
-	Color(0.42, 0.39, 0.36),  # WALL      — town wall and house footprints
+	Color(0.42, 0.39, 0.36),  # WALL
 	Color(0.38, 0.31, 0.24),  # CAMP
+	Color(0.16, 0.31, 0.45),  # WATER     — the Kettle
+	Color(0.36, 0.44, 0.47),  # FORD
+	Color(0.15, 0.25, 0.16),  # FOREST    — the Thornwood
+	Color(0.27, 0.31, 0.26),  # MARSH
+	Color(0.47, 0.45, 0.24),  # FARMLAND
+	Color(0.68, 0.62, 0.44),  # SAND
 ])
-
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
@@ -154,15 +171,21 @@ func _draw() -> void:
 	var half: Vector2 = get_viewport_rect().size * 0.5 / float(TILE)
 	var min_x: int = maxi(floori(centre.x - half.x) - 1, 0)
 	var max_x: int = mini(ceili(centre.x + half.x) + 1, region.width - 1)
-	var min_y: int = maxi(floori(centre.y - half.y) - 1, 0)
+	var min_y: int = maxi(floori(centre.y - half.y) - 2, 0)
 	var max_y: int = mini(ceili(centre.y + half.y) + 1, region.height - 1)
 
+	# Ground first, then everything that stands on it, so a tree drawn at the top
+	# of one tile overlaps the tile behind it rather than being clipped by it.
 	for x: int in range(min_x, max_x + 1):
 		for y: int in range(min_y, max_y + 1):
 			_draw_ground(region, x, y)
 
+	for x: int in range(min_x, max_x + 1):
+		for y: int in range(min_y, max_y + 1):
+			_draw_scatter(region, x, y)
+
 	for prop: Dictionary in region.props:
-		_draw_house(prop["at"] as Vector2i, String(prop["kind"]))
+		_draw_prop(prop, min_x, max_x, min_y, max_y)
 
 	for npc: Npc in _cast.in_zone(_world.current_zone):
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
@@ -178,27 +201,59 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 	var dest := Rect2(float(x * TILE), float(y * TILE), float(TILE), float(TILE))
 	var terrain: int = region.terrain_at(Vector2i(x, y))
 
-	# The King's Road and the town get pack art; the rest of the overworld is
-	# still coloured rectangles, which is what Phase 1 asked for.
-	if terrain == Region.Terrain.ROAD:
-		draw_texture_rect_region(_art.floor_atlas, dest, Art.tile_rect(Art.EARTH))
+	var entry: Array = _art.terrain_tiles.get(terrain, []) as Array
+	if entry.is_empty():
+		draw_rect(dest, _terrain_colours[terrain], true)
 		return
-	if _world.current_zone == &"harrowgate" and terrain == Region.Terrain.TOWN:
-		var tufted: bool = (x * 7 + y * 13) % 11 == 0
-		var cell: Vector2i = Art.GRASS_TUFT if tufted else Art.GRASS
-		draw_texture_rect_region(_art.floor_atlas, dest, Art.tile_rect(cell))
-		return
-	draw_rect(dest, _terrain_colours[terrain], true)
 
-
-func _draw_house(at: Vector2i, kind: String) -> void:
-	var index: int = int(kind.substr(kind.length() - 1)) % Art.HOUSES.size()
-	var source: Rect2i = Art.HOUSES[index]
+	var column: int = entry[1] as int
+	var row: int = entry[2] as int
+	# Break up the flat fills so ground does not read as graph paper.
+	if terrain == Region.Terrain.WILD or terrain == Region.Terrain.FOREST:
+		if Art.scatter_hash(x + 7, y + 3) < 90:
+			column = 15
+	elif terrain == Region.Terrain.FARMLAND:
+		# Crop rows, which is what tells a field from a lawn at a glance.
+		row = 4 if (y / 2) % 2 == 0 else 1
 	draw_texture_rect_region(
-		_art.house_atlas,
-		Rect2(float(at.x * TILE), float(at.y * TILE), float(source.size.x), float(source.size.y)),
-		Rect2(source),
+		_art.atlas(entry[0] as StringName), dest, Art.tile_rect(column, row))
+
+
+func _draw_scatter(region: Region, x: int, y: int) -> void:
+	var entry: Array = _art.scatter_at(region.terrain_at(Vector2i(x, y)), x, y)
+	if entry.is_empty():
+		return
+	var source: Rect2i = entry[1] as Rect2i
+	# Anchored by the foot, not the corner, so a tree stands on its tile.
+	var at := Vector2(
+		float(x * TILE) + float(TILE) * 0.5 - float(source.size.x) * 0.5,
+		float((y + 1) * TILE) - float(source.size.y),
 	)
+	draw_texture_rect_region(
+		_art.atlas(entry[0] as StringName),
+		Rect2(at.round(), Vector2(source.size)),
+		Rect2(source))
+
+
+func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int) -> void:
+	var at: Vector2i = prop["at"] as Vector2i
+	var size: Vector2i = prop.get("size", Vector2i(4, 3)) as Vector2i
+	if at.x > max_x or at.y > max_y or at.x + size.x < min_x or at.y + size.y < min_y:
+		return
+	var entry: Array = _art.props.get(prop["kind"] as StringName, []) as Array
+	if entry.is_empty():
+		return
+	var source: Rect2i = entry[1] as Rect2i
+	# Footed on the bottom of its footprint and centred across it, so a tall
+	# building overhangs the tiles behind rather than floating above them.
+	var dest := Vector2(
+		float(at.x * TILE) + float(size.x * TILE) * 0.5 - float(source.size.x) * 0.5,
+		float((at.y + size.y) * TILE) - float(source.size.y),
+	)
+	draw_texture_rect_region(
+		_art.atlas(entry[0] as StringName),
+		Rect2(dest.round(), Vector2(source.size)),
+		Rect2(source))
 
 
 func _draw_actor(at: Vector2, role: StringName, column: int) -> void:
@@ -209,7 +264,7 @@ func _draw_actor(at: Vector2, role: StringName, column: int) -> void:
 	draw_texture_rect_region(
 		sheet,
 		Rect2(top_left.round(), Vector2(FIGURE, FIGURE)),
-		Rect2(float(column * TILE), 0.0, float(TILE), float(TILE)),
+		Art.tile_rect(column, 0),
 	)
 
 
@@ -231,17 +286,22 @@ func _draw_escort() -> void:
 func _place_name() -> String:
 	if _world.current_zone == &"harrowgate":
 		return "Harrowgate"
+	var zone: StringName = _world.region().zone_at(_world.player_tile())
+	if ZONE_NAMES.has(zone):
+		return String(ZONE_NAMES[zone])
 	match _world.region().terrain_at(_world.player_tile()):
-		Region.Terrain.CAMP:
-			return "the Muster — an army camp, not a town"
-		Region.Terrain.TOWN:
-			return "Harrowgate, the gate"
-		Region.Terrain.RUINS:
-			return "Brindle"
-		Region.Terrain.CASTLE:
-			return "Blackcairn"
 		Region.Terrain.ROAD:
 			return "the King's Road"
+		Region.Terrain.FORD:
+			return "the ford"
+		Region.Terrain.FOREST:
+			return "the Thornwood"
+		Region.Terrain.MARSH:
+			return "the marshes"
+		Region.Terrain.FARMLAND:
+			return "the Wide Acres"
+		Region.Terrain.SAND:
+			return "the coast"
 	return "the wild"
 
 

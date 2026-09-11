@@ -20,6 +20,38 @@ func _walk(dir: Vector2i, quarter_seconds: int) -> void:
 	_sim.advance(quarter_seconds * Sim.STEPS_PER_WORLD_TICK)
 
 
+## Walk to a tile by an actual path, not by pressing into whatever is in the way.
+func _walk_to(target: Vector2i, max_seconds: float) -> bool:
+	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
+	var zone: StringName = _world.current_zone
+	var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
+	if route.is_empty():
+		return false
+	for point: Vector2 in route:
+		while _sim.step < deadline:
+			if _world.current_zone != zone:
+				return true
+			var delta: Vector2 = point - _world.player_pos
+			if delta.length() <= 1.0:
+				break
+			var dir := Vector2i.ZERO
+			if absf(delta.x) >= 0.5:
+				dir.x = 1 if delta.x > 0.0 else -1
+			if absf(delta.y) >= 0.5:
+				dir.y = 1 if delta.y > 0.0 else -1
+			_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
+			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
+		if _sim.step >= deadline:
+			return false
+	_sim.submit(&"move_intent", {"x": 0, "y": 0})
+	_sim.advance(1)
+	return true
+
+
+func _at(tile: Vector2i) -> Vector2:
+	return Vector2(tile) + Vector2(0.5, 0.5)
+
+
 func _say(type: StringName, data: Dictionary = {}) -> void:
 	_sim.submit(type, data)
 	_sim.advance(1)
@@ -27,40 +59,37 @@ func _say(type: StringName, data: Dictionary = {}) -> void:
 
 # ---------------------------------------------------------------- the town ---
 
-func test_harrowgate_is_a_walled_zone_with_a_way_in_and_out() -> void:
-	var town: Region = _world.zones[&"harrowgate"] as Region
-	assert_not_null(town, "the zone exists")
-	assert_false(town.is_passable(Vector2i(0, 0)), "walled")
-	assert_false(town.is_passable(Vector2i(20, 0)), "walled to the north too")
-	assert_true(town.is_passable(Region.HARROWGATE_ARRIVAL), "you can stand where you arrive")
-	assert_false(town.portal_at(Region.HARROWGATE_ARRIVAL).has("zone"),
-		"and arriving does not immediately send you back")
-	assert_true(town.portal_at(Vector2i(20, 24)).has("zone"), "the gate leads out")
+func test_harrowgate_is_part_of_the_map_not_a_room_you_enter() -> void:
+	# Towns are laid out on the overworld at their real size. A transition now
+	# means a change of scale or of rules — an interior — never a change of place.
+	var region: Region = _world.region()
+	assert_eq(_world.current_zone, WorldState.OVERWORLD)
+	assert_eq(_world.zones.size(), 1, "one region, and the towns are in it")
+	assert_true(region.portals.is_empty(), "no doorway stands between the road and the town")
+	assert_eq(region.zone_at(Region.HARROWGATE), &"harrowgate", "and it still knows where it is")
+
+	var walkable: int = 0
+	var half: Vector2i = Region.HARROWGATE_SIZE / 2
+	for x: int in range(Region.HARROWGATE.x - half.x, Region.HARROWGATE.x + half.x + 1):
+		for y: int in range(Region.HARROWGATE.y - half.y, Region.HARROWGATE.y + half.y + 1):
+			if region.is_passable(Vector2i(x, y)):
+				walkable += 1
+	assert_true(walkable > 600, "the town has streets to walk, not just roofs: %d tiles" % walkable)
 
 
-func test_the_gate_is_wide_enough_that_a_step_cannot_miss_it() -> void:
-	# One step is 1.5 tiles, so a one-tile doorway is a doorway you walk through.
-	var overworld: Region = _world.zones[WorldState.OVERWORLD] as Region
-	var band: int = 0
-	for dx: int in range(-3, 4):
-		if overworld.portal_at(Region.HARROWGATE_GATE + Vector2i(dx, 0)).has("zone"):
-			band += 1
-	assert_true(band >= 3, "town doorway is %d tiles wide, needs 2+" % band)
+func test_the_road_runs_through_the_town() -> void:
+	# §4's King's Road goes "through Harrowgate", and now it literally does —
+	# which is only safe because there is no portal left for it to run through.
+	var region: Region = _world.region()
+	var road: int = 0
+	for x: int in range(Region.HARROWGATE.x - 18, Region.HARROWGATE.x + 19):
+		if region.terrain_at(Vector2i(x, Region.HARROWGATE.y)) == Region.Terrain.ROAD:
+			road += 1
+	assert_true(road > 25, "the road crosses the town, %d tiles of it" % road)
 
-
-func test_walking_into_the_town_footprint_enters_harrowgate() -> void:
-	_world.player_pos = Vector2(Region.HARROWGATE_GATE) + Vector2(6.5, 0.5)
-	_world.player_tile_last = _world.player_tile()
-	_walk(Vector2i(-1, 0), 4)
-	assert_eq(_world.current_zone, &"harrowgate", "entered by walking")
-	assert_eq(_world.player_tile(), Region.HARROWGATE_ARRIVAL)
-	assert_true(_sim.facts.has(&"zone:harrowgate:entered"), "and the world noticed")
-
-
-# ---------------------------------------------------------------- the cast ---
 
 func test_exactly_the_five_npcs_spec_6_names_live_here() -> void:
-	var here: Array[Npc] = _cast.in_zone(&"harrowgate")
+	var here: Array[Npc] = _cast.in_zone(WorldState.OVERWORLD)
 	var ids: Array[String] = []
 	for npc: Npc in here:
 		ids.append(String(npc.id))
@@ -80,7 +109,7 @@ func test_every_dialogue_slot_has_a_key_bound_to_it() -> void:
 	# The bug this pins down: the dialogue box printed "4. (say nothing and go)"
 	# while only 1-3 were bound, so the option it offered did nothing and the
 	# player was stuck in the conversation.
-	for npc: Npc in _cast.in_zone(&"harrowgate"):
+	for npc: Npc in _cast.in_zone(WorldState.OVERWORLD):
 		var slots: int = DialogueRules.available(npc, _sim.facts).size() + 1
 		assert_true(slots <= DialogueRules.MAX_OPTIONS,
 			"%s offers %d slots, more than §9's three-or-four" % [npc.id, slots])
@@ -90,8 +119,8 @@ func test_every_dialogue_slot_has_a_key_bound_to_it() -> void:
 
 
 func test_the_player_can_stand_where_every_npc_stands() -> void:
-	var town: Region = _world.zones[&"harrowgate"] as Region
-	for npc: Npc in _cast.in_zone(&"harrowgate"):
+	var town: Region = _world.region()
+	for npc: Npc in _cast.in_zone(WorldState.OVERWORLD):
 		assert_true(town.is_passable(npc.tile), "%s is not inside a wall" % npc.id)
 
 
@@ -195,14 +224,13 @@ func test_exposing_it_twice_changes_nothing_the_second_time() -> void:
 func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
 	assert_eq(_world.king_escort, 10, "before: ten guards stand between the player and the king")
 
-	# Brindle to Harrowgate, on foot, north-west then west into the town.
-	_walk(Vector2i(-1, -1), 34)
-	_walk(Vector2i(-1, 0), 16)
-	assert_eq(_world.current_zone, &"harrowgate", "walked into Harrowgate")
+	# Brindle to Harrowgate, on foot, along the King's Road and over the bridge.
+	assert_true(_walk_to(Region.HARROWGATE, 180.0), "walked the road to Harrowgate")
+	assert_eq(_world.region().zone_at(_world.player_tile()), &"harrowgate", "and into the town")
 
 	# Across the town to the herbalist, who treats the men who ran.
-	_walk(Vector2i(-1, -1), 3)
 	var ossa: Npc = _cast.get_npc(&"ossa")
+	assert_true(_walk_to(ossa.tile, 60.0), "crossed the town to Ossa")
 	assert_true(_world.player_pos.distance_to(ossa.centre()) <= Game.TALK_REACH,
 		"standing close enough to speak")
 
@@ -211,11 +239,8 @@ func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
 	assert_true(_sim.facts.has(ArmyRules.FACT_PAY_FRAUD), "learned why they are deserting")
 	_say(&"end_talk")
 
-	# Out of the gate and across the region to the Muster.
-	_walk(Vector2i(1, 1), 4)
-	assert_eq(_world.current_zone, WorldState.OVERWORLD, "back on the King's Road")
-	_walk(Vector2i(-1, 0), 10)
-	_walk(Vector2i(-1, -1), 38)
+	# On up the road to the Muster, without a loading screen in between.
+	assert_true(_walk_to(Region.MUSTER, 300.0), "followed the road to the camp")
 	assert_true(_world.region().is_in_muster(_world.player_tile()),
 		"standing in the camp at %s" % _world.player_tile())
 
@@ -228,15 +253,13 @@ func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
 
 
 func test_the_whole_chain_replays_identically_from_its_log() -> void:
-	_walk(Vector2i(-1, -1), 34)
-	_walk(Vector2i(-1, 0), 16)
-	_walk(Vector2i(-1, -1), 3)
+	assert_true(_walk_to(Region.HARROWGATE, 180.0))
+	var ossa: Npc = _cast.get_npc(&"ossa")
+	assert_true(_walk_to(ossa.tile, 60.0))
 	_say(&"talk", {"npc": "ossa"})
 	_say(&"choose_intent", {"intent": "ask_why"})
 	_say(&"end_talk")
-	_walk(Vector2i(1, 1), 4)
-	_walk(Vector2i(-1, 0), 10)
-	_walk(Vector2i(-1, -1), 38)
+	assert_true(_walk_to(Region.MUSTER, 300.0))
 	_say(&"expose_fraud")
 	assert_eq(_world.king_escort, 5, "the run did what it was supposed to")
 

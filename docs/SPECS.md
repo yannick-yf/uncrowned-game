@@ -199,9 +199,17 @@ Two numbers follow from that, and only the second is a design target:
   A short crossing is *by design*, not a shortfall — the king is reachable from
   minute one, and a map that took a quarter of an hour to cross would be arguing
   with Pillar 1.
-- **Actual travel along the King's Road: 4–6 minutes.** The road dog-legs south and
-  west before it turns north, and real travel carries terrain, the river crossings
-  and encounters. **This is the figure to tune**, and the only one worth timing.
+- **Actual travel along the King's Road: 45–90 seconds.** The road dog-legs south
+  and west before it turns north, and real travel carries terrain, the river
+  crossings and encounters. **This is the figure to tune**, and the only one worth
+  timing.
+
+> **The 4–6 minute figure was wrong, and wrong in an instructive way.** It was
+> reasoned from the map's dimensions rather than from anyone walking it, and a
+> minute of empty walking was already boring in play. Session length comes from
+> encounters, stops and detours — from things being *in the way* — not from
+> distance. A map tuned to fill an hour with travel is a map that makes travel the
+> content. See §20.
 
 > Consequence for Phase 0. The vertical slice has no terrain and no encounters, so
 > the walk it measures is the bare straight line: expect roughly 40 seconds
@@ -286,6 +294,89 @@ immediately, exactly as intended — through ten guards, at 10 HP.
 
 > This is topology, not layout. Exact tile placement, terrain painting, collision
 > and transitions are production work for the agent, once this shape is approved.
+
+### Resolved: the road's route (settled 2026-09-11)
+
+**The prose wins over the sketch.** The King's Road runs Cinderworks → the bridge →
+Harrowgate → the Wide Acres → **the Muster** → Cairnwell → Blackcairn, and
+**Saltmarch hangs off the Muster junction on a spur**. Four reasons: the prose is
+the only place the route is stated in words; the sketch disclaims itself two lines
+above; §4's own roster calls the Muster "on the crossroads", which a dead-end spur
+is not; and the road is the *watched* route, so putting the standing army
+physically on it is what makes "everything you do here is seen" concrete.
+
+**The road is a deliberate dog-leg, and that is load-bearing.** It bows west along
+the south to Harrowgate, out to the farms, then back north-east to the Muster
+before turning north-west — **354 tiles against a 251-tile direct line, a ratio of
+1.41**. Without that bow the wild costs time and blood and saves no distance, which
+makes it strictly worse forever, witnesses or not. Any future change to zone
+placement must keep this ratio between 1.30 and 1.50; there is a test.
+
+**The road passes beside Harrowgate's gate, not through it.** "Through Harrowgate"
+is true at map scale, but a trunk crossing the portal footprint means nobody can
+travel past the town without being pulled inside it, and there is no far-side exit
+to come back out of. A gate is a doorway off the road.
+
+### Towns are on the map; transitions are for interiors (settled 2026-09-11)
+
+**A transition means a change of scale or of rules — never a change of place.**
+
+Countryside into a town is the same scale under the same rules, so towns are laid
+out on the overworld at the size they actually are and you simply walk in.
+Outside into inside is a real change of scale — a house three tiles wide outside
+is twelve across inside, and the two cannot share a grid — so buildings, dungeons
+and the castle keep are separate zones. §4's three ways into Blackcairn are three
+entrances to one interior, which is exactly what a transition is for.
+
+| Place | Footprint | Why |
+|---|---|---|
+| Harrowgate | 40 × 28 | One of the two you spend time in (§6) |
+| Cairnwell | 40 × 28 | The capital, and the bank is in it |
+| Saltmarch | 26 × 18 | A port, passed through |
+| The Cinderworks, the Wide Acres | 24 × 16 | Visited for one thing each |
+| Blackcairn's courtyard | 24 × 18 | The keep's inside is a zone, later |
+| The Muster | 20 × 14 | A camp, not a town |
+| Brindle | 15 × 11 | Small, and meant to feel it |
+
+Towns keep the ground they were built on and get **streets** through it — a main
+street each way and a back lane either side. Paving the whole footprint turns a
+village into a warehouse yard, which is what the first attempt looked like.
+
+**What this replaced, and why it had to go.** Harrowgate was a 40 × 28 room entered
+through a 5 × 5 rectangle on the road — the town was **45 times bigger inside than
+out**, and the seam produced four separate bugs in two sittings: the King's Road
+ran through the portal footprint so travelling the road pulled you into the town;
+the exit put you on the wrong side of the gate so leaving bounced you back in;
+portals landed on impassable tiles; the footprint clipped the next road leg. All
+four were bugs in the *doorway*, not in the town. The mechanism survives, tested,
+for the interiors that genuinely need it.
+
+### Terrain speeds (settled)
+
+| Ground | × | tiles/sec |
+|---|---:|---:|
+| Road, town streets, camp, castle | 1.00 | 6.0 |
+| Ruins | 0.90 | 5.4 |
+| Open grass, farmland | 0.80 | 4.8 |
+| Coast sand | 0.75 | 4.5 |
+| Thornwood | 0.55 | 3.3 |
+| The ford (wading) | 0.50 | 3.0 |
+| Marsh | 0.45 | 2.7 |
+
+The road is the **1.00 reference rather than a bonus**: 6 tiles/sec is the speed
+that was tuned and approved, so every other surface is a penalty. Were the wild
+1.00 and the road faster, the approved feel would become the slow case.
+
+### The Kettle, the bridge and the ford
+
+The river runs from the northern mountains to the southern sea down the east of the
+map, dividing the eastern strip — Brindle, the Cinderworks, the near Thornwood —
+from everything else. **It is a real barrier:** dam both crossings and Blackcairn
+becomes unreachable from Brindle, which is a test rather than a claim.
+
+Both crossings are **bands, not tiles** (§19 Q28b), and both are sized to span the
+river's *slant* rather than its width — a crossing measured against the width alone
+leaves water on the far side and the road stops in the river. The first one did.
 
 ---
 
@@ -921,6 +1012,23 @@ sub-themes, not a single 32-colour ramp. That is a fact about the pack rather th
 a decision, and it is recorded rather than tidied. If a tighter palette is wanted
 later, that is a new pack, not a new spreadsheet.
 
+### What the pack is used for (Phase 2)
+
+Ground comes from `TilesetFloor`, `TilesetFloorB`, `TilesetWater` and `TilesetField`
+(crop rows, which is what tells a field from a lawn at a glance). Landmarks come
+from `TilesetHouse` (the counting house in Cairnwell, the kilns at the
+Cinderworks), `tileset_camp` (the Muster's tents), `TilesetVillageAbandoned`
+(Brindle's ruins) and `Vehicles/Boat` (Saltmarch). Trees, bushes and boulders come
+from `TilesetNature`.
+
+**Landmarks are solid; scatter is not.** A building is an obstacle you walk around
+— §4's towns get "walkable exteriors" — and its footprint is recorded in `core/` so
+a test can assert every zone has one. Trees and rocks are decided per tile from a
+hash of its coordinates rather than stored, so a wood can be dense without the
+world holding a hundred thousand objects, and they are **deliberately walk-through**:
+a forest you cannot cross is a maze, and the Thornwood's cost is meant to be time
+and blood, not navigation. Revisit that if the wood ever needs to funnel movement.
+
 ### The validator
 
 `tools/asset_validator.gd`, wired into the test suite as `test/test_assets.gd` and
@@ -1024,8 +1132,80 @@ TBD.
 
 ## 18. Roadmap
 
-TBD — see the agreed phase plan: vertical slice, simulation core, deterministic
-dialogue, runtime model, art layer.
+Eight phases, each with the proof that closes it. **A phase is done when its proof
+is playable, not when its code is written** — which is why every one of them below
+ends in something Yannick can sit down and do, rather than a list of systems.
+
+The order has changed twice and the current order is the one that matters; see §20
+for what moved and why.
+
+**Phase 0 — vertical slice. ✅**
+Brindle, a player who walks, the King's Road running north-west, Blackcairn at the
+end of it, and a king who kills the player in three hits. Coloured rectangles.
+> **Proof:** "I walk straight there and lose" is playable, and makes you want to
+> try again differently.
+
+**Phase 1 — Harrowgate alive. ✅**
+The town on its own grid, entered from the road. The five NPCs §6 names, with
+hand-written dialogue: three or four options, each mapping to a known intent, the
+verdict issued by the rules layer. One fact worth learning and one consequence
+that reaches the king — the pay fraud, and an escort of ten becoming five.
+> **Proof:** a fact learned from a person changes a number the king depends on, and
+> you can watch it change.
+
+**Phase 2 — the world, greyboxed.**
+Every zone exists and is walkable, the terrain is real, the art is applied, and the
+wild is dangerous — but nothing in it is finished. All eight zones from §4, each
+recognisable on sight; every power base visible as a landmark and nothing more; the
+Kettle, the bridge, the ford, the Thornwood, the mountains, the coast; the road and
+its Saltmarch spur; real terrain speeds; animals that chase and hurt. No new NPCs,
+no new dialogue, no interiors, no reputation, no combat screen.
+> **Proof:** one run visits all eight zones and each is recognisable on sight
+> alone; **the costs of both routes are measurable and legible** — the Thornwood is
+> slower and draws blood, the road is fast and safe; road travel from Brindle to
+> Blackcairn can be timed by hand; and it looks like a game rather than a test
+> harness.
+>
+> Note what this proof deliberately does *not* claim. The wild's whole payoff is
+> being unwatched, and nothing watches yet, so in Phase 2 the wild is strictly the
+> worse choice and is meant to be. Viability is Phase 3's proof, not this one.
+
+**Phase 3 — the world reads you.**
+Reputation per town and per faction, not one global number. Witnesses that record
+what they saw. Rumour propagating on a delay. The journal screen §15 calls the most
+important in the game. Pays the **external-versus-derived event debt** — systems
+currently cannot submit events, because replay re-injects everything logged and
+would double them — and cannot be built without paying it.
+> **Proof:** a killing witnessed in one town changes how a stranger in another town
+> opens a conversation, and the journal tells you why — **and the wild becomes a
+> real choice**, because the slow dangerous track through the trees is now the one
+> nobody can report you on. Phase 2 builds the cost; this phase pays it.
+
+**Phase 4 — combat.**
+The dedicated side-on real-time screen (§10), the occupation-driven enemy tiers 0-5,
+and the king fight with its phases and tells. Retires Phase 0's contact-damage
+exception.
+> **Proof:** the king is beatable by a prepared player and lethal to an unprepared
+> one, and the same five moves carry both a tier-0 servant and a tier-4 knight.
+
+**Phase 5 — the three routes, end to end.**
+Force, Access and Exposure each completable. The reachability test as a living
+performer-chain walk per route (§7).
+> **Proof:** three runs reach the confrontation by three different verbs, and
+> killing any combination of NPCs still leaves at least one route open — as a test
+> that fails the build, not a wish.
+
+**Phase 6 — the full cast and deterministic dialogue.**
+All 25 NPCs with sheets. The context assembler (§9) as a pure function over fixed,
+ordered sources. Dialogue baked offline and reviewed; a runtime model only if
+baking demonstrably cannot cover the packet space.
+> **Proof:** the same situation produces the same words twice, and a stranger who
+> has heard of you opens differently from one who has not.
+
+**Phase 7 — art, audio and polish.**
+Commissioned art replacing the approved pack, audio, and the accessibility pass
+§16 defers.
+> **Proof:** Yannick wants to play it in front of someone else.
 
 ---
 
@@ -1041,7 +1221,7 @@ dialogue, runtime model, art layer.
 | 4 | The levelling curve: target endgame HP and damage scaling | 2026-09-10 | Yes — combat |
 | 5 | What happens when the player dies? | 2026-09-10 | Yes |
 | 6 | Trait point pool size (12?) | 2026-09-10 | |
-| 7 | ~~Is the 9×9 screen grid the right scale?~~ — answered: 7×9 screens, ~280×200 tiles, ~4 tiles/sec. Phase 0 now measures the *pace* of the walk; the 4–6 min road-travel target is timed later | 2026-09-10 | Closed |
+| 7 | **Closed 2026-09-11, see Q7b.** ~~Is the 9×9 screen grid the right scale?~~ — answered: 7×9 screens, ~280×200 tiles, ~4 tiles/sec. Phase 0 now measures the *pace* of the walk; the 4–6 min road-travel target is timed later | 2026-09-10 | Closed |
 | 8 | The five consequences that specify the reactivity system (§8) | 2026-09-10 | |
 | 9 | ~~Approved asset packs~~ — answered: Ninja Adventure Asset Pack, CC0 1.0, one pack only (§13) | 2026-09-10 | Closed |
 | 10 | Can facts be wrong? Rumours, lies, misinformation | 2026-09-10 | Yes — see Q25 |
@@ -1084,9 +1264,11 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q23 | **Can traits rise after creation?** Attunement gates whether some NPCs will speak at all, which is a creation-time gate. §11 says levelling raises "attributes", never defined against the six traits | §11 | Invariant 4 |
 | Q24 | **Is a document a fact, an item, or both** — and does it survive its holder's death? Decides every performer-chain walk | §7 | The test, inventory |
 | Q25 | **Can facts be wrong?** Rumours already ship in §8. Decides the fact-base type | §7, §8 | The fact base |
-| Q26 | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
+| Q26 | ~~**The road's shape.**~~ — answered 2026-09-11: the prose wins, trunk through the Muster, Saltmarch on a spur, and the dog-leg is held to a 1.30–1.50 ratio by test. See §4 | §4 | Closed |
+| Q26old | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
 | Q27 | **Kell lives in a zone marked "cut first".** He is one of three sources of the player's own past. The optional zones are "Settled" scope in §17 and absent from §21's cut list | §4, §6, §17, §21 | The player's past |
-| Q28 | ~~**Zone or screen as the loadable unit.**~~ — answered in part: the **zone** is the unit. A town is its own `Region` with its own grid, and the overworld holds portal tiles into it. Still open: whether zones stream or load wholesale, and where their content lives | §4, §22 | Partly closed |
+| Q28 | ~~**Zone or screen as the loadable unit.**~~ — answered 2026-09-11: **neither.** The overworld is one region and the towns are in it; a zone is an *interior*, entered when the scale or the rules change. Screen-by-screen transitions were considered and rejected: §13's target is *Echoes of Wisdom*, which scrolls, the map is 7.0 × 8.9 screens so it does not divide, and a diagonal road with 8-way movement crosses boundaries constantly. Orientation is the map screen's job (§15) | §4, §22 | Closed |
+| Q7b | ~~**Is the map the right size?**~~ — answered by playing rather than by arithmetic: a ~60-second empty walk was already too long, so the road-travel target came *down* to 45–90 seconds and the map keeps its 280×200. Length belongs in what is in the way, not in distance | §4 | Closed |
 | Q28b | **Gates must be bands, not tiles.** A walker covers 6 tiles a second, so a one-tile doorway can be stepped clean over — you walk through the wall of a town and nothing happens. Every transition needs to be at least two tiles deep in the direction of travel. Recorded because it will bite again for the culvert, the ford and the cliff path | §4 | A rule for every future transition |
 | Q28old | **Zone or screen as the loadable unit.** Invariant 3 says "zones unload"; zone boundaries are undefined, and §22's inspirations table is the only place that states how a zone is entered | §4, §22 | Streaming, invariant 3 |
 | Q29 | **The journal screen**, which §15 calls the most important in the game, is TBD — and no save/load screen is listed at all, while §1 commits to save-based play | §15 | The real progression UI |
@@ -1122,6 +1304,13 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
 | 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-11 | Towns are laid out on the overworld at real size; transitions are reserved for interiors — a change of scale or rules, never of place | Every town its own zone behind a portal, as Harrowgate was; ALttP-style screen-by-screen transitions for the whole overworld | Harrowgate was 45× bigger inside than out, and the doorway itself caused four bugs in two sittings. Screens were rejected separately: the target art direction scrolls, 280×200 does not divide into screens vertically, and a diagonal road with 8-way movement would cross a boundary every few seconds |
+| 2026-09-11 | Landmark buildings are impassable; scattered trees and rocks are walk-through scenery decided per tile by hash | Solid trees; no scatter at all; storing every tree as an object | A dense wood as solid objects is a maze and a memory cost. §4 prices the Thornwood in time and blood, not in navigation |
+| 2026-09-11 | A town gate is placed on the far side of the road from the country beyond it | Gate between the road and the north, which is where it started | Otherwise every route out of the town crosses the doorway again and bounces the player straight back inside. Found by a test walking the road and arriving back in Harrowgate |
+| 2026-09-11 | The King's Road runs through the Muster with Saltmarch on a spur; the trunk is a deliberate dog-leg at 1.41× the direct line | The sketch's route through Saltmarch; a direct road | §4's prose is the only worded statement of the route and the sketch disclaims itself. The bow is the point: without it the wild saves no distance and is strictly worse forever |
+| 2026-09-11 | Terrain speed multipliers, road = 1.00 as the reference | Making the road a bonus above open ground | 6 tiles/sec is the tuned and approved speed. If the wild were the reference the approved feel would become the slow case |
+| 2026-09-11 | Road-travel target cut from 4–6 minutes to 45–90 seconds; the map keeps its 280×200 | Growing the map roughly 36× in area to make the old figure reachable; slowing the walk | A ~60-second empty walk was already boring in play. The old figure had been reasoned from the map's dimensions rather than from anyone walking it, and reaching it by distance alone would have made travel the content. Session length comes from encounters, stops and detours |
+| 2026-09-11 | Phases 2 and 3 swapped: the greyboxed world comes before reputation | Reputation, witnesses and rumour next, on the one zone that exists | Word travelling needs somewhere to travel to. Rumour on a delay, reputation per town and witnesses who saw you *there* are all claims about a map, and with one town built there was nothing to test them against. Traversal is a property of the whole map rather than of one zone, so the map comes first |
 | 2026-09-11 | Two clocks: the sim steps at 60 Hz, the world tick fires every 15th step (unchanged at 4 in-game minutes per real second). Movement, collision, input and dialogue run on the step; the twelve drifting quantities run on the tick | One clock at 4 Hz, as first settled; a second clock only for combat | 4 Hz meant up to 250 ms of input lag on every direction change. That distorts every playtest, including the ones meant to settle walk speed. Measured after: one frame |
 | 2026-09-11 | The zone is the loadable unit: a town is its own Region, entered through portal tiles on the overworld | One continuous grid with towns painted into it; screens as the unit | §19 Q28 was open. Towns want their own coordinate space and their own art, and CLAUDE.md invariant 3 already says "zones unload, and their nodes with them" |
 | 2026-09-11 | Exposing the pay fraud takes the escort from 10 to 5 | §3's "roughly one and a half fewer per power base damaged", which would give 8.5 | Yannick's call for Phase 1. Note this contradicts §3's schedule and makes one power base worth more than three of §3's steps — see Q20, which is still open on the schedule being non-integral |

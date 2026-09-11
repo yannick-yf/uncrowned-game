@@ -1,13 +1,11 @@
 class_name Region
 extends RefCounted
 
-## The overworld as terrain, and nothing else. Immutable once built.
+## The world as terrain, and nothing else. Immutable once built.
 ##
-## Phase 0's geometry is placeholder: Brindle in the south-east, Blackcairn in the
-## north-west, one road between them, sea to the south and west and mountains to
-## the north and east (SPECS §4). The road's real shape is an open question —
-## SPECS §19 Q26, where the prose and the sketch disagree — so nothing about the
-## line drawn here should be read as settled topology.
+## Two regions exist: the overworld, and Harrowgate on its own grid. Zones are the
+## loadable unit (SPECS §19 Q28) — a town is its own Region and the overworld holds
+## portal tiles into it.
 
 enum Terrain {
 	WILD,
@@ -19,48 +17,73 @@ enum Terrain {
 	TOWN,
 	WALL,
 	CAMP,
+	WATER,
+	FORD,
+	FOREST,
+	MARSH,
+	FARMLAND,
+	SAND,
 }
 
 const WIDTH: int = 280
 const HEIGHT: int = 200
-const BORDER: int = 3
 
-## Brindle sits in the south-east. Blackcairn is *centre*-north-west (SPECS §4),
-## pulled in off the corner: at 28% across and 12% down it reads as north-west
-## against the mountains without being the literal map corner.
-const BRINDLE: Vector2i = Vector2i(271, 191)
-const BLACKCAIRN: Vector2i = Vector2i(78, 24)
-const BRINDLE_SIZE: Vector2i = Vector2i(13, 9)
-const BLACKCAIRN_SIZE: Vector2i = Vector2i(15, 11)
+## The sea lies south and west, the mountains north and east (SPECS §4), so the
+## playable area is everything inside these.
+const SEA_WEST: int = 9
+const SEA_SOUTH: int = 190
+const MOUNTAIN_NORTH: int = 9
+const MOUNTAIN_EAST: int = 271
+
+## The eight zones of §4, placed to make the King's Road a genuine dog-leg rather
+## than a ruled line: it runs west along the south to Harrowgate, out to the farms,
+## then back north-east to the Muster before turning north-west for the capital.
+## That bow is what makes the road about a third longer than a direct wild crossing
+## — without it the wild costs time and blood and saves no distance, which would
+## make it strictly worse forever, witnesses or not.
+const BRINDLE: Vector2i = Vector2i(262, 180)
+const CINDERWORKS: Vector2i = Vector2i(241, 172)
+const HARROWGATE: Vector2i = Vector2i(150, 174)
+const WIDE_ACRES: Vector2i = Vector2i(95, 150)
+const SALTMARCH: Vector2i = Vector2i(34, 158)
+const MUSTER: Vector2i = Vector2i(140, 103)
+const CAIRNWELL: Vector2i = Vector2i(95, 60)
+const BLACKCAIRN: Vector2i = Vector2i(66, 24)
+
+## Towns are laid out on the overworld at the size they actually are, rather than
+## marked by a rectangle you walk into. A transition now means a change of *scale
+## or rules* — an interior, a dungeon — never a change of place. See §20.
+##
+## Harrowgate and Cairnwell are the two you spend time in (§6), so they are a
+## screenful and a bit across; the rest are smaller because they are smaller.
+const HARROWGATE_SIZE: Vector2i = Vector2i(40, 28)
+const CAIRNWELL_SIZE: Vector2i = Vector2i(40, 28)
+const CINDERWORKS_SIZE: Vector2i = Vector2i(24, 16)
+const SALTMARCH_SIZE: Vector2i = Vector2i(26, 18)
+const WIDE_ACRES_SIZE: Vector2i = Vector2i(24, 16)
+const BRINDLE_SIZE: Vector2i = Vector2i(15, 11)
+const MUSTER_SIZE: Vector2i = Vector2i(20, 14)
+const BLACKCAIRN_SIZE: Vector2i = Vector2i(24, 18)
+
 const ROAD_HALF_WIDTH: int = 1
 
-## Harrowgate sits south-centre on the King's Road (SPECS §4). The Muster sits at
-## the road's bend, which is the nearest thing to the "crossroads" §4 names — the
-## road's true shape is still open (§19 Q26), so neither is load-bearing yet.
-const HARROWGATE_GATE: Vector2i = Vector2i(210, 155)
-const MUSTER: Vector2i = Vector2i(150, 120)
-const MUSTER_SIZE: Vector2i = Vector2i(13, 9)
+## The Kettle runs from the northern mountains to the southern sea, dividing the
+## eastern strip — Brindle, the Cinderworks, the Thornwood — from everything else.
+const KETTLE: Array[Vector2i] = [
+	Vector2i(196, 8), Vector2i(208, 70), Vector2i(220, 138), Vector2i(236, 191),
+]
+const KETTLE_HALF_WIDTH: int = 2
 
-const HARROWGATE_SIZE: Vector2i = Vector2i(40, 28)
-const HARROWGATE_BORDER: int = 3
-const HARROWGATE_ARRIVAL: Vector2i = Vector2i(20, 22)
-## Where you come out, set clear of the town footprint so leaving does not put
-## you straight back inside it.
-const HARROWGATE_RETURN: Vector2i = Vector2i(210, 160)
-
-## Gates are bands, not tiles. At 1.5 tiles per tick a walker covers a tile and a
-## half in one step, so a one-tile doorway can be stepped clean over — the player
-## walks through the wall of a town and nothing happens. Every gate here is wide
-## enough that no single step can miss it.
-const TOWN_FOOTPRINT: Vector2i = Vector2i(5, 5)
+## The road's one guarded crossing, and the ford downstream of it. Both are bands
+## rather than tiles: a walker covers 6 tiles a second and can step clean over a
+## one-tile trigger (§19 Q28b).
+const BRIDGE: Vector2i = Vector2i(228, 177)
+const FORD: Vector2i = Vector2i(233, 188)
+const CROSSING_HALF_WIDTH: int = 2
 
 var width: int = 0
 var height: int = 0
-## Tile -> {"zone": StringName, "at": Vector2i}. Stepping onto one moves you.
 var portals: Dictionary = {}
-## Placed scenery: {"kind": StringName, "at": Vector2i}. Their footprint is
-## already WALL in the grid — this says what to draw on top of it, and the view
-## decides what each kind looks like.
 var props: Array[Dictionary] = []
 var _tiles: PackedByteArray = PackedByteArray()
 
@@ -88,24 +111,59 @@ func set_terrain(tile: Vector2i, terrain: Terrain) -> void:
 
 
 func is_passable(tile: Vector2i) -> bool:
-	var terrain: Terrain = terrain_at(tile)
-	return terrain != Terrain.SEA and terrain != Terrain.MOUNTAIN and terrain != Terrain.WALL
+	match terrain_at(tile):
+		Terrain.SEA, Terrain.MOUNTAIN, Terrain.WALL, Terrain.WATER:
+			return false
+	return true
+
+
+## How fast the ground lets you walk, as a fraction of §4's settled 6 tiles/sec.
+##
+## The road is the 1.0 reference rather than a bonus: 6 tiles/sec is the speed that
+## was tuned and approved, so everything else is a penalty. Were the wild 1.0 and
+## the road faster, the approved feel would become the slow case.
+static func speed_multiplier(terrain: Terrain) -> float:
+	match terrain:
+		Terrain.ROAD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
+			return 1.00
+		Terrain.RUINS:
+			return 0.90
+		Terrain.WILD, Terrain.FARMLAND:
+			return 0.80
+		Terrain.SAND:
+			return 0.75
+		Terrain.FOREST:
+			return 0.55
+		Terrain.FORD:
+			return 0.50
+		Terrain.MARSH:
+			return 0.45
+	return 1.00
 
 
 func portal_at(tile: Vector2i) -> Dictionary:
 	return portals.get(tile, {}) as Dictionary
 
 
+## Asking the ground what place you are in stopped working the moment towns were
+## laid out for real: the King's Road runs through them, so a town's own centre
+## tile is street. Proximity to the site is the question, and zone_at answers it.
 func is_in_muster(tile: Vector2i) -> bool:
-	return terrain_at(tile) == Terrain.CAMP
+	return zone_at(tile) == &"muster"
 
 
-## SPECS §4 says the road is fast and the wild slower, but states one speed —
-## 4 tiles/sec — and no multiplier. Phase 0 therefore walks everything at that one
-## speed: the mechanism is here so the number stays a decision rather than
-## something invented in code.
-static func speed_multiplier(_terrain: Terrain) -> float:
-	return 1.0
+## Which zone a tile belongs to, or an empty name out in the country. Terrain
+## cannot answer this: every settlement stands on TOWN, so asking the ground what
+## town you are in gets you the first one in the list.
+func zone_at(tile: Vector2i, reach: float = 11.0) -> StringName:
+	var best: StringName = &""
+	var best_distance: float = reach
+	for id: StringName in zone_sites().keys():
+		var distance: float = Vector2(tile).distance_to(Vector2(zone_sites()[id] as Vector2i))
+		if distance <= best_distance:
+			best = id
+			best_distance = distance
+	return best
 
 
 func brindle_centre() -> Vector2:
@@ -116,98 +174,77 @@ func blackcairn_centre() -> Vector2:
 	return Vector2(BLACKCAIRN) + Vector2(0.5, 0.5)
 
 
-## Tiles of travel from Brindle to Blackcairn on a straight 8-way line. §4's 343 is
-## the true map diagonal, (0,0) to (279,199); the settlements sit inside the border.
+## The eight zones of §4, by name, for anything that needs to visit all of them.
+static func zone_sites() -> Dictionary:
+	return {
+		&"brindle": BRINDLE,
+		&"cinderworks": CINDERWORKS,
+		&"harrowgate": HARROWGATE,
+		&"wide_acres": WIDE_ACRES,
+		&"muster": MUSTER,
+		&"saltmarch": SALTMARCH,
+		&"cairnwell": CAIRNWELL,
+		&"blackcairn": BLACKCAIRN,
+	}
+
+
+## The King's Road, in order. §4's prose wins over its sketch: the trunk runs
+## through the Muster, and Saltmarch hangs off that junction on a spur. The prose
+## is the only place the route is stated in words, the sketch disclaims itself as
+## topology, and §4's own roster calls the Muster "on the crossroads" — which a
+## dead-end spur is not.
+static func road_route() -> Array[Vector2i]:
+	return [CINDERWORKS, BRIDGE, HARROWGATE, WIDE_ACRES, MUSTER, CAIRNWELL, BLACKCAIRN]
+
+
+static func saltmarch_spur() -> Array[Vector2i]:
+	return [MUSTER, SALTMARCH]
+
+
+func path_length(points: Array[Vector2i]) -> float:
+	var total: float = 0.0
+	for i: int in points.size() - 1:
+		total += Vector2(points[i]).distance_to(Vector2(points[i + 1]))
+	return total
+
+
 func brindle_to_blackcairn_tiles() -> float:
 	return brindle_centre().distance_to(blackcairn_centre())
 
 
-## A region is content: stamped once, then read. Shared rather than rebuilt because
-## stamping 56,000 tiles thirteen times over is most of a test run, and nothing
-## mutates terrain after build. Pass fresh = true if you intend to.
-static var _phase_0: Region = null
+## Road distance from Brindle to the castle, the figure §4's 45–90 second target
+## is about.
+func road_distance() -> float:
+	var route: Array[Vector2i] = [BRINDLE]
+	route.append_array(road_route())
+	return path_length(route)
 
 
-static func build_phase_0(fresh: bool = false) -> Region:
-	if not fresh and _phase_0 != null:
-		return _phase_0
-	var region: Region = _build_phase_0()
+# ------------------------------------------------------------- construction ---
+
+static var _overworld: Region = null
+
+
+static func build_overworld(fresh: bool = false) -> Region:
+	if not fresh and _overworld != null:
+		return _overworld
+	var region: Region = _build_overworld()
 	if not fresh:
-		_phase_0 = region
+		_overworld = region
 	return region
 
 
-static func _build_phase_0() -> Region:
+static func _build_overworld() -> Region:
 	var region := Region.new()
 	region._stamp_bounds()
-	# One road, Brindle to Blackcairn, with a single bend so it is visibly a road
-	# and not a ruled line. Placeholder: see §19 Q26.
-	region._stamp_line(BRINDLE, Vector2i(150, 120), ROAD_HALF_WIDTH, Terrain.ROAD)
-	region._stamp_line(Vector2i(150, 120), BLACKCAIRN, ROAD_HALF_WIDTH, Terrain.ROAD)
-	region._stamp_rect(BRINDLE, BRINDLE_SIZE, Terrain.RUINS)
-	region._stamp_rect(BLACKCAIRN, BLACKCAIRN_SIZE, Terrain.CASTLE)
-	region._stamp_rect(MUSTER, MUSTER_SIZE, Terrain.CAMP)
-	region._stamp_rect(HARROWGATE_GATE, TOWN_FOOTPRINT, Terrain.TOWN)
-	# The whole town footprint is the doorway, for the reason above.
-	for dx: int in range(-(TOWN_FOOTPRINT.x / 2), TOWN_FOOTPRINT.x / 2 + 1):
-		for dy: int in range(-(TOWN_FOOTPRINT.y / 2), TOWN_FOOTPRINT.y / 2 + 1):
-			region.portals[HARROWGATE_GATE + Vector2i(dx, dy)] = {
-				"zone": &"harrowgate", "at": HARROWGATE_ARRIVAL,
-			}
-	return region
-
-
-## Harrowgate: a walled town on its own grid, entered from the King's Road.
-##
-## Zones are the loadable unit — CLAUDE.md invariant 3 says "zones unload, and
-## their nodes with them", and SPECS §19 Q28 leaves zone-versus-screen open, so
-## this is a decision rather than a reading. A town is its own Region, and the
-## overworld holds a portal tile into it.
-static var _harrowgate: Region = null
-
-
-static func build_harrowgate(fresh: bool = false) -> Region:
-	if not fresh and _harrowgate != null:
-		return _harrowgate
-	var region := Region.new(HARROWGATE_SIZE.x, HARROWGATE_SIZE.y)
-	region._tiles.fill(Terrain.TOWN)
-
-	for x: int in region.width:
-		for y: int in region.height:
-			var b: int = HARROWGATE_BORDER
-			if x < b or y < b or x >= region.width - b or y >= region.height - b:
-				region.set_terrain(Vector2i(x, y), Terrain.WALL)
-
-	# Two streets, crossing. Everything else is packed earth between houses.
-	for x: int in range(6, 35):
-		for dy: int in range(-1, 2):
-			region.set_terrain(Vector2i(x, 16 + dy), Terrain.ROAD)
-	for y: int in range(6, 25):
-		for dx: int in range(-1, 2):
-			region.set_terrain(Vector2i(20 + dx, y), Terrain.ROAD)
-
-	var houses: Array[Vector2i] = [
-		Vector2i(8, 8), Vector2i(14, 8), Vector2i(24, 8), Vector2i(30, 8),
-		Vector2i(8, 19), Vector2i(24, 21), Vector2i(30, 18),
-	]
-	for index: int in houses.size():
-		var corner: Vector2i = houses[index]
-		for dx: int in 4:
-			for dy: int in 3:
-				region.set_terrain(corner + Vector2i(dx, dy), Terrain.WALL)
-		region.props.append({
-			"kind": StringName("house_%d" % (index % 3)),
-			"at": corner,
-		})
-
-	for x: int in range(19, 22):
-		for y: int in range(23, 25):
-			region.set_terrain(Vector2i(x, y), Terrain.ROAD)
-			region.portals[Vector2i(x, y)] = {
-				"zone": &"overworld", "at": HARROWGATE_RETURN,
-			}
-	if not fresh:
-		_harrowgate = region
+	region._stamp_thornwood()
+	region._stamp_ellipse(WIDE_ACRES, Vector2i(34, 24), Terrain.FARMLAND)
+	region._stamp_ellipse(SALTMARCH, Vector2i(32, 22), Terrain.MARSH)
+	region._stamp_kettle()
+	region._stamp_road()
+	region._stamp_crossings()
+	region._stamp_settlements()
+	region._stamp_landmarks()
 	return region
 
 
@@ -215,22 +252,251 @@ func _stamp_bounds() -> void:
 	for x: int in width:
 		for y: int in height:
 			var tile := Vector2i(x, y)
-			if y < BORDER or x >= width - BORDER:
+			if y < MOUNTAIN_NORTH or x > MOUNTAIN_EAST:
 				set_terrain(tile, Terrain.MOUNTAIN)
-			elif x < BORDER or y >= height - BORDER:
+			elif x < SEA_WEST or y > SEA_SOUTH:
 				set_terrain(tile, Terrain.SEA)
+			elif x < SEA_WEST + 3 or y > SEA_SOUTH - 3:
+				set_terrain(tile, Terrain.SAND)
 
+
+## The Thornwood: everything east of the river that is not a settlement, plus a
+## tongue reaching north-west toward the Redcut. Unwatched, slow, and where the
+## animals live.
+func _stamp_thornwood() -> void:
+	for x: int in range(198, MOUNTAIN_EAST + 1):
+		for y: int in range(MOUNTAIN_NORTH, 176):
+			if is_passable(Vector2i(x, y)) and terrain_at(Vector2i(x, y)) == Terrain.WILD:
+				set_terrain(Vector2i(x, y), Terrain.FOREST)
+	# And a belt of it running north-west across the middle, lying squarely on the
+	# line a player cuts when they leave the road. Wood behind the start line is
+	# scenery; wood on the shortcut is a decision. The road bows south and west
+	# around most of it.
+	_stamp_line(Vector2i(220, 165), Vector2i(145, 85), 24, Terrain.FOREST, false)
+
+
+func _stamp_kettle() -> void:
+	for i: int in KETTLE.size() - 1:
+		_stamp_line(KETTLE[i], KETTLE[i + 1], KETTLE_HALF_WIDTH, Terrain.WATER, true)
+
+
+func _stamp_road() -> void:
+	var route: Array[Vector2i] = road_route()
+	for i: int in route.size() - 1:
+		_stamp_line(route[i], route[i + 1], ROAD_HALF_WIDTH, Terrain.ROAD, false)
+	var spur: Array[Vector2i] = saltmarch_spur()
+	for i: int in spur.size() - 1:
+		_stamp_line(spur[i], spur[i + 1], ROAD_HALF_WIDTH, Terrain.ROAD, false)
+	# Brindle's own track out to the works, so the player starts connected.
+	_stamp_line(BRINDLE, CINDERWORKS, ROAD_HALF_WIDTH, Terrain.ROAD, false)
+
+
+## The bridge carries the road over the Kettle; the ford is a wade downstream of
+## it. Both are stamped after the river so they cut through it, and both are wide
+## enough that no single 6-tiles-per-second step can miss them.
+func _stamp_crossings() -> void:
+	# Wide enough to span the river *and* its slant. The Kettle runs at an angle,
+	# so at any given row it covers more columns than its width suggests — a
+	# crossing sized to the width alone leaves water on the far side and the road
+	# simply stops in the river.
+	_stamp_rect(BRIDGE, Vector2i(19, 5), Terrain.ROAD)
+	_stamp_rect(FORD, Vector2i(15, 5), Terrain.FORD)
+
+
+## Scenery, placed in core because *where* a furnace stands is world layout and a
+## test should be able to assert every zone has a landmark. What each kind looks
+## like is view/'s business and core never learns it.
+##
+## Landmark footprints are impassable: §4's towns get "walkable exteriors" — you
+## walk the streets between buildings, and the buildings are solid. Scattered trees
+## and rocks are not, and are not props at all; the view draws those from the tile
+## itself so that a wood can be dense without becoming a maze.
+func _place(kind: StringName, at: Vector2i, size: Vector2i) -> void:
+	props.append({"kind": kind, "at": at, "size": size})
+	for dx: int in size.x:
+		for dy: int in size.y:
+			var tile: Vector2i = at + Vector2i(dx, dy)
+			if in_bounds(tile) and is_passable(tile) and not _is_protected(tile):
+				set_terrain(tile, Terrain.WALL)
+
+
+## Two things a building may never close: the road, and the ground a zone is
+## reached by. The first version stamped walls straight across the King's Road and
+## cut the map in half — every route test failed at once, which is the cheap way
+## to find out.
+func _is_protected(tile: Vector2i) -> bool:
+	var here: Terrain = terrain_at(tile)
+	if here == Terrain.ROAD or here == Terrain.FORD:
+		return true
+	for site: Vector2i in zone_sites().values():
+		if Vector2(tile).distance_to(Vector2(site)) <= 2.5:
+			return true
+	return false
+
+
+## Ground, streets and buildings for one settlement, laid out on the overworld at
+## the size the place actually is.
+func _stamp_town(site: Vector2i, size: Vector2i, ground: Terrain, streets: bool) -> void:
+	var half: Vector2i = size / 2
+
+	# Ground is only replaced where the surface genuinely differs — Brindle's
+	# ash, the Muster's beaten earth, Blackcairn's flags. A town keeps the grass
+	# it was built on and gets streets through it; paving the whole footprint
+	# turns a village into a warehouse yard, which is what the first pass looked
+	# like.
+	if not streets:
+		for x: int in range(site.x - half.x, site.x + half.x + 1):
+			for y: int in range(site.y - half.y, site.y + half.y + 1):
+				var tile := Vector2i(x, y)
+				var here: Terrain = terrain_at(tile)
+				if here == Terrain.SEA or here == Terrain.MOUNTAIN or here == Terrain.WATER:
+					continue
+				if here == Terrain.ROAD or here == Terrain.FORD:
+					continue
+				set_terrain(tile, ground)
+		return
+
+	# A main street each way, and a back lane either side of it.
+	var lane_x: int = maxi(half.x / 2, 4)
+	var lane_y: int = maxi(half.y / 2, 3)
+	for x: int in range(site.x - half.x, site.x + half.x + 1):
+		for dy: int in [-1, 0, 1]:
+			_street(Vector2i(x, site.y + dy))
+		_street(Vector2i(x, site.y - lane_y))
+		_street(Vector2i(x, site.y + lane_y))
+	for y: int in range(site.y - half.y, site.y + half.y + 1):
+		for dx: int in [-1, 0, 1]:
+			_street(Vector2i(site.x + dx, y))
+		_street(Vector2i(site.x - lane_x, y))
+		_street(Vector2i(site.x + lane_x, y))
+
+
+func _street(tile: Vector2i) -> void:
+	var here: Terrain = terrain_at(tile)
+	if here == Terrain.SEA or here == Terrain.MOUNTAIN or here == Terrain.WATER:
+		return
+	set_terrain(tile, Terrain.ROAD)
+
+
+## Buildings in blocks either side of a street, skipping anything that would close
+## the road or the ground a zone is reached by.
+func _stamp_blocks(site: Vector2i, corners: Array[Vector2i], kinds: Array[StringName]) -> void:
+	for i: int in corners.size():
+		var at: Vector2i = site + corners[i]
+		# A nudge from the tile's own coordinates. Buildings on an exact grid read
+		# as generated, and no town was ever surveyed that carefully.
+		var jitter := Vector2i(
+			(absi((at.x * 73856093) ^ (at.y * 19349663)) % 3) - 1,
+			(absi((at.x * 19349663) ^ (at.y * 83492791)) % 3) - 1,
+		)
+		_place(kinds[(i + absi(at.x)) % kinds.size()], at + jitter, Vector2i(4, 3))
+
+
+## Every power base visible as a landmark, and nothing more — scenery, not systems
+## (Phase 2 scope). The Muster keeps the interaction it already had.
+func _stamp_landmarks() -> void:
+	var houses: Array[StringName] = [&"house_0", &"house_1", &"house_2", &"house_big"]
+
+	# Brindle: what is left of it, and what has grown back through it.
+	_place(&"ruin_house", BRINDLE + Vector2i(-6, -4), Vector2i(4, 5))
+	_place(&"ruin_house", BRINDLE + Vector2i(1, -1), Vector2i(4, 5))
+	_place(&"overgrowth", BRINDLE + Vector2i(-5, 2), Vector2i(4, 3))
+
+	# The Cinderworks: the furnaces the village was cleared for, on the river.
+	for i: int in 3:
+		_place(&"kiln", CINDERWORKS + Vector2i(-9 + i * 5, -6), Vector2i(3, 4))
+	_place(&"kiln", CINDERWORKS + Vector2i(-9, 2), Vector2i(3, 4))
+	_place(&"house_big", CINDERWORKS + Vector2i(-4, 3), Vector2i(4, 3))
+
+	# Harrowgate: a town on the road, four blocks around a crossroads.
+	_stamp_blocks(HARROWGATE, [
+		Vector2i(-17, -11), Vector2i(-11, -11), Vector2i(-5, -11),
+		Vector2i(3, -11), Vector2i(9, -11), Vector2i(15, -11),
+		Vector2i(-17, -6), Vector2i(-11, -6), Vector2i(9, -6), Vector2i(15, -6),
+		Vector2i(-17, 4), Vector2i(-11, 4), Vector2i(-5, 4),
+		Vector2i(3, 4), Vector2i(9, 4), Vector2i(15, 4),
+		Vector2i(-17, 9), Vector2i(-11, 9), Vector2i(9, 9), Vector2i(15, 9),
+	], houses)
+
+	# The Wide Acres: a farmhouse or two in a sea of crops.
+	_place(&"house_big", WIDE_ACRES + Vector2i(-9, -6), Vector2i(4, 3))
+	_place(&"house_big", WIDE_ACRES + Vector2i(4, -6), Vector2i(4, 3))
+	_place(&"house_big", WIDE_ACRES + Vector2i(-9, 3), Vector2i(4, 3))
+	_place(&"house_big", WIDE_ACRES + Vector2i(4, 3), Vector2i(4, 3))
+
+	# The Muster: tents, in rows, because that is what a standing army looks like.
+	for row: int in 2:
+		for col: int in 3:
+			var kind: StringName = &"tent" if (row + col) % 2 == 0 else &"tent_b"
+			_place(kind, MUSTER + Vector2i(-9 + col * 6, -6 + row * 9), Vector2i(3, 3))
+
+	# Saltmarch: boats, which is the whole point of a port.
+	_place(&"boat", SALTMARCH + Vector2i(-12, -7), Vector2i(5, 2))
+	_place(&"boat", SALTMARCH + Vector2i(-12, 5), Vector2i(5, 2))
+	_place(&"house_big", SALTMARCH + Vector2i(3, -7), Vector2i(4, 3))
+	_place(&"house_big", SALTMARCH + Vector2i(3, 4), Vector2i(4, 3))
+	_place(&"house_0", SALTMARCH + Vector2i(-4, 5), Vector2i(4, 3))
+
+	# Cairnwell: the capital, and the bank is the tallest thing in it — which is
+	# the point of §3's sixth power base and worth seeing from the road.
+	_place(&"counting_house", CAIRNWELL + Vector2i(3, -11), Vector2i(4, 5))
+	_stamp_blocks(CAIRNWELL, [
+		Vector2i(-17, -11), Vector2i(-11, -11), Vector2i(-5, -11), Vector2i(11, -11),
+		Vector2i(-17, -6), Vector2i(-11, -6), Vector2i(9, -6), Vector2i(15, -6),
+		Vector2i(-17, 4), Vector2i(-11, 4), Vector2i(-5, 4),
+		Vector2i(3, 4), Vector2i(9, 4), Vector2i(15, 4),
+		Vector2i(-17, 9), Vector2i(-11, 9), Vector2i(3, 9), Vector2i(9, 9),
+	], houses)
+
+	# Blackcairn: the castle's outbuildings. The keep's inside is a zone for a
+	# later phase — that is a change of scale, which is what a transition is for.
+	_place(&"tower", BLACKCAIRN + Vector2i(-10, -7), Vector2i(3, 5))
+	_place(&"tower", BLACKCAIRN + Vector2i(7, -7), Vector2i(3, 5))
+	_place(&"tower", BLACKCAIRN + Vector2i(-10, 3), Vector2i(3, 5))
+	_place(&"tower", BLACKCAIRN + Vector2i(7, 3), Vector2i(3, 5))
+
+
+func _stamp_settlements() -> void:
+	_stamp_town(BRINDLE, BRINDLE_SIZE, Terrain.RUINS, false)
+	_stamp_town(CINDERWORKS, CINDERWORKS_SIZE, Terrain.TOWN, true)
+	_stamp_town(HARROWGATE, HARROWGATE_SIZE, Terrain.TOWN, true)
+	_stamp_town(WIDE_ACRES, WIDE_ACRES_SIZE, Terrain.TOWN, true)
+	_stamp_town(MUSTER, MUSTER_SIZE, Terrain.CAMP, false)
+	_stamp_town(SALTMARCH, SALTMARCH_SIZE, Terrain.TOWN, true)
+	_stamp_town(CAIRNWELL, CAIRNWELL_SIZE, Terrain.TOWN, true)
+	_stamp_town(BLACKCAIRN, BLACKCAIRN_SIZE, Terrain.CASTLE, false)
+
+
+# ------------------------------------------------------------------ helpers ---
 
 func _stamp_rect(centre: Vector2i, size: Vector2i, terrain: Terrain) -> void:
 	var half: Vector2i = size / 2
 	for x: int in range(centre.x - half.x, centre.x + half.x + 1):
 		for y: int in range(centre.y - half.y, centre.y + half.y + 1):
 			var tile := Vector2i(x, y)
-			if is_passable(tile):
+			if terrain_at(tile) != Terrain.SEA and terrain_at(tile) != Terrain.MOUNTAIN:
 				set_terrain(tile, terrain)
 
 
-func _stamp_line(from: Vector2i, to: Vector2i, half_width: int, terrain: Terrain) -> void:
+func _stamp_ellipse(centre: Vector2i, radii: Vector2i, terrain: Terrain) -> void:
+	for x: int in range(centre.x - radii.x, centre.x + radii.x + 1):
+		for y: int in range(centre.y - radii.y, centre.y + radii.y + 1):
+			var tile := Vector2i(x, y)
+			var dx: float = float(x - centre.x) / float(maxi(radii.x, 1))
+			var dy: float = float(y - centre.y) / float(maxi(radii.y, 1))
+			if dx * dx + dy * dy > 1.0:
+				continue
+			if terrain_at(tile) == Terrain.WILD:
+				set_terrain(tile, terrain)
+
+
+func _stamp_line(
+	from: Vector2i,
+	to: Vector2i,
+	half_width: int,
+	terrain: Terrain,
+	over_water: bool,
+) -> void:
 	var steps: int = maxi(absi(to.x - from.x), absi(to.y - from.y))
 	if steps == 0:
 		return
@@ -240,5 +506,11 @@ func _stamp_line(from: Vector2i, to: Vector2i, half_width: int, terrain: Terrain
 		for dx: int in range(-half_width, half_width + 1):
 			for dy: int in range(-half_width, half_width + 1):
 				var tile: Vector2i = point + Vector2i(dx, dy)
-				if is_passable(tile):
-					set_terrain(tile, terrain)
+				if not in_bounds(tile):
+					continue
+				var here: Terrain = terrain_at(tile)
+				if here == Terrain.SEA or here == Terrain.MOUNTAIN:
+					continue
+				if here == Terrain.WATER and not over_water:
+					continue
+				set_terrain(tile, terrain)

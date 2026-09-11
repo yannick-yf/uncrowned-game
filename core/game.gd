@@ -32,10 +32,9 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 
 
 static func build_world() -> WorldState:
-	var overworld: Region = Region.build_phase_0()
+	var overworld: Region = Region.build_overworld()
 	var world := WorldState.new()
 	world.zones[WorldState.OVERWORLD] = overworld
-	world.zones[&"harrowgate"] = Region.build_harrowgate()
 	world.current_zone = WorldState.OVERWORLD
 	world.player_pos = overworld.brindle_centre()
 	world.player_tile_last = world.player_tile()
