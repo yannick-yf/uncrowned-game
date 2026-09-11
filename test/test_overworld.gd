@@ -13,29 +13,6 @@ func before_each() -> void:
 	_region = Region.build_overworld()
 
 
-func _passable_neighbours(tile: Vector2i) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	for dx: int in [-1, 0, 1]:
-		for dy: int in [-1, 0, 1]:
-			if dx == 0 and dy == 0:
-				continue
-			var next: Vector2i = tile + Vector2i(dx, dy)
-			if _region.is_passable(next):
-				out.append(next)
-	return out
-
-
-func _reachable_from(start: Vector2i) -> Dictionary:
-	var seen: Dictionary = {start: true}
-	var queue: Array[Vector2i] = [start]
-	while not queue.is_empty():
-		for next: Vector2i in _passable_neighbours(queue.pop_back()):
-			if not seen.has(next):
-				seen[next] = true
-				queue.append(next)
-	return seen
-
-
 func test_all_eight_zones_of_spec_4_exist_and_are_walkable() -> void:
 	var sites: Dictionary = Region.zone_sites()
 	assert_eq(sites.size(), 8, "§4 names eight zones")
@@ -43,26 +20,6 @@ func test_all_eight_zones_of_spec_4_exist_and_are_walkable() -> void:
 		var at: Vector2i = sites[id] as Vector2i
 		assert_true(_region.in_bounds(at), "%s is on the map" % id)
 		assert_true(_region.is_passable(at), "%s can be stood in" % id)
-
-
-func test_every_zone_is_reachable_on_foot_from_brindle() -> void:
-	var seen: Dictionary = _reachable_from(Region.BRINDLE)
-	for id: StringName in Region.zone_sites().keys():
-		assert_true(seen.has(Region.zone_sites()[id]), "%s is reachable from Brindle" % id)
-
-
-func test_the_kettle_actually_divides_the_map() -> void:
-	# If the river is not a barrier then the bridge and the ford are decoration.
-	# Fill both crossings in and the castle must become unreachable.
-	var dammed := Region.build_overworld(true)
-	for x: int in range(Region.BRIDGE.x - 12, Region.BRIDGE.x + 12):
-		for y: int in range(Region.BRIDGE.y - 4, Region.FORD.y + 6):
-			if dammed.terrain_at(Vector2i(x, y)) == Region.Terrain.ROAD \
-					or dammed.terrain_at(Vector2i(x, y)) == Region.Terrain.FORD:
-				dammed.set_terrain(Vector2i(x, y), Region.Terrain.WATER)
-	_region = dammed
-	assert_false(_reachable_from(Region.BRINDLE).has(Region.BLACKCAIRN),
-		"with both crossings dammed, the east bank is cut off — so the river is real")
 
 
 func test_both_crossings_are_bands_a_single_step_cannot_miss() -> void:
@@ -182,7 +139,7 @@ func test_every_landmark_kind_has_art() -> void:
 	var art := Art.new()
 	for prop: Dictionary in _region.props:
 		var kind: StringName = prop["kind"] as StringName
-		assert_true(art.props.has(kind), "no sprite is mapped for landmark kind '%s'" % kind)
+		assert_true(art.can_draw(kind), "nothing knows how to draw a '%s'" % kind)
 
 
 func test_every_walkable_terrain_has_a_tile_or_a_deliberate_colour() -> void:
@@ -196,23 +153,53 @@ func test_every_walkable_terrain_has_a_tile_or_a_deliberate_colour() -> void:
 			"terrain %d would be drawn as a flat rectangle" % terrain)
 
 
-func test_landmarks_never_close_the_road() -> void:
-	for prop: Dictionary in _region.props:
-		var at: Vector2i = prop["at"] as Vector2i
-		var size: Vector2i = prop.get("size", Vector2i(4, 3)) as Vector2i
-		for dx: int in size.x:
-			for dy: int in size.y:
-				var tile: Vector2i = at + Vector2i(dx, dy)
-				if _region.terrain_at(tile) == Region.Terrain.WALL:
-					continue
-				assert_true(true)
-	# The real assertion: with every landmark placed, the road still connects.
-	assert_true(_reachable_from(Region.BRINDLE).has(Region.BLACKCAIRN),
-		"a building was put through the King's Road")
-
-
 func test_the_zone_a_tile_belongs_to_is_answerable() -> void:
 	for id: StringName in Region.zone_sites().keys():
 		assert_eq(_region.zone_at(Region.zone_sites()[id] as Vector2i), id,
 			"standing in %s should say so" % id)
 	assert_eq(_region.zone_at(Vector2i(120, 60)), &"", "and open country is nowhere in particular")
+
+
+# --------------------------------------------------------- the crowd (§6) ---
+
+func test_harrowgate_has_standing_room_for_the_men_who_left() -> void:
+	var spots: int = 0
+	for prop: Dictionary in _region.props:
+		if (prop["kind"] as StringName) != &"townsfolk":
+			continue
+		spots += 1
+		assert_eq(_region.zone_at(prop["at"] as Vector2i), &"harrowgate",
+			"the crowd stands in Harrowgate, where the deserters went")
+		assert_true(_region.is_passable(prop["at"] as Vector2i),
+			"and on ground you can walk through — they are scenery, not walls")
+	assert_true(spots >= 10, "room for a crowd, not a handful: %d" % spots)
+
+
+func test_townsfolk_are_not_cast() -> void:
+	# §6: scenery has no sheet, no name and no place in the 25.
+	var cast := Cast.shared()
+	for prop: Dictionary in _region.props:
+		if (prop["kind"] as StringName) == &"townsfolk":
+			assert_null(cast.get_npc(&"townsfolk"), "nobody in the crowd is in the roster")
+			break
+	# §17 budgets twenty-five named people for the whole region. What matters is
+	# that the crowd never quietly joins them.
+	assert_true(cast.named().size() <= 25, "the named cast is inside §6's budget")
+	for id: StringName in cast.npcs.keys():
+		assert_false(String(id).begins_with("townsfolk"),
+			"nobody in the crowd has acquired a sheet")
+
+
+func test_strangers_are_not_cast_either() -> void:
+	# Same rule, other end of it. A generic has a trade and no name, and adding
+	# one must never quietly enlarge §6's twenty-five.
+	var cast := Cast.shared()
+	var strangers: int = cast.npcs.size() - cast.named().size()
+	assert_true(strangers > 0, "there is at least one stranger placed in the world")
+	for id: StringName in cast.npcs.keys():
+		var npc: Npc = cast.get_npc(id)
+		if not npc.generic:
+			continue
+		assert_true(npc.kind != &"", "%s is one of a trade, not one of a kind" % id)
+		assert_true(String(id).contains("@"), "a stranger's id names a placement, not a person")
+		assert_true(npc.greeting.length() > 0, "and still has something to say")

@@ -1,8 +1,9 @@
 {
-  "_note": "Hand-written. No generation, no LLM. Every line here was typed by a person and is shipped as reviewed content (SPECS §9). Trait tags in brackets are display-only until traits exist: the rules layer ignores them. Tiles are overworld coordinates — towns are laid out on the map at their real size rather than entered through a transition.",
+  "_note": "Hand-written. No generation, no LLM. Every line here was typed by a person and is shipped as reviewed content (SPECS §9). Trait tags in brackets are display-only until traits exist: the rules layer ignores them. Tiles are overworld coordinates — towns are laid out on the map at their real size rather than entered through a transition. Some lines are gated on a named world condition — the rules layer decides what the name means, so no line reads the world directly.",
   "facts": {
     "muster:pay_fraud": "Quartermaster Odile at the Muster signs for soldiers who are dead or never existed, and keeps the difference.",
-    "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks."
+    "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks.",
+    "wide_acres:unwatched_stall": "There is a market stall in the Wide Acres that nobody stands near — the farms keep no watch on their own produce."
   },
   "npcs": {
     "maddox": {
@@ -25,13 +26,35 @@
           "intent": "ask_law",
           "tag": "Wits",
           "text": "The law here — who does it fall on?",
-          "reply": "Tovin could tell you that. He'd apologise the whole time he was doing it."
+          "reply": "Tovin could tell you that. He'd apologise the whole time he was doing it.",
+          "costs": "goodwill"
         },
         {
           "intent": "ask_soldiers",
           "tag": "Temper",
           "text": "Do soldiers still come through?",
-          "reply": "Fewer than they did. Ask Ossa why — she patches the ones who stop going back."
+          "reply": "Fewer than they did. Ask Ossa why — she patches the ones who stop going back.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_bread",
+          "tag": "Wits",
+          "text": "Why has bread gone up?",
+          "reply": "Soldiers. They used to be fed and now they're buying, and there's the same amount of grain as there was. Half the Muster's walked off and every one of them still eats twice a day.",
+          "requires_condition": "grain_is_dear_here"
+        },
+        {
+          "intent": "ask_favour",
+          "text": "Anything I should know?",
+          "reply": "There's a man drinks here who won't give his name and won't sit with his back to the door. Deserter, or worse. I'd not mention I told you.",
+          "requires_condition": "they_think_well_of_me",
+          "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "grain_is_dear_here",
+          "text": "Bread's up again. Third time this month, and nobody can tell me why."
         }
       ]
     },
@@ -55,12 +78,20 @@
           "intent": "ask_tiers",
           "tag": "Wits",
           "text": "And you think it is defensible?",
-          "reply": "I think it is written down. Those are different things, and I have a house."
+          "reply": "I think it is written down. Those are different things, and I have a house.",
+          "costs": "goodwill"
         },
         {
           "intent": "ask_muster",
           "text": "Does your office cover the Muster?",
-          "reply": "It does not. The army pays its own — or is supposed to. What happens to that money stops being my business the moment it leaves the tax chest."
+          "reply": "It does not. The army pays its own — or is supposed to. What happens to that money stops being my business the moment it leaves the tax chest.",
+          "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "the_army_is_shrinking",
+          "text": "If you've come about the grain levy, so has everyone. The answer is the same."
         }
       ]
     },
@@ -84,12 +115,14 @@
           "intent": "ask_copy",
           "tag": "Wits",
           "text": "Do you ever copy something you shouldn't have seen?",
-          "reply": "I copy what I am given and I remember all of it. That is the job. It is also, I have started to think, a problem for somebody."
+          "reply": "I copy what I am given and I remember all of it. That is the job. It is also, I have started to think, a problem for somebody.",
+          "costs": "goodwill"
         },
         {
           "intent": "ask_soldiers",
           "text": "Do army papers pass your desk?",
-          "reply": "Never. The Muster keeps its own rolls, which is convenient for the Muster."
+          "reply": "Never. The Muster keeps its own rolls, which is convenient for the Muster.",
+          "costs": "goodwill"
         }
       ]
     },
@@ -114,12 +147,21 @@
           "tag": "Wits",
           "text": "Then why are so many of them running?",
           "reply": "Not the fighting. The pay. There is a Quartermaster at the Muster — Odile — signing for men who are dead or were never born, and keeping the difference. What reaches the living is nothing. You would run too, and you would come here, because I am the only one who does not ask.",
-          "teaches": "muster:pay_fraud"
+          "teaches": "muster:pay_fraud",
+          "forbids_condition": "they_think_ill_of_me"
         },
         {
           "intent": "ask_kell",
           "text": "Is there one of them you remember?",
-          "reply": "There is one I still see. He does not come into town. That is all you are getting from me today."
+          "reply": "There is one I still see. He does not come into town. That is all you are getting from me today.",
+          "forbids_condition": "they_think_ill_of_me",
+          "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "I saw what you did. Sit if you're bleeding — I said I never ask, and I meant it. But you'll get no more than that from me."
         }
       ]
     },
@@ -145,14 +187,144 @@
           "tag": "Wits",
           "text": "You supply the Muster?",
           "reply": "I did. Now I sell them nothing on credit. Their Quartermaster signs for more men than she feeds — Odile, her name is. The rolls are fat and the camp is thin, and I would rather be owed by someone who isn't already stealing.",
-          "teaches": "muster:pay_fraud"
+          "teaches": "muster:pay_fraud",
+          "costs": "free"
         },
         {
           "intent": "ask_rumour",
           "text": "What travels the road besides you?",
-          "reply": "Word does, and faster, and it arrives changed. Whatever you do out there, someone will hear a worse version of it by the time you get back."
+          "reply": "Word does, and faster, and it arrives changed. Whatever you do out there, someone will hear a worse version of it by the time you get back.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "wren": {
+      "name": "Wren",
+      "role": "Scavenger",
+      "zone": "overworld",
+      "tile": [
+        258,
+        177
+      ],
+      "sprite": "Villager5",
+      "greeting": "Careful where you put your feet. Half of what's under the ash is still worth something, and the other half will cut you.",
+      "options": [
+        {
+          "intent": "ask_ruins",
+          "text": "You live out here?",
+          "reply": "I work out here. Nobody lives in Brindle. I came after, like the crows, and I'm not ashamed of it — somebody was going to."
+        },
+        {
+          "intent": "ask_watched",
+          "tag": "Wits",
+          "text": "You must know where nobody's looking.",
+          "reply": "That's the only thing I know that's worth coin. Try the Wide Acres — there's a stall out past the far field with nobody stood by it from one week to the next. Farmers don't watch their own. I didn't say that either.",
+          "teaches": "wide_acres:unwatched_stall",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_cinderworks",
+          "text": "What do you sell, and to who?",
+          "reply": "Scrap, to the Cinderworks. They buy metal and ask nothing, which tells you what they are. I'd not go in there without knowing when the shift changes.",
+          "costs": "goodwill"
         }
       ]
     }
+  },
+  "_strangers_note": "Generic types, not cast. §6's roster is twenty-five named people and these are not among them: a stranger has a trade, a line set shared by everyone of that trade, and no name. They exist so the world can react to you through somebody who has never met you — which is the whole point of a rumour arriving before you do. Placements are instances; the lines belong to the type.",
+  "strangers": {
+    "types": {
+      "trader": {
+        "name": "A trader",
+        "role": "Trader",
+        "sprite": "ManGreen",
+        "greeting": "Cloth, salt, lamp oil. Coin first, and no, I don't do favours.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "No. Whatever it is, no. I've heard about you and I'd rather keep what I've got."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_trade",
+            "text": "What will you sell me?",
+            "reply": "Whatever you can pay for. Sit a while, I'll find something you need.",
+            "forbids_condition": "they_think_ill_of_me",
+            "costs": "goodwill"
+          },
+          {
+            "intent": "ask_refusal",
+            "tag": "Temper",
+            "text": "You've never seen me before.",
+            "reply": "No. But word came up the road ahead of you, and it was specific.",
+            "requires_condition": "they_think_ill_of_me"
+          },
+          {
+            "intent": "ask_town",
+            "text": "Busy town?",
+            "reply": "Busy enough. The counting house keeps the hours and the rest of us keep to them."
+          }
+        ]
+      },
+      "guard": {
+        "name": "A bridge guard",
+        "role": "Guard",
+        "sprite": "Knight",
+        "greeting": "Road's open. Keep it that way and we'll not have a conversation.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "You again. Cross, and keep your hands where I can see them."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_bridge",
+            "text": "Who pays you to stand here?",
+            "reply": "The crown pays for the bridge. The bridge pays for me. Ask me again in a month and I'll tell you whether either still does."
+          },
+          {
+            "intent": "ask_ford",
+            "tag": "Wits",
+            "text": "Is there another way over?",
+            "reply": "There's a ford downstream. Shallow in a dry week, and nobody counts who uses it. I didn't say that.",
+            "teaches": "kettle:ford",
+            "costs": "free"
+          },
+          {
+            "intent": "ask_traffic",
+            "text": "Much traffic lately?",
+            "reply": "Soldiers going the wrong way. That's all I'll say about soldiers.",
+            "costs": "goodwill"
+          }
+        ]
+      }
+    },
+    "placements": [
+      {
+        "kind": "trader",
+        "zone": "overworld",
+        "tile": [
+          93,
+          59
+        ]
+      },
+      {
+        "kind": "guard",
+        "zone": "overworld",
+        "tile": [
+          228,
+          175
+        ]
+      }
+    ]
+  },
+  "_dispositions_note": "How anybody opens a conversation when they have an opinion of you, used when that person has not been written a line of their own for that band. Narration rather than speech, deliberately: a shared line in nobody's voice sounds flat coming out of a named character, but a shared line about a stance works for everyone. %s is the speaker's name. This is what makes reaction the default rather than something each line has to opt into — before it existed, four of the five named cast chatted normally to a player the whole town had turned on.",
+  "dispositions": {
+    "hated": "%s turns away before you can get a word out.",
+    "unwelcome": "%s does not return your greeting.",
+    "wary": "%s watches you a moment longer than is comfortable, and waits.",
+    "welcome": "%s is glad to see you, and does not trouble to hide it."
   }
 }

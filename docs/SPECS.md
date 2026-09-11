@@ -19,6 +19,79 @@ truth. `SPECS_wild_notes.md` holds the original raw notes for reference only.
 
 ---
 
+## 0. Glossary
+
+Every invented proper noun in this document, in one line each. **Names are
+placeholders** and may change; what each thing *is* should not.
+
+### Places
+
+| Name | What it is | Defined in |
+|---|---|---|
+| **Brindle** | The player's village, burned to clear ground for the works. Where they wake, and where they respawn | §4, §5 |
+| **The Cinderworks** | The stone and steel works, built on Brindle's own ground. Holds the death ledger | §3, §4 |
+| **Harrowgate** | The first town, south-centre on the road. Market, gossip, the tiered law in daily practice | §3, §4, §6 |
+| **The Wide Acres** | Consolidated farm estates feeding the capital and the army. Holds the land grants | §3, §4 |
+| **The Muster** | The standing army's camp, at the road's crossroads. Muster rolls, pay fraud, signed orders | §3, §4 |
+| **Saltmarch & Greyhold** | One zone, two names: the port town (Saltmarch) and the sub-castle above it (Greyhold) | §3, §4 |
+| **Cairnwell** | The capital, north-west. The bank is in it | §3, §4 |
+| **Blackcairn** | The castle, against the northern mountains. The king is here, reachable from minute one | §4 |
+| **The Kettle** | The river, running from the northern mountains to the southern sea. One guarded bridge, one ford downstream | §4 |
+| **The Thornwood** | The wood off the road: unwatched, dangerous, and the short way | §4 |
+| **The Iron Spine** | The impassable mountains along the eastern edge | §4 |
+| **The Redcut** | The iron quarry in the eastern mountains. An optional zone, cut first if behind | §4 |
+| **The King's Road** | The paved, patrolled route across the region. Fast and safe; everything done on it is seen | §4 |
+
+### People
+
+★ marks route-critical. Every ★ fact has a second source **except Hesper**, which
+is deliberate — see §6.
+
+| Name | Who they are | Where |
+|---|---|---|
+| **Wren** | Scavenger picking Brindle's ruins. Not from there; arrived after | Brindle |
+| ★ **Foreman Halgrave** | Runs the Cinderworks and believes in it. Keeps the death ledger, proudly | The Cinderworks |
+| **Sena** | Furnace worker, lost a hand, organising the others. Has copied ledger pages | The Cinderworks |
+| **Doctor Ivo Marsh** | The works' physician. Knows the true death count, including the unrecorded | The Cinderworks |
+| **Maddox** | Innkeeper. Knows everyone, believes nothing. The cheapest way into almost any thread | Harrowgate |
+| **Tovin the Reeve** | Administers the tiered law locally, apologetically | Harrowgate |
+| **Bell** | Apprentice scribe, an adult. Has the wealth tiers memorised | Harrowgate |
+| **Ossa** | Herbalist. Treats everyone, deserters included — which is how she knows about the pay fraud | Harrowgate |
+| **Garrick** | Caravan master. Moves between zones and carries rumour physically | Harrowgate |
+| ★ **Estate Lord Cadan Vale** | Holds the land grants naming the razed villages | The Wide Acres |
+| **Nessa Vale** | His steward and daughter. Keeps the actual paperwork | The Wide Acres |
+| **Old Pell** | Tenant farmer who worked Brindle's soil before and after the burning. Knew the player's family; does not recognise them | The Wide Acres |
+| ★ **Commander Ryse** | Led the clearances and sleeps fine. Holds the signed orders — and, having drilled against the king, how he fights | The Muster |
+| **Quartermaster Odile** | Running the pay fraud. Holds the muster rolls and her own crime | The Muster |
+| **Kell** | A deserter hiding in the Thornwood. He was at Brindle that night — the closest thing to a witness | The Thornwood |
+| ★ **Lord Aurel Greyhold** | Administers the tiered law and privately believes it indefensible. The softest ★ to turn | Greyhold |
+| **Harbourmaster Til** | Smuggler by preference. Knows what leaves the region and on whose order | Saltmarch |
+| **Mira Sand** | Advocate for the poor under the tiered law. Evidence with faces on it | Saltmarch |
+| ★ **Corvin Ash** | Banker holding the crown's debts | Cairnwell |
+| **Archivist Peyre** | The crown's record keeper. Second source for the debts *and* the land grants | Cairnwell |
+| ★ **Hesper** | Court steward. Controls who gets papers into Blackcairn — the key to Route B, and its single point of failure by design | Cairnwell |
+| ★★ **Mother Sabine Crowe** | Leader of the church, and the creditor the king fears. Also complicit: the church financed the works | Cairnwell |
+| **Brother Anselm** | Her secretary. The way in to her, and a second source on the church's ledgers | Cairnwell |
+| **The King** | Name TBD. Believes he was right, and can produce the orders he signed | Blackcairn |
+| **Captain of the Guard** | Name TBD. Commands the escort, which shrinks as power bases fall | Blackcairn |
+
+### Things worth naming
+
+| Name | What it is | Defined in |
+|---|---|---|
+| **The tiered law** | Law that sorts people by wealth and origin, so the same act costs different people differently. The king's argument's weakest point | §3, §5 |
+| **The death ledger** | The Cinderworks' record of what the works cost in lives. The king required it and thought the price worth paying | §3, §6 |
+| **The land grants** | The papers naming the razed villages, Brindle among them, with a date and a signature. Where the player finds their own village | §3, §6 |
+| **The signed orders** | The clearance orders, signed by the king himself | §3, §5, §6 |
+| **The muster rolls** | The army's own pay records — fat with men who are dead or never existed | §3, §6 |
+| **Route A / Force** | Fight through the door | §3 |
+| **Route B / Access** | Be admitted: become someone the castle lets in | §3 |
+| **Route C / Exposure** | The bloodless route: assemble the evidence and put it in front of him | §3 |
+| **The six power bases** | The Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank. **Never** "Pillar N" | §3 |
+| **The five design pillars** | §1's numbered pillars — the only thing "Pillar" ever means | §1 |
+
+---
+
 ## 1. Pillars
 
 **Pitch (one sentence):**
@@ -138,17 +211,57 @@ levelling closes a 100× gap is a game about levelling.
 |---|---|---|---|---|
 | 1 | **The Cinderworks** — stone & steel | The industry the villages were razed for; the kingdom's furnaces | Sabotage the furnaces; turn the workers; cut its ore supply from the quarry; expose its death toll | The ledger of what the works cost in lives — and that the king kept that ledger himself, and considered the price worth paying |
 | 2 | **The Wide Acres** — the farms | Consolidated estates feeding the capital and the standing army | Burn stores; organise a withholding; redirect a supply convoy; buy the harvest out from under the crown | That the estates sit on the ground of specific razed villages, named in the land grants. This is where the player can find their own village on paper |
-| 3 | **The Muster** — the military camp | The standing force, and the officers who executed the clearances | Kill the commander; expose the pay fraud; recruit deserters; destroy the muster rolls | The names of the men who burned the player's village, and the orders they were given, signed |
+| 3 | **The Muster** — the military camp | The standing force, and the officers who executed the clearances | Kill the commander; expose the pay fraud; recruit deserters; destroy the muster rolls | The names of the men who burned the player's village, and the orders they were given, signed. **And how the king fights** — he trained with his own guard, so his officers have drilled against him |
 | 4 | **Greyhold** — the sub-castle | The regional seat and its lord — the king's enforcer of the wealth-tiered law | Turn the lord; blackmail him; kill him; discredit him publicly | How the tiered law is actually administered, and that the lord privately believes it is indefensible |
 | 5 | **Harrowgate** — the town | The civil population whose loyalty the crown assumes | Shift its reputation of the king; expose the tiered law's local effects; provoke or prevent a riot | That consent is manufactured, and how — which is also the mechanism Route C exploits |
 | 6 | **The bank**, at Cairnwell | Where the war gold sits, and the debts that finance the works | Rob it; expose the debts; ruin its confidence; hand its records to the right person | That the whole industrial project is leveraged, and that the king is personally afraid of one specific creditor |
 
-### Routes to the confrontation
+### How a reign ends (2026-09-11)
 
-> Three at launch, each using a different verb.
+**The goal is not to kill the king. It is that he stops being king.** Killed,
+ruined, deposed, discredited, abandoned — the game is over when the world has
+reached a state he cannot hold.
+
+That is expressed as **predicates over the tracked quantities**, never as a
+completed route. Nothing is scripted, nothing has required steps, and any
+combination of acts that reaches one of these states finishes the game:
+
+| Ending | The world has reached |
+|---|---|
+| **Dead** | His health is gone. *(Needs the combat screen, §10)* |
+| **Ruined** | The treasury is empty and the bank has no confidence left |
+| **Deposed** | The army is hollow and faction tension is high enough for somebody to move |
+| **Discredited** | Enough of what he did is public, and enough towns have turned |
+| **Abandoned** | The escort is a bare handful and the place he stands has turned on him |
+
+This is invariants 4 and 5 applied to the ending itself. An earlier version of this
+section wrote the three routes as recipes with required steps, which is exactly the
+"quest that can only start one way" invariant 5 calls a bug — the contradiction was
+in the spec, not in the code.
+
+#### The handprint rule (hard)
+
+**Drift alone must never end the game.** The world moves on its own, and if a reign
+could fall out of ambient motion the player would be a spectator at their own story.
+
+So every tracked quantity carries a second figure beside it: **how much of where it
+stands is the player's doing.** A deed writes both the quantity and the handprint; a
+drift writes only the quantity. An ending requires *both* its threshold **and** a
+minimum handprint on the quantities it reads.
+
+> This is §8's "push the ambient, pull the attribution" turned around. The world
+> never tells the player what they caused — but the game has to know, or it cannot
+> tell a reign the player brought down from one that fell over on its own.
+
+#### Routes are descriptions, not machinery
+
+> Three at launch, each using a different verb. **They are ways of thinking about
+> the game and names for what tends to work — they are not requirements, not
+> checklists, and nothing in the code asks which one you are on.** A run that uses
+> all three, or none of them recognisably, ends the same way: on a predicate.
 
 **Route A — Force.** Reduce the escort, level, equip, fight through the door.
-- Requires knowing: how he fights (from the Muster)
+- Requires knowing: how he fights (from the Muster — Ryse, or Odile)
 - Requires having: equipment and levels
 - Requires being: nothing — this route accepts a monster
 - How it can fail: arriving too early, escort intact
@@ -521,8 +634,25 @@ walked away from — and play continues in a changed region.
 > ★ = route-critical, and every ★ fact has at least one other source.
 
 **Named NPCs are people with a sheet**: a voice, wants, facts, and social edges.
+> **Generic types now carry dialogue** (2026-09-11). A stranger has a trade, a line
+> set shared by everyone of that trade, and no name — ids are `trade@n`, and they
+> are outside the twenty-five. Placed so far: a trader in Cairnwell, a guard at the
+> Kettle bridge. They exist so the world can react to the player through somebody
+> who has never met them, and so that "he needs something to say" cannot turn a
+> prop into a named character by degrees.
+
 Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separately
 (§17) and reused across the region.
+
+**Townsfolk are scenery, and are not cast.** The figures standing about in a town
+have no names, no sheets, no dialogue and no facts, and they are **not part of the
+25**. They exist to be counted: Harrowgate's crowd is drawn from the army strength
+the Muster has lost, so emptying the camp visibly fills the town. That is the
+ambient register doing the work a number cannot — the extra mouths explain the
+bread price by being *there*, rather than by anyone mentioning them.
+
+If one of them ever needs a name, it stops being scenery and joins the roster with
+a sheet like everybody else. Do not let one acquire dialogue by degrees.
 
 ### Template — copy per character
 
@@ -543,7 +673,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 
 | Name | Role | Holds |
 |---|---|---|
-| **Wren** | A scavenger picking the ruins. Not from Brindle; she arrived after | The Cinderworks' shift patterns — she sells them scrap. The first practical fact in the game |
+| **Wren** | A scavenger picking the ruins. Not from Brindle; she arrived after | **Where nobody is looking** — the unwatched stall in the Wide Acres. Still the first practical fact in the game, and now one that needs no NPC routine to be true (Q11, 2026-09-11) |
 
 **The Cinderworks — stone & steel**
 
@@ -588,8 +718,8 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 
 | Name | Role | Holds |
 |---|---|---|
-| ★ **Commander Ryse** | Led the clearances. Sleeps fine | The signed orders, and the names of the men who burned Brindle |
-| **Quartermaster Odile** | Running the pay fraud | The muster rolls, and her own crime — leverage |
+| ★ **Commander Ryse** | Led the clearances. Sleeps fine | The signed orders, and the names of the men who burned Brindle. **How the king fights** — Ryse drilled against him for years |
+| **Quartermaster Odile** | Running the pay fraud | The muster rolls, and her own crime — leverage. **How the king fights**, second source: she kitted the guard that drilled against him |
 | **Kell** | A deserter hiding in the Thornwood. He was at Brindle that night | The orders, from memory. And what actually happened. The closest thing to a witness the player will ever find |
 
 **Saltmarch & Greyhold — the sub-castle**
@@ -606,7 +736,7 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 |---|---|---|
 | ★ **Corvin Ash** | Banker. Holds the crown's debts | That the industrial project is leveraged, and to whom |
 | **Archivist Peyre** | The crown's record keeper | Second source for the debts *and* the land grants |
-| **Hesper** | Court steward. Controls who gets papers into Blackcairn | The key to Route B |
+| ★ **Hesper** | Court steward. Controls who gets papers into Blackcairn | The key to Route B. **Deliberately the only source** — see below |
 | ★★ **Mother Sabine Crowe** | Leader of the church. **The creditor the king fears** | The debt that could break him — and the church's own complicity in financing the works |
 | **Brother Anselm** | Her secretary | The way in to her, and a second source on the church's ledgers |
 
@@ -616,6 +746,25 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 |---|---|---|
 | **The King** | TBD name | His argument (§5), and his records |
 | **Captain of the Guard** | TBD name | The escort. Reduced as pillars fall |
+
+### Hesper is a single point of failure on purpose (decided 2026-09-11)
+
+Every other ★ has a second source. Hesper does not, and that is a decision rather
+than an oversight.
+
+Invariant 7 says **at least one** route survives any set of deaths — not every
+route. Kill Hesper and Access closes, exactly as killing Mother Crowe closes
+Exposure. Force always remains, because fighting through a door needs nobody's
+permission. That is the rule working, not failing.
+
+It also earns its keep dramatically: the player who murders their way toward the
+castle finds the polite door has quietly shut behind them, and nobody announces
+it. A world in which every route has a spare is a world where nothing you do to it
+matters.
+
+> The redundancy rule still applies to **facts**: what Hesper knows is not lost
+> with her, only her willingness to act on it. What dies with Hesper is a
+> *performer*, not a piece of knowledge.
 
 ### Mother Crowe and the shape of Route C 🟡
 
@@ -666,11 +815,15 @@ as Hesper granting papers or Mother Crowe convening a congregation. It applies
 does. A fact or a performer with a single source is acceptable when the route it
 serves is not the last one standing.
 
-**Reachability test (hard).** After any set of deaths, **at least one** route to the
-confrontation remains open. *At least one* — not all three. Losing a route to a
-death is intended and is the design working: kill Mother Crowe and Exposure closes,
-and the player still has Force and Access. What must never happen is the last route
-closing.
+**Reachability test (hard).** After any set of deaths, **at least one ending
+remains reachable**. Losing a way in to a death is intended and is the design
+working: kill Mother Crowe and the discrediting route gets much harder, and the
+player can still empty his treasury. What must never happen is every ending closing.
+
+> **Restated 2026-09-11.** This used to ask whether each of three authored routes
+> was still open, which only made sense while the routes were machinery. Now the
+> ending is a predicate over world state, so the question is whether the world can
+> still be *moved* to satisfy any of them — which is a smaller test and a truer one.
 
 The check is a **living-performer-chain walk per route**, not an enumeration of kill
 sets. For each of the three routes, walk its required facts and its required
@@ -747,15 +900,15 @@ quantities drift on their own and are pushed by the player's actions:
 
 | # | Quantity | Drifts because | Player pushes it by |
 |---|---|---|---|
-| 1 | Grain price | Season, supply | Burning stores, redirecting convoys |
+| 1 | Grain price **(per town)** | Season, supply, **and mouths to feed — deserters buy the food they used to be issued** | Burning stores, redirecting convoys |
 | 2 | Steel output | Ore supply, worker morale | Sabotage, turning workers |
 | 3 | Worker morale | Wages, accidents | Agitation, exposure of the ledger |
 | 4 | Patrol density | Crime reports | Being seen committing violence |
 | 5 | Guard alertness | Recent incidents | Any witnessed crime |
 | 6 | Crown treasury | Taxes, war costs | Robbery, exposing debts |
 | 7 | Bank confidence | Treasury, rumour | Robbery, handing over records |
-| 8 | Town sentiment | Prices, patrols, law | Almost everything |
-| 9 | Army strength | Pay, food, desertion | The Wide Acres, the Muster, the bank |
+| 8 | Town sentiment **(per town)** | Prices, patrols, law | Almost everything |
+| 9 | Army strength *(global — there is one army)* | Pay, food, desertion | The Wide Acres, the Muster, the bank |
 | 10 | Faction tension | The above | Taking sides |
 | 11 | Rumour spread | Time | Being witnessed |
 | 12 | King's escort | Pillar states | Damaging pillars |
@@ -764,11 +917,81 @@ Each is a number the simulation core owns, updated on tick, and readable by
 dialogue, prices, spawn tables and the pillar system. Nothing here requires
 simulating a person's day.
 
+**Quantity #12, the escort, is derived rather than stored** (2026-09-11). It reads
+off army strength: ten men at full, five at the strength a camp is left with once
+the pay fraud is public, and two — §3's "bare handful" — when there is nothing
+left. §3's "roughly one and a half fewer per power base damaged" never worked: six
+bases at 1.5 leaves one man, and 1.5 is not a person. Reading it off the army makes
+it continuous, integral, and a consequence of the world rather than a tally of the
+player's achievements.
+
+**Drift rules arrive one consequence at a time.** Stage 1 gives only army strength
+a rule; the other eleven are declared, addressable and at their baseline. Inventing
+eleven more drift rates would be inventing eleven numbers nobody had reasoned
+about, and §8's "drifts because" column is a cause, not a rate.
+
+**Two of the twelve are per town, not global** (decided 2026-09-11). Grain price
+and town sentiment are held once per settlement. §8's own opening already said
+reputation is "per town and per faction, not one global number", and a single
+sentiment number contradicted it; consequences 1 and 4 both fail without the fix.
+Prices are per town for the same reason — consequence 2 asks for grain "in
+Harrowgate", not in the abstract. **Army strength stays global: there is one army.**
+
+**Desertion feeds grain demand, explicitly.** Army strength falling means men who
+were issued food now buy it, so the towns nearest the Muster see grain rise. This
+coupling is not a detail — **it is the whole mechanism of consequence 2**, the one
+where the world reacts to what the player broke without ever mentioning them. An
+implicit link would be no link at all.
+
 **How reputation is earned and lost:** TBD in detail. Principle: reputation is a
 consequence of *witnessed* actions, never of a quest completion flag.
 
 **Who witnesses what, and how word travels:** witnesses record what they saw;
 rumours propagate on a delay; a crime nobody saw did not happen.
+
+### A change the player cannot perceive is identical to no change
+
+The governing principle of this whole section. A quantity that moves correctly and
+is never felt has not happened, and the simulation is only as good as its narrowest
+channel to the player.
+
+Feedback comes in **three registers, and all three are needed**:
+
+| Register | What it is | Example |
+|---|---|---|
+| **Immediate** | Something happens as I act | The escort drops from ten to eight the night I expose the fraud |
+| **Ambient** | The world looks different when I return | Half the tents are down; the town has more people in it |
+| **Narrated** | Something eventually tells me it was me | The journal, when I go looking |
+
+**Most systemic games do the first two and skip the third, which is why their
+players never feel their choices mattered.** The world changed and nothing ever
+connected it back. Narration is not a nicety on top of simulation; it is the half
+that turns simulation into experience.
+
+#### Push the ambient, pull the attribution
+
+The world **shows** change without explaining it. The journal **explains** it when
+asked. Nothing ever announces *"your actions caused X"*.
+
+Maddox not knowing it was you is the entire pleasure of consequence 2. A banner
+reading "Your exposure of the pay fraud has raised grain prices by 24%" would
+destroy it, and it would destroy it *while technically providing more information*.
+The player assembles the connection themselves; the journal is there for when they
+want to check they were right.
+
+#### Ambient drift stays slow and small; player-caused change is large, fast, local
+
+**A constraint on the twelve, and the reason ten of them have no drift rule yet.**
+
+If everything drifts constantly, nothing reads as caused. A world where every
+quantity wanders is a world where a player cannot tell their own handprint from the
+weather — and the handprint is the entire point. Resist the urge to give the twelve
+lively drift rates because a still number looks unfinished. A still number is the
+background against which a moved one is legible.
+
+So: ambient movement is slow, small, and regional at most. Player-caused movement
+is **large, fast and local** — grain in the towns near the camp, not grain
+everywhere; the escort now, not the escort eventually.
 
 ### The five consequences — the specification for the reactivity system
 
@@ -776,11 +999,18 @@ Not examples. Each one exists to prove a different mechanism, and Phase 3 is don
 when all five happen in play. They are also not a closed list: what the system
 should *be* stays open, and these are the five that pin it down first.
 
-**1. Word outruns me.** I kill someone in Harrowgate in front of Maddox. Three days
-later I walk into Cairnwell and a trader I have never met will not sell to me. The
-story got there before I did.
+**1. Word outruns me.** I steal from a stall in Harrowgate in front of Maddox.
+Three days later I walk into Cairnwell and a trader I have never met will not sell
+to me. The story got there before I did.
 > *Proves:* witnesses → rumour travelling on a delay → reputation in a town I have
 > never visited.
+>
+> **Theft rather than murder, deliberately.** Stealing is a verb the finished game
+> needs anyway, so building it now is building the game rather than scaffolding;
+> murder would drag combat forward a whole phase to be thrown away again. The chain
+> it exercises is identical — witness, rumour, delay, reputation somewhere else —
+> and **killing arrives in Phase 4 through exactly these pipes**, as a heavier act
+> on the same machinery, not as a second machinery.
 
 **2. The world reacts to what I broke, not to me.** I expose the fraud at the
 Muster. A week later grain prices in Harrowgate have risen, because deserters are
@@ -805,6 +1035,16 @@ recognises me and will not let me pass.
 Muster and there are fewer tents. The desertions I started kept going without me.
 > *Proves:* the world tick drifting under its own momentum.
 
+### Drift may move the world; only the player may end it (hard rule, 2026-09-11)
+
+Every quantity carries a **handprint** beside it: how much of where it stands the
+player put there. Deeds write both; drift writes only the number. §3's end
+conditions require a minimum handprint as well as a threshold, so **a reign can
+never fall out of ambient motion**.
+
+This is what keeps the twelve from becoming weather the player watches. It also
+gives the journal something true to show — see §15.
+
 ### Every door that shuts opens another (hard rule)
 
 **A reputation change is never only a loss.** Kill the people Ossa treats and she
@@ -819,6 +1059,88 @@ way to play.
 
 Practically: every reaction rule names who is offended *and* who is impressed. If a
 change has no counterpart, it is not finished.
+
+### What raises a town: giving away what you know (2026-09-11)
+
+Reputation was one-way. Every act in the system subtracted, the `welcome` band was
+unreachable, and the counterpart rule was honoured only *across* factions — theft
+costs the town and buys you the unlawful — never *within* one. That is the shape
+that teaches a player to do nothing, and it is the failure mode a morality meter
+has: if addition is gated and subtraction is free, the optimal play is to stand
+still.
+
+**Availability is the hard part of this rule, not the arithmetic.** The positive
+acts must be as available as theft: things you can do *because you are standing
+there*, needing no grant, no quest and no permission. An act you have to be given
+is not a counterweight to an act you can simply take.
+
+**The primary positive act is telling people what you know.** This is not a
+consolation mechanic bolted on to balance a meter — it is the thesis of the game
+stated as a verb. Information is the currency here and the king falls to what people
+know, so the act that raises a town is the act the whole design is about.
+
+It is the exact mirror of theft. Theft takes and is witnessed; telling gives and is
+witnessed. Same machinery, opposite sign: a deed, the people near enough to see it,
+a story that travels, and standing that moves as the story arrives.
+
+**Act 1 — warn a town.** The player holds the Muster's pay fraud. Until now it had
+exactly one use: tell the Muster and the army collapses. It now has two. Tell
+**Harrowgate** instead — the deserters are coming, here is why bread is about to
+rise, lay in stores now. The town's opinion of you rises. The army does not
+collapse. The town is *prepared*, and takes less of the grain pressure whenever the
+Muster does empty out, by whatever hand.
+
+**The fact becomes a resource with an opportunity cost.** It can be told once, to
+one audience. Spend it on the king — collapse the army, shorten the escort — or
+spend it on the town. That is a dilemma; a fact with two independent uses is a menu.
+In the fiction, speaking it aloud anywhere is what reaches Odile, and a
+quartermaster who knows she has been named does not leave the books where she left
+them; the second audience gets a story rather than a revelation.
+
+> **What is spent is the telling, never the knowing.** The fact stays in the fact
+> base permanently. Route C needs the player to *know* the fraud and put it in front
+> of the king, and nothing here touches that — nor invariant 6's redundancy, nor
+> invariant 7's reachability, both of which are claims about reaching a fact rather
+> than about having spent it.
+
+**Act 2 — give back what you took.** Smaller, and the precise mirror of theft: put
+it back on the stall you took it from, in front of whoever is standing there. It
+raises the town, costs you with the unlawful by more than the theft gained — a thief
+who returns things is no use to anybody — and does not fully undo the loss, because
+the town remembers that you took it. It also cannot catch the story: a rumour
+already walking toward Cairnwell keeps walking. **You can repair the place, not the
+past.** That is the point of having it — a way to answer for a mistake rather than
+only to accumulate them.
+
+> **A deed travels if it is worth repeating.** A theft is, three days' walk away.
+> So is a man standing in a square saying the king's army is rotting. Somebody
+> quietly putting something back on a stall is not — it is news to the people who
+> watched it and to nobody else. That single rule is what makes restitution local
+> without making it a special case.
+
+**What this seeds.** If evidence can buy standing, then every document the player
+finds carries a temptation, and Route C's assembly becomes a running series of small
+refusals rather than a collection quest. That is the intended pressure.
+
+### Reactive dialogue: content names a condition, the rules layer defines it
+
+A line may be gated on a **named world condition** — `grain_is_dear_here`,
+`the_army_is_shrinking` — and an NPC may have alternative greetings gated the same
+way, so a town can tell you it has changed before you ask it anything. Content
+names the condition; `core/rules/` decides what the name means. A line that read
+the world directly would put game logic in `content/`, where it cannot be reasoned
+about or tested, and §9's whole point is that the rules layer issues the verdict
+and the words only phrase it.
+
+**A conditional line outranks a standing one.** §9 allows three or four options and
+the fourth is always the way out, so there are three slots for anything else. A
+line that exists *because the world changed* takes its slot first; the standing
+filler yields. Otherwise the cap fills with what is always there and the reactive
+line — authored last, by nature — is never seen, which is reactivity nobody can
+reach.
+
+More lines may be authored than are ever shown at once. What §9 constrains is what
+the player is *offered*.
 
 ### Can the twelve quantities carry these five?
 
@@ -944,6 +1266,52 @@ always renders an identical packet.
 In that case: hybrid. Deterministic graph traversal for the NPC, vector search
 *only* over the document corpus, with a fixed top-k and a stable tie-break so the
 retrieved set still hashes consistently.
+
+### How standing changes a conversation (2026-09-11)
+
+Found in play: steal from the Harrowgate market in front of Maddox, Bell and Tovin,
+then walk up to any of them. All three opened exactly as they had the first time.
+The machinery was correct — Maddox at −30, the town at −22, every resident
+ill-disposed — and **reaction was something each individual line had to opt into**,
+so silence was the default and four of the five named cast had never opted in.
+
+Writing more alt-greetings would not have fixed that. It would have postponed it
+until the next NPC. So the default is inverted: **the rules layer changes every
+conversation from one number, before content is consulted.** Authored lines
+override; they are no longer what makes reaction happen.
+
+**One number.** A conversation reads what *the person in front of you* thinks.
+Their own standing already carries their town's through hearsay, so gating some
+content on the town and some on the person was a distinction the player could not
+see and an author had to guess between. Per-town standing stays for content about a
+*place* rather than a person.
+
+| Band | How they open | What is offered |
+|---|---|---|
+| **hated** ≤ −60 | turns away | nothing — the conversation is refused |
+| **unwelcome** ≤ −20 | does not return your greeting | anything costing goodwill is withdrawn |
+| **wary** ≤ −5 | watches you a moment too long | unchanged |
+| **unknown** | their everyday greeting | unchanged |
+| **welcome** ≥ +5 | glad to see you, and shows it | plus anything they will only volunteer to a friend |
+
+**The shared lines are narration, not speech.** A line in nobody's voice sounds flat
+coming out of a named character; a line about a *stance* works in everyone's mouth.
+Four sentences cover the entire cast, for ever, and authored greetings become where
+the good writing goes rather than the only thing standing between the player and a
+world that does not notice them.
+
+**Options carry a cost.** `goodwill` means answering costs the listener something —
+a fact confided, a name given up, a lead handed over — and people do not do that for
+somebody they think ill of. **Anything that teaches a fact costs goodwill by
+default**, so the rule reaches new content automatically. `costs: "free"` marks the
+one source of a fact that stays open however badly the conversation is going, and a
+test fails the build if a fact has no such source. Invariant 6's redundancy is what
+makes a door shutting affordable at all.
+
+> **The coverage test is the deliverable, not the table.** No speaker may present an
+> identical conversation at `unwelcome` and at `unknown`, or at `welcome` and at
+> `unknown`. It walks every speaker at every band through a real conversation, and
+> it is what stops this returning the next time somebody is added to the cast.
 
 ### Determinism rules
 
@@ -1248,8 +1616,94 @@ TBD.
 **Screens:** title, character creation, overworld HUD, dialogue, journal/knowledge,
 map, inventory, combat, pause.
 
+### The journal — the only screen that answers "why" (2026-09-11)
+
 **The journal / knowledge screen** is the most important screen in this game — it is
 where the player's real progression is visible.
+
+It is §8's third register. IMMEDIATE is the act confirmed as you do it; AMBIENT is
+the world quietly changing its mind; **NARRATED is this**, and it is the only thing
+in the game permitted to join an act to its consequence. Most systemic games ship
+the first two, which is why their players never feel their choices mattered.
+
+**Behind a key (`J`), never a notification.** The world does not announce that you
+caused something — Maddox not knowing it was you is the entire pleasure of it — so
+the causal chain is *pulled*. A rumour arriving reads:
+
+> `day 3, 19:31   Cairnwell has heard about it.`
+> `               3 days after you took something, in Harrowgate.`
+
+The first line is the ambient register written down. The second line exists nowhere
+else in the game.
+
+**Read from the event log and nothing else.** This is what the external/derived
+split was paid for: `submit()` is what the player did, `derive()` is a system's
+answer, both are logged, and the journal reconstructs the chain from them. A test
+walks to the market, steals, waits, replays the run from its log alone and asserts
+the journal is word for word identical — which is the proof that the log really is
+the authoritative record and a save file can be a log rather than a snapshot.
+
+**It never scores you.** No numbers, no standing, no "+22", no "your actions caused".
+A test forbids the vocabulary. It explains; it does not accuse.
+
+**A second page: what holds him up.** The ending is a predicate over ten or so
+numbers, and a predicate is invisible — without this page the player cannot aim, and
+"push the world until he cannot hold it" becomes guesswork. So the journal lists the
+quantities that decide it, where each stands, and **which of them carry the player's
+handprint**. It shows state and attribution, never advice: it will say the treasury
+is low and that you emptied it, and never that you should rob the bank next.
+
+> The handprint column is the guardrail made visible. A number the world drifted to
+> reads differently from one you pushed, and the player can see at a glance how much
+> of this is theirs — which is the same fact the end conditions are checking.
+
+**The other half is what you know**, with who told you — and which facts only one
+person has ever told you. That makes invariant 6 the player's problem as well as the
+designer's: the journal is where you find out that the thing you know would die with
+the woman who said it.
+
+### The overworld HUD tells you how you are regarded, never what you did (2026-09-11)
+
+§8 requires all three feedback registers, and the HUD carries two of them. What it
+must never carry is the third.
+
+**Standing is shown as a word, for the place you are standing in.** The place line
+reads `Harrowgate — wary`. Walk west and it reads `Cairnwell — unknown`, and three
+days later that changes on its own while you watch. The scale is five words, worst
+to best:
+
+> hated · unwelcome · wary · unknown · welcome
+
+Shown from the first minute, neutral included: a baseline is what makes a change
+legible, and a readout that appears only once something has gone wrong gives the
+player nothing to compare against.
+
+**Three things it deliberately is not.**
+
+*Not global.* One meter for the whole region says the world has one mind, and
+per-town standing is the entire proof of §8's first consequence — Cairnwell refusing
+you while Saltmarch has not heard.
+
+*Not a number.* A visible scalar with legible increments stops being a reputation
+and becomes a score, and the player farms it instead of deciding things. Red Dead
+Redemption is the worked example in both directions: its crime-and-witness system is
+close to what §8 specifies and is the part that works; its honour meter is global,
+numeric and immediate, and is the part players game.
+
+*Not moved at the moment of the act.* The readout changes when the story arrives,
+which may be days after you left the town it is about. The delay is the consequence.
+
+**Witnesses are marked over their heads, and only while an act is possible.** A mark
+appears over anyone who can see you when there is something in front of you worth
+taking. No count and no number: *who* is the part that matters — Maddox seeing you
+is not the same event as a stranger seeing you — and the sight radius is learnt by
+walking until the marks go out. A permanent readout of who can see you is
+surveillance furniture; this answers a question the player is asking at that moment.
+
+**The HUD never attributes.** It shows state, not causation. Nothing on it says
+"your actions caused" anything, and nothing announces a change as it is made. The
+journal is the only place that joins an act to its consequence, and the player has
+to go and open it.
 
 Everything else: TBD.
 
@@ -1305,7 +1759,7 @@ that reaches the king — the pay fraud, and an escort of ten becoming five.
 > **Proof:** a fact learned from a person changes a number the king depends on, and
 > you can watch it change.
 
-**Phase 2 — the world, greyboxed.**
+**Phase 2 — the world, greyboxed. ✅**
 Every zone exists and is walkable, the terrain is real, the art is applied, and the
 wild is dangerous — but nothing in it is finished. All eight zones from §4, each
 recognisable on sight; every power base visible as a landmark and nothing more; the
@@ -1322,7 +1776,7 @@ no new dialogue, no interiors, no reputation, no combat screen.
 > being unwatched, and nothing watches yet, so in Phase 2 the wild is strictly the
 > worse choice and is meant to be. Viability is Phase 3's proof, not this one.
 
-**Phase 3 — the world reads you.**
+**Phase 3 — the world reads you. ✅**
 Reputation per town and per faction, not one global number. Witnesses that record
 what they saw. Rumour propagating on a delay. The journal screen §15 calls the most
 important in the game.
@@ -1341,19 +1795,52 @@ town, faction and person rather than global scalars. See §8.
 > real choice**, because the slow dangerous track through the trees is now the one
 > nobody can report you on. Phase 2 builds the cost; this phase pays it.
 
-**Phase 4 — combat.**
+**Delivered 2026-09-11**, in five stages: (1) the plumbing — stores, the two clocks,
+the external/derived split; (2) systems answering systems — the army empties, bread
+rises a week later, and nobody mentions the player; (3) witnesses, theft and rumour
+as a travelling object, with per-town standing; (4) the positive acts that raise a
+town, standing per person and per faction, and disposition as the default for every
+conversation; (5) the journal.
+
+Theft stands in for the witnessed killing — the same pipes, a permanent verb, and no
+need to drag combat forward a phase (§20, 2026-09-11).
+
+**The wild became a real choice on 2026-09-11**, with travellers. A story used to
+spread as a circle of fixed radius, so it reached every town whichever way the player
+walked and the road cost nothing. It now carries about as far as the next town on its
+own, and any further than that has to be **carried by somebody who walked there**.
+Stand where you can be seen after doing something and word goes wherever the road
+goes; take the Thornwood and it never leaves the county. Both halves of the proof now
+hold.
+
+**Phase 4 — combat.** *(deferred by decision, 2026-09-11 — four of the five endings need no fighting)*
+
 The dedicated side-on real-time screen (§10), the occupation-driven enemy tiers 0-5,
 and the king fight with its phases and tells. Retires Phase 0's contact-damage
 exception.
 > **Proof:** the king is beatable by a prepared player and lethal to an unprepared
 > one, and the same five moves carry both a tier-0 servant and a tier-4 knight.
 
-**Phase 5 — the three routes, end to end.**
-Force, Access and Exposure each completable. The reachability test as a living
-performer-chain walk per route (§7).
-> **Proof:** three runs reach the confrontation by three different verbs, and
-> killing any combination of NPCs still leaves at least one route open — as a test
-> that fails the build, not a wish.
+**Phase 5 — the world can be moved, and the king can fall out of it.**
+*Reshaped 2026-09-11 — it used to read "the three routes, end to end".*
+
+Two of the twelve tracked quantities move; ten are inert, and dialogue is the only
+input to the only one that matters. That is why the game had begun to feel like
+matching people to states: **there was no other way in.** This phase gives the other
+ten inputs — mostly **deeds against the power bases**, which §3 already lists and
+which run on the machinery Phase 3 built — and expresses the ending as §3's
+predicates rather than as three authored chains.
+
+1. The handprint, and the end conditions as predicates (§3).
+2. The journal's second page, so a predicate over ten numbers is something a player
+   can aim at (§15).
+3. The ten inert quantities get inputs. Burn stores, turn workers, cut ore, rob the
+   bank, expose the debts — rows in the deed table, not new systems.
+4. §7's reachability test restated: can the world still reach *any* ending?
+
+> **Proof:** three runs finish the game three different ways without any of them
+> following a script, the journal shows why each one worked, and a run that does
+> nothing at all never ends — because drift cannot end a reign.
 
 **Phase 6 — the full cast and deterministic dialogue.**
 All 25 NPCs with sheets. The context assembler (§9) as a pure function over fixed,
@@ -1401,16 +1888,16 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 |---|---|---|---|
 | Q1 | **Populate the fact table.** §7's fact list is one empty row and §6's `Redundancy` field is unfilled for all 25 NPCs, so the redundancy validator and the reachability test have nothing to read. §6's "Holds" prose already names second sources for four facts — transcription, not invention | §7, §6 | Invariants 6, 7 |
 | Q2 | **Define "a route is open" as a predicate**, per route, as a list of required facts and required performers. Exposure's "enough from at least four power bases" is the worst gap — "enough from one" is defined nowhere | §3, §7 | The reachability test |
-| Q3 | **Who holds "how he fights"?** Force's only required fact has no holder in the roster, and the Muster's "teaches" column does not contain it. Relatedly, §3's "requires knowing / having / being" mixes facts, traits, items and levels in one vocabulary, and redundancy can only apply to facts | §3, §6 | Route A, the test |
+| Q3 | ~~**Who holds "how he fights"?**~~ — answered 2026-09-11: the Muster teaches it, Ryse primary and Odile second, because the king trained with his own guard. Still open, separately: §3's "requires knowing / having / being" mixes facts, traits, items and levels in one vocabulary, and redundancy can only apply to facts | §3, §6 | Partly closed |
 | Q4 | **Where does the authoritative fact list live** — §7's table or `content/facts` — and who fills it? | §7 | The fact base |
 | Q5 | **Quests.** No quest, fact pattern or quest count exists anywhere, though invariant 5 governs them and XP is granted for them | §9, §17 | Invariant 5 |
 | Q6 | **Who witnesses a fight?** Combat now runs beside the sim, so nothing says how the witness set is derived — line-of-sight snapshot at transition, or something else — and whether that snapshot is an event | §8, §10 | Reputation, rumour |
 | Q7 | **§10's "Violence is never mechanically punished" is false against §8**, where patrol density is pushed by "being seen committing violence", guard alertness by "any witnessed crime", and both feed spawn tables. That is a wanted level. Which claim stands? | §8, §10 | Reactivity, pacifist parity |
 | Q8 | **World-tick persistence.** Are the twelve quantities event-sourced, snapshotted or stored? Invariant 3 routes all persistent state through the event log; SPECS never mentions the log | §8 | Save format |
 | Q9 | **Player↔NPC relationships and allies** (§2, §11) are tracked by nothing in §8, and §9's graph edges are NPC-to-NPC only | §8, §9 | Dialogue context |
-| Q10 | **Three of the twelve are global where the five consequences need them per place.** #8 Town sentiment contradicts §8's own opening line; #1 Grain price is asked for "in Harrowgate"; and #9 Army strength needs an explicit coupling to grain, since desertion is not among grain's listed inputs. Analysed in §8 | §8 | Consequences 1, 2 and 4 |
+| Q10 | ~~**Three of the twelve are global where the consequences need them per place.**~~ — answered 2026-09-11: grain price and town sentiment are per town, army strength stays global, and desertion is now an explicit input to grain demand. See §8 | §8 | Closed |
 | Q10old | **Town sentiment is one global quantity** while §8's own opening says reputation is per town and §9 reads "their town's sentiment" | §8 | Per-town reactivity |
-| Q11 | **Do NPCs have routines?** Wren's shift patterns are "the first practical fact in the game", but §21 cut daily schedules. The tick gives the world a clock; it does not give NPCs a day | §6, §8, §21 | The first fact in the game |
+| Q11 | ~~**Do NPCs have routines?**~~ — answered 2026-09-11: **no**, and Wren sells something else. Her fact is now the location of the unwatched stall, which needs no routine, is worth buying the moment you hear it, and is still "the first practical fact in the game". §21's cut stands | §6, §8, §21 | Closed |
 | Q12 | **Weather and season.** The ford is passable only in dry weeks and no tracked quantity models either | §4, §8 | A knowledge-gated crossing |
 | Q13 | **Cache-miss policy.** §9 names the miss as what breaks determinism and never says what happens on one. No seed, temperature, decode mode or pinned model version anywhere, so invariant 12 is unsatisfiable in the dialogue path | §9 | Invariant 12, §18 |
 | Q14 | **Where the model runs** — local with pinned weights, hosted, or a baked cache with no runtime model at all | §9, §18 | The whole dialogue pipeline |
@@ -1439,6 +1926,9 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q32 | **§12 economy is a bare TBD** while money is load-bearing in five places: a weakening lever, a fact-acquisition path, an Exposure failure mode, a leverage type, and five of the twelve tick quantities | §12 | Prices, bribery, the bank |
 | Q33 | **§16 accessibility is a bare TBD** against a real-time, timing-based fighter | §16 | Combat design |
 | Q34a | ~~**Invariant 11 was convention, not enforcement.** `project.godot` warned on untyped declarations instead of erroring, so nothing stopped an untyped member variable reaching main.~~ — answered: `gdscript/warnings/untyped_declaration=2`. Recorded here because the audit surfaced it and I left it out of this queue when I wrote it | project.godot | Closed |
+| Q37 | ~~**An unwitnessed theft is specified but unreachable.**~~ — answered 2026-09-11: a stall in the Wide Acres, which has no cast in it. Theft becomes a decision about *where*, made on the map, which is the same shape as road against wild. Wren sells the location | §8, §6 | Closed |
+| Q38 | ~~**Nothing earns a town's good opinion.**~~ — answered 2026-09-11: the act that raises a town is **giving away what you know**. Warn a town of what is coming (the pay fraud, told to Harrowgate instead of the Muster) and, smaller, give back what you stole. Both witnessed, both available because you are standing there. The fact becomes a resource with an opportunity cost: told once, to one audience. See §8 | §8, §15 | Closed |
+| Q39 | **Nothing warns the player that a telling is one-shot before they spend it.** Deliberately not fixed: they learn it the first time it costs them, and the camp and the journal now make that legible after the fact. Considered and rejected for v1 — having Ossa explain the rule when she gives the fact would teach a mechanic by exposition and pre-empt the discovery. Revisit **after** Q5 (death and save policy), because "permanent" means something different with and without a reload | §8, §15 | Whether a one-shot resource is fair unannounced |
 | Q34 | **Bookkeeping.** The header's populated-sections list is stale; §17 marks rows "Settled" that live in 🟡 unapproved sections; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared `core/ view/ tools/ test/` | header, §17, §20, repo | Nothing — but it misleads readers |
 
 ---
@@ -1466,6 +1956,20 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
 | 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-11 | Feedback is specified in three registers — immediate, ambient, narrated — and all three are required | Treating the simulation as sufficient; a notification when the world changes | A change the player cannot perceive is identical to no change. Most systemic games do the first two and skip narration, which is why their players never feel their choices mattered. And the attribution is *pulled* through the journal, never pushed: Maddox not knowing it was you is the entire pleasure of consequence 2 |
+| 2026-09-11 | Ambient drift stays slow and small; player-caused change is large, fast and local | Giving all twelve quantities lively drift rates | If everything drifts, nothing reads as caused and the player cannot tell their handprint from the weather. A still number is the background that makes a moved one legible — which is also why ten of the twelve still have no drift rule |
+| 2026-09-11 | Harrowgate's crowd is drawn from army strength lost — scenery, unnamed, outside the 25-NPC budget | Leaving the bread price as a number; adding named townsfolk | Deserters have to go somewhere, and bodies explain a price better than a number does. Same body-over-number pattern the tents already proved. Keeping them nameless is what stops them acquiring dialogue by degrees and becoming cast |
+| 2026-09-11 | Grain's reach from the Muster falls off with the square of distance, and the price drifts at 2.5/day rather than 5 | A linear falloff; matching the army's own drift rate | Linear gave Harrowgate — seventy tiles out, and one of the two towns the player lives in — a fifth of the pressure, not enough for anyone to notice. And at 5/day the price finished climbing on day three, tracking the army so closely it read as the same event; at 2.5 it is still moving on day six, which is a consequence |
+| 2026-09-11 | A dialogue line gated on a world condition takes a slot ahead of an ungated one | First-authored-first-shown, as before | §9 leaves three slots and the reactive line is authored last by nature, so it was never reachable. Reactivity nobody can reach is reactivity nobody has |
+| 2026-09-11 | A debug day-skip on `T`, through the ordinary tick path, gated on a debug build | `Engine.time_scale`; a faster world clock while testing | time_scale accelerates the player too, so you cannot move while time passes. Going through the tick path means a skipped day is identical to a waited one — same drift, same events, same replay — and every consequence left in §8 happens later than the act that caused it |
+| 2026-09-11 | The suite is split: fast (0.9 s, bare sims) and `--all` (5.8 s, journeys and the asset pack), and `tools/run_tests.sh` is the only sanctioned way to run either | One suite; running `test_runner.gd` directly | 7.6 s was past the point of running it without thinking, and it only grows. The script is part of the check rather than a convenience: the runner cannot see its own stderr, so a test that crashes after its first assertion would still report "ok" |
+| 2026-09-11 | The escort is derived from army strength, not stored: 10 at full, 5 after the fraud, 2 at nothing | §3's "1.5 fewer per power base"; keeping the escort as its own number | §3's schedule was never integral and never reached "a bare handful". Deriving it makes the escort a consequence of the world rather than a scoreboard, and closes the arithmetic defect the audit found |
+| 2026-09-11 | Exposing the fraud costs 25 army strength immediately and eases to 40 over days | A single instant drop, as Phase 1 had it; pure drift with no immediate loss | Instant is legible but has no momentum; pure drift means nothing visibly happens when you act. Both: the men already on the edge go tonight, the rest over the following week — which is consequence 5 |
+| 2026-09-11 | The witnessed crime that proves consequence 1 is **theft**, not murder | Killing, as first written; a minimal strike built in Phase 3 and deleted in Phase 4 | Theft is a permanent verb the game needs, exercises the identical witness-rumour-reputation chain, and does not drag combat forward a phase. Killing arrives in Phase 4 through the same pipes |
+| 2026-09-11 | The guard at the bridge is a generic enemy type with a small shared line set, not a 26th named NPC | Adding a named character to §6's roster | §6 already rules that generic guards are enemy types budgeted separately. Giving the type a few shared lines is what stops "he needs something to say" turning it into a named character by the back door |
+| 2026-09-11 | The Muster teaches how the king fights: Ryse primary, Odile second | Kell as the source | Route A's only knowledge requirement had no holder anywhere. Kell was rejected deliberately: one killable man already carries the player's past, and making him Force's sole requirement too puts more weight on a single death than §7 should allow |
+| 2026-09-11 | Hesper is ★ and deliberately has no second source | Giving her a second source like every other ★ | Invariant 7 is "at least one route survives", not "every route". Killing her closes Access exactly as killing Crowe closes Exposure, and Force always remains. A world where every route has a spare is one where nothing you do to it matters |
+| 2026-09-11 | Grain price and town sentiment become per-town; army strength stays global; desertion is an explicit input to grain demand | Keeping all twelve global; making army strength per-region too | Consequences 1, 2 and 4 all fail against global scalars, and §8's own opening already said reputation is per town. There is only one army, so army strength has nothing to be indexed by. The desertion-to-grain link is consequence 2's entire mechanism and cannot stay implicit |
 | 2026-09-11 | Events are external or derived: `submit()` from outside the sim is replayed, `derive()` from a system is logged but recomputed | Systems never raising events, as before; replaying everything; not logging derived events at all | Systems reacting to systems is §8's second consequence and cannot be built without it. Logging derived events too is what lets the journal answer "why did this happen"; recomputing rather than replaying them is what stops each one happening twice |
 | 2026-09-11 | Health mends on its own — six calm seconds, then a point per 20 s outside and per 6 s in a town — as a Phase 3 stopgap | Potions and an inventory economy; no healing at all | Without healing the wild's cost ratchets and dying is the only reset; with an item economy it becomes a Phase 4 design problem dragged forward. This is the cheapest thing that makes the wild survivable and a town worth returning to |
 | 2026-09-11 | The four child sprite folders are deleted from the pack, and a denylist fails the build if they return or are named in code | Leaving them unused; relying on review | Invariant 10 is absolute, and the palette validator cannot see it — a child sprite from the approved pack is perfectly on-palette. A rule enforced by memory is a rule that fails once |
@@ -1490,6 +1994,49 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | Phase 0 exception: death respawns the player in Brindle keeping everything; no save system | Reload-from-save; a death cost | The slice needs a loss the player can retry, not a persistence layer. The real death and save policy stays open (§19 row 5) |
 | 2026-09-10 | Internal resolution 640×360, 16 px tiles, smooth scrolling camera that follows the player | A 640×352 viewport; forcing an integer tile count per screen | 360 scales ×2 to 720p and ×3 to 1080p; integer scaling beats a whole-number tile count. A following camera makes tiles-per-screen a planning unit, not an engine constraint. Snapped interiors, if ever wanted, are 40×22 rooms centred with a 4 px letterbox |
 | 2026-09-10 | Region ~280×200 tiles (7×9 screens of 40×22) at ~4 tiles/sec; the tuned target is 4–6 min of road travel, not corner to corner | 9×9 screens with a 10–20 min corner-to-corner target | The old pair was arithmetically impossible: 478 tiles at 4 tiles/sec is 2 minutes, and 10–20 minutes would have needed a 0.5–0.9 tiles/sec crawl. Corner to corner *should* be short — the king is reachable from minute one — so length belongs in terrain, crossings and encounters on the road, not in the dimensions |
+| 2026-09-11 | A rumour is an object — what happened, where, who saw it, how far it has got — not §8's single "rumour spread" scalar | Keeping the eleventh quantity as a number and adding a per-town delay beside it | A scalar cannot arrive in Cairnwell three days after a theft in Harrowgate: it has no origin to travel from and no distance to have covered. The number was the *report* of the thing, and consequence 1 needs the thing |
+| 2026-09-11 | Standing lives beside the twelve tracked quantities, indexed by town and by faction, rather than becoming a thirteenth | Adding reputation to the twelve; one global reputation scalar | The twelve describe how the *world* is doing; standing describes where the *player* stands in it. Different kinds of thing, and the arithmetic that suits a drifting price does not suit an opinion |
+| 2026-09-11 | A town's opinion moves when the story **arrives**, not when the crime happens | Moving every town's standing at the moment of the act, with a delay only on the dialogue | The delay *is* the consequence. If Cairnwell turns the instant Maddox looks up, the player learns that the world has one mind and nothing was ever travelling |
+| 2026-09-11 | Witnesses are named cast only; the crowd sees nothing | Letting townsfolk witness; giving the crowd sheets so they could | A witness has to be able to repeat the story to somebody, and §6's scenery has no name to repeat it to. Making the crowd witnesses is the first step toward making them cast |
+| 2026-09-11 | Word travels 45 tiles per in-game day, and stops being repeated past 220 tiles | A fixed per-town delay table; instant propagation to adjacent towns | Distance-based means the map's geometry decides who hears and when, which is the same thing that already decides the road's cost. Harrowgate to Cairnwell is ~127 tiles, so the story arrives on day three — ahead of a player who stops anywhere |
+| 2026-09-11 | A robbed stall is bare for a quarter of an in-game day | No limit; one theft per town per day; a stolen-goods inventory | A consequence you can spam is not one — holding E starts fifty stories in a second and floors every reputation in the region. Ninety seconds is long enough that theft is a decision about where to be, short enough that it is not a punishment for trying it |
+| 2026-09-11 | Generic strangers are types with a shared line set, placed by instance, with ids of the form `trade@n` — outside §6's twenty-five | A 26th named NPC in Cairnwell; townsfolk with dialogue bolted on | Extends the bridge-guard decision from enemies to civilians. The world has to be able to react to you through somebody who has never met you — that is the whole of consequence 1 — and a name would make that person cast |
+| 2026-09-11 | Content can gate a line on a condition being **false** (`forbids_condition`), not only true | Authoring the inverse condition for every door that shuts | Every door that shuts opens another, so both halves have to be expressible. "He no longer offers to sell" is a consequence in exactly the way "he now mentions the bread" is |
+| 2026-09-11 | A deed travels only if it is worth repeating: theft and a public warning do, restitution does not | Every deed propagating; nothing propagating but the first | One rule instead of a special case. A theft is news three days' walk away and so is a man saying the king's army is rotting; somebody quietly putting something back on a stall is news to the people who watched and nobody else. It is also what makes "repair the place, not the past" true in the code |
+| 2026-09-11 | Standing is also per person: whoever **watched** you forms their own, stronger opinion; everybody else in the town moves with their town when word arrives; nobody is counted twice for one deed | Per-person standing only for witnesses; leaving relationships as a global town number | A town's opinion is the aggregate of the people in it, so the two should track by default and diverge only where somebody was actually standing. Witness-only would have left Ossa — ten tiles from the market, so never a witness — permanently neutral about a town that had turned, which is the case that showed the model was wrong |
+| 2026-09-11 | Ossa stops sharing what she knows once she thinks ill of you, and that is legal only because Garrick teaches the same fact ungated | Gating nothing she says; gating only flavour lines | The door shutting has to be able to cost something real or it is decoration. Invariant 6's redundancy is exactly what makes it safe, which is the first time that rule has paid for itself. A content test now asserts every taught fact keeps at least one source nothing can gate shut — the luck of authoring is not a mechanism |
+| 2026-09-11 | A second key: `E` is what is in front of you, `F` is what you carry in your head | One contextual key with a priority order | They were fighting over one key, and §8's availability rule says the act that raises a town must not queue behind whatever stall happens to be nearer. The split is also the clearer mental model — the world, and your knowledge of it |
+| 2026-09-11 | A story carries about as far as the next town on its own; beyond that somebody has to walk it there. Rumour range 220 tiles → 80 | Leaving the uniform circle; making the circle slower; making the circle bigger | At 220 tiles a story reached all eight towns unaided, so it arrived in Cairnwell whether the player took the King's Road or the Thornwood — the road cost nothing and §18's proof for the phase was simply false. Distance is covered by people now, which is what makes the two routes differ by something other than animals |
+| 2026-09-11 | **Travellers carry stories and can never be a source.** No name, no home, no routine, no opinion, never in the fact base or the standing tables | Letting travellers witness deeds; giving them ids and personal standing; no travellers at all | A story needs somebody who can be named and asked, and you never meet the same traveller twice — an opinion you cannot encounter is not an opinion, and a source you cannot question is not a source. So they only ever carry a story a named person already started. What is attributed is the **route**: the journal says "carried up the King's Road", and a route is better attribution than a name you would never meet again, because you can choose to avoid a route |
+| 2026-09-11 | Travellers are simulated for the whole map always; only their drawing is culled. Movement runs per step, everything else per tick | Spawning them around the player like wildlife; running all of it per step | A carrier who stops existing when you look away cannot deliver anything, which is the one thing they are for. Deciding per step whether somebody recognises you cost more than the rest of the simulation put together, and a story does not need deciding sixty times a second |
+| 2026-09-11 | A stall in the Wide Acres, where no cast stands, and Wren sells its location | Leaving §8's "a crime nobody saw did not happen" with no reachable case; NPC schedules so the market empties at some hour | Closes Q37 and Q11 with one piece of content and no new machinery. Theft stops being a flat tax and becomes a decision about *where* — the same shape as road against wild, made on the map. And it fits who Wren is: she picks over ruins, so she knows where nobody is looking |
+| 2026-09-11 | **The player outruns gossip by ~35× and always will.** Not a defect | Raising rumour speed; slowing the player | For word to beat a 29-second walk it would need ~1,500 tiles a day, which is "instantly everywhere". Outrunning news is realistic and fine — you simply can never go back. What the wild buys is not outrunning the story but starving it, which is what travellers made true |
+| 2026-09-11 | The end conditions and the journal's page read **one table**, so a predicate over a number the player cannot see is not expressible | Two lists kept in step; a test asserting they match | Legibility as a structure rather than a promise. A test that checks two lists agree passes until somebody forgets it exists; a single table cannot disagree with itself. A predicate over an invisible number is a trapdoor, not a goal |
+| 2026-09-11 | A quantity moves by `push()` (moves it and credits the player) or by assignment (weather). Changes the player sets in motion but that arrive later are credited with `credit()` at the act | One write path with a boolean; crediting drift per tick as it arrives | Two different calls is what stops the distinction being a comment somebody forgets. Exposing the fraud drops the army twenty-five tonight and forty more over the week — all of it the player's doing, so it is credited at the decision, and the drift that delivers it stays weather in the code |
+| 2026-09-11 | Handprint needed is 25, well under every threshold | Requiring the player to have caused the whole movement | The world helping is the entire point of having a simulation. The rule is that a reign cannot fall over on its own, not that the player must do it unaided |
+| 2026-09-11 | **The ending is a predicate over world state, not a completed route.** Killed, ruined, deposed, discredited, abandoned — any combination of acts that reaches one of those states finishes the game | Keeping §3's three routes as machinery with required steps; one authored ending | §3 wrote Force/Access/Exposure as recipes with required steps, which is exactly the "quest that can only start one way" invariant 5 calls a bug — the contradiction was in the spec, not the code. Predicates are about forty lines against three authored chains, they make any combination count, and four of the five need no combat, so deferring Phase 4 now costs one ending rather than the climax. Routes survive as fiction and as names for what tends to work |
+| 2026-09-11 | **The handprint: drift may move the world, only the player may end it.** Every quantity carries a second figure for how much of it the player put there, and an ending needs a minimum handprint as well as a threshold | Thresholds alone; requiring a named act per ending | Yannick's guardrail. Without it a reign could fall out of ambient motion and the player would be a spectator at their own story. It is also §8's "push the ambient, pull the attribution" turned around — the world never tells the player what they caused, but the game has to know, or it cannot tell a reign that was brought down from one that fell over |
+| 2026-09-11 | The journal gets a second page: the quantities that decide the ending, where each stands, and which carry the player's handprint | Leaving the predicate invisible; a progress bar; hints | A predicate over ten numbers cannot be aimed at. The page shows state and attribution and never advice — it will say the treasury is empty and that you emptied it, never that you should rob the bank next. It is the guardrail made visible: the same fact the end conditions check |
+| 2026-09-11 | §7's reachability test asks whether **any ending is still reachable**, not whether each authored route is still open | Keeping the living-performer-chain walk per route | The per-route walk only made sense while routes were machinery. Asking whether the world can still be *moved* to satisfy any predicate is a smaller test and a truer one |
+| 2026-09-11 | Phase 5 becomes "the world can be moved", and its first work is giving the ten inert quantities inputs | Building the three routes as planned; more NPCs first | Measured: two of twelve quantities are ever touched by a system, and everything that has felt alive comes from army strength alone. Dialogue is the only input to the only mover, which is why the game had started to feel like matching people to states. The fix is not more content — §3 already lists the acts for every power base and none are built, and they are rows in the deed table rather than new systems |
+| 2026-09-11 | **Reaffirmed for v1: the world runs on the coarse tick and nobody has a day.** §21's first row stays cut | Un-cutting NPC routines; a cheap middle path of three or four posts per person by time of day | The cut list's trigger — "the coarse tick proves too thin" — arguably fired three times in one session: an unwitnessed theft is unreachable (Q37), Ossa can never witness anything from ten tiles away, and nobody walks the road. Weighed and declined anyway. Simplicity is what has kept every phase buildable, and the world-state simulation is what makes the player a nobody or a hero — a person's day is not. The three symptoms have answers that need no routines: a stall where nobody stands, the hearsay path already built, and travellers, which are moving furniture rather than people with lives |
+| 2026-09-11 | A place must never describe an opportunity the player no longer has; when an act is spent, the ambient shows the door shut and the journal says what shut it | Leaving the prompt to vanish silently; a message on screen explaining the cost | Found in play: warn Harrowgate, walk to the camp, and the option to expose the fraud was simply gone while the camp still read "the pay tent has a queue and no money in it". An absent prompt is indistinguishable from a bug, and a world still advertising the thing is worse than silence. The camp now reads "the pay tent is shut, and the ledgers are not in it" and never says why — the journal does, and only if asked |
+| 2026-09-11 | The journal is read from the event log alone, behind a key, and never announces anything | Rebuilding it from live state; a notification when a consequence lands; a feed | §8's narrated register has to be *pulled* or the attribution is pushed and the pleasure of consequence 2 is gone. Reading it from the log is also the proof that the log is the authoritative record of a run: a test replays a walk and asserts the journal comes back word for word |
+| 2026-09-11 | The journal shows which facts have only ever had one source | Showing facts as a flat list | Invariant 6 is a design rule the player has no way to see, and it is their problem too — the thing you know dies with the only person who told you it. A test forbids the screen from ever printing a number or the word "reputation": it explains, it does not score |
+| 2026-09-11 | Reaction to standing is the **default** for every conversation, with authored lines as overrides — not something each line opts into | Writing alt-greetings for all 25; leaving reactivity per line | Found in play: three people watched a theft and all three greeted the thief as a stranger. Opt-in reactivity makes silence the default, so coverage gaps are not an accident but the resting state — and writing more lines postpones the problem to the next NPC rather than fixing it. Same shape as the reactive line that could not get a slot, one level up: the mechanism was right and the default was wrong |
+| 2026-09-11 | The shared band lines are **narration, not speech** | A generic spoken greeting per band; a spoken line per band per role | A line in nobody's voice sounds flat coming out of a named character. A line about a stance — "Maddox does not return your greeting" — works in everyone's mouth, so four sentences cover the whole cast for ever |
+| 2026-09-11 | A conversation reads **one** number: what the person in front of you thinks | Keeping town standing and personal standing both live in dialogue | Personal standing already carries the town's through hearsay. Two numbers was a distinction the player could not see and an author had to guess between — the trader gated on the town, Ossa on the person, and nothing explained why. Per-town standing stays for content about a place |
+| 2026-09-11 | Options carry a goodwill cost; teaching a fact costs goodwill by default; `costs: "free"` marks the source that must stay open | Gating each line by hand; withdrawing all teaching lines when disliked | By hand is what produced the defect. A default that reaches new content automatically is the only version that survives more content, and the free marker makes invariant 6's redundancy explicit instead of accidental — there must be somebody who will tell anybody |
+| 2026-09-11 | Reach to a stall is measured to its **footprint**, not its anchor tile | Leaving point distance; moving the stalls apart | The anchor is the top-left corner of a 4×5 block and the sprite is drawn footed and centred on it, so the only usable spot was the back corner of something five tiles tall. In play the whole Harrowgate market was unreachable except one corner that happened to sit beside Bell, which read as "you can only steal from Bell" |
+| 2026-09-11 | The act that raises a town is **giving away what you know** — warn a town of what is coming; secondarily, give back what you stole | A quest granted by an NPC; paying money; charity or almsgiving; leaving reputation one-way | A quest or a payment makes addition *gated* while subtraction stays free, and players optimise toward doing nothing. Telling is the exact mirror of theft — takes/gives, both witnessed, same machinery opposite sign — and it is the thesis of the game as a verb: information is the currency and the king falls to what people know |
+| 2026-09-11 | The pay fraud can be told **once, to one audience**: the Muster or a town, never both | Two independent uses of the same fact; a weaker second telling; making the choice only a matter of order | Two uses is a menu, not a dilemma. Spend it on the king (collapse the army, shorten the escort) or spend it on the town (standing, and a town that has laid in stores). In the fiction, speaking it aloud anywhere reaches Odile, who then does not leave the books where she left them |
+| 2026-09-11 | What is spent is the **telling**, never the **knowing** — the fact stays in the fact base permanently | Consuming the fact; introducing documents as a separate spendable resource | Route C needs the player to *know* the fraud and put it in front of the king. Invariants 6 and 7 are claims about *reaching* a fact, not about having spent it, so a consumable fact would have made the reachability test mean something different from what it says |
+| 2026-09-11 | Faction standing moves **once, at the deed**; town standing moves **as the story arrives** | Shifting factions on every arrival, as the first version did | A faction is not a place and cannot hear the same story eight times. The old behaviour multiplied every faction shift by the number of towns the rumour reached and clamped at the ends of the range — found while giving the positive acts their counterparts |
+| 2026-09-11 | Giving something back repairs the place, not the past: it raises the town, costs more with the unlawful than the theft gained, does not fully undo the loss, and never catches a rumour already travelling | A full undo; no restitution at all | A way to answer for a mistake rather than only accumulate them — but an act that erased its own consequence would make theft free, and a story already walking to Cairnwell is exactly the thing the player should learn they do not control |
+| 2026-09-11 | Standing is shown on the HUD as a **word**, for the **place you are in**, and never as a global meter | An RDR-style global honour bar; a per-town bar; showing nothing until the journal exists | Legibility was a real gap — three in-game days between act and effect with nothing on screen. But one meter says the world has one mind, a needle that moves when Maddox looks up deletes the delay that *is* the consequence, and a visible number with known increments gets farmed rather than read. Words are as legible and are not optimisable. RDR2's crime-and-witness system is the part worth copying; its honour bar is the part players game |
+| 2026-09-11 | Anyone who can see you is marked over their head, but only while an act is possible, and never counted | A permanent "who can see me" readout; keeping the "N people watching" text; showing nothing | *Who* is the part that matters — Maddox seeing you is not the same event as a stranger seeing you — and a mark teaches the sight radius by going out as you walk, which a number cannot. Permanent would be surveillance furniture rather than an answer to a question being asked |
+| 2026-09-11 | The standing thresholds live in `StandingRules` beside the words, not in `DialogueRules` where the first one was written | Leaving the dialogue threshold where it was and giving the HUD its own bands | The HUD reading "wary" while a trader refuses to serve you is a lie the player cannot audit. One set of constants feeding both readings makes that impossible rather than merely unlikely, and a property test sweeps the whole range to hold it there |
+| 2026-09-11 | One witnessed theft costs the town 22 and buys 14 with the unlawful; unwelcome starts at −20 | A smaller first offence with escalation on repetition | The first consequence has to be legible the first time, not on the third repetition. The counterpart is not decoration: without somebody who approves, the number is a morality meter |
 
 ---
 
@@ -1497,7 +2044,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 
 | Idea | Why it's out | Could return if |
 |---|---|---|
-| Full daily schedules for every NPC | Cost far exceeds the felt benefit | The coarse tick proves too thin |
+| Full daily schedules for every NPC | Cost far exceeds the felt benefit. **Reconsidered and re-cut 2026-09-11** against three symptoms of nobody moving; each had an answer that needed no routines | The coarse tick proves too thin *in a way a static answer cannot fix* — v2, not v1 |
 | HD-2D / Octopath look | Wrong camera for a top-down grid overworld | A later version changes the camera |
 | Epilogue content after the king | The world changes state; it does not gain new zones or quest lines | The ending proves to be the hook |
 | Vector RAG for NPC context | Non-deterministic, and unnecessary at this cast size | Cast > ~150, or a searchable document corpus |

@@ -13,6 +13,7 @@ func _initialize() -> void:
 
 	var sim: Sim = Game.build(run_seed)
 	var world := sim.store(&"world") as WorldState
+	var ticked := sim.store(&"worldtick") as WorldTick
 
 	var started_usec: int = Time.get_ticks_usec()
 	sim.advance_world_ticks(ticks)
@@ -33,8 +34,8 @@ func _initialize() -> void:
 		world.player_tile(), world.player_hp, WorldState.MAX_HP, world.deaths,
 	])
 	print("to castle   %d tiles" % int(round(world.tiles_to_blackcairn())))
-	print("escort      %d guards   army %d   fraud exposed %s" % [
-		world.king_escort, world.army_strength, world.pay_fraud_exposed,
+	print("escort      %d guards   army %.1f   fraud exposed %s" % [
+		ticked.kings_escort(), ticked.army_strength, world.pay_fraud_exposed,
 	])
 	print("simulated   %.1f ms" % elapsed_ms)
 	quit(0)

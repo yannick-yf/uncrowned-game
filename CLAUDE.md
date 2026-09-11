@@ -79,10 +79,26 @@ docs/      SPECS.md — the source of truth.
 ## Commands
 
 ```bash
-godot --headless --path . --import                      # once after cloning
-godot --headless --path . -s tools/test_runner.gd       # the feedback loop
+godot --headless --path . --import          # once after cloning
+tools/run_tests.sh                          # the feedback loop — after every change
+tools/run_tests.sh --all                    # before committing
 godot --headless --path . -s tools/sim_runner.gd -- --ticks 5000
+godot --headless --path . -s tools/measure_routes.gd
+godot --headless --path . -s tools/validate_assets.gd -- --no-cache
 ```
+
+**Run the suite through `tools/run_tests.sh`, never `test_runner.gd` directly.**
+The script is part of the check, not a convenience. A GDScript runtime error does
+not unwind — it prints to stderr, abandons the function and returns as if nothing
+happened — so a crashed test records no failures and reads as a pass. The runner
+catches the common case by failing any test that asserts nothing, but **it cannot
+see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which is
+the only thing that closes the gap.
+
+Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
+walks, no asset pack — in about **0.9 s**, which is the one to run without
+thinking. `--all` adds the journeys and the asset pack and takes about **5.8 s**.
+A suite marked `const SLOW := true` is in the second group.
 
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
@@ -95,6 +111,22 @@ milliseconds and it is the only thing that tells you whether something broke.
 If verifying a change requires opening the editor, ask whether the logic belongs in
 `core/` instead.
 
+## Development tools that must never ship
+
+**`T` skips one in-game day.** Every consequence left in §8 happens *later* — a
+rumour arriving three days after a theft, grain rising a week after the desertions
+— and none of them can be judged by hand without skipping forward. It advances
+through the ordinary tick path, so a skipped day is identical to a waited one:
+same drift, same events, same replay. Which also means a day skipped standing in
+the Thornwood is a day of being eaten.
+
+It is gated on `OS.has_feature("debug")`, so it is absent from a release export.
+Anything else of this kind goes behind the same gate and gets listed here. A debug
+tool that is not written down is a debug tool that ships.
+
+> `Engine.time_scale` was considered and rejected: it accelerates the player too,
+> so you cannot walk anywhere while time passes, which is the whole point.
+
 ## Effort discipline
 
 Do not spawn subagents or parallel workflows unless I explicitly ask, or unless
@@ -105,20 +137,39 @@ what it would cost in time and tokens and ask first.
 
 ## Current phase
 
-**Phase 0 — vertical slice.** Brindle, a player who walks, the King's Road running
-north-west, Blackcairn at the end of it, and a king who kills the player in three
-hits. Coloured rectangles. No NPCs, no LLM, no art.
+**Phase 5 — the world can be moved, and the king can fall out of it.**
+Phases 0–3 are delivered (vertical slice, Harrowgate, the greyboxed world,
+reputation and rumour). Phase 4, combat, is **deferred by decision** — four of the
+five endings need no fighting.
 
-Proof required: "I walk straight there and lose" is playable and makes you want to
-try again differently. It also calibrates the walk: the scale is settled (SPECS §4 —
-~280×200 tiles at 6 tiles/sec, 8-way movement), so what Phase 0 measures is whether
-that *pace* feels right, not how long the crossing takes. Expect the bare diagonal to
-read about 40 seconds.
+The goal is not to kill the king; it is that he stops being king. **The ending is a
+predicate over the tracked quantities, never a completed route** (SPECS §3). Nothing
+is scripted and nothing has required steps: any combination of acts that reaches one
+of those states finishes the game.
 
-### Phase 0 exceptions — deliberate, temporary, and only these three
+Two hard rules govern this phase:
 
-These three things contradict SPECS on purpose. They are scoped to Phase 0, and each
-names the decision that replaces it. Do not generalise from them, and do not add a
+- **The handprint.** Every tracked quantity carries a second figure for how much of
+  where it stands is the player's doing. Deeds write both; drift writes only the
+  number. An ending needs a minimum handprint as well as a threshold, so **drift can
+  never end the game**.
+- **Legibility.** A predicate over ten numbers is invisible, so the journal's second
+  page shows those numbers, where they stand, and which carry the player's
+  handprint. State and attribution — never advice.
+
+The work, in order: the handprint and the predicates; the journal page; then giving
+the ten inert quantities inputs, which are **rows in the deed table rather than new
+systems** (SPECS §3 lists them for every power base).
+
+> **Routes are descriptions, not machinery.** Force, Access and Exposure are ways of
+> thinking about the game and names for what tends to work. Nothing in the code asks
+> which one the player is on, and writing them as recipes with required steps was a
+> violation of invariant 5 that lived in the spec.
+
+### Standing exceptions — deliberate, temporary, and only these three
+
+Carried forward from Phase 0. They contradict SPECS on purpose, and each names the
+decision that replaces it. Numbers 1 and 2 are retired by Phase 4. Do not generalise from them, and do not add a
 fourth without asking.
 
 1. **No combat screen.** SPECS §10 rules that fights happen never in the overworld.

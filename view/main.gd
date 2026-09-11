@@ -15,6 +15,20 @@ const FIGURE: float = 16.0
 ## Interpolating across a respawn or a zone change would streak the player over
 ## the whole map for a frame.
 const TELEPORT_TILES: float = 2.0
+## How near something hunting you has to be before the HUD mentions it.
+const CLOSE_ENOUGH_TO_FEAR: float = 7.0
+## How long a thing that just happened stays on screen: two seconds, then the
+## world stops mentioning it and never brings it up again.
+const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
+## How many of the most recent entries fit on the page. The journal is a record,
+## not a feed: the oldest thing you did is rarely the thing you are trying to
+## understand.
+const JOURNAL_ROWS: int = 9
+
+var _journal_open: bool = false
+## The log length the page was built from. A journal held open would otherwise walk
+## every event in the run sixty times a second to print the same page.
+var _journal_at: int = -1
 
 ## Somewhere you cannot enter should still say what it is.
 const ZONE_NAMES: Dictionary = {
@@ -32,10 +46,15 @@ var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
 var _wild: Wildlife = null
+var _ticked: WorldTick = null
+var _standing: Standing = null
+var _road: Travellers = null
 var _art: Art = null
 
 var _accumulator: float = 0.0
 var _seconds_per_step: float = 1.0 / 60.0
+var _debug_available: bool = false
+var _skipped_days: int = 0
 var _held_dir: Vector2i = Vector2i.ZERO
 var _real_seconds: float = 0.0
 var _render_from: Vector2 = Vector2.ZERO
@@ -64,16 +83,23 @@ var _terrain_colours: PackedColorArray = PackedColorArray([
 @onready var _line: Label = $HUD/DialogueBox/Line
 @onready var _choices: Label = $HUD/DialogueBox/Choices
 @onready var _prompt: Label = $HUD/Prompt
+@onready var _journal_box: ColorRect = $HUD/JournalBox
+@onready var _journal_title: Label = $HUD/JournalBox/Title
+@onready var _journal_body: Label = $HUD/JournalBox/Body
 
 
 ## Wiring, not logic: one call into core/, then cache what is read every frame.
 func _ready() -> void:
 	_art = Art.new()
 	_seconds_per_step = Game.seconds_per_step()
+	_debug_available = OS.has_feature("debug")
 	_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
 	_wild = _sim.store(&"wildlife") as Wildlife
+	_ticked = _sim.store(&"worldtick") as WorldTick
+	_standing = _sim.store(&"standing") as Standing
+	_road = _sim.store(&"travellers") as Travellers
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -92,6 +118,7 @@ func _process(delta: float) -> void:
 	position = (get_viewport_rect().size * 0.5 - _draw_position() * float(TILE)).round()
 	queue_redraw()
 	_draw_hud()
+	_draw_journal()
 
 
 # ------------------------------------------------------------------- input ---
@@ -115,10 +142,29 @@ func _read_input() -> void:
 		_held_dir = dir
 		_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
 
+	if _debug_available and Input.is_action_just_pressed(&"debug_skip_day"):
+		_skip_a_day()
+
 	if Input.is_action_just_pressed(&"interact"):
 		var npc: Npc = _nearby_npc()
 		if npc != null:
 			_sim.submit(&"talk", {"npc": String(npc.id)})
+		elif _can_give_back():
+			_sim.submit(&"give_back")
+		elif _can_steal():
+			_sim.submit(&"steal")
+
+	# A second key, because the two kinds of act are different kinds of thing and
+	# were fighting over one. E is what is in front of you; F is what you carry in
+	# your head. Splitting them is also what keeps §8's availability rule true —
+	# telling a town must not queue behind a stall that happens to be nearer.
+	if Input.is_action_just_pressed(&"journal"):
+		_journal_open = not _journal_open
+		_draw_journal()
+
+	if Input.is_action_just_pressed(&"speak_out"):
+		if _can_warn():
+			_sim.submit(&"tell_town")
 		elif _can_expose():
 			_sim.submit(&"expose_fraud")
 
@@ -129,6 +175,25 @@ func _read_input() -> void:
 ## 4, so the only way out was a key the game never mentioned.
 func _exit_slot() -> int:
 	return mini(_world.options.size() + 1, DialogueRules.MAX_OPTIONS)
+
+
+## Development only. Every remaining consequence in §8 happens *later* — a rumour
+## arriving three days after a theft, grain rising a week after the desertions —
+## and none of them can be judged by hand without being able to skip forward.
+##
+## It advances through the ordinary tick path, so a skipped day is identical to a
+## waited one: the same drift, the same events, the same replay. Which also means
+## a day skipped standing in the Thornwood is a day of being eaten. That is
+## correct, and worth knowing before pressing it there.
+##
+## Gated on a debug build, so it cannot reach anyone who is playing rather than
+## making this.
+func _skip_a_day() -> void:
+	var before: int = _sim.tick
+	_sim.advance_world_ticks(Game.TICKS_PER_IN_GAME_DAY)
+	_skipped_days += 1
+	print("[debug] skipped a day: tick %d -> %d (%s)" % [
+		before, _sim.tick, Game.in_game_clock(_sim.tick)])
 
 
 func _read_direction() -> Vector2i:
@@ -148,12 +213,38 @@ func _nearby_npc() -> Npc:
 	return _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH)
 
 
+## The stall within reach that still has something on it, or NOWHERE.
+func _stall_in_reach() -> Vector2i:
+	var at: Vector2i = _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH)
+	if at == Region.NOWHERE or _world.stall_is_bare(at, _sim.tick):
+		return Region.NOWHERE
+	return at
+
+
+func _can_steal() -> bool:
+	return _stall_in_reach() != Region.NOWHERE
+
+
 ## Asking the rules layer a question. Reading a pure predicate is not mutating.
 func _can_expose() -> bool:
 	if _world.current_zone != WorldState.OVERWORLD:
 		return false
 	var in_muster: bool = _world.region().is_in_muster(_world.player_tile())
-	return ArmyRules.can_expose(in_muster, _world.pay_fraud_exposed, _sim.facts)
+	return ArmyRules.can_expose(in_muster, _world.fraud_told_to, _sim.facts)
+
+
+## Telling a town what is coming. The witnesses are the audience, not the risk.
+func _can_warn() -> bool:
+	return TellingRules.can_warn(
+		_world.region().zone_at(_world.player_tile()),
+		_world.fraud_told_to,
+		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos),
+		_sim.facts)
+
+
+func _can_give_back() -> bool:
+	return _world.can_give_back(
+		_world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH))
 
 
 # ----------------------------------------------------------------- drawing ---
@@ -186,11 +277,31 @@ func _draw() -> void:
 		for y: int in range(min_y, max_y + 1):
 			_draw_scatter(region, x, y)
 
+	# The Muster's tents are drawn from army strength, so a camp that has been
+	# emptying while you were elsewhere looks emptied. This is the visible half of
+	# §8's fifth consequence: the world moved without you.
+	var tents_standing: int = _tents_standing()
+	var crowd: int = _crowd_size()
+	var tent: int = 0
+	var folk: int = 0
 	for prop: Dictionary in region.props:
+		var kind: StringName = prop["kind"] as StringName
+		if kind == &"tent" or kind == &"tent_b":
+			tent += 1
+			if tent > tents_standing:
+				continue
+		elif kind == &"townsfolk":
+			folk += 1
+			if folk > crowd:
+				continue
+			_draw_townsfolk(prop["at"] as Vector2i, folk)
+			continue
 		_draw_prop(prop, min_x, max_x, min_y, max_y)
 
 	for npc: Npc in _cast.in_zone(_world.current_zone):
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
+
+	_draw_travellers(min_x, max_x, min_y, max_y)
 
 	for beast: Beast in _wild.beasts:
 		_draw_beast(beast)
@@ -200,6 +311,45 @@ func _draw() -> void:
 		_draw_actor(_world.king_pos, &"king", Art.FACE_DOWN)
 
 	_draw_actor(centre, &"player", Art.column_for(_world.player_facing))
+	_draw_witnesses()
+
+
+## How many of the Muster's tents are still up. Struck in proportion to the army
+## that pitched them, never all of them: a camp with nobody in it is a ruin, and
+## the Muster is not one yet.
+func _tents_standing() -> int:
+	var total: int = 0
+	for prop: Dictionary in _world.region().props:
+		var kind: StringName = prop["kind"] as StringName
+		if kind == &"tent" or kind == &"tent_b":
+			total += 1
+	var share: float = clampf(_ticked.army_strength, 0.0, 100.0) / 100.0
+	return clampi(ceili(float(total) * share), 1, total)
+
+
+## How many people are standing about in Harrowgate: nobody extra while the army
+## is whole, the full crowd once it has emptied out. The bread price explained by
+## bodies rather than by a number, which is §8's ambient register.
+func _crowd_size() -> int:
+	var lost: float = clampf(100.0 - _ticked.army_strength, 0.0, 100.0)
+	var total: int = 0
+	for prop: Dictionary in _world.region().props:
+		if (prop["kind"] as StringName) == &"townsfolk":
+			total += 1
+	return clampi(roundi(float(total) * lost / 60.0), 0, total)
+
+
+func _draw_townsfolk(at: Vector2i, index: int) -> void:
+	var sheet: Texture2D = _art.townsfolk_sheet(index)
+	if sheet == null:
+		return
+	# Facing decided by where they stand, so a crowd is not a rank of clones all
+	# looking the same way.
+	var facing: int = Art.scatter_hash(at.x, at.y) % 4
+	var top_left: Vector2 = (Vector2(at) + Vector2(0.5, 0.5)) * float(TILE) \
+		- Vector2(FIGURE, FIGURE) * 0.5
+	draw_texture_rect_region(
+		sheet, Rect2(top_left.round(), Vector2(FIGURE, FIGURE)), Art.tile_rect(facing, 0))
 
 
 func _draw_ground(region: Region, x: int, y: int) -> void:
@@ -285,10 +435,59 @@ func _draw_actor(at: Vector2, role: StringName, column: int) -> void:
 	)
 
 
+## §8's IMMEDIATE register, before the act rather than after it.
+##
+## Whoever can see you is marked while there is an act in front of you that they
+## would see you do. No count and no number: *who* is the part that matters, because
+## Maddox seeing you is not the same event as a stranger seeing you, and the sight
+## radius is learnt by walking until the marks go out rather than by being told a
+## figure.
+##
+## The same marks serve both signs. Over a stall they mean "who would see this"; with
+## something to tell they mean "who would hear it" — which is the whole of why
+## telling is the mirror of theft rather than a separate mechanic wearing its coat.
+##
+## Shown only with a stall in reach. A permanent readout of who can see you is
+## surveillance furniture; this is the answer to a question the player is asking at
+## exactly that moment.
+func _draw_witnesses() -> void:
+	if not (_can_steal() or _can_give_back() or _can_warn()):
+		return
+	for id: String in CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos):
+		var npc: Npc = _cast.get_npc(StringName(id))
+		if npc == null:
+			continue
+		var head: Vector2 = (npc.centre() * float(TILE) - Vector2(0.0, float(FIGURE) * 0.5 + 4.0)).round()
+		draw_circle(head, 2.6, Color(0.08, 0.07, 0.10, 0.85))
+		draw_circle(head, 1.5, Color(0.93, 0.88, 0.68, 0.95))
+
+
+## People on the King's Road. Drawn from the crowd's faces, because that is what
+## they are: nobody, and never the same one twice.
+##
+## They are simulated for the whole map whether or not you are looking, which is
+## the point — a carrier who stops existing when you turn away cannot deliver
+## anything. Only the drawing is culled.
+func _draw_travellers(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
+	if _road == null:
+		return
+	for walker: Traveller in _road.walkers:
+		var at: Vector2i = walker.tile()
+		if at.x < min_x or at.x > max_x or at.y < min_y or at.y > max_y:
+			continue
+		var sheet: Texture2D = _art.townsfolk_sheet(walker.id)
+		if sheet == null:
+			continue
+		var column: int = Art.column_for(Vector2i(walker.heading, 0))
+		var top_left: Vector2 = walker.pos * float(TILE) - Vector2(FIGURE, FIGURE) * 0.5
+		draw_texture_rect_region(
+			sheet, Rect2(top_left.round(), Vector2(FIGURE, FIGURE)), Art.tile_rect(column, 0))
+
+
 ## The escort, drawn because it has to be *seen* to drop. Ten bodies in two ranks
 ## in front of the gate; five after the Muster empties.
 func _draw_escort() -> void:
-	for i: int in _world.king_escort:
+	for i: int in _ticked.kings_escort():
 		var rank: int = i / 5
 		var file: int = i % 5
 		var at: Vector2 = _world.king_pos + Vector2(float(file) - 2.0, 2.0 + float(rank) * 1.2)
@@ -322,18 +521,40 @@ func _place_name() -> String:
 	return "the wild"
 
 
+## §8's AMBIENT register: how the place you are standing in regards you.
+##
+## Per place and never global, so walking out of Harrowgate and into Cairnwell
+## changes the word — which teaches that reputation has an address without a line
+## of explanation. Shown from the first minute, including at neutral, because a
+## baseline is what makes the change legible; a readout that only appears once
+## something has gone wrong gives the player nothing to compare it against.
+##
+## It says how you are regarded. It never says why, and it never moves at the
+## moment of the act — it moves when the story gets here, which may be days after
+## you left. Push the ambient, pull the attribution.
+func _regard() -> String:
+	if _standing == null:
+		return ""
+	var zone: StringName = _world.region().zone_at(_world.player_tile())
+	if zone == &"":
+		return ""
+	return " — %s" % StandingRules.word_for(_standing.in_town(zone))
+
+
 func _draw_hud() -> void:
 	var walked: int = int(_real_seconds)
 	var where: String = _place_name()
 	var lines: Array[String] = [
-		"%s   ·   HP %d/%d   ·   deaths %d" % [
-			where, _world.player_hp, WorldState.MAX_HP, _world.deaths,
+		"%s%s   ·   HP %d/%d   ·   deaths %d" % [
+			where, _regard(), _world.player_hp, WorldState.MAX_HP, _world.deaths,
 		],
-		"the king's escort: %d" % _world.king_escort,
+		"the king's escort: %d" % _ticked.kings_escort(),
 	]
 	if _world.current_zone == WorldState.OVERWORLD:
 		lines.append("%d tiles to Blackcairn" % int(round(_world.tiles_to_blackcairn())))
 	lines.append("%s   ·   walked %d:%02d" % [Game.in_game_clock(_sim.tick), walked / 60, walked % 60])
+	if _debug_available:
+		lines.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
 	_info.text = "\n".join(lines)
 
 	_box.visible = _world.in_dialogue()
@@ -349,13 +570,18 @@ func _draw_hud() -> void:
 		return
 
 	var rows: Array[String] = []
+	var done: String = _just_happened()
+	if done != "":
+		rows.append(done)
 	var mood: String = _atmosphere()
 	if mood != "":
 		rows.append(mood)
 
+	# Only what can actually reach you. A wolf that has seen you from the treeline
+	# while you stand in a camp it cannot enter is not a warning, it is a lie.
 	var hunted: int = 0
 	for beast: Beast in _wild.beasts:
-		if beast.hunting:
+		if beast.hunting and beast.pos.distance_to(_world.player_pos) <= CLOSE_ENOUGH_TO_FEAR:
 			hunted += 1
 	if hunted > 0:
 		rows.append("something is following you" if hunted == 1 else "%d of them have seen you" % hunted)
@@ -363,9 +589,95 @@ func _draw_hud() -> void:
 	var npc: Npc = _nearby_npc()
 	if npc != null:
 		rows.append("E — speak to %s, %s" % [npc.display_name, npc.role.to_lower()])
-	elif _can_expose():
-		rows.append("E — say what you know")
+	elif _can_give_back():
+		rows.append("E — put it back")
+	elif _can_steal():
+		# Who is watching is drawn over their heads, not counted here. The prompt
+		# never says what it will cost: the world shows, the journal explains (§8).
+		rows.append("E — take something")
+	elif _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH) != Region.NOWHERE:
+		rows.append("picked clean")
+
+	# Its own row, never an `elif`. What you know is available wherever you are
+	# standing, and burying it behind whatever happens to be nearer would make the
+	# act that raises a town harder to reach than the act that lowers one.
+	if _can_warn() or _can_expose():
+		rows.append("F — say what you know")
 	_prompt.text = "\n".join(rows)
+
+
+## §8's IMMEDIATE register: the act, confirmed at the moment it happens, and
+## nothing else.
+##
+## It says what you did and who looked up. It does not say what it will cost,
+## because the cost has not happened yet and will not happen here — that is the
+## ambient register's business, three days' walk away, and the player is meant to
+## be the one who joins them up. Push the ambient, pull the attribution.
+func _just_happened() -> String:
+	if _world.last_theft_step < 0:
+		return ""
+	if _sim.step - _world.last_theft_step > MOMENT_STEPS:
+		return ""
+	if _world.last_theft_seen == 0:
+		return "you take it. nobody looks up"
+	if _world.last_theft_seen == 1:
+		return "you take it. one person looks up"
+	return "you take it. %d people look up" % _world.last_theft_seen
+
+
+## §8's NARRATED register, and the only screen allowed to join an act to its
+## consequence.
+##
+## The world never says "your actions caused this". It changes its mind quietly and
+## the player comes here to find out why — which is why this is behind a key rather
+## than a notification. Push the ambient, pull the attribution.
+func _draw_journal() -> void:
+	_journal_box.visible = _journal_open
+	if not _journal_open:
+		_journal_at = -1
+		return
+	if _journal_at == _sim.events.size():
+		return
+	_journal_at = _sim.events.size()
+	var rows: Array[Dictionary] = Journal.entries(_sim.events)
+	var lines: Array[String] = []
+	var from: int = maxi(rows.size() - JOURNAL_ROWS, 0)
+	for i: int in range(from, rows.size()):
+		var row: Dictionary = rows[i]
+		lines.append("%s   %s" % [Game.in_game_clock(int(row["tick"])), row["line"]])
+		if String(row["because"]) != "":
+			lines.append("                  %s" % row["because"])
+	if lines.is_empty():
+		lines.append("Nothing worth writing down yet.")
+
+	# §15's second page. A predicate over ten numbers is invisible, and without this
+	# "push the world until he cannot hold it" is guesswork. State and attribution
+	# only: it says the treasury is empty and that you emptied it, and never that
+	# you should rob the bank next.
+	lines.append("")
+	lines.append("WHAT HOLDS HIM UP")
+	for row: Dictionary in EndRules.what_holds_him_up(_ticked, _world, _sim.facts):
+		lines.append("· %-30s %5d%s" % [
+			row["name"], int(round(float(row["value"]))),
+			"     — and you are why" if float(row["yours"]) > 0.0 else "",
+		])
+	if _world.reign_ended != &"":
+		lines.append("")
+		lines.append("HE IS NO LONGER KING — %s" % String(_world.reign_ended).to_upper())
+
+	var known: Array[Dictionary] = Journal.knowledge(_sim.facts, _cast)
+	if not known.is_empty():
+		lines.append("")
+		lines.append("WHAT YOU KNOW")
+		for row: Dictionary in known:
+			lines.append("· %s" % row["line"])
+			# Whether a fact would survive the death of the person who gave it to
+			# you. Invariant 6 made visible, because it is the player's problem as
+			# much as the designer's.
+			lines.append("      %s%s" % [row["from"],
+				"" if bool(row["safe"]) else "   — and nobody else has told you this"])
+	_journal_title.text = "THE JOURNAL          %s          J to close" % Game.in_game_clock(_sim.tick)
+	_journal_body.text = "\n".join(lines)
 
 
 ## What a place looks like, which is not the same as what to do about it.
@@ -385,4 +697,11 @@ func _atmosphere() -> String:
 		return ""
 	if _world.pay_fraud_exposed:
 		return "half the tents are down, and nobody is striking the rest"
+	# Told somewhere else. The camp has to stop advertising a thing that can no
+	# longer be done here — a world that describes an opportunity the player no
+	# longer has is worse than one that says nothing, and an absent prompt on its
+	# own is indistinguishable from a bug. It never says why: speaking it aloud
+	# anywhere is what reached Odile, and this is what that looks like from here.
+	if _world.fraud_told_to != &"":
+		return "the pay tent is shut, and the ledgers are not in it"
 	return "the pay tent has a queue and no money in it"

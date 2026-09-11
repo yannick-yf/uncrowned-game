@@ -29,6 +29,10 @@ const CASTING: Dictionary = {
 	&"bell": "Woman",
 	&"ossa": "OldWoman",
 	&"garrick": "Villager2",
+	&"wren": "Villager5",
+	# Strangers are cast by trade, not by name — there is only one trader sheet
+	# however many traders the map ends up holding.
+	&"trader": "ManGreen",
 }
 
 ## What lives in the wild. Monster sheets are 4x4 — the same four directions as a
@@ -38,6 +42,14 @@ const BEASTS: Dictionary = {
 	&"spider": "SpiderRed",
 	&"bat": "BlueBat",
 }
+
+## Faces for the crowd. Never the same one twice in a row, and none of them is
+## anybody: §6 keeps townsfolk out of the cast precisely so they cannot acquire a
+## name by being drawn often enough.
+const TOWNSFOLK: Array[String] = [
+	"Villager3", "Villager4", "Villager5", "Villager6", "Woman", "OldMan2",
+	"OldWoman", "ManGreen", "Monk", "Villager2",
+]
 
 var _atlases: Dictionary = {}
 var _sheets: Dictionary = {}
@@ -68,6 +80,10 @@ func _init() -> void:
 		Region.Terrain.RUINS: [&"floor", 11, 19],
 		Region.Terrain.TOWN: [&"floor", 11, 19],
 		Region.Terrain.CAMP: [&"floor", 11, 19],
+		# A building's footprint is packed earth, not a grey block. It is normally
+		# hidden under the sprite standing on it — but a struck tent leaves its
+		# ground behind, and bare ground is what should be there.
+		Region.Terrain.WALL: [&"floor", 11, 19],
 		Region.Terrain.CASTLE: [&"floorb", 1, 1],
 		Region.Terrain.SEA: [&"water", 11, 0],
 		Region.Terrain.WATER: [&"water", 11, 0],
@@ -90,6 +106,7 @@ func _init() -> void:
 		&"tower": [&"ruin", Rect2i(192, 97, 64, 80)],
 		&"boat": [&"boat", Rect2i(0, 0, 80, 32)],
 		&"counting_house": [&"house", Rect2i(400, 224, 64, 80)],
+		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
 	}
 
 
@@ -109,10 +126,30 @@ func beast_sheet_for(kind: StringName) -> Texture2D:
 	return _sheets[id] as Texture2D
 
 
+## Whether anything at all knows how to draw this kind of prop. Landmarks come
+## from the props table; the crowd comes from its own faces.
+func can_draw(kind: StringName) -> bool:
+	return props.has(kind) or kind == &"townsfolk"
+
+
+## One of the crowd, picked by index so the same spot always holds the same face.
+func townsfolk_sheet(index: int) -> Texture2D:
+	var folder: String = TOWNSFOLK[absi(index) % TOWNSFOLK.size()]
+	var id := StringName("folk:%s" % folder)
+	if not _sheets.has(id):
+		_sheets[id] = load("%s/Actor/Character/%s/SpriteSheet.png" % [PACK, folder]) as Texture2D
+	return _sheets[id] as Texture2D
+
+
 func sheet_for(role: StringName) -> Texture2D:
 	if _sheets.has(role):
 		return _sheets[role] as Texture2D
-	var folder: String = String(CASTING.get(role, "Villager"))
+	# A generic's id is "trade@n". Everyone of a trade wears the same face.
+	var key: StringName = role
+	var at: int = String(role).find("@")
+	if at > 0:
+		key = StringName(String(role).substr(0, at))
+	var folder: String = String(CASTING.get(key, "Villager"))
 	_sheets[role] = load("%s/Actor/Character/%s/SpriteSheet.png" % [PACK, folder]) as Texture2D
 	return _sheets[role] as Texture2D
 

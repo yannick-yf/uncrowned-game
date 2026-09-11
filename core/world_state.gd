@@ -25,6 +25,14 @@ var invulnerable_until: int = 0
 var last_hurt_step: int = 0
 var mending_steps: int = 0
 var king_pos: Vector2 = Vector2.ZERO
+## §10 gives him a thousand and the means to lose it. Declared here so §3's "dead"
+## ending is written with the other four rather than bolted on later; it cannot be
+## reached until Phase 4 builds the combat screen, which is the point of deferring
+## combat costing one ending rather than the climax.
+var king_hp: int = 1000
+## How the reign ended, or nothing. Set once — a reign ends the way a person dies.
+var reign_ended: StringName = &""
+var reign_ended_tick: int = -1
 var deaths: int = 0
 var touches_taken: int = 0
 var reached_blackcairn: bool = false
@@ -35,10 +43,44 @@ var speaker_name: String = ""
 var current_line: String = ""
 var options: Array[DialogueOption] = []
 
-## The Muster, and what it holds up.
+## The Muster. Army strength and the escort live on the WorldTick store now —
+## they are the world's vital signs, not the player's state, and they keep moving
+## when nobody is looking at them.
 var pay_fraud_exposed: bool = false
-var army_strength: int = ArmyRules.ARMY_AT_FULL_STRENGTH
-var king_escort: int = ArmyRules.ESCORT_AT_FULL_STRENGTH
+var thefts: int = 0
+## Stall tile -> the tick it was last emptied. A stall you have just robbed has
+## nothing left on it, which is what stops one keypress held down from starting
+## fifty rumours and flooring every reputation in the region inside a second.
+var robbed: Dictionary = {}
+## What the last theft was, so the view can say so at the moment it happens and
+## then stop saying it. The system records the facts; the window finds the words.
+var last_theft_step: int = -1
+var last_theft_seen: int = 0
+## What you are carrying that is not yours, and where it came from. Put back on the
+## stall you took it from, which is both the natural reading and what stops "give
+## it back" and "take something" fighting over the same key at the same stall.
+var carrying_stolen: int = 0
+var stolen_from: Vector2i = Vector2i(-1, -1)
+var stolen_town: StringName = &""
+## Who you told about the pay fraud, or nothing. It can be told once, to one
+## audience: the Muster, or a town. Spending it is §8's opportunity cost, and what
+## is spent is the telling — the fact itself never leaves the fact base.
+var fraud_told_to: StringName = &""
+
+
+## You put it back on the stall you took it from. That is the natural reading, and
+## it is also what keeps "give it back" and "take something" from fighting over one
+## key — the robbed stall offers the first, every other stall still offers the
+## second.
+func can_give_back(stall_in_reach: Vector2i) -> bool:
+	return carrying_stolen > 0 and stall_in_reach != Region.NOWHERE \
+		and stall_in_reach == stolen_from
+
+
+func stall_is_bare(at: Vector2i, tick: int) -> bool:
+	if not robbed.has(at):
+		return false
+	return tick - int(robbed[at]) < CrimeRules.STALL_RESTOCK_TICKS
 
 
 func region() -> Region:
@@ -85,8 +127,8 @@ func hurt(amount: int, step: int) -> bool:
 
 
 func fingerprint() -> String:
-	return "zone=%s pos=%.4f,%.4f dir=%d,%d hp=%d deaths=%d touches=%d reached=%s talk=%s fraud=%s escort=%d army=%d" % [
+	return "zone=%s pos=%.4f,%.4f dir=%d,%d hp=%d deaths=%d touches=%d reached=%s talk=%s fraud=%s thefts=%d end=%s" % [
 		String(current_zone), player_pos.x, player_pos.y, player_dir.x, player_dir.y,
 		player_hp, deaths, touches_taken, reached_blackcairn,
-		String(talking_to), pay_fraud_exposed, king_escort, army_strength,
+		String(talking_to), pay_fraud_exposed, thefts, String(reign_ended),
 	]

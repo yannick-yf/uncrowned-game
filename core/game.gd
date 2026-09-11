@@ -27,6 +27,10 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"world", build_world())
 	sim.add_store(&"cast", Cast.shared())
 	sim.add_store(&"wildlife", Wildlife.new())
+	sim.add_store(&"worldtick", WorldTick.new())
+	sim.add_store(&"standing", Standing.new())
+	sim.add_store(&"rumours", Rumours.new())
+	sim.add_store(&"travellers", Travellers.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -53,6 +57,13 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(ZoneSystem.new())
 	systems.append(DialogueSystem.new())
 	systems.append(ArmySystem.new())
+	systems.append(WorldTickSystem.new())
+	systems.append(GrainSystem.new())
+	systems.append(TellingSystem.new())
+	systems.append(TravellerSystem.new())
+	systems.append(EndingSystem.new())
+	systems.append(TheftSystem.new())
+	systems.append(RumourSystem.new())
 	systems.append(WildlifeSystem.new())
 	systems.append(RecoverySystem.new())
 	systems.append(ArrivalSystem.new())
@@ -67,7 +78,12 @@ static func replay(sim: Sim) -> Sim:
 		sim.rng_seed,
 		build_systems(),
 		sim.step,
-		{&"world": build_world(), &"cast": Cast.shared(), &"wildlife": Wildlife.new()},
+		{
+			&"world": build_world(), &"cast": Cast.shared(),
+			&"wildlife": Wildlife.new(), &"worldtick": WorldTick.new(),
+			&"standing": Standing.new(), &"rumours": Rumours.new(),
+			&"travellers": Travellers.new(),
+		},
 	)
 
 

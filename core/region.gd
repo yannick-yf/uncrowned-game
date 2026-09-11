@@ -67,6 +67,10 @@ const BLACKCAIRN_SIZE: Vector2i = Vector2i(24, 18)
 
 const ROAD_HALF_WIDTH: int = 1
 
+## No tile. Returned by lookups that found nothing, so that callers do not have to
+## agree on a sentinel of their own.
+const NOWHERE: Vector2i = Vector2i(-1, -1)
+
 ## The Kettle runs from the northern mountains to the southern sea, dividing the
 ## eastern strip — Brindle, the Cinderworks, the Thornwood — from everything else.
 const KETTLE: Array[Vector2i] = [
@@ -185,6 +189,22 @@ const ZONE_ORDER: Array[StringName] = [
 ## How far past its buildings a place still counts as itself.
 const ZONE_MARGIN: int = 3
 
+
+## What a place is called. World data rather than presentation: the journal in
+## core/ has to name where something happened, and the window is not the only thing
+## that needs the word.
+static func place_name(zone: StringName) -> String:
+	match zone:
+		&"brindle": return "Brindle"
+		&"cinderworks": return "the Cinderworks"
+		&"harrowgate": return "Harrowgate"
+		&"wide_acres": return "the Wide Acres"
+		&"muster": return "the Muster"
+		&"saltmarch": return "Saltmarch"
+		&"cairnwell": return "Cairnwell"
+		&"blackcairn": return "Blackcairn"
+	return ""
+
 var _zone_map: PackedByteArray = PackedByteArray()
 var _wild_map: PackedByteArray = PackedByteArray()
 
@@ -229,25 +249,29 @@ func is_beast_ground(tile: Vector2i) -> bool:
 func _bake_wild() -> void:
 	_wild_map.resize(width * height)
 	_wild_map.fill(0)
+
+	# Two passes, both linear. The obvious version asks every tile "is there road
+	# near me?" — fifty-six thousand tiles times a seven-by-seven box is 2.7
+	# million lookups and two seconds, paid on every launch. Asking instead "what
+	# is near *this* road tile" is the same answer for a tenth of the work,
+	# because there is far less road than there is world.
 	for x: int in width:
 		for y: int in height:
 			var tile := Vector2i(x, y)
-			if not BeastRules.is_wild_ground(terrain_at(tile)):
-				continue
-			if zone_at(tile) != &"":
-				continue
-			if _near_safe_ground(tile):
-				continue
-			_wild_map[y * width + x] = 1
+			if BeastRules.is_wild_ground(terrain_at(tile)) and zone_at(tile) == &"":
+				_wild_map[y * width + x] = 1
 
-
-func _near_safe_ground(tile: Vector2i) -> bool:
-	for dx: int in range(-ROAD_STANDOFF, ROAD_STANDOFF + 1):
-		for dy: int in range(-ROAD_STANDOFF, ROAD_STANDOFF + 1):
-			match terrain_at(tile + Vector2i(dx, dy)):
+	for x: int in width:
+		for y: int in height:
+			match terrain_at(Vector2i(x, y)):
 				Terrain.ROAD, Terrain.FORD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
-					return true
-	return false
+					_clear_around(x, y)
+
+
+func _clear_around(cx: int, cy: int) -> void:
+	for x: int in range(maxi(cx - ROAD_STANDOFF, 0), mini(cx + ROAD_STANDOFF + 1, width)):
+		for y: int in range(maxi(cy - ROAD_STANDOFF, 0), mini(cy + ROAD_STANDOFF + 1, height)):
+			_wild_map[y * width + x] = 0
 
 
 static func zone_footprints() -> Dictionary:
@@ -300,7 +324,21 @@ static func road_route() -> Array[Vector2i]:
 ## travel *on* the road rather than merely between its ends needs the line, not
 ## the nodes. A shortest path between two corners cuts the bend, which puts you on
 ## the verge — and the verge is where the animals are.
+## Cached: the road is a constant of the class, and the traveller system asks for
+## the line once per walker per step. Rebuilding it there cost more than everything
+## else in the simulation put together.
+static var _waypoint_cache: Dictionary = {}
+
+
 static func road_waypoints(spacing: int = 5) -> Array[Vector2i]:
+	if _waypoint_cache.has(spacing):
+		return _waypoint_cache[spacing] as Array[Vector2i]
+	var built: Array[Vector2i] = _build_waypoints(spacing)
+	_waypoint_cache[spacing] = built
+	return built
+
+
+static func _build_waypoints(spacing: int) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []
 	var route: Array[Vector2i] = road_route()
 	for i: int in route.size() - 1:
@@ -361,6 +399,8 @@ static func _build_overworld() -> Region:
 	region._stamp_crossings()
 	region._stamp_settlements()
 	region._stamp_landmarks()
+	region._stamp_crowd()
+	region._stamp_stalls()
 	region._bake_zones()
 	region._bake_wild()
 	return region
@@ -508,6 +548,94 @@ func _stamp_blocks(site: Vector2i, corners: Array[Vector2i], kinds: Array[String
 			(absi((at.x * 19349663) ^ (at.y * 83492791)) % 3) - 1,
 		)
 		_place(kinds[(i + absi(at.x)) % kinds.size()], at + jitter, Vector2i(4, 3))
+
+
+## Scenery that does not block the way: people, mostly. Recorded in core because
+## *where* a crowd stands is world layout, and a test should be able to count them.
+func _place_scenery(kind: StringName, at: Vector2i) -> void:
+	props.append({"kind": kind, "at": at, "size": Vector2i(1, 1), "solid": false})
+
+
+## Standing room in Harrowgate for the men who left the Muster.
+##
+## Deserters have to go somewhere, and §8's ambient register works better with
+## bodies than with numbers: the extra mouths explain the bread price by being
+## there. How many are drawn is the view's business — it reads army strength, the
+## same way the tents do. These are the places they stand.
+##
+## Scenery, not cast. No names, no sheets, no dialogue, outside the 25 (§6).
+## Market stalls: something to steal from, and a reason for a market square.
+const STALL_SPOTS: Array[Vector2i] = [
+	Vector2i(-4, -3), Vector2i(0, -4), Vector2i(4, -3),
+]
+
+const CROWD_SPOTS: Array[Vector2i] = [
+	Vector2i(-8, -6), Vector2i(-3, -9), Vector2i(4, -7), Vector2i(9, -4),
+	Vector2i(-11, -2), Vector2i(-6, 3), Vector2i(2, 5), Vector2i(7, 2),
+	Vector2i(-9, 8), Vector2i(-2, 10), Vector2i(6, 9), Vector2i(11, 6),
+]
+
+
+func _stamp_stalls() -> void:
+	for offset: Vector2i in STALL_SPOTS:
+		_stall_at(HARROWGATE + offset)
+	# One in Cairnwell, beside the trader, so a stranger who will not sell to you
+	# is standing in front of the thing he will not sell.
+	_stall_at(CAIRNWELL + Vector2i(-3, -3))
+	# And one in the Wide Acres, which has no cast in it at all.
+	#
+	# §8 says a crime nobody saw did not happen, and until now that rule had no
+	# reachable case: every stall on the map stood inside somebody's nine tiles,
+	# so theft was a flat tax rather than a decision. A stall nobody watches makes
+	# it a decision about *where* — the same shape as road against wild, made on
+	# the map rather than in a menu. Which is also why Wren sells the location of
+	# this one: she picks over ruins, so she knows where nobody is looking.
+	_stall_at(WIDE_ACRES + Vector2i(-2, -2))
+
+
+func _stall_at(at: Vector2i) -> void:
+	if is_passable(at):
+		props.append({"kind": &"stall", "at": at, "size": Vector2i(4, 5), "solid": false})
+
+
+## The stall you are standing next to, or NOWHERE.
+##
+## Measured to the stall's *footprint*, not to its anchor. The anchor is the
+## top-left corner of a four-by-five block and the sprite is drawn footed and
+## centred on it, so measuring to the point put the only usable spot at the back
+## corner of something five tiles tall — stand where the stall plainly is and you
+## were five tiles from being able to touch it. Found in play: the whole Harrowgate
+## market was unreachable except for one corner that happened to sit beside Bell,
+## which read as "you can only steal from Bell".
+func nearest_stall(tile: Vector2i, reach: float) -> Vector2i:
+	var best: Vector2i = NOWHERE
+	var best_distance: float = reach
+	for prop: Dictionary in props:
+		if (prop["kind"] as StringName) != &"stall":
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+		var distance: float = _distance_to_block(tile, at, size)
+		if distance <= best_distance:
+			best = at
+			best_distance = distance
+	return best
+
+
+## How far a tile is from the nearest tile of a block. Zero when standing on it.
+static func _distance_to_block(tile: Vector2i, at: Vector2i, size: Vector2i) -> float:
+	var nearest := Vector2(
+		clampf(float(tile.x), float(at.x), float(at.x + size.x - 1)),
+		clampf(float(tile.y), float(at.y), float(at.y + size.y - 1)),
+	)
+	return Vector2(tile).distance_to(nearest)
+
+
+func _stamp_crowd() -> void:
+	for offset: Vector2i in CROWD_SPOTS:
+		var at: Vector2i = HARROWGATE + offset
+		if is_passable(at):
+			_place_scenery(&"townsfolk", at)
 
 
 ## Every power base visible as a landmark, and nothing more — scenery, not systems

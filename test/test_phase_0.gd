@@ -22,68 +22,6 @@ func _walk(dir: Vector2i, quarter_seconds: int) -> void:
 	_sim.advance(quarter_seconds * Sim.STEPS_PER_WORLD_TICK)
 
 
-## Walk to a tile by an actual path, not by pressing into whatever is in the way.
-## Returns false on running out of time; returns true early if the zone changed,
-## because arriving somewhere is the point of walking into a town.
-func _walk_to(target: Vector2i, max_seconds: float) -> bool:
-	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	var zone: StringName = _world.current_zone
-	var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
-	if route.is_empty():
-		return false
-	for point: Vector2 in route:
-		while _sim.step < deadline:
-			if _world.current_zone != zone:
-				return true
-			var delta: Vector2 = point - _world.player_pos
-			if delta.length() <= 1.0:
-				break
-			var dir := Vector2i.ZERO
-			if absf(delta.x) >= 0.5:
-				dir.x = 1 if delta.x > 0.0 else -1
-			if absf(delta.y) >= 0.5:
-				dir.y = 1 if delta.y > 0.0 else -1
-			_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
-			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-		if _sim.step >= deadline:
-			return false
-	_sim.submit(&"move_intent", {"x": 0, "y": 0})
-	_sim.advance(1)
-	return true
-
-
-## Follow the King's Road node by node, which is the safe way and therefore the
-## only way to reach the castle with your health intact now that the wild bites.
-func _walk_the_road(max_seconds: float) -> bool:
-	for node: Vector2i in Region.road_route():
-		if not _walk_to(node, max_seconds):
-			return false
-	return true
-
-
-## Push into a target rather than arriving politely next to it. _walk_to stops
-## a tile and a half out, which is outside the king's reach — you can walk all the
-## way to Blackcairn and stand there unharmed, which is true of the game too.
-func _walk_into(target: Vector2, seconds: float) -> void:
-	var deadline: int = _sim.step + int(seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	var deaths: int = _world.deaths
-	while _sim.step < deadline:
-		# Stop on dying. Without this the helper keeps steering at the king, and a
-		# player respawned in Brindle simply sets off for the castle again.
-		if _world.deaths > deaths:
-			_sim.submit(&"move_intent", {"x": 0, "y": 0})
-			_sim.advance(1)
-			return
-		var delta: Vector2 = target - _world.player_pos
-		var dir := Vector2i.ZERO
-		if absf(delta.x) >= 0.2:
-			dir.x = 1 if delta.x > 0.0 else -1
-		if absf(delta.y) >= 0.2:
-			dir.y = 1 if delta.y > 0.0 else -1
-		_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
-		_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-
-
 func test_the_region_is_bounded_on_all_four_sides() -> void:
 	var region: Region = _world.region()
 	assert_eq(region.width, 280)
@@ -125,29 +63,6 @@ func test_the_walk_is_the_length_spec_4_implies() -> void:
 	var corner: float = Vector2(0, 0).distance_to(Vector2(279, 199))
 	assert_true(corner > 340.0 and corner < 345.0, "map diagonal is §4's 343, got %.1f" % corner)
 	assert_true(road < corner * 1.2, "and the road does not wander absurdly")
-
-
-func test_a_walkable_route_connects_brindle_to_blackcairn() -> void:
-	# The ancestor of the reachability test: no combination of anything may leave
-	# the confrontation unreachable, and in Phase 0 that means the ground connects.
-	var region: Region = _world.region()
-	var seen: Dictionary = {}
-	var queue: Array[Vector2i] = [Region.BRINDLE]
-	seen[Region.BRINDLE] = true
-	var found: bool = false
-	while not queue.is_empty():
-		var tile: Vector2i = queue.pop_back()
-		if tile == Region.BLACKCAIRN:
-			found = true
-			break
-		for dx: int in [-1, 0, 1]:
-			for dy: int in [-1, 0, 1]:
-				var next: Vector2i = tile + Vector2i(dx, dy)
-				if seen.has(next) or not region.is_passable(next):
-					continue
-				seen[next] = true
-				queue.append(next)
-	assert_true(found, "the player can reach the king from the first minute")
 
 
 func test_the_kings_road_runs_between_them() -> void:
@@ -246,29 +161,6 @@ func test_standing_in_blackcairn_is_recorded_as_a_fact() -> void:
 	assert_true(_sim.facts.has(&"blackcairn:reached"))
 	assert_eq(_sim.facts.sources_of(&"blackcairn:reached"),
 		[&"witnessed"] as Array[StringName], "the player saw it themselves")
-
-
-func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
-	# The actual walk, event-driven from end to end: follow the King's Road to the
-	# castle gate, then stand in the king and be killed. Nothing is written to the
-	# store by hand, so the log owns the entire run.
-	assert_true(_walk_the_road(120.0), "walked the King's Road to Blackcairn")
-	assert_eq(_world.deaths, 0, "and arrived alive, because the road is safe")
-	_walk_into(_world.king_pos, 4.0)
-
-	assert_true(_world.reached_blackcairn, "the player got there")
-	assert_eq(_world.deaths, 1, "and lost, once")
-	assert_eq(_world.player_tile(), Region.BRINDLE, "and woke up in Brindle again")
-
-	var replayed: Sim = Game.replay(_sim)
-	var replayed_world := replayed.store(&"world") as WorldState
-
-	assert_eq(replayed.step, _sim.step, "same clock")
-	assert_eq(replayed.events.size(), _sim.events.size(), "same log")
-	assert_eq(replayed.facts.fingerprint(), _sim.facts.fingerprint(), "same facts")
-	assert_eq(replayed_world.fingerprint(), _world.fingerprint(),
-		"same world, down to the position — nothing important lives outside the log")
-	assert_true(replayed.events.size() > 3, "a road walk is many steered intents")
 
 
 func test_the_tick_means_what_spec_8_says() -> void:

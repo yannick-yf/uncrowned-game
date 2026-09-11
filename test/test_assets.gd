@@ -1,5 +1,8 @@
 extends TestCase
 
+## Slow by nature: it reads 1,867 files off disk.
+const SLOW: bool = true
+
 ## SPECS §13's asset rule, as a test.
 ##
 ## The approved pack is where the palette came from, so these pass by construction

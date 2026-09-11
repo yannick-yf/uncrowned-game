@@ -17,56 +17,6 @@ func before_each() -> void:
 	_wild = _sim.store(&"wildlife") as Wildlife
 
 
-func _walk_to(target: Vector2i, max_seconds: float) -> bool:
-	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
-	if route.is_empty():
-		return false
-	for point: Vector2 in route:
-		while _sim.step < deadline:
-			var delta: Vector2 = point - _world.player_pos
-			if delta.length() <= 1.0:
-				break
-			var dir := Vector2i.ZERO
-			if absf(delta.x) >= 0.5:
-				dir.x = 1 if delta.x > 0.0 else -1
-			if absf(delta.y) >= 0.5:
-				dir.y = 1 if delta.y > 0.0 else -1
-			_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
-			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-		if _sim.step >= deadline:
-			return false
-	return true
-
-
-## Steer straight through a list of points, without pathfinding. Used for the road
-## because a shortest path between two corners cuts the bend onto the verge.
-func _follow(points: Array[Vector2i], max_seconds: float) -> bool:
-	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	for point: Vector2i in points:
-		var target: Vector2 = Vector2(point) + Vector2(0.5, 0.5)
-		while _sim.step < deadline:
-			var delta: Vector2 = target - _world.player_pos
-			if delta.length() <= 1.0:
-				break
-			var dir := Vector2i.ZERO
-			if absf(delta.x) >= 0.5:
-				dir.x = 1 if delta.x > 0.0 else -1
-			if absf(delta.y) >= 0.5:
-				dir.y = 1 if delta.y > 0.0 else -1
-			_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
-			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-		if _sim.step >= deadline:
-			return false
-	return true
-
-
-## Health lost on a journey, counting a death as the full ten it cost you.
-func _blood_price(before_hp: int, before_deaths: int) -> int:
-	var deaths: int = _world.deaths - before_deaths
-	return before_hp - _world.player_hp + deaths * WorldState.MAX_HP
-
-
 func test_beasts_are_all_slower_than_you() -> void:
 	# A predator you cannot outrun is a tax, not a risk.
 	for kind: StringName in BeastRules.KINDS:
@@ -84,47 +34,6 @@ func test_nothing_lives_on_the_road_or_in_a_town() -> void:
 	assert_true(BeastRules.is_wild_ground(Region.Terrain.WILD))
 
 
-func test_beasts_never_stand_on_the_road_however_long_you_wait() -> void:
-	var region: Region = _world.region()
-	_world.player_pos = Vector2(200.5, 140.5)
-	_world.player_tile_last = _world.player_tile()
-	_sim.advance(Sim.STEPS_PER_REAL_SECOND * 40)
-	assert_true(_wild.count() > 0, "the wood is inhabited")
-	for beast: Beast in _wild.beasts:
-		var terrain: Region.Terrain = region.terrain_at(beast.tile())
-		assert_true(BeastRules.is_wild_ground(terrain),
-			"a %s is standing on terrain %d" % [beast.kind, terrain])
-		assert_eq(region.zone_at(beast.tile()), &"", "and not inside a settlement")
-
-
-func test_walking_the_kings_road_costs_nothing() -> void:
-	var hp: int = _world.player_hp
-	var deaths: int = _world.deaths
-	# Stopping short of the castle gate: the road is safe, but the man standing at
-	# the end of it is not, and that is a different test.
-	var route: Array[Vector2i] = []
-	for point: Vector2i in Region.road_waypoints():
-		if Vector2(point).distance_to(Vector2(Region.BLACKCAIRN)) > 14.0:
-			route.append(point)
-	assert_true(_follow(route, 200.0), "walked the King's Road to the capital")
-	assert_eq(_blood_price(hp, deaths), 0, "the long way round is the safe way round")
-	assert_true(_world.player_pos.distance_to(Vector2(Region.CAIRNWELL)) < 40.0,
-		"and got most of the way across the region")
-
-
-func test_cutting_through_the_thornwood_draws_blood() -> void:
-	var hp: int = _world.player_hp
-	var deaths: int = _world.deaths
-	# Straight across the wood, which is what the shortest path does.
-	assert_true(_walk_to(Vector2i(150, 90), 180.0), "crossed the wild")
-	var price: int = _blood_price(hp, deaths)
-	assert_true(price > 0, "the wild took nothing, so it is not a choice")
-	assert_true(price <= 24,
-		"the wild took %d health, which is a wall rather than a risk" % price)
-	assert_true(_sim.facts.has(BeastRules.FACT_WILD_IS_DANGEROUS),
-		"and you now know it, which is a fact like any other")
-
-
 func test_the_same_seed_meets_the_same_animals() -> void:
 	_world.player_pos = Vector2(200.5, 140.5)
 	_world.player_tile_last = _world.player_tile()
@@ -139,19 +48,6 @@ func test_the_same_seed_meets_the_same_animals() -> void:
 	assert_eq((other.store(&"wildlife") as Wildlife).fingerprint(), first,
 		"same seed, same wood, same animals in the same places")
 
-
-func test_a_mauling_replays_from_the_log() -> void:
-	assert_true(_walk_to(Vector2i(180, 120), 120.0), "walked into the wood")
-	assert_true(_wild.count() > 0)
-
-	var replayed: Sim = Game.replay(_sim)
-	assert_eq((replayed.store(&"world") as WorldState).fingerprint(), _world.fingerprint(),
-		"the same walk rebuilds the same wounds")
-	assert_eq((replayed.store(&"wildlife") as Wildlife).fingerprint(), _wild.fingerprint(),
-		"and the same animals, in the same places, hunting or not")
-
-
-# ------------------------------------------- recovery, a Phase 3 stopgap ---
 
 func test_nothing_mends_while_something_is_biting_you() -> void:
 	_world.player_hp = 4

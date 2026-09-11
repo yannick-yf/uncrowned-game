@@ -10,6 +10,9 @@ const CAST_PATH: String = "res://content/cast.json"
 
 var npcs: Dictionary = {}
 var fact_descriptions: Dictionary = {}
+## Band -> the narrated line anybody opens with at that standing, when nobody has
+## written them one of their own.
+var dispositions: Dictionary = {}
 
 static var _shared: Cast = null
 
@@ -27,6 +30,10 @@ static func load_from(path: String) -> Cast:
 		return cast
 	var root: Dictionary = parsed as Dictionary
 
+	for band: String in (root.get("dispositions", {}) as Dictionary).keys():
+		cast.dispositions[StringName(band)] = String(
+			(root["dispositions"] as Dictionary)[band])
+
 	for fact: String in (root.get("facts", {}) as Dictionary).keys():
 		cast.fact_descriptions[StringName(fact)] = String((root["facts"] as Dictionary)[fact])
 
@@ -41,6 +48,12 @@ static func load_from(path: String) -> Cast:
 		npc.tile = Vector2i(int(at[0]), int(at[1]))
 		npc.sprite = String(row.get("sprite", ""))
 		npc.greeting = String(row.get("greeting", ""))
+		for entry: Variant in (row.get("alt_greetings", []) as Array):
+			var alt: Dictionary = entry as Dictionary
+			npc.alt_greetings.append({
+				"when": StringName(alt.get("when", "")),
+				"text": String(alt.get("text", "")),
+			})
 		for entry: Variant in (row.get("options", []) as Array):
 			var data: Dictionary = entry as Dictionary
 			var option := DialogueOption.new()
@@ -51,9 +64,78 @@ static func load_from(path: String) -> Cast:
 			option.teaches = StringName(data.get("teaches", ""))
 			option.requires = StringName(data.get("requires", ""))
 			option.hides_after = StringName(data.get("hides_after", ""))
+			option.requires_condition = StringName(data.get("requires_condition", ""))
+			option.forbids_condition = StringName(data.get("forbids_condition", ""))
+			option.costs = StringName(data.get("costs", ""))
 			npc.options.append(option)
 		cast.npcs[npc.id] = npc
+
+	cast._load_strangers(root.get("strangers", {}) as Dictionary)
 	return cast
+
+
+## Generic types, placed. Everyone of a trade shares one line set, so a second
+## trader anywhere costs a placement and not a sheet — which is what keeps §6's
+## twenty-five from quietly becoming thirty.
+func _load_strangers(section: Dictionary) -> void:
+	var types: Dictionary = section.get("types", {}) as Dictionary
+	var placed: Dictionary = {}
+	for entry: Variant in (section.get("placements", []) as Array):
+		var spot: Dictionary = entry as Dictionary
+		var kind: StringName = StringName(spot.get("kind", ""))
+		if not types.has(String(kind)):
+			continue
+		var row: Dictionary = types[String(kind)] as Dictionary
+		placed[kind] = int(placed.get(kind, 0)) + 1
+		var npc := Npc.new()
+		npc.id = StringName("%s@%d" % [kind, placed[kind]])
+		npc.kind = kind
+		npc.generic = true
+		npc.display_name = String(row.get("name", "A stranger"))
+		npc.role = String(row.get("role", ""))
+		npc.zone = StringName(spot.get("zone", ""))
+		var at: Array = spot.get("tile", [0, 0]) as Array
+		npc.tile = Vector2i(int(at[0]), int(at[1]))
+		npc.sprite = String(row.get("sprite", ""))
+		npc.greeting = String(row.get("greeting", ""))
+		for alt_entry: Variant in (row.get("alt_greetings", []) as Array):
+			var alt: Dictionary = alt_entry as Dictionary
+			npc.alt_greetings.append({
+				"when": StringName(alt.get("when", "")),
+				"text": String(alt.get("text", "")),
+			})
+		for option_entry: Variant in (row.get("options", []) as Array):
+			var data: Dictionary = option_entry as Dictionary
+			var option := DialogueOption.new()
+			option.intent = StringName(data.get("intent", ""))
+			option.text = String(data.get("text", ""))
+			option.reply = String(data.get("reply", ""))
+			option.tag = StringName(data.get("tag", ""))
+			option.teaches = StringName(data.get("teaches", ""))
+			option.requires = StringName(data.get("requires", ""))
+			option.hides_after = StringName(data.get("hides_after", ""))
+			option.requires_condition = StringName(data.get("requires_condition", ""))
+			option.forbids_condition = StringName(data.get("forbids_condition", ""))
+			option.costs = StringName(data.get("costs", ""))
+			npc.options.append(option)
+		npcs[npc.id] = npc
+
+
+## The twenty-five. Strangers are scenery with lines, and §6's budget does not
+## count them.
+func named() -> Array[Npc]:
+	var out: Array[Npc] = []
+	for id: StringName in npcs.keys():
+		var npc: Npc = npcs[id] as Npc
+		if not npc.generic:
+			out.append(npc)
+	return out
+
+
+## How somebody at this standing opens, or "" if that band has no shared line.
+func disposition_line(band: StringName, speaker: String) -> String:
+	var pattern: String = String(dispositions.get(band, ""))
+	return pattern % speaker if pattern != "" else ""
 
 
 func get_npc(id: StringName) -> Npc:

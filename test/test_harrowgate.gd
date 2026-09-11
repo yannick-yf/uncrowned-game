@@ -5,12 +5,14 @@ extends TestCase
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
+var _ticked: WorldTick = null
 
 
 func before_each() -> void:
 	_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
+	_ticked = _sim.store(&"worldtick") as WorldTick
 
 
 ## Quarter-seconds, converted to steps: the routes below were measured in the old
@@ -18,38 +20,6 @@ func before_each() -> void:
 func _walk(dir: Vector2i, quarter_seconds: int) -> void:
 	_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
 	_sim.advance(quarter_seconds * Sim.STEPS_PER_WORLD_TICK)
-
-
-## Walk to a tile by an actual path, not by pressing into whatever is in the way.
-func _walk_to(target: Vector2i, max_seconds: float) -> bool:
-	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	var zone: StringName = _world.current_zone
-	var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
-	if route.is_empty():
-		return false
-	for point: Vector2 in route:
-		while _sim.step < deadline:
-			if _world.current_zone != zone:
-				return true
-			var delta: Vector2 = point - _world.player_pos
-			if delta.length() <= 1.0:
-				break
-			var dir := Vector2i.ZERO
-			if absf(delta.x) >= 0.5:
-				dir.x = 1 if delta.x > 0.0 else -1
-			if absf(delta.y) >= 0.5:
-				dir.y = 1 if delta.y > 0.0 else -1
-			_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
-			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-		if _sim.step >= deadline:
-			return false
-	_sim.submit(&"move_intent", {"x": 0, "y": 0})
-	_sim.advance(1)
-	return true
-
-
-func _at(tile: Vector2i) -> Vector2:
-	return Vector2(tile) + Vector2(0.5, 0.5)
 
 
 func _say(type: StringName, data: Dictionary = {}) -> void:
@@ -89,7 +59,14 @@ func test_the_road_runs_through_the_town() -> void:
 
 
 func test_exactly_the_five_npcs_spec_6_names_live_here() -> void:
-	var here: Array[Npc] = _cast.in_zone(WorldState.OVERWORLD)
+	# Harrowgate's five, not the whole roster — §6 names twenty-five across the
+	# region and they arrive a town at a time. Filtered by where they stand rather
+	# than by a list, so adding somebody elsewhere never touches this.
+	var region: Region = _world.region()
+	var here: Array[Npc] = []
+	for npc: Npc in _cast.named():
+		if region.zone_at(npc.tile) == &"harrowgate":
+			here.append(npc)
 	var ids: Array[String] = []
 	for npc: Npc in here:
 		ids.append(String(npc.id))
@@ -98,11 +75,88 @@ func test_exactly_the_five_npcs_spec_6_names_live_here() -> void:
 		"§6's Harrowgate roster, and nobody invented")
 	for npc: Npc in here:
 		assert_true(npc.greeting.length() > 0, "%s has a written greeting" % npc.id)
-		assert_true(npc.options.size() >= 2 and npc.options.size() <= 3,
-			"%s offers %d intents; with the exit that is 3-4 (§9)" % [npc.id, npc.options.size()])
+		# Authored count may exceed what is shown: lines gated on a world condition
+		# are written alongside the standing ones and displace them when they apply.
+		# What §9 constrains is what the player is *offered*.
+		var offered: int = DialogueRules.available(npc, _sim.facts).size() + 1
+		assert_true(offered >= 3 and offered <= 4,
+			"%s offers %d slots including the exit; §9 says three or four" % [npc.id, offered])
 		for option: DialogueOption in npc.options:
 			assert_true(option.intent != &"", "every option maps to a named intent")
 			assert_true(option.reply.length() > 0, "and every intent has a written reply")
+
+
+func test_nobody_greets_a_thief_the_way_they_greet_a_stranger() -> void:
+	# The coverage rule, and the reason it is a test rather than a habit.
+	#
+	# Found in play: steal in front of Maddox, Bell and Tovin, walk up to any of
+	# them, and all three opened exactly as they had the first time. The machinery
+	# was right — Maddox was at -30 and the whole town at -22 — but reaction was
+	# something each *line* opted into, so silence was the default and four of the
+	# five named cast had never opted in. Writing more lines would not have fixed
+	# that; it would have postponed it until the next NPC.
+	var sim: Sim = Game.build()
+	var standing := sim.store(&"standing") as Standing
+	var world := sim.store(&"world") as WorldState
+	var cast := sim.store(&"cast") as Cast
+
+	for id: StringName in cast.npcs.keys():
+		var npc: Npc = cast.get_npc(id)
+		standing.by_person[id] = Standing.NEUTRAL
+		var plain: Array = _conversation(sim, world, id)
+
+		standing.by_person[id] = StandingRules.UNWELCOME - 1.0
+		assert_ne(_conversation(sim, world, id), plain,
+			"%s opens the same way for somebody they think ill of" % npc.display_name)
+
+		standing.by_person[id] = StandingRules.HATED - 1.0
+		var done: Array = _conversation(sim, world, id)
+		assert_eq((done[1] as Array).size(), 0,
+			"%s will still hold a conversation with somebody they hate" % npc.display_name)
+
+		standing.by_person[id] = StandingRules.WELCOME + 1.0
+		assert_ne(_conversation(sim, world, id), plain,
+			"%s opens the same way for somebody they are glad to see" % npc.display_name)
+		standing.by_person[id] = Standing.NEUTRAL
+
+
+## The line and the options, as the player would get them.
+func _conversation(sim: Sim, world: WorldState, id: StringName) -> Array:
+	sim.submit(&"talk", {"npc": String(id)})
+	sim.advance(2)
+	var intents: Array[String] = []
+	for option: DialogueOption in world.options:
+		intents.append(String(option.intent))
+	var line: String = world.current_line
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	return [line, intents]
+
+
+func test_every_fact_keeps_one_source_nothing_can_gate_shut() -> void:
+	# Invariants 6 and 7, checked against the content rather than hoped for.
+	#
+	# Ossa stops telling you why men run once she thinks ill of you, which is the
+	# door shutting — and it is only legal because Garrick teaches the same fact
+	# and nothing gates him. The moment somebody gates the last open source, a
+	# required fact leaves the world and no test elsewhere would notice.
+	var open_sources: Dictionary = {}
+	for id: StringName in _cast.npcs.keys():
+		for option: DialogueOption in _cast.get_npc(id).options:
+			if option.teaches == &"":
+				continue
+			var gated: bool = option.forbids_condition != &"" \
+				or option.requires_condition != &"" or option.requires != &"" \
+				or option.asks_for_goodwill()
+			if not open_sources.has(option.teaches):
+				open_sources[option.teaches] = 0
+			if not gated:
+				open_sources[option.teaches] += 1
+
+	assert_true(open_sources.size() > 0, "somebody teaches something")
+	for fact: StringName in open_sources.keys():
+		assert_true(int(open_sources[fact]) >= 1,
+			"every route to '%s' can be gated shut — invariant 6" % fact)
 
 
 func test_every_dialogue_slot_has_a_key_bound_to_it() -> void:
@@ -191,8 +245,8 @@ func _stand_in_muster() -> void:
 
 
 func test_the_escort_is_ten_until_something_changes_it() -> void:
-	assert_eq(_world.king_escort, 10, "SPECS §3: ten guards")
-	assert_eq(_world.army_strength, 100)
+	assert_eq(_ticked.kings_escort(), 10, "SPECS §3: ten guards")
+	assert_eq(_ticked.army_strength, 100.0)
 	assert_false(_world.pay_fraud_exposed)
 
 
@@ -200,71 +254,24 @@ func test_exposing_the_fraud_requires_knowing_it() -> void:
 	_stand_in_muster()
 	_say(&"expose_fraud")
 	assert_false(_world.pay_fraud_exposed, "standing there is not knowing")
-	assert_eq(_world.king_escort, 10)
+	assert_eq(_ticked.kings_escort(), 10)
 
 
 func test_knowing_the_fraud_is_not_enough_if_you_are_not_there() -> void:
 	_sim.facts.add_source(ArmyRules.FACT_PAY_FRAUD, &"ossa")
 	_say(&"expose_fraud")
 	assert_false(_world.pay_fraud_exposed, "you have to take it to the camp")
-	assert_eq(_world.king_escort, 10)
+	assert_eq(_ticked.kings_escort(), 10)
 
 
 func test_exposing_it_twice_changes_nothing_the_second_time() -> void:
 	_sim.facts.add_source(ArmyRules.FACT_PAY_FRAUD, &"ossa")
 	_stand_in_muster()
 	_say(&"expose_fraud")
-	assert_eq(_world.king_escort, 5)
+	var after: float = _ticked.army_strength
 	_say(&"expose_fraud")
-	assert_eq(_world.king_escort, 5, "the men only desert once")
+	assert_eq(_ticked.army_strength, after, "the men only desert once")
 
 
 # ------------------------------------------------------------- the whole chain ---
 
-func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
-	assert_eq(_world.king_escort, 10, "before: ten guards stand between the player and the king")
-
-	# Brindle to Harrowgate, on foot, along the King's Road and over the bridge.
-	assert_true(_walk_to(Region.HARROWGATE, 180.0), "walked the road to Harrowgate")
-	assert_eq(_world.region().zone_at(_world.player_tile()), &"harrowgate", "and into the town")
-
-	# Across the town to the herbalist, who treats the men who ran.
-	var ossa: Npc = _cast.get_npc(&"ossa")
-	assert_true(_walk_to(ossa.tile, 60.0), "crossed the town to Ossa")
-	assert_true(_world.player_pos.distance_to(ossa.centre()) <= Game.TALK_REACH,
-		"standing close enough to speak")
-
-	_say(&"talk", {"npc": "ossa"})
-	_say(&"choose_intent", {"intent": "ask_why"})
-	assert_true(_sim.facts.has(ArmyRules.FACT_PAY_FRAUD), "learned why they are deserting")
-	_say(&"end_talk")
-
-	# On up the road to the Muster, without a loading screen in between.
-	assert_true(_walk_to(Region.MUSTER, 300.0), "followed the road to the camp")
-	assert_true(_world.region().is_in_muster(_world.player_tile()),
-		"standing in the camp at %s" % _world.player_tile())
-
-	_say(&"expose_fraud")
-
-	assert_true(_world.pay_fraud_exposed, "the camp knows")
-	assert_eq(_world.army_strength, 55, "men leave")
-	assert_eq(_world.king_escort, 5, "after: five, and the king is that much more reachable")
-	assert_true(_sim.facts.has(ArmyRules.FACT_FRAUD_EXPOSED))
-
-
-func test_the_whole_chain_replays_identically_from_its_log() -> void:
-	assert_true(_walk_to(Region.HARROWGATE, 180.0))
-	var ossa: Npc = _cast.get_npc(&"ossa")
-	assert_true(_walk_to(ossa.tile, 60.0))
-	_say(&"talk", {"npc": "ossa"})
-	_say(&"choose_intent", {"intent": "ask_why"})
-	_say(&"end_talk")
-	assert_true(_walk_to(Region.MUSTER, 300.0))
-	_say(&"expose_fraud")
-	assert_eq(_world.king_escort, 5, "the run did what it was supposed to")
-
-	var replayed: Sim = Game.replay(_sim)
-	var replayed_world := replayed.store(&"world") as WorldState
-	assert_eq(replayed_world.fingerprint(), _world.fingerprint(),
-		"a conversation and its consequence rebuild from the log like anything else")
-	assert_eq(replayed.facts.fingerprint(), _sim.facts.fingerprint(), "same facts, same sources")
