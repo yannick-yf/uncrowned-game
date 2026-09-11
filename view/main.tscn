@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://view/main.gd" id="1_main"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Info" type="Label" parent="HUD"]
+offset_left = 6.0
+offset_top = 4.0
+offset_right = 480.0
+offset_bottom = 76.0
+theme_override_colors/font_color = Color(0.94, 0.93, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 10
+
+[node name="Prompt" type="Label" parent="HUD"]
+offset_left = 6.0
+offset_top = 320.0
+offset_right = 634.0
+offset_bottom = 356.0
+theme_override_colors/font_color = Color(1, 0.92, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 10
+
+[node name="DialogueBox" type="ColorRect" parent="HUD"]
+visible = false
+offset_left = 8.0
+offset_top = 216.0
+offset_right = 632.0
+offset_bottom = 352.0
+color = Color(0.0784314, 0.0705882, 0.0862745, 0.901961)
+
+[node name="Speaker" type="Label" parent="HUD/DialogueBox"]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 616.0
+offset_bottom = 20.0
+theme_override_colors/font_color = Color(1, 0.847059, 0.443137, 1)
+theme_override_font_sizes/font_size = 11
+
+[node name="Line" type="Label" parent="HUD/DialogueBox"]
+offset_left = 8.0
+offset_top = 22.0
+offset_right = 616.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.94, 0.93, 0.88, 1)
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 3
+
+[node name="Choices" type="Label" parent="HUD/DialogueBox"]
+offset_left = 8.0
+offset_top = 78.0
+offset_right = 616.0
+offset_bottom = 132.0
+theme_override_colors/font_color = Color(0.694118, 0.85098, 0.803922, 1)
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 3

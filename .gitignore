@@ -15,3 +15,21 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# The approved asset pack (SPECS §13): the art is committed, the rest is not.
+#
+# The PNGs are only 4 MB and they *define* the locked palette in
+# content/palette.txt, so the repo has to carry them — a clone without them
+# cannot run the asset tests. What is excluded:
+#   - 97 MB of music and sound effects that nothing references, while §14 Audio
+#     is still TBD. Nothing is decided, so nothing is vendored.
+#   - 5 MB of animated GIF previews, which Godot does not import at all (no
+#     .import file is generated for a single one of them).
+# Both are re-downloadable from the itch.io URL recorded in
+# assets/NinjaAdventure/LICENCE-as-downloaded.md.
+assets/**/Audio/
+assets/**/*.gif

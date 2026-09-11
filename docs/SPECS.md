@@ -12,7 +12,7 @@
 
 **Status:** draft — sections 1, 3, 5, 8, 9, 10, 11 populated
 **Last updated:** 2026-09-10
-**Version:** 0.6
+**Version:** 0.7
 **Location:** this file, `uncrowned-game/docs/SPECS.md`, is the single source of
 truth. `SPECS_wild_notes.md` holds the original raw notes for reference only.
 
@@ -184,26 +184,28 @@ One region, bounded on all four sides so the playable area needs no invisible wa
 - **North** — mountains, with the castle set against them
 
 **Scale (settled):** the region is roughly **280 × 200 tiles** — a grid of **7 × 9
-overworld screens at 40 × 22 tiles each** — walked at about **4 tiles per second**.
+overworld screens at 40 × 22 tiles each** — walked at **6 tiles per second**.
 The *screens* are a planning unit for laying the region out on paper, not an engine
 concept: the camera scrolls smoothly and follows the player, so tiles-per-screen
 never has to be a whole number (§13).
 
 Two numbers follow from that, and only the second is a design target:
 
-- **Straight-line corner to corner: ~86 seconds.** Movement is **8-way**, so
-  Brindle in the south-east to Blackcairn in the north-west is the true diagonal —
-  √(280² + 198²) = 343 tiles — which at 4 tiles/sec is 1 min 26 s. (The 4-way
-  Manhattan figure, for reference, would be 280 + 198 = 478 tiles, two minutes.)
-  This is *by design*, not a shortfall — the king is reachable from minute one, and
-  a map that took a quarter of an hour to cross would be arguing with Pillar 1.
+- **Brindle to Blackcairn, straight line: ~43 seconds.** Movement is **8-way**,
+  and the two sit 255 tiles apart — Brindle in the south-east, Blackcairn
+  centre-north-west — which at 6 tiles/sec is 42.5 seconds.
+  The map's *own* diagonal, (0,0) to (279,199), is 343 tiles: that figure bounds
+  the region but measures no route, because no settlement stands in a corner.
+  A short crossing is *by design*, not a shortfall — the king is reachable from
+  minute one, and a map that took a quarter of an hour to cross would be arguing
+  with Pillar 1.
 - **Actual travel along the King's Road: 4–6 minutes.** The road dog-legs south and
   west before it turns north, and real travel carries terrain, the river crossings
   and encounters. **This is the figure to tune**, and the only one worth timing.
 
 > Consequence for Phase 0. The vertical slice has no terrain and no encounters, so
-> the walk it measures is the bare diagonal: expect roughly a minute and a half
-> (343 tiles at 4 tiles/sec), and read that as the instrument reading correctly. What Phase 0 settles is whether 4
+> the walk it measures is the bare straight line: expect roughly 40 seconds
+> (255 tiles at 6 tiles/sec), and read that as the instrument reading correctly. What Phase 0 settles is whether 4
 > tiles/sec *feels* right at 40 × 22 tiles a screen — the pace of the walk, not its
 > duration. The 4–6 minute target is measured later, once the road has something on
 > it.
@@ -244,7 +246,7 @@ Consistent with Pillar 1: nothing is locked, some things are simply unknown.
 | 5 | **The Muster** | Centre, on the crossroads | the Muster | The standing force. Muster rolls, pay fraud, the signed orders |
 | 6 | **Saltmarch & Greyhold** | South-west, on the coast | Greyhold | Port town and the lord who administers the tiered law, and privately loathes it |
 | 7 | **Cairnwell** | Centre-north-west | the bank | The capital. Money, debts, the creditor the king fears |
-| 8 | **Blackcairn** | North-west, against the mountains | — | The castle. The king. Reachable from minute one |
+| 8 | **Blackcairn** | Centre-north-west, against the mountains | — | The castle. The king. Reachable from minute one |
 
 **Optional zones** (cut first if behind): **The Redcut**, the iron quarry in the
 eastern mountains — cutting the Cinderworks' ore supply; **the Thornwood depths**,
@@ -413,7 +415,20 @@ Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separat
 | **Ossa** | Herbalist. Treats everyone, including deserters | Where Kell is hiding |
 | **Garrick** | Caravan master, moves between zones | The ford. Also carries rumour physically across the map |
 
-**The Wide Acres — the farms**
+> **Proposed, needs approval 🟡 — who tells the player about the pay fraud.**
+> §3 lists "expose the pay fraud" as one of four ways to weaken the Muster and
+> §6 gives the fraud to Odile, but **no Harrowgate NPC is specified as knowing
+> about it**, so Phase 1 had to assign it. Nobody new was invented; two people
+> already here fit the text:
+>
+> - **Ossa** (primary) — she already "treats everyone, including deserters", and
+>   men desert because they are not being paid. She hears why from the people it
+>   happened to.
+> - **Garrick** (second source) — he already "moves between zones"; a caravan
+>   master who supplied the camp would notice the rolls outrunning the mouths.
+>
+> Two sources, so §7's redundancy rule holds: killing either leaves the fact in
+> the world. Reject this and the chain needs a different first link.
 
 | Name | Role | Holds |
 |---|---|---|
@@ -555,6 +570,24 @@ advances **4 ticks per real second** while the player is in the overworld. So:
 Every drift rate in the table below is therefore expressed per in-game minute, and
 "over the following in-game days" (§2) means the player watches a pillar's fallout
 land over the next half-hour of play.
+
+**Two clocks (settled).** A *step* is the simulation's own heartbeat at **60 a
+second**; a *world tick* is one in-game minute and fires **every 15th step**. That
+is exactly the 4 in-game minutes per real second above — the world clock did not
+change — but the simulation no longer resolves the player's hands at its speed.
+
+| | |
+|---|---|
+| 1 step | 1/60 s. Movement, collision, input, dialogue |
+| 15 steps | 1 world tick = 1 in-game minute. The twelve drifting quantities |
+| 1 real second | 60 steps, 4 world ticks, 4 in-game minutes |
+
+Why two, recorded because it was the wrong call first time: a single 4 Hz clock is
+right for grain prices and wrong for a walking man. Every key press waited up to
+250 ms and a quarter of a second of input lag distorts every judgement made while
+playing — including the judgement about walk speed this phase exists to settle. A
+system says which clock it is on: anything the player's hands can feel is on the
+step, anything that drifts is on the tick.
 
 **Combat runs beside the sim, and the world clock stops during a fight.** A fight is
 not advanced by world ticks and does not advance them; when it resolves, the sim
@@ -821,10 +854,43 @@ different artists are never mixed: different palettes, pixel densities and light
 angles do not reconcile, and mixing packs is the most recognisable mark of an
 amateur-looking game. A validator rejects any asset that is off-palette or off-grid.
 
-**Approved asset packs:** TBD
+### Approved asset pack (settled) — exactly one
+
+| | |
+|---|---|
+| **Pack** | Ninja Adventure Asset Pack |
+| **Authors** | Pixel-boy and AAA |
+| **Licence** | **CC0 1.0 Universal** — commercial use permitted, modification permitted, attribution appreciated but not required |
+| **Source** | <https://pixel-boy.itch.io/ninja-adventure-asset-pack> |
+| **Vendored at** | `assets/NinjaAdventure/`, downloaded 2026-09-10 |
+| **Licence evidence** | `assets/NinjaAdventure/LICENCE-as-downloaded.md`, alongside the pack's own `LICENSE.txt` and `README.md` |
+
+The pack ships its own full CC0 text and an explicit statement from the authors,
+which is why it was accepted: the licence travels with the files rather than living
+on a store page that can change.
+
+> **Do not source this pack from GitHub.** The mirror at `pixel-boy/NinjaAdventure`
+> carries no licence file and no stated terms — checked 2026-09-10. Absence of a
+> licence is not permission. See the licence-evidence file for the full check.
+
+**One pack, and swapping it is an edit to this table.** No asset by any other
+artist may enter `assets/` while this entry stands. Adding a second artist means
+**replacing** the entry above, not appending to it, and re-extracting the palette
+below from whatever replaces it. That is deliberately awkward: the rule exists
+because mixing packs is the most recognisable mark of an amateur game, and it
+happens one borrowed sprite at a time, never as a decision anyone announces.
+
+Credit the authors in the shipped game regardless. CC0 does not require it; we do
+it anyway, and it costs a line.
 
 **Resolution & pixel grid (settled):** internal resolution **640 × 360**, **16 px**
-tiles. Character height TBD.
+tiles.
+
+**Character height (settled):** **16 px** — the pack's characters are 16 × 16
+frames, so a character occupies exactly one tile. Sprite sheets are 64 × 112, laid
+out 4 columns × 7 rows of those frames. Within the frame the figure is
+bottom-aligned and 13–16 px tall, most commonly 15. Dialogue portraits ("facesets")
+are 38 × 38 and are *not* on the tile grid, by the pack's design.
 
 360 is non-negotiable — it scales ×2 to 720p and ×3 to 1080p, and integer scaling
 matters more than the half tile left over at the viewport edge (360 ÷ 16 = 22.5).
@@ -832,7 +898,80 @@ Because the camera scrolls and follows the player, tiles-per-screen is a plannin
 number rather than a constraint, so nothing has to divide evenly. If snapped
 interiors are wanted later, rooms are 40 × 22 tiles centred, with a 4 px letterbox.
 
-**Palette:** TBD — number of colours, ramps, the rule for when a colour is allowed.
+### Palette (locked) — 340 colours
+
+The palette is **`content/palette.txt`**: 340 colours, extracted from every opaque
+pixel of the 1899 art PNGs in the approved pack.
+
+**No colour in it was invented, and none may be.** The pack's palette *is* the
+palette — that is the whole rule. The file is generated, not authored: the only
+legitimate way to change it is to replace the approved pack above and re-extract.
+
+Two things the extraction deliberately excludes, both worth knowing:
+
+- **The 16 `*Preview*.png` contact sheets.** These are scaled marketing composites
+  — the itch.io store images — and their resampling invents 193 blended colours
+  that appear in no actual art file. Including them would have locked a 533-colour
+  palette, 193 of which are artefacts of image scaling rather than choices anyone
+  made. They are skipped by the validator for the same reason.
+- **Fully transparent pixels**, which have no colour to check.
+
+340 is a large palette for pixel art because this is a large pack with several
+sub-themes, not a single 32-colour ramp. That is a fact about the pack rather than
+a decision, and it is recorded rather than tidied. If a tighter palette is wanted
+later, that is a new pack, not a new spreadsheet.
+
+### The validator
+
+`tools/asset_validator.gd`, wired into the test suite as `test/test_assets.gd` and
+runnable on its own with `godot --headless --path . -s tools/validate_assets.gd`.
+It fails the build if any image in `assets/` uses a colour outside the locked
+palette, or if a tile source is off the 16 px grid.
+
+**The approved pack is the palette source, so it passes by construction.** That is
+not a weakness in the check — it is the point. The validator exists for what gets
+added *later*: the sprite borrowed from another artist in six months, which is
+exactly when nobody is looking. It has its own negative tests, because a validator
+that has never rejected anything is not known to work.
+
+#### What it catches, and what it does not
+
+340 colours is a **loose net**, and a later reader should not trust it further
+than it goes.
+
+**It catches:** another artist's pack dropped into `assets/` wholesale. Two
+independently-authored pixel-art packs essentially never share a palette, so a
+foreign pack fails on its first file. That is the failure this rule was written
+for, because it is the one that happens by accident.
+
+**It does not catch:**
+
+- **A single asset tweaked or generated to sit inside the palette.** Recolour
+  anything to the nearest of 340 pack colours — by hand, by a tool, by a model —
+  and it passes silently. The net is wide enough to walk through on purpose.
+- **Anything about style.** Pixel density, outline convention, light angle,
+  dithering, shading ramp, the number of colours *per sprite* — §13's actual
+  reasons for one-pack discipline — are invisible to it. A 32 px-detail sprite
+  squeezed onto a 16 px tile passes every check here and still looks wrong.
+- **Off-grid free-standing sprites**, by design: the grid rule binds tile sources
+  only, for the reason below.
+- **Anything not a PNG**, and anything outside `assets/`.
+
+So: this validator is a tripwire against the accident, not a guarantee of
+coherence. It cannot tell you the art is right — only that it is not obviously
+from somewhere else. **Only a person looking at the screen catches the rest**, and
+nothing here removes that job.
+
+Two scoping facts, stated rather than buried:
+
+- **The 16 px grid is checked for tile sources only** — currently
+  `Backgrounds/Tilesets/`. Free-standing sprites are not laid on the grid and the
+  approved pack does not pretend otherwise: 812 of its 1899 art files are not
+  multiples of 16, because a 38 × 38 portrait or a 13 × 13 UI arrow has no reason
+  to be. A blanket grid rule would reject the approved pack itself.
+- **One recorded exception:** `TilesetFloor.png` is 352 × 417 — one pixel taller
+  than 26 tiles. A flaw in the pack, not in the project. The validator prints every
+  exception on every run so that the list cannot quietly grow.
 
 **Path to the final look:** placeholder → approved pack → commissioned art.
 
@@ -904,7 +1043,7 @@ dialogue, runtime model, art layer.
 | 6 | Trait point pool size (12?) | 2026-09-10 | |
 | 7 | ~~Is the 9×9 screen grid the right scale?~~ — answered: 7×9 screens, ~280×200 tiles, ~4 tiles/sec. Phase 0 now measures the *pace* of the walk; the 4–6 min road-travel target is timed later | 2026-09-10 | Closed |
 | 8 | The five consequences that specify the reactivity system (§8) | 2026-09-10 | |
-| 9 | Approved asset packs | 2026-09-10 | Blocks the art pass |
+| 9 | ~~Approved asset packs~~ — answered: Ninja Adventure Asset Pack, CC0 1.0, one pack only (§13) | 2026-09-10 | Closed |
 | 10 | Can facts be wrong? Rumours, lies, misinformation | 2026-09-10 | Yes — see Q25 |
 
 > Row 5 is now scoped rather than closed: Phase 0 respawns the player in Brindle and
@@ -947,12 +1086,15 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q25 | **Can facts be wrong?** Rumours already ship in §8. Decides the fact-base type | §7, §8 | The fact base |
 | Q26 | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
 | Q27 | **Kell lives in a zone marked "cut first".** He is one of three sources of the player's own past. The optional zones are "Settled" scope in §17 and absent from §21's cut list | §4, §6, §17, §21 | The player's past |
-| Q28 | **Zone or screen as the loadable unit.** Invariant 3 says "zones unload"; zone boundaries are undefined, and §22's inspirations table is the only place that states how a zone is entered | §4, §22 | Streaming, invariant 3 |
+| Q28 | ~~**Zone or screen as the loadable unit.**~~ — answered in part: the **zone** is the unit. A town is its own `Region` with its own grid, and the overworld holds portal tiles into it. Still open: whether zones stream or load wholesale, and where their content lives | §4, §22 | Partly closed |
+| Q28b | **Gates must be bands, not tiles.** A walker covers 6 tiles a second, so a one-tile doorway can be stepped clean over — you walk through the wall of a town and nothing happens. Every transition needs to be at least two tiles deep in the direction of travel. Recorded because it will bite again for the culvert, the ford and the cliff path | §4 | A rule for every future transition |
+| Q28old | **Zone or screen as the loadable unit.** Invariant 3 says "zones unload"; zone boundaries are undefined, and §22's inspirations table is the only place that states how a zone is entered | §4, §22 | Streaming, invariant 3 |
 | Q29 | **The journal screen**, which §15 calls the most important in the game, is TBD — and no save/load screen is listed at all, while §1 commits to save-based play | §15 | The real progression UI |
-| Q30 | **Asset validator inputs:** palette and approved pack list are still TBD. The pixel grid is settled | §13 | The art rule |
+| Q30 | ~~**Asset validator inputs:** palette and approved pack list are still TBD.~~ — answered: Ninja Adventure (CC0), palette locked at 340 colours in `content/palette.txt`, validator in `tools/asset_validator.gd` | §13 | Closed |
 | Q31 | **§8's five consequences** are an empty list declared to be "the specification for the reactivity system", while §17 already marks the twelve quantities "Settled" | §8, §17 | Reactivity |
 | Q32 | **§12 economy is a bare TBD** while money is load-bearing in five places: a weakening lever, a fact-acquisition path, an Exposure failure mode, a leverage type, and five of the twelve tick quantities | §12 | Prices, bribery, the bank |
 | Q33 | **§16 accessibility is a bare TBD** against a real-time, timing-based fighter | §16 | Combat design |
+| Q34a | ~~**Invariant 11 was convention, not enforcement.** `project.godot` warned on untyped declarations instead of erroring, so nothing stopped an untyped member variable reaching main.~~ — answered: `gdscript/warnings/untyped_declaration=2`. Recorded here because the audit surfaced it and I left it out of this queue when I wrote it | project.godot | Closed |
 | Q34 | **Bookkeeping.** The header's populated-sections list is stale; §17 marks rows "Settled" that live in 🟡 unapproved sections; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared `core/ view/ tools/ test/` | header, §17, §20, repo | Nothing — but it misleads readers |
 
 ---
@@ -975,10 +1117,18 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | Title: *Uncrowned* | Regicide, The Whisper Campaign, Hearsay | Regicide was taken; Uncrowned reads as both threat and outcome |
 | 2026-09-10 | The Cinderworks stands on Brindle's ground, visible from the start | Works elsewhere in the region | The crime and the industry it served share the first frame; no exposition needed |
 | 2026-09-10 | Two ways to cross the map: watched road vs unwatched wild | One road network | Ties the map itself to reputation and rumour |
+| 2026-09-10 | Static typing enforced by the compiler: `untyped_declaration=2` | Leaving it at warning level and relying on review | Invariant 11 is a hard rule and a warning does not stop anything. Errors do |
 | 2026-09-10 | Precedence: SPECS wins on what the game is, CLAUDE.md on how we work and which phase we are in | Single source of truth for everything | The two documents answer different questions; the audit found an agent hitting a cross-document conflict had no rule and was told not to pick |
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
 | 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-11 | Two clocks: the sim steps at 60 Hz, the world tick fires every 15th step (unchanged at 4 in-game minutes per real second). Movement, collision, input and dialogue run on the step; the twelve drifting quantities run on the tick | One clock at 4 Hz, as first settled; a second clock only for combat | 4 Hz meant up to 250 ms of input lag on every direction change. That distorts every playtest, including the ones meant to settle walk speed. Measured after: one frame |
+| 2026-09-11 | The zone is the loadable unit: a town is its own Region, entered through portal tiles on the overworld | One continuous grid with towns painted into it; screens as the unit | §19 Q28 was open. Towns want their own coordinate space and their own art, and CLAUDE.md invariant 3 already says "zones unload, and their nodes with them" |
+| 2026-09-11 | Exposing the pay fraud takes the escort from 10 to 5 | §3's "roughly one and a half fewer per power base damaged", which would give 8.5 | Yannick's call for Phase 1. Note this contradicts §3's schedule and makes one power base worth more than three of §3's steps — see Q20, which is still open on the schedule being non-integral |
+| 2026-09-11 | Transitions are bands at least two tiles deep, never single tiles | A one-tile doorway | A 1.5-tile step can skip a one-tile trigger entirely |
+| 2026-09-10 | Approved pack: Ninja Adventure (CC0 1.0), vendored to `assets/` with its licence recorded beside it; palette locked at the 340 colours extracted from it; character height 16 px | Sourcing the same pack from its GitHub mirror; commissioning art now; a hand-authored palette | The pack ships its own CC0 text, so the licence travels with the files. The GitHub mirror states no terms at all, and absence of a licence is not permission. The palette is extracted rather than chosen so that "the pack's palette is the palette" is enforceable rather than aspirational |
+| 2026-09-10 | The 16 px grid rule binds tile sources only, not every image | Every image in `assets/` must be a multiple of 16 | 812 of the approved pack's 1899 art files are off-grid by design — portraits, UI icons, FX sheets. A blanket rule would reject the pack it was written to protect |
+| 2026-09-10 | Walk speed 6 tiles/sec (1.5 tiles/tick), and Blackcairn sits centre-north-west at 28% across, 12% down — 255 tiles from Brindle | 4 tiles/sec with the castle in the far north-west corner | Both from playing Phase 0: 4 tiles/sec was a trudge against the ~5.3 of *A Link to the Past*, and a castle in the literal corner contradicted §4's own "castle centre-north-west" |
 | 2026-09-10 | Movement is 8-way | 4-way, tile-locked | Makes the corner-to-corner diagonal the true 343 tiles (~86 s) rather than the 478-tile Manhattan path, and fixes what Phase 0's stopwatch is compared against |
 | 2026-09-10 | Phase 0 exception: no combat screen — the king kills on contact in the overworld, three touches | Building the side-on combat screen for the slice | §10's screen is the largest unbuilt system in the game and would swallow the slice. Deferred to Phase 3+ and recorded as an exception in CLAUDE.md so nothing generalises from it |
 | 2026-09-10 | Phase 0 exception: death respawns the player in Brindle keeping everything; no save system | Reload-from-save; a death cost | The slice needs a loss the player can retry, not a persistence layer. The real death and save policy stays open (§19 row 5) |

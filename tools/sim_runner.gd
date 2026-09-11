@@ -7,29 +7,35 @@ extends SceneTree
 ## One tick is one in-game minute and the overworld runs 4 ticks per real second
 ## (SPECS §8), so 5000 ticks is 3.5 in-game days — about 21 real minutes of play.
 
-const TICKS_PER_IN_GAME_DAY: int = 1440
-const TICKS_PER_REAL_SECOND: int = 4
-
-
 func _initialize() -> void:
 	var ticks: int = _int_arg("--ticks", 1000)
 	var run_seed: int = _int_arg("--seed", Sim.DEFAULT_SEED)
 
-	var sim := Sim.new(run_seed)
-	# No systems yet: core/systems/ is empty until there is a world to react to.
+	var sim: Sim = Game.build(run_seed)
+	var world := sim.store(&"world") as WorldState
+
 	var started_usec: int = Time.get_ticks_usec()
-	sim.advance(ticks)
+	sim.advance_world_ticks(ticks)
 	var elapsed_ms: float = float(Time.get_ticks_usec() - started_usec) / 1000.0
 
 	print("seed        %d" % sim.rng_seed)
-	print("ticks       %d  (%.1f in-game days, %.1f real minutes of play)" % [
-		sim.tick,
-		float(sim.tick) / float(TICKS_PER_IN_GAME_DAY),
-		float(sim.tick) / float(TICKS_PER_REAL_SECOND) / 60.0,
+	print("ticks       %d  (%s, %.1f real minutes of play)" % [
+		sim.tick, Game.in_game_clock(sim.tick),
+		float(sim.tick) / float(Game.TICKS_PER_REAL_SECOND) / 60.0,
+	])
+	print("steps       %d  (%d per world tick, %d per real second)" % [
+		sim.step, Sim.STEPS_PER_WORLD_TICK, Sim.STEPS_PER_REAL_SECOND,
 	])
 	print("systems     %d" % sim.system_count())
 	print("events      %d" % sim.events.size())
 	print("facts       %d" % sim.facts.size())
+	print("player      %s  hp %d/%d  deaths %d" % [
+		world.player_tile(), world.player_hp, WorldState.MAX_HP, world.deaths,
+	])
+	print("to castle   %d tiles" % int(round(world.tiles_to_blackcairn())))
+	print("escort      %d guards   army %d   fraud exposed %s" % [
+		world.king_escort, world.army_strength, world.pay_fraud_exposed,
+	])
 	print("simulated   %.1f ms" % elapsed_ms)
 	quit(0)
 

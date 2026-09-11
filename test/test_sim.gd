@@ -25,10 +25,14 @@ class FoldingSystem extends SimSystem:
 ## Instrumentation only — a real system would not carry counters.
 class CountingSystem extends SimSystem:
 	var events_seen: int = 0
+	var steps_seen: int = 0
 	var ticks_seen: int = 0
 
 	func on_event(_sim: Sim, _event: SimEvent) -> void:
 		events_seen += 1
+
+	func on_step(_sim: Sim, _step: int) -> void:
+		steps_seen += 1
 
 	func on_tick(_sim: Sim, _tick: int) -> void:
 		ticks_seen += 1
@@ -36,7 +40,8 @@ class CountingSystem extends SimSystem:
 
 func test_a_new_sim_is_at_tick_zero_and_empty() -> void:
 	var sim := Sim.new()
-	assert_eq(sim.tick, 0, "clock starts at zero")
+	assert_eq(sim.step, 0, "step counter starts at zero")
+	assert_eq(sim.tick, 0, "and so does the world clock")
 	assert_eq(sim.events.size(), 0, "no events yet")
 	assert_eq(sim.facts.size(), 0, "no facts yet")
 	assert_eq(sim.system_count(), 0, "no systems yet")
@@ -45,13 +50,27 @@ func test_a_new_sim_is_at_tick_zero_and_empty() -> void:
 func test_advance_is_the_only_thing_that_moves_the_clock() -> void:
 	var sim := Sim.new()
 	sim.advance()
-	assert_eq(sim.tick, 1, "one tick by default")
+	assert_eq(sim.step, 1, "one step by default")
 	sim.advance(9)
-	assert_eq(sim.tick, 10, "advance(n) moves n ticks")
+	assert_eq(sim.step, 10, "advance(n) moves n steps")
 	sim.advance(0)
-	assert_eq(sim.tick, 10, "advance(0) is a no-op")
+	assert_eq(sim.step, 10, "advance(0) is a no-op")
 	sim.advance(-5)
-	assert_eq(sim.tick, 10, "negative advance is a no-op, not a rewind")
+	assert_eq(sim.step, 10, "negative advance is a no-op, not a rewind")
+
+
+func test_the_world_tick_fires_every_fifteenth_step() -> void:
+	# This is the whole two-clock contract: the world still drifts at SPECS §8's
+	# four ticks a second while the player's input resolves sixty times a second.
+	var sim := Sim.new()
+	sim.advance(Sim.STEPS_PER_WORLD_TICK - 1)
+	assert_eq(sim.tick, 0, "fourteen steps is not yet an in-game minute")
+	sim.advance(1)
+	assert_eq(sim.tick, 1, "the fifteenth is")
+	sim.advance(Sim.STEPS_PER_REAL_SECOND)
+	assert_eq(sim.tick, 5, "and a real second adds four more")
+	assert_eq(Sim.STEPS_PER_REAL_SECOND / Sim.STEPS_PER_WORLD_TICK, 4,
+		"4 in-game minutes per real second, exactly as §8 settled")
 
 
 func test_submit_logs_immediately_and_stamps_the_current_tick() -> void:
@@ -59,7 +78,7 @@ func test_submit_logs_immediately_and_stamps_the_current_tick() -> void:
 	sim.advance(7)
 	var event := sim.submit(&"thing_happened", {"detail": 1})
 	assert_eq(sim.events.size(), 1, "the log grows on submit, not on advance")
-	assert_eq(event.tick, 7, "stamped with the tick it happened on")
+	assert_eq(event.step, 7, "stamped with the step it happened on")
 	assert_eq(sim.events.at(0).type, &"thing_happened")
 
 
@@ -75,7 +94,8 @@ func test_systems_see_events_on_the_next_advance_not_before() -> void:
 
 	sim.advance()
 	assert_eq(counter.events_seen, 2, "both dispatched on the next advance")
-	assert_eq(counter.ticks_seen, 1, "and the tick ran once")
+	assert_eq(counter.steps_seen, 1, "and the step ran once")
+	assert_eq(counter.ticks_seen, 0, "but a single step is not yet a world tick")
 	assert_eq(sim.pending_count(), 0, "queue drained")
 
 
@@ -126,9 +146,10 @@ func test_replaying_the_log_rebuilds_the_world_exactly() -> void:
 	assert_true(sim.facts.is_redundant(&"the_ledger"), "from two sources")
 
 	var systems: Array[SimSystem] = [FoldingSystem.new()]
-	var replayed := Sim.replay(sim.events.to_array(), sim.rng_seed, systems, sim.tick)
+	var replayed := Sim.replay(sim.events.to_array(), sim.rng_seed, systems, sim.step)
 
-	assert_eq(replayed.tick, sim.tick, "same clock")
+	assert_eq(replayed.step, sim.step, "same step counter")
+	assert_eq(replayed.tick, sim.tick, "same world clock")
 	assert_eq(replayed.events.size(), sim.events.size(), "same log")
 	assert_eq(replayed.facts.fingerprint(), sim.facts.fingerprint(),
 		"same facts, same sources — nothing important lives outside the log")
@@ -145,6 +166,6 @@ func test_the_log_round_trips_through_its_serialisable_form() -> void:
 	var restored := EventLog.from_array(sim.events.to_array())
 	assert_eq(restored.size(), 2)
 	assert_eq(restored.at(0).type, &"one")
-	assert_eq(restored.at(1).tick, 1, "ticks survive")
+	assert_eq(restored.at(1).step, 1, "step stamps survive")
 	assert_eq(restored.at(1).data, sim.events.at(1).data, "so does nested data")
 	assert_eq(restored.of_type(&"two").size(), 1)

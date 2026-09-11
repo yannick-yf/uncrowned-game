@@ -111,9 +111,9 @@ hits. Coloured rectangles. No NPCs, no LLM, no art.
 
 Proof required: "I walk straight there and lose" is playable and makes you want to
 try again differently. It also calibrates the walk: the scale is settled (SPECS §4 —
-~280×200 tiles at ~4 tiles/sec, 8-way movement), so what Phase 0 measures is whether
+~280×200 tiles at 6 tiles/sec, 8-way movement), so what Phase 0 measures is whether
 that *pace* feels right, not how long the crossing takes. Expect the bare diagonal to
-read about a minute and a half.
+read about 40 seconds.
 
 ### Phase 0 exceptions — deliberate, temporary, and only these three
 
