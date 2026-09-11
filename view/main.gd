@@ -31,6 +31,7 @@ const ZONE_NAMES: Dictionary = {
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
+var _wild: Wildlife = null
 var _art: Art = null
 
 var _accumulator: float = 0.0
@@ -72,6 +73,7 @@ func _ready() -> void:
 	_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
+	_wild = _sim.store(&"wildlife") as Wildlife
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -190,6 +192,9 @@ func _draw() -> void:
 	for npc: Npc in _cast.in_zone(_world.current_zone):
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
 
+	for beast: Beast in _wild.beasts:
+		_draw_beast(beast)
+
 	if _world.current_zone == WorldState.OVERWORLD:
 		_draw_escort()
 		_draw_actor(_world.king_pos, &"king", Art.FACE_DOWN)
@@ -254,6 +259,18 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 		_art.atlas(entry[0] as StringName),
 		Rect2(dest.round(), Vector2(source.size)),
 		Rect2(source))
+
+
+func _draw_beast(beast: Beast) -> void:
+	var sheet: Texture2D = _art.beast_sheet_for(beast.kind)
+	if sheet == null:
+		return
+	var top_left: Vector2 = beast.pos * float(TILE) - Vector2(FIGURE, FIGURE) * 0.5
+	draw_texture_rect_region(
+		sheet,
+		Rect2(top_left.round(), Vector2(FIGURE, FIGURE)),
+		Art.tile_rect(Art.column_for(beast.facing), 0),
+	)
 
 
 func _draw_actor(at: Vector2, role: StringName, column: int) -> void:
@@ -335,6 +352,13 @@ func _draw_hud() -> void:
 	var mood: String = _atmosphere()
 	if mood != "":
 		rows.append(mood)
+
+	var hunted: int = 0
+	for beast: Beast in _wild.beasts:
+		if beast.hunting:
+			hunted += 1
+	if hunted > 0:
+		rows.append("something is following you" if hunted == 1 else "%d of them have seen you" % hunted)
 
 	var npc: Npc = _nearby_npc()
 	if npc != null:

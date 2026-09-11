@@ -17,16 +17,8 @@ func on_step(sim: Sim, step: int) -> void:
 	if not ContactRules.touching(world.player_pos, world.king_pos):
 		return
 
-	world.player_hp = ContactRules.damage_after(world.player_hp)
-	world.touches_taken += 1
-	world.invulnerable_until = step + ContactRules.invulnerable_steps()
 	sim.facts.add_source(&"the_king_is_lethal", &"witnessed")
-
-	if ContactRules.is_dead(world.player_hp):
-		world.deaths += 1
-		world.player_hp = WorldState.MAX_HP
-		world.player_pos = world.region().brindle_centre()
-		world.player_dir = Vector2i.ZERO
+	if world.hurt(ContactRules.KING_DAMAGE, step):
 		sim.facts.add_source(&"the_king_killed_me", &"witnessed")
 
 

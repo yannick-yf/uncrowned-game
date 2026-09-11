@@ -26,6 +26,7 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	var sim := Sim.new(p_seed)
 	sim.add_store(&"world", build_world())
 	sim.add_store(&"cast", Cast.shared())
+	sim.add_store(&"wildlife", Wildlife.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -52,6 +53,7 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(ZoneSystem.new())
 	systems.append(DialogueSystem.new())
 	systems.append(ArmySystem.new())
+	systems.append(WildlifeSystem.new())
 	systems.append(ArrivalSystem.new())
 	systems.append(ContactSystem.new())
 	return systems
@@ -64,7 +66,7 @@ static func replay(sim: Sim) -> Sim:
 		sim.rng_seed,
 		build_systems(),
 		sim.step,
-		{&"world": build_world(), &"cast": Cast.shared()},
+		{&"world": build_world(), &"cast": Cast.shared(), &"wildlife": Wildlife.new()},
 	)
 
 

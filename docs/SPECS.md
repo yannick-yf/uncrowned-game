@@ -381,6 +381,47 @@ that was tuned and approved, so every other surface is a penalty. Were the wild
 > dog-leg stops being flavour and becomes the entire price of the safe route, which
 > is why its 1.30–1.50 ratio is guarded by a test.
 
+### The wild is dangerous (settled 2026-09-11)
+
+§4 says everything off the road "holds wild animals and monsters". Three of them:
+a **bear** (slow, 2 damage), a **spider** (quick, 1) and a **bat** (quickest, 1).
+All are slower than the player's 6 tiles/sec — **a predator you cannot outrun is a
+tax, not a risk** — so the wild is survivable by running and lethal to dawdling.
+
+They exist only near the player: spawned on a ring just past sight and forgotten
+once left behind, so a map of 56,000 tiles is populated for the cost of four
+animals, and it replays exactly because the spawns follow from the seed and from
+where the player walked.
+
+Three things the first version got wrong, each worth keeping written down:
+
+- **Spawns are biased toward where you are going.** Everything is slower than you,
+  so anything behind is scenery. A wood that is only dangerous if you stop is not
+  dangerous.
+- **Beasts keep a margin from the road, not merely off it.** Keeping them off road
+  *tiles* was not enough: a walker wobbles either side of a three-wide road and a
+  wolf on the verge can reach them. §4 calls the road patrolled — patrolled means
+  nothing hunts along it. That margin is what makes the long way round *safe*
+  rather than merely long, which is the whole of the choice now that the ground no
+  longer slows anyone.
+- **Beasts have territory.** Without it they wandered off, were forgotten, and the
+  wood emptied itself while the player stood and watched — so waiting became a way
+  to make the dangerous route safe.
+
+**Measured, on a straight run without evading** (`tools/measure_routes.gd`):
+
+| Route | Distance | Time | Cost |
+|---|---:|---:|---|
+| The King's Road | 342 tiles | **57 s** | nothing |
+| The wild | 260 tiles | **43 s** | **8 of 10 health** |
+
+Fourteen seconds faster, and you arrive on two health. That is the trade the map
+is for. Run it after touching the map, the speed table or the wildlife, and check
+the two rows still say different things.
+
+> Not in Phase 2: you cannot fight back. There is no combat screen until Phase 4,
+> so the wild is something you run from or die to.
+
 ### The Kettle, the bridge and the ford
 
 The river runs from the northern mountains to the southern sea down the east of the
@@ -1282,6 +1323,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q26old | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
 | Q27 | **Kell lives in a zone marked "cut first".** He is one of three sources of the player's own past. The optional zones are "Settled" scope in §17 and absent from §21's cut list | §4, §6, §17, §21 | The player's past |
 | Q28 | ~~**Zone or screen as the loadable unit.**~~ — answered 2026-09-11: **neither.** The overworld is one region and the towns are in it; a zone is an *interior*, entered when the scale or the rules change. Screen-by-screen transitions were considered and rejected: §13's target is *Echoes of Wisdom*, which scrolls, the map is 7.0 × 8.9 screens so it does not divide, and a diagonal road with 8-way movement crosses boundaries constantly. Orientation is the map screen's job (§15) | §4, §22 | Closed |
+| Q36 | **Health never comes back.** There is no healing, so the wild's cost ratchets: your second crossing is far more dangerous than your first, and dying in Brindle is the only reset. Fine while death is cheap; needs an answer when Phase 4 makes fights survivable | §10, §11 | Phase 4 |
 | Q7b | ~~**Is the map the right size?**~~ — answered by playing rather than by arithmetic: a ~60-second empty walk was already too long, so the road-travel target came *down* to 45–90 seconds and the map keeps its 280×200. Length belongs in what is in the way, not in distance | §4 | Closed |
 | Q28b | **Gates must be bands, not tiles.** A walker covers 6 tiles a second, so a one-tile doorway can be stepped clean over — you walk through the wall of a town and nothing happens. Every transition needs to be at least two tiles deep in the direction of travel. Recorded because it will bite again for the culvert, the ford and the cliff path | §4 | A rule for every future transition |
 | Q28old | **Zone or screen as the loadable unit.** Invariant 3 says "zones unload"; zone boundaries are undefined, and §22's inspirations table is the only place that states how a zone is entered | §4, §22 | Streaming, invariant 3 |
@@ -1318,6 +1360,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
 | 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-11 | The wild holds three beasts, all slower than the player, spawned near them and biased toward their heading, keeping a 3-tile margin from the road and a territory of their own | Beasts placed across the whole map; beasts that can outrun you; beasts merely kept off road tiles | Everything slower than the player means anything behind is scenery, so the danger has to be ahead. A margin rather than a tile is what makes the road genuinely safe. Territory is what stops the wood emptying while the player waits — otherwise waiting defeats the whole route |
 | 2026-09-11 | Terrain no longer slows the player: everything walks at the road's 6 tiles/sec. The tuned table is kept behind `TERRAIN_SLOWS_YOU` | Keeping the multipliers; deleting the table outright | A forest should be dangerous, not tiring — the slog was making the interesting route the annoying one. §4's trade-off becomes distance against danger instead of speed against witnesses, which makes the road's dog-leg the whole price of safety rather than a detail |
 | 2026-09-11 | Towns are laid out on the overworld at real size; transitions are reserved for interiors — a change of scale or rules, never of place | Every town its own zone behind a portal, as Harrowgate was; ALttP-style screen-by-screen transitions for the whole overworld | Harrowgate was 45× bigger inside than out, and the doorway itself caused four bugs in two sittings. Screens were rejected separately: the target art direction scrolls, 280×200 does not divide into screens vertically, and a diagonal road with 8-way movement would cross a boundary every few seconds |
 | 2026-09-11 | Landmark buildings are impassable; scattered trees and rocks are walk-through scenery decided per tile by hash | Solid trees; no scatter at all; storing every tree as an object | A dense wood as solid objects is a maze and a memory cost. §4 prices the Thornwood in time and blood, not in navigation |

@@ -52,6 +52,15 @@ func _walk_to(target: Vector2i, max_seconds: float) -> bool:
 	return true
 
 
+## Follow the King's Road node by node, which is the safe way and therefore the
+## only way to reach the castle with your health intact now that the wild bites.
+func _walk_the_road(max_seconds: float) -> bool:
+	for node: Vector2i in Region.road_route():
+		if not _walk_to(node, max_seconds):
+			return false
+	return true
+
+
 ## Push into a target rather than arriving politely next to it. _walk_to stops
 ## a tile and a half out, which is outside the king's reach — you can walk all the
 ## way to Blackcairn and stand there unharmed, which is true of the game too.
@@ -243,7 +252,8 @@ func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 	# The actual walk, event-driven from end to end: follow the King's Road to the
 	# castle gate, then stand in the king and be killed. Nothing is written to the
 	# store by hand, so the log owns the entire run.
-	assert_true(_walk_to(Region.BLACKCAIRN, 240.0), "walked to Blackcairn")
+	assert_true(_walk_the_road(120.0), "walked the King's Road to Blackcairn")
+	assert_eq(_world.deaths, 0, "and arrived alive, because the road is safe")
 	_walk_into(_world.king_pos, 4.0)
 
 	assert_true(_world.reached_blackcairn, "the player got there")

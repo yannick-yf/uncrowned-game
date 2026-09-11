@@ -55,6 +55,28 @@ func tiles_to_blackcairn() -> float:
 	return player_pos.distance_to(king_pos)
 
 
+## Take a hit. Returns true if it killed. Called only by systems, inside
+## Sim.advance() — it is a state transition, not a rule, and the verdict about
+## *whether* you were hit belongs to the caller.
+##
+## One path for the king and the beasts both, so that death, the respawn and the
+## grace window cannot drift apart between them.
+func hurt(amount: int, step: int) -> bool:
+	if step < invulnerable_until:
+		return false
+	player_hp = ContactRules.damage_after(player_hp, amount)
+	touches_taken += 1
+	invulnerable_until = step + ContactRules.invulnerable_steps()
+	if not ContactRules.is_dead(player_hp):
+		return false
+	deaths += 1
+	player_hp = MAX_HP
+	player_pos = region().brindle_centre()
+	player_dir = Vector2i.ZERO
+	player_tile_last = player_tile()
+	return true
+
+
 func fingerprint() -> String:
 	return "zone=%s pos=%.4f,%.4f dir=%d,%d hp=%d deaths=%d touches=%d reached=%s talk=%s fraud=%s escort=%d army=%d" % [
 		String(current_zone), player_pos.x, player_pos.y, player_dir.x, player_dir.y,

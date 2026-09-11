@@ -169,18 +169,98 @@ func is_in_muster(tile: Vector2i) -> bool:
 	return zone_at(tile) == &"muster"
 
 
-## Which zone a tile belongs to, or an empty name out in the country. Terrain
-## cannot answer this: every settlement stands on TOWN, so asking the ground what
-## town you are in gets you the first one in the list.
-func zone_at(tile: Vector2i, reach: float = 11.0) -> StringName:
-	var best: StringName = &""
-	var best_distance: float = reach
-	for id: StringName in zone_sites().keys():
-		var distance: float = Vector2(tile).distance_to(Vector2(zone_sites()[id] as Vector2i))
-		if distance <= best_distance:
-			best = id
-			best_distance = distance
-	return best
+## Which zone a tile belongs to, or an empty name out in the country.
+##
+## Terrain cannot answer this — every settlement stands on TOWN, so asking the
+## ground which town you are in gets you the first one in the list — and neither
+## can a fixed radius, now that Harrowgate is forty tiles across and Brindle is
+## fifteen. It is baked from each zone's own footprint when the region is built:
+## correct for towns of different sizes, and a byte lookup rather than eight
+## square roots, which matters because the wildlife asks it four times per animal
+## per step.
+const ZONE_ORDER: Array[StringName] = [
+	&"brindle", &"cinderworks", &"harrowgate", &"wide_acres",
+	&"muster", &"saltmarch", &"cairnwell", &"blackcairn",
+]
+## How far past its buildings a place still counts as itself.
+const ZONE_MARGIN: int = 3
+
+var _zone_map: PackedByteArray = PackedByteArray()
+var _wild_map: PackedByteArray = PackedByteArray()
+
+
+func zone_at(tile: Vector2i) -> StringName:
+	if not in_bounds(tile) or _zone_map.is_empty():
+		return &""
+	var index: int = _zone_map[tile.y * width + tile.x]
+	return ZONE_ORDER[index - 1] if index > 0 else &""
+
+
+func _bake_zones() -> void:
+	_zone_map.resize(width * height)
+	_zone_map.fill(0)
+	var sizes: Dictionary = zone_footprints()
+	for i: int in ZONE_ORDER.size():
+		var id: StringName = ZONE_ORDER[i]
+		var site: Vector2i = zone_sites()[id] as Vector2i
+		var half: Vector2i = (sizes[id] as Vector2i) / 2 + Vector2i(ZONE_MARGIN, ZONE_MARGIN)
+		for x: int in range(site.x - half.x, site.x + half.x + 1):
+			for y: int in range(site.y - half.y, site.y + half.y + 1):
+				if in_bounds(Vector2i(x, y)):
+					_zone_map[y * width + x] = i + 1
+
+
+## Ground a wild animal will set foot on: open country, wood or marsh, outside
+## every settlement, and **clear of the road by a margin**.
+##
+## The margin is the point. Keeping beasts off road *tiles* was not enough — a
+## walker wobbles a tile either side of a three-wide road, and a wolf standing on
+## the verge can reach them. §4 calls the King's Road patrolled; patrolled means
+## nothing hunts along it, not merely that nothing stands in it.
+const ROAD_STANDOFF: int = 3
+
+
+func is_beast_ground(tile: Vector2i) -> bool:
+	if not in_bounds(tile) or _wild_map.is_empty():
+		return false
+	return _wild_map[tile.y * width + tile.x] == 1
+
+
+func _bake_wild() -> void:
+	_wild_map.resize(width * height)
+	_wild_map.fill(0)
+	for x: int in width:
+		for y: int in height:
+			var tile := Vector2i(x, y)
+			if not BeastRules.is_wild_ground(terrain_at(tile)):
+				continue
+			if zone_at(tile) != &"":
+				continue
+			if _near_safe_ground(tile):
+				continue
+			_wild_map[y * width + x] = 1
+
+
+func _near_safe_ground(tile: Vector2i) -> bool:
+	for dx: int in range(-ROAD_STANDOFF, ROAD_STANDOFF + 1):
+		for dy: int in range(-ROAD_STANDOFF, ROAD_STANDOFF + 1):
+			match terrain_at(tile + Vector2i(dx, dy)):
+				Terrain.ROAD, Terrain.FORD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
+					return true
+	return false
+
+
+static func zone_footprints() -> Dictionary:
+	return {
+		&"brindle": BRINDLE_SIZE,
+		&"cinderworks": CINDERWORKS_SIZE,
+		&"harrowgate": HARROWGATE_SIZE,
+		&"wide_acres": WIDE_ACRES_SIZE,
+		&"muster": MUSTER_SIZE,
+		&"saltmarch": SALTMARCH_SIZE,
+		&"cairnwell": CAIRNWELL_SIZE,
+		&"blackcairn": BLACKCAIRN_SIZE,
+	}
 
 
 func brindle_centre() -> Vector2:
@@ -212,6 +292,25 @@ static func zone_sites() -> Dictionary:
 ## dead-end spur is not.
 static func road_route() -> Array[Vector2i]:
 	return [CINDERWORKS, BRIDGE, HARROWGATE, WIDE_ACRES, MUSTER, CAIRNWELL, BLACKCAIRN]
+
+
+## Points along the King's Road itself, every few tiles.
+##
+## Distinct from road_route(), which is only the corners: anything that should
+## travel *on* the road rather than merely between its ends needs the line, not
+## the nodes. A shortest path between two corners cuts the bend, which puts you on
+## the verge — and the verge is where the animals are.
+static func road_waypoints(spacing: int = 5) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	var route: Array[Vector2i] = road_route()
+	for i: int in route.size() - 1:
+		var from := Vector2(route[i])
+		var to := Vector2(route[i + 1])
+		var steps: int = maxi(int(from.distance_to(to)) / maxi(spacing, 1), 1)
+		for step: int in steps:
+			out.append(Vector2i(from.lerp(to, float(step) / float(steps)).round()))
+	out.append(route[route.size() - 1])
+	return out
 
 
 static func saltmarch_spur() -> Array[Vector2i]:
@@ -262,6 +361,8 @@ static func _build_overworld() -> Region:
 	region._stamp_crossings()
 	region._stamp_settlements()
 	region._stamp_landmarks()
+	region._bake_zones()
+	region._bake_wild()
 	return region
 
 

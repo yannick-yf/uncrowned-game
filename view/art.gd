@@ -31,6 +31,14 @@ const CASTING: Dictionary = {
 	&"garrick": "Villager2",
 }
 
+## What lives in the wild. Monster sheets are 4x4 — the same four directions as a
+## character, with fewer frames.
+const BEASTS: Dictionary = {
+	&"bear": "Bear",
+	&"spider": "SpiderRed",
+	&"bat": "BlueBat",
+}
+
 var _atlases: Dictionary = {}
 var _sheets: Dictionary = {}
 
@@ -93,6 +101,14 @@ func atlas(id: StringName) -> Texture2D:
 	return _atlases.get(id, null) as Texture2D
 
 
+func beast_sheet_for(kind: StringName) -> Texture2D:
+	var id := StringName("beast:%s" % kind)
+	if _sheets.has(id):
+		return _sheets[id] as Texture2D
+	_sheets[id] = load("%s/Actor/Monster/%s/SpriteSheet.png" % [PACK, String(BEASTS.get(kind, "Bear"))]) as Texture2D
+	return _sheets[id] as Texture2D
+
+
 func sheet_for(role: StringName) -> Texture2D:
 	if _sheets.has(role):
 		return _sheets[role] as Texture2D
@@ -130,9 +146,13 @@ func scatter_at(terrain: int, x: int, y: int) -> Array:
 	var roll: int = scatter_hash(x, y)
 	match terrain:
 		Region.Terrain.FOREST:
-			if roll < 340:
+			# Thinned from 42% of tiles to 26%. A wood you cannot see an animal
+			# through is not atmospheric, it is unfair — you cannot avoid what you
+			# cannot see, and the trees are drawn two tiles tall over one-tile
+			# ground, so they overlap far more than the number suggests.
+			if roll < 200:
 				return [&"nature", Rect2i(32, 0, 32, 32)]
-			if roll < 420:
+			if roll < 260:
 				return [&"nature", Rect2i(0, 0, 32, 32)]
 		Region.Terrain.WILD:
 			if roll < 22:
