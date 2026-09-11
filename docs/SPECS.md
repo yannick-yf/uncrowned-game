@@ -367,6 +367,20 @@ The road is the **1.00 reference rather than a bonus**: 6 tiles/sec is the speed
 that was tuned and approved, so every other surface is a penalty. Were the wild
 1.00 and the road faster, the approved feel would become the slow case.
 
+> **Terrain speeds are currently off** (2026-09-11). Everything walkable moves at
+> the road's 6 tiles/sec: a forest should be dangerous, not tiring, and trudging
+> was making the interesting route the annoying one. The table above is kept rather
+> than deleted — `Region.TERRAIN_SLOWS_YOU` turns it back on in one word, with the
+> reasoned numbers intact.
+>
+> **What this does to §4's trade-off.** "Speed versus witnesses" loses its speed
+> half — and what replaces it is sharper. The King's Road is a deliberate dog-leg,
+> 351 tiles against a 250-tile wild line, so the road now costs **~17 seconds of
+> detour and buys safety**, while cutting through the Thornwood saves those seconds
+> and draws blood. **Distance against danger**, and later against being seen. The
+> dog-leg stops being flavour and becomes the entire price of the safe route, which
+> is why its 1.30–1.50 ratio is guarded by a test.
+
 ### The Kettle, the bridge and the ford
 
 The river runs from the northern mountains to the southern sea down the east of the
@@ -1162,9 +1176,9 @@ its Saltmarch spur; real terrain speeds; animals that chase and hurt. No new NPC
 no new dialogue, no interiors, no reputation, no combat screen.
 > **Proof:** one run visits all eight zones and each is recognisable on sight
 > alone; **the costs of both routes are measurable and legible** — the Thornwood is
-> slower and draws blood, the road is fast and safe; road travel from Brindle to
-> Blackcairn can be timed by hand; and it looks like a game rather than a test
-> harness.
+> the short way and draws blood, the road is the long way and is safe; road travel
+> from Brindle to Blackcairn can be timed by hand; and it looks like a game rather
+> than a test harness.
 >
 > Note what this proof deliberately does *not* claim. The wild's whole payoff is
 > being unwatched, and nothing watches yet, so in Phase 2 the wild is strictly the
@@ -1304,6 +1318,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
 | 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
+| 2026-09-11 | Terrain no longer slows the player: everything walks at the road's 6 tiles/sec. The tuned table is kept behind `TERRAIN_SLOWS_YOU` | Keeping the multipliers; deleting the table outright | A forest should be dangerous, not tiring — the slog was making the interesting route the annoying one. §4's trade-off becomes distance against danger instead of speed against witnesses, which makes the road's dog-leg the whole price of safety rather than a detail |
 | 2026-09-11 | Towns are laid out on the overworld at real size; transitions are reserved for interiors — a change of scale or rules, never of place | Every town its own zone behind a portal, as Harrowgate was; ALttP-style screen-by-screen transitions for the whole overworld | Harrowgate was 45× bigger inside than out, and the doorway itself caused four bugs in two sittings. Screens were rejected separately: the target art direction scrolls, 280×200 does not divide into screens vertically, and a diagonal road with 8-way movement would cross a boundary every few seconds |
 | 2026-09-11 | Landmark buildings are impassable; scattered trees and rocks are walk-through scenery decided per tile by hash | Solid trees; no scatter at all; storing every tree as an object | A dense wood as solid objects is a maze and a memory cost. §4 prices the Thornwood in time and blood, not in navigation |
 | 2026-09-11 | A town gate is placed on the far side of the road from the country beyond it | Gate between the road and the north, which is where it started | Otherwise every route out of the town crosses the doorway again and bounces the player straight back inside. Found by a test walking the road and arriving back in Harrowgate |

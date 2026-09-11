@@ -117,12 +117,29 @@ func is_passable(tile: Vector2i) -> bool:
 	return true
 
 
-## How fast the ground lets you walk, as a fraction of §4's settled 6 tiles/sec.
+## Whether the ground slows you at all.
 ##
-## The road is the 1.0 reference rather than a bonus: 6 tiles/sec is the speed that
-## was tuned and approved, so everything else is a penalty. Were the wild 1.0 and
-## the road faster, the approved feel would become the slow case.
+## Off. Everything walkable moves at the road's 6 tiles/sec — a forest is not a
+## slog and a marsh is not a punishment for going the interesting way. The tuned
+## table below is kept intact rather than deleted, so turning this back on is one
+## word and the numbers are still the ones that were reasoned about.
+##
+## What this costs, and what it buys: §4's trade-off was "speed versus witnesses",
+## and the speed half is now gone. What replaces it is better. The road is a
+## deliberate dog-leg — 351 tiles against a 250-tile wild line — so taking the road
+## costs about 17 seconds and buys safety, while cutting through the Thornwood
+## saves those seconds and (from stage 3) draws blood. Distance against danger,
+## and later against being seen. The dog-leg is now load-bearing rather than
+## flavour: it is the entire price of the safe route.
+const TERRAIN_SLOWS_YOU: bool = false
+
+
 static func speed_multiplier(terrain: Terrain) -> float:
+	return speed_table(terrain) if TERRAIN_SLOWS_YOU else 1.0
+
+
+## The tuned figures, as settled in §4. Consulted only when TERRAIN_SLOWS_YOU.
+static func speed_table(terrain: Terrain) -> float:
 	match terrain:
 		Terrain.ROAD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
 			return 1.00
