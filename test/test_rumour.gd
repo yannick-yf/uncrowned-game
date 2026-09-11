@@ -266,8 +266,8 @@ func test_a_traveller_can_never_be_a_source() -> void:
 	sim.advance(2)
 	assert_eq(road.walkers.size(), TravelRules.ON_THE_ROAD, "the road is in use")
 
-	# The Wide Acres stall, which no member of the cast stands near.
-	_steal_at(sim, Vector2(93.5, 149.0))
+	# The Saltmarch stall, which no member of the cast stands near.
+	_steal_at(sim, Vector2(38.5, 157.0))
 	assert_eq(world.thefts, 1, "the theft happened")
 	assert_eq(rumours.told, 0, "and started nothing, however many people were on the road")
 

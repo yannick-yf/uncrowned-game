@@ -11,6 +11,12 @@ extends RefCounted
 const FACT_PAY_FRAUD: StringName = &"muster:pay_fraud"
 const FACT_FRAUD_EXPOSED: StringName = &"muster:fraud_exposed"
 
+
+## What the world knows about the crown that it did not before. §3's `discredited`
+## ending counts these; a fact known privately has never embarrassed anybody.
+static func made_public(fact: StringName) -> StringName:
+	return StringName("public:%s" % fact)
+
 ## Exposing needs the fact, the place, and for the fraud not to have been told to
 ## anybody yet. Knowing is not enough and standing there is not enough: SPECS §7's
 ## redundancy rule is about *reaching* the fact, and this is what the fact is for.

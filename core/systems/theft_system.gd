@@ -40,16 +40,14 @@ func _steal(sim: Sim) -> void:
 		return
 
 	var here: StringName = world.region().zone_at(world.player_tile())
-	var witnesses: PackedStringArray = CrimeRules.witnesses_to(cast, world.current_zone, world.player_pos)
 	world.thefts += 1
 	world.robbed[stall] = sim.tick
 	world.carrying_stolen += 1
 	world.stolen_from = stall
 	world.stolen_town = here
 	world.last_theft_step = sim.step
-	world.last_theft_seen = witnesses.size()
-	sim.facts.add_source(DeedRules.DEED_THEFT, &"witnessed")
-	_witnessed(sim, DeedRules.DEED_THEFT, here, witnesses, &"theft_unseen")
+	world.last_theft_seen = Deeds.perform(
+		sim, DeedRules.DEED_THEFT, here, world.player_pos, &"theft_unseen").size()
 
 
 ## Putting it back where it came from, in front of whoever is standing there.
@@ -68,7 +66,6 @@ func _give_back(sim: Sim) -> void:
 
 	var stall: Vector2i = world.stolen_from
 	var here: StringName = world.stolen_town
-	var witnesses: PackedStringArray = CrimeRules.witnesses_to(cast, world.current_zone, world.player_pos)
 	world.carrying_stolen -= 1
 	# Back on the counter, so the stall has something on it again.
 	world.robbed.erase(stall)
@@ -76,36 +73,11 @@ func _give_back(sim: Sim) -> void:
 		world.stolen_from = Vector2i(-1, -1)
 		world.stolen_town = &""
 	world.last_theft_step = -1
-	sim.facts.add_source(DeedRules.DEED_RESTITUTION, &"witnessed")
-	_witnessed(sim, DeedRules.DEED_RESTITUTION, here, witnesses, &"restitution_unseen")
+	Deeds.perform(
+		sim, DeedRules.DEED_RESTITUTION, here, world.player_pos, &"restitution_unseen")
 
 
-## The half both branches share: who is impressed or offended settles now, and the
-## story starts only if there was somebody to start it.
-func _witnessed(
-	sim: Sim,
-	deed: StringName,
-	where: StringName,
-	witnesses: PackedStringArray,
-	unseen: StringName,
-) -> void:
-	var standing := sim.store(&"standing") as Standing
-	if standing != null:
-		standing.shift_factions(DeedRules.faction_effects(deed))
-		# The people who watched it. Theirs is personal and immediate, and from
-		# here it is their own opinion rather than their town's.
-		for who: String in witnesses:
-			standing.shift_person(StringName(who), DeedRules.witness_effect(deed))
-	# A deed nobody saw did not happen (§8). It still occurred — the fact is yours
-	# either way — but there is no story to travel and no town to hear it.
-	if not CrimeRules.is_worth_repeating(witnesses):
-		sim.derive(unseen, {"town": String(where)})
-		return
-	sim.derive(&"deed_witnessed", {
-		"about": String(deed),
-		"town": String(where),
-		"witnesses": witnesses,
-	})
+## Both branches hand off to the shared pipe, which every deed in the game uses.
 
 
 func system_name() -> StringName:

@@ -33,6 +33,7 @@ const CASTING: Dictionary = {
 	# Strangers are cast by trade, not by name — there is only one trader sheet
 	# however many traders the map ends up holding.
 	&"trader": "ManGreen",
+	&"watchman": "Knight",
 }
 
 ## What lives in the wild. Monster sheets are 4x4 — the same four directions as a
@@ -107,6 +108,8 @@ func _init() -> void:
 		&"boat": [&"boat", Rect2i(0, 0, 80, 32)],
 		&"counting_house": [&"house", Rect2i(400, 224, 64, 80)],
 		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
+		&"granary": [&"house", Rect2i(0, 224, 48, 64)],
+		&"muster_rolls": [&"camp", Rect2i(96, 48, 32, 32)],
 	}
 
 

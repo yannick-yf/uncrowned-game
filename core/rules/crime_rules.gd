@@ -32,12 +32,21 @@ const RUMOUR_RANGE: float = 80.0
 
 ## Everyone close enough to have seen it. Named cast only for now: the crowd has no
 ## sheets, and a witness has to be able to repeat the story to somebody.
-static func witnesses_to(cast: Cast, zone: StringName, at: Vector2) -> PackedStringArray:
+static func witnesses_to(
+	cast: Cast,
+	zone: StringName,
+	at: Vector2,
+	alertness: float = WorldTick.NEUTRAL,
+) -> PackedStringArray:
 	var seen := PackedStringArray()
 	if cast == null:
 		return seen
 	for npc: Npc in cast.in_zone(zone):
-		if npc.centre().distance_to(at) <= WITNESS_SIGHT:
+		# A watchman is posted to look, and looks further the more the watch has
+		# heard about lately (WatchRules). Everybody else sees what anybody sees.
+		var sight: float = WatchRules.sight_for(alertness) \
+			if WatchRules.is_watchman(npc) else WITNESS_SIGHT
+		if npc.centre().distance_to(at) <= sight:
 			seen.append(String(npc.id))
 	return seen
 

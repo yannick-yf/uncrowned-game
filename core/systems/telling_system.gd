@@ -41,19 +41,10 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	# the camp finally empties, which is the shape a warning should have.
 	ticked.prepared[here] = true
 
-	var standing := sim.store(&"standing") as Standing
-	if standing != null:
-		standing.shift_factions(DeedRules.faction_effects(DeedRules.DEED_WARNING))
-		# You told these people to their faces. They remember that you did.
-		for who: String in witnesses:
-			standing.shift_person(
-				StringName(who), DeedRules.witness_effect(DeedRules.DEED_WARNING))
-	sim.facts.add_source(DeedRules.DEED_WARNING, &"witnessed")
-	sim.derive(&"deed_witnessed", {
-		"about": String(DeedRules.DEED_WARNING),
-		"town": String(here),
-		"witnesses": witnesses,
-	})
+	# Said in front of a crowd, so it is out — whatever the sayer meant by it.
+	sim.facts.add_source(ArmyRules.made_public(ArmyRules.FACT_PAY_FRAUD), &"witnessed")
+	ticked.credit(&"facts_public", EndRules.HANDPRINT_NEEDED)
+	Deeds.perform(sim, DeedRules.DEED_WARNING, here, world.player_pos)
 
 
 func system_name() -> StringName:

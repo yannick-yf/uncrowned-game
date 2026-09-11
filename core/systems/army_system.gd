@@ -38,6 +38,8 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	ticked.credit(&"army_strength", maxf(ticked.army_strength - falling_to, 0.0))
 	ticked.army_target = falling_to
 	sim.facts.add_source(ArmyRules.FACT_FRAUD_EXPOSED, &"witnessed")
+	sim.facts.add_source(ArmyRules.made_public(ArmyRules.FACT_PAY_FRAUD), &"witnessed")
+	ticked.credit(&"facts_public", EndRules.HANDPRINT_NEEDED)
 	sim.derive(&"fraud_exposed", {"army": ticked.army_strength})
 
 

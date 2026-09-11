@@ -30,6 +30,11 @@ var rumour_spread: float = 0.0
 # -- per town (§8) --------------------------------------------------------
 var grain_price: Dictionary = {}
 var town_sentiment: Dictionary = {}
+## Guard alertness, §8's fifth quantity, **per town** (2026-09-11). It was global
+## and a granary burned in the Wide Acres closed the bank a hundred and twenty tiles
+## away, which nobody could read as anything but a bug. Same change grain price and
+## town sentiment already took, for the same reason: this one is about a place.
+var guard_alertness_by_town: Dictionary = {}
 
 ## What army strength is easing toward. Set by events; reached over in-game days.
 var army_target: float = BASELINE
@@ -75,6 +80,18 @@ func credit(quantity: StringName, amount: float) -> void:
 	handprint[quantity] = handprint_on(quantity) + absf(amount)
 
 
+## A quantity dragged by another inherits its credit.
+##
+## The bank losing faith because the player emptied the treasury is the player's
+## doing, one step removed. Without this, coupling would launder the hand out of
+## every consequence further than one step from the act — and §3's endings would
+## stop firing for exactly the runs that earned them.
+func credit_from(target: StringName, driver: StringName, amount: float) -> void:
+	if handprint_on(driver) <= 0.0:
+		return
+	credit(target, amount)
+
+
 func handprint_on(quantity: StringName) -> float:
 	return float(handprint.get(quantity, 0.0))
 
@@ -100,6 +117,7 @@ func _init() -> void:
 		grain_price[town] = NEUTRAL
 		grain_target[town] = NEUTRAL
 		town_sentiment[town] = NEUTRAL
+		guard_alertness_by_town[town] = NEUTRAL
 
 
 func grain_in(town: StringName) -> float:
@@ -118,6 +136,25 @@ func towns_below(sentiment: float) -> int:
 		if sentiment_in(town) < sentiment:
 			count += 1
 	return count
+
+
+func alertness_in(town: StringName) -> float:
+	return float(guard_alertness_by_town.get(town, NEUTRAL))
+
+
+func rouse(town: StringName, amount: float) -> void:
+	guard_alertness_by_town[town] = clampf(alertness_in(town) + amount, 0.0, BASELINE)
+	handprint[&"guard_alertness"] = handprint_on(&"guard_alertness") + absf(amount)
+
+
+## §8 declares one figure and the watch is now per town, so the regional one is the
+## worst-watched place in the kingdom. Recomputed rather than accumulated: a
+## high-water mark that only ever rises is not a reading of anything.
+func settle_alertness() -> void:
+	var worst: float = 0.0
+	for town: StringName in Region.ZONE_ORDER:
+		worst = maxf(worst, alertness_in(town))
+	guard_alertness = worst
 
 
 func push_sentiment(town: StringName, amount: float) -> void:

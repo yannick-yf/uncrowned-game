@@ -153,6 +153,8 @@ func _read_input() -> void:
 			_sim.submit(&"give_back")
 		elif _can_steal():
 			_sim.submit(&"steal")
+		elif _site_in_reach() != "" or _watched_site() != "":
+			_sim.submit(&"act")
 
 	# A second key, because the two kinds of act are different kinds of thing and
 	# were fighting over one. E is what is in front of you; F is what you carry in
@@ -240,6 +242,26 @@ func _can_warn() -> bool:
 		_world.fraud_told_to,
 		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos),
 		_sim.facts)
+
+
+## The prompt for whatever can be done to the landmark you are beside, or "".
+func _site_in_reach() -> String:
+	var site: Dictionary = _world.region().nearest_site(_world.player_tile(), SiteRules.REACH)
+	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
+		return ""
+	return SiteRules.label_for(site["kind"] as StringName)
+
+
+## Why there is no prompt at a site the watch is standing over. A place must never
+## simply fall silent — an absent prompt is indistinguishable from a bug.
+func _watched_site() -> String:
+	var site: Dictionary = _world.region().nearest_site(_world.player_tile(), SiteRules.REACH)
+	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
+		return ""
+	if WatchRules.guarded_by(_cast, _world.current_zone, _world.player_pos,
+			_ticked.alertness_in(_world.region().zone_at(_world.player_tile()))) == &"":
+		return ""
+	return "the watch is standing over it"
 
 
 func _can_give_back() -> bool:
@@ -597,6 +619,10 @@ func _draw_hud() -> void:
 		rows.append("E — take something")
 	elif _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH) != Region.NOWHERE:
 		rows.append("picked clean")
+	elif _site_in_reach() != "":
+		rows.append(_site_in_reach())
+	elif _watched_site() != "":
+		rows.append(_watched_site())
 
 	# Its own row, never an `elif`. What you know is available wherever you are
 	# standing, and burying it behind whatever happens to be nearer would make the

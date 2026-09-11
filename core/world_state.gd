@@ -33,6 +33,12 @@ var king_hp: int = 1000
 ## How the reign ended, or nothing. Set once — a reign ends the way a person dies.
 var reign_ended: StringName = &""
 var reign_ended_tick: int = -1
+## Landmarks already acted on. A cold furnace is cold; there is no undoing and no
+## refilling, which is what caps how far each quantity can be pushed by hand.
+var spent_sites: Dictionary = {}
+var last_act_step: int = -1
+var last_act: StringName = &""
+var last_act_seen: int = 0
 var deaths: int = 0
 var touches_taken: int = 0
 var reached_blackcairn: bool = false

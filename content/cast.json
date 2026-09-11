@@ -3,7 +3,7 @@
   "facts": {
     "muster:pay_fraud": "Quartermaster Odile at the Muster signs for soldiers who are dead or never existed, and keeps the difference.",
     "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks.",
-    "wide_acres:unwatched_stall": "There is a market stall in the Wide Acres that nobody stands near — the farms keep no watch on their own produce."
+    "wide_acres:unwatched_stall": "There is a market stall in Saltmarch that nobody stands near — the marsh town is off the road and keeps no watch worth the name."
   },
   "npcs": {
     "maddox": {
@@ -218,7 +218,7 @@
           "intent": "ask_watched",
           "tag": "Wits",
           "text": "You must know where nobody's looking.",
-          "reply": "That's the only thing I know that's worth coin. Try the Wide Acres — there's a stall out past the far field with nobody stood by it from one week to the next. Farmers don't watch their own. I didn't say that either.",
+          "reply": "That's the only thing I know that's worth coin. Saltmarch — there's a stall by the water with nobody stood at it from one week to the next. It's off the road, so nothing that happens there travels. I didn't say that either.",
           "teaches": "wide_acres:unwatched_stall",
           "costs": "free"
         },
@@ -299,6 +299,32 @@
             "costs": "goodwill"
           }
         ]
+      },
+      "watchman": {
+        "name": "A watchman",
+        "role": "Watchman",
+        "sprite": "Knight",
+        "greeting": "Works property. Look all you like, touch nothing, and we stay friends.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "I know you. Stand where I can see you and keep your hands out."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_post",
+            "text": "Long shift?",
+            "reply": "Long enough. They pay me to stand here and notice things, and lately there's been a great deal to notice."
+          },
+          {
+            "intent": "ask_orders",
+            "tag": "Wits",
+            "text": "Who told you to watch this?",
+            "reply": "Somebody who signs for it. That's as far up as I've ever been told, and I've stopped asking.",
+            "costs": "goodwill"
+          }
+        ]
       }
     },
     "placements": [
@@ -316,6 +342,54 @@
         "tile": [
           228,
           175
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          237,
+          170
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          232,
+          178
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          100,
+          153
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          92,
+          153
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          101,
+          53
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          147,
+          105
         ]
       }
     ]

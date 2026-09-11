@@ -582,20 +582,39 @@ func _stamp_stalls() -> void:
 	# One in Cairnwell, beside the trader, so a stranger who will not sell to you
 	# is standing in front of the thing he will not sell.
 	_stall_at(CAIRNWELL + Vector2i(-3, -3))
-	# And one in the Wide Acres, which has no cast in it at all.
+	# And one in Saltmarch, which has no cast, no power base and no watch.
 	#
-	# §8 says a crime nobody saw did not happen, and until now that rule had no
-	# reachable case: every stall on the map stood inside somebody's nine tiles,
-	# so theft was a flat tax rather than a decision. A stall nobody watches makes
-	# it a decision about *where* — the same shape as road against wild, made on
-	# the map rather than in a menu. Which is also why Wren sells the location of
-	# this one: she picks over ruins, so she knows where nobody is looking.
-	_stall_at(WIDE_ACRES + Vector2i(-2, -2))
+	# §8 says a crime nobody saw did not happen, and that rule had no reachable
+	# case: every stall on the map stood inside somebody's nine tiles, so theft was
+	# a flat tax rather than a decision. A stall nobody watches makes it a decision
+	# about *where* — the same shape as road against wild, made on the map. It
+	# started in the Wide Acres and moved here when the granaries got a watch:
+	# Saltmarch is off the trunk road, so no traveller carries word out of it
+	# either. Which is why Wren sells the location — she picks over ruins, so she
+	# knows where nobody is looking.
+	_stall_at(SALTMARCH + Vector2i(4, -2))
 
 
 func _stall_at(at: Vector2i) -> void:
 	if is_passable(at):
 		props.append({"kind": &"stall", "at": at, "size": Vector2i(4, 5), "solid": false})
+
+
+## The landmark you are standing next to that something can be done to, or an empty
+## dictionary. Returns the whole prop, because the caller needs its position to know
+## which one was used and its kind to know what the act is.
+func nearest_site(tile: Vector2i, reach: float) -> Dictionary:
+	var best: Dictionary = {}
+	var best_distance: float = reach
+	for prop: Dictionary in props:
+		if not SiteRules.is_site(prop["kind"] as StringName):
+			continue
+		var distance: float = _distance_to_block(
+			tile, prop["at"] as Vector2i, prop.get("size", Vector2i(1, 1)) as Vector2i)
+		if distance <= best_distance:
+			best = prop
+			best_distance = distance
+	return best
 
 
 ## The stall you are standing next to, or NOWHERE.
@@ -669,6 +688,10 @@ func _stamp_landmarks() -> void:
 	_place(&"house_big", WIDE_ACRES + Vector2i(4, -6), Vector2i(4, 3))
 	_place(&"house_big", WIDE_ACRES + Vector2i(-9, 3), Vector2i(4, 3))
 	_place(&"house_big", WIDE_ACRES + Vector2i(4, 3), Vector2i(4, 3))
+	# The stores themselves, which are the power base rather than the farmhouses:
+	# §3's second pillar is what feeds the capital and the standing army.
+	for i: int in 4:
+		_place(&"granary", WIDE_ACRES + Vector2i(-13 + i * 7, -1), Vector2i(3, 4))
 
 	# The Muster: tents, in rows, because that is what a standing army looks like.
 	for row: int in 2:
@@ -708,6 +731,7 @@ func _stamp_settlements() -> void:
 	_stamp_town(HARROWGATE, HARROWGATE_SIZE, Terrain.TOWN, true)
 	_stamp_town(WIDE_ACRES, WIDE_ACRES_SIZE, Terrain.TOWN, true)
 	_stamp_town(MUSTER, MUSTER_SIZE, Terrain.CAMP, false)
+	_place(&"muster_rolls", MUSTER + Vector2i(6, -2), Vector2i(3, 3))
 	_stamp_town(SALTMARCH, SALTMARCH_SIZE, Terrain.TOWN, true)
 	_stamp_town(CAIRNWELL, CAIRNWELL_SIZE, Terrain.TOWN, true)
 	_stamp_town(BLACKCAIRN, BLACKCAIRN_SIZE, Terrain.CASTLE, false)

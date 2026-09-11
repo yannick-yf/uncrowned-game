@@ -17,9 +17,21 @@ const DEED_THEFT: StringName = &"i_stole_in_public"
 const DEED_RESTITUTION: StringName = &"i_gave_it_back"
 const DEED_WARNING: StringName = &"i_warned_the_town"
 
+## Acts against the six power bases (§3). These are what give the tracked
+## quantities inputs that are not somebody's dialogue — which is the whole of why
+## Phase 5 was reshaped. Each is a row here rather than a system of its own.
+const DEED_SABOTAGE: StringName = &"i_wrecked_a_furnace"
+const DEED_BURN_STORES: StringName = &"i_burned_the_stores"
+const DEED_ROB_BANK: StringName = &"i_emptied_the_vault"
+const DEED_WRECK_ROLLS: StringName = &"i_destroyed_the_muster_rolls"
+
 const FACTION_TOWNS: StringName = &"towns"
 const FACTION_UNDERWORLD: StringName = &"the unlawful"
 const FACTION_CROWN: StringName = &"the crown"
+## The people the king's project ruined — the razed villages, the men the
+## Cinderworks used up. The player is one of them, which is why damage to the crown
+## buys standing here that damage to a town never does.
+const FACTION_DISPOSSESSED: StringName = &"the dispossessed"
 
 
 ## What the town where the story lands thinks, once it lands.
@@ -34,6 +46,17 @@ static func town_effect(deed: StringName) -> float:
 		return 14.0
 	if deed == DEED_WARNING:
 		return 30.0
+	# Acts against the power bases cost you with the place they happen in. The
+	# works is the Cinderworks' living, the stores are the Wide Acres' winter, and
+	# nobody thanks the man who burned either — however much the crown needed it.
+	if deed == DEED_SABOTAGE:
+		return -18.0
+	if deed == DEED_BURN_STORES:
+		return -25.0
+	if deed == DEED_ROB_BANK:
+		return -20.0
+	if deed == DEED_WRECK_ROLLS:
+		return -12.0
 	return 0.0
 
 
@@ -49,6 +72,14 @@ static func faction_effects(deed: StringName) -> Dictionary:
 	if deed == DEED_WARNING:
 		# Telling a town the king's army is rotting is sedition, whoever it helps.
 		return {FACTION_TOWNS: 15.0, FACTION_CROWN: -25.0}
+	if deed == DEED_SABOTAGE:
+		return {FACTION_TOWNS: -9.0, FACTION_CROWN: -20.0, FACTION_DISPOSSESSED: 26.0}
+	if deed == DEED_BURN_STORES:
+		return {FACTION_TOWNS: -14.0, FACTION_CROWN: -22.0, FACTION_DISPOSSESSED: 18.0}
+	if deed == DEED_ROB_BANK:
+		return {FACTION_TOWNS: -10.0, FACTION_CROWN: -28.0, FACTION_UNDERWORLD: 30.0}
+	if deed == DEED_WRECK_ROLLS:
+		return {FACTION_CROWN: -24.0, FACTION_TOWNS: 6.0, FACTION_DISPOSSESSED: 14.0}
 	return {}
 
 
@@ -66,6 +97,14 @@ static func witness_effect(deed: StringName) -> float:
 		return 20.0
 	if deed == DEED_WARNING:
 		return 35.0
+	if deed == DEED_SABOTAGE:
+		return -34.0
+	if deed == DEED_BURN_STORES:
+		return -40.0
+	if deed == DEED_ROB_BANK:
+		return -36.0
+	if deed == DEED_WRECK_ROLLS:
+		return -20.0
 	return 0.0
 
 
@@ -79,7 +118,35 @@ static func travels(deed: StringName) -> bool:
 	return deed != DEED_RESTITUTION
 
 
+## What a deed does to the world, as quantity -> amount. Pushed rather than
+## assigned, so the player's hand is recorded and §3's endings can count it.
+##
+## The whole reason Phase 5 was reshaped lives in this function: two of the twelve
+## quantities moved, dialogue was the only input to the only one that mattered, and
+## the game had started to feel like matching people to states. These are the other
+## ways in, and they are acts rather than conversations.
+static func world_effects(deed: StringName) -> Dictionary:
+	if deed == DEED_SABOTAGE:
+		# A cold furnace makes nothing, and the men who tend it stop believing the
+		# works will outlast them.
+		return {&"steel_output": -22.0, &"worker_morale": -12.0}
+	if deed == DEED_BURN_STORES:
+		# The crown eats what the Wide Acres grow. Burn it and the crown buys it.
+		return {&"crown_treasury": -18.0}
+	if deed == DEED_ROB_BANK:
+		# §3's sixth power base. A bank that can be robbed is a bank nobody trusts,
+		# and the whole industrial project is leveraged on it.
+		return {&"crown_treasury": -26.0, &"bank_confidence": -34.0}
+	if deed == DEED_WRECK_ROLLS:
+		# You cannot pay men you cannot name, and the officers blame each other.
+		return {&"army_strength": -18.0, &"faction_tension": 16.0}
+	return {}
+
+
 ## Deeds nobody performed do nothing, and a deed with no counterpart is a bug. Used
 ## by the test that walks every deed in the table.
 static func all_deeds() -> Array[StringName]:
-	return [DEED_THEFT, DEED_RESTITUTION, DEED_WARNING]
+	return [
+		DEED_THEFT, DEED_RESTITUTION, DEED_WARNING,
+		DEED_SABOTAGE, DEED_BURN_STORES, DEED_ROB_BANK, DEED_WRECK_ROLLS,
+	]
