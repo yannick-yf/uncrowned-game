@@ -100,7 +100,7 @@ func _process(delta: float) -> void:
 		_sim.advance(1)
 		_render_to = _world.player_pos
 
-	position = (get_viewport_rect().size * 0.5 - _draw_position() * float(TILE)).round()
+	position = (get_viewport_rect().size * 0.5 - _camera_at(delta) * float(TILE)).round()
 	queue_redraw()
 	_draw_hud()
 	_draw_journal()
@@ -334,6 +334,40 @@ func _can_give_back() -> bool:
 
 # ----------------------------------------------------------------- drawing ---
 
+## How far ahead of the player the camera sits, in tiles, and how fast it catches up.
+##
+## Lookahead shows you where you are going rather than where you have been, which
+## matters on a map whose whole point is choosing a route. Kept small: more than a
+## tile or two and the player stops being the thing you are looking at.
+const CAMERA_LOOKAHEAD: float = 1.6
+## Per second, as a share of the remaining distance. Fast enough that it never feels
+## like dragging something, slow enough that changing your mind is visible.
+const CAMERA_CATCHES_UP: float = 7.0
+
+var _camera: Vector2 = Vector2.ZERO
+var _camera_placed: bool = false
+
+
+## Where the camera is, as opposed to where the player is.
+##
+## Eased toward the player plus a lead in the direction they are facing. Snapped
+## rather than eased when the player has moved further than they could have walked —
+## a death puts them back at a fire, and a camera that *travels* there sweeps the
+## whole map and tells everybody where the fairies are.
+func _camera_at(delta: float) -> Vector2:
+	var looking: Vector2 = Vector2(_world.player_dir)
+	if looking.length() > 0.01:
+		looking = looking.normalized()
+	var want: Vector2 = _draw_position() + looking * CAMERA_LOOKAHEAD
+	if not _camera_placed or _camera.distance_to(want) > TELEPORT_TILES:
+		_camera = want
+		_camera_placed = true
+		return _camera
+	# Frame-rate independent easing: the same catch-up at 30 fps and at 144.
+	_camera = _camera.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
+	return _camera
+
+
 func _draw_position() -> Vector2:
 	if _render_from.distance_to(_render_to) > TELEPORT_TILES:
 		return _render_to
@@ -346,11 +380,16 @@ func _draw() -> void:
 		return
 	var region: Region = _world.region()
 	var centre: Vector2 = _draw_position()
+	# What to draw is decided by where the **camera** is, not where the player is.
+	# The two parted company when the camera gained a lead: culling from the player
+	# leaves a strip of unpainted ground on the side you are walking toward, and the
+	# lead is exactly the size of that strip.
+	var eye: Vector2 = _camera if _camera_placed else centre
 	var half: Vector2 = get_viewport_rect().size * 0.5 / float(TILE)
-	var min_x: int = maxi(floori(centre.x - half.x) - 1, 0)
-	var max_x: int = mini(ceili(centre.x + half.x) + 1, region.width - 1)
-	var min_y: int = maxi(floori(centre.y - half.y) - 2, 0)
-	var max_y: int = mini(ceili(centre.y + half.y) + 1, region.height - 1)
+	var min_x: int = maxi(floori(eye.x - half.x) - 2, 0)
+	var max_x: int = mini(ceili(eye.x + half.x) + 2, region.width - 1)
+	var min_y: int = maxi(floori(eye.y - half.y) - 3, 0)
+	var max_y: int = mini(ceili(eye.y + half.y) + 2, region.height - 1)
 
 	# Ground first, then everything that stands on it, so a tree drawn at the top
 	# of one tile overlaps the tile behind it rather than being clipped by it.
@@ -358,8 +397,14 @@ func _draw() -> void:
 		for y: int in range(min_y, max_y + 1):
 			_draw_ground(region, x, y)
 
+	# **Canopy.** Everything growing *behind* the player is drawn now; everything in
+	# front of them waits until after they are drawn, so walking south through the
+	# Thornwood puts you under the branches rather than in front of them. The row the
+	# player is standing on is the canopy proper and is drawn faded, because a wood
+	# that swallows you is not atmospheric, it is a lost player.
+	var on_foot: Vector2i = _world.player_tile()
 	for x: int in range(min_x, max_x + 1):
-		for y: int in range(min_y, max_y + 1):
+		for y: int in range(min_y, mini(on_foot.y, max_y + 1)):
 			_draw_scatter(region, x, y)
 
 	# The Muster's tents are drawn from army strength, so a camp that has been
@@ -403,6 +448,14 @@ func _draw() -> void:
 		# a second king half a pixel behind the first.
 
 	_draw_actor(centre, &"player", Art.column_for(_world.player_facing))
+
+	# The other half of the canopy, over the player.
+	for x: int in range(min_x, max_x + 1):
+		for y: int in range(maxi(on_foot.y, min_y), max_y + 1):
+			var over: bool = y <= on_foot.y + 1 and absi(x - on_foot.x) <= 1
+			_draw_scatter(region, x, y, Color(1.0, 1.0, 1.0, 0.55) if over else Color.WHITE)
+
+	_draw_particles(min_x, max_x, min_y, max_y)
 	_draw_witnesses()
 
 
@@ -455,6 +508,13 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 
 	var column: int = entry[1] as int
 	var row: int = entry[2] as int
+	# **Animated tiles.** Water moves, and so does everything drawn from the water
+	# sheet — the sea, the Kettle, the ford, the marsh. Offset by the tile's own
+	# position as well as by time, so a river does not flash in unison like a sign.
+	if terrain == Region.Terrain.SEA or terrain == Region.Terrain.WATER \
+			or terrain == Region.Terrain.FORD or terrain == Region.Terrain.MARSH:
+		var wave: int = int(_real_seconds * 2.4 + float(x) * 0.35 + float(y) * 0.2) % 2
+		column += wave
 	# Break up the flat fills so ground does not read as graph paper.
 	if terrain == Region.Terrain.WILD or terrain == Region.Terrain.FOREST:
 		if Art.scatter_hash(x + 7, y + 3) < 90:
@@ -466,7 +526,7 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 		_art.atlas(entry[0] as StringName), dest, Art.tile_rect(column, row))
 
 
-func _draw_scatter(region: Region, x: int, y: int) -> void:
+func _draw_scatter(region: Region, x: int, y: int, tint: Color = Color.WHITE) -> void:
 	var entry: Array = _art.scatter_at(region.terrain_at(Vector2i(x, y)), x, y)
 	if entry.is_empty():
 		return
@@ -479,7 +539,45 @@ func _draw_scatter(region: Region, x: int, y: int) -> void:
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(at.round(), Vector2(source.size)),
-		Rect2(source))
+		Rect2(source), tint)
+
+
+## Embers over the kilns, and smoke off the fires.
+##
+## Drawn rather than spawned: there is no particle node anywhere in this game, and
+## adding one would mean a scene tree the window does not otherwise need. A few dozen
+## sine waves cost nothing and stop at the edge of the screen.
+##
+## Deliberately only two places — the furnaces, because the Cinderworks running is the
+## thing the whole map is about, and the campfires, because a fire you can save at
+## should look like one from across a field.
+func _draw_particles(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
+	var now: float = _real_seconds
+	for prop: Dictionary in _world.region().props:
+		var kind: StringName = prop["kind"] as StringName
+		var embers: int = 0
+		var colour := Color.WHITE
+		if kind == &"kiln":
+			embers = 5
+			colour = Color(1.0, 0.62, 0.28, 0.75)
+		elif kind == &"campfire":
+			embers = 3
+			colour = Color(1.0, 0.74, 0.40, 0.70)
+		if embers == 0:
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		if at.x < min_x - 2 or at.x > max_x + 2 or at.y < min_y - 2 or at.y > max_y + 2:
+			continue
+		var base := Vector2(float(at.x) + 0.5, float(at.y)) * float(TILE)
+		for i: int in embers:
+			# Each ember has its own period and its own drift, so the group never
+			# pulses together — which is the thing that reads as fake.
+			var life: float = fposmod(now * (0.34 + float(i) * 0.07) + float(i) * 0.41, 1.0)
+			var rise: float = life * 22.0
+			var sway: float = sin((now + float(i) * 2.1) * 1.7) * (2.0 + life * 4.0)
+			var fade: float = colour.a * (1.0 - life) * (1.0 - life)
+			draw_circle(base + Vector2(sway, -rise), 1.0 + (1.0 - life), Color(
+				colour.r, colour.g, colour.b, fade))
 
 
 func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int) -> void:
@@ -497,10 +595,17 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 		float(at.x * TILE) + float(size.x * TILE) * 0.5 - float(source.size.x) * 0.5,
 		float((at.y + size.y) * TILE) - float(source.size.y),
 	)
+	# **Occlusion fade.** A building the player is standing behind goes part
+	# transparent, so walking behind the counting house does not mean disappearing
+	# for four seconds. Judged on the drawn rectangle rather than the footprint,
+	# because what hides the player is the part that overhangs — a tall roof covers
+	# tiles nobody is standing on.
+	var covers: bool = Rect2(dest, Vector2(source.size)).grow(-2.0).has_point(
+		_draw_position() * float(TILE))
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(dest.round(), Vector2(source.size)),
-		Rect2(source))
+		Rect2(source), Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE)
 
 
 func _draw_beast(beast: Beast) -> void:
@@ -848,9 +953,9 @@ func _draw_journal() -> void:
 		if bool(wood.get("gone", false)):
 			lines.append(Text.of(&"journal.wood.gone"))
 		elif bool(wood.get("falling", false)):
-			lines.append(Text.of(&"journal.wood.falling", [int(wood["paces"])]))
+			lines.append(Text.of(&"journal.wood.falling", [int(wood.get("paces", 0))]))
 		else:
-			lines.append(Text.of(&"journal.wood.holding", [int(wood["paces"])]))
+			lines.append(Text.of(&"journal.wood.holding", [int(wood.get("paces", 0))]))
 
 	# What you are, and what it has bought. Joining is worn (§8's appearance
 	# register), so the one screen that joins acts to consequences should say it.

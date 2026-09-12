@@ -49,7 +49,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | ✅ **done** — all 12 pass |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | ✅ **done** |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | ✅ **done** (fast suite 4.71 s, not 4 s) |
-| 5 | **The look** — the cheap five. Real 2D lighting is **out of v1** | not started |
+| 5 | **The look** — the cheap five. Real 2D lighting is **out of v1** | ✅ **built, for Yannick to judge** |
 
 ### 1. The opening — five stages
 
@@ -210,6 +210,11 @@ Every entry here is a choice he was not present for. Newest last.
 | 35 | Fast suite **7.57 s → 4.71 s** without cutting a single test — but **the 4 s target is not met** | Two changes, both safe. Long simulated spans were trimmed where the claim survived (20 in-game days proves nothing 6 does not, when the army drifts 12 a day). And systems now opt out of the step and tick loops: `on_step` was being called on all 22 systems whether they did anything or not, which is **nine and a half million calls into empty functions** in a test that simulates twenty days. Getting the last 0.7 s would mean cutting coverage, and the suite has grown by 76 tests tonight, so I stopped and wrote the number down instead |
 | 36 | `SimSystem.steps()` and `ticks()` **default to true** | Opting in would mean a system that forgets is silently broken; opting out means a system that forgets is merely slower. Correctness should never be the thing you lose by being forgetful |
 | 37 | Collision is tested as **reachability**, not as traps | A trap in the sense people imagine cannot happen: passability is symmetric, so if you can walk in you can walk out. What can happen is something the player must reach being stranded, and that is what the walk checks — every zone, every fire, every named person, every stall and paper, and both places the game can put the player without asking |
+| 38 | **Canopy is a y-sort**, not an overlay | Everything growing behind the player draws before them, everything in front draws after — so walking south through the Thornwood puts you *under* the branches. The row you are standing on is drawn at 55% so a wood cannot swallow you, which is the difference between atmospheric and a lost player |
+| 39 | Occlusion fade is judged on the **drawn rectangle**, not the footprint | What hides the player is the part that overhangs. A tall roof covers tiles nobody is standing on, so testing the footprint would fade the wrong buildings and miss the right ones |
+| 40 | Particles are **drawn, not spawned**, and only at kilns and campfires | There is no particle node anywhere in this game and adding one means a scene tree the window does not otherwise need. A few dozen sine waves cost nothing. Two places only: the furnaces, because the works running is what the whole map is about, and the fires, because a fire you can save at should read as one from across a field |
+| 41 | The camera **snaps rather than eases** when the player has moved further than they could walk | A death puts you back at a fire, and a camera that travels there sweeps the whole map — which among other things shows everybody where the fairies are |
+| 42 | Culling follows the **camera**, not the player | The two parted company the moment the camera gained a lead, and culling from the player leaves a strip of unpainted ground on exactly the side you are walking toward |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
 
 ---
@@ -231,6 +236,35 @@ one entry short. It scans `Text.of(&"…")` out of the source rather than workin
 list, and it found `deed.heard.i_informed_the_crown` missing within a minute of being
 written: the informing deed added an hour earlier would have leaked its raw id into a
 context packet the first time anybody had heard about it.
+
+### The look — built, and for Yannick to judge
+
+MAP_SPEC §11 and the brief both: a model may propose and implement these; it may not
+declare them done. So these are **built and not declared**.
+
+| | |
+|---|---|
+| **Canopy layers** | y-sorted, so you walk under the Thornwood. The row you stand on fades to 55% |
+| **Animated tiles** | the sea, the Kettle, the ford and the marsh all move, offset by tile position so a river does not flash in unison |
+| **Occlusion fade** | buildings go to 45% when the player is behind the drawn rectangle |
+| **Camera lookahead and lag** | 1.6 tiles of lead, catching up at 7× per second, frame-rate independent, snapping on a teleport |
+| **Particles** | embers over the kilns and the campfires, each on its own period |
+
+**Real 2D lights and shadows are cut from v1**, as agreed. The game draws in a single
+`_draw()` on one `Node2D` with no TileMap, Camera2D, Light2D or particle node, and
+true shadow casting means a rendering rewrite.
+
+**Verified by running the actual game**: 300 frames with a real window, **zero script
+errors**. Worth saying because `--headless` never calls `_draw()`, so none of the look
+code above is exercised by the test suite at all — and the terrain colour crash earlier
+tonight was exactly that blind spot.
+
+**Where the ceiling is.** The target is *A Link to the Past* and the pack is Ninja
+Adventure: 16×16, lighter, brighter, and with a smaller palette per sprite than ALttP's
+art. What the pack cannot give is ALttP's depth cueing — its darker outlines toward the
+bottom of a sprite, and its two-tone shadowing. The five above are the parts of the look
+that are *code* rather than art, and they are done; the rest is a commission, which is
+what Phase 7's art budget is for.
 
 ---
 
