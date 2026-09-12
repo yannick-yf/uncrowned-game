@@ -3,6 +3,37 @@
 > **Yannick reads this first.** It is both the plan and the record: what was built,
 > in what order, and every decision taken without him in the room.
 
+## WHERE IT ENDED
+
+All five pieces are done. **332 tests green**, fast suite **4.71 s**, asset validator
+**green**, 20,000 headless ticks and 300 real rendered frames with **zero script
+errors**, and **all twelve of MAP_SPEC's criteria pass**.
+
+Eight commits on `phase7`, none pushed:
+
+| | |
+|---|---|
+| `9b11faa` | setup: this plan, and MAP_SPEC into the repo |
+| `2253fee` | opening 1 and 4 — the clearing, the one path, the first fire |
+| `7ce79c2` | opening 2 — the ground the fairies hold, and what takes it |
+| `ce5ded0` | opening 3 — she speaks, and then she is gone |
+| `b9ce970` | opening 5 — the journal shows what became of the wood |
+| `64621e5` | the map — twelve criteria, and the thesis on the ground |
+| `41cca88` | factions — two sides, four ranks, ground that changes hands |
+| `f587401` | polish — collision walked, language keys checked, suite 38% faster |
+| `82d6486` | the look — canopy, animated water, occlusion fade, camera lead, embers |
+
+**Three things want your eye.**
+
+1. **The look is built and not declared done**, per MAP_SPEC §11 and your own brief.
+   Play it and judge it. Real 2D lighting stayed cut.
+2. **The fast suite is 4.71 s, not 4 s.** It was 7.57 s and the suite grew by 76 tests
+   tonight. The last 0.7 s costs coverage, so I stopped and wrote the number down.
+3. **The disguise is proposed, not built** — the proposal is near the bottom of this
+   file.
+
+**Nothing was left half-finished, and nothing is red.**
+
 ---
 
 ## HOW TO RESUME — read this if you have lost context

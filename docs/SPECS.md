@@ -1352,6 +1352,54 @@ never fall out of ambient motion**.
 This is what keeps the twelve from becoming weather the player watches. It also
 gives the journal something true to show — see §15.
 
+### Two sides, and not joining either (2026-09-12)
+
+**The crown** is industry, the road, the cities, order and the tiered law. **The
+opposition** is the forest, magic, the displaced and the poor. That is §4's thesis
+with people in it: the map already argues, and this is who is arguing.
+
+**Neutral is not a third faction.** It is the default, it is free, and it is what the
+game already was — everything that worked before joining exists still.
+
+**They feed the three routes; they do not replace them.** The crown opens Access and
+lets the player rise until the castle admits them. The opposition feeds Exposure. And
+joining neither leaves Force, which needs nobody's permission. **One structure, not
+two** — which is what keeps invariant 7 true when a player joins the crown and helps
+it hunt the opposition to nothing. A test does exactly that.
+
+**Joining is not standing**, and the distinction is load-bearing. Standing is what a
+place thinks of you and it moves on its own; joining is a thing you chose, it changes
+only when you say so, and **everyone can see it** (§8's appearance register — the
+context packet carries `SEES YOU AS`). A crown officer can be despised in Harrowgate
+and still get through the gate at Blackcairn.
+
+**Four ranks a side, read off service rather than stored**, so there is one number to
+replay and no way for the two to disagree. Service comes off the **deed table**: every
+act already in the game counts as work for the opposition without being authored
+twice, which is why joining them needed no new verbs at all.
+
+**The crown needed exactly one new act.** Every one of the thirteen deeds cost the
+king something — fine while the player could only be against him, and untenable the
+moment they could join. Rather than invent ten pro-crown systems, there is one act:
+**informing**, the mirror of making a thing public. The same fact, spent the other way.
+It is one-shot, it requires actually knowing something, and **it costs you the town**,
+because nobody likes an informer. That last part is what stops the crown route being
+free: every step up costs you the ground you are standing on.
+
+**You join by saying so to somebody** — Tovin writes you down, Kell takes you in —
+never from a menu, so it is in the log and there is a person who took your name.
+
+**Ownership is a fact, not a constant.** The crown's five points and the forest's one
+do not move; you do not take Blackcairn by being disliked there. The **Wide Acres and
+Saltmarch** are borders rather than sides, and they are the only two that change hands,
+on the sentiment of the town under them — on a band rather than a line, so a border
+cannot flicker. The player's choices show on the map, in the only two places where
+showing is honest.
+
+> **The disguise is proposed and not built**, by decision. See `docs/OVERNIGHT.md`:
+> worn rather than toggled, fools strangers and never the twenty-five named people,
+> broken by being seen acting, and gating nothing.
+
 ### Every door that shuts opens another (hard rule)
 
 **A reputation change is never only a loss.** Kill the people Ossa treats and she
@@ -2591,10 +2639,31 @@ to keep. Re-running the whole experiment against a better small model later is o
 command, and the door got materially stricter for having been pointed at real
 generated text.
 
-**Phase 7 — art, audio and polish.**
+**Phase 7 — the opening, the map, factions, polish and the look. 🟡 in progress**
 Commissioned art replacing the approved pack, audio, and the accessibility pass
 §16 defers.
 > **Proof:** Yannick wants to play it in front of someone else.
+
+**Delivered 2026-09-12**, overnight, in five pieces — the running record, with every
+decision taken without him in the room, is `docs/OVERNIGHT.md`:
+
+1. **The opening.** The player wakes in the fairies' clearing, one corridor leads out
+   to the ruins with the furnaces in the same frame, the ground the fairies hold is a
+   number that falls as the furnaces run, she tells them seven things and is gone, the
+   clearing is the first fire, and the journal says what became of the wood.
+2. **The map.** All twelve of MAP_SPEC's criteria pass, and the thesis is on the
+   ground: `Terrain.CLEARED`, the Cinderworks as a wound with a radius that stops four
+   tiles short of the fairies.
+3. **Factions**, above.
+4. **Polish.** Collision walked as reachability, a test that every line the code asks
+   for exists in both languages, and the fast suite 38% faster with no test cut.
+5. **The look.** Canopy, animated water, occlusion fade, camera lead and embers.
+   **Real 2D lighting is cut from v1.** Built and *not declared done* — that is
+   Yannick's to judge, per MAP_SPEC §11.
+
+**Combat is out of v1 or its very last step** (Yannick, 2026-09-12). Plan for four
+endings and treat the fifth as the thing that happens only if everything else is
+finished.
 
 ---
 
