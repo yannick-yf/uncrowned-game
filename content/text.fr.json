@@ -168,5 +168,21 @@
   "journal.wood.holding": "· Les fées tiennent encore {0} pas de terrain. Plus rien ne le prend.",
   "journal.wood.gone": "· Elles ne tiennent plus rien.",
   "journal.wood.saved": "Le bois tient encore. Ce qu'elle vous a demandé, vous l'avez fait.",
-  "journal.wood.lost": "Le bois a fini de partir. Ce qu'elle vous a demandé, personne ne l'a fait."
+  "journal.wood.lost": "Le bois a fini de partir. Ce qu'elle vous a demandé, personne ne l'a fait.",
+  "rank.crown.0": "un homme du roi",
+  "rank.crown.1": "un commis du roi",
+  "rank.crown.2": "un officier du roi",
+  "rank.crown.3": "un chambellan du roi",
+  "rank.opposition.0": "quelqu'un du bois",
+  "rank.opposition.1": "un porteur",
+  "rank.opposition.2": "un organisateur",
+  "rank.opposition.3": "une voix",
+  "journal.side": "CE QUE VOUS ÊTES",
+  "journal.side.none": "· Vous n'avez rejoint personne.",
+  "journal.side.row": "· {0}. {1} au service.",
+  "journal.ground": "QUI TIENT QUOI",
+  "journal.ground.row": "· {0} : {1}",
+  "ground.crown": "la couronne",
+  "ground.opposition": "le bois",
+  "ground.none": "personne"
 }

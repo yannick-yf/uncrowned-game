@@ -206,6 +206,22 @@
           "text": "Does your office cover the army camp?",
           "reply": "On paper. In practice the camp judges itself, so nobody judges it. Nothing that happens there reaches my desk.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "join_crown",
+          "text": "I want to serve the king.",
+          "joins": "crown",
+          "costs": "free",
+          "reply": "Then I will write you down. You start at the bottom, like everybody. Work will find you.",
+          "requires_condition": "nobody_has_your_name"
+        },
+        {
+          "intent": "inform_crown",
+          "text": "I have learned something. I am telling you.",
+          "causes": "i_informed_the_crown",
+          "requires": "cinderworks:death_toll",
+          "costs": "free",
+          "reply": "I am noting it. It will go up. You only say a thing like that once, so do not say it twice."
         }
       ],
       "alt_greetings": [
@@ -696,6 +712,14 @@
           "costs": "goodwill",
           "causes": "i_recruited_deserters",
           "requires": "brindle:that_night"
+        },
+        {
+          "intent": "join_wood",
+          "text": "I want to help the wood.",
+          "joins": "opposition",
+          "costs": "free",
+          "reply": "The wood keeps no roll. You help, or you do not. We will know which.",
+          "requires_condition": "nobody_has_your_name"
         }
       ]
     },

@@ -32,6 +32,7 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"rumours", Rumours.new())
 	sim.add_store(&"travellers", Travellers.new())
 	sim.add_store(&"phrasebook", Phrasebook.new())
+	sim.add_store(&"allegiance", Allegiance.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -67,6 +68,7 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(UnrestSystem.new())
 	systems.append(TellingSystem.new())
 	systems.append(TravellerSystem.new())
+	systems.append(AllegianceSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
@@ -92,6 +94,7 @@ static func fresh_stores() -> Dictionary:
 		&"wildlife": Wildlife.new(), &"worldtick": WorldTick.new(),
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
+		&"allegiance": Allegiance.new(),
 	}
 
 

@@ -168,5 +168,21 @@
   "journal.wood.holding": "· The fairies still hold {0} paces of ground. Nothing is taking it now.",
   "journal.wood.gone": "· They hold nothing now.",
   "journal.wood.saved": "The wood is still standing. What she asked of you, you did.",
-  "journal.wood.lost": "The wood is gone. What she asked of you, nobody did."
+  "journal.wood.lost": "The wood is gone. What she asked of you, nobody did.",
+  "rank.crown.0": "a king's man",
+  "rank.crown.1": "a king's clerk",
+  "rank.crown.2": "a king's officer",
+  "rank.crown.3": "a king's chamberlain",
+  "rank.opposition.0": "somebody from the wood",
+  "rank.opposition.1": "a carrier",
+  "rank.opposition.2": "an organiser",
+  "rank.opposition.3": "a voice",
+  "journal.side": "WHAT YOU ARE",
+  "journal.side.none": "· You have joined nobody.",
+  "journal.side.row": "· {0}. {1} of service.",
+  "journal.ground": "WHO HOLDS WHAT",
+  "journal.ground.row": "· {0}: {1}",
+  "ground.crown": "the crown",
+  "ground.opposition": "the wood",
+  "ground.none": "nobody"
 }

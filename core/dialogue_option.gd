@@ -41,6 +41,11 @@ var repeatable: bool = false
 ## risked being lore. The rules layer still decides whether the line is offered;
 ## this only names what saying it does.
 var causes: StringName = &""
+## A side this line joins you to. Separate from `causes`, which names a deed: joining
+## is not an act against the world, it is a declaration about yourself, and the two
+## want different machinery. Content names the side; `FactionRules` decides whether
+## it is one.
+var joins: StringName = &""
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible

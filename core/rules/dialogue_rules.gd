@@ -31,6 +31,7 @@ static func conditions(
 	world: WorldState,
 	ticked: WorldTick,
 	standing: Standing = null,
+	allegiance: Allegiance = null,
 ) -> Dictionary:
 	if world == null or ticked == null:
 		return {}
@@ -48,6 +49,14 @@ static func conditions(
 		# watched — which is the only kind of thing it was ever right for.
 		&"i_am_unwelcome_here": (standing != null and here != &""
 			and StandingRules.is_unwelcome(standing.in_town(here))),
+		# The offer to take a side, which exists while you have not taken one and
+		# stops being offered the moment you do.
+		#
+		# It has to be *reactive* rather than standing, and that is not decoration:
+		# the three-slot cap fills with standing lines in the order they were
+		# written, so an offer authored last is an offer nobody is ever shown. The
+		# same reason the rest of this table exists.
+		&"nobody_has_your_name": allegiance == null or allegiance.side == FactionRules.NEUTRAL,
 	}
 
 

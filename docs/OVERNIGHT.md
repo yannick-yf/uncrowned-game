@@ -47,7 +47,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 |---|---|---|
 | 1 | **The opening** — stages 1–5 below | ✅ **done** |
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | ✅ **done** — all 12 pass |
-| 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | not started |
+| 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | ✅ **done** |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
 | 5 | **The look** — the cheap five. Real 2D lighting is **out of v1** | not started |
 
@@ -199,7 +199,41 @@ Every entry here is a choice he was not present for. Newest last.
 | 24 | Criterion 9 **narrowed** to what it protects | Read literally — *no footprint on the road* — it fails, because inside a town streets and buildings interleave, which is what a town is. I tried nudging every such building clear and **it made things worse**: routes narrowed until the King's Road walk failed outright. Reverted. The criterion now checks the open road, where a house in the middle really is a mistake, plus the thing MAP_SPEC §8 actually cares about — that no building closes the way through |
 | 25 | The wound is **26 tiles** and keeps **4 clear** of the fairies' ring; the working face runs north, away from them | The works has eaten everything it can reach and stopped just short of the last of them, so the two are in the same thought and the gap is what the player is asked to save. The first stamp swallowed the ring and the corridor test caught it |
 | 26 | Terrain colours moved out of `view/main.gd` into `Art`, **keyed rather than indexed** | This was a real crash, not tidying. The table was a `PackedColorArray` read by terrain ordinal, so adding `CLEARING` in an earlier commit left it one short and the first frame drawn in the clearing would have read past the end. No test drew anything, so nothing caught it. A dictionary cannot go out of bounds, and a test now asserts every terrain the map lays down can be drawn |
+| 27 | **Joining is not standing.** The two factions are a new thing beside the four standing dimensions the game already had | Standing is what a place thinks of you and it moves on its own; joining is a thing you chose, it changes only when you say so, and everyone can see it. A crown officer can be despised in Harrowgate and still get through the gate at Blackcairn. The brief said *"neutral is not joining — the default, free, and what the game already is"*, which is exactly this split |
+| 28 | The crown needed **one new act**: `i_informed_the_crown` | There was nothing pro-crown in the game — every one of the thirteen deeds costs him something, which was fine while the player could only be against him. Inventing ten systems to fix that would have been the wrong repair. One act, the mirror of making a thing public: the same fact, spent the other way. It is one-shot, it needs you to actually know something, and **it costs you the town**, because nobody likes an informer |
+| 29 | The opposition needed **no new acts at all** | The deed table was already entirely theirs. Service is read off the deed rather than from a quest list, so every act already in the game counts without being authored twice |
+| 30 | **Service does not carry across** when you change sides | Otherwise a player banks work for one side and cashes it with the other, and joining both in turn is strictly better than choosing |
+| 31 | The recruiters are **Tovin and Kell**, not new characters | The named cast is at §6's budget of 25 and the fairy took the last slot. It is also better: the people you already know ask you to pick a side, and Kell — a deserter hiding in the wood who already recruits — is the right person for the opposition |
+| 32 | The offer to join is **reactive**, not a standing line | It did not work as a standing line and the test caught it: the three-slot cap fills in the order options were written, so an offer authored last is an offer nobody is ever shown. It now appears while you have not joined and goes away the moment you do |
+| 33 | Ground changes hands on a **band, not a line** | A town sitting between two thresholds keeps whoever holds it, so a border cannot flicker every tick |
+| 34 | Rank is **read off service**, never stored | One number to replay, and no way for the two to disagree |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
+
+---
+
+## PROPOSED, NOT BUILT — the disguise
+
+The brief asked for a proposal rather than an implementation, so this is the proposal.
+
+Faction is worn: `Context` now puts `SEES YOU AS: a king's officer` in the packet, and
+the journal says what you are. Hiding it should be **a place you can be, not a button
+you can press**:
+
+- **It is a thing you wear, and wearing it is an act.** Changing what you look like
+  happens at a landmark — a stall, a camp, a house that will take you in — never from
+  a menu, so it is in the log and it has a location somebody can watch you at.
+- **It fools the ground, not the people.** A disguise should suppress `SEES YOU AS`
+  for strangers and generics, and do nothing at all to the twenty-five named people.
+  Maddox knows your face. That keeps it from becoming a universal solvent, and it
+  makes the named cast matter more rather than less.
+- **It is broken by being seen doing something**, using the witness machinery that
+  already exists: any deed with a witness while disguised sets it back. No new system,
+  and the failure mode is the interesting one — you are fine until you act.
+- **It should cost standing with the side you are hiding**, because pretending not to
+  be a king's man is something a king's man can be caught doing.
+
+What it must not do: gate anything. Invariant 4 — there has to be a way through every
+door without it.
 
 ---
 
@@ -350,6 +384,29 @@ is exactly what it has become.
 And it **stops four tiles short of the fairies**. That gap is the smallest and most
 important measurement on the map: the works and the last of the wood are close enough
 to be in the same thought, and the gap is the thing the player is being asked to save.
+
+### Factions — the mechanism, ranks, jobs and the people who ask
+
+Built: `FactionRules`, the `Allegiance` store, `AllegianceSystem`, `DeedRules.DEED_INFORM`,
+`DialogueOption.joins`, a `nobody_has_your_name` condition, join lines on Tovin and
+Kell, the journal's two new sections, 16 text keys a language, and 17 tests.
+
+**Two sides and not joining either.** Four ranks each, read off service rather than
+stored. Service comes from the deed table, so **every act already in the game counts
+as work for the opposition without anything being authored twice** — and the crown got
+the one act the game never had.
+
+**They feed the routes, they do not replace them.** Crown → Access, opposition →
+Exposure, neither → Force. `test_joining_the_crown_and_destroying_the_opposition_leaves_force`
+is the permissiveness test for the whole feature: a player may take the king's side and
+help him hunt the wood to nothing, and the game is still finishable.
+
+**Ownership is a fact.** The crown's five points and the forest's one do not move; the
+**Wide Acres and Saltmarch** are borders and are the only two that change hands, on the
+sentiment of the town under them.
+
+Suite: **323 tests green.** 106 hand-written lines still pass the prose door in both
+languages.
 
 ### One thing found that the polish pass has to answer
 

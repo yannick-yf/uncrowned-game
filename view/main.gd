@@ -55,6 +55,7 @@ var _real_seconds: float = 0.0
 var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
 
+var _mine: Allegiance = null
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
@@ -80,6 +81,7 @@ func _ready() -> void:
 	_cast = _sim.store(&"cast") as Cast
 	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
+	_mine = _sim.store(&"allegiance") as Allegiance
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
@@ -303,6 +305,7 @@ func _reload() -> void:
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
+	_mine = _sim.store(&"allegiance") as Allegiance
 	_deaths_seen = _world.deaths
 	_journal_at = -1
 	_render_from = _world.player_pos
@@ -848,6 +851,27 @@ func _draw_journal() -> void:
 			lines.append(Text.of(&"journal.wood.falling", [int(wood["paces"])]))
 		else:
 			lines.append(Text.of(&"journal.wood.holding", [int(wood["paces"])]))
+
+	# What you are, and what it has bought. Joining is worn (§8's appearance
+	# register), so the one screen that joins acts to consequences should say it.
+	lines.append("")
+	lines.append(Text.of(&"journal.side"))
+	if _mine.side == FactionRules.NEUTRAL:
+		lines.append(Text.of(&"journal.side.none"))
+	else:
+		lines.append(Text.of(&"journal.side.row",
+			[Text.of(_mine.rank_key()), int(round(_mine.served))]))
+
+	# And who holds what, which is the map answering back. Only the two borders can
+	# move, so only the two borders are worth a line.
+	lines.append("")
+	lines.append(Text.of(&"journal.ground"))
+	for zone: StringName in FactionRules.CONTESTED:
+		var held: StringName = _mine.holder(zone)
+		lines.append(Text.of(&"journal.ground.row", [
+			Text.of(StringName("place.short.%s" % zone)),
+			Text.of(StringName("ground.%s" % (held if held != FactionRules.NEUTRAL else &"none"))),
+		]))
 
 	if _world.reign_ended != &"":
 		lines.append("")
