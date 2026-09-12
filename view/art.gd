@@ -219,9 +219,11 @@ static func scatter_hash(x: int, y: int) -> int:
 ## ground in this pack has four or five variants per surface — tufts, twigs, stones,
 ## ripples — sitting in the sheet unused.
 ##
-## `chance` is out of 256 and is the odds of *any* detail, then one of them is picked
-## evenly. Kept low: detail that appears half the time stops being detail and becomes
-## a checkerboard, which is the failure the one hard-coded variant already had.
+## `chance` is **out of 1000**, matching `scatter_hash`, and is the odds of any detail
+## at all; one of them is then picked evenly. The first draft wrote these as if the
+## hash returned 0–255, so every surface got a quarter of the detail it was asked for
+## and the grass still looked flat. Kept moderate even so: detail that appears half
+## the time stops being detail and becomes a checkerboard.
 ##
 ## **A detail tile is a variant of the surface, never an edge of it.** That is not a
 ## style note, it is the bug that shipped twice — the sea drawn with shoreline tiles
@@ -229,44 +231,44 @@ static func scatter_hash(x: int, y: int) -> int:
 ## itself in every direction.
 const GROUND: Dictionary = {
 	Region.Terrain.WILD: {
-		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 96,
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 300,
 		"detail": [Vector2i(12, 12), Vector2i(13, 12), Vector2i(14, 12), Vector2i(15, 12)],
 	},
 	Region.Terrain.CLEARING: {
-		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 130,
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 380,
 		"detail": [Vector2i(12, 12), Vector2i(14, 12), Vector2i(15, 12)],
 	},
 	Region.Terrain.FOREST: {
-		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 70,
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 220,
 		"detail": [Vector2i(13, 12), Vector2i(14, 12)],
 	},
 	Region.Terrain.THICKET: {
-		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 40,
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 120,
 		"detail": [Vector2i(13, 12)],
 	},
 	# The road, the towns and the camp are all beaten ground, and beaten ground has
 	# stones and ruts in it.
 	Region.Terrain.ROAD: {
-		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 74,
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 260,
 		"detail": [Vector2i(12, 19), Vector2i(13, 19), Vector2i(14, 19), Vector2i(15, 19)],
 	},
 	Region.Terrain.TOWN: {
-		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 60,
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 200,
 		"detail": [Vector2i(13, 19), Vector2i(15, 19)],
 	},
 	Region.Terrain.CAMP: {
-		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 80,
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 280,
 		"detail": [Vector2i(12, 19), Vector2i(14, 19)],
 	},
 	# Ground the works has taken. The darker, rougher dirt, with the twig and the
 	# stone that are literally the stumps left behind.
 	Region.Terrain.CLEARED: {
-		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 120,
+		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 420,
 		"detail": [Vector2i(12, 18), Vector2i(14, 18), Vector2i(15, 18)],
 	},
 	# Brindle. Grass coming back through it, which is the village reclaiming itself.
 	Region.Terrain.RUINS: {
-		"sheet": &"floor", "base": Vector2i(11, 20), "chance": 150,
+		"sheet": &"floor", "base": Vector2i(11, 20), "chance": 520,
 		"detail": [Vector2i(12, 20), Vector2i(13, 20), Vector2i(14, 20), Vector2i(15, 20)],
 	},
 	# **Water, and the one thing that has to be right about it.**
@@ -281,21 +283,21 @@ const GROUND: Dictionary = {
 	# of its 476 tiles are a single flat colour, rather than by picking one that
 	# looked about right.
 	Region.Terrain.SEA: {
-		"sheet": &"water", "base": Vector2i(1, 7), "chance": 40,
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 140,
 		"detail": [Vector2i(11, 1), Vector2i(11, 2), Vector2i(11, 4)],
 	},
 	Region.Terrain.WATER: {
-		"sheet": &"water", "base": Vector2i(1, 7), "chance": 54,
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 190,
 		"detail": [Vector2i(11, 1), Vector2i(11, 2)],
 	},
 	# A marsh is shallow water with things growing in it, so it is that water with
 	# the lily turned right up. It used to be a pond's top-left corner.
 	Region.Terrain.MARSH: {
-		"sheet": &"water", "base": Vector2i(1, 7), "chance": 150,
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 520,
 		"detail": [Vector2i(11, 3), Vector2i(11, 3), Vector2i(11, 1)],
 	},
 	Region.Terrain.FORD: {
-		"sheet": &"water", "base": Vector2i(1, 7), "chance": 96,
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 340,
 		"detail": [Vector2i(11, 1), Vector2i(11, 2)],
 	},
 	# Beach. No detail: the only tiles near it on this sheet are *water* details, and

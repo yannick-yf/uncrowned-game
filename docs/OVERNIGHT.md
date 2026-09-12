@@ -36,14 +36,49 @@ at the picture is the check, and I did not do it.
 | | | |
 |---|---|---|
 | A | **The water bug** | ✅ done |
-| B | **Ground texture** — grass, dirt and sand stop being flat fills | |
-| C | **Shorelines** — water gets its edges where it meets land | |
-| D | **Forest collision and paths** — the Thornwood becomes a wood you find a way through | |
+| B | **Ground texture** — grass, dirt and sand stop being flat fills | ✅ done |
+| C | **Shorelines** — water gets its edges where it meets land | ✅ done |
+| D | **Forest collision and paths** — the Thornwood becomes a wood you find a way through | ✅ done |
 | E | **Campfires placed deliberately** | |
 | F | **Which beast lives where, with a reason** | |
 | G | **Each settlement its own identity** | |
 | H | **A real town and a real castle** | |
 | I | **The map screen** | |
+
+---
+
+### The wood, and the two bugs under it
+
+The Thornwood was a lawn with trees drawn on it: you crossed it in a straight line
+and the only cost was teeth. It is now **closed wood with ways carved through it** —
+carved rather than blocked, so connectivity holds by construction rather than by
+hoping a noise function left a gap. The belt across the middle keeps its choice and
+gets thickets to weave past instead, because turning the shortcut into a maze would
+take away the decision it exists to offer.
+
+**The route balance got better, not worse:**
+
+| | before | after |
+|---|---|---|
+| the King's Road | 342 tiles, 57.2 s, 0 health | unchanged |
+| the wild | 260 tiles, 43.4 s, 6 health | **281 tiles, 46.9 s, 4 health** |
+
+The gap narrowed from 17 seconds to 10, which makes the choice tighter.
+
+**Every journey test failed the moment the wood closed, and the paths were all fine.**
+Two real bugs underneath, both of which had been there all along and could not show
+up on an open map:
+
+- **Breadth-first search cut corners.** It happily stepped diagonally between two
+  blocked tiles — a move a walker cannot make, because movement slides each axis
+  separately, so it tries x, fails, tries y, fails, and stands there. Paths existed
+  that could not be walked.
+- **Waypoints were sampled every fourth tile** and the walker steers straight at the
+  next one, so four tiles of straight line across a bend in a three-tile corridor goes
+  through the trees. `spacing` is now a maximum rather than a stride, and a waypoint
+  is only kept while the straight line to it stays on ground.
+
+Both are general fixes that make the map free to have corridors in it at all.
 
 ---
 

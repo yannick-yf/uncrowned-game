@@ -33,6 +33,15 @@ static func path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i
 			var next: Vector2i = tile + step
 			if came_from.has(next) or not region.is_passable(next):
 				continue
+			# **No cutting corners.** A diagonal step between two blocked tiles is a
+			# move a walker cannot make: movement slides each axis separately, so it
+			# tries x, fails, tries y, fails, and stands there. Breadth-first search
+			# was happy to squeeze through and every journey test failed the day the
+			# wood closed, with a path that existed and could not be walked.
+			if step.x != 0 and step.y != 0:
+				if not region.is_passable(Vector2i(tile.x + step.x, tile.y)) \
+						or not region.is_passable(Vector2i(tile.x, tile.y + step.y)):
+					continue
 			came_from[next] = tile
 			queue.append(next)
 	return []
@@ -52,8 +61,36 @@ static func _unwind(came_from: Dictionary, from: Vector2i, to: Vector2i) -> Arra
 ## wastes events, and one every few tiles is what a hand on a keyboard does.
 static func waypoints(region: Region, from: Vector2i, to: Vector2i, spacing: int = 4) -> Array[Vector2]:
 	var tiles: Array[Vector2i] = path(region, from, to)
-	var out: Array[Vector2] = []
-	for i: int in tiles.size():
-		if i % spacing == 0 or i == tiles.size() - 1:
-			out.append(Vector2(tiles[i]) + Vector2(0.5, 0.5))
+	if tiles.is_empty():
+		return []
+	# **Kept only while the straight line to them stays walkable.**
+	#
+	# This used to take every fourth tile, which is fine in a field and wrong in a
+	# wood: a walker steers straight at the next waypoint, and four tiles of straight
+	# line across a bend in a three-tile corridor goes through the trees. Every
+	# journey test failed the day the Thornwood closed, and the paths were all fine —
+	# it was the shortcuts between the samples that were not.
+	#
+	# `spacing` is now a *maximum* rather than a stride, so the list stays short in
+	# the open and gets as dense as it needs to be in the tight parts.
+	var out: Array[Vector2] = [Vector2(tiles[0]) + Vector2(0.5, 0.5)]
+	var anchor: int = 0
+	for i: int in range(1, tiles.size()):
+		if i - anchor < spacing and _walkable_line(region, tiles[anchor], tiles[i]):
+			continue
+		anchor = i - 1 if i - 1 > anchor else i
+		out.append(Vector2(tiles[anchor]) + Vector2(0.5, 0.5))
+	out.append(Vector2(tiles[tiles.size() - 1]) + Vector2(0.5, 0.5))
 	return out
+
+
+## Whether a walker steering straight from one tile to another stays on ground.
+static func _walkable_line(region: Region, from: Vector2i, to: Vector2i) -> bool:
+	var steps: int = maxi(absi(to.x - from.x), absi(to.y - from.y))
+	for step: int in steps + 1:
+		var at: Vector2 = Vector2(from).lerp(Vector2(to), float(step) / float(maxi(steps, 1)))
+		# Floored, not rounded: this has to ask about the same tile the walker will
+		# actually occupy, and `MovementRules.tile_of` floors.
+		if not region.is_passable(Vector2i(floori(at.x), floori(at.y))):
+			return false
+	return true

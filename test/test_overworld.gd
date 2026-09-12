@@ -110,15 +110,26 @@ func test_the_road_costs_distance_and_the_wild_will_cost_something_else() -> voi
 
 
 func test_the_thornwood_lies_east_of_the_river_where_spec_4_puts_it() -> void:
+	# **Counts wood, not only open wood** (2026-09-13). The deep Thornwood is mostly
+	# `THICKET` now — closed wood with ways carved through it — and `FOREST` is what
+	# is left open. Asking only about `FOREST` said the wood had almost gone, when
+	# what had happened is that it had finally become a wood.
 	var east: int = 0
 	var west: int = 0
+	var open_east: int = 0
 	for y: int in range(20, 170):
-		if _region.terrain_at(Vector2i(250, y)) == Region.Terrain.FOREST:
+		var here: Region.Terrain = _region.terrain_at(Vector2i(250, y))
+		if here == Region.Terrain.FOREST or here == Region.Terrain.THICKET:
 			east += 1
-		if _region.terrain_at(Vector2i(40, y)) == Region.Terrain.FOREST:
+		if here == Region.Terrain.FOREST:
+			open_east += 1
+		var there: Region.Terrain = _region.terrain_at(Vector2i(40, y))
+		if there == Region.Terrain.FOREST or there == Region.Terrain.THICKET:
 			west += 1
-	assert_true(east > 100, "the Thornwood covers the eastern strip")
+	assert_true(east > 100, "the Thornwood covers the eastern strip: %d tiles" % east)
 	assert_eq(west, 0, "and does not reach the western coast")
+	assert_true(open_east > 0,
+		"and there is a way through it rather than a wall: %d open tiles" % open_east)
 
 
 # ------------------------------------------------------- stage 2: identity ---

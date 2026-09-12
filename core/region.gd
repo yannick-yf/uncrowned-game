@@ -432,6 +432,8 @@ static func _build_overworld() -> Region:
 	# Before the road, the river and the settlements, so that if any of this
 	# geometry is ever wrong they overwrite it rather than the other way round.
 	region._stamp_clearing()
+	# And last of the wood: close it up, leaving the ways through.
+	region._stamp_deep_wood()
 	region._stamp_ellipse(WIDE_ACRES, Vector2i(34, 24), Terrain.FARMLAND)
 	region._stamp_ellipse(SALTMARCH, Vector2i(32, 22), Terrain.MARSH)
 	region._stamp_kettle()
@@ -555,6 +557,103 @@ func _stamp_clearing() -> void:
 				set_terrain(tile, Terrain.FOREST)
 			else:
 				set_terrain(tile, Terrain.THICKET)
+
+
+## The ways through the deep wood.
+##
+## Each leg is walked and cleared, so the wood is **carved rather than blocked** —
+## connectivity holds by construction instead of by hoping a noise function left a
+## gap. The legs are the routes a person would actually want: out of Brindle, north
+## along the mountains, west toward the camp, and the spur to the deserter's fire.
+const WOOD_WAYS: Array[Vector2i] = [
+	Vector2i(266, 172), Vector2i(258, 160), Vector2i(252, 143), Vector2i(244, 124),
+	Vector2i(232, 104), Vector2i(216, 86), Vector2i(204, 66), Vector2i(206, 40),
+]
+const WOOD_SPUR_WEST: Array[Vector2i] = [
+	Vector2i(232, 104), Vector2i(214, 108), Vector2i(200, 112),
+]
+const WOOD_SPUR_KELL: Array[Vector2i] = [
+	Vector2i(216, 86), Vector2i(200, 100), Vector2i(186, 116), Vector2i(176, 128),
+]
+## How wide a way through is. Three tiles: wide enough to walk and fight in, narrow
+## enough that you are following it rather than wandering near it.
+const WOOD_WAY_HALF_WIDTH: int = 1
+## And how far the wood stays open around a way, so a path is a path and not a slot.
+const WOOD_VERGE: int = 1
+
+
+## Close the Thornwood up, leaving the ways.
+##
+## **What this changes about the game.** The wood was a lawn with trees drawn on it:
+## you crossed it in a straight line and the only cost was teeth. Now it is wood —
+## you find a way through, and the way is longer than the line. That is the road
+## against the wild finally being about *ground* rather than only about witnesses.
+##
+## Only the deep wood east of the river is closed. The belt running north-west across
+## the middle is the shortcut the road bows around (§4), and turning that into a maze
+## would take away the choice it exists to offer; it gets thickets to weave past
+## instead.
+func _stamp_deep_wood() -> void:
+	var keep_clear: float = float(CLEARING_RADIUS + THICKET_DEPTH + 2)
+	for x: int in range(198, MOUNTAIN_EAST + 1):
+		for y: int in range(MOUNTAIN_NORTH, 176):
+			var tile := Vector2i(x, y)
+			if terrain_at(tile) != Terrain.FOREST:
+				continue
+			if Vector2(tile).distance_to(Vector2(CLEARING)) <= keep_clear:
+				continue
+			# The corridor out of the clearing is a way through like any other.
+			if absi(x - CLEARING.x) <= WOOD_WAY_HALF_WIDTH + WOOD_VERGE \
+					and y >= CLEARING.y and y <= BRINDLE.y:
+				continue
+			set_terrain(tile, Terrain.THICKET)
+
+	for route: Array in [WOOD_WAYS, WOOD_SPUR_WEST, WOOD_SPUR_KELL]:
+		_carve_way(route as Array[Vector2i])
+
+	# The belt across the middle keeps its choice: thickets to weave past, not a maze.
+	for x: int in range(120, 232):
+		for y: int in range(70, 176):
+			var tile := Vector2i(x, y)
+			if terrain_at(tile) != Terrain.FOREST:
+				continue
+			if _clump_hash(x, y) < 210:
+				set_terrain(tile, Terrain.THICKET)
+
+
+## Clumps rather than speckle: thicket one tile at a time is noise you walk through
+## without noticing, and thicket in patches is something you go round.
+func _clump_hash(x: int, y: int) -> int:
+	var cx: int = x / 3
+	var cy: int = y / 3
+	var h: int = (cx * 73856093) ^ (cy * 19349663)
+	return absi(h) % 1000
+
+
+func _carve_way(route: Array[Vector2i]) -> void:
+	# The fairies' ring is not a wall the wood may open. A way passing near the
+	# clearing cut straight through it, and the corridor test caught it: the pocket
+	# stopped being a pocket and the whole map was reachable with the corridor dammed.
+	var ring: float = float(CLEARING_RADIUS + THICKET_DEPTH + 1)
+	for leg: int in route.size() - 1:
+		var from := Vector2(route[leg])
+		var to := Vector2(route[leg + 1])
+		var steps: int = int(from.distance_to(to)) * 2
+		for step: int in steps + 1:
+			var at: Vector2 = from.lerp(to, float(step) / float(maxi(steps, 1)))
+			# A wander off the straight line, so a way bends the way a path bends.
+			var wander: float = sin(float(step) * 0.19 + float(leg) * 2.2) * 2.4
+			var across: Vector2 = (to - from).orthogonal().normalized() * wander
+			var centre := Vector2i((at + across).round())
+			for dx: int in range(-WOOD_WAY_HALF_WIDTH - WOOD_VERGE,
+					WOOD_WAY_HALF_WIDTH + WOOD_VERGE + 1):
+				for dy: int in range(-WOOD_WAY_HALF_WIDTH - WOOD_VERGE,
+						WOOD_WAY_HALF_WIDTH + WOOD_VERGE + 1):
+					var tile: Vector2i = centre + Vector2i(dx, dy)
+					if Vector2(tile).distance_to(Vector2(CLEARING)) <= ring:
+						continue
+					if terrain_at(tile) == Terrain.THICKET:
+						set_terrain(tile, Terrain.FOREST)
 
 
 func _stamp_kettle() -> void:
