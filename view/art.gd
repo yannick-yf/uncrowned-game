@@ -103,7 +103,13 @@ func _init() -> void:
 		# hidden under the sprite standing on it — but a struck tent leaves its
 		# ground behind, and bare ground is what should be there.
 		Region.Terrain.WALL: [&"floor", 11, 19],
-		Region.Terrain.CASTLE: [&"floorb", 1, 1],
+		# A bailey is packed earth, not snow. It was `floorb` — the pale blob set —
+		# which is what made Blackcairn a white rectangle.
+		Region.Terrain.CASTLE: [&"floor", 11, 19],
+		# A wall you can see. (11,20) on the house sheet is the one tile in the pack
+		# that runs seamlessly in both directions, checked by tiling it rather than
+		# by looking at the sheet.
+		Region.Terrain.RAMPART: [&"house", 11, 20],
 		Region.Terrain.SEA: [&"water", 11, 0],
 		Region.Terrain.WATER: [&"water", 11, 0],
 		Region.Terrain.FORD: [&"water", 0, 5],
@@ -131,6 +137,10 @@ func _init() -> void:
 		&"tower": [&"ruin", Rect2i(192, 97, 64, 80)],
 		&"boat": [&"boat", Rect2i(0, 0, 80, 32)],
 		&"counting_house": [&"house", Rect2i(400, 224, 64, 80)],
+		# Checked against the sheet rather than picked by arithmetic: the first two
+		# guesses put a ladder rack and a stone bear in the castle.
+		&"keep": [&"house", Rect2i(400, 224, 64, 80)],
+		&"gatehouse": [&"house", Rect2i(128, 0, 64, 48)],
 		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
 		&"granary": [&"house", Rect2i(0, 224, 48, 64)],
 		&"muster_rolls": [&"camp", Rect2i(96, 48, 32, 32)],
@@ -262,6 +272,12 @@ const GROUND: Dictionary = {
 	},
 	# Ground the works has taken. The darker, rougher dirt, with the twig and the
 	# stone that are literally the stumps left behind.
+	# The bailey: swept earth, worn where people walk, and no weeds — somebody keeps
+	# this ground.
+	Region.Terrain.CASTLE: {
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 150,
+		"detail": [Vector2i(13, 19), Vector2i(15, 19)],
+	},
 	Region.Terrain.CLEARED: {
 		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 420,
 		"detail": [Vector2i(12, 18), Vector2i(14, 18), Vector2i(15, 18)],

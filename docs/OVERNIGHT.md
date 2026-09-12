@@ -39,10 +39,10 @@ at the picture is the check, and I did not do it.
 | B | **Ground texture** — grass, dirt and sand stop being flat fills | ✅ done |
 | C | **Shorelines** — water gets its edges where it meets land | ✅ done |
 | D | **Forest collision and paths** — the Thornwood becomes a wood you find a way through | ✅ done |
-| E | **Campfires placed deliberately** | |
-| F | **Which beast lives where, with a reason** | |
+| E | **Campfires placed deliberately** | ✅ done |
+| F | **Which beast lives where, with a reason** | ✅ done |
 | G | **Each settlement its own identity** | |
-| H | **A real town and a real castle** | |
+| H | **A real town and a real castle** | 🟡 castle done |
 | I | **The map screen** | |
 
 ---
@@ -79,6 +79,32 @@ up on an open map:
   is only kept while the straight line to it stays on ground.
 
 Both are general fixes that make the map free to have corridors in it at all.
+
+---
+
+### Blackcairn becomes a castle
+
+It was `_stamp_town(..., Terrain.CASTLE)` — a **pale rectangle with four houses
+standing in it**, drawn on the snow tileset, with nothing to say it was a castle. Now
+it is what a castle is: a **wall with a gate**. `Terrain.RAMPART`, impassable and
+drawn as a wall rather than as the packed earth `WALL` uses — `WALL` is a building's
+footprint, hidden under the sprite on top of it, so using it for a curtain wall gave
+the castle an invisible perimeter.
+
+The gate is **wherever the King's Road actually arrives**, not where I calculated it
+should be. The first version put a gap in the south wall by arithmetic and walled the
+road off; letting the road cut its own gate is self-correcting, and the road keeps
+running through the courtyard to the keep door — a castle the road stops outside is a
+castle the road does not reach, which is what the oldest test in the project has been
+asking about since the first week.
+
+Two building sprites were picked by arithmetic and put **a ladder rack and a stone
+bear** in the castle. Checked against the sheet and replaced.
+
+> §4 says Blackcairn has three ways in: the gate with papers, the river culvert and
+> the cliff path. Only the gate exists, so **the gate stands open** — a castle nobody
+> can enter would close every route at once. The other two are the thing to build
+> before the gate is ever shut.
 
 ---
 

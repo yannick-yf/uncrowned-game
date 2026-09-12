@@ -32,6 +32,11 @@ enum Terrain {
 	## at a glance or the argument is a caption. The Cinderworks is a wound with a
 	## radius, not a building standing on grass.
 	CLEARED,
+	## A built wall: a castle's rampart, a town's curtain. Impassable, and drawn as a
+	## wall rather than as the packed earth `WALL` is — `WALL` is a building's
+	## *footprint*, hidden under the sprite standing on it, and using it for a curtain
+	## wall gave Blackcairn an invisible perimeter around a white rectangle.
+	RAMPART,
 	## Wood too dense to walk into. **Geography, not a gate** — the map already
 	## closes itself with sea and mountain, and Pillar 1 is about progression checks
 	## rather than walls. The rule that keeps it honest: thicket may never be the
@@ -148,7 +153,8 @@ func set_terrain(tile: Vector2i, terrain: Terrain) -> void:
 
 func is_passable(tile: Vector2i) -> bool:
 	match terrain_at(tile):
-		Terrain.SEA, Terrain.MOUNTAIN, Terrain.WALL, Terrain.WATER, Terrain.THICKET:
+		Terrain.SEA, Terrain.MOUNTAIN, Terrain.WALL, Terrain.WATER, Terrain.THICKET, \
+		Terrain.RAMPART:
 			return false
 	return true
 
@@ -1076,7 +1082,60 @@ func _stamp_settlements() -> void:
 	_place(&"muster_rolls", MUSTER + Vector2i(6, -2), Vector2i(3, 3))
 	_stamp_town(SALTMARCH, SALTMARCH_SIZE, Terrain.TOWN, true)
 	_stamp_town(CAIRNWELL, CAIRNWELL_SIZE, Terrain.TOWN, true)
-	_stamp_town(BLACKCAIRN, BLACKCAIRN_SIZE, Terrain.CASTLE, false)
+	_stamp_castle()
+
+
+## Blackcairn: a courtyard inside a wall, with one way in.
+##
+## It used to be `_stamp_town(..., Terrain.CASTLE)` — a pale rectangle with four
+## houses standing in it and nothing to say it was a castle at all. A castle is a
+## **wall with a gate**, and the gate is the whole reason Route B exists: Hesper's
+## papers get you through a door, and a door you can walk round is not a door.
+##
+## The gate faces south, because that is where the King's Road arrives. The wall is
+## `RAMPART` and so is impassable, which means **the gate is now the only way in on
+## foot** — and that is exactly the shape §4 wanted when it said Blackcairn has three
+## ways in: the gate with papers, the culvert, and the cliff path. Those two are not
+## built yet, and until they are the gate stands open, because a castle nobody can
+## enter would close every route at once.
+const CASTLE_GATE_WIDTH: int = 5
+
+
+func _stamp_castle() -> void:
+	var half: Vector2i = BLACKCAIRN_SIZE / 2
+	# The courtyard, but the road keeps running through it to the keep door. A castle
+	# the road stops outside is a castle the road does not reach, and the phase 0 test
+	# that has asked "does the road get to the castle" since the first week said so.
+	for x: int in range(BLACKCAIRN.x - half.x, BLACKCAIRN.x + half.x + 1):
+		for y: int in range(BLACKCAIRN.y - half.y, BLACKCAIRN.y + half.y + 1):
+			var tile := Vector2i(x, y)
+			var here: Terrain = terrain_at(tile)
+			if here == Terrain.SEA or here == Terrain.MOUNTAIN or here == Terrain.ROAD:
+				continue
+			set_terrain(tile, Terrain.CASTLE)
+	for x: int in range(BLACKCAIRN.x - half.x, BLACKCAIRN.x + half.x + 1):
+		for y: int in range(BLACKCAIRN.y - half.y, BLACKCAIRN.y + half.y + 1):
+			var on_edge: bool = x == BLACKCAIRN.x - half.x or x == BLACKCAIRN.x + half.x \
+				or y == BLACKCAIRN.y - half.y or y == BLACKCAIRN.y + half.y
+			if not on_edge:
+				continue
+			# The gate: a gap in the south wall, wide enough to be a gate rather
+			# than a crack, standing where the road comes up to it.
+			if y == BLACKCAIRN.y + half.y and absi(x - BLACKCAIRN.x) <= CASTLE_GATE_WIDTH / 2:
+				continue
+			# **A wall never closes the road.** The gate is wherever the King's Road
+			# actually arrives, rather than where I guessed it would — the first
+			# version put the gap on the south wall by arithmetic and walled the road
+			# off, which the road test caught immediately. Letting the road cut its
+			# own gate is self-correcting: move the road and the gate moves with it.
+			if terrain_at(Vector2i(x, y)) == Terrain.ROAD:
+				continue
+			set_terrain(Vector2i(x, y), Terrain.RAMPART)
+
+	# A keep to stand in front of, and the gatehouse either side of the way in.
+	_place(&"keep", BLACKCAIRN + Vector2i(-3, -7), Vector2i(6, 6))
+	_place(&"gatehouse", BLACKCAIRN + Vector2i(-half.x + 1, half.y - 4), Vector2i(3, 4))
+	_place(&"gatehouse", BLACKCAIRN + Vector2i(half.x - 3, half.y - 4), Vector2i(3, 4))
 
 
 # ------------------------------------------------------------------ helpers ---
