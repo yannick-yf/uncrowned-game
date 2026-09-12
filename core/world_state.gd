@@ -152,11 +152,13 @@ func hurt(amount: int, step: int) -> bool:
 	player_hp = MAX_HP
 	mending_steps = 0
 	# Back to the last fire you sat down at, as you were when you sat down (§19 Q5,
-	# 2026-09-12). Brindle only for somebody who has died before ever resting, so a
-	# first death is a lesson rather than a dead end — that is all that survives of
-	# Phase 0's "respawn in Brindle keeping everything".
+	# 2026-09-12). Somebody who dies before ever resting wakes in the fairies'
+	# clearing, where they woke the first time — the last protected ground in the
+	# region, and the only place that could hold them. A first death is a lesson
+	# rather than a dead end, which is all that survives of Phase 0's "respawn in
+	# Brindle keeping everything".
 	player_pos = Vector2(rested_at) + Vector2(0.5, 1.5) if rested_at != Vector2i(-1, -1) \
-		else region().brindle_centre()
+		else region().clearing_centre()
 	player_dir = Vector2i.ZERO
 	player_tile_last = player_tile()
 	return true

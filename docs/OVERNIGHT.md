@@ -45,7 +45,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 
 | # | Piece | Status |
 |---|---|---|
-| 1 | **The opening** — stages 1–5 below | not started |
+| 1 | **The opening** — stages 1–5 below | **stages 1 and 4 done**; 2, 3, 5 next |
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | not started |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | not started |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
@@ -176,6 +176,11 @@ Every entry here is a choice he was not present for. Newest last.
 |---|---|---|
 | 1 | Git runs through a cleaned config at `.git/overnight-gitconfig` rather than fixing `~/.gitconfig` | He manages two accounts in GitKraken and does not want the global file touched. The copy is inside `.git`, so it is never tracked and never pushed, and it preserves his name and email |
 | 2 | `MAP_SPEC.md` copied into `docs/` | It was outside the repo, untracked. Confirmed as this project: same eight zones, same 280×200 region, same 6 tiles/sec, road figures within 4% of what `tools/measure_routes.gd` measures today |
+| 3 | Clearing at **(261, 150)**, radius 7, thicket ring 5 deep, corridor 3 wide | Inside the Thornwood, east of the Kettle so it is on Brindle's own side of the river, and 30 tiles north of the ruins — **5.0 seconds** of walking. Long enough to be a walk out of the trees, short enough that §4's rule against empty walking still holds. The ring is 5 deep because 8-way movement finds a diagonal seam in anything thinner |
+| 4 | The corridor's **walls stop at y=168**, seven tiles short of Brindle | Walls where you could get lost, open where the destination is already in shot. By y=168 the ruins are in frame, and a destination you can see guides better than a wall does. It also keeps the first minute from reading as a tunnel |
+| 5 | **Stage 4 landed with stage 1**, not on its own | Stage 1 moved the start into the wood, which broke the save test: it walks to the nearest fire using real move events, and there was no fire reachable from the clearing. The honest fix was the fire stage 4 was going to add anyway. Committed together and recorded here rather than faked |
+| 6 | Dying **before any rest** returns the player to the clearing, not Brindle | It is where they woke the first time and the only ground left that could hold them. Three existing tests asserted Brindle and were updated, not worked around |
+| 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
 
 ---
 
@@ -190,3 +195,42 @@ Every entry here is a choice he was not present for. Newest last.
 - Recovered `41ef652 Kick-off phase 7`, which a chained `reset --hard` destroyed while
   probing whether commits worked. Nothing lost. The rule that came out of it is in
   *How to resume* above.
+
+### Opening, stages 1 and 4 — the ground, and the first fire
+
+Built: `Terrain.CLEARING` and `Terrain.THICKET` (impassable), `_stamp_clearing()`,
+`Region.clearing_centre()`, the fairies' campfire, the start moved out of Brindle,
+and `test/test_opening.gd`.
+
+**Measured, not assumed:**
+
+| | |
+|---|---|
+| Clearing → Brindle | 30.0 tiles, **5.0 s** |
+| Clearing → Blackcairn, straight | 232 tiles, **38.7 s** — Pillar 1 intact |
+| Corridor dammed | clearing falls to a **148-tile pocket**, Brindle unreachable |
+| Nearest part of the Cinderworks, from Brindle's centre | **9 tiles**, in a 40 × 22.5 frame |
+
+*One corridor* is asserted the way MAP_SPEC asserts the river: **block it and the
+pocket closes.** A barrier that is only stated is a barrier nobody has checked.
+
+**Two of my own tests were wrong and the ground was right**, which is worth recording
+because both would have read as map bugs:
+
+- *the furnaces are in frame* measured the works' **far** northern edge, 16 tiles up,
+  and failed on a frame that plainly contains the furnaces. What has to be in shot is
+  some of the thing, not all of it.
+- *nothing wrote over the road* swept a box 14 tiles either side all the way down to
+  Brindle and caught the **Cinderworks**, which the opening never touched.
+
+**Five existing tests assumed the player starts in Brindle** and were updated rather
+than worked around: `test_phase_0` (wakes, and dies), `test_journeys` (the road walk,
+and the full replay), `test_saving` (first death). One early attempt set
+`player_pos` directly to dodge this and broke `test_a_run_is_saved_and_comes_back_the_same`
+in a more interesting way — a position set directly is not an event, so it is not in
+the log, and replay puts the player where they really were. The test was right.
+
+Suite: **276 tests green**, fast suite 237 in 7.5 s.
+
+> Fast suite is **7.5 s against the 4 s target** in the polish brief. Not addressed
+> here; it belongs to the polish pass and is written down so it is not forgotten.

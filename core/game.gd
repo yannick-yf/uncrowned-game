@@ -42,7 +42,10 @@ static func build_world() -> WorldState:
 	var world := WorldState.new()
 	world.zones[WorldState.OVERWORLD] = overworld
 	world.current_zone = WorldState.OVERWORLD
-	world.player_pos = overworld.brindle_centre()
+	# The player wakes in the fairies' clearing, not in Brindle (§4's opening).
+	# One corridor leads south out of it; walking out of the trees into the ruins,
+	# with the furnaces in the same frame, is the opening and needs no exposition.
+	world.player_pos = overworld.clearing_centre()
 	world.player_tile_last = world.player_tile()
 	world.king_pos = overworld.blackcairn_centre()
 	return world

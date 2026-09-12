@@ -23,6 +23,14 @@ enum Terrain {
 	MARSH,
 	FARMLAND,
 	SAND,
+	## The fairies' clearing, where the player wakes. Open ground inside the wood.
+	CLEARING,
+	## Wood too dense to walk into. **Geography, not a gate** — the map already
+	## closes itself with sea and mountain, and Pillar 1 is about progression checks
+	## rather than walls. The rule that keeps it honest: thicket may never be the
+	## only thing between the player and anything. It shapes the first minute and
+	## bounds nothing else.
+	THICKET,
 }
 
 const WIDTH: int = 280
@@ -81,6 +89,23 @@ const KETTLE_HALF_WIDTH: int = 2
 ## The road's one guarded crossing, and the ford downstream of it. Both are bands
 ## rather than tiles: a walker covers 6 tiles a second and can step clean over a
 ## one-tile trigger (§19 Q28b).
+## **The fairies' clearing** (§4's opening, §5). The player wakes here, and one
+## corridor leads south out of it to Brindle — no maze, no choice, nothing gated.
+##
+## Placed inside the Thornwood 30 tiles north of Brindle, which is about five
+## seconds of walking: long enough to be a walk out of the trees, short enough that
+## §4's rule against empty walking still holds. East of the Kettle, so it sits on
+## Brindle's own side of the river.
+const CLEARING: Vector2i = Vector2i(261, 150)
+const CLEARING_RADIUS: int = 7
+## How deep the thicket ring is. Five, because 8-way movement will find a diagonal
+## seam in anything thinner.
+const THICKET_DEPTH: int = 5
+const PATH_HALF_WIDTH: int = 1
+## Where the corridor's walls stop. Below this the ruins and the furnaces are
+## already in frame, and a destination you can see guides better than a wall does.
+const PATH_WALLED_TO: int = 168
+
 const BRIDGE: Vector2i = Vector2i(228, 177)
 const FORD: Vector2i = Vector2i(233, 188)
 const CROSSING_HALF_WIDTH: int = 2
@@ -116,7 +141,7 @@ func set_terrain(tile: Vector2i, terrain: Terrain) -> void:
 
 func is_passable(tile: Vector2i) -> bool:
 	match terrain_at(tile):
-		Terrain.SEA, Terrain.MOUNTAIN, Terrain.WALL, Terrain.WATER:
+		Terrain.SEA, Terrain.MOUNTAIN, Terrain.WALL, Terrain.WATER, Terrain.THICKET:
 			return false
 	return true
 
@@ -277,6 +302,17 @@ static func zone_footprints() -> Dictionary:
 	}
 
 
+## Where the player wakes, which is no longer Brindle (§4's opening, 2026-09-12).
+func clearing_centre() -> Vector2:
+	return Vector2(CLEARING) + Vector2(0.5, 0.5)
+
+
+## The figure §4's "reachable from minute one" is really about, now that the game
+## does not start in Brindle.
+func clearing_to_blackcairn_tiles() -> float:
+	return clearing_centre().distance_to(blackcairn_centre())
+
+
 func brindle_centre() -> Vector2:
 	return Vector2(BRINDLE) + Vector2(0.5, 0.5)
 
@@ -382,6 +418,9 @@ static func _build_overworld() -> Region:
 	var region := Region.new()
 	region._stamp_bounds()
 	region._stamp_thornwood()
+	# Before the road, the river and the settlements, so that if any of this
+	# geometry is ever wrong they overwrite it rather than the other way round.
+	region._stamp_clearing()
 	region._stamp_ellipse(WIDE_ACRES, Vector2i(34, 24), Terrain.FARMLAND)
 	region._stamp_ellipse(SALTMARCH, Vector2i(32, 22), Terrain.MARSH)
 	region._stamp_kettle()
@@ -421,6 +460,42 @@ func _stamp_thornwood() -> void:
 	# scenery; wood on the shortcut is a decision. The road bows south and west
 	# around most of it.
 	_stamp_line(Vector2i(220, 165), Vector2i(145, 85), 24, Terrain.FOREST, false)
+
+
+## The clearing, the thicket that closes it, and the one corridor south.
+##
+## Only ever writes over `FOREST`, so the river, the road and every settlement are
+## safe from it by construction rather than by getting the arithmetic right.
+func _stamp_clearing() -> void:
+	var outer: int = CLEARING_RADIUS + THICKET_DEPTH
+	for x: int in range(CLEARING.x - outer, CLEARING.x + outer + 1):
+		for y: int in range(CLEARING.y - outer, CLEARING.y + outer + 1):
+			var tile := Vector2i(x, y)
+			if terrain_at(tile) != Terrain.FOREST:
+				continue
+			var away: float = Vector2(tile).distance_to(Vector2(CLEARING))
+			if away <= float(CLEARING_RADIUS):
+				set_terrain(tile, Terrain.CLEARING)
+			elif away <= float(outer):
+				set_terrain(tile, Terrain.THICKET)
+
+	# The corridor, cut back through the ring the loop above just laid down, and
+	# walled on both sides until Brindle comes into frame.
+	for y: int in range(CLEARING.y, PATH_WALLED_TO + 1):
+		for x: int in range(CLEARING.x - PATH_HALF_WIDTH - THICKET_DEPTH,
+				CLEARING.x + PATH_HALF_WIDTH + THICKET_DEPTH + 1):
+			var tile := Vector2i(x, y)
+			var here: Terrain = terrain_at(tile)
+			if here != Terrain.FOREST and here != Terrain.THICKET and here != Terrain.CLEARING:
+				continue
+			# Inside the clearing nothing is cut: the corridor begins at its edge,
+			# or the open ground the player wakes on has a path stamped through it.
+			if Vector2(tile).distance_to(Vector2(CLEARING)) <= float(CLEARING_RADIUS):
+				continue
+			if absi(x - CLEARING.x) <= PATH_HALF_WIDTH:
+				set_terrain(tile, Terrain.FOREST)
+			else:
+				set_terrain(tile, Terrain.THICKET)
 
 
 func _stamp_kettle() -> void:
@@ -634,6 +709,15 @@ func _place_campfires() -> void:
 		var at: Vector2i = (zone_sites()[zone] as Vector2i) + Vector2i(-5, 5)
 		props.append({"kind": &"campfire", "at": _nearest_open(at),
 			"size": Vector2i(2, 2), "solid": false})
+	# **The fairies' fire**, in the clearing the player wakes in (§4's opening).
+	#
+	# The first save in the game, and it earns that twice over. It is the last
+	# protected ground in the region, so the place that can hold you is the place
+	# that is still held; and it gives the player a reason to come back, which is the
+	# only way the ground the fairies keep can be *seen* to be shrinking rather than
+	# said to be. §8: a change the player cannot perceive is identical to no change.
+	props.append({"kind": &"campfire", "at": CLEARING + Vector2i(0, 2),
+		"size": Vector2i(2, 2), "solid": false})
 	# And on the road between them, so a run does not have to end in a town.
 	for at: Vector2i in CAMP_SPURS:
 		props.append({"kind": &"campfire", "at": _nearest_open(at),
