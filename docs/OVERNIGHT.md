@@ -3,6 +3,50 @@
 > **Yannick reads this first.** It is both the plan and the record: what was built,
 > in what order, and every decision taken without him in the room.
 
+## NIGHT TWO — after Yannick played it
+
+He played it and the verdict was *"far from v1 expected"*. The opening is good; the
+rest is not there yet. What he asked for, in his order:
+
+1. **The ocean texture bug** — mine, from night one. Fixed first, see below.
+2. **Campfires everywhere, randomly placed.**
+3. **Forests must collide**, so a wood becomes paths through it rather than a lawn
+   with trees on.
+4. **Every town and village needs its own identity**, and so do specific characters.
+5. **A real town and a real castle.**
+6. **A graphics jump in general** — the grass looks bad, and there is no logic in
+   which monster appears where.
+7. **A map screen**, for playing and for debugging.
+
+### The bug, and what it says about how I checked my work
+
+`TilesetWater.png` is a sheet of **autotile blobs, not animation frames**. Each patch
+of water is an interior surrounded by its own shoreline, so the tile *beside* an
+interior tile is its edge. My "animated tiles" nudged the atlas column by one to make
+water move, which walked the entire sea onto shoreline tiles — the tan blobs all over
+the ocean in his screenshot.
+
+**It shipped because "300 rendered frames, zero script errors" proved nothing about
+how it looks, and I reported it as though it did.** A frame that draws the wrong tile
+without complaining is exactly as quiet as a frame that draws the right one. Looking
+at the picture is the check, and I did not do it.
+
+### The plan, in order
+
+| | | |
+|---|---|---|
+| A | **The water bug** | ✅ done |
+| B | **Ground texture** — grass, dirt and sand stop being flat fills | |
+| C | **Shorelines** — water gets its edges where it meets land | |
+| D | **Forest collision and paths** — the Thornwood becomes a wood you find a way through | |
+| E | **Campfires placed deliberately** | |
+| F | **Which beast lives where, with a reason** | |
+| G | **Each settlement its own identity** | |
+| H | **A real town and a real castle** | |
+| I | **The map screen** | |
+
+---
+
 ## WHERE IT ENDED
 
 All five pieces are done. **332 tests green**, fast suite **4.71 s**, asset validator

@@ -508,13 +508,18 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 
 	var column: int = entry[1] as int
 	var row: int = entry[2] as int
-	# **Animated tiles.** Water moves, and so does everything drawn from the water
-	# sheet — the sea, the Kettle, the ford, the marsh. Offset by the tile's own
-	# position as well as by time, so a river does not flash in unison like a sign.
-	if terrain == Region.Terrain.SEA or terrain == Region.Terrain.WATER \
-			or terrain == Region.Terrain.FORD or terrain == Region.Terrain.MARSH:
-		var wave: int = int(_real_seconds * 2.4 + float(x) * 0.35 + float(y) * 0.2) % 2
-		column += wave
+	# **No column-shift animation here, and a note about why**, because it looks like
+	# an obvious thing to add and it is wrong.
+	#
+	# `TilesetWater.png` is a sheet of **autotile blobs**, not animation frames: each
+	# patch of water is a 3×3 of interior plus shoreline, and the tile beside an
+	# interior tile is its *edge*, not its next frame. Nudging the column by one to
+	# animate it walked the whole sea onto shoreline tiles, which is why the ocean
+	# came out covered in tan blobs. Shipped for one night, found by looking at it.
+	#
+	# Water is animated properly below — by its shoreline, which `_water_frame`
+	# picks from the blob — and anything wanting a moving surface needs a sheet that
+	# actually has frames.
 	# Break up the flat fills so ground does not read as graph paper.
 	if terrain == Region.Terrain.WILD or terrain == Region.Terrain.FOREST:
 		if Art.scatter_hash(x + 7, y + 3) < 90:
