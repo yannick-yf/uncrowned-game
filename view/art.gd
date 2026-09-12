@@ -107,7 +107,6 @@ func _init() -> void:
 		Region.Terrain.SEA: [&"water", 11, 0],
 		Region.Terrain.WATER: [&"water", 11, 0],
 		Region.Terrain.FORD: [&"water", 0, 5],
-		Region.Terrain.SAND: [&"water", 0, 5],
 		Region.Terrain.MARSH: [&"water", 0, 6],
 		Region.Terrain.FARMLAND: [&"field", 1, 4],
 		# The thesis, on the ground. Cleared land reads as the road's world — the
@@ -211,6 +210,200 @@ static func scatter_hash(x: int, y: int) -> int:
 	return absi(h) % 1000
 
 
+## The tiles a terrain is *actually* made of: one base, and the detail tiles that
+## belong with it.
+##
+## **Why this exists.** Every terrain used to be a single tile repeated, with one
+## hard-coded exception that swapped grass for one variant a third of the time. The
+## result reads as a flat fill, which is the whole of "the grass looks bad": real
+## ground in this pack has four or five variants per surface — tufts, twigs, stones,
+## ripples — sitting in the sheet unused.
+##
+## `chance` is out of 256 and is the odds of *any* detail, then one of them is picked
+## evenly. Kept low: detail that appears half the time stops being detail and becomes
+## a checkerboard, which is the failure the one hard-coded variant already had.
+##
+## **A detail tile is a variant of the surface, never an edge of it.** That is not a
+## style note, it is the bug that shipped twice — the sea drawn with shoreline tiles
+## and the marsh drawn with a pond's top-left corner. Anything here must tile with
+## itself in every direction.
+const GROUND: Dictionary = {
+	Region.Terrain.WILD: {
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 96,
+		"detail": [Vector2i(12, 12), Vector2i(13, 12), Vector2i(14, 12), Vector2i(15, 12)],
+	},
+	Region.Terrain.CLEARING: {
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 130,
+		"detail": [Vector2i(12, 12), Vector2i(14, 12), Vector2i(15, 12)],
+	},
+	Region.Terrain.FOREST: {
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 70,
+		"detail": [Vector2i(13, 12), Vector2i(14, 12)],
+	},
+	Region.Terrain.THICKET: {
+		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 40,
+		"detail": [Vector2i(13, 12)],
+	},
+	# The road, the towns and the camp are all beaten ground, and beaten ground has
+	# stones and ruts in it.
+	Region.Terrain.ROAD: {
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 74,
+		"detail": [Vector2i(12, 19), Vector2i(13, 19), Vector2i(14, 19), Vector2i(15, 19)],
+	},
+	Region.Terrain.TOWN: {
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 60,
+		"detail": [Vector2i(13, 19), Vector2i(15, 19)],
+	},
+	Region.Terrain.CAMP: {
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 80,
+		"detail": [Vector2i(12, 19), Vector2i(14, 19)],
+	},
+	# Ground the works has taken. The darker, rougher dirt, with the twig and the
+	# stone that are literally the stumps left behind.
+	Region.Terrain.CLEARED: {
+		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 120,
+		"detail": [Vector2i(12, 18), Vector2i(14, 18), Vector2i(15, 18)],
+	},
+	# Brindle. Grass coming back through it, which is the village reclaiming itself.
+	Region.Terrain.RUINS: {
+		"sheet": &"floor", "base": Vector2i(11, 20), "chance": 150,
+		"detail": [Vector2i(12, 20), Vector2i(13, 20), Vector2i(14, 20), Vector2i(15, 20)],
+	},
+	# **Water, and the one thing that has to be right about it.**
+	#
+	# The sheet holds two blues. `(11,0)` is a flat greyish `(121,184,206)` standing
+	# on its own; everything else — every bank, every blob interior, and all four
+	# detail tiles — is a brighter `(113,221,238)`. Drawing the sea in the first and
+	# its details in the second is what made the ocean read as pale squares.
+	#
+	# `(1,7)` is the plain tile of the *bright* family, so the sea, its ripples, its
+	# stones and its shoreline are finally one colour. Found by asking the sheet which
+	# of its 476 tiles are a single flat colour, rather than by picking one that
+	# looked about right.
+	Region.Terrain.SEA: {
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 40,
+		"detail": [Vector2i(11, 1), Vector2i(11, 2), Vector2i(11, 4)],
+	},
+	Region.Terrain.WATER: {
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 54,
+		"detail": [Vector2i(11, 1), Vector2i(11, 2)],
+	},
+	# A marsh is shallow water with things growing in it, so it is that water with
+	# the lily turned right up. It used to be a pond's top-left corner.
+	Region.Terrain.MARSH: {
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 150,
+		"detail": [Vector2i(11, 3), Vector2i(11, 3), Vector2i(11, 1)],
+	},
+	Region.Terrain.FORD: {
+		"sheet": &"water", "base": Vector2i(1, 7), "chance": 96,
+		"detail": [Vector2i(11, 1), Vector2i(11, 2)],
+	},
+	# Beach. No detail: the only tiles near it on this sheet are *water* details, and
+	# scattering those put three cyan puddles in the middle of the sand.
+	Region.Terrain.SAND: {
+		"sheet": &"water", "base": Vector2i(0, 5), "chance": 0, "detail": [],
+	},
+}
+
+
+# ------------------------------------------------------------- shorelines ---
+
+## Where each blob starts. The water sheet carries the same shape twice: once with
+## sand banks and once with grass banks, so water can meet a beach or a field and
+## look like it meant to.
+const BANK_SAND: Vector2i = Vector2i(4, 0)
+const BANK_GRASS: Vector2i = Vector2i(4, 6)
+
+## Offsets inside a 4×4 blob, read off the sheet rather than guessed:
+##
+## ```
+##   outer TL   top      top      outer TR
+##   left       inner SE inner SW right
+##   left       inner NE inner NW right
+##   outer BL   bottom   bottom   outer BR
+## ```
+##
+## The middle four are **inner** corners — the sheet draws a small island across
+## their junction, so each one is the quadrant of water that has land diagonally
+## behind it. Getting those backwards is the difference between a bay and a
+## chequerboard, which is why they are named here rather than indexed.
+const EDGE_TOP_LEFT: Vector2i = Vector2i(0, 0)
+const EDGE_TOP: Vector2i = Vector2i(1, 0)
+const EDGE_TOP_RIGHT: Vector2i = Vector2i(3, 0)
+const EDGE_LEFT: Vector2i = Vector2i(0, 1)
+const EDGE_RIGHT: Vector2i = Vector2i(3, 1)
+const EDGE_BOTTOM_LEFT: Vector2i = Vector2i(0, 3)
+const EDGE_BOTTOM: Vector2i = Vector2i(1, 3)
+const EDGE_BOTTOM_RIGHT: Vector2i = Vector2i(3, 3)
+const INNER_SE: Vector2i = Vector2i(1, 1)
+const INNER_SW: Vector2i = Vector2i(2, 1)
+const INNER_NE: Vector2i = Vector2i(1, 2)
+const INNER_NW: Vector2i = Vector2i(2, 2)
+
+
+## Which shoreline tile a piece of water is, given what is around it.
+##
+## `around` is eight booleans — **is that neighbour also water** — in the order
+## N, E, S, W, NE, NW, SE, SW. Returns the cell to draw, or `Vector2i(-1, -1)` for
+## open water with nothing to bank against.
+##
+## This is the single thing that most separates the map from the games it is aiming
+## at. Everything in it was painted in rectangles: a coast was a straight line
+## between blue and yellow, because every tile of a terrain was the same tile. A
+## shoreline is what a map looks like when it was drawn rather than filled in.
+static func water_edge(bank: Vector2i, around: Array) -> Vector2i:
+	var n: bool = around[0]
+	var e: bool = around[1]
+	var s: bool = around[2]
+	var w: bool = around[3]
+	if not n and not w:
+		return bank + EDGE_TOP_LEFT
+	if not n and not e:
+		return bank + EDGE_TOP_RIGHT
+	if not s and not w:
+		return bank + EDGE_BOTTOM_LEFT
+	if not s and not e:
+		return bank + EDGE_BOTTOM_RIGHT
+	if not n:
+		return bank + EDGE_TOP
+	if not s:
+		return bank + EDGE_BOTTOM
+	if not w:
+		return bank + EDGE_LEFT
+	if not e:
+		return bank + EDGE_RIGHT
+	# Every side is water, so only a diagonal can still be land.
+	if not around[5]:
+		return bank + INNER_NW
+	if not around[4]:
+		return bank + INNER_NE
+	if not around[7]:
+		return bank + INNER_SW
+	if not around[6]:
+		return bank + INNER_SE
+	return Vector2i(-1, -1)
+
+
+static func is_water(terrain: int) -> bool:
+	return terrain == Region.Terrain.SEA or terrain == Region.Terrain.WATER \
+		or terrain == Region.Terrain.FORD or terrain == Region.Terrain.MARSH
+
+
+## Which tile of a terrain's surface this square is, base or detail.
+##
+## Hashed off the position, so it is the same every frame and every run — ground that
+## shimmers as you walk is worse than ground that is flat.
+static func ground_tile(terrain: int, x: int, y: int) -> Array:
+	var entry: Dictionary = GROUND.get(terrain, {}) as Dictionary
+	if entry.is_empty():
+		return []
+	var detail: Array = entry["detail"] as Array
+	var roll: int = scatter_hash(x * 3 + 11, y * 5 + 7)
+	if detail.is_empty() or roll >= int(entry["chance"]):
+		return [entry["sheet"], entry["base"] as Vector2i]
+	return [entry["sheet"], detail[scatter_hash(x + 31, y + 17) % detail.size()] as Vector2i]
+
+
 ## The flat colour a terrain falls back to when it has no atlas tile.
 ##
 ## **Keyed, not indexed.** It was a `PackedColorArray` in the window, read by terrain
@@ -285,7 +478,6 @@ func scatter_at(terrain: int, x: int, y: int) -> Array:
 		Region.Terrain.RUINS:
 			if roll < 90:
 				return [&"nature", Rect2i(64, 0, 32, 32)]
-		Region.Terrain.MARSH:
-			if roll < 60:
-				return [&"nature", Rect2i(96, 0, 32, 32)]
+		# Nothing grows out of open water. The marsh used to scatter the same bush
+		# the grassland does, so Saltmarch had trees standing in the sea.
 	return []

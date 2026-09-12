@@ -85,12 +85,45 @@ func _ready() -> void:
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
+	var stand: String = OS.get_environment("UNCROWNED_AT")
+	if OS.has_feature("debug") and stand.contains(","):
+		var parts: PackedStringArray = stand.split(",")
+		_world.player_pos = Vector2(float(parts[0]) + 0.5, float(parts[1]) + 0.5)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
 
+## Render a frame to a file and quit, for looking at the game without playing it.
+##
+## **The tool the last night needed and did not have.** "Zero script errors over 300
+## frames" says nothing about whether the sea is the right colour, and the ocean
+## shipped covered in shoreline tiles because nobody looked. This makes looking cheap:
+##
+##   UNCROWNED_SHOT=/tmp/a.png UNCROWNED_AT=241,150 godot --path . --quit-after 40
+##
+## Debug builds only, like the day-skip, and listed in CLAUDE.md for the same reason.
+func _screenshot_if_asked() -> void:
+	if not OS.has_feature("debug"):
+		return
+	var path: String = OS.get_environment("UNCROWNED_SHOT")
+	if path.is_empty():
+		return
+	_shot_frames += 1
+	# A few frames in, so the camera has settled and the first draw is behind us.
+	if _shot_frames != 12:
+		return
+	var image: Image = get_viewport().get_texture().get_image()
+	image.save_png(path)
+	print("wrote %s" % path)
+	get_tree().quit()
+
+
+var _shot_frames: int = 0
+
+
 func _process(delta: float) -> void:
 	_real_seconds += delta
+	_screenshot_if_asked()
 	_read_input()
 
 	_accumulator += delta
@@ -500,6 +533,39 @@ func _draw_townsfolk(at: Vector2i, index: int) -> void:
 func _draw_ground(region: Region, x: int, y: int) -> void:
 	var dest := Rect2(float(x * TILE), float(y * TILE), float(TILE), float(TILE))
 	var terrain: int = region.terrain_at(Vector2i(x, y))
+
+	# **Shorelines.** Water that touches anything else is drawn as its own bank, so a
+	# coast is a coast rather than a straight line between two colours. The bank is
+	# chosen by what it is meeting: sand against a beach, grass against a field.
+	if Art.is_water(terrain):
+		var here := Vector2i(x, y)
+		var around: Array = [
+			Art.is_water(region.terrain_at(here + Vector2i(0, -1))),
+			Art.is_water(region.terrain_at(here + Vector2i(1, 0))),
+			Art.is_water(region.terrain_at(here + Vector2i(0, 1))),
+			Art.is_water(region.terrain_at(here + Vector2i(-1, 0))),
+			Art.is_water(region.terrain_at(here + Vector2i(1, -1))),
+			Art.is_water(region.terrain_at(here + Vector2i(-1, -1))),
+			Art.is_water(region.terrain_at(here + Vector2i(1, 1))),
+			Art.is_water(region.terrain_at(here + Vector2i(-1, 1))),
+		]
+		var bank: Vector2i = Art.BANK_GRASS
+		for step: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
+			if region.terrain_at(here + step) == Region.Terrain.SAND:
+				bank = Art.BANK_SAND
+		var edge: Vector2i = Art.water_edge(bank, around)
+		if edge.x >= 0:
+			draw_texture_rect_region(
+				_art.atlas(&"water"), dest, Art.tile_rect(edge.x, edge.y))
+			return
+
+	# The surface, base or detail, hashed off the position so it never shimmers.
+	var ground: Array = Art.ground_tile(terrain, x, y)
+	if not ground.is_empty():
+		var cell: Vector2i = ground[1] as Vector2i
+		draw_texture_rect_region(
+			_art.atlas(ground[0] as StringName), dest, Art.tile_rect(cell.x, cell.y))
+		return
 
 	var entry: Array = _art.terrain_tiles.get(terrain, []) as Array
 	if entry.is_empty():
