@@ -30,9 +30,91 @@
     "church:ledgers": "Les registres de l'Église, qui montrent ce qu'Hesper a pris et à qui. Anselm les garde parce qu'il faut bien que quelqu'un le fasse.",
     "castle:the_way_in": "Comment on fait entrer un inconnu à Blackcairn : un nom sur un rôle de fourniture, contresigné, et un visage qui lui ressemble.",
     "king:his_argument": "La thèse d'Arthur, dans ses propres mots : la pauvreté est l'ennemi, l'industrie est la seule chose qui y ait jamais mis fin, l'industrie exige de la terre, et les villages qui ont refusé de partir choisissaient la pauvreté pour leurs petits-enfants. Il a signé les ordres lui-même et les produira sur demande.",
-    "blackcairn:the_escort": "L'escorte à la porte n'est pas un nombre fixe. C'est ce que le Rassemblement peut encore céder, et cela baisse depuis un an."
+    "blackcairn:the_escort": "L'escorte à la porte n'est pas un nombre fixe. C'est ce que le Rassemblement peut encore céder, et cela baisse depuis un an.",
+    "you:died": "Vous êtes mort quand Brindle a brûlé, avec tous les autres.",
+    "you:raised": "Les fées du bois vous ont ramené. Votre mémoire est ce que ça a coûté.",
+    "thornwood:axes": "Des hommes viennent dans le bois avec des haches et du feu, et le bois est plus petit chaque année.",
+    "thornwood:dying": "Les fées meurent.",
+    "you:remembered": "La fée vous a connu avant l'incendie. C'est le seul témoin de votre vie qui ne soit pas un papier.",
+    "you:owed": "La fée ne vous a pas choisi parce que vous êtes quelqu'un. Elle vous a choisi parce qu'on vous doit quelque chose.",
+    "thornwood:save_us": "Les fées vous demandent de les sauver, si vous le pouvez."
   },
   "npcs": {
+    "fairy": {
+      "name": "La fée",
+      "role": "Ce qui vit dans le bois",
+      "zone": "overworld",
+      "tile": [
+        261,
+        149
+      ],
+      "sprite": "",
+      "greeting": "Vous êtes réveillé. Ne partez pas encore.",
+      "options": [
+        {
+          "intent": "hear_died",
+          "text": "Écouter.",
+          "reply": "Vous êtes mort avec les autres.",
+          "teaches": "you:died",
+          "hides_after": "you:died",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_raised",
+          "text": "Écouter.",
+          "reply": "Je vous ai ramené. Ça a coûté votre mémoire.",
+          "teaches": "you:raised",
+          "requires": "you:died",
+          "hides_after": "you:raised",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_axes",
+          "text": "Écouter.",
+          "reply": "Des hommes sont venus avec des haches et du feu. Le bois est plus petit chaque année.",
+          "teaches": "thornwood:axes",
+          "requires": "you:raised",
+          "hides_after": "thornwood:axes",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_dying",
+          "text": "Écouter.",
+          "reply": "Nous mourons.",
+          "teaches": "thornwood:dying",
+          "requires": "thornwood:axes",
+          "hides_after": "thornwood:dying",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_knew_you",
+          "text": "Écouter.",
+          "reply": "Je vous ai connu, avant.",
+          "teaches": "you:remembered",
+          "requires": "thornwood:dying",
+          "hides_after": "you:remembered",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_owed",
+          "text": "Écouter.",
+          "reply": "Je n'ai pas choisi quelqu'un de spécial. J'ai choisi quelqu'un à qui on doit quelque chose.",
+          "teaches": "you:owed",
+          "requires": "you:remembered",
+          "hides_after": "you:owed",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_ask",
+          "text": "Écouter.",
+          "reply": "Trouvez votre chemin dans ce monde. Et si vous le pouvez, sauvez-nous.",
+          "teaches": "thornwood:save_us",
+          "requires": "you:owed",
+          "hides_after": "thornwood:save_us",
+          "costs": "free"
+        }
+      ]
+    },
     "maddox": {
       "name": "Maddox",
       "role": "Aubergiste",

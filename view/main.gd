@@ -234,7 +234,12 @@ func _read_direction() -> Vector2i:
 
 
 func _nearby_npc() -> Npc:
-	return _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH)
+	var who: Npc = _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH)
+	# Somebody who has left is not somebody to prompt about. The simulation refuses
+	# the conversation anyway; this is so the window does not offer it.
+	if who != null and OpeningRules.is_gone(who.id, _sim.facts):
+		return null
+	return who
 
 
 ## The stall within reach that still has something on it, or NOWHERE.
@@ -393,6 +398,11 @@ func _draw() -> void:
 		_draw_prop(prop, min_x, max_x, min_y, max_y)
 
 	for npc: Npc in _cast.in_zone(_world.current_zone):
+		if OpeningRules.is_gone(npc.id, _sim.facts):
+			continue
+		if npc.id == OpeningRules.FAIRY:
+			_draw_fairy(npc.centre())
+			continue
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
 
 	_draw_travellers(min_x, max_x, min_y, max_y)
@@ -517,6 +527,31 @@ func _draw_beast(beast: Beast) -> void:
 		Rect2(top_left.round(), Vector2(FIGURE, FIGURE)),
 		Art.tile_rect(Art.column_for(beast.facing), 0),
 	)
+
+
+## The fairy, who is **light and movement and not a body**.
+##
+## There is no fairy in the asset pack, §13 forbids mixing packs, and a twinkling
+## humanoid would undo the plain register the whole cast was rewritten for — so she
+## is drawn rather than sprited. She still has to be *visible*: something the eye can
+## find and follow, not a voice from nowhere.
+##
+## Three soft discs and a few motes that drift on their own clock. Deliberately
+## dimmer and slower than anything else on screen, because she is dying.
+func _draw_fairy(at: Vector2) -> void:
+	var centre: Vector2 = at * float(TILE)
+	var now: float = float(Time.get_ticks_msec()) * 0.001
+	# The glow: three discs, the outermost barely there. Breathing slowly.
+	var breath: float = 0.82 + 0.18 * sin(now * 1.1)
+	for ring: int in 3:
+		var radius: float = (14.0 - float(ring) * 4.0) * breath
+		var alpha: float = 0.07 + float(ring) * 0.09
+		draw_circle(centre, radius, Color(0.78, 0.94, 0.80, alpha))
+	# And the motes, on their own periods so the pattern never repeats cleanly.
+	for mote: int in 5:
+		var phase: float = now * (0.5 + float(mote) * 0.13) + float(mote) * 1.7
+		var sway: Vector2 = Vector2(cos(phase) * 9.0, sin(phase * 0.7) * 6.0 - 3.0)
+		draw_circle(centre + sway, 1.2, Color(0.90, 1.0, 0.88, 0.55))
 
 
 func _draw_actor(at: Vector2, role: StringName, column: int) -> void:

@@ -45,7 +45,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 
 | # | Piece | Status |
 |---|---|---|
-| 1 | **The opening** — stages 1–5 below | **stages 1, 2 and 4 done**; 3 and 5 next |
+| 1 | **The opening** — stages 1–5 below | **1, 2, 3, 4 done**; 5 next |
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | not started |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | not started |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
@@ -184,6 +184,13 @@ Every entry here is a choice he was not present for. Newest last.
 | 9 | The wood shrinks at a rate driven by **`steel_output`**, not by the calendar | This is the fiction exactly — men came with axes, and the axes are the works' appetite. It also means **stopping the clearing is already something the player can do with the levers they have**, so the fairy's *"if you can, save us"* is answerable without the forest needing machinery of its own. Q42/Q43 stay deferred and this does not wait on them |
 | 10 | `HELD_AT_START` 22 tiles, `HELD_LOST_PER_DAY` 0.55 at full output | 22 covers the clearing (7), the ring that closes it (12) and the corridor as far as Brindle coming into frame (~20), so the first thing lost is the safe walk out, then the ring, then the clearing. 0.55 empties it in about forty in-game days of the furnaces running flat out |
 | 11 | **Sharpened** `test_a_world_with_no_cause_in_it_does_not_wander` rather than exempting the wood from it | The test said five days change nothing. The wood now changes — and that is the rule working, not breaking: there *is* a cause in the world from the first minute, and it is why the game has a plot. It is now asserted the harder way round: **stop the furnaces and nothing moves at all.** A drift you can switch off is a drift somebody reasoned about, which is what §8 was protecting against |
+| 12 | **Seven lines, not six.** The "she remembers you" addition became its own line rather than being folded in | It is the best line she has and the one that gives the scene its ache, and burying it inside another would waste it. Placed fifth, before the send-off, so she still closes by asking |
+| 13 | Her seven lines are a `requires`/`hides_after` **chain**, so exactly one option is ever offered | "She speaks, I read, I advance" **inside** the dialogue system instead of beside it. No new machinery, no cutscene mode, and the whole scene is ordinary events — so it is in the save and replays word for word |
+| 14 | **No "she is gone" flag.** She is gone when the player knows her last word | The facts the player holds *are* the state. Nothing to keep in step, nothing that can desync, and it falls out of the fiction: a player who has been told everything is a player she is finished with |
+| 15 | Rewrote *"I chose you because you are owed"* → *"I did not pick someone special. I picked someone who is owed."* | The original tripped `test_nobody_ever_tells_you_it_was_your_fault`, which bans "because you" to protect §8's *push the ambient, pull the attribution*. The matcher is blunt and her line was not really an attribution — but **I changed the line rather than the rule**, because a real invariant should not be narrowed to fit one sentence of mine. It is shorter and more in her voice anyway |
+| 16 | **Refined** `test_every_fact_keeps_one_source_nothing_can_gate_shut` to tell a *gate* from a *sequence* | `requires` counted as a gate on its own, so her chain read as seven facts with no open source. But the first line needs nothing, she never leaves until she has finished, and no condition or standing is consulted anywhere in it — nothing can shut that door, you simply have to listen in order. The test now walks each speaker's own chain to a fixpoint. It can distinguish two things it previously could not, so it is stronger, not looser |
+| 17 | She is drawn as **three soft discs and five drifting motes**, dimmer and slower than anything else on screen | No fairy in the pack, §13 forbids mixing, and a twinkling humanoid would undo the plain register the cast was rewritten for. She still had to be findable and followable rather than a voice from nowhere |
+| 18 | The named cast is now **25**, exactly §6's budget | `test_overworld` asserts `<= 25`. She fits with nothing to spare, which is worth knowing before anybody adds a twenty-sixth |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
 
 ---
@@ -258,3 +265,27 @@ The one collision worth reading: the wood shrinking breaks
 rather than exempt the wood — see decision 11.
 
 Suite: **283 tests green**.
+
+### Opening, stage 3 — she speaks
+
+Built: the fairy in both cast files (7 chained lines, 7 facts, a voice note),
+`core/rules/opening_rules.gd`, the dialogue gate that stops her being reopened,
+`_draw_fairy()` in the view, and eight tests.
+
+She says, in order: *you died with the others* · *I brought you back, it cost you your
+memory* · *men came with axes and fire, the wood is smaller every year* · *we are
+dying* · **I knew you, before** · *I did not pick someone special, I picked someone
+who is owed* · *find your way in this world, and if you can, save us.*
+
+**Two existing invariant tests caught her**, and both were right to:
+
+- `test_nobody_ever_tells_you_it_was_your_fault` on *"because you"*. Line rewritten,
+  rule untouched — see decision 15.
+- `test_every_fact_keeps_one_source_nothing_can_gate_shut` on her `requires` chain.
+  Test refined to tell a gate from a sequence — see decision 16.
+
+Her eight lines pass the prose door in both languages: **103 hand-written lines, 0
+refused.** She never says the king, the crown, the law, steel, the works, land or tax,
+and a test asserts that word by word in English and French rather than trusting it.
+
+Suite: **290 tests green**.

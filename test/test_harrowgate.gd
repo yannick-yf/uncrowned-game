@@ -225,17 +225,37 @@ func test_every_fact_keeps_one_source_nothing_can_gate_shut() -> void:
 	# door shutting — and it is only legal because Garrick teaches the same fact
 	# and nothing gates him. The moment somebody gates the last open source, a
 	# required fact leaves the world and no test elsewhere would notice.
+	# **Refined 2026-09-12.** `requires` used to count as a gate on its own, which
+	# cannot tell a *gate* from a *sequence*. The fairy tells the player seven things
+	# in order, each line needing the one before it — but the first needs nothing, she
+	# never leaves until she has finished, and no condition or standing is consulted
+	# anywhere in the chain. Nothing can shut that door; you simply have to listen in
+	# order. A prerequisite taught by the same person through an otherwise ungated
+	# option is a sequence, so the fixpoint below walks each speaker's own chain and
+	# only counts a real gate as a gate.
 	var open_sources: Dictionary = {}
 	for id: StringName in _cast.npcs.keys():
-		for option: DialogueOption in _cast.get_npc(id).options:
+		var npc: Npc = _cast.get_npc(id)
+		var reachable_from_them: Dictionary = {}
+		var moved: bool = true
+		while moved:
+			moved = false
+			for option: DialogueOption in npc.options:
+				if option.teaches == &"" or reachable_from_them.has(option.teaches):
+					continue
+				if option.forbids_condition != &"" or option.requires_condition != &"" \
+						or option.asks_for_goodwill():
+					continue
+				if option.requires != &"" and not reachable_from_them.has(option.requires):
+					continue
+				reachable_from_them[option.teaches] = true
+				moved = true
+		for option: DialogueOption in npc.options:
 			if option.teaches == &"":
 				continue
-			var gated: bool = option.forbids_condition != &"" \
-				or option.requires_condition != &"" or option.requires != &"" \
-				or option.asks_for_goodwill()
 			if not open_sources.has(option.teaches):
 				open_sources[option.teaches] = 0
-			if not gated:
+			if reachable_from_them.has(option.teaches):
 				open_sources[option.teaches] += 1
 
 	assert_true(open_sources.size() > 0, "somebody teaches something")

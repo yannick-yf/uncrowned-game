@@ -40,6 +40,10 @@ func _open(
 	conditions: Dictionary,
 	regard: float,
 ) -> void:
+	# She leaves when she has finished (§4's opening). The authoritative gate, so a
+	# stale prompt or a replayed event cannot reopen a conversation that is over.
+	if OpeningRules.is_gone(id, sim.facts):
+		return
 	var npc: Npc = cast.get_npc(id)
 	if npc == null or npc.zone != world.current_zone:
 		return

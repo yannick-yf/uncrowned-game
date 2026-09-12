@@ -30,9 +30,91 @@
     "church:ledgers": "The church's own ledgers, which show what Hesper took and from whom. Anselm keeps them because somebody has to.",
     "castle:the_way_in": "How a stranger is admitted to Blackcairn: a name on a supply roll, countersigned, and a face that matches it.",
     "king:his_argument": "Arthur's case, in his own words: poverty is the enemy, industry is the only thing that has ever ended it, industry needs land, and the villages that would not move were choosing poverty for their grandchildren. He signed the orders himself and will produce them on request.",
-    "blackcairn:the_escort": "The escort at the gate is not a fixed number. It is whatever the Muster can still spare, and it has been falling for a year."
+    "blackcairn:the_escort": "The escort at the gate is not a fixed number. It is whatever the Muster can still spare, and it has been falling for a year.",
+    "you:died": "You died when Brindle burned, with everybody else.",
+    "you:raised": "The fairies of the wood brought you back. Your memory is what it cost.",
+    "thornwood:axes": "Men come into the wood with axes and fire, and the wood is smaller every year.",
+    "thornwood:dying": "The fairies are dying.",
+    "you:remembered": "The fairy knew you before the fire. It is the one witness to your life that is not a piece of paper.",
+    "you:owed": "The fairy did not choose you because you are someone. She chose you because you are owed something.",
+    "thornwood:save_us": "The fairies have asked you to save them, if you can."
   },
   "npcs": {
+    "fairy": {
+      "name": "The fairy",
+      "role": "What lives in the wood",
+      "zone": "overworld",
+      "tile": [
+        261,
+        149
+      ],
+      "sprite": "",
+      "greeting": "You are awake. Do not go yet.",
+      "options": [
+        {
+          "intent": "hear_died",
+          "text": "Listen.",
+          "reply": "You died with the others.",
+          "teaches": "you:died",
+          "hides_after": "you:died",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_raised",
+          "text": "Listen.",
+          "reply": "I brought you back. It cost you your memory.",
+          "teaches": "you:raised",
+          "requires": "you:died",
+          "hides_after": "you:raised",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_axes",
+          "text": "Listen.",
+          "reply": "Men came with axes and fire. The wood is smaller every year.",
+          "teaches": "thornwood:axes",
+          "requires": "you:raised",
+          "hides_after": "thornwood:axes",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_dying",
+          "text": "Listen.",
+          "reply": "We are dying.",
+          "teaches": "thornwood:dying",
+          "requires": "thornwood:axes",
+          "hides_after": "thornwood:dying",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_knew_you",
+          "text": "Listen.",
+          "reply": "I knew you, before.",
+          "teaches": "you:remembered",
+          "requires": "thornwood:dying",
+          "hides_after": "you:remembered",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_owed",
+          "text": "Listen.",
+          "reply": "I did not pick someone special. I picked someone who is owed.",
+          "teaches": "you:owed",
+          "requires": "you:remembered",
+          "hides_after": "you:owed",
+          "costs": "free"
+        },
+        {
+          "intent": "hear_ask",
+          "text": "Listen.",
+          "reply": "Find your way in this world. And if you can, save us.",
+          "teaches": "thornwood:save_us",
+          "requires": "you:owed",
+          "hides_after": "thornwood:save_us",
+          "costs": "free"
+        }
+      ]
+    },
     "maddox": {
       "name": "Maddox",
       "role": "Innkeeper",

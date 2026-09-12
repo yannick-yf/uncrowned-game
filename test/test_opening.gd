@@ -256,3 +256,110 @@ func test_the_wood_shrinking_can_never_end_a_reign() -> void:
 	sim.advance(60 * 30)
 	assert_true(ticked.held_ground < WorldRules.HELD_AT_START, "the wood did shrink")
 	assert_eq(ticked.handprint_on(&"held_ground"), 0.0, "and none of it was the player's doing")
+
+
+# ------------------------------------------------- stage 3: she speaks ---
+
+func _wake_and_listen(sim: Sim, times: int) -> Array[String]:
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"talk", {"npc": "fairy"})
+	sim.advance(2)
+	var heard: Array[String] = []
+	for _round: int in times:
+		if world.options.is_empty():
+			break
+		assert_eq(world.options.size(), 1,
+			"she offers exactly one thing to do, which is listen")
+		sim.submit(&"choose_intent", {"intent": String(world.options[0].intent)})
+		sim.advance(2)
+		heard.append(world.current_line)
+	return heard
+
+
+func test_she_is_standing_there_when_you_wake() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var cast := sim.store(&"cast") as Cast
+	var her: Npc = cast.get_npc(&"fairy")
+	assert_not_null(her, "there is a fairy")
+	assert_true(her.centre().distance_to(world.player_pos) <= Game.TALK_REACH,
+		"within reach of where the player wakes, without walking anywhere")
+	assert_eq(her.sprite, "", "and she is not a body: no sprite, drawn as light")
+
+
+func test_she_says_seven_things_one_at_a_time_and_in_order() -> void:
+	var sim: Sim = Game.build()
+	Text.set_locale("en")
+	var heard: Array[String] = _wake_and_listen(sim, 9)
+	assert_eq(heard.size(), OpeningRules.WHAT_SHE_TELLS_YOU.size(),
+		"seven lines, and then nothing more to say")
+	assert_true(heard[0].contains("died"), "she opens with the thing only she can tell you")
+	assert_true(heard[heard.size() - 1].contains("save us"), "and closes by asking")
+
+
+func test_everything_she_tells_you_is_in_the_fact_base() -> void:
+	var sim: Sim = Game.build()
+	_wake_and_listen(sim, 9)
+	for fact: StringName in OpeningRules.WHAT_SHE_TELLS_YOU:
+		assert_true(sim.facts.has(fact), "the player knows '%s'" % fact)
+
+
+func test_she_never_has_the_political_map() -> void:
+	# The restriction the whole opening rests on. A fairy in a wood knows men came
+	# with axes; she does not know whose men. If she pre-judges him in minute one,
+	# Route C stops working, because §5 holds that his argument has to be real and
+	# found. Asserted rather than trusted, in both languages.
+	for language: String in ["en", "fr"]:
+		var cast: Cast = Cast.load_from(Cast.path_for(language))
+		var her: Npc = cast.get_npc(&"fairy")
+		var lines: Array[String] = [her.greeting]
+		for option: DialogueOption in her.options:
+			lines.append(option.reply)
+		for line: String in lines:
+			for word: String in line.to_lower().replace(".", " ").replace(",", " ").split(" ", false):
+				var bare: String = ProseRules.bare_word(word)
+				assert_false(OpeningRules.SHE_MAY_NEVER_SAY.has(bare),
+					"%s: she says '%s' in \"%s\"" % [language, bare, line])
+
+
+func test_she_is_gone_once_she_has_finished_and_stays_gone() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	assert_true(OpeningRules.fairy_is_here(sim.facts), "she is here to begin with")
+	_wake_and_listen(sim, 9)
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	assert_false(OpeningRules.fairy_is_here(sim.facts), "and gone when she has finished")
+
+	sim.submit(&"talk", {"npc": "fairy"})
+	sim.advance(2)
+	assert_false(world.in_dialogue(), "walking back does not find her again")
+
+
+func test_walking_away_leaves_her_there_because_nothing_is_gated() -> void:
+	# Pillar 1. You may ignore her entirely and walk to Blackcairn, and she will
+	# still be in the clearing when you come back — so the premise is never lost,
+	# and it is never forced on you either.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	_wake_and_listen(sim, 3)
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	world.player_pos = world.region().brindle_centre()
+	sim.advance(120)
+	assert_true(OpeningRules.fairy_is_here(sim.facts), "she has not finished, so she waits")
+	world.player_pos = world.region().clearing_centre()
+	var rest: Array[String] = _wake_and_listen(sim, 9)
+	assert_eq(rest.size(), OpeningRules.WHAT_SHE_TELLS_YOU.size() - 3,
+		"and picks up where she left off")
+
+
+func test_the_whole_opening_replays_from_the_log() -> void:
+	# It is a conversation, not a cutscene: every line is an ordinary event, so the
+	# scene is in the save and a reload says the same words in the same order.
+	var sim: Sim = Game.build()
+	_wake_and_listen(sim, 9)
+	var replayed: Sim = Game.replay(sim)
+	assert_eq(replayed.facts.fingerprint(), sim.facts.fingerprint(),
+		"rebuilt from the log, down to what she told you")
+	assert_false(OpeningRules.fairy_is_here(replayed.facts), "and she is gone there too")
