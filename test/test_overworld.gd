@@ -143,13 +143,20 @@ func test_every_landmark_kind_has_art() -> void:
 
 
 func test_every_walkable_terrain_has_a_tile_or_a_deliberate_colour() -> void:
+	# **Updated 2026-09-13.** There are three ways a surface can be drawn now, in
+	# the order the window tries them: `Art.GROUND`, which gives a terrain a base and
+	# its detail tiles; `terrain_tiles`, the single-tile table it grew out of; and the
+	# flat colour, which is the thing this test exists to keep anything from falling
+	# back to. Asking only about the middle one failed the moment sand moved up to
+	# the first.
 	var art := Art.new()
 	for terrain: int in [Region.Terrain.WILD, Region.Terrain.ROAD, Region.Terrain.FOREST,
 			Region.Terrain.WATER, Region.Terrain.FORD, Region.Terrain.SAND,
 			Region.Terrain.MARSH, Region.Terrain.FARMLAND, Region.Terrain.SEA,
 			Region.Terrain.RUINS, Region.Terrain.TOWN, Region.Terrain.CAMP,
-			Region.Terrain.CASTLE]:
-		assert_true(art.terrain_tiles.has(terrain),
+			Region.Terrain.CASTLE, Region.Terrain.CLEARED, Region.Terrain.CLEARING,
+			Region.Terrain.THICKET]:
+		assert_true(Art.GROUND.has(terrain) or art.terrain_tiles.has(terrain),
 			"terrain %d would be drawn as a flat rectangle" % terrain)
 
 
