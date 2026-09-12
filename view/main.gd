@@ -394,7 +394,9 @@ func _draw() -> void:
 
 	if _world.current_zone == WorldState.OVERWORLD:
 		_draw_escort()
-		_draw_actor(_world.king_pos, &"king", Art.FACE_DOWN)
+		# Arthur is a person in the cast now and the NPC loop draws him where he
+		# stands, which is the tile `king_pos` already named. Drawing him twice put
+		# a second king half a pixel behind the first.
 
 	_draw_actor(centre, &"player", Art.column_for(_world.player_facing))
 	_draw_witnesses()

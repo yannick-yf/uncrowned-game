@@ -582,7 +582,11 @@ func _stamp_stalls() -> void:
 	# Saltmarch is off the trunk road, so no traveller carries word out of it
 	# either. Which is why Wren sells the location — she picks over ruins, so she
 	# knows where nobody is looking.
-	_stall_at(SALTMARCH + Vector2i(4, -2))
+	# Moved twice now, each time because the town it stood in acquired people: first
+	# out of the Wide Acres when the granaries got a watch, then to the north edge
+	# of Saltmarch when Til and Mira arrived. Verified against a *roused* watch, so
+	# it stays unwatched at the worst moment rather than the calmest.
+	_stall_at(SALTMARCH + Vector2i(0, -10))
 	_place_documents()
 	_place_campfires()
 
@@ -618,6 +622,10 @@ func _nearest_open(from: Vector2i) -> Vector2i:
 ## they are rare, death stops being a cost and becomes a punishment.
 const CAMP_SPURS: Array[Vector2i] = [
 	Vector2i(200, 168), Vector2i(150, 120), Vector2i(112, 96), Vector2i(228, 180),
+	# Kell's, deep in the Thornwood. A deserter hiding in a wood has a fire, and it
+	# is the only landmark out there — without it, Ossa telling you where he is
+	# would be telling you to search a forest.
+	Vector2i(175, 129),
 ]
 
 

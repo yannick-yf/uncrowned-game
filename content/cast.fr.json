@@ -9,7 +9,20 @@
     "cinderworks:ledger": "Le registre des Forges, ce que les fours ont coûté en hommes, tenu de la main du roi, le prix inscrit en face du rendement.",
     "bank:debts": "Le livre de la banque : ce que la couronne doit, et à qui. Presque tout est dû à un seul créancier.",
     "muster:signed_orders": "Les ordres de raser les villages, signés. Les hommes qui les ont exécutés sont nommés en dessous.",
-    "cinderworks:death_toll": "Les Forges ont tué près de quatre cents hommes en onze ans. On envoyait le compte à Arthur chaque année, et il continuait de demander plus de pierre."
+    "cinderworks:death_toll": "Les Forges ont tué près de quatre cents hommes en onze ans. On envoyait le compte à Arthur chaque année, et il continuait de demander plus de pierre.",
+    "acres:razed_villages": "Les domaines des Grands Champs sont bâtis sur le sol de villages rasés pour les faire. Les actes les nomment tous, et Brindle est sur la liste.",
+    "brindle:the_ground": "Les terres au nord de Brindle sont Brindle — la même terre, retournée. Le vieux Pell la travaillait avant l'incendie et la travaille encore.",
+    "muster:how_the_king_fights": "Arthur s'est entraîné avec sa propre garde et n'a jamais changé son ouverture. Il attaque bouclier en avant et contre à gauche, et ses officiers s'exercent contre ça depuis des années.",
+    "thornwood:kell": "Un déserteur nommé Kell vit dans la Ronceraie, à l'est de Harrowgate, près d'un feu qu'il garde trop petit pour être vu de la route.",
+    "brindle:that_night": "Ce qui s'est passé à Brindle : l'ordre était de l'évacuer, le village n'a pas bougé, et on a dit après aux hommes qui l'ont exécuté que le village avait résisté.",
+    "saltmarch:what_leaves": "L'acier, le grain et l'argent quittent la région par la mer, sur ordre de la couronne et sous le sceau de personne. Til a gardé les manifestes qu'on lui avait dit de perdre.",
+    "law:the_effects": "Ce que fait la loi par paliers, cas par cas : la même faute, trois peines, classées selon ce que possède l'accusé et l'endroit où il est né.",
+    "bank:leveraged": "Tout le projet industriel est emprunté, et presque tout est dû à un seul créancier. La certitude d'Arthur était un pari.",
+    "castle:hesper": "Rien n'entre à Blackcairn sans la marque d'Hesper. C'est elle, la porte, et elle n'a pas d'adjoint.",
+    "church:ledgers": "Les registres de l'Église, qui montrent ce qu'Hesper a pris et à qui. Anselm les garde parce qu'il faut bien que quelqu'un le fasse.",
+    "castle:the_way_in": "Comment on fait entrer un inconnu à Blackcairn : un nom sur un rôle de fourniture, contresigné, et un visage qui lui ressemble.",
+    "king:his_argument": "La thèse d'Arthur, dans ses propres mots : la pauvreté est l'ennemi, l'industrie est la seule chose qui y ait jamais mis fin, l'industrie exige de la terre, et les villages qui ont refusé de partir choisissaient la pauvreté pour leurs petits-enfants. Il a signé les ordres lui-même et les produira sur demande.",
+    "blackcairn:the_escort": "L'escorte à la porte n'est pas un nombre fixe. C'est ce que le Rassemblement peut encore céder, et cela baisse depuis un an."
   },
   "npcs": {
     "maddox": {
@@ -55,6 +68,13 @@
           "reply": "Il y a un homme qui boit ici, qui ne donne pas son nom et ne s'assoit jamais dos à la porte. Déserteur, ou pire. Je n'ai rien dit.",
           "requires_condition": "they_think_well_of_me",
           "costs": "goodwill"
+        },
+        {
+          "intent": "ask_deserter",
+          "text": "Il y a un homme qui vit dans la Ronceraie, non ?",
+          "reply": "Un déserteur. Kell. Deux hivers qu'il y est, je ne l'ai jamais vu et je n'en ai jamais douté — Ossa part à l'est avec un sac deux fois par mois et revient avec un sac vide. Je ne l'approcherais pas en douce. Sifflez d'abord.",
+          "teaches": "thornwood:kell",
+          "costs": "free"
         }
       ],
       "alt_greetings": [
@@ -159,9 +179,10 @@
         {
           "intent": "ask_kell",
           "text": "Y en a-t-il un dont vous vous souvenez ?",
-          "reply": "Il y en a un que je vois encore. Il ne vient pas en ville. C'est tout ce que vous tirerez de moi aujourd'hui.",
+          "reply": "Il y en a un que je vois encore. Kell. Il est dans la Ronceraie à l'est, près d'un feu qu'il garde trop petit pour être vu de la route, et si vous l'abordez en silence il fuira. Faites du bruit.",
           "forbids_condition": "they_think_ill_of_me",
-          "costs": "goodwill"
+          "costs": "goodwill",
+          "teaches": "thornwood:kell"
         }
       ],
       "alt_greetings": [
@@ -345,6 +366,539 @@
           "intent": "ask_why_stay",
           "text": "Alors pourquoi rester ?",
           "reply": "Parce que si je pars, ils trouveront un homme qui ne tient pas son propre compte. C'est toute ma défense et je sais ce qu'elle vaut.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "cadan": {
+      "name": "Seigneur Cadan Vale",
+      "role": "Seigneur terrien",
+      "zone": "overworld",
+      "tile": [
+        99,
+        147
+      ],
+      "sprite": "Noble",
+      "greeting": "Vous êtes debout sur la meilleure terre à orge du royaume et vous n'avez pas une fois baissé les yeux dessus.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Vale vous observe comme un homme observe un temps sur lequel il a déjà tranché."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_estate",
+          "text": "Jusqu'où vont les Champs ?",
+          "reply": "De la Bouilloire à la crête. Quatre mille arpents sous un seul registre, là où il y avait neuf villages et neuf réponses différentes à tout."
+        },
+        {
+          "intent": "ask_villages",
+          "text": "Neuf villages.",
+          "reply": "Neuf. Ils sont dans les actes, nommés, chacun avec la date de son évacuation et les arpents qu'il est devenu — je ne les ai pas écrits et je ne les ai pas brûlés. Mon père a pris la concession et j'ai pris la dette qui venait avec, et je la reprendrais, parce que l'orge nourrit plus de gens que le sentiment.",
+          "teaches": "acres:razed_villages",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "nessa": {
+      "name": "Nessa Vale",
+      "role": "Intendante",
+      "zone": "overworld",
+      "tile": [
+        102,
+        146
+      ],
+      "sprite": "Princess",
+      "greeting": "Si vous voulez mon père, il faudra valoir la peine qu'on le dérange. Si vous voulez les papiers, c'est moi, et je coûte moins cher.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Nessa garde le registre fermé d'une main pendant qu'elle vous parle."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_paperwork",
+          "text": "C'est vous qui gardez les actes.",
+          "reply": "Je garde tout. Il signe, il oublie, puis il me demande ce que ça disait. Il n'y a aucun mystère dans cette maison, seulement du classement."
+        },
+        {
+          "intent": "ask_names",
+          "text": "À qui était cette terre ?",
+          "reply": "Neuf villages, et je pourrais vous les réciter. Brindle, Ashcote, Wenn, les deux Harrow — j'ai recopié cette liste à quatorze ans et elle ne m'a jamais quittée. Il pense que les noms sont un détail administratif. J'ai cessé de lui dire que non.",
+          "teaches": "acres:razed_villages",
+          "costs": "free"
+        }
+      ]
+    },
+    "pell": {
+      "name": "Le vieux Pell",
+      "role": "Métayer",
+      "zone": "overworld",
+      "tile": [
+        90,
+        151
+      ],
+      "sprite": "OldMan2",
+      "greeting": "Attention au sillon. Ça ressemble à de la terre, c'est surtout de la pierre, et sous la pierre c'est le seuil de quelqu'un.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Pell continue son rang et vous laisse planté là."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_soil",
+          "text": "Qu'est-ce qu'il y avait ici avant ?",
+          "reply": "Brindle. C'en était le haut — le pré, le puits, et une maison avec un portail de travers qu'une famille tenait. J'ai labouré autour de ce portail trois ans avant qu'on me fasse l'arracher. C'est toujours Brindle, quoi qu'en dise le registre.",
+          "teaches": "brindle:the_ground",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_family",
+          "text": "La famille au portail.",
+          "reply": "De braves gens. Il était lent à prêter et prompt à donner, ce qui est le bon sens. Il y avait des enfants. Je ne sais pas ce qu'ils sont devenus et je n'ai jamais demandé, parce que je ne voulais pas qu'on me le dise. Vous avez l'air de quelqu'un, mais à mon âge tout le monde a l'air de quelqu'un.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_withhold",
+          "text": "Ils pourraient garder la récolte dans la grange.",
+          "reply": "Ils le pourraient. Ils en parlent depuis six ans sans jamais avoir eu une raison qu'on puisse dire tout haut sans passer pour un voleur. Neuf villages sur un papier, c'est une raison. Je fais le tour ce soir.",
+          "costs": "goodwill",
+          "causes": "i_organised_a_withholding",
+          "requires": "acres:razed_villages"
+        }
+      ]
+    },
+    "ryse": {
+      "name": "Commandant Ryse",
+      "role": "Commandant",
+      "zone": "overworld",
+      "tile": [
+        142,
+        104
+      ],
+      "sprite": "KnightGold",
+      "greeting": "Vous entrez dans un camp comme un homme qu'on n'y a jamais arrêté. Profitez-en.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Ryse ne se retourne pas. On lui a déjà fait votre portrait."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_clearances",
+          "text": "C'est vous qui avez mené les évacuations.",
+          "reply": "C'est moi. On m'a donné une liste et une saison, et j'ai fini dans les deux. Si vous cherchez un homme qui se tord les mains, vous vous êtes trompé de camp — je dors bien, et je m'estimerais moins si je prétendais le contraire.",
+          "teaches": "brindle:that_night",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_king",
+          "text": "Vous vous êtes entraîné contre Arthur.",
+          "reply": "Onze ans. Il attaque bouclier en avant et il contre à gauche, toujours, parce qu'il l'a appris à dix-neuf ans et que personne depuis n'a eu le droit de l'en corriger. Je l'ai dit devant quarante officiers. Aucun de nous n'a jamais pu s'en servir.",
+          "teaches": "muster:how_the_king_fights",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "odile": {
+      "name": "Quartier-maître Odile",
+      "role": "Quartier-maître",
+      "zone": "overworld",
+      "tile": [
+        137,
+        105
+      ],
+      "sprite": "Inspector",
+      "greeting": "Les réquisitions à gauche, les plaintes où vous voulez, je ne les lis pas.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Odile referme le livre avant que vous soyez assez près pour voir la page."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_rolls",
+          "text": "Vos registres sont longs.",
+          "reply": "Mes registres sont exactement aussi longs que les hommes qu'on me dit de nourrir. Si certains de ces hommes sont morts depuis un mois et que la paie sort quand même de cette tente, c'est une question pour celui qui signe au-dessus de moi, et personne ne l'a jamais posée par écrit."
+        },
+        {
+          "intent": "ask_king",
+          "text": "Arthur se bat comment ?",
+          "reply": "De façon prévisible, et je vous le donne pour rien parce que ça ne me coûte rien. J'ai équipé la garde qui s'est entraînée contre lui pendant onze ans. Bouclier en avant, contre à gauche. Demandez à Ryse si vous le voulez de quelqu'un qui tenait une épée.",
+          "teaches": "muster:how_the_king_fights",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_leverage",
+          "text": "Je sais ce que vous faites.",
+          "reply": "Alors vous savez ce que ça vaut pour moi que vous cessiez de le dire tout haut sous ma tente. Annoncez votre prix ou taisez-vous, mais ne restez pas là à me faire la morale — j'ai des quotas.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "kell": {
+      "name": "Kell",
+      "role": "Déserteur",
+      "zone": "overworld",
+      "tile": [
+        176,
+        128
+      ],
+      "sprite": "Villager4",
+      "greeting": "Ne refaites pas ça. N'arrivez pas sur un homme ici sans faire de bruit d'abord.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Kell a le dos contre un arbre et la main là où vous ne la voyez pas."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_hiding",
+          "text": "Depuis combien de temps êtes-vous ici ?",
+          "reply": "Deux hivers. Il y a un feu, il y a de l'eau, et personne ne me demande de porter quoi que ce soit. C'est le mieux que j'aie jamais eu et je ne plaisante pas."
+        },
+        {
+          "intent": "ask_that_night",
+          "text": "Brindle.",
+          "reply": "J'avais dix-neuf ans. On nous a dit qu'il avait résisté. Il n'avait pas résisté — il n'avait pas bougé, ce qui n'est pas la même chose, et quand j'ai compris la différence j'avais déjà fait ce que j'ai fait. Je peux vous donner l'ordre mot pour mot. J'ai eu deux hivers pour le retenir.",
+          "teaches": "brindle:that_night",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_recruit",
+          "text": "Il y en a d'autres ici.",
+          "reply": "Onze que je connais par leur nom, et d'autres que non. Ils ne rentreront pas pour une grâce, ils ont tous vu ce que vaut une grâce. Ils rentreraient pour quelqu'un qui sait déjà ce qu'on a fait et qui n'a pas craché. C'est une porte étroite et vous êtes dedans.",
+          "costs": "goodwill",
+          "causes": "i_recruited_deserters",
+          "requires": "brindle:that_night"
+        }
+      ]
+    },
+    "til": {
+      "name": "Capitaine du port Til",
+      "role": "Capitaine du port",
+      "zone": "overworld",
+      "tile": [
+        26,
+        158
+      ],
+      "sprite": "ManGreen",
+      "greeting": "Si vous voulez la marée, elle est partie il y a une heure. Si vous voulez autre chose, dites-le doucement et dites-le une fois.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Til trouve, à l'autre bout du quai, quelque chose qui réclame sa présence."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_port",
+          "text": "Il passe beaucoup de choses ici ?",
+          "reply": "Moins qu'avant et plus que ne le dit le livre. Saltmarch est hors de la route, ce qui est la seule raison qu'on s'en serve encore et la seule raison que personne ne vienne y regarder."
+        },
+        {
+          "intent": "ask_manifests",
+          "text": "Qu'est-ce qui part, et sur ordre de qui ?",
+          "reply": "De l'acier vers l'ouest, du grain vers l'ouest, et de l'argent vers l'ouest, tous les mois, sur ordre de la couronne et sous le sceau de personne. On m'a dit de perdre les manifestes. J'ai perdu des copies. Les originaux sont dans de la toile huilée sous mon plancher et je ne l'ai jamais regretté.",
+          "teaches": "saltmarch:what_leaves",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_convoy",
+          "text": "Un convoi pourrait prendre la mauvaise direction.",
+          "reply": "Il pourrait. C'est arrivé deux fois, et les deux fois c'était la météo. Je peux arranger la météo. Ça coûte un mois à la couronne et ça ne me coûte rien qui me manquera.",
+          "costs": "goodwill",
+          "causes": "i_redirected_a_convoy",
+          "requires": "saltmarch:what_leaves"
+        }
+      ]
+    },
+    "mira": {
+      "name": "Mira Sand",
+      "role": "Avocate",
+      "zone": "overworld",
+      "tile": [
+        37,
+        159
+      ],
+      "sprite": "Woman",
+      "greeting": "Asseyez-vous ou non, mais si vous venez me dire que la loi est la loi, j'ai déjà eu cette conversation et je l'ai perdue poliment.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Mira referme le dossier qu'elle lisait et attend que vous partiez."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_work",
+          "text": "Qu'est-ce que vous faites ?",
+          "reply": "Je représente des gens qui n'ont pas de quoi se faire représenter, sous une loi qui décide ce qu'ils doivent d'après ce qu'ils ont. Vous entendez le problème sans que je le dise."
+        },
+        {
+          "intent": "ask_cases",
+          "text": "Montrez-moi ce que ça fait.",
+          "reply": "Trois hommes, un mur, une nuit. Celui qui avait de la terre a eu onze shillings d'amende. Celui qui avait un métier a eu quatre mois. Celui qui était né dans un village rasé a eu sept ans et j'ai sa sentence dans la main. Le même mur. J'en ai quatre cents comme ça et j'ai cessé d'être surprise sans cesser d'être en colère.",
+          "teaches": "law:the_effects",
+          "costs": "free"
+        }
+      ]
+    },
+    "corvin": {
+      "name": "Corvin Ash",
+      "role": "Banquier",
+      "zone": "overworld",
+      "tile": [
+        100,
+        53
+      ],
+      "sprite": "Sultan2",
+      "greeting": "Vous avez l'air d'un homme à qui il faut expliquer quelque chose. C'est à ça que sert une banque, et ce n'est pas gratuit.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Ash fait dire par son clerc que la maison ne reçoit pas."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_bank",
+          "text": "Que fait cette maison ?",
+          "reply": "Elle prête à la couronne, la couronne bâtit avec, le pays s'enrichit et la maison s'enrichit, et tout le monde appelle ça un partenariat jusqu'au mois où un paiement a du retard."
+        },
+        {
+          "intent": "ask_debts",
+          "text": "Combien est emprunté ?",
+          "reply": "Presque tout, et presque tout ce presque tout est à moi. Arthur n'a pas bâti les forges avec son argent, il les a bâties avec ma confiance, qui est une matière plus étrange et ne survit pas qu'on la regarde de trop près. Il n'a jamais compris la différence et je ne l'ai jamais corrigé.",
+          "teaches": "bank:leveraged",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "peyre": {
+      "name": "Archiviste Peyre",
+      "role": "Archiviste",
+      "zone": "overworld",
+      "tile": [
+        84,
+        67
+      ],
+      "sprite": "Monk",
+      "greeting": "Doucement, s'il vous plaît. Pas pour les archives — elles s'en moquent — mais parce que je fais ça depuis quarante ans et que j'y ai pris goût.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Peyre retourne à ses rayonnages et ne vous offre pas de chaise."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_archive",
+          "text": "Qu'est-ce qu'on garde ici ?",
+          "reply": "Tout ce qui a jamais été signé. Concessions, dettes, sentences, réquisitions. Les gens croient qu'une archive est l'endroit où l'on cache une chose. C'est l'endroit où une chose ne peut plus être dédite."
+        },
+        {
+          "intent": "ask_grants",
+          "text": "Les actes des Grands Champs.",
+          "reply": "Deuxième copie, rayon onze, et les villages sont listés par leur nom parce que l'arpenteur était payé au nom. Neuf. J'ai lu cette page plus de fois qu'il n'est bon pour un homme.",
+          "teaches": "acres:razed_villages",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_debts",
+          "text": "Et ce que doit la couronne.",
+          "reply": "Rayon onze également, ce que j'ai toujours pris pour la plaisanterie de quelqu'un. C'est un seul créancier, ou presque, et la somme n'a pas été lue tout haut dans ce bâtiment depuis six ans.",
+          "teaches": "bank:leveraged",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_church",
+          "text": "L'Église dépose-t-elle ses comptes ici ?",
+          "reply": "Chaque maison le fait, vérifiés, chaque année. Les leurs s'équilibrent et s'équilibrent depuis neuf ans, ce qui est soit une très bonne gestion, soit quelque chose que je suis trop vieux pour vouloir prouver.",
+          "teaches": "church:ledgers",
+          "costs": "free"
+        }
+      ]
+    },
+    "anselm": {
+      "name": "Frère Anselm",
+      "role": "Secrétaire",
+      "zone": "overworld",
+      "tile": [
+        93,
+        62
+      ],
+      "sprite": "Monk2",
+      "greeting": "L'intendante ne reçoit personne. Je le dis onze fois par jour et c'est vrai dix fois sur onze.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Anselm dit que l'intendante ne reçoit personne, et cette fois ne l'adoucit pas."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_steward",
+          "text": "Qui décide qui elle reçoit ?",
+          "reply": "Elle, puis je l'écris, puis on m'en veut. Hesper est la porte de Blackcairn. Pas une porte — la porte. Il n'y a personne derrière elle chez qui faire appel, et ce n'est pas un hasard.",
+          "teaches": "castle:hesper",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_ledgers",
+          "text": "C'est vous qui tenez les livres de l'Église.",
+          "reply": "Je les tiens parce qu'il faut bien que quelqu'un le fasse et parce que sinon personne ne peut vérifier. Ils montrent ce qu'elle a pris et à qui, sur neuf ans. Je ne les ai jamais montrés à personne et j'y ai pensé chacune de ces neuf années.",
+          "teaches": "church:ledgers",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_roll",
+          "text": "Qu'est-ce qui est écrit sur le rôle, exactement ?",
+          "reply": "Un nom, un métier, une quantité, et sa marque à côté. J'écris les trois premiers. Le quatrième est la seule partie qui compte et la seule que je ne peux pas faire.",
+          "teaches": "castle:the_way_in",
+          "costs": "free"
+        }
+      ]
+    },
+    "hesper": {
+      "name": "Hesper",
+      "role": "Intendante de la cour",
+      "zone": "overworld",
+      "tile": [
+        96,
+        61
+      ],
+      "sprite": "OldWoman",
+      "greeting": "J'ai quatre minutes et vous n'êtes pas annoncé, alors voyons lequel de nous deux gaspille celles de l'autre.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Hesper ne lève pas les yeux du rôle qu'elle annote."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_papers",
+          "text": "Comment un inconnu entre-t-il à Blackcairn ?",
+          "reply": "Sur un rôle de fourniture, contresigné par moi, avec un visage que la porte peut rattacher au nom. C'est tout. Ce n'est pas compliqué et ce n'est pas négociable, et j'ai dit non ce matin à des hommes mieux habillés que vous.",
+          "teaches": "castle:the_way_in",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_terms",
+          "text": "Qu'est-ce qu'il faudrait ?",
+          "reply": "Quelque chose que je veux, ou quelque chose dont j'ai peur. Je suis rarement l'un ou l'autre, ce qui explique que j'aie encore ce poste et que mon prédécesseur ne l'ait plus.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "aurel": {
+      "name": "Seigneur Aurel Greyhold",
+      "role": "Grand justicier",
+      "zone": "overworld",
+      "tile": [
+        90,
+        58
+      ],
+      "sprite": "Knight",
+      "greeting": "On me dit que vous posez des questions sur les paliers. Posez-les-moi, alors. Je préfère que ça vienne de quelqu'un qui les applique plutôt que de quelqu'un qui se contente de les détester.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Greyhold décide, visiblement, que ce n'est pas la matinée pour ça."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_law",
+          "text": "C'est vous qui appliquez la loi par paliers.",
+          "reply": "En effet. Chaque peine de plus de quatre mois dans cette région porte ma main. J'ai lu les arguments qui la défendent, je peux les présenter mieux que ceux qui les ont écrits, et je n'en crois plus un mot.",
+          "teaches": "law:the_effects",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_turn",
+          "text": "Alors arrêtez.",
+          "reply": "C'est la première fois que quelqu'un me le dit comme si c'était disponible. J'ai une maison, un titre qui ne vaut rien sans la charge, et quarante ans de signatures qui ne cessent pas d'exister si je démissionne. Mais je ne signerai pas la prochaine. Commençons par là.",
+          "costs": "goodwill",
+          "causes": "i_turned_the_lord",
+          "requires": "law:the_effects"
+        }
+      ]
+    },
+    "arthur": {
+      "name": "Arthur",
+      "role": "Roi",
+      "zone": "overworld",
+      "tile": [
+        66,
+        24
+      ],
+      "sprite": "Sultan",
+      "greeting": "Vous avez fait tout ce chemin et vous n'avez rien tiré. C'est soit très sage, soit très bête, et je n'ai pas encore tranché. Dites ce que vous êtes venu dire.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Arthur vous regarde un long moment et décide, visiblement, qu'il l'entendra quand même."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_why",
+          "text": "Pourquoi les avoir brûlés ?",
+          "reply": "Je n'ai rien brûlé. J'ai signé un ordre d'évacuer neuf villages, et des hommes fatigués et effrayés ont fait ce que font les hommes fatigués et effrayés. Ce n'est pas une défense, c'est une correction, et vous devriez la vouloir, parce que tout le reste de ce que je vais dire dépend de ce que vous me croyiez exact.\n\nLa pauvreté est l'ennemi. Pas la couronne, pas les forges, pas moi. Un homme sur quatre arpents a une vie courte, enterre la moitié de ses enfants et ne peut pas partir, et ceux qui écrivent des chansons sur cette vie-là n'ont jamais eu à la vivre. L'industrie est le seul mécanisme, dans l'histoire de ce royaume ou d'un autre, qui en ait jamais sorti une population. L'industrie exige de la pierre, du charbon, de la terre, et la terre était sous ces villages. J'ai demandé. Ils ont refusé. J'aurais pu m'arrêter, et le prix de m'arrêter aurait été payé par des gens qui n'étaient pas encore nés et qu'on ne pouvait pas consulter.\n\nJ'y pense chaque année depuis onze ans et je n'ai jamais trouvé l'endroit où le calcul se trompe.",
+          "teaches": "king:his_argument",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_village",
+          "text": "Le mien était l'un des neuf.",
+          "reply": "Je sais. J'ignore lequel, et je ne vais pas prétendre le contraire. Voici ce que je dirai, et vous le détesterez, et c'est vrai quand même : ils étaient heureux, et pauvres, et morts à quarante ans. Les deux moitiés. Je leur ai pris la première et je leur ai pris la troisième aussi, et on ne me doit pas de remerciements pour l'échange — mais c'était un échange, et quiconque vous dit que ce n'était qu'un vol vous vend quelque chose de plus simple que ce qui s'est passé.\n\nVous avez le droit de décider que la première moitié comptait davantage. J'ai décidé que non. L'un de nous a tort et aucun des deux ne peut le prouver.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_records",
+          "text": "Vous gardez trace de tout cela.",
+          "reply": "Chaque page. Le registre des morts aux forges, les actes avec les noms des villages, les ordres avec ma main au bas. Je n'en ai jamais détruit un seul et je ne le ferai jamais, parce qu'un homme qui cache le prix est un homme qui soupçonne qu'il ne valait pas la peine d'être payé.\n\nJe préfère qu'on me contredise avec les vrais chiffres qu'on me loue sans les avoir lus.",
+          "costs": "free"
+        }
+      ]
+    },
+    "dray": {
+      "name": "Capitaine Dray",
+      "role": "Capitaine de la garde",
+      "zone": "overworld",
+      "tile": [
+        70,
+        24
+      ],
+      "sprite": "KnightGold",
+      "greeting": "Arrêtez-vous là. Vous êtes assez près pour ce que c'est, et si ça devient autre chose vous ne serez pas assez rapide.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Dray se place entre vous et la porte, sans se presser."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_gate",
+          "text": "Combien d'hommes tiennent ici ?",
+          "reply": "Autant que le Rassemblement veut bien m'en envoyer, c'est-à-dire ce mois-ci moins que le mois dernier, et encore moins que celui d'avant. J'en demande quarante. J'ai cessé d'en attendre quarante il y a un moment.",
+          "teaches": "blackcairn:the_escort",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_loyalty",
+          "text": "Vous suivraient-ils contre lui ?",
+          "reply": "Non. Et vous devriez vous en réjouir, parce que le jour où un capitaine peut répondre autrement à cette question est le jour où ce pays découvre de quoi il est fait. J'ai vu un royaume faire ça. Il n'était pas meilleur après.",
           "costs": "goodwill"
         }
       ]

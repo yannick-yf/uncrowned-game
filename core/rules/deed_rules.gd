@@ -31,6 +31,14 @@ const DEED_MAKE_PUBLIC: StringName = &"i_made_it_public"
 ## rather than a thing you break. Sena is organising the others; what she has never
 ## had is a number to organise them around.
 const DEED_TURN_WORKERS: StringName = &"i_turned_the_workers"
+## §3's second lever against the Wide Acres, and its third against the Muster. Both
+## are things you say to somebody who was already most of the way there.
+const DEED_WITHHOLDING: StringName = &"i_organised_a_withholding"
+const DEED_RECRUIT: StringName = &"i_recruited_deserters"
+## §3's remaining two spoken levers: a convoy that goes the wrong way, and the
+## softest ★ deciding not to sign the next one.
+const DEED_CONVOY: StringName = &"i_redirected_a_convoy"
+const DEED_TURN_LORD: StringName = &"i_turned_the_lord"
 
 const FACTION_TOWNS: StringName = &"towns"
 const FACTION_UNDERWORLD: StringName = &"the unlawful"
@@ -68,6 +76,14 @@ static func town_effect(deed: StringName) -> float:
 		return 25.0
 	if deed == DEED_TURN_WORKERS:
 		return 15.0
+	if deed == DEED_WITHHOLDING:
+		return 12.0
+	if deed == DEED_RECRUIT:
+		return -6.0
+	if deed == DEED_CONVOY:
+		return -4.0
+	if deed == DEED_TURN_LORD:
+		return 20.0
 	return 0.0
 
 
@@ -95,6 +111,14 @@ static func faction_effects(deed: StringName) -> Dictionary:
 		return {FACTION_CROWN: -30.0, FACTION_DISPOSSESSED: 22.0, FACTION_TOWNS: 8.0}
 	if deed == DEED_TURN_WORKERS:
 		return {FACTION_CROWN: -26.0, FACTION_DISPOSSESSED: 24.0, FACTION_TOWNS: -8.0}
+	if deed == DEED_WITHHOLDING:
+		return {FACTION_CROWN: -24.0, FACTION_DISPOSSESSED: 20.0, FACTION_TOWNS: -6.0}
+	if deed == DEED_RECRUIT:
+		return {FACTION_CROWN: -28.0, FACTION_UNDERWORLD: 16.0, FACTION_TOWNS: -10.0}
+	if deed == DEED_CONVOY:
+		return {FACTION_CROWN: -22.0, FACTION_UNDERWORLD: 20.0, FACTION_TOWNS: -6.0}
+	if deed == DEED_TURN_LORD:
+		return {FACTION_CROWN: -32.0, FACTION_DISPOSSESSED: 26.0, FACTION_TOWNS: 12.0}
 	return {}
 
 
@@ -124,6 +148,14 @@ static func witness_effect(deed: StringName) -> float:
 		return 30.0
 	if deed == DEED_TURN_WORKERS:
 		return 22.0
+	if deed == DEED_WITHHOLDING:
+		return 18.0
+	if deed == DEED_RECRUIT:
+		return -10.0
+	if deed == DEED_CONVOY:
+		return -8.0
+	if deed == DEED_TURN_LORD:
+		return 26.0
 	return 0.0
 
 
@@ -182,6 +214,21 @@ static func world_effects(deed: StringName) -> Dictionary:
 	if deed == DEED_TURN_WORKERS:
 		# Men who know what the furnaces cost tend the furnaces worse.
 		return {&"worker_morale": -30.0, &"steel_output": -15.0, &"town_sentiment": -10.0}
+	if deed == DEED_WITHHOLDING:
+		# The estates feed the capital and the standing army. A harvest that stays
+		# in the barn is a harvest the crown has to buy at somebody else's price.
+		return {&"crown_treasury": -24.0, &"town_sentiment": -8.0}
+	if deed == DEED_RECRUIT:
+		# One deserter who will talk to other deserters is worth more to you than
+		# any document, and worth less to the man who has to replace them.
+		return {&"army_strength": -20.0, &"faction_tension": 12.0}
+	if deed == DEED_CONVOY:
+		# A month of steel and grain that goes west and does not arrive.
+		return {&"crown_treasury": -18.0, &"steel_output": -10.0}
+	if deed == DEED_TURN_LORD:
+		# The man who signs the sentences stops signing them. Nothing in the region
+		# changes for a month and then everything does.
+		return {&"faction_tension": 20.0, &"town_sentiment": -14.0}
 	return {}
 
 
@@ -191,5 +238,6 @@ static func all_deeds() -> Array[StringName]:
 	return [
 		DEED_THEFT, DEED_RESTITUTION, DEED_WARNING,
 		DEED_SABOTAGE, DEED_BURN_STORES, DEED_ROB_BANK, DEED_WRECK_ROLLS,
-		DEED_MAKE_PUBLIC, DEED_TURN_WORKERS,
+		DEED_MAKE_PUBLIC, DEED_TURN_WORKERS, DEED_WITHHOLDING, DEED_RECRUIT,
+		DEED_CONVOY, DEED_TURN_LORD,
 	]

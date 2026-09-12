@@ -12,6 +12,11 @@ func on_step(sim: Sim, step: int) -> void:
 	var world := sim.store(&"world") as WorldState
 	if world == null or world.current_zone != WorldState.OVERWORLD:
 		return
+	# Nobody is stabbed mid-sentence. Arthur is a person you can walk up to and
+	# speak with — he is not afraid of you — and he becomes lethal again the moment
+	# the conversation ends. It also stops a wolf interrupting Ossa.
+	if world.in_dialogue():
+		return
 	if step < world.invulnerable_until:
 		return
 	if not ContactRules.touching(world.player_pos, world.king_pos):

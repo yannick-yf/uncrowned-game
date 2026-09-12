@@ -86,6 +86,13 @@ func _choose(
 	var option: DialogueOption = DialogueRules.find(npc, intent)
 	if option == null:
 		return
+	# And it has to be a line he is actually offering. The verdict already refused
+	# to teach anything for an intent that was not on the list, but the reply was
+	# spoken regardless — so an unoffered line was read aloud and taught nothing,
+	# which looks exactly like a fact that failed to register. The keyboard cannot
+	# reach one; a tool or a test can, and did.
+	if not DialogueRules.available(npc, sim.facts, conditions, regard).has(option):
+		return
 	# The verdict is the rules layer's, and it is issued before the line is read.
 	var learned: StringName = DialogueRules.verdict(npc, intent, sim.facts, conditions, regard)
 	if learned != &"":

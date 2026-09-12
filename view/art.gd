@@ -33,6 +33,21 @@ const CASTING: Dictionary = {
 	&"halgrave": "OldMan3",
 	&"sena": "Woman",
 	&"ivo": "Monk",
+	&"cadan": "Noble",
+	&"nessa": "Princess",
+	&"pell": "OldMan2",
+	&"ryse": "KnightGold",
+	&"odile": "Inspector",
+	&"kell": "Villager4",
+	&"til": "ManGreen",
+	&"mira": "Woman",
+	&"corvin": "Sultan2",
+	&"peyre": "Monk",
+	&"anselm": "Monk2",
+	&"hesper": "OldWoman",
+	&"aurel": "Knight",
+	&"arthur": "Sultan",
+	&"dray": "KnightGold",
 	# Strangers are cast by trade, not by name — there is only one trader sheet
 	# however many traders the map ends up holding.
 	&"trader": "ManGreen",
@@ -113,7 +128,10 @@ func _init() -> void:
 		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
 		&"granary": [&"house", Rect2i(0, 224, 48, 64)],
 		&"muster_rolls": [&"camp", Rect2i(96, 48, 32, 32)],
-		&"papers": [&"camp", Rect2i(96, 48, 32, 32)],
+		# A book, not a barrel. The first version reused the muster-rolls art without
+		# looking at it, so the five documents lay on the ground as pots and the
+		# player walked up to some crockery and was told they had taken a ledger.
+		&"papers": [&"camp", Rect2i(114, 122, 16, 16)],
 		&"campfire": [&"camp", Rect2i(192, 80, 32, 32)],
 	}
 

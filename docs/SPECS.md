@@ -1283,7 +1283,7 @@ Tom lost his sister in the forest. Tom is rich and looking for help.* If the pla
 arrives and the conversation goes a certain way, that thread opens; otherwise it
 doesn't.
 
-### The context layer — deterministic assembly, not vector RAG 🟡
+### The context layer — deterministic assembly, not vector RAG ✅ (built 2026-09-12)
 
 **Decision: no embeddings, no vector search.** Build a *context assembler*: a pure
 function
@@ -1906,12 +1906,26 @@ predicates rather than as three authored chains.
 > following a script, the journal shows why each one worked, and a run that does
 > nothing at all never ends — because drift cannot end a reign.
 
-**Phase 6 — the full cast and deterministic dialogue.**
+**Phase 6 — the full cast and deterministic dialogue. ✅ (cast and assembler)**
 All 25 NPCs with sheets. The context assembler (§9) as a pure function over fixed,
 ordered sources. Dialogue baked offline and reviewed; a runtime model only if
 baking demonstrably cannot cover the packet space.
 > **Proof:** the same situation produces the same words twice, and a stranger who
 > has heard of you opens differently from one who has not.
+
+**Delivered 2026-09-12**, in seven stages: (6a) the Cinderworks; (6b) the Wide
+Acres; (6c) the Muster and the Thornwood; (6d) Saltmarch; (6e) Cairnwell, with Lord
+Aurel Greyhold moved into it; (6f) Blackcairn — **Arthur** and Captain Dray; (6g) the
+relationship web and §9's context assembler.
+
+**Twenty-four named people, thirty-two facts, forty-two relationship edges**, every
+line hand-written in French and English. Six of §3's levers are now things you
+*say* rather than things you break.
+
+**No model, on purpose.** The assembler is a pure function and the packet is worth
+having without one: it is what a hand-written line chooses between, what a dialogue
+cache would be keyed on, and the thing to *read* before deciding whether a model
+should ever see it. `tools/packet.gd` prints one. That decision is the next one.
 
 **Phase 7 — art, audio and polish.**
 Commissioned art replacing the approved pack, audio, and the accessibility pass
@@ -2078,6 +2092,16 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | A document is **both** knowledge and proof, lies in a **place** rather than with a person, and can never be taken from you | Documents as facts only; as items only; confiscation as drama | Knowledge alone makes "put it in front of him where it cannot be denied" into "know four things", which is no climax. Living in places is what makes invariant 7 structural — violence can never close Route C, only make it harder — and it is the same guarantee the power bases gave. Confiscation was considered and rejected by Yannick: evidence that can be lost is a route that can be closed |
 | 2026-09-12 | Reading a document aloud is what makes it public, and the news spreads as a rumour that turns towns against **the crown** — a different number from how they regard the player | Making a fact public by knowing it; turning only the town you stand in | Route C becomes a tour rather than an errand, and the King's Road matters to a player who never steals anything. It also gave `discredited` its first reachable path: five documents, read out where people can hear, and six towns had turned within a day of the last one |
 | 2026-09-12 | No copies, though Bell is a copyist | Building copies now, since the character exists | The reason for a copy was to hedge against losing the original, and nothing can take one — so it would be building the answer to a question the game does not ask. It returns the day handing a document to somebody becomes an act |
+| 2026-09-12 | **The cast is complete: twenty-four named people across all eight zones**, every line written in French and English | Writing English first and translating; leaving towns empty until later | Six of §3's levers are now things you *say* — turn the workers, organise a withholding, recruit deserters, redirect a convoy, turn the lord, read a document out — which is what stops twenty-four people being lore |
+| 2026-09-12 | The Captain of the Guard is **Dray**; Arthur stands at `king_pos` and is the king you already walk up to | A separate NPC beside the king entity | Drawing him twice put a second king half a pixel behind the first. And nobody is stabbed mid-sentence now: contact damage and wildlife both stand down while a conversation is open, which is what makes Arthur a person you can speak to rather than a wall that hurts |
+| 2026-09-12 | **§9's context assembler is built, and there is no model anywhere** | Building the model first; building the assembler only as a model input | The packet is worth having on its own: it is what a hand-written line chooses between, what a cache would be keyed on, and the thing to *read* before deciding whether a model should ever see it. A thin packet means no model would save it; a rich one makes the bake-versus-runtime decision worth having with evidence rather than opinion |
+| 2026-09-12 | The relationship web is **ids only, in its own file** | Edges inside the cast sheets; edges in code | It needs no translation, which is the whole reason to keep it out of `cast.*.json` — and it lets an NPC be told who their neighbours are without any of it being written into their dialogue |
+| 2026-09-12 | The unwatched stall moved a second time, and is now verified against a **roused** watch | Checking it against a calm watch, as before | It has been displaced twice by the world filling up — out of the Wide Acres when the granaries got a watch, out of southern Saltmarch when Til and Mira arrived. Checking it at the calmest moment was how it stopped being true the first time |
+| 2026-09-12 | The Wide Acres and the Muster get their five, and Kell the Thornwood — **twelve of twenty-five now exist** | Writing all eighteen before playing any | Two more levers that are things you *say*: a withholding at the Acres, deserters recruited in the wood. Both need a reason the other person can repeat out loud — Pell will not move for a feeling and neither will eleven men hiding in a forest |
+| 2026-09-12 | **The unashamed one is the open source**, in every town | Picking the open source at random; gating everything | Halgrave, Nessa and Ryse each give away the fact that damns their side, because none of them thinks it needs hiding. Invariant 6 needs one source nothing can gate shut, and characterisation was already deciding which — so the two rules turn out to be the same rule. It is also why the game has no "good" informants: the people who talk are the ones who are not ashamed |
+| 2026-09-12 | A man hiding in a wood gets a fire | Leaving Kell in open forest | "He is out in the Thornwood" is otherwise an instruction to search a forest. The fire is the only landmark out there, it is what a deserter would have, and it doubles as a save point — one prop doing three jobs |
+| 2026-09-12 | An intent that is not being offered is not spoken | Speaking the line and teaching nothing, as it did | Choosing an unoffered intent read the reply aloud and taught nothing, because the verdict refused it and the line printed anyway — indistinguishable from a fact failing to register. A keyboard cannot reach one; a tool can, and did |
+| 2026-09-12 | Documents look like a book | Reusing the muster-rolls art, as it did | The five documents lay on the ground as pots and barrels, so the player walked up to some crockery and was told they had taken a ledger. Found by looking at the sprite rather than the code |
 | 2026-09-12 | **The king is Arthur.** The region is still unnamed | — | Q1, open since the first day. Nothing had needed it because nobody in the game had cause to say his name; from the Cinderworks onward they do — Halgrave says it while defending him |
 | 2026-09-12 | **French is the default language.** The machine's language is not consulted | Defaulting to the OS language; English first | The game is authored in French and translated into English, not the other way round, because that is how it is played. One line to change the day that stops being true |
 | 2026-09-12 | **A spoken line can cause a deed** (`causes` on an option) | Levers only as acts at landmarks; a system per lever | §3 lists levers like "turn the workers" that are plainly things you *say*, and until now nothing in a conversation could cause anything — which is most of why a cast risked being lore. The rules layer still decides whether the line is offered; `causes` only names what saying it does |

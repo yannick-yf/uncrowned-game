@@ -143,12 +143,16 @@ func test_a_question_answered_is_a_question_spent() -> void:
 
 	sim.submit(&"talk", {"npc": "maddox"})
 	sim.advance(2)
-	var first: int = world.options.size()
-	assert_true(first >= 2, "he starts with things to say")
+	assert_true(world.options.size() >= 2, "he starts with things to say")
 
 	sim.submit(&"choose_intent", {"intent": "ask_town"})
 	sim.advance(2)
-	assert_eq(world.options.size(), first - 1, "and one fewer once he has answered")
+	# The *intent* is gone, which is the rule. The count need not drop: §9 shows
+	# three at a time and a man with six things to say simply moves the next one up
+	# — a conversation that refills until it is genuinely exhausted is right, and
+	# asserting the count was asserting how much Maddox happened to know that week.
+	for option: DialogueOption in world.options:
+		assert_ne(String(option.intent), "ask_town", "he has answered that one")
 
 	sim.submit(&"end_talk")
 	sim.advance(2)
@@ -169,6 +173,32 @@ func test_some_things_bear_asking_twice() -> void:
 			if option.repeatable:
 				repeatable += 1
 	assert_true(repeatable > 0, "somebody in the world can be asked the same thing twice")
+
+
+func test_a_line_he_is_not_offering_is_not_spoken() -> void:
+	# Found with a tool rather than a keyboard: choosing an intent outside the three
+	# offered slots read the reply aloud and taught nothing, because the verdict
+	# refused it and the line was printed anyway. It looks precisely like a fact
+	# that failed to register, and §9's whole point is that intents are a closed set.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"talk", {"npc": "maddox"})
+	sim.advance(2)
+
+	var offered: Array[String] = []
+	for option: DialogueOption in world.options:
+		offered.append(String(option.intent))
+	var hidden: StringName = &""
+	for option: DialogueOption in _cast.get_npc(&"maddox").options:
+		if not offered.has(String(option.intent)):
+			hidden = option.intent
+			break
+	assert_ne(hidden, &"", "he knows more than three things, so something is off the list")
+
+	var before: String = world.current_line
+	sim.submit(&"choose_intent", {"intent": String(hidden)})
+	sim.advance(2)
+	assert_eq(world.current_line, before, "he did not answer a question you could not ask")
 
 
 func test_every_line_that_causes_something_names_a_real_deed() -> void:

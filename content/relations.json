@@ -1,0 +1,215 @@
+{
+  "_note": "Who stands in what relation to whom. §9's context assembler walks these one and two hops out, so an NPC can be told who their neighbours are without any of it being written into their dialogue. Directed, because 'Nessa is Cadan's daughter' and 'Cadan employs Nessa' are different sentences to put in front of a reader even though they are one fact. Ids only — no words — so this file needs no translation.",
+  "edges": [
+    {
+      "from": "nessa",
+      "to": "cadan",
+      "kind": "daughter_of"
+    },
+    {
+      "from": "cadan",
+      "to": "nessa",
+      "kind": "employs"
+    },
+    {
+      "from": "pell",
+      "to": "cadan",
+      "kind": "tenant_of"
+    },
+    {
+      "from": "cadan",
+      "to": "pell",
+      "kind": "landlord_of"
+    },
+    {
+      "from": "sena",
+      "to": "halgrave",
+      "kind": "works_for"
+    },
+    {
+      "from": "halgrave",
+      "to": "sena",
+      "kind": "employs"
+    },
+    {
+      "from": "ivo",
+      "to": "halgrave",
+      "kind": "works_for"
+    },
+    {
+      "from": "halgrave",
+      "to": "ivo",
+      "kind": "employs"
+    },
+    {
+      "from": "ivo",
+      "to": "sena",
+      "kind": "treated"
+    },
+    {
+      "from": "sena",
+      "to": "ivo",
+      "kind": "was_treated_by"
+    },
+    {
+      "from": "bell",
+      "to": "tovin",
+      "kind": "works_for"
+    },
+    {
+      "from": "tovin",
+      "to": "bell",
+      "kind": "employs"
+    },
+    {
+      "from": "ossa",
+      "to": "kell",
+      "kind": "treats"
+    },
+    {
+      "from": "kell",
+      "to": "ossa",
+      "kind": "is_treated_by"
+    },
+    {
+      "from": "maddox",
+      "to": "ossa",
+      "kind": "knows"
+    },
+    {
+      "from": "maddox",
+      "to": "tovin",
+      "kind": "knows"
+    },
+    {
+      "from": "maddox",
+      "to": "garrick",
+      "kind": "knows"
+    },
+    {
+      "from": "maddox",
+      "to": "kell",
+      "kind": "knows_of"
+    },
+    {
+      "from": "garrick",
+      "to": "odile",
+      "kind": "supplies"
+    },
+    {
+      "from": "odile",
+      "to": "garrick",
+      "kind": "buys_from"
+    },
+    {
+      "from": "odile",
+      "to": "ryse",
+      "kind": "serves"
+    },
+    {
+      "from": "ryse",
+      "to": "odile",
+      "kind": "commands"
+    },
+    {
+      "from": "kell",
+      "to": "ryse",
+      "kind": "deserted_from"
+    },
+    {
+      "from": "ryse",
+      "to": "kell",
+      "kind": "would_hang"
+    },
+    {
+      "from": "anselm",
+      "to": "hesper",
+      "kind": "works_for"
+    },
+    {
+      "from": "hesper",
+      "to": "anselm",
+      "kind": "employs"
+    },
+    {
+      "from": "anselm",
+      "to": "hesper",
+      "kind": "holds_over"
+    },
+    {
+      "from": "mira",
+      "to": "aurel",
+      "kind": "opposes"
+    },
+    {
+      "from": "aurel",
+      "to": "mira",
+      "kind": "is_opposed_by"
+    },
+    {
+      "from": "aurel",
+      "to": "arthur",
+      "kind": "serves"
+    },
+    {
+      "from": "ryse",
+      "to": "arthur",
+      "kind": "serves"
+    },
+    {
+      "from": "peyre",
+      "to": "arthur",
+      "kind": "serves"
+    },
+    {
+      "from": "hesper",
+      "to": "arthur",
+      "kind": "serves"
+    },
+    {
+      "from": "dray",
+      "to": "arthur",
+      "kind": "protects"
+    },
+    {
+      "from": "arthur",
+      "to": "dray",
+      "kind": "trusts"
+    },
+    {
+      "from": "arthur",
+      "to": "corvin",
+      "kind": "owes"
+    },
+    {
+      "from": "corvin",
+      "to": "arthur",
+      "kind": "is_owed_by"
+    },
+    {
+      "from": "wren",
+      "to": "halgrave",
+      "kind": "sells_to"
+    },
+    {
+      "from": "halgrave",
+      "to": "wren",
+      "kind": "buys_from"
+    },
+    {
+      "from": "til",
+      "to": "corvin",
+      "kind": "moves_coin_for"
+    },
+    {
+      "from": "arthur",
+      "to": "ryse",
+      "kind": "commands"
+    },
+    {
+      "from": "arthur",
+      "to": "aurel",
+      "kind": "commands"
+    }
+  ]
+}

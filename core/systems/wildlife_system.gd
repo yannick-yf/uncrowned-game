@@ -12,6 +12,11 @@ extends SimSystem
 ## That is what makes the long way round *safe* rather than merely long.
 
 func on_step(sim: Sim, step: int) -> void:
+	# Same rule as the king's: a conversation is not interrupted by teeth.
+	var talking := sim.store(&"world") as WorldState
+	if talking != null and talking.in_dialogue():
+		return
+
 	var world := sim.store(&"world") as WorldState
 	var wild := sim.store(&"wildlife") as Wildlife
 	if world == null or wild == null or world.current_zone != WorldState.OVERWORLD:
