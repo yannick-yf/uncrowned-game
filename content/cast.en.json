@@ -43,6 +43,10 @@
       ],
       "sprite": "OldMan",
       "greeting": "You walked here. Nobody walks here.",
+      "reactions": {
+        "unwelcome": "One answer, then you go.",
+        "welcome": "For you, everything I know."
+      },
       "options": [
         {
           "intent": "ask_town",
@@ -170,6 +174,10 @@
       ],
       "sprite": "OldWoman",
       "greeting": "Sit down if you are bleeding. Stand somewhere else if you are not.",
+      "reactions": {
+        "unwelcome": "I answer everyone, you as well.",
+        "welcome": "Ask, I do not count the questions."
+      },
       "options": [
         {
           "intent": "ask_deserters",
@@ -243,6 +251,10 @@
       ],
       "sprite": "Villager5",
       "greeting": "Watch your feet. Half of what is under the ash is worth money. The other half will cut you.",
+      "reactions": {
+        "unwelcome": "You pay first.",
+        "welcome": "You, you do not pay for this."
+      },
       "options": [
         {
           "intent": "ask_ruins",
@@ -275,6 +287,10 @@
       ],
       "sprite": "OldMan3",
       "greeting": "Careful, the slag stays hot all day. This is the third biggest ironworks in the kingdom.",
+      "reactions": {
+        "unwelcome": "I hide nothing, you included.",
+        "welcome": "Then you get the whole of it."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -450,6 +466,10 @@
       ],
       "sprite": "OldMan2",
       "greeting": "Mind the furrow. It looks like soil. It is mostly stone, and under the stone there are old walls.",
+      "reactions": {
+        "unwelcome": "I answer, then I go back to my row.",
+        "welcome": "You listen, so I will tell you."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -523,6 +543,10 @@
       ],
       "sprite": "Inspector",
       "greeting": "Supply requests on the left. Complaints anywhere you like, I do not read them.",
+      "reactions": {
+        "unwelcome": "This will cost you more.",
+        "welcome": "For you, no charge this time."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -560,6 +584,10 @@
       ],
       "sprite": "Villager4",
       "greeting": "Do not do that again. Do not walk up to a man out here without making noise.",
+      "reactions": {
+        "unwelcome": "Stay where you are and talk.",
+        "welcome": "Come closer, I will answer."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -599,6 +627,10 @@
       ],
       "sprite": "ManGreen",
       "greeting": "The tide left an hour ago. Anything else, say it quietly and say it once.",
+      "reactions": {
+        "unwelcome": "Not here, and keep your voice down.",
+        "welcome": "I will say it once, so listen."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -638,6 +670,10 @@
       ],
       "sprite": "Woman",
       "greeting": "Sit down or do not. If you came to tell me the law is the law, I have heard it.",
+      "reactions": {
+        "unwelcome": "I answer, but I will not defend you.",
+        "welcome": "Sit down, you get all of it."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -1102,5 +1138,11 @@
     "unwelcome": "%s does not return your greeting.",
     "wary": "%s watches you a moment longer than is comfortable, and waits.",
     "welcome": "%s is glad to see you, and does not trouble to hide it."
+  },
+  "_reactions_note": "One line per person per band, NOT per question, so it has to work in front of every answer that person has. Halgrave first read 'Vous aurez le chiffre quand meme', which fits 'how many men has it killed' and not 'what do you make here'. Check a new one against all of that character's replies before keeping it. What somebody says in front of an answer, given how they regard you. The spoken half of dispositions, which are narrated and belong to the greeting. Shown once per conversation, on the first thing they tell you, because a man who says 'you pay first' four times in one exchange is a machine with a stuck key. The rule: it says what they will or will not GIVE you, never what they think of you. A neutral standing gets nothing and the line is exactly what it has always been, so nothing regresses. 'hated' is absent on purpose: at that standing there is no conversation at all.",
+  "reactions": {
+    "unwelcome": "I will answer you, then you go.",
+    "wary": "One question, no more.",
+    "welcome": "For you, I can say it."
   }
 }

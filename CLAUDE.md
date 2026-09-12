@@ -142,8 +142,10 @@ what it would cost in time and tokens and ask first.
 ## Current phase
 
 **Phase 7 — art, audio and polish.** Phases 0, 1, 2, 3, 5 and 6 are delivered.
-Phase 4, combat, is **deferred by decision** — four of the five endings need no
-fighting, and the fifth (killing him) waits for it.
+Phase 4, combat, is **out of v1 or its very last step** (Yannick, 2026-09-12).
+Four of the five endings need no fighting; the fifth, killing him, is the one that
+waits. Plan for v1 shipping with four endings and treat combat as the thing that
+happens only if everything else is finished.
 
 **There is no LLM in v1, decided 2026-09-12 and tested rather than argued.** Two
 local models, sixteen real packets, four prompt designs, on this machine. The
@@ -159,11 +161,11 @@ The machinery stays: `core/context.gd` (the packet), `core/rules/prose_rules.gd`
 `tools/phrase.py`. All inert, all tested, all switched off. `Phraser.phrase()`
 returns `""` and nothing asks it anything.
 
-**What replaces it**, and the one piece of dialogue work still owed: the reactive
-**openers**, hand-written. The value was measured — lines diverge 50% between worlds
-where the player has acted and 74% where they have not, and all of that divergence
-is the opening sentence. A `reactions` block beside `dispositions` in the cast
-sheets, joined by `ProseRules.joined()`. Under 30 lines a language.
+**What replaced it, and it is built** (2026-09-12): the reactive **openers**, hand
+written. A `reactions` block beside `dispositions` in the cast sheets — 3 shared
+bands plus 9 people with their own, 21 lines a language — joined by
+`ProseRules.joined()` and said **once per conversation**, on the first answer. See
+SPECS §9 *Reactions* for the four rules, and `test/test_reactions.gd`.
 
 > Do not reopen the model question by adding a check, a prompt or a bigger model
 > without new evidence. The three things already tried and recorded in SPECS §9 are

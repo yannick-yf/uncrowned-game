@@ -108,8 +108,17 @@ func _choose(
 	if option.causes != &"":
 		Deeds.perform(sim, option.causes, world.region().zone_at(world.player_tile()),
 			world.player_pos)
-	world.said_before.append("%s -> %s" % [option.text, option.reply])
-	world.current_line = option.reply
+	# The reaction goes in front of the answer, **once**, on the first thing they tell
+	# you in this conversation. Not on every answer: a man who says "you pay first"
+	# four times in one exchange is a machine with a stuck key, and the relationship
+	# only needs acknowledging once. The greeting is not the place for it either —
+	# that already has a narrated disposition line, and this one is spoken.
+	var spoken: String = option.reply
+	if world.said_before.is_empty():
+		spoken = ProseRules.joined(
+			cast.reaction_for(npc, StandingRules.word_for(regard)), option.reply)
+	world.said_before.append("%s -> %s" % [option.text, spoken])
+	world.current_line = spoken
 	world.last_intent = intent
 	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
 

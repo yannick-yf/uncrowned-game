@@ -28,6 +28,7 @@ placeholders** and may change; what each thing *is* should not.
 
 | Name | What it is | Defined in |
 |---|---|---|
+| **Erileo** | The region the whole game takes place in. One region, bounded by sea and mountains | §4 |
 | **Brindle** | The player's village, burned to clear ground for the works. Where they wake, and where they respawn | §4, §5 |
 | **The Cinderworks** | The stone and steel works, built on Brindle's own ground. Holds the death ledger | §3, §4 |
 | **Harrowgate** | The first town, south-centre on the road. Market, gossip, the tiered law in daily practice | §3, §4, §6 |
@@ -37,7 +38,7 @@ placeholders** and may change; what each thing *is* should not.
 | **Cairnwell** | The capital, north-west. The bank is in it | §3, §4 |
 | **Blackcairn** | The castle, against the northern mountains. The king is here, reachable from minute one | §4 |
 | **The Kettle** | The river, running from the northern mountains to the southern sea. One guarded bridge, one ford downstream | §4 |
-| **The Thornwood** | The wood off the road: unwatched, dangerous, and the short way | §4 |
+| **The Thornwood** | The wood off the road: unwatched, dangerous, the short way — and where magic still lives | §4, §5 |
 | **The Iron Spine** | The impassable mountains along the eastern edge | §4 |
 | **The Redcut** | The iron quarry in the eastern mountains. An optional zone, cut first if behind | §4 |
 | **The King's Road** | The paved, patrolled route across the region. Fast and safe; everything done on it is seen | §4 |
@@ -70,7 +71,6 @@ is deliberate — see §6.
 | ★ **Corvin Ash** | Banker holding the crown's debts | Cairnwell |
 | **Archivist Peyre** | The crown's record keeper. Second source for the debts *and* the land grants | Cairnwell |
 | ★ **Hesper** | Court steward. Controls who gets papers into Blackcairn — the key to Route B, and its single point of failure by design | Cairnwell |
-| ★★ **Mother Sabine Crowe** | Leader of the church, and the creditor the king fears. Also complicit: the church financed the works | Cairnwell |
 | **Brother Anselm** | Her secretary. The way in to her, and a second source on the church's ledgers | Cairnwell |
 | **The King** | Name TBD. Believes he was right, and can produce the orders he signed | Blackcairn |
 | **Captain of the Guard** | Name TBD. Commands the escort, which shrinks as power bases fall | Blackcairn |
@@ -83,6 +83,8 @@ is deliberate — see §6.
 | **The death ledger** | The Cinderworks' record of what the works cost in lives. The king required it and thought the price worth paying | §3, §6 |
 | **The land grants** | The papers naming the razed villages, Brindle among them, with a date and a signature. Where the player finds their own village | §3, §6 |
 | **The signed orders** | The clearance orders, signed by the king himself | §3, §5, §6 |
+| **The fairies** | What lives in the Thornwood, and the only magic in the game. They raised the player because the king is clearing the forest and killing them with it, and they needed somebody with cause to stop him | §5 |
+| **The raising** | The one miracle. The player died at Brindle and came back months later, paying their memory for it | §5 |
 | **The muster rolls** | The army's own pay records — fat with men who are dead or never existed | §3, §6 |
 | **Route A / Force** | Fight through the door | §3 |
 | **Route B / Access** | Be admitted: become someone the castle lets in | §3 |
@@ -365,6 +367,47 @@ Speed versus witnesses. That single trade-off connects the map directly to the
 reputation and rumour systems, and it means the map itself makes the player choose
 what kind of person they are being today.
 
+### The map's thesis: the road and the forest (2026-09-12)
+
+Every zone belongs to one side or the other, and **the map is the argument between
+them**:
+
+- **The road is the king's world** — industry, order, tax, patrols, being seen.
+- **The forest is what he is destroying** — magic, the displaced, the poor, being
+  unseen.
+
+This was already true mechanically from Phase 2, and that order matters: it was a
+systems decision before it was a thematic one, so the theme is something the player
+*does* rather than something they are told. Every crossing is the argument in
+miniature. Take the road and you move through his world on his terms and are counted;
+take the forest and you are with what he is clearing, and nobody sees you at all.
+
+| Zone | Side | |
+|---|---|---|
+| **Brindle** | the forest's | The ruins the road was built over, and where the fairies raised the player |
+| **The Thornwood** | the forest's | Where magic still lives, and where the deserter hides |
+| **The Kettle's ford** | the forest's | The crossing nobody watches. The bridge is the road's |
+| **The Cinderworks** | the king's | Built on Brindle's own ground: the conversion, in one image |
+| **Harrowgate** | the king's | The road's first town, the tiered law in daily practice |
+| **The Wide Acres** | the king's, **contested** | Estates on razed villages, worked by the people who were razed |
+| **The Muster** | the king's | The road's crossroads, and the force that does the clearing |
+| **Saltmarch** | the king's, **barely** | Off the trunk road, which is exactly why nobody checks its books |
+| **Cairnwell** | the king's | Where the law is written and the money is owed |
+| **Blackcairn** | the king's | The end of the road, literally |
+| **The Redcut** | the king's | Ore. Optional zone |
+
+**What this costs, stated rather than discovered later.** The argument is lopsided:
+**nine zones are the king's and two are the forest's**, and one of the two —
+the Thornwood's depths — is on §4's optional list, cut first if behind. A map whose
+thesis is an argument between two sides, where one side has two locations and might
+have one, is not staging an argument; it is staging a rout. Phase 7 either gives the
+forest enough presence to answer back or the thesis stays a caption. See §19.
+
+> The two **contested** rows are the interesting ones and should stay contested. The
+> Wide Acres is the king's order imposed on the forest's people — Pell works ground
+> that was a village, for the man who owns it now. Saltmarch is the king's town that
+> his own order has stopped reaching. Neither is a side; both are the border.
+
 ### Barriers that are knowledge, not walls
 
 Consistent with Pillar 1: nothing is locked, some things are simply unknown.
@@ -392,11 +435,52 @@ Consistent with Pillar 1: nothing is locked, some things are simply unknown.
 eastern mountains — cutting the Cinderworks' ore supply; **the Thornwood depths**,
 wild and unpatrolled, where things that are not people live.
 
-### The opening 🟡
+### The opening (2026-09-12)
 
 The player wakes in Brindle, and from the first screen can see the Cinderworks
 smoking on their village's ground, a minute or two's walk away. No exposition is
 needed: the crime and the industry it served are in the same frame.
+
+**One fairy, once, and then never again.** He is there when the player wakes, because
+he is the reason they woke. He is the only fairy in the game and the only time one
+appears; walk away and he is gone. That is the one miracle, spent in front of you.
+
+**Four things only he can tell you, and nothing else:**
+
+1. You died here.
+2. We brought you back.
+3. The king is clearing the forest and it is killing us. You were the one with cause.
+4. Your memory was the price.
+
+**What he must not say**, and this is the hard part of the decision: who the king is,
+what he did to the villages, why he thinks he was right, the tiered law, the works,
+the routes, where to go, or what to do. Not because they are secrets — **because they
+are the game.**
+
+> The paragraph above this one has said since the first draft that *no exposition is
+> needed*. A fairy who explains the king is exposition, and it would spend §5's whole
+> design in ninety seconds: the king's argument has to be **discovered, and believed,
+> before it can be broken**, or Route C is exposing a pantomime villain. It would also
+> undo the one thing keeping the player from being a chosen one. Being **owed** is not
+> the same as being **briefed**. He tells you what was done *to you* and leaves what
+> was done to everyone else where you have to go and find it.
+
+**It is a conversation, not a cutscene.** Invariant 9 already has the player choosing
+among options, and the game has a dialogue system, a fact base and an event log. The
+fairy is an NPC who exists for one scene; what he tells you are facts in the fact base
+like any other, and they are the player's opening hand. A cutscene would be new
+machinery, unreplayable, and outside the log.
+
+**He is outside the invariants, deliberately.** He performs nothing route-critical —
+his four facts are in the player's hand from the first minute and §7 says nothing can
+take a fact away. So he is not a link in invariant 7's reachability walk and needs no
+redundancy under invariant 6. He is the prologue, not a performer.
+
+**He must not be cute.** The register settled on 2026-09-12 is plain speech a ten year
+old can read, with no metaphor and no styling, and it cost two rewrites to get. A
+twinkling sprite talking in riddles would undo all of it in one scene, and invariant
+10 means he must not read as a child either. He is a dying thing asking for help,
+and he should sound like one.
 
 The King's Road runs past Brindle toward Harrowgate. A player who follows it
 north-west reaches the castle in minutes, not hours, and can attempt the king
@@ -569,15 +653,103 @@ leaves water on the far side and the road stops in the river. The first one did.
 
 ## 5. Story & fiction
 
-**Premise** — the player wakes with no possessions and half their memory gone. Their
-village is ash. They remember the king's men, and that the people they loved were
-killed. They do not yet remember much else, including who they were.
+**Premise** — the player **died** when Brindle burned, and was raised months later in
+its ruins, with no possessions and half their memory gone. Their village is ash. They
+remember the king's men, and that the people they loved were killed. They do not yet
+remember much else, including who they were — or that on every roll the kingdom
+keeps, they are still dead.
 
 **Tone** — TBD (three adjectives, and one work of fiction that has it).
 
 **Themes** — what industrialisation costs and who pays it; law written to favour the
 people who wrote it; whether revenge and justice are the same act; what a person is
 without their memory.
+
+### Who raised the player, and what it cost (2026-09-12)
+
+The premise had a hole in it. The village burned, the family died, and the player
+walked out of it with half a memory and no account of how. This is the account.
+
+**The fairies of the Thornwood raised them.** Magic lives in the forest and nowhere
+else, and the raising is the only one it has performed in living memory.
+
+> **One of them appears, once, in the opening, and never again** (2026-09-12). He
+> tells the player four things — that they died, that the fairies raised them, why,
+> and what it cost — and he is forbidden the rest. See §4's *The opening* for what he
+> may not say and why that restriction is the whole design.
+
+**Their motive was not kindness.** The king is clearing the forest for stone, coal
+and land, and the fairies are what lives in it. He is killing them — steadily, and
+mostly as a side effect — and they cannot stop him themselves. So they raised the
+one person in the region with cause to.
+
+> **Chosen for being owed, not for being special.** This matters more than it looks.
+> A player raised because they are the prophesied someone is a player on rails, and
+> Pillar 1 spends its whole budget on the opposite. A player raised because the
+> fairies needed somebody with a grievance and a corpse to hand is a player who can
+> still walk to Blackcairn and lose in three hits. **The fairies made a bet. Nothing
+> in the game makes it pay off.**
+
+**The memory is the price, not bad luck.** Coming back cost what the player knew
+about themselves. This turns the game's oldest design note — *recovering memory and
+acquiring world knowledge are the same system* — from a convenience into the story:
+the thing you are trying to get back is the thing you paid, and you buy it back from
+the records of the people who erased you.
+
+**And the ending can give it back** (2026-09-12) — how much of it depending on which
+ending. The fairies did not raise the player to punish a man; they raised them to
+stop the clearing. So the memory returns to the degree the bet paid off, and the five
+predicates stop being five ways to win:
+
+> Killing Arthur removes the man and leaves the forest being cleared by whoever
+> takes his place. It gives back least. Breaking him, deposing him or turning the
+> country against him changes the policy rather than the officeholder, and gives back
+> most. **The ending that satisfies the player is not the same as the ending that
+> satisfies the things that raised them**, and the player finds that out by which
+> parts of themselves come back.
+
+The mapping from each predicate to how much returns is Phase 7's work, not written
+here. What is decided is the principle.
+
+**The player is legally dead.** No papers, no record, no name on any roll. This is
+the real reason they are nobody, and it is load-bearing in three places:
+
+- **Hesper's problem becomes existential rather than bureaucratic.** A supply pass
+  needs a name, a trade and her mark (§6, Anselm). The player has none of the first
+  and no way to acquire one honestly. She is not being difficult; there is nothing
+  for her to write.
+- **The tiered law cannot classify them.** Bell's three columns are *what you own,
+  where you come from, what you owe* — and the third is worked out from the first
+  two. A dead man has no row. Whether that is a hole to walk through or a hole to
+  fall into is not yet decided (§19).
+- **It is the same erasure, twice.** The land grants removed Brindle from the map and
+  the rolls removed the player from the list. The paperwork of their erasure is
+  literally the thing they read to find out who they were.
+
+**The church is against magic** (2026-09-12). It is not the king's ally — it is a
+third power that happens to agree with him about exactly one thing, and disagrees
+about the rest, which is why its accounts can still break him.
+
+Three things follow, and they are why this answer is worth more than its opposite:
+
+- **Route C acquires a cost it did not have.** Its climax is the player standing in
+  that church, before that congregation, reading the king's own records aloud
+  (Q3). The player is a thing the congregation would condemn. They are using a
+  pulpit that would turn on them if it knew what they are, and *the fairies' bet
+  works only because nobody in the room can see it.*
+- **The church's complicity gets worse in the right way.** §6 has the church
+  financing the furnaces. So it paid for the clearing that is killing the thing it
+  preaches against, and got what it wanted by means it would not sanction. That is a
+  second person in this game holding a coherent argument and an indefensible ledger,
+  which is the shape the king already has.
+- **It keeps the fairies from becoming allies.** Nobody in the built world is on
+  their side. The player is not joining a faction; they are the only overlap between
+  two things that would each disown them.
+
+**Magic is the one miracle.** It is rare because the king has been killing it, not
+because it was ever common — which is a better reason than the systemic one §11
+gives, and replaces it. One raising, in the forest, by the things that live there.
+Nothing else in the game does anything a reasonable person would call magic.
 
 ### The king's argument 🟡
 
@@ -594,6 +766,18 @@ choosing poverty, for their children and their children's children. Some of them
 to be moved by force, and the king has never pretended otherwise. He signed those
 orders himself and can produce them on request.
 
+The forest is the same argument continued. It is standing fuel, standing stone and
+standing land, and what lives in it is in the way exactly as the villages were. He
+does not think of himself as at war with magic; he thinks of himself as clearing
+ground, and the fact that something dies when he clears it is a cost he has already
+accepted once and sees no reason to reconsider.
+
+> **Keep him reasonable.** §5's protected note is that Route C only works if his
+> argument is real, and *"he hunts fairies"* is the fastest way to hand the player a
+> pantomime villain. He is not hunting them. He is clearing land and they are on it,
+> which is precisely what he did to Brindle — and the player, who *is* Brindle, is
+> the one person who can see that the two are the same act.
+
 **Where the argument breaks**, and where the player's case lives:
 
 - He counts the aggregate and never the individual. The kingdom is richer. The
@@ -607,6 +791,12 @@ orders himself and can produce them on request.
 - The player's village is the counterexample and he will say so out loud: *they were
   happy, and poor, and dead at forty.* The player has to decide whether that's an
   answer.
+- **He calls it clearing, and it is killing** (added 2026-09-12). He accepted that
+  cost once, for the villages, and produced an argument for it. He has never made the
+  argument a second time for the forest, because he has never counted what is in it
+  as the kind of thing that can be counted. That is the same blind spot as the first
+  break — he counts aggregates, never individuals — arriving somewhere he cannot
+  dismiss as sentiment about peasants.
 - **The whole thing was borrowed** (added 2026-09-12). He says industry is the only
   mechanism that has ever lifted a population out of poverty — and he mortgaged the
   kingdom to one creditor to build it. His certainty was a bet, and other people's
@@ -628,9 +818,14 @@ as facts during play.
 > Design note worth protecting: recovering memory and acquiring world knowledge are
 > the same system. A recovered memory is a fact in the fact base like any other.
 
-**Magic** — exists, but is not widely practised. This is enforced systemically
-rather than by fiat: magic is one trait among six, and most builds won't take it
-(see §11).
+**Magic** — lives in the forest, and is rare **because the king has been killing it**
+(2026-09-12). The earlier reason — one trait among six, most builds won't take it —
+was a systemic dodge for a question the fiction should answer, and the fiction now
+answers it. The systemic version still holds underneath and is still worth having;
+it is no longer the *reason*.
+
+> This leaves a question §11 has to settle: whether the Attunement trait's magic and
+> the miracle that raised the player are the same substance. See §19.
 
 ### Endings
 
@@ -759,7 +954,6 @@ a sheet like everybody else. Do not let one acquire dialogue by degrees.
 | ★ **Corvin Ash** | Banker. Holds the crown's debts | That the industrial project is leveraged, and to whom |
 | **Archivist Peyre** | The crown's record keeper | Second source for the debts *and* the land grants |
 | ★ **Hesper** | Court steward. Controls who gets papers into Blackcairn | The key to Route B. **Deliberately the only source** — see below |
-| ★★ **Mother Sabine Crowe** | Leader of the church. **The creditor the king fears** | The debt that could break him — and the church's own complicity in financing the works |
 | **Brother Anselm** | Her secretary | The way in to her, and a second source on the church's ledgers |
 
 **Blackcairn — the castle**
@@ -775,9 +969,16 @@ Every other ★ has a second source. Hesper does not, and that is a decision rat
 than an oversight.
 
 Invariant 7 says **at least one** route survives any set of deaths — not every
-route. Kill Hesper and Access closes, exactly as killing Mother Crowe closes
-Exposure. Force always remains, because fighting through a door needs nobody's
-permission. That is the rule working, not failing.
+route. Kill Hesper and Access closes. Force always remains, because fighting through
+a door needs nobody's permission, and so does Exposure, because reading a document
+out loud needs nobody's permission either. That is the rule working, not failing.
+
+> **Updated 2026-09-12.** This used to read *"exactly as killing Mother Crowe closes
+> Exposure"*, and that is no longer true in either direction: Crowe is cut, and Route
+> C as built has no performer to kill. Hesper is now the **only** route a death can
+> close, which makes her single point of failure more deliberate rather than less —
+> it is the one door in the game that can be shut for good, and the player shuts it
+> themselves.
 
 It also earns its keep dramatically: the player who murders their way toward the
 castle finds the polite door has quietly shut behind them, and nobody announces
@@ -788,23 +989,40 @@ matters.
 > with her, only her willingness to act on it. What dies with Hesper is a
 > *performer*, not a piece of knowledge.
 
-### Mother Crowe and the shape of Route C 🟡
+### The shape of Route C (rewritten 2026-09-12)
 
-The church financed the furnaces. Mother Crowe is simultaneously the only audience
-the crown cannot buy, and an accomplice. The player cannot simply hand her the
-evidence — she is in it.
+**It has no performer, and that is the finding rather than the design.** Route C is
+`DEED_MAKE_PUBLIC` — reading a document aloud where people can hear it — and the
+built version has no gate, no convener and nobody to persuade. It needs two things
+the world already provides: **evidence**, which lies in places and cannot be taken
+from you (§7), and **an audience**, which is anywhere there are people.
 
-Two ways through, and they should feel different:
+So Route C cannot be closed by killing anyone. That is worth stating plainly because
+it changes invariant 7's shape: **Exposure and Force both survive any set of deaths,
+and Access is the only route a death can shut.**
 
-- **Absolution** — give her a way to repent publicly, and she convenes the reckoning
-  herself. She keeps her authority; the player gives up the satisfaction of naming
-  her.
-- **Coercion** — take the church's own ledgers (via Anselm) and hold them over her.
-  She convenes it under duress, and the player has made an enemy of the one
-  institution that outlives kings.
+**The church is the best room, not a door.** Largest audience, and the one the crown
+cannot buy. Nothing gates it — the player walks in and reads. What the church buys
+is **cost rather than permission**: it is against magic (Q47), the player was raised
+by it (§5), and they are using a pulpit that would condemn them if it knew. The
+fairies' bet works only because nobody in that room can see what is standing in it.
 
-> Route C's venue, previously open: **the church, before a congregation Mother Crowe
-> convenes.** Not a court — the king owns the courts.
+**Corvin Ash holds the break, not the venue.** The debt is his, in `bank:debts` and in
+Peyre's dialogue: the king mortgaged the kingdom to one creditor to build the thing
+he says lifted it out of poverty. That is §5's fifth break, and it is the strongest
+thing to read aloud.
+
+**A story spreads about as far as the next town** (§7), so Route C is a *tour* rather
+than a scene, and travellers on the King's Road are what carries it. Reading the
+ledger in Harrowgate reaches Harrowgate.
+
+> **What was lost, recorded honestly.** The cut version had Mother Crowe as an
+> accomplice who had to be either absolved or coerced into convening the reckoning —
+> a real choice about *how you get the room*, with a different enemy at the end of
+> each. Route C is dramatically poorer without it. It went because the performer it
+> needed was never built and the deed that replaced it needs nobody, and inventing a
+> convener now would be adding a gate to a route whose whole strength is that it has
+> none. It returns if the church ever gets a leader. See §21.
 
 ### How the player recovers their own past
 
@@ -870,15 +1088,17 @@ anything.
 
 **Redundancy rule (hard).** Redundancy applies to **facts** and to
 **route-critical performers** — the people who perform an act a route needs, such
-as Hesper granting papers or Mother Crowe convening a congregation. It applies
+as Hesper granting papers. **She is now the only one** (2026-09-12): Route C's
+convener was cut with Mother Crowe, and reading a document aloud needs nobody's
+permission. It applies
 **only to the degree that one route survives**, not to the degree that every route
 does. A fact or a performer with a single source is acceptable when the route it
 serves is not the last one standing.
 
 **Reachability test (hard).** After any set of deaths, **at least one ending
 remains reachable**. Losing a way in to a death is intended and is the design
-working: kill Mother Crowe and the discrediting route gets much harder, and the
-player can still empty his treasury. What must never happen is every ending closing.
+working: kill Hesper and the polite door shuts for good, and the player can still
+empty his treasury or read his own ledgers out in the street. What must never happen is every ending closing.
 
 > **Restated 2026-09-11.** This used to ask whether each of three authored routes
 > was still open, which only made sense while the routes were machinery. Now the
@@ -1708,6 +1928,48 @@ not, and all of it lives in the opener. But the opener is one sentence chosen fr
 small set of stances, and something small enough for a 4B model to get backwards is
 small enough to write by hand. Generation stays built, tested and switched off.
 
+### Reactions: what replaced the model (built 2026-09-12)
+
+Every answer in this game is fixed. Ask Halgrave how many men the works has killed
+and the sentence is identical whether he trusts you, has never met you, or watched
+you take something off a stall. That is the 50%-against-74% divergence measured
+during the generation experiment, and **all of it lives in the first sentence.**
+
+So the first sentence is written by hand. A `reactions` block in the cast sheets,
+beside the `dispositions` block — which is the *narrated* version of the same idea
+and belongs to the greeting, where this one is **spoken** and belongs to the answer.
+
+| Standing | Halgrave, asked what the works makes |
+|---|---|
+| unknown | *Du fer et de l'acier. Des rails, des plaques…* |
+| unwelcome | **Je ne cache rien, même à vous.** *Du fer et de l'acier…* |
+| welcome | **Alors je vous donne tout le détail.** *Du fer et de l'acier…* |
+
+**Four rules, three of them learned rather than chosen.**
+
+1. **It says what they will or will not give you. Never what they think of you.**
+   Settled by ear: *"À vous, je peux le dire"* was chosen and *"Vous, vous regardez
+   les fours au lieu de regarder ailleurs"* rejected, by the same reader in one
+   sitting. One is a change in what is on offer; the other is a remark.
+2. **Once per conversation, on the first answer.** A man who says *"vous payez
+   d'avance"* to all three questions is a machine with a stuck key. Leaving and
+   coming back acknowledges it again, because the thread is the conversation and the
+   standing is the relationship.
+3. **One line per person per band, not per question** — so it has to work in front of
+   *every* answer that person has. Halgrave's first draft was *"Vous aurez le chiffre
+   quand même"*, which fits *how many men has it killed* and not *what do you make
+   here*. Caught by reading all three side by side, and not checkable by machine:
+   the note lives in the cast files where the next line will be written.
+4. **A neutral standing gets nothing**, so every line the game already shipped is
+   untouched and nothing regresses. `hated` gets nothing either — at that standing
+   there is no conversation at all.
+
+**Size: 3 shared bands and 9 people with their own, 21 lines a language.** Held by
+`test/test_reactions.gd`, including the one real risk in joining two written things —
+that French runs long and the pair overflows the box — checked against every
+combination that can actually occur rather than against a worst case that pairs a
+long reply with an opener that person never says.
+
 ### Determinism rules
 
 - The model never decides a mechanical outcome. The rules layer issues the verdict;
@@ -1775,8 +2037,10 @@ progresses at a comparable rate.
 Equipment carries at least as much of the player's power as levels do.
 > TBD: the actual curve. Target endgame player HP, and damage scaling.
 
-**Magic** is available to players who took Attunement (§11), and is rare precisely
-because most builds won't.
+**Magic** — **there is none for the player** (2026-09-12). The raising is the one
+miracle in the game, it lives in the forest, and it happened *to* the player before
+the first frame rather than being something they perform. Attunement buys the ability
+to notice magic, never to cast it. Nothing the player does in a fight is magical.
 
 **Death of the player:** TBD
 
@@ -1802,7 +2066,7 @@ ever wasted:
 | **Temper** | Accusation, threat, fury; the emotional register, not an ability | Higher damage, less control — a real trade-off |
 | **Hands** | Craft knowledge — how the works, the farms and the ledgers actually function | Speed, blocking, precision |
 | **Body** | Physical presence in a room | Health, stamina, carrying |
-| **Attunement** | The rare register; some NPCs only speak to those who have it | Magic |
+| **Attunement** | The forest's register: you can read what is dying and who is doing it, and some people only speak to somebody who can | The wild does not treat you as prey — fights you never have, rather than damage you deal |
 
 **Point-buy:** each trait starts at 1, with a pool to distribute; maximum 5 at
 creation.
@@ -1810,8 +2074,25 @@ creation.
 
 **Why this list.** *Temper* is a disposition rather than an ability, which is what
 makes it interesting: it opens doors that *Presence* closes, and vice versa.
-*Attunement* is how magic stays rare without a fiat rule — it competes with five
-traits people want more. *Hands* exists so a player can be technically literate
+*Attunement* was described here as how magic stays rare without a fiat rule, and
+that was a systemic dodge for a question the fiction now answers: magic is rare
+because the king has been killing it (§5). **Rewritten 2026-09-12.** It is not a
+spell list and never was one — there is no player magic, because the raising is the
+one miracle and it happened to the player rather than being performed by them.
+Attunement is the ability to *notice* it: what the clearing is doing, what is in the
+wood, and what the people pushed into it will say to somebody who can tell.
+
+Its combat half is the same sensitivity pointed the other way: **the wild stops
+treating you as prey.** That is fights you never have, not damage you deal — the
+precedent is *Presence*, whose combat use is ending fights without violence. And it
+makes the two social traits the map's two sides: **Presence is the road build** (the
+Access route, papers, being seen and being let in) and **Attunement is the forest
+build** (unwatched, unprovoked, and able to hear the half of the region the king is
+clearing). §4's thesis, bought at character creation.
+
+> **Still open, and downstream of Q42/Q43**: *who* only speaks to somebody attuned.
+> The forest has no people in it yet, so the dialogue half of this trait currently
+> has nobody to talk to. That is the deferred map question, not a hole in the trait. *Hands* exists so a player can be technically literate
 about the king's industry, which Route C needs.
 
 **What levelling raises:** health and attributes. XP from kills (tier-scaled),
@@ -2296,9 +2577,9 @@ Commissioned art replacing the approved pack, audio, and the accessibility pass
 
 | # | Question | Raised | Blocking? |
 |---|---|---|---|
-| 1 | ~~The king's name~~ — **Arthur** (2026-09-12). **The region's name is still open**, and it is the one that shows up on a title screen | 2026-09-10 | Half closed |
+| 1 | ~~The king's name, and the region's~~ — **Arthur**, and the region is **Erileo** (2026-09-12). Closed | 2026-09-10 | Closed |
 | 2 | Why attempt #1 fails — the exact first-attempt experience | 2026-09-10 | It's the tutorial |
-| 3 | ~~Route C's venue~~ — answered: the church, before Mother Crowe's congregation | 2026-09-10 | Closed |
+| 3 | ~~Route C's venue~~ — answered: **the church**, the largest room the crown cannot buy. Not a court, because the king owns the courts. Originally *"before Mother Crowe's congregation"*; she is cut and the church is a room rather than a door (2026-09-12) | 2026-09-10 | Closed |
 | 4 | The levelling curve: target endgame HP and damage scaling | 2026-09-10 | Yes — combat |
 | 5 | ~~What happens when the player dies?~~ — answered 2026-09-12: **you wake where you last slept, as you were when you slept.** Saving happens at beds and camps, not anywhere; the save is the event log, with a snapshot written alongside it so loading need not replay the whole run | 2026-09-10 | Closed |
 | 6 | Trait point pool size (12?) | 2026-09-10 | |
@@ -2363,6 +2644,15 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q38 | ~~**Nothing earns a town's good opinion.**~~ — answered 2026-09-11: the act that raises a town is **giving away what you know**. Warn a town of what is coming (the pay fraud, told to Harrowgate instead of the Muster) and, smaller, give back what you stole. Both witnessed, both available because you are standing there. The fact becomes a resource with an opportunity cost: told once, to one audience. See §8 | §8, §15 | Closed |
 | Q39 | **Nothing warns the player that a telling is one-shot before they spend it.** Deliberately not fixed: they learn it the first time it costs them, and the camp and the journal now make that legible after the fact. Considered and rejected for v1 — having Ossa explain the rule when she gives the fact would teach a mechanic by exposition and pre-empt the discovery. Revisit **after** Q5 (death and save policy), because "permanent" means something different with and without a reload | §8, §15 | Whether a one-shot resource is fair unannounced |
 | Q40 | ~~**Greyhold is a power base with no location.**~~ — answered 2026-09-12: **Lord Aurel Greyhold moves to Cairnwell for v1.** The tiered-law record is already there, the capital is where the law is written, and a ninth zone is a great deal of map for one man. Greyhold as a place is not cut — it is deferred, and if it is ever built the lord and the record go back to it | §3, §4 | Closed |
+| Q41 | ~~**Is the player's magic the fairies' magic?**~~ — answered 2026-09-12: **Attunement is attunement to the forest.** Not a spell list: a register. One substance, one source, and a player without it is deaf to the thing that raised them. §11's combat column for Attunement is now wrong and needs rewriting, and that is the real cost of the answer | §5, §11 | Closed; §11 owes a rewrite |
+| Q42 | **Deferred to Phase 7's map work** (Yannick, 2026-09-12: *"not sure, and we are going to change the map a bit and improve it"*). The forest's scope is a map question before it is a content question, so it waits for the map. **What the opening already settles**: the player learns they were raised, by whom and why, in the first minute, so the premise reaches them whatever happens to the forest. What stays open is whether the king's motive becomes *actionable* — see the three sizes below. ~~Magic is central to the king's motive and absent from the built world.~~ Twenty-four NPCs, thirty-two facts, eight zones, ten deeds: none of them mention magic, the forest's people or the fairies. A motive with no presence is a motive the player cannot act on, and none of §3's five endings currently moves when the fairy-killing is exposed | §3, §5, §6 | Whether the new lore reaches play at all |
+| Q43 | **Deferred with Q42, same reason.** Recorded so the map work has it in hand: the thesis needs the Thornwood off §4's cut-first list, and Q27 (Kell lives there) is a second reason. ~~The forest cannot answer back.~~ The map's thesis is an argument between two sides and the forest holds two zones, one of them optional and cut-first (§4). Q27 already flagged Kell living there; this promotes that from a content worry to a structural one | §4, §17, §21 | The thesis, and Phase 7's scope |
+| Q44 | ~~**If memory was the price, can it be bought back?**~~ — answered 2026-09-12: **yes, and how much depends on the ending.** The fairies raised the player to stop the clearing, so the memory comes back to the degree the bet paid off. Removing the man is not the same as stopping the thing: killing Arthur leaves the forest still being cleared by whoever follows, and gives back least; breaking or deposing him changes the policy, and gives back most. The mapping from the five predicates to how much returns is Phase 7's, not written here | §5, §7 | Closed in principle |
+| Q45 | ~~**Legally dead: a hole to walk through, or to fall into?**~~ — answered 2026-09-12: **both, and which one depends on where you are standing.** In Harrowgate the law is a local fee and a man with no row cannot be assessed, so it is a hole to walk through. In Cairnwell the law is *written*, and a man with no row has no standing to be wronged — so it is a hole to fall into. The same fact, read by two institutions, which is the tiered law's own argument turned on the player | §5, §6 | Closed |
+| Q46 | **Every death is a resurrection.** Yannick, 2026-09-12: *"not sure — when the player is dead we come back to the last saving point."* So the mechanic stands and the fiction is undecided. **Recommendation, cheapest and it protects the one miracle: the fiction never narrates the player's death at all.** Waking at the last camp is a *save being loaded*, not an event in the world — the save is the event log (Q5), and the log does not contain a second death. Nothing to acknowledge, nothing cheapened, no rule needed. Left open because it is a choice about whether death means anything, and that is worth making deliberately | §5, §10 | Whether the one miracle stays one |
+| Q47 | ~~**Which side is the church on?**~~ — answered 2026-09-12: **the church is against magic.** It is not the king's ally; it is a third power that agrees with him about exactly one thing. See §5 for what that buys | §5, §6 | Closed |
+| Q48 | ~~**Mother Crowe does not exist, and somebody else has her job.**~~ — answered 2026-09-12: **Route C rebuilds around Corvin Ash.** He is built, he is good, and the debt is already his in dialogue and in `bank:debts`. The church keeps the *venue* — it is a better church for being against magic (Q47) than it ever was for being a creditor. Crowe is cut, and §6's ★★ row and §7's redundancy prose both name her and must be rewritten before invariant 7's walk can run | §6, §7 | Closed 2026-09-12 |
+| Q49 | **Does the raising survive being said out loud?** The church is against magic, the player was raised by it, and Route C's climax happens in that church before its congregation. Whether the congregation can learn what the player is — and what happens if they do — is the most interesting consequence of Q47 and is unwritten | §5, §6 | Route C's cost |
 | Q34 | **Bookkeeping.** The header's populated-sections list is stale; §17 marks rows "Settled" that live in 🟡 unapproved sections; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared `core/ view/ tools/ test/` | header, §17, §20, repo | Nothing — but it misleads readers |
 
 ---
@@ -2388,7 +2678,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-10 | Static typing enforced by the compiler: `untyped_declaration=2` | Leaving it at warning level and relying on review | Invariant 11 is a hard rule and a warning does not stop anything. Errors do |
 | 2026-09-10 | Precedence: SPECS wins on what the game is, CLAUDE.md on how we work and which phase we are in | Single source of truth for everything | The two documents answer different questions; the audit found an agent hitting a cross-document conflict had no rule and was told not to pick |
 | 2026-09-10 | The king's six power bases are named, never numbered — the Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank | Keeping "Pillar N" for both series; renaming the design pillars instead | Two numbered series called "Pillar" collided in one document — both containing a 3 and a 5 — and the words become identifiers |
-| 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force |
+| 2026-09-10 | Reachability means *at least one* route survives, not all three; redundancy covers facts and route-critical performers, to that same depth; the check is a living-performer-chain walk per route | Every route stays open (invariant 7 as originally written); a 2²⁵ kill-set enumeration | Killing Mother Crowe *should* close Exposure — that is permissiveness working. The old wording forbade it, and the exhaustive sweep both missed the budget and measured the wrong thing, since killing grants XP and so opens Force. **The example is superseded (2026-09-12): Crowe is cut and Exposure has no performer to kill. The decision stands; only the illustration was wrong** |
 | 2026-09-10 | 1 tick = 1 in-game minute; 4 ticks per real second in the overworld; 1 in-game day = 6 real minutes; the world clock stops during a fight and combat runs beside the sim | Ticks as frames; a coarse day-tick; combat inside the world clock | Nothing in the doc gave the tick a duration, which left all twelve drift rates unwritable and `--ticks 5000` meaningless. §2's "watch the region react over the following in-game days" inside a one-hour session already constrained the ratio |
 | 2026-09-11 | Feedback is specified in three registers — immediate, ambient, narrated — and all three are required | Treating the simulation as sufficient; a notification when the world changes | A change the player cannot perceive is identical to no change. Most systemic games do the first two and skip narration, which is why their players never feel their choices mattered. And the attribution is *pulled* through the journal, never pushed: Maddox not knowing it was you is the entire pleasure of consequence 2 |
 | 2026-09-11 | Ambient drift stays slow and small; player-caused change is large, fast and local | Giving all twelve quantities lively drift rates | If everything drifts, nothing reads as caused and the player cannot tell their handprint from the weather. A still number is the background that makes a moved one legible — which is also why ten of the twelve still have no drift rule |
@@ -2402,7 +2692,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-11 | The witnessed crime that proves consequence 1 is **theft**, not murder | Killing, as first written; a minimal strike built in Phase 3 and deleted in Phase 4 | Theft is a permanent verb the game needs, exercises the identical witness-rumour-reputation chain, and does not drag combat forward a phase. Killing arrives in Phase 4 through the same pipes |
 | 2026-09-11 | The guard at the bridge is a generic enemy type with a small shared line set, not a 26th named NPC | Adding a named character to §6's roster | §6 already rules that generic guards are enemy types budgeted separately. Giving the type a few shared lines is what stops "he needs something to say" turning it into a named character by the back door |
 | 2026-09-11 | The Muster teaches how the king fights: Ryse primary, Odile second | Kell as the source | Route A's only knowledge requirement had no holder anywhere. Kell was rejected deliberately: one killable man already carries the player's past, and making him Force's sole requirement too puts more weight on a single death than §7 should allow |
-| 2026-09-11 | Hesper is ★ and deliberately has no second source | Giving her a second source like every other ★ | Invariant 7 is "at least one route survives", not "every route". Killing her closes Access exactly as killing Crowe closes Exposure, and Force always remains. A world where every route has a spare is one where nothing you do to it matters |
+| 2026-09-11 | Hesper is ★ and deliberately has no second source | Giving her a second source like every other ★ | Invariant 7 is "at least one route survives", not "every route". Killing her closes Access exactly as killing Crowe closes Exposure, and Force always remains. A world where every route has a spare is one where nothing you do to it matters. **Superseded in its example (2026-09-12): Crowe is cut, so Hesper is now the only route a death can close — which makes this decision stronger, not weaker** |
 | 2026-09-11 | Grain price and town sentiment become per-town; army strength stays global; desertion is an explicit input to grain demand | Keeping all twelve global; making army strength per-region too | Consequences 1, 2 and 4 all fail against global scalars, and §8's own opening already said reputation is per town. There is only one army, so army strength has nothing to be indexed by. The desertion-to-grain link is consequence 2's entire mechanism and cannot stay implicit |
 | 2026-09-11 | Events are external or derived: `submit()` from outside the sim is replayed, `derive()` from a system is logged but recomputed | Systems never raising events, as before; replaying everything; not logging derived events at all | Systems reacting to systems is §8's second consequence and cannot be built without it. Logging derived events too is what lets the journal answer "why did this happen"; recomputing rather than replaying them is what stops each one happening twice |
 | 2026-09-11 | Health mends on its own — six calm seconds, then a point per 20 s outside and per 6 s in a town — as a Phase 3 stopgap | Potions and an inventory economy; no healing at all | Without healing the wild's cost ratchets and dying is the only reset; with an item economy it becomes a Phase 4 design problem dragged forward. This is the cheapest thing that makes the wild survivable and a town worth returning to |
@@ -2544,6 +2834,25 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | Showing hand-written lines as examples is **not** used | Three examples as prior turns, the standard fix | It cost the better model 19 points. A finished line in the target register appears to pull the model toward the example's *contents* rather than its shape, which is the same failure as a finished French sentence in the background beating an English instruction in the task |
 | 2026-09-12 | Qwen's thinking mode is turned off with `--reasoning off --reasoning-budget 0` on llama.cpp b10930 | Accepting the empty output; a larger token budget; abandoning Qwen | The first run scored Qwen 0%, with every line empty and 3.5 s spent: the whole budget went on reasoning tokens and `content` came back blank. The research cited an open issue saying the flag was ignored. On this build it works. **Third time in one session that a model looked broken and the harness was at fault** |
 | 2026-09-12 | Generation stays **off** for v1; the reactive openers are hand-written instead | Whole-line generation; opener-only generation; a second model to check meaning | Opener-only removed the unfixable part by construction and still got the sign backwards 5 times out of 6, at 94% through the door. A metric reading *ready* over inverted output is worse than one reading *broken*. The thing small enough for a model to invert is small enough to write: 4 standing bands, shared per band like `dispositions` already are |
+| 2026-09-12 | Reactive **openers are hand-written**: 3 shared bands plus 9 characters with their own, 21 lines a language | Generated openers; no reaction at all; a reaction per question | The measured value of generation was entirely in this sentence, and 21 lines is smaller than the verification problem generating them creates. Every one can be read before it ships, which is the argument — not that models are bad, but that this is small |
+| 2026-09-12 | A reaction is said **once per conversation**, on the first answer | On every answer; on the greeting | Four identical openers in one exchange is a stuck key. The greeting already has a narrated disposition line, and this one is spoken |
+| 2026-09-12 | **The fairies of the Thornwood raised the player**, because the king is clearing the forest and killing them with it | Leaving the survival unexplained; a human rescuer; the player never died | The premise had the village burned and the player walking out of it with no account of how. A motive that is self-interested rather than kind keeps the player **owed** rather than **chosen**, which is the only version Pillar 1 survives: the fairies made a bet and nothing in the game makes it pay off |
+| 2026-09-12 | **The memory loss is the price of the raising**, not separate misfortune | Leaving it as trauma or as unexplained amnesia | Turns the oldest design note — recovering memory and acquiring world knowledge are one system — from a convenience into the story. What you are trying to get back is what you paid, and you buy it from the records of the people who erased you |
+| 2026-09-12 | **The player is legally dead**: no papers, no record, no name on any roll | "Nobody" as social standing only | Makes Hesper's refusal existential rather than bureaucratic — there is nothing for her to write on a pass — and gives the tiered law a person it cannot classify. The same erasure twice: the grants removed the village, the rolls removed the man |
+| 2026-09-12 | **Magic is rare because the king has been killing it**, not because most builds skip Attunement | The systemic reason alone | The systemic version was a dodge for a question the fiction should answer. It still holds underneath and is no longer the reason |
+| 2026-09-12 | **The map's thesis: the road is the king's world, the forest is what he is destroying** | Leaving road-against-wild as a pure systems trade-off | It was already true mechanically from Phase 2 — and that order is what makes it good. The theme is something the player *does* on every crossing rather than something the game tells them. Recorded with its cost: nine zones are his and two are the forest's, one of those optional |
+| 2026-09-12 | The king is **clearing ground, not hunting magic** | Making the fairy-killing deliberate and personal | §5's protected note is that Route C only works if his argument is real, and a king who hunts fairies is a pantomime villain. Clearing land that something lives on is precisely what he did to Brindle — which is why the player, who *is* Brindle, is the one person who can see the two are the same act |
+| 2026-09-12 | **The ending gives the memory back, in proportion to whether the clearing stopped** | All or nothing; never; the same for every ending | The fairies raised the player to stop the clearing, not to punish a man. Killing Arthur leaves the forest being cleared by his successor and gives back least; breaking or deposing him changes the policy and gives back most. It makes the five endings mean different things without adding a sixth, and the player learns which one they chose by what comes back |
+| 2026-09-12 | **The church is against magic** | Neutral; secretly sympathetic; aligned with the king | It is a third power agreeing with the king about one thing only. It gives Route C a cost it lacked — the player reads the king's records from a pulpit that would condemn what they are — and makes the church's financing of the furnaces worse in the right way: it paid for the clearing that kills the thing it preaches against. And it leaves the fairies with no allies, so the player is an overlap between two things that would each disown them |
+| 2026-09-12 | The region is **Erileo**; the king is **Arthur** | — | Closes the last naming question. Erileo is the one that shows up on a title screen |
+| 2026-09-12 | **One fairy, in the opening, once**, telling the player four things and forbidden the rest | No fairy at all; a fairy who explains the situation; a fairy companion | The player has to be able to learn why they are alive, and nobody else in the world can tell them — everyone who knew them is dead. But a fairy who explains the *king* is exposition, and §4 has said since the first draft that none is needed. His argument must be discovered and believed before it can be broken, or Route C exposes a pantomime villain. **Being owed is not the same as being briefed** |
+| 2026-09-12 | The opening is a **conversation, not a cutscene** | A scripted intro sequence | Invariant 9 already has the player choosing among options, and the four things he says are facts in the fact base like any other — the player's opening hand. A cutscene is new machinery, unreplayable, and outside the event log |
+| 2026-09-12 | **Attunement is attunement to the forest**, a register rather than a spell list | A separate combat magic; dropping the trait | One substance, one source. A player without it is deaf to the thing that raised them, which is a far better trait than a damage type. §11's combat column for Attunement is now wrong and owes a rewrite |
+| 2026-09-12 | **Legally dead is a hole to walk through in Harrowgate and a hole to fall into in Cairnwell** | Pick one reading | Harrowgate's law is a local fee and cannot assess a man with no row; Cairnwell's law is written, and a man with no row has no standing to be wronged. The same fact read by two institutions — the tiered law's own argument, turned on the player |
+| 2026-09-12 | **Route C rebuilds around Corvin Ash; Mother Crowe is cut** | Building Crowe; leaving the spec stale | The spec made her the creditor the king fears and the built game gave that to Ash, in dialogue and in `bank:debts`. The church keeps the venue and is better for it: against magic (Q47) is a stronger reason to be the room than being the lender ever was |
+| 2026-09-12 | **The forest's scope is deferred to Phase 7's map work** | Deciding it now | Yannick: the map is being changed and improved in Phase 7, and how much forest there is is a map question before it is a content question. The opening already guarantees the premise reaches the player regardless |
+| 2026-09-12 | **Route C has no performer**, and the spec is corrected to match the code rather than the code to match the spec | Building a convener; inventing a replacement for Crowe | `DEED_MAKE_PUBLIC` is reading a document aloud where people can hear, and it gates on nothing. Route C therefore cannot be closed by any death, which makes **Hesper the only route a death can shut** — deliberate, and stronger for being the only one. The cost is the cut Absolution/Coercion choice, recorded in §21 rather than quietly dropped |
+| 2026-09-12 | **Attunement is a register, not a spell list**, and its combat half is that the wild stops treating you as prey | Keeping combat magic; dropping the trait; giving it a damage type | There is no player magic — the one miracle happened *to* the player. Fights you never have is real double duty and has a precedent in Presence. It also makes the two social traits the map's two sides: Presence is the road build, Attunement the forest build, §4's thesis bought at character creation |
 
 ---
 
@@ -2556,6 +2865,8 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Epilogue content after the king | The world changes state; it does not gain new zones or quest lines | The ending proves to be the hook |
 | Vector RAG for NPC context | Non-deterministic, and unnecessary at this cast size | Cast > ~150, or a searchable document corpus |
 | Child characters | Out of scope permanently, by decision | Never |
+| Mother Sabine Crowe | Cut 2026-09-12. The spec made her the creditor the king fears; the built game gave that to Corvin Ash at the bank, and Ash is good. The church keeps Route C's venue | The church ever gets a leader |
+| **Absolution or Coercion** — Route C's choice of *how you get the room* | Went with Crowe. She was an accomplice who had to be either absolved into convening the reckoning or coerced into it, with a different enemy left standing at the end of each. A real choice, and Route C is dramatically poorer without it | A convener exists again. Not before: the deed that replaced her needs nobody's permission, and adding a gate to the one route no death can close would be spending its best property for drama |
 
 ---
 

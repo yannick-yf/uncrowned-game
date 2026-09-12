@@ -28,6 +28,14 @@ var dispositions: Dictionary = {}
 ## up one, and a name that appears only inside a sentence looks exactly like a
 ## hallucination.
 var names: PackedStringArray = PackedStringArray()
+## Band -> the line anybody **says** in front of an answer at that standing.
+##
+## The spoken half of `dispositions`, which are narrated and belong to the greeting.
+## Every answer in this game is fixed, so asking Halgrave how many men the works has
+## killed produces the same sentence whether he trusts you or watched you steal. The
+## facts should not move — they are the same facts. What moves is whether he is glad
+## to tell you, and that is one sentence in front.
+var reactions: Dictionary = {}
 
 static var _shared: Cast = null
 
@@ -54,6 +62,10 @@ static func load_from(path: String) -> Cast:
 		cast.dispositions[StringName(band)] = String(
 			(root["dispositions"] as Dictionary)[band])
 
+	for band: String in (root.get("reactions", {}) as Dictionary).keys():
+		cast.reactions[StringName(band)] = String(
+			(root["reactions"] as Dictionary)[band])
+
 	for name: Variant in (root.get("names", []) as Array):
 		cast.names.append(String(name))
 
@@ -71,6 +83,9 @@ static func load_from(path: String) -> Cast:
 		npc.tile = Vector2i(int(at[0]), int(at[1]))
 		npc.sprite = String(row.get("sprite", ""))
 		npc.greeting = String(row.get("greeting", ""))
+		for band: String in (row.get("reactions", {}) as Dictionary).keys():
+			npc.reactions[StringName(band)] = String(
+				(row["reactions"] as Dictionary)[band])
 		for entry: Variant in (row.get("alt_greetings", []) as Array):
 			var alt: Dictionary = entry as Dictionary
 			npc.alt_greetings.append({
@@ -160,6 +175,19 @@ func named() -> Array[Npc]:
 
 
 ## How somebody at this standing opens, or "" if that band has no shared line.
+## What this person says in front of an answer, given how they regard the player.
+##
+## **The rule, settled by ear on 2026-09-12**: it says what they will or will not
+## give you, and never what they think of you. *"À vous, je peux le dire"* was chosen
+## and *"Vous, vous regardez les fours au lieu de regarder ailleurs"* was rejected, by
+## the same reader in the same sitting. One is a change in what is on offer. The
+## other is a man noticing you, which is not a reaction, it is a remark.
+func reaction_for(npc: Npc, band: StringName) -> String:
+	if npc != null and npc.reactions.has(band):
+		return String(npc.reactions[band])
+	return String(reactions.get(band, ""))
+
+
 func disposition_line(band: StringName, speaker: String) -> String:
 	var pattern: String = String(dispositions.get(band, ""))
 	return pattern % speaker if pattern != "" else ""

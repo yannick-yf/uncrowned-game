@@ -43,6 +43,10 @@
       ],
       "sprite": "OldMan",
       "greeting": "Vous êtes venu à pied. Personne ne vient à pied ici.",
+      "reactions": {
+        "unwelcome": "Un renseignement, et vous partez.",
+        "welcome": "Pour vous, je dis tout ce que je sais."
+      },
       "options": [
         {
           "intent": "ask_town",
@@ -170,6 +174,10 @@
       ],
       "sprite": "OldWoman",
       "greeting": "Asseyez-vous si vous saignez. Allez ailleurs si vous ne saignez pas.",
+      "reactions": {
+        "unwelcome": "Je réponds à tout le monde, vous aussi.",
+        "welcome": "Demandez, je ne compte pas les questions."
+      },
       "options": [
         {
           "intent": "ask_deserters",
@@ -243,6 +251,10 @@
       ],
       "sprite": "Villager5",
       "greeting": "Attention où vous marchez. La moitié de ce qu'il y a sous la cendre vaut de l'argent. L'autre moitié vous coupera.",
+      "reactions": {
+        "unwelcome": "Vous, vous payez d'avance.",
+        "welcome": "Vous, vous ne payez pas pour ça."
+      },
       "options": [
         {
           "intent": "ask_ruins",
@@ -275,6 +287,10 @@
       ],
       "sprite": "OldMan3",
       "greeting": "Attention, les déchets du four restent brûlants toute la journée. Ce sont les troisièmes forges du royaume.",
+      "reactions": {
+        "unwelcome": "Je ne cache rien, même à vous.",
+        "welcome": "Alors je vous donne tout le détail."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -450,6 +466,10 @@
       ],
       "sprite": "OldMan2",
       "greeting": "Attention au sillon. Ça ressemble à de la terre. C'est surtout de la pierre, et sous la pierre il y a de vieux murs.",
+      "reactions": {
+        "unwelcome": "Je réponds, puis je retourne à mon rang.",
+        "welcome": "Vous, vous écoutez, alors je vous le dis."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -523,6 +543,10 @@
       ],
       "sprite": "Inspector",
       "greeting": "Les demandes de matériel à gauche. Les plaintes où vous voulez, je ne les lis pas.",
+      "reactions": {
+        "unwelcome": "Ça vous coûtera plus cher.",
+        "welcome": "Pour vous, c'est gratuit cette fois."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -560,6 +584,10 @@
       ],
       "sprite": "Villager4",
       "greeting": "Ne refaites pas ça. N'approchez pas un homme ici sans faire de bruit.",
+      "reactions": {
+        "unwelcome": "Restez où vous êtes et parlez.",
+        "welcome": "Approchez, je vous réponds."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -599,6 +627,10 @@
       ],
       "sprite": "ManGreen",
       "greeting": "La marée est partie il y a une heure. Autre chose, dites-le doucement et une seule fois.",
+      "reactions": {
+        "unwelcome": "Pas ici, et baissez la voix.",
+        "welcome": "Je le dis une fois, alors écoutez."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -638,6 +670,10 @@
       ],
       "sprite": "Woman",
       "greeting": "Asseyez-vous ou non. Si vous venez me dire que la loi est la loi, je l'ai déjà entendu.",
+      "reactions": {
+        "unwelcome": "Je réponds, mais je ne vous défendrai pas.",
+        "welcome": "Asseyez-vous, je vous donne tout."
+      },
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
@@ -1102,5 +1138,11 @@
     "unwelcome": "%s ne vous rend pas votre salut.",
     "wary": "%s vous regarde un instant de trop, et attend.",
     "welcome": "%s est content de vous voir, et ne prend pas la peine de le cacher."
+  },
+  "_reactions_note": "One line per person per band, NOT per question, so it has to work in front of every answer that person has. Halgrave first read 'Vous aurez le chiffre quand meme', which fits 'how many men has it killed' and not 'what do you make here'. Check a new one against all of that character's replies before keeping it. What somebody says in front of an answer, given how they regard you. The spoken half of dispositions, which are narrated and belong to the greeting. Shown once per conversation, on the first thing they tell you, because a man who says 'you pay first' four times in one exchange is a machine with a stuck key. The rule: it says what they will or will not GIVE you, never what they think of you. A neutral standing gets nothing and the line is exactly what it has always been, so nothing regresses. 'hated' is absent on purpose: at that standing there is no conversation at all.",
+  "reactions": {
+    "unwelcome": "Je vous réponds, et après vous partez.",
+    "wary": "Une question, pas plus.",
+    "welcome": "À vous, je peux le dire."
   }
 }
