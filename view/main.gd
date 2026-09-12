@@ -626,7 +626,10 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 			return
 
 	# The surface, base or detail, hashed off the position so it never shimmers.
-	var ground: Array = Art.ground_tile(terrain, x, y)
+	# Towns are asked which town they are, so a quay is planks and a capital is paved.
+	var ground: Array = Art.ground_tile(terrain, x, y,
+		region.zone_at(Vector2i(x, y)) if terrain == Region.Terrain.TOWN
+			or terrain == Region.Terrain.CAMP else &"")
 	if not ground.is_empty():
 		var cell: Vector2i = ground[1] as Vector2i
 		draw_texture_rect_region(

@@ -41,8 +41,8 @@ at the picture is the check, and I did not do it.
 | D | **Forest collision and paths** — the Thornwood becomes a wood you find a way through | ✅ done |
 | E | **Campfires placed deliberately** | ✅ done |
 | F | **Which beast lives where, with a reason** | ✅ done |
-| G | **Each settlement its own identity** | |
-| H | **A real town and a real castle** | 🟡 castle done |
+| G | **Each settlement its own identity** | 🟡 ground done, buildings still shared |
+| H | **A real town and a real castle** | 🟡 castle done, Harrowgate still a village |
 | I | **The map screen** | ✅ done |
 
 ---
@@ -119,6 +119,45 @@ is a slideshow rather than a map.
 `RAMPART` had gone into the enum without a colour an hour earlier. A map that shows
 you every terrain at once turns out to be a decent test of whether every terrain can
 be drawn.
+
+---
+
+### Each place gets its own floor
+
+Every town was the same beaten dirt, which is why they all looked like the same town
+with different buildings on it. **A place reads as itself from its floor before it
+reads as itself from anything else.** Saltmarch is planks laid over the marsh —
+a port built on ground that is not ground. Cairnwell is paved and swept, the only
+place in Erileo whose floor says somebody is paying for it. The Cinderworks and the
+Muster are ash and trodden mud.
+
+Saltmarch is the one that changed most: with shorelines around it and planks under
+it, it now reads as a quay rather than as a brown rectangle near some blue.
+
+**Not finished**: the buildings are still shared between towns, and Harrowgate is
+still a village rather than a town with a wall and a gate. That is the next thing.
+
+---
+
+## WHERE IT ENDED — NIGHT TWO
+
+| | |
+|---|---|
+| Full suite | **332 tests, 0 failed** |
+| Fast suite | **4.58 s** |
+| Asset validator | **green** |
+| MAP_SPEC's twelve | **all pass** |
+| Rendered run, 200 frames | **0 script errors** |
+| the King's Road | 342 tiles, 57.2 s, 0 health |
+| the wild | 281 tiles, 46.9 s, 4 health |
+
+**What is done**: the ocean bug, ground texture everywhere, shorelines, the Thornwood
+as a wood you find a way through, fires and beasts with reasons, Blackcairn as a
+castle, each settlement's own floor, and the map on **M**.
+
+**What is not**: Harrowgate is still a village rather than a walled town, buildings
+are still shared between places, and specific characters do not yet look like
+themselves. Those are the next session's.
 
 ---
 

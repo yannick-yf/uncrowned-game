@@ -407,12 +407,48 @@ static func is_water(terrain: int) -> bool:
 		or terrain == Region.Terrain.FORD or terrain == Region.Terrain.MARSH
 
 
+## What each settlement's ground is made of.
+##
+## **Every town was the same beaten dirt**, which is why they all looked like the same
+## town with different buildings on it. A place reads as itself from its floor before
+## it reads as itself from anything else — a quay is planks, a capital is paved, a
+## works is ash and cinder. Falls through to the ordinary town dirt for anywhere not
+## named here.
+const TOWN_GROUND: Dictionary = {
+	# Planks over the marsh. Saltmarch is a port built on ground that is not ground.
+	&"saltmarch": {
+		"sheet": &"floor", "base": Vector2i(16, 18), "chance": 340,
+		"detail": [Vector2i(17, 18), Vector2i(18, 18), Vector2i(19, 18)],
+	},
+	# The capital is paved, and swept. It is the only place in Erileo where the
+	# ground itself says somebody is paying for it.
+	&"cairnwell": {
+		"sheet": &"floor", "base": Vector2i(11, 5), "chance": 120,
+		"detail": [Vector2i(12, 5), Vector2i(13, 5)],
+	},
+	# Ash and cinder, the same ground the wound outside is made of, because the works
+	# does not stop at its own wall.
+	&"cinderworks": {
+		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 380,
+		"detail": [Vector2i(12, 18), Vector2i(14, 18), Vector2i(15, 18)],
+	},
+	# Trodden mud between the tents, which is what a camp turns its ground into.
+	&"muster": {
+		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 300,
+		"detail": [Vector2i(12, 18), Vector2i(13, 19)],
+	},
+}
+
+
 ## Which tile of a terrain's surface this square is, base or detail.
 ##
 ## Hashed off the position, so it is the same every frame and every run — ground that
 ## shimmers as you walk is worse than ground that is flat.
-static func ground_tile(terrain: int, x: int, y: int) -> Array:
+static func ground_tile(terrain: int, x: int, y: int, zone: StringName = &"") -> Array:
 	var entry: Dictionary = GROUND.get(terrain, {}) as Dictionary
+	if zone != &"" and TOWN_GROUND.has(zone) \
+			and (terrain == Region.Terrain.TOWN or terrain == Region.Terrain.CAMP):
+		entry = TOWN_GROUND[zone] as Dictionary
 	if entry.is_empty():
 		return []
 	var detail: Array = entry["detail"] as Array
