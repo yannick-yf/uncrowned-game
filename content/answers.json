@@ -1,0 +1,115 @@
+{
+  "_note": "What an answer has to contain, as facts rather than as a sentence. Instructions for whoever writes the line and never shown to a player, so like voices.json this file is English only and is not translated: a translated copy of a brief is two things to keep in step for no benefit. Keyed npc.intent. An option that is not in here is never generated and its hand-written reply stands, which is what makes turning generation on safe one line at a time.",
+
+  "_why_note": "The packet used to end with MUST SAY followed by the whole finished reply, which is a brief to rephrase rather than a brief to write. Rephrasing is safe and nearly worthless: if the sentence is already written, generating it again buys nothing. Facts are the brief that earns its keep, because 71 fact sets cover the thousands of situations the 71 hand-written replies cannot tell apart.",
+
+  "_context_note": "Every fact carries why, not just what. 'the works has killed 381 men' leaves a player asking 381 of what and why does that matter; 'and Arthur reads the number every spring and orders the works made bigger' is the half that makes the first half mean something. A line can only be self-contained if the brief was.",
+
+  "answers": {
+    "halgrave.ask_works": [
+      "the works makes iron and steel: rails, plates, tools, nails",
+      "before the works, 1 child in 4 born here died every winter; now it is 1 in 40",
+      "he believes the works is why the town is alive at all"
+    ],
+    "halgrave.ask_cost": [
+      "the works has killed 381 men in 11 years",
+      "he writes the number down himself and sends it to King Arthur every spring",
+      "Arthur reads it and orders the works made bigger, every year"
+    ],
+    "halgrave.ask_ledger": [
+      "he keeps a book with every dead man's name and the date he died",
+      "the crown asks him for the book each year, and he would keep it anyway",
+      "his reason: if a thing kills 381 men, somebody should write it down"
+    ],
+
+    "mira.ask_work": [
+      "she defends people in court who cannot pay a lawyer",
+      "the law in this region sets your punishment by how much money you have"
+    ],
+    "mira.ask_cases": [
+      "3 men broke the same wall on the same night, and she had all 3 cases",
+      "the rich one paid 11 shillings and went home",
+      "the tradesman went to prison for 4 months",
+      "the poor one went to prison for 7 years",
+      "same wall, same night, same law"
+    ],
+
+    "maddox.ask_town": [
+      "nobody agrees who owns Harrowgate: the Reeve says the king owns it, the king says the Reeve does",
+      "Tovin is the Reeve and runs the law here",
+      "Maddox thinks the argument is convenient for both of them"
+    ],
+    "maddox.ask_law": [
+      "Tovin is the Reeve and his office is on the square",
+      "Tovin is polite about it and takes your money anyway"
+    ],
+    "maddox.ask_soldiers": [
+      "fewer soldiers come through the inn every month",
+      "they are leaving the army camp north of here, without permission",
+      "Ossa the herbalist treats the ones who run"
+    ],
+    "maddox.ask_bread": [
+      "bread has gone up because soldiers left the army camp",
+      "the army used to feed them; now they buy their own bread in town",
+      "there is no more grain than before, and the same grain now feeds more mouths"
+    ],
+    "maddox.ask_favour": [
+      "a man drinks at the inn who will not give his name",
+      "he will not sit with his back to the door",
+      "Maddox thinks he is a deserter and has not asked"
+    ],
+    "maddox.ask_deserter": [
+      "a deserter named Kell has lived in the Thornwood for two winters",
+      "Ossa walks east with a full bag twice a month and comes back with it empty",
+      "Maddox has worked out where Kell is from the bag and has told nobody"
+    ],
+
+    "pell.ask_soil": [
+      "these fields were the village of Brindle before it was burned to make them",
+      "this field was the top of the village: a green, a well, and a house with a broken gate",
+      "Pell worked this ground before the fire and works it still, for the man who owns it now"
+    ],
+    "pell.ask_family": [
+      "the house with the gate held a family Pell thought well of",
+      "the man lent slowly and gave quickly",
+      "nobody ever told Pell what became of them, and he never asked"
+    ],
+    "pell.ask_withhold": [
+      "the farmers could keep the harvest instead of handing it to the estate",
+      "they have talked about doing it for 6 years and never done it",
+      "what they lack is not courage but a reason they can say out loud",
+      "9 burned villages, written down on paper, is that reason"
+    ],
+
+    "wren.ask_ruins": [
+      "nobody lives in Brindle any more, the village was burned",
+      "Wren works here and does not live here",
+      "she came after the fire to collect what was left"
+    ],
+    "wren.ask_watched": [
+      "knowing where nobody is looking is the only thing Wren sells",
+      "there is a market stall on the north side of Saltmarch that nobody watches",
+      "it has been unwatched week after week, because Saltmarch is off the road"
+    ],
+    "wren.ask_cinderworks": [
+      "she sells scrap metal to the ironworks west of here",
+      "they pay 2 copper coins a sack",
+      "they never ask where the metal came from"
+    ],
+
+    "til.ask_port": [
+      "fewer ships come through than before, but more than the harbour book records",
+      "Saltmarch is off the main road, so nobody comes to check the book"
+    ],
+    "til.ask_manifests": [
+      "steel, grain and money leave Saltmarch every month, west by sea",
+      "the king orders it and nobody signs for it",
+      "Til was told to lose the cargo lists, and kept copies instead"
+    ],
+    "til.ask_convoy": [
+      "a cargo has gone the wrong way twice, and both times it was called bad weather",
+      "Til can arrange bad weather again",
+      "it costs the king a month"
+    ]
+  }
+}

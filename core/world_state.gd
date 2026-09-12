@@ -60,7 +60,19 @@ var reached_blackcairn: bool = false
 var talking_to: StringName = &""
 var speaker_name: String = ""
 var current_line: String = ""
+## The intent whose reply is on screen, or nothing for a greeting. The packet needs
+## it: a brief that says who somebody is and never says what they were asked is
+## most of a brief and none of a question.
+var last_intent: StringName = &""
 var options: Array[DialogueOption] = []
+## What has already been said in **this** conversation, in order.
+##
+## `asked:` facts record which questions have been put to somebody, ever, and that is
+## the right shape for "a person is a finite resource". It is the wrong shape for a
+## conversation: a set has no order and holds no answers, so a packet built from it
+## can say what was asked and never what was said. Cleared when the conversation
+## closes, because the thread is the conversation and not the relationship.
+var said_before: Array[String] = []
 
 ## The Muster. Army strength and the escort live on the WorldTick store now —
 ## they are the world's vital signs, not the player's state, and they keep moving

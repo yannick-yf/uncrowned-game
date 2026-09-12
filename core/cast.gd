@@ -22,6 +22,12 @@ var fact_descriptions: Dictionary = {}
 ## Band -> the narrated line anybody opens with at that standing, when nobody has
 ## written them one of their own.
 var dispositions: Dictionary = {}
+## Proper nouns the world contains that are neither a person nor a place on the map:
+## the burned villages, a river, a family name. Declared rather than inferred, because
+## the door that refuses invented names has to be able to tell a real one from a made
+## up one, and a name that appears only inside a sentence looks exactly like a
+## hallucination.
+var names: PackedStringArray = PackedStringArray()
 
 static var _shared: Cast = null
 
@@ -47,6 +53,9 @@ static func load_from(path: String) -> Cast:
 	for band: String in (root.get("dispositions", {}) as Dictionary).keys():
 		cast.dispositions[StringName(band)] = String(
 			(root["dispositions"] as Dictionary)[band])
+
+	for name: Variant in (root.get("names", []) as Array):
+		cast.names.append(String(name))
 
 	for fact: String in (root.get("facts", {}) as Dictionary).keys():
 		cast.fact_descriptions[StringName(fact)] = String((root["facts"] as Dictionary)[fact])

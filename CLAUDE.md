@@ -141,34 +141,34 @@ what it would cost in time and tokens and ask first.
 
 ## Current phase
 
-**Phase 5 — the world can be moved, and the king can fall out of it.**
-Phases 0–3 are delivered (vertical slice, Harrowgate, the greyboxed world,
-reputation and rumour). Phase 4, combat, is **deferred by decision** — four of the
-five endings need no fighting.
+**Phase 7 — art, audio and polish.** Phases 0, 1, 2, 3, 5 and 6 are delivered.
+Phase 4, combat, is **deferred by decision** — four of the five endings need no
+fighting, and the fifth (killing him) waits for it.
 
-The goal is not to kill the king; it is that he stops being king. **The ending is a
-predicate over the tracked quantities, never a completed route** (SPECS §3). Nothing
-is scripted and nothing has required steps: any combination of acts that reaches one
-of those states finishes the game.
+**There is no LLM in v1, decided 2026-09-12 and tested rather than argued.** Two
+local models, sixteen real packets, four prompt designs, on this machine. The
+finding that settled it: the door can check figures, names, register and formatting,
+and **none of that catches a line that says the opposite of what it was told**.
+Shrinking the model's job to one fact-free sentence removed that failure by
+construction and it still got the sign backwards 5 times in 6 — while the pass rate
+went *up* to 94%. A measurement that reads *ready* over inverted output is worse than
+one that reads *broken*.
 
-Two hard rules govern this phase:
+The machinery stays: `core/context.gd` (the packet), `core/rules/prose_rules.gd`
+(the door), `core/phrasebook.gd`, `PhrasingSystem`, `view/phraser.gd` and
+`tools/phrase.py`. All inert, all tested, all switched off. `Phraser.phrase()`
+returns `""` and nothing asks it anything.
 
-- **The handprint.** Every tracked quantity carries a second figure for how much of
-  where it stands is the player's doing. Deeds write both; drift writes only the
-  number. An ending needs a minimum handprint as well as a threshold, so **drift can
-  never end the game**.
-- **Legibility.** A predicate over ten numbers is invisible, so the journal's second
-  page shows those numbers, where they stand, and which carry the player's
-  handprint. State and attribution — never advice.
+**What replaces it**, and the one piece of dialogue work still owed: the reactive
+**openers**, hand-written. The value was measured — lines diverge 50% between worlds
+where the player has acted and 74% where they have not, and all of that divergence
+is the opening sentence. A `reactions` block beside `dispositions` in the cast
+sheets, joined by `ProseRules.joined()`. Under 30 lines a language.
 
-The work, in order: the handprint and the predicates; the journal page; then giving
-the ten inert quantities inputs, which are **rows in the deed table rather than new
-systems** (SPECS §3 lists them for every power base).
-
-> **Routes are descriptions, not machinery.** Force, Access and Exposure are ways of
-> thinking about the game and names for what tends to work. Nothing in the code asks
-> which one the player is on, and writing them as recipes with required steps was a
-> violation of invariant 5 that lived in the spec.
+> Do not reopen the model question by adding a check, a prompt or a bigger model
+> without new evidence. The three things already tried and recorded in SPECS §9 are
+> whole-line generation, few-shot examples (which made it *worse*), and opener-only
+> generation.
 
 ### Standing exceptions — deliberate, temporary, and only these three
 

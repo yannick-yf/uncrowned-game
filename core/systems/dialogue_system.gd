@@ -45,6 +45,7 @@ func _open(
 		return
 	world.talking_to = npc.id
 	world.speaker_name = npc.display_name
+	world.last_intent = &""
 	world.current_line = _opening(cast, npc, conditions, regard)
 	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
 	world.player_dir = Vector2i.ZERO
@@ -107,14 +108,18 @@ func _choose(
 	if option.causes != &"":
 		Deeds.perform(sim, option.causes, world.region().zone_at(world.player_tile()),
 			world.player_pos)
+	world.said_before.append("%s -> %s" % [option.text, option.reply])
 	world.current_line = option.reply
+	world.last_intent = intent
 	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
 
 
 func _close(world: WorldState) -> void:
 	world.talking_to = &""
+	world.last_intent = &""
 	world.speaker_name = ""
 	world.current_line = ""
+	world.said_before = []
 	world.options = []
 
 

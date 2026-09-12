@@ -1,15 +1,23 @@
 {
   "_note": "Hand-written. No generation, no LLM. Every line here was typed by a person and is shipped as reviewed content (SPECS §9). Trait tags in brackets are display-only until traits exist: the rules layer ignores them. Tiles are overworld coordinates, towns are laid out on the map at their real size rather than entered through a transition. Some lines are gated on a named world condition, the rules layer decides what the name means, so no line reads the world directly.",
+  "_names_note": "Proper nouns the world contains that are neither a person with a sheet nor a place on the map: the burned villages the land grants name, and the river. Declared here because the reject filter on any generated line refuses names that do not exist, and a name that appears only inside a sentence is indistinguishable from an invented one.",
+  "names": [
+    "Ashcote",
+    "Wenn",
+    "Upper Harrow",
+    "Lower Harrow",
+    "Kettle"
+  ],
   "facts": {
     "muster:pay_fraud": "Quartermaster Odile at the Muster signs for soldiers who are dead or never existed, and keeps the difference.",
     "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks.",
     "wide_acres:unwatched_stall": "There is a market stall in Saltmarch that nobody stands near, the marsh town is off the road and keeps no watch worth the name.",
     "acres:land_grants": "The land grants for the Wide Acres, naming each village cleared to make them. One of the names is the one you grew up in.",
-    "cairnwell:tiered_law": "The working record of how the tiered law is administered: three columns, and the third is calculated from the first two.",
+    "cairnwell:tiered_law": "The working record of how the tiered law is administered: 3 columns, and the third is calculated from the first two.",
     "cinderworks:ledger": "The Cinderworks ledger of what the furnaces cost in men, kept in the king's own hand, with the price set against the output.",
     "bank:debts": "The bank's book of what the crown owes and to whom. Nearly all of it is owed to one creditor.",
     "muster:signed_orders": "The orders to clear the villages, signed. The men who carried them out are named underneath.",
-    "cinderworks:death_toll": "The Cinderworks has killed somewhere near four hundred men in eleven years. Arthur was sent the count every year and kept sending for more stone.",
+    "cinderworks:death_toll": "The Cinderworks has killed 381 men in 11 years, by the ledger Halgrave keeps. Arthur was sent the count every year and kept sending for more stone.",
     "acres:razed_villages": "The Wide Acres estates stand on the ground of villages that were cleared to make them. The grants name every one, and Brindle is on the list.",
     "brindle:the_ground": "The farmland north of Brindle is Brindle, the same soil, ploughed over. Old Pell worked it before the burning and works it still.",
     "muster:how_the_king_fights": "Arthur trained with his own guard and has never changed his opening. He leads with the shield and counters left, and his officers have drilled against it for years.",
@@ -34,45 +42,45 @@
         172
       ],
       "sprite": "OldMan",
-      "greeting": "You look like you walked here. Nobody walks here.",
+      "greeting": "You walked here. Nobody walks here.",
       "options": [
         {
           "intent": "ask_town",
           "text": "Who owns this town?",
-          "reply": "Depends on the hour. The Reeve says the crown, the crown says the Reeve. Ask Tovin, he'll apologise about it."
+          "reply": "Depends who you ask. The Reeve says the king owns it. The king says the Reeve does. Go and ask Tovin, he runs the law here."
         },
         {
           "intent": "ask_law",
           "tag": "Wits",
-          "text": "The law here, who does it fall on?",
-          "reply": "Tovin. Office by the square, door's always open, which tells you how much anyone wants to go in.",
+          "text": "Who applies the law here?",
+          "reply": "Tovin the Reeve. His office is on the square. He will be polite about it and he will still take your money.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_soldiers",
           "tag": "Temper",
           "text": "Do soldiers still come through?",
-          "reply": "Fewer than they did. Ask Ossa. She patches the ones who stop going back.",
+          "reply": "Fewer every month. They are leaving the army camp up north. Ask Ossa the herbalist, she treats the ones who run.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_bread",
           "tag": "Wits",
           "text": "Why has bread gone up?",
-          "reply": "Soldiers. They used to be fed, now they're buying, and there's the same grain as there was.",
+          "reply": "Soldiers. The army used to feed them. Now they have left the camp and they buy bread here, and there is no more grain than before.",
           "requires_condition": "grain_is_dear_here"
         },
         {
           "intent": "ask_favour",
           "text": "Anything I should know?",
-          "reply": "There's a man drinks here who won't give a name and won't sit with his back to the door. Deserter, or worse.",
+          "reply": "A man drinks here who will not give his name and will not sit with his back to the door. A deserter, I think.",
           "requires_condition": "they_think_well_of_me",
           "costs": "goodwill"
         },
         {
           "intent": "ask_deserter",
-          "text": "There's a man living in the Thornwood, isn't there?",
-          "reply": "Kell. Two winters out there. Ossa goes east with a full bag twice a month and comes back with an empty one.",
+          "text": "Is there a man living in the woods?",
+          "reply": "Kell. He has been in the Thornwood two winters. Ossa walks east with a full bag twice a month and comes back with an empty one.",
           "teaches": "thornwood:kell",
           "costs": "free"
         }
@@ -93,24 +101,24 @@
         177
       ],
       "sprite": "Inspector",
-      "greeting": "Registrations inside. Complaints inside. The queue is the same queue.",
+      "greeting": "If you want to register, go inside. If you want to complain, go inside. It is the same queue.",
       "options": [
         {
           "intent": "ask_law",
           "text": "How is the law applied here?",
-          "reply": "By tiers. What you owe follows what you have and where your father was born. Somebody has to apply it."
+          "reply": "By levels. What you pay depends on what you own and on where your father was born. A poor man pays more for the same thing."
         },
         {
           "intent": "ask_tiers",
           "tag": "Wits",
-          "text": "And you think it is defensible?",
-          "reply": "No. It is written, which is a different thing from defensible.",
+          "text": "And you think that is fair?",
+          "reply": "No. It is the law and it is not fair. Those are two different things. I have a house and a job and I apply it.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_muster",
-          "text": "Does your office cover the Muster?",
-          "reply": "It should. The Muster judges the Muster, which comes to the same as nobody judging it.",
+          "text": "Does your office cover the army camp?",
+          "reply": "On paper. In practice the camp judges itself, so nobody judges it. Nothing that happens there reaches my desk.",
           "costs": "goodwill"
         }
       ],
@@ -130,24 +138,24 @@
         171
       ],
       "sprite": "Woman",
-      "greeting": "Don't lean on that. Ink's wet and the Reeve counts sheets.",
+      "greeting": "Careful, the ink is wet. The Reeve counts the pages at the end of the day.",
       "options": [
         {
           "intent": "ask_tiers",
-          "text": "You know the wealth tiers?",
-          "reply": "Three columns. What you own, where you're from, what you owe. The third is worked out from the first two."
+          "text": "You know the wealth levels?",
+          "reply": "I copy them every week. 3 columns: what you own, where you come from, what you owe. The third one is worked out from the first two."
         },
         {
           "intent": "ask_copy",
           "tag": "Wits",
-          "text": "Do you ever copy something you shouldn't have seen?",
-          "reply": "I copy slowly sometimes. Fourteen lines an hour instead of forty.",
+          "text": "Do you ever copy something slowly?",
+          "reply": "Sometimes. 14 lines an hour instead of 40. It gives a man a week before his sentence is filed.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_soldiers",
           "text": "Do army papers pass your desk?",
-          "reply": "Not the real ones. What arrives is already clean, and clean paper out of a dirty camp is a thing you notice.",
+          "reply": "Only the clean papers. Everything from the camp arrives in order. Tidy paper out of an untidy camp is strange.",
           "costs": "goodwill"
         }
       ]
@@ -161,25 +169,25 @@
         181
       ],
       "sprite": "OldWoman",
-      "greeting": "Sit if you're bleeding. Stand if you're not. You're in my light.",
+      "greeting": "Sit down if you are bleeding. Stand somewhere else if you are not.",
       "options": [
         {
           "intent": "ask_deserters",
           "text": "They say you treat men who have run.",
-          "reply": "I treat whoever bleeds. Papers come after the arm is set, or not at all."
+          "reply": "I treat anyone who bleeds. I have never asked a soldier for his papers before setting his arm and I will not start today."
         },
         {
           "intent": "ask_why",
           "tag": "Wits",
-          "text": "Then why are so many of them running?",
-          "reply": "Not the fighting. The pay. There's a quartermaster at the Muster, Odile, signing for men who are dead. What reaches the living is nothing.",
+          "text": "Why are so many of them running?",
+          "reply": "Not the fighting. The pay. There is a quartermaster at the camp, Odile. She signs for soldiers who are dead and keeps their pay.",
           "teaches": "muster:pay_fraud",
           "forbids_condition": "they_think_ill_of_me"
         },
         {
           "intent": "ask_kell",
           "text": "Is there one of them you remember?",
-          "reply": "Kell. Thornwood, east of here, small fire. Go loud. If you come up quiet on him he runs.",
+          "reply": "Kell. He lives in the Thornwood, east of here, next to a small fire. Make noise when you get close or he will run.",
           "forbids_condition": "they_think_ill_of_me",
           "costs": "goodwill",
           "teaches": "thornwood:kell"
@@ -201,26 +209,26 @@
         176
       ],
       "sprite": "Villager2",
-      "greeting": "Mind the wheel. Cheaper than boots, slower than rumour.",
+      "greeting": "Mind the wheel. I carry people and goods. I am cheaper than boots.",
       "options": [
         {
           "intent": "ask_ford",
-          "text": "Is the bridge the only way over the Kettle?",
-          "reply": "No. Ford downstream, half a day. Shallow in a dry week. Nobody counts who uses it.",
+          "text": "Is the bridge the only way over the river?",
+          "reply": "No. There is a ford downstream, half a day away. The water is low in a dry week and nobody watches who crosses there.",
           "teaches": "kettle:ford"
         },
         {
           "intent": "ask_muster",
           "tag": "Wits",
-          "text": "You supply the Muster?",
-          "reply": "I delivered. Now I deliver less and I'm paid later. Ask yourself who keeps the difference.",
+          "text": "You supply the army camp?",
+          "reply": "I used to. Now they order less and pay me late. Somebody up there is keeping the difference.",
           "teaches": "muster:pay_fraud",
           "costs": "free"
         },
         {
           "intent": "ask_rumour",
-          "text": "What travels the road besides you?",
-          "reply": "Soldiers, going the wrong way. And people who listen, which is worse.",
+          "text": "What else travels the road?",
+          "reply": "Soldiers walking away from the camp instead of towards it. And people who listen to what carters say.",
           "costs": "goodwill"
         }
       ]
@@ -234,25 +242,25 @@
         177
       ],
       "sprite": "Villager5",
-      "greeting": "Mind your feet. Half of what's under the ash is worth something. The other half cuts.",
+      "greeting": "Watch your feet. Half of what is under the ash is worth money. The other half will cut you.",
       "options": [
         {
           "intent": "ask_ruins",
           "text": "You live out here?",
-          "reply": "Nobody lives in Brindle. The crows came after the fire and so did everyone else."
+          "reply": "I work here. Nobody lives in Brindle any more, the village was burned. I came afterwards to collect what was left."
         },
         {
           "intent": "ask_watched",
           "tag": "Wits",
-          "text": "You must know where nobody's looking.",
-          "reply": "That's the only thing I know worth coin. Saltmarch, north edge. A stall nobody stands at, week to week. It's off the road, so nothing that happens there travels.",
+          "text": "You must know where nobody is looking.",
+          "reply": "That is the only thing I sell. Go to Saltmarch, on the north side. There is a market stall there with nobody watching it, week after week.",
           "teaches": "wide_acres:unwatched_stall",
           "costs": "free"
         },
         {
           "intent": "ask_cinderworks",
           "text": "What do you sell, and to who?",
-          "reply": "Scrap, to the Forges. They buy metal and ask nothing. That's two coppers a pound and no questions.",
+          "reply": "Scrap metal. I sell it to the ironworks west of here. 2 copper coins a sack. They never ask where it came from.",
           "costs": "goodwill"
         }
       ]
@@ -266,30 +274,30 @@
         171
       ],
       "sprite": "OldMan3",
-      "greeting": "Mind the slag, it stays hot a day. Third largest works in the kingdom. Only one still making its numbers.",
+      "greeting": "Careful, the slag stays hot all day. This is the third biggest ironworks in the kingdom.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Halgrave puts himself between you and the furnaces, and does not pretend it is anything else."
+          "text": "Halgrave stands between you and the furnaces and does not move."
         }
       ],
       "options": [
         {
           "intent": "ask_works",
           "text": "What is it you make here?",
-          "reply": "Steel. Rail, plate, tools, and every nail between here and the sea. Before the works this valley buried a child in four every winter. Now it buries one in forty."
+          "reply": "Iron and steel. Rails, plates, tools, nails. Before the works, 1 child in 4 died here every winter. Now it is 1 in 40."
         },
         {
           "intent": "ask_cost",
-          "text": "What has it cost?",
-          "reply": "Three hundred and eighty-one, in eleven years. I send the figure up every spring. I have never rounded it down. Arthur reads them and sends for more stone.",
+          "text": "How many men has it killed?",
+          "reply": "381 in 11 years. I write the number down and send it to King Arthur every spring. He reads it and orders the works made bigger.",
           "teaches": "cinderworks:death_toll",
           "costs": "free"
         },
         {
           "intent": "ask_ledger",
-          "text": "You keep a record of that.",
-          "reply": "Of course. The crown requires it. If a thing costs three hundred and eighty-one men somebody had better be able to say so. It's in the office.",
+          "text": "You keep a record of the dead?",
+          "reply": "A book with every name and every date. The crown asks for it. I would keep it anyway. If a thing kills 381 men somebody should write it down.",
           "costs": "goodwill"
         }
       ]
@@ -303,30 +311,30 @@
         173
       ],
       "sprite": "Woman",
-      "greeting": "You're not from the works. Nobody from the works stands looking at it.",
+      "greeting": "You are not from the works. Nobody from the works stands looking at it.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Sena looks at your hands rather than your face, and keeps her own where you can see them."
+          "text": "Sena watches your hands instead of your face."
         }
       ],
       "options": [
         {
           "intent": "ask_hand",
-          "text": "Your hand.",
-          "reply": "Furnace four, six years ago. Eleven days' pay and a paper saying the fault was mine."
+          "text": "What happened to your hand?",
+          "reply": "Furnace number 4, 6 years ago. The works paid me 11 days of wages and the doctor wrote that it was my own fault."
         },
         {
           "intent": "ask_toll",
-          "text": "How many has it taken?",
-          "reply": "He'll say three eighty-one. He's not lying, he's counting what he's allowed to count. Men carried out of the infirmary don't go in the book.",
+          "text": "How many men has the works killed?",
+          "reply": "Halgrave will say 381. He is not lying. He only counts the men who die at the furnaces, not the ones who die at home afterwards.",
           "teaches": "cinderworks:death_toll",
           "costs": "goodwill"
         },
         {
           "intent": "ask_organise",
-          "text": "They would listen to you.",
-          "reply": "They would. What was missing was a number. Nobody walks off a shift for a feeling. A week.",
+          "text": "The other workers would listen to you.",
+          "reply": "They would. I never had a number to give them. Nobody stops working because of a feeling. 381 is different. Give me a week.",
           "costs": "goodwill",
           "causes": "i_turned_the_workers",
           "requires": "cinderworks:death_toll"
@@ -342,30 +350,30 @@
         177
       ],
       "sprite": "Monk",
-      "greeting": "If you're bleeding, sit. If it's about somebody dead, ask me. Don't go through the files.",
+      "greeting": "Sit down if you are hurt. If you are here about a dead man, ask me. Do not open the files.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Marsh goes on writing, and does not look up until you have gone."
+          "text": "Marsh keeps writing and does not look up."
         }
       ],
       "options": [
         {
           "intent": "ask_certificates",
-          "text": "You sign the certificates.",
-          "reply": "I sign what I'm given. Crush, burn, fall, fever. Four words and a date."
+          "text": "You sign the death certificates.",
+          "reply": "I sign what they bring me. Crushed, burned, fell, fever. 4 words and a date for a whole man."
         },
         {
           "intent": "ask_true_count",
-          "text": "Is the foreman's book accurate?",
-          "reply": "Honest and wrong. He counts what dies at the furnace. I count what dies of it. Lungs, mostly, eighteen months later, at home.",
+          "text": "Is the foreman's book correct?",
+          "reply": "It is honest and it is wrong. He counts men who die at the furnaces. I also count the ones who die at home, 18 months later, coughing.",
           "teaches": "cinderworks:death_toll",
           "costs": "goodwill"
         },
         {
           "intent": "ask_why_stay",
-          "text": "Then why stay?",
-          "reply": "Because if I go they find a man who keeps no count of his own. That is the whole of my defence and I know what it is worth.",
+          "text": "Then why do you stay?",
+          "reply": "If I leave they will hire a doctor who counts nothing at all. That is my whole excuse and I know it is a poor one.",
           "costs": "goodwill"
         }
       ]
@@ -379,23 +387,23 @@
         147
       ],
       "sprite": "Noble",
-      "greeting": "You are standing on the best barley ground in the kingdom and you have not looked down once.",
+      "greeting": "You are standing on the best barley land in the kingdom and you have not looked down once.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Vale watches you the way a man watches weather he has already decided about."
+          "text": "Vale has already decided about you and does not hide it."
         }
       ],
       "options": [
         {
           "intent": "ask_estate",
-          "text": "How far do the Acres run?",
-          "reply": "Kettle to the ridge. Four thousand acres, one rent roll. There were nine villages and nine answers to everything."
+          "text": "How far do these farms run?",
+          "reply": "From the river to the ridge. 4000 acres, all of it mine. There were 9 villages on this land before my father bought the rights."
         },
         {
           "intent": "ask_villages",
-          "text": "Nine villages.",
-          "reply": "Nine. Named in the grants, with the date each was cleared. My father took the grant. I took the debt. Barley feeds more people than sentiment.",
+          "text": "What happened to the nine villages?",
+          "reply": "They were emptied and the people were moved. The papers list all 9 by name, with the date each one was cleared. Brindle is on that list.",
           "teaches": "acres:razed_villages",
           "costs": "goodwill"
         }
@@ -410,23 +418,23 @@
         146
       ],
       "sprite": "Princess",
-      "greeting": "My father is expensive to interrupt. The paperwork is me and I'm cheaper.",
+      "greeting": "My father is busy. If you want the papers, that is my job and I am easier to find.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Nessa keeps the ledger closed with one hand while she talks to you."
+          "text": "Nessa keeps her hand flat on the book while she talks to you."
         }
       ],
       "options": [
         {
           "intent": "ask_paperwork",
-          "text": "You keep the grants.",
-          "reply": "Grants, rents, boundaries, tithes, the lot. He signs it, forgets it, asks me what it said."
+          "text": "You keep the land papers?",
+          "reply": "All of them. My father signs things and forgets them, then asks me what they said. I am the one who reads them."
         },
         {
           "intent": "ask_names",
-          "text": "Whose ground was this?",
-          "reply": "Brindle. Ashcote. Wenn. Upper Harrow. Lower Harrow. Four more. He calls that list an administrative detail.",
+          "text": "Whose land was this before?",
+          "reply": "9 villages. I can name them: Brindle, Ashcote, Wenn, Upper Harrow, Lower Harrow and 4 more. I copied that list when I was 14.",
           "teaches": "acres:razed_villages",
           "costs": "free"
         }
@@ -441,31 +449,31 @@
         151
       ],
       "sprite": "OldMan2",
-      "greeting": "Mind the furrow. Looks like ground. Mostly stone. Under the stone it's somebody's doorstep.",
+      "greeting": "Mind the furrow. It looks like soil. It is mostly stone, and under the stone there are old walls.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Pell goes on with the row he is on and lets you stand there."
+          "text": "Pell keeps working his row and lets you stand there."
         }
       ],
       "options": [
         {
           "intent": "ask_soil",
-          "text": "What was here before?",
-          "reply": "Brindle. This was the top of it. The green, the well, a house with a crooked gate. I ploughed round that gate three years. Still Brindle.",
+          "text": "What was here before the farms?",
+          "reply": "Brindle. This field was the top of the village. There was a green, a well, and a house with a broken gate. It is still Brindle to me.",
           "teaches": "brindle:the_ground",
           "costs": "free"
         },
         {
           "intent": "ask_family",
-          "text": "The family with the gate.",
-          "reply": "Good people. Slow to lend, quick to give. There were children. Nobody ever said what became of them.",
+          "text": "Who lived in the house with the gate?",
+          "reply": "Good people. He lent slowly and gave quickly. They had children. Nobody ever told me what became of them and I never asked.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_withhold",
-          "text": "They could keep the harvest in the barn.",
-          "reply": "They could. Talked about it six years. Never had a reason they could say out loud. Nine villages on paper is a reason. I'll go round tonight.",
+          "text": "The farmers could keep the harvest.",
+          "reply": "They could. They have talked about it for 6 years. They needed a reason they could say out loud. 9 burned villages on paper is a reason.",
           "costs": "goodwill",
           "causes": "i_organised_a_withholding",
           "requires": "acres:razed_villages"
@@ -481,25 +489,25 @@
         104
       ],
       "sprite": "KnightGold",
-      "greeting": "You walk into a camp like a man nobody has ever stopped in one. Enjoy that.",
+      "greeting": "You walk into an army camp like a man nobody has ever stopped. Enjoy it.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Ryse does not turn round. He has already had you described to him."
+          "text": "Ryse does not turn round. Somebody has already described you to him."
         }
       ],
       "options": [
         {
           "intent": "ask_clearances",
-          "text": "You led the clearances.",
-          "reply": "I did. A list and a season. I finished inside both. If you want a man wringing his hands, wrong camp.",
+          "text": "You emptied the villages.",
+          "reply": "I did. They gave me a list of 9 villages and one summer. I finished early. I am not sorry and I will not pretend to be.",
           "teaches": "brindle:that_night",
           "costs": "free"
         },
         {
           "intent": "ask_king",
-          "text": "You have drilled against Arthur.",
-          "reply": "Eleven years. Shield forward. Counters left. Always. He learned it at nineteen and nobody has been allowed to beat it out of him.",
+          "text": "You have trained against the king?",
+          "reply": "For 11 years. He always attacks with the shield first and answers to the left. He learned it at 19 and nobody is allowed to beat him.",
           "teaches": "muster:how_the_king_fights",
           "costs": "goodwill"
         }
@@ -514,30 +522,30 @@
         105
       ],
       "sprite": "Inspector",
-      "greeting": "Requisitions left. Complaints anywhere. I don't read them.",
+      "greeting": "Supply requests on the left. Complaints anywhere you like, I do not read them.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Odile closes the book before you are near enough to see the page."
+          "text": "Odile shuts the book before you are close enough to read it."
         }
       ],
       "options": [
         {
           "intent": "ask_rolls",
-          "text": "Your rolls are long.",
-          "reply": "Exactly as long as the men I am told to feed. If some are a month dead, that is a question for whoever signs above this tent."
+          "text": "Your lists of soldiers are long.",
+          "reply": "They are as long as I am told to make them. Some of those soldiers died a month ago. The pay still leaves this tent. Ask the man who signs above me."
         },
         {
           "intent": "ask_king",
-          "text": "What is Arthur like in a fight?",
-          "reply": "Predictable, and free, because it costs nothing to say. Shield forward, counter left. The guard drilled against him eleven years.",
+          "text": "How does the king fight?",
+          "reply": "Always the same way, and I will tell you for nothing. Shield first, answer to the left. I supplied the guards who trained against him for 11 years.",
           "teaches": "muster:how_the_king_fights",
           "costs": "free"
         },
         {
           "intent": "ask_leverage",
-          "text": "I know what you are doing.",
-          "reply": "Then name a price. There are quotas, and you are saying it out loud in a tent with thin walls.",
+          "text": "I know you are stealing the pay.",
+          "reply": "Then you know what I would pay to have you stop saying it here. Name your price.",
           "costs": "goodwill"
         }
       ]
@@ -551,30 +559,30 @@
         128
       ],
       "sprite": "Villager4",
-      "greeting": "Don't do that again. Don't come up on a man out here quiet.",
+      "greeting": "Do not do that again. Do not walk up to a man out here without making noise.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Kell has his back to a tree and his hand where you cannot see it."
+          "text": "Kell puts a tree at his back and keeps one hand out of sight."
         }
       ],
       "options": [
         {
           "intent": "ask_hiding",
-          "text": "How long have you been out here?",
-          "reply": "Two winters. Fire, water, and nobody handing out loads. Better than the camp was."
+          "text": "How long have you lived out here?",
+          "reply": "Two winters. There is a fire and there is water and nobody orders me to carry anything. It is better than the camp was."
         },
         {
           "intent": "ask_that_night",
-          "text": "Brindle.",
-          "reply": "Nineteen. We were told it resisted. It had not. It stood still. That is a different thing and the difference came too late.",
+          "text": "You were at Brindle.",
+          "reply": "I was 19. They told us the village had fought back. It had not. It just stayed where it was and would not move. I can repeat the order word for word.",
           "teaches": "brindle:that_night",
           "costs": "goodwill"
         },
         {
           "intent": "ask_recruit",
-          "text": "There are others out here.",
-          "reply": "Eleven by name. More I don't know. They won't come in for a pardon. They've seen what a pardon is. Somebody who already knows and didn't spit, maybe.",
+          "text": "There are other deserters out here.",
+          "reply": "11 that I know by name. They will not come back for a pardon. They might come back for someone who already knows what we did.",
           "costs": "goodwill",
           "causes": "i_recruited_deserters",
           "requires": "brindle:that_night"
@@ -590,30 +598,30 @@
         158
       ],
       "sprite": "ManGreen",
-      "greeting": "Tide went out an hour ago. Anything else, say it quiet and say it once.",
+      "greeting": "The tide left an hour ago. Anything else, say it quietly and say it once.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Til finds something on the far side of the quay that needs him."
+          "text": "Til finds something at the far end of the quay that needs him."
         }
       ],
       "options": [
         {
           "intent": "ask_port",
-          "text": "Much comes through here?",
-          "reply": "Less than there was. More than the book says."
+          "text": "Do many ships come through?",
+          "reply": "Fewer than before. More than the harbour book says. Saltmarch is off the main road, so nobody comes to check."
         },
         {
           "intent": "ask_manifests",
-          "text": "What leaves, and on whose order?",
-          "reply": "Steel west. Grain west. Coin west. Every month, crown order, nobody's seal. The manifests were to be lost. Copies were.",
+          "text": "What leaves here, and on whose orders?",
+          "reply": "Steel, grain and money. Every month, west by sea. The king orders it and nobody signs for it. I was told to lose the cargo lists. I lost copies.",
           "teaches": "saltmarch:what_leaves",
           "costs": "free"
         },
         {
           "intent": "ask_convoy",
-          "text": "A convoy could go the wrong way.",
-          "reply": "Twice already. Both times it was weather. Weather can be arranged.",
+          "text": "A cargo could go the wrong way.",
+          "reply": "It has, twice. Both times we called it bad weather. I can arrange bad weather. It costs the king a month.",
           "costs": "goodwill",
           "causes": "i_redirected_a_convoy",
           "requires": "saltmarch:what_leaves"
@@ -629,23 +637,23 @@
         159
       ],
       "sprite": "Woman",
-      "greeting": "Sit or don't. If you're here to tell me the law is the law, I've had that one and I lost it politely.",
+      "greeting": "Sit down or do not. If you came to tell me the law is the law, I have heard it.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Mira closes the file she was reading and waits for you to leave."
+          "text": "Mira closes the file she was reading and waits for you to go."
         }
       ],
       "options": [
         {
           "intent": "ask_work",
           "text": "What is it you do?",
-          "reply": "I represent people who can't pay to be represented, under a law that decides what they owe by what they have."
+          "reply": "I defend people in court who cannot pay for a lawyer. The law here decides your punishment by how much money you have."
         },
         {
           "intent": "ask_cases",
-          "text": "Show me what it does.",
-          "reply": "Three men, one wall, one night. Landowner: eleven shillings. Tradesman: four months. Born in a cleared village: seven years. I have four hundred of these.",
+          "text": "Show me what the law does.",
+          "reply": "3 men broke the same wall on the same night. The rich one paid 11 shillings. The tradesman went to prison for 4 months. The poor one got 7 years.",
           "teaches": "law:the_effects",
           "costs": "free"
         }
@@ -660,23 +668,23 @@
         53
       ],
       "sprite": "Sultan2",
-      "greeting": "You have the look of a man who wants something explained. That's what a bank is for. It isn't free.",
+      "greeting": "You look like a man who wants something explained. That is what a bank is for. It is not free.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Ash has his clerk tell you the house is not receiving."
+          "text": "Ash sends a clerk to tell you the bank is closed to you."
         }
       ],
       "options": [
         {
           "intent": "ask_bank",
-          "text": "What does this house do?",
-          "reply": "It lends to the crown. The crown builds. Everyone calls that a partnership until a payment runs late."
+          "text": "What does this bank do?",
+          "reply": "It lends money to the king. The king builds with it. Everyone is happy until a payment is late."
         },
         {
           "intent": "ask_debts",
-          "text": "How much of it is borrowed?",
-          "reply": "Nearly all of it, and nearly all of that is this house. He did not build the works with money. He built them with confidence, which is a stranger instrument.",
+          "text": "How much does the king owe?",
+          "reply": "Almost everything he has built, and almost all of it is owed to me. He did not pay for the ironworks with his money. He paid with mine.",
           "teaches": "bank:leveraged",
           "costs": "goodwill"
         }
@@ -691,37 +699,37 @@
         67
       ],
       "sprite": "Monk",
-      "greeting": "Quietly, please. Not for the records. Forty years and I've got used to it.",
+      "greeting": "Quietly, please. 40 years in this room and I have got used to the quiet.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Peyre goes back to his shelving and does not offer you a chair."
+          "text": "Peyre goes back to his shelves and does not offer you a chair."
         }
       ],
       "options": [
         {
           "intent": "ask_archive",
           "text": "What is kept here?",
-          "reply": "Everything ever signed. Grants, debts, sentences, requisitions. An archive isn't where a thing is hidden."
+          "reply": "Every paper the crown ever signed. Land papers, debts, court sentences, army orders. People think an archive hides things. It does the opposite."
         },
         {
           "intent": "ask_grants",
-          "text": "The Wide Acres grants.",
-          "reply": "Shelf eleven, second copy. Villages listed by name because the surveyor was paid by the name. Nine of them.",
+          "text": "The land papers for the Wide Acres farms.",
+          "reply": "Shelf 11, second copy. The 9 villages are listed by name, because the surveyor was paid for each name he wrote.",
           "teaches": "acres:razed_villages",
           "costs": "free"
         },
         {
           "intent": "ask_debts",
           "text": "And what the crown owes.",
-          "reply": "Shelf eleven also, which I have always taken for somebody's joke. One creditor, near enough. Not read aloud here in six years.",
+          "reply": "Shelf 11 as well. Almost all of it is owed to one man, Corvin Ash at the bank. Nobody has read the total out loud here in 6 years.",
           "teaches": "bank:leveraged",
           "costs": "free"
         },
         {
           "intent": "ask_church",
-          "text": "Does the church file returns here?",
-          "reply": "Every house files, audited, annually. Theirs balance. They have balanced for nine years.",
+          "text": "Does the church file accounts here?",
+          "reply": "Every year, checked. Theirs always balance. They have balanced for 9 years, which is either very good work or something worse.",
           "teaches": "church:ledgers",
           "costs": "free"
         }
@@ -736,32 +744,32 @@
         62
       ],
       "sprite": "Monk2",
-      "greeting": "The steward isn't seeing anyone. I say that eleven times a day and it's true about ten.",
+      "greeting": "The steward is not seeing anyone. I say that 11 times a day and it is true about 10 of them.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Anselm says the steward is not seeing anyone, and this time does not soften it."
+          "text": "Anselm says the steward is not seeing anyone and does not soften it."
         }
       ],
       "options": [
         {
           "intent": "ask_steward",
           "text": "Who decides who she sees?",
-          "reply": "She does, then I write it down, then people are cross with me. Hesper is the door into Blackcairn. Not a door. There's nobody behind her.",
+          "reply": "She does. Hesper decides who is allowed into the castle at Blackcairn. There is nobody above her to ask instead.",
           "teaches": "castle:hesper",
           "costs": "free"
         },
         {
           "intent": "ask_ledgers",
-          "text": "You keep the church's books.",
-          "reply": "Because otherwise nobody can check. They show what she has taken and from whom, over nine years.",
+          "text": "You keep the church accounts.",
+          "reply": "Somebody has to, or nobody can check them. They show what Hesper has taken from people over 9 years, and who paid her.",
           "teaches": "church:ledgers",
           "costs": "goodwill"
         },
         {
           "intent": "ask_roll",
-          "text": "What is actually written on the roll?",
-          "reply": "A name, a trade, a quantity, and her mark beside it. I write the first three.",
+          "text": "What is written on a castle pass?",
+          "reply": "A name, a trade, a quantity of goods, and her mark next to it. I write the first three. The mark is the only part that matters.",
           "teaches": "castle:the_way_in",
           "costs": "free"
         }
@@ -776,25 +784,25 @@
         61
       ],
       "sprite": "OldWoman",
-      "greeting": "Four minutes, and you weren't announced. Let's find out which of us is wasting them.",
+      "greeting": "I have four minutes and you were not announced. Let us see which of us is wasting them.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Hesper does not look up from the roll she is marking."
+          "text": "Hesper does not look up from the list she is marking."
         }
       ],
       "options": [
         {
           "intent": "ask_papers",
-          "text": "How does a stranger get into Blackcairn?",
-          "reply": "Supply roll, countersigned by me, a face the gate can match to the name. That's all of it. It isn't negotiable.",
+          "text": "How does a stranger get into the castle?",
+          "reply": "With a supply pass. A name, a trade, my mark next to it, and a face the gate guards can match. That is the whole thing.",
           "teaches": "castle:the_way_in",
           "costs": "goodwill"
         },
         {
           "intent": "ask_terms",
-          "text": "What would it take?",
-          "reply": "Something wanted, or something feared. Neither is often in the room.",
+          "text": "What would make you sign one?",
+          "reply": "Something I want, or something I am afraid of. Neither is often in the room.",
           "costs": "goodwill"
         }
       ]
@@ -808,25 +816,25 @@
         58
       ],
       "sprite": "Knight",
-      "greeting": "I am told you have been asking about the tiers. Ask me. I would rather it came from a man who administers them than from one who merely resents them.",
+      "greeting": "They tell me you have been asking about the wealth levels. Ask me instead.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Greyhold decides, visibly, that this is not the morning for it."
+          "text": "Greyhold decides this is not the morning for it."
         }
       ],
       "options": [
         {
           "intent": "ask_law",
-          "text": "You enforce the tiered law.",
-          "reply": "Every sentence above four months in this region carries my hand. The arguments for it are better made by its enforcers than by its authors.",
+          "text": "You enforce the wealth levels.",
+          "reply": "I sign every prison sentence over 4 months in this region. I have done it for 40 years. I stopped believing in the law a long time ago.",
           "teaches": "law:the_effects",
           "costs": "goodwill"
         },
         {
           "intent": "ask_turn",
-          "text": "Then stop.",
-          "reply": "Nobody has ever put it as though it were available. There is a household, and forty years of signatures. The next one will not be signed.",
+          "text": "Then stop signing them.",
+          "reply": "Nobody has ever asked me to. I have a family, a house, and 40 years of signatures behind me. But I will not sign the next one.",
           "costs": "goodwill",
           "causes": "i_turned_the_lord",
           "requires": "law:the_effects"
@@ -842,49 +850,49 @@
         24
       ],
       "sprite": "Sultan",
-      "greeting": "You came all this way and you have not drawn anything. Say what you came to say.",
+      "greeting": "You came all this way and you have not drawn a weapon. Say what you came to say.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Arthur looks at you a long moment and decides he will hear it anyway."
+          "text": "Arthur looks at you for a long moment and decides to listen anyway."
         }
       ],
       "options": [
         {
           "intent": "ask_why",
-          "text": "Why did you burn them?",
-          "reply": "Nothing was burned. An order was signed to clear nine villages. Tired, frightened men did the rest. That is a correction, not a defence.",
+          "text": "Why did you burn the villages?",
+          "reply": "I burned nothing. I signed an order to empty 9 villages. The soldiers did the rest. That is not an excuse. It is what happened.",
           "teaches": "king:his_argument",
           "costs": "free"
         },
         {
           "intent": "ask_enemy",
-          "text": "Then what was it for?",
-          "reply": "Poverty. Not the crown, not the works. A man on four acres has a short life and buries half his children, and the people who write songs about that life have never lived it.",
+          "text": "Why did you need the land?",
+          "reply": "For the ironworks. A farmer with 4 acres dies young and buries half his children. Factories are the only thing that has ever changed that.",
           "costs": "free"
         },
         {
           "intent": "ask_choice",
           "text": "You could have stopped.",
-          "reply": "It could have stopped. The cost of stopping falls on people not yet born, who cannot be asked. The ones who were there refused, and it went on.",
+          "reply": "I could. Then the children who are not born yet would pay for it instead. I asked the villages to move. They said no. I did it anyway.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_village",
-          "text": "Mine was one of the nine.",
-          "reply": "I know. Not which. Here is what you will hate: they were happy, and poor, and dead at forty. All three at once.",
+          "text": "My village was one of the nine.",
+          "reply": "I know. I do not know which one. Here is the part you will hate. They were happy. They were poor. They died at 40. All three are true.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_answer",
           "text": "That is not an answer.",
-          "reply": "No. It is a trade, and you are entitled to decide the first part mattered more. I decided it did not. One of us is wrong and neither of us can prove it.",
+          "reply": "No. It is a trade. You can decide the first part mattered more. I decided it did not. One of us is wrong and neither of us can prove it.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_records",
-          "text": "You keep records of all of it.",
-          "reply": "Every page. The dead at the works, the grants with the village names, the orders with my hand at the bottom. A man who hides the cost suspects it was not worth paying.",
+          "text": "You kept records of all of it.",
+          "reply": "Every page. The dead at the ironworks, the land papers with the village names, the orders I signed. I have destroyed nothing.",
           "costs": "free"
         }
       ]
@@ -898,25 +906,25 @@
         24
       ],
       "sprite": "KnightGold",
-      "greeting": "Stop there. Close enough for whatever this is.",
+      "greeting": "Stop there. You are close enough for talking.",
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Dray moves to put himself between you and the gate, without hurrying."
+          "text": "Dray moves between you and the gate without hurrying."
         }
       ],
       "options": [
         {
           "intent": "ask_gate",
-          "text": "How many stand here?",
-          "reply": "As many as the Muster sends. Fewer than last month. The post is meant to hold forty.",
+          "text": "How many guards are here?",
+          "reply": "As many as the army camp sends me. Fewer every month. This gate is built for 40 men.",
           "teaches": "blackcairn:the_escort",
           "costs": "free"
         },
         {
           "intent": "ask_loyalty",
-          "text": "Would they follow you against him?",
-          "reply": "No. Be glad. I have seen a kingdom find that out about itself. It was not better after.",
+          "text": "Would they follow you against the king?",
+          "reply": "No. Be glad about that. I have seen a country where the guards decided. It was worse afterwards.",
           "costs": "goodwill"
         }
       ]

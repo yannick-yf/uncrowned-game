@@ -40,6 +40,10 @@ var _wild: Wildlife = null
 var _ticked: WorldTick = null
 var _standing: Standing = null
 var _road: Travellers = null
+var _book: Phrasebook = null
+## Whatever chooses words, if anything does. The default asks nothing, so the game
+## ships today running entirely on authored lines with this path switched off.
+var _phraser: Phraser = Phraser.new()
 var _art: Art = null
 
 var _accumulator: float = 0.0
@@ -95,6 +99,7 @@ func _ready() -> void:
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
+	_book = _sim.store(&"phrasebook") as Phrasebook
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -174,6 +179,8 @@ func _read_input() -> void:
 		_cast = Cast.shared()
 		_sim.add_store(&"cast", _cast)
 		_journal_at = -1
+
+	_find_words()
 
 	if Input.is_action_just_pressed(&"journal"):
 		_journal_open = not _journal_open
@@ -307,6 +314,7 @@ func _reload() -> void:
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
+	_book = _sim.store(&"phrasebook") as Phrasebook
 	_deaths_seen = _world.deaths
 	_journal_at = -1
 	_render_from = _world.player_pos
@@ -593,6 +601,38 @@ func _option_label(option: DialogueOption) -> String:
 	if key == &"":
 		return option.text
 	return Text.of(&"option.tagged", [Text.of(key), option.text])
+
+
+## Ask whoever chooses words whether they have any for what is on screen now.
+##
+## Runs beside the simulation rather than inside it. Anything it gets back is
+## submitted as an ordinary event, so the words end up in the log, in the save file
+## and in a replay, exactly like a keypress. Nothing here can break a run: if the
+## phraser is absent, slow or wrong, the authored line stays on screen.
+func _find_words() -> void:
+	if not _world.in_dialogue() or not _phraser.ready():
+		return
+	var npc: Npc = _cast.get_npc(_world.talking_to)
+	if npc == null:
+		return
+	var option: DialogueOption = DialogueRules.find(npc, _world.last_intent)
+	# No facts declared for this answer, so nothing may replace it. The gate that
+	# lets generation be turned on one line at a time instead of all at once: an
+	# option nobody has briefed is exactly as it was before any of this existed.
+	if not Answers.shared().may_be_written(npc.id, _world.last_intent):
+		return
+	var packet: String = Context.build(npc.id, _world, _cast, _standing, _ticked,
+		_sim.facts, Relations.shared(), option)
+	var key: String = Phrasebook.key_for(packet, _world.last_intent)
+	_book.asked += 1
+	if _book.remembers(key):
+		_book.served += 1
+		_world.current_line = _book.recall(key)
+		return
+	var line: String = _phraser.phrase(packet, option, Text.locale())
+	if line != "":
+		_sim.submit(&"phrased", {
+			"key": key, "line": line, "for": String(npc.id)})
 
 
 ## The clock, in the player's language.

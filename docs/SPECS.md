@@ -1375,38 +1375,338 @@ makes a door shutting affordable at all.
 
 ### House style, and the generation constraints (2026-09-12)
 
-Measured after twenty-four characters had been written: **53% of all replies ended
-with the speaker turning back on themselves** in a wry, self-aware coda. A
-scavenger, a foreman, a banker, an archivist, a deserter and a king all landed the
-same closing beat, three of them in every single line. Arthur's argument ran to 987
-characters against a dialogue box that holds about 420, so half of the most
-important speech in the game was never displayed.
+**Plain words. Short sentences. No metaphor. Every line understandable on its own.**
+A 10 year old should be able to read any line in the game, in either language.
 
-That is not "AI writing" in the sense of a model having written it. It is **one
-writer's tic applied twenty-four times**, which is the same failure and the same
-smell. Nobody notices it line by line; it is only visible when the closing
-sentences are listed side by side.
+That is not a simplification of the writing, it *is* the writing. These are busy
+people saying what happened, and the job of a line is to be true and clear, not to
+be well turned.
 
-**The rules, all machine-checked** (`test/test_prose.gd`):
+**French is written first, then English.** Neither is a translation of the other.
+The line that settled this was *"chaque peine de plus de 4 mois porte ma main au
+bas"*, which is not French at all. It existed because an English image had been
+translated word for word, and a 25 word sentence gave it somewhere to live.
+
+**Every line must stand on its own.** The player chooses options in any order, so no
+reply may assume another has been read. Not "7 years" but 7 years *in prison*; not
+"more stone" but stone *to make the works bigger*; not "at the furnace" unless the
+furnaces have been named in the same breath. Plain language is not only short words,
+it is giving the player enough to understand what is being said.
+
+**Counts are figures**, in both languages: 381 dead, 11 years, 9 villages, 4000
+acres, 40 men at the gate. A game about ledgers and tolls should read like one, and
+digits are language-neutral when the same content ships twice.
 
 | Rule | Why |
 |---|---|
-| No em dash, in either language | The most recognisable tell in English, and French typography uses it differently anyway |
-| No line over 420 characters | The dialogue box holds four lines of about 120. Longer is text the player never sees |
-| No reply over 40 words, no voice averaging over 32 | These are busy people answering a question |
-| At most a quarter of replies end on the speaker | A good device, and it was doing the work of characterisation for the whole cast |
+| No em dash | The most recognisable tell in English, and French uses it differently |
+| No line over 420 characters | The dialogue box holds four lines of about 120 |
+| No sentence over 24 words | A short sentence can be wrong. It cannot be ornate, and it survives being written in one language and checked in the other |
+| Under 4.6 letters a word | Long words are where the literary register creeps back, and the first thing a model reaches for when asked to sound serious |
+| No reply over 48 words, no voice averaging over 44 | Nobody makes a speech |
 
-**Each character gets one concrete verbal habit that is not wit.** Halgrave answers
-in figures, Sena in under a dozen words, Dray in orders, Pell repeats himself, Til
-says as little as he can, Wren prices everything, Nessa lists, Peyre gives shelf
-numbers. Ivo and Mira keep the self-examining close, because examining themselves is
-what a physician who signs certificates and an advocate actually do.
+#### Two rules were deleted, not relaxed
 
-> **These are the generation constraints.** A model asked to write for this game
-> will imitate what is already in it, tics included, so the corpus has to be clean
-> before it is ever used as an example. `test_prose.gd` then becomes the automatic
-> reject filter on anything generated: every rule in it is checkable without a
-> human reading the line.
+Both were built for a register that is gone, and one of them caused the damage.
+
+*At most a quarter of replies may end on the speaker* was a proxy for the wry,
+self-aware coda. The plain register removes that by construction, and in plain
+speech people say "I" constantly: "give me a week" is not a flourish.
+
+*The cast must span a wide range of sentence lengths* was worse than useless. It
+pushed characters into 27 word built sentences, and a built sentence is exactly
+where a metaphor hides. **A rule that fights the register is a bad rule however well
+it measures.**
+
+> These rules are the generation constraints. A model will imitate the corpus, so
+> the corpus had to be clean before it is ever used as an example, and
+> `test/test_prose.gd` is the reject filter on anything generated. Every rule is
+> checkable without a human reading the line.
+
+### Where a generated line would enter the world (built 2026-09-12, model absent)
+
+The whole path exists and **the model slot is empty**. The game ships today with
+every line hand-written and this switched off, which is the point of building it in
+this order: turning a model on later is replacing one function rather than opening
+up the dialogue system.
+
+**The window asks; the simulation is told.** A model is not repeatable and `core/`
+must replay exactly, so nothing inside the simulation may ask one anything. The
+window asks whoever chooses words and then **submits the answer as an ordinary
+external event**. That single shape keeps everything true at once:
+
+- it is logged, so a save contains the words and a reload says the same thing
+- it is replayed rather than recomputed, so a model is never asked twice for the
+  same moment
+- it can be deleted and the game does not notice, because every line has an
+  authored version behind it
+
+**The door is inside the simulation, not outside it.** Every line is checked against
+`ProseRules` before anybody hears it, at the point it enters rather than where it
+was produced: whoever generated it may be careless or absent, and the rule that a
+line may only name people who exist has to hold at the door. A refused line is
+dropped and the authored one stands.
+
+**The key is the packet fingerprint plus the intent.** Same person, same world, same
+question, same words. This is the determinism guarantee §9 refused retrieval to
+protect, and the hit rate on it is the number that decides whether a model ever
+needs to run while somebody is playing.
+
+**Voice notes** (`content/voices.json`) say how each person talks, in plain terms a
+person or a model can both follow: *"answers with figures"*, *"says as little as
+possible"*. English only and never shown to a player, so it is not translated. A
+packet that says only "a foreman" is not enough to put words in anybody's mouth.
+
+### What is actually in a packet (2026-09-12)
+
+Four things, in this order, and it is worth naming them because the shape was
+arrived at rather than designed:
+
+| | Source | Changes |
+|---|---|---|
+| **Who they are** | `WHO`, `VOICE` | never |
+| **What they have** | `KNOWS` (the relationship web), `HOLDS` (facts they can hand over) | never |
+| **What they know about you** | `REGARDS YOU`, `HAS MET YOU`, `HAS HEARD` (every deed), `YOU KNOW` (what the player has learned) | every act |
+| **Where you are in the talk** | `ALREADY ASKED`, `SO FAR IN THIS TALK` | every line |
+| **The task** | `ASKED`, `MUST BE TRUE` | every question |
+
+The third block is the one that was missing until 2026-09-12, and its absence is
+why every answer read as though written for somebody who had just walked in off the
+road. The packet described the person in detail and the player not at all. **Whether
+you have read the ledger is the difference between being told the number and being
+asked what you intend to do with it** — and when the player's own options are
+generated, `YOU KNOW` is the source they are generated from.
+
+The fourth block exists because the `asked:` facts are a set: they have no order and
+hold no answers, so a packet built from them can say what was asked and never what
+was said. The thread is held on `WorldState` for the length of one conversation and
+cleared when it closes, because the thread is the conversation and not the
+relationship.
+
+### Two statements about one thing have to agree (2026-09-12)
+
+`cinderworks:death_toll` described the works as having killed *"près de 400 hommes"*
+while the brief for the question that teaches it said **381**. Both land in the same
+packet — one under `YOU KNOW` or `HOLDS`, one under `MUST BE TRUE` — so the model
+wrote 400 and looked as though it were inventing figures. It was reading ours.
+
+That was the **second** time in one session that a model was nearly blamed for a
+defect in the packet, the first being `HOLDS: thornwood:kell` becoming *"il est dans
+Thornwood"* in a French line. The pattern is worth naming: **when generated output is
+wrong, the packet is the first suspect, not the model.** A test now holds the
+specific case — a fact description and the brief for the answer that hands it over
+must agree on their figures.
+
+### The brief is facts, never the finished sentence (2026-09-12)
+
+The packet used to end with `MUST SAY:` and the whole hand-written reply. That is a
+brief to **rephrase**, and rephrasing is safe and nearly worthless: if the sentence
+is already written, writing it again buys nothing, and every situation still has to
+be hand-written first. It also quietly decided that the answer to "is generation
+worth having" was no.
+
+It now ends with `MUST BE TRUE:` and the facts the answer has to contain
+(`content/answers.json`, English only and untranslated, like the voice notes). The
+line is then **written in the player's language from the facts**, not translated
+from an English original — which is the same rule the register correction of
+2026-09-12 imposed on the hand-written corpus, for the same reason.
+
+**Every fact carries why, not only what.** *"the works has killed 381 men"* leaves a
+player asking 381 of what; *"and Arthur reads the number every spring and orders the
+works made bigger"* is the half that makes the first half mean anything. A line can
+only be self-contained if the brief was.
+
+**No facts, no generation.** An option with nothing declared for it keeps its
+hand-written reply and the window never asks for words at all
+(`Answers.may_be_written`, checked in `view/main.gd` before a packet is even built).
+So this turns on one line at a time, and everything it is not turned on for is
+untouched.
+
+**What it is worth, measured** (16 lines written from real packets, 2026-09-12).
+Against the hand-written reply for the same question, character overlap was:
+
+| The world | Overlap with the written line | What that means |
+|---|---|---|
+| Nothing has happened | 74% | Generation reproduces what is already there. No gain. |
+| They think well of you | 75% | Same. |
+| The town is hungry | 50% | The line starts using the town's numbers. |
+| They know you as a thief | 50% | The line answers *and* reacts. |
+
+So the value is not spread across the cast — **it is concentrated entirely in the
+half of the world the authored line cannot see**. Today every question has exactly
+one written answer serving four materially different situations (71 questions, 284
+packets, 284 distinct fingerprints, 71 distinct replies). Characters whose voice is
+terse or numeric — Til at *"says as little as possible"*, Halgrave at *"answers with
+figures"* — reached 85–91% overlap, meaning there is one way to say it and it is
+already said. That is a reason to brief the reactive questions first and possibly
+never brief the rest.
+
+### The door was mis-calibrated, and only the corpus could show it (2026-09-12)
+
+`ProseRules` was written before anything had been generated, so the only lines it
+had ever judged were the bad ones its own test feeds it, written to fail. Run over
+the 95 hand-written replies (`tools/prose_check.gd`) it **refused 8% of them**, and
+every refusal was the rule being wrong rather than the line being bad:
+
+- *One word-length ceiling for two languages.* French words are longer than English
+  words for reasons that have nothing to do with register. English averages 3.85
+  letters a word and peaks at 5.00; French averages 4.28 and peaks at 5.46. A single
+  threshold at 5.4 refused two plain French lines while leaving English 0.4 of slack
+  it never used. It is now per language.
+- *Names that exist but nothing declares.* A role capitalised in French (*le
+  Prévôt*), a wood that is not a town (*la Ronceraie*), four burned villages that
+  appear only inside the sentence naming them. Content now declares them
+  (`names` in the cast sheets), because a name the world contains and nothing
+  declares cannot be told apart from one a model invented.
+
+Both fixed, both languages now at 0% refused. **A door calibrated only against lines
+written to fail is not calibrated**, and had this gone unmeasured the first thing a
+model produced would have been blamed for the door's own faults.
+
+### The figures are checkable because they are digits (2026-09-12)
+
+`ProseRules` now also refuses a line that **drops a figure it was given** or
+**invents one it was not**. This is the only part of "it must state the facts" that
+is checkable without a person reading it, and it is checkable *because content
+writes numbers as digits* — a decision taken for the player, which turns out to be
+the one rule that survives being written in one language and checked in the other.
+381 is 381 in French. Facts that spell a number out (*two winters*) are checked by
+neither direction, which is correct: content spells a number out exactly where the
+number is not the point.
+
+An invented figure is worse than a dropped one. A figure is why a player believes
+the rest of the line, so a made-up one spends trust the game cannot earn back.
+
+### What the register actually is, judged by ear (2026-09-12)
+
+Two rounds of blind and semi-blind comparison with the person who will play the
+game in French. Both rounds were lines written from real packets and passed through
+the door first, so nothing below is about correctness — it is about which of two
+correct lines is the one to write.
+
+**Round 1, six pairs, hand-written against written-from-facts, labels hidden.** The
+hand-written line was preferred in 4 of 6. All six were the *plain* world, where
+nothing has happened — which is exactly where the overlap measurement said
+generation reproduces what is already there. The measurement and the ear agreed.
+**A caveat worth keeping**: the answer came as an aggregate ("mostly B") rather than
+per pair, so preference and position bias are not separable at n=6. Future rounds
+ask per pair.
+
+**Round 2, four situations where the world had moved**, two written versions each,
+differing on one axis. The results are rules:
+
+- **The reaction opens the line; it does not close it.** Chosen 3 times out of 3
+  where that was the axis. A line that answers the question and then adds *"and I
+  know what you took"* reads as an afterthought bolted on — the same coda tic the
+  voice-range rule was deleted for encouraging. When the world has changed, say so
+  first, then answer.
+- **A signpost has to point somewhere useful.** Maddox's voice note says he answers
+  by pointing at somebody else, and the version that sent the player to Tovin about
+  the price of bread *lost* to the version that just gave the price. Tovin runs the
+  law, not the granary. The note is not wrong; the referral was. A name offered that
+  cannot help is worse than no name.
+**Round 3, four more, testing whether the rule survives a *good* reaction and a terse
+voice.** It does, 3 of 4 — and the one exception sharpened the rule rather than
+weakening it.
+
+- **The opener states the terms, not the opinion.** The three chosen openers all say
+  what the speaker will *give*: *"À vous, je peux le dire"*, *"Vous, vous écoutez,
+  alors je vais vous le dire"*, *"À vous, je le dis une fois"*. The rejected one says
+  what the speaker *thinks of you*: *"Vous, vous regardez les fours au lieu de
+  regarder ailleurs"*. That single distinction explains 6 of the 7 reaction-position
+  answers across both rounds, including the ones that looked like exceptions. A
+  reaction is a change in what is on offer. It is not a character noticing you.
+- **A terse voice still reacts.** Til's note is *"says as little as possible, often
+  three words"*, and four words of reaction still beat none. Terseness governs the
+  answer, not whether the relationship is acknowledged.
+
+- **Blunter wins where bluntness costs no fact.** The shorter, flatter version won
+  where the two said the same things. It did **not** win where the longer version
+  was the one that opened with the reaction, so this ranks below the first rule.
+
+### Which model, measured rather than researched (2026-09-12)
+
+Both candidates run locally on the M4 Pro through llama.cpp's prebuilt arm64 build,
+same sixteen packets, same prompt, same grammar, temperature 0.3.
+
+| | Through the door | Mean | Size |
+|---|---|---|---|
+| Ministral 3 8B, Q4_K_M | 44% | 1.30 s | 4.8 GB |
+| Ministral 3 8B, with 3 examples | 44% | 1.31 s | 4.8 GB |
+| **Qwen3.5 4B, Q4_K_M** | **81%** | **1.21 s** | **2.6 GB** |
+| Qwen3.5 4B, with 3 examples | 62% | 1.24 s | 2.6 GB |
+
+**The 4B beats the 8B decisively, at half the size and the same speed.** The desk
+research recommended the Mistral model on the reasoning that a French company makes
+the best French, while flagging as a surprise that one French tester had found the
+opposite. The tester was right and the reasoning was wrong. *Nothing published about
+these models predicted this; sixteen packets and an afternoon did.*
+
+**Examples made it worse, not better.** Three hand-written lines shown as prior turns
+cost the 4B 19 points. The most likely reading is that a model given a finished line
+in this register starts reaching for the *contents* of the example, not its shape —
+the same failure as a finished French sentence in the background beating an English
+instruction in the task. Not investigated further; recorded so it is not tried again
+by assumption.
+
+**Two of the three refusals were the same fault**: the model wrote *onze*, *quatre*,
+*deux* where the brief gave 11, 4 and 2. It is not wrong French. It is wrong for this
+game, where a figure is evidence and has to be repeatable, and it is the single
+easiest thing to fix with a grammar.
+
+### The door cannot see meaning, and that is now the gap (2026-09-12)
+
+Of the thirteen lines the door accepted from the better model, perhaps **two** are
+usable. What passed:
+
+- *"Je ne défends pas ceux qui n'ont pas d'argent"* — Mira, whose entire brief is
+  that she defends people who cannot pay. **The exact inverse of the fact**, with no
+  figure in it, so nothing caught it.
+- *"Ils n'ont pas le courage mais ils ont une raison"* — the brief says what they
+  lack is *not* courage but a reason. Inverted again.
+- *"Je peux faire la pluie"* — *arrange bad weather* is what Til calls sinking a
+  cargo. Read literally it is weather magic.
+- *"J'ai tué 381 hommes en 11 ans"* — the works killed them. Halgrave keeps the
+  count. Every figure correct, the agent wrong.
+
+The door checks figures, names, formatting and register, and all four of those lines
+are clean on all four counts. **A fact check that only understands numbers cannot see
+a sentence that says the opposite of what it was told**, and roughly half the briefs
+carry no figures at all. Nothing should be generated into the game until this is
+answered, and it is the open question this phase now turns on.
+
+### Shrinking the job does not shrink the problem (2026-09-12)
+
+The obvious repair for "the model gets meaning wrong and nothing catches it" is to
+give it less meaning to get wrong. So: the model writes **only the opening reaction**
+— one sentence under 14 words, no figures, no names, saying what this person will or
+will not give you — and the hand-written line supplies every fact, unchanged. A model
+that never states a fact cannot state one backwards. Everything left is checkable to
+the last rule, and `ProseRules.opener_faults` checks it.
+
+It works exactly as designed and it fails anyway.
+
+| | |
+|---|---|
+| Through the door | **94%** |
+| Actually right | **about 20%** |
+| Speed | 0.5 s |
+
+Five of the six openers written for a character who **likes** the player refused to
+help them: *"Je ne vous aiderai pas"*, *"Je ne vous aide pas"*. One sentence, plain
+French, no figure, no invented name — clean on every rule there is, and the opposite
+of what the packet said.
+
+**The pass rate went up as the lines got worse.** That is the finding, and it is a
+worse result than the 81% that preceded it: a measurement that reads *ready* while
+the output is inverted is more dangerous than one that reads *broken*. The meaning
+problem did not shrink with the job. It only got harder to see.
+
+**What this settles.** The value generation was for is real and was measured — the
+divergence between worlds is 50% where the player has acted and 74% where they have
+not, and all of it lives in the opener. But the opener is one sentence chosen from a
+small set of stances, and something small enough for a 4B model to get backwards is
+small enough to write by hand. Generation stays built, tested and switched off.
 
 ### Determinism rules
 
@@ -1920,8 +2220,9 @@ exception.
 > **Proof:** the king is beatable by a prepared player and lethal to an unprepared
 > one, and the same five moves carry both a tier-0 servant and a tier-4 knight.
 
-**Phase 5 — the world can be moved, and the king can fall out of it.**
+**Phase 5 — the world can be moved, and the king can fall out of it. ✅**
 *Reshaped 2026-09-11 — it used to read "the three routes, end to end".*
+*Delivered 2026-09-12: all four items built and held by tests.*
 
 Two of the twelve tracked quantities move; ten are inert, and dialogue is the only
 input to the only one that matters. That is why the game had begun to feel like
@@ -1960,7 +2261,27 @@ line hand-written in French and English. Six of §3's levers are now things you
 **No model, on purpose.** The assembler is a pure function and the packet is worth
 having without one: it is what a hand-written line chooses between, what a dialogue
 cache would be keyed on, and the thing to *read* before deciding whether a model
-should ever see it. `tools/packet.gd` prints one. That decision is the next one.
+should ever see it. `tools/packet.gd` prints one.
+
+**And the decision is now taken: no model in v1** (2026-09-12). It was tested rather
+than argued — two models, sixteen real packets, four prompt designs, on the machine
+the game will run on. The spec's own condition was *"a runtime model only if baking
+demonstrably cannot cover the packet space"*, and what the experiment found is worse
+than that: the packet space is coverable, but **nothing cheap can tell a right line
+from a line that says the exact opposite**. Reducing the model's job to one
+fact-free sentence removed the unfixable failure by construction and it still got
+the sign backwards 5 times in 6, at 94% through the door.
+
+What replaces it is small and was measured, not guessed: the whole value sat in the
+**opening reaction**, and that is written by hand — a `reactions` block beside the
+`dispositions` block the cast sheets already carry, joined by `ProseRules.joined()`.
+Under 30 lines a language.
+
+Everything built for the model stays: the packet, the door, the phrasebook, the
+`phrased` event path, and `tools/phrase.py`. It is inert, tested, and costs nothing
+to keep. Re-running the whole experiment against a better small model later is one
+command, and the door got materially stricter for having been pointed at real
+generated text.
 
 **Phase 7 — art, audio and polish.**
 Commissioned art replacing the approved pack, audio, and the accessibility pass
@@ -2127,6 +2448,15 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | A document is **both** knowledge and proof, lies in a **place** rather than with a person, and can never be taken from you | Documents as facts only; as items only; confiscation as drama | Knowledge alone makes "put it in front of him where it cannot be denied" into "know four things", which is no climax. Living in places is what makes invariant 7 structural — violence can never close Route C, only make it harder — and it is the same guarantee the power bases gave. Confiscation was considered and rejected by Yannick: evidence that can be lost is a route that can be closed |
 | 2026-09-12 | Reading a document aloud is what makes it public, and the news spreads as a rumour that turns towns against **the crown** — a different number from how they regard the player | Making a fact public by knowing it; turning only the town you stand in | Route C becomes a tour rather than an errand, and the King's Road matters to a player who never steals anything. It also gave `discredited` its first reachable path: five documents, read out where people can hear, and six towns had turned within a day of the last one |
 | 2026-09-12 | No copies, though Bell is a copyist | Building copies now, since the character exists | The reason for a copy was to hedge against losing the original, and nothing can take one — so it would be building the answer to a question the game does not ask. It returns the day handing a document to somebody becomes an act |
+| 2026-09-12 | **The dialogue pipeline is built with the model slot empty** | Building the model first; building the pipeline only when a model exists | The game runs today entirely on authored lines with the whole path inert, so attaching a model later is replacing one function. It is also the only way the decision in step 5 gets made on evidence: everything except the model is finished, tested and reversible |
+| 2026-09-12 | A generated line enters as an **external event submitted by the window**, never produced inside a system | A system calling the model; the view substituting the line without logging it | A model is not repeatable and `core/` must replay exactly. Submitting the words as an ordinary event means they are logged, saved, replayed rather than re-asked, and removable without the game noticing |
+| 2026-09-12 | Lines are checked **at the door**, inside the simulation, against one shared `ProseRules` | Checking where the line is produced; a second copy of the rules for generated text | Whoever produced it may be careless or absent. Two copies of the rules would drift, and the one that drifted would be the copy guarding the generated text |
+| 2026-09-12 | Voice notes live in their own English-only file | Inside `cast.*.json`; as prose direction | They are instructions to a writer, never shown to a player, so a translated copy would be two things to keep in step for nothing. Plain and followable on purpose: "answers with figures" is something a person and a model can both do, "wry and world-weary" is how 24 characters end up sounding like 1 |
+| 2026-09-12 | **The register is plain: short sentences, common words, no metaphor, readable by a 10 year old in both languages** | The literary register the whole cast was first written in | Yannick's call, on an example that proved it: "chaque peine de plus de 4 mois porte ma main au bas" is not French. It existed because an English image was translated word for word, and a long sentence gave it somewhere to live. French is written first now and neither language is a translation |
+| 2026-09-12 | **Every line must stand on its own** | Lines that assume an earlier question was asked | The player picks options in any order. "7 years" has to be 7 years *in prison*, "more stone" has to say what the stone is for, and "at the furnace" needs the furnaces named. Plain language is not only short words, it is giving the player enough to understand the sentence |
+| 2026-09-12 | Two prose rules **deleted** rather than relaxed: the coda cap and the voice-range rule | Keeping them and tuning the thresholds | The coda cap was a proxy for a register that no longer exists, and in plain speech everybody says "I". The range rule actively caused the damage: it pushed characters into 27 word sentences, which is where a metaphor hides. A rule that fights the register is a bad rule however well it measures |
+| 2026-09-12 | **Counts are figures, not words**, in both languages | Prose convention, spelled out | A game about ledgers, death tolls and escort numbers should read like one, a figure lands where a spelled-out number reads past, and digits are language-neutral when the same content ships twice. The conversion had to be done by hand in the end: a regex cannot tell a count from an article, and French makes that worse because "un" is both — fifteen men became "1 homme" before it was caught |
+| 2026-09-12 | **Voice range is a rule, because ceilings cannot see uniformity** | Caps alone, as the first pass had | Cutting every coda left the whole cast speaking in six words: 40% of sentences four words or fewer, spread 3.6 to 10.2. Every line passed every cap and the cast still had one voice, hard-boiled pastiche instead of rueful pastiche. A test now fails if the shortest and longest voices are less than 7 words a sentence apart. Spread is now 3.6 to 27.0, deviation 5.9 against 1.6 |
 | 2026-09-12 | **A house style, machine-checked, and it doubles as the generation constraints** | Style by review; fixing it after the model exists | Measured: 53% of replies ended on a self-aware coda and Arthur's argument was twice the size of the dialogue box. One writer's tic applied twenty-four times is the same failure as a model's, and it is invisible line by line — only listing the closing sentences side by side shows it. A model will imitate the corpus, tics included, so the corpus had to be cleaned before it is ever used as an example |
 | 2026-09-12 | Each character gets **one concrete verbal habit that is not wit** | Distinguishing voices by what they say rather than how | Halgrave answers in figures, Sena in under a dozen words, Dray in orders, Pell repeats himself, Wren prices everything. Ivo and Mira keep the self-examining close because it is what their work is. Wit was the only register the whole cast had, and wit is the easiest thing for a model to over-supply |
 | 2026-09-12 | Arthur's argument is **six short beats** the player asks for, not one speech | One long reply, as written | It was 987 characters in a box that holds 420, so half of §5's case was never on screen. Split, the player assembles his argument by asking for it, which is also a better scene than being lectured |
@@ -2193,6 +2523,27 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-11 | Anyone who can see you is marked over their head, but only while an act is possible, and never counted | A permanent "who can see me" readout; keeping the "N people watching" text; showing nothing | *Who* is the part that matters — Maddox seeing you is not the same event as a stranger seeing you — and a mark teaches the sight radius by going out as you walk, which a number cannot. Permanent would be surveillance furniture rather than an answer to a question being asked |
 | 2026-09-11 | The standing thresholds live in `StandingRules` beside the words, not in `DialogueRules` where the first one was written | Leaving the dialogue threshold where it was and giving the HUD its own bands | The HUD reading "wary" while a trader refuses to serve you is a lie the player cannot audit. One set of constants feeding both readings makes that impossible rather than merely unlikely, and a property test sweeps the whole range to hold it there |
 | 2026-09-11 | One witnessed theft costs the town 22 and buys 14 with the unlawful; unwelcome starts at −20 | A smaller first offence with escalation on repetition | The first consequence has to be legible the first time, not on the third repetition. The counterpart is not decoration: without somebody who approves, the number is a morality meter |
+| 2026-09-12 | The packet's brief is **facts** (`MUST BE TRUE`), never the finished reply (`MUST SAY`) | Handing the model the written line to rephrase; giving it no target at all | Rephrasing a sentence that is already written buys nothing and still needs every situation hand-written first. Facts are the brief that pays: measured overlap with the written line is 74% where nothing has happened and 50% where the player is known as a thief, so the whole gain sits in the half of the world an authored line cannot see |
+| 2026-09-12 | An answer with no facts declared is **never generated** and keeps its written reply | Generating everything; generating nothing | Lets generation be turned on one question at a time instead of all at once, and makes "the game is complete without it" true by construction rather than by intention |
+| 2026-09-12 | The prose door's word-length ceiling is **per language** — 5.4 English, 5.9 French | One ceiling for both; dropping the rule | Measured over the 95 written replies: English peaks at 5.00 letters a word, French at 5.46. One number refused two plain French lines and gave English slack it never used. French words are longer for reasons that are not register |
+| 2026-09-12 | Content **declares** the proper nouns the world contains that are neither a person nor a zone | Inferring them; loosening the invented-name rule | A name that appears only inside the sentence naming it is indistinguishable from a hallucination. Declaring it is the only way to keep the rule strict and still let Nessa name four burned villages |
+| 2026-09-12 | The door refuses a line that drops a given figure **or invents one** | Checking neither; checking only omissions | The only half of "state the facts" that is machine-checkable, and only because numbers are digits — 381 is 381 in either language. An invented figure is the worse of the two: a figure is why the player believes the rest of the line |
+| 2026-09-12 | Calibrate the door against the **hand-written corpus** before ever pointing it at a model | Trusting the rules as written; calibrating on generated output | As written it refused 8% of lines a person wrote and shipped. A door judged only by the bad lines its own test feeds it is not judged at all, and the first generated line would have been blamed for the door's faults |
+| 2026-09-12 | A reaction to the world **opens** a line rather than closing it | Answering first and adding the reaction as a tail; not reacting at all | Chosen 3 of 3 by ear where that was the axis. A reaction at the end reads as an afterthought bolted onto a stock answer — the same coda tic the voice-range rule was deleted for encouraging |
+| 2026-09-12 | A name offered in an answer must be somebody who can actually help with *that* question | Following the voice note literally wherever it applies | The version sending the player to Tovin about bread lost to one that just gave the price. Tovin runs the law, not the granary. A voice note describes a habit, not a licence to point anywhere |
+| 2026-09-12 | Rewrote 8 French lines carrying units and words a 10 year old cannot read: `sous`/`livre`, `arpents`, `laitier` (reads as milkman, not slag), `camp sale`, `fourniture` | Leaving approved content alone; changing only the line that was reported | The reported line was an instance of a class, and fixing only the instance leaves the rest for the next playtest to find. Same number written two ways by different characters (`Neuf`/`9`, `Quarante`/`40`) fixed in the same pass |
+| 2026-09-12 | Run llama.cpp from the **official prebuilt macOS arm64 binary**, not from this machine's Homebrew | `brew install llama.cpp`; building from source; Ollama | This machine's Homebrew is the Intel one under Rosetta 2 (`HOMEBREW_PREFIX: /usr/local`, `macOS: …-x86_64`). Installing from it yields an x86 binary with no Metal, which would have made the speed test meaningless. The prebuilt arm64 tarball touches nothing else on the machine and is deleted by removing one folder |
+| 2026-09-12 | An opening reaction says **what the speaker will or will not give**, never what they think of the player | Any reaction at the start; a reaction that observes the player | Explains 6 of 7 answers across two A/B rounds, including the one that looked like an exception. *"À vous, je peux le dire"* was chosen; *"Vous, vous regardez les fours"* was rejected by the same ear in the same session. A reaction is a change in what is on offer, not a character noticing you |
+| 2026-09-12 | **Everything in the packet that names a thing is rendered in the player's language**; English survives only as instruction — the labels, the voice note, the facts | Leaving the packet as ids because it was only ever read by a person | The first real model run wrote *"il est dans Thornwood"* into a French line, from `HOLDS: thornwood:kell`. Anything in the packet may be repeated, so anything that names a thing must be sayable. Cost: the cast, the relation verbs and the fact descriptions all render per language, and 26 relation verbs became translated content |
+| 2026-09-12 | The brief the model gets puts the **task first and the background last**, the reverse of the packet's own order | Sending the packet as built; trusting the instruction to win from the bottom | Maddox, asked the price of bread, explained where the deserter lives — his `HOLDS` line was a finished French sentence and the task was English fifteen lines below it. A finished sentence in the background beats an instruction in the task. Costs the cacheable prefix, which is a second ordering problem rather than a reason to keep a worse prompt |
+| 2026-09-12 | The door refuses **formatting and stage directions** outright, and a GBNF grammar makes them unemittable | Stripping them after the fact; trusting the prompt | A model asked to write dialogue reaches for `*se retourne vers la mer*` and `**381**` immediately. Stripping is a guess about intent; a grammar that cannot express the character is a guarantee. Both are cheap, so both |
+| 2026-09-12 | The packet carries **what the player knows and has done**, not only who the NPC is | Leaving the player out, as before; passing the whole fact base | Every answer was written for somebody who had just walked in off the road. Whether the player has read the ledger is the difference between being told the number and being asked what they mean to do with it. Clipped to 6, because the fact base is unbounded and most of it has nothing to do with the person in front of you |
+| 2026-09-12 | A conversation carries its own **thread** — the last exchanges in full — on `WorldState`, cleared when the talk ends | Rebuilding it from the `asked:` facts; keeping it forever | A set of asked questions has no order and holds no answers, so a packet built from it can say what was asked and never what was said. It is cleared on close because the thread is the conversation, not the relationship |
+| 2026-09-12 | When generated output is wrong, **the packet is the first suspect, not the model** | Tuning the model, the temperature or the prompt first | Twice in one session: `thornwood:kell` became "il est dans Thornwood" in a French line, and a fact description saying "près de 400" produced a 400 where the brief said 381. Both looked exactly like a model inventing things. Both were ours |
+| 2026-09-12 | **Qwen3.5 4B over Ministral 3 8B** for generated dialogue | The desk research's primary recommendation; the 8B at a better quant; either with examples | Measured on sixteen real packets: 81% through the door against 44%, at half the size and the same 1.2 s. The research reasoned that a French company makes the best French and flagged one French tester who disagreed; the tester was right. Nothing published predicted this |
+| 2026-09-12 | Showing hand-written lines as examples is **not** used | Three examples as prior turns, the standard fix | It cost the better model 19 points. A finished line in the target register appears to pull the model toward the example's *contents* rather than its shape, which is the same failure as a finished French sentence in the background beating an English instruction in the task |
+| 2026-09-12 | Qwen's thinking mode is turned off with `--reasoning off --reasoning-budget 0` on llama.cpp b10930 | Accepting the empty output; a larger token budget; abandoning Qwen | The first run scored Qwen 0%, with every line empty and 3.5 s spent: the whole budget went on reasoning tokens and `content` came back blank. The research cited an open issue saying the flag was ignored. On this build it works. **Third time in one session that a model looked broken and the harness was at fault** |
+| 2026-09-12 | Generation stays **off** for v1; the reactive openers are hand-written instead | Whole-line generation; opener-only generation; a second model to check meaning | Opener-only removed the unfixable part by construction and still got the sign backwards 5 times out of 6, at 94% through the door. A metric reading *ready* over inverted output is worse than one reading *broken*. The thing small enough for a model to invert is small enough to write: 4 standing bands, shared per band like `dispositions` already are |
 
 ---
 

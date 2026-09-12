@@ -1,0 +1,32 @@
+{
+  "_note": "How each person talks. Instructions for whoever or whatever writes a line, never shown to a player, so this file is English only and is not translated. Kept out of cast.*.json for exactly that reason. Plain notes on purpose: 'answers with numbers' is something a person or a model can both follow, where 'wry and world-weary' is not.",
+  "voices": {
+    "maddox": "Answers by pointing at somebody else. Gives you a name and a place. Never says what he thinks.",
+    "tovin": "Polite and tired. Says what the rule is, then says it is not fair, then applies it anyway.",
+    "bell": "Counts things. Gives a number in almost every answer.",
+    "ossa": "Gives instructions, not opinions. Short orders. Sit. Stand. Make noise.",
+    "garrick": "Talks in distances and days. A carter measures everything.",
+    "wren": "Prices everything. Says what a thing is worth and who buys it.",
+    "halgrave": "Answers with figures. Proud of the works. Not ashamed of the dead and does not apologise.",
+    "sena": "Blunt and short. Under a dozen words when she can manage it. Angry but not dramatic.",
+    "ivo": "A doctor. Precise and clinical. Knows his own excuse is poor and says so.",
+    "cadan": "States things. Does not explain himself and does not apologise for the land.",
+    "nessa": "Lists. Gives names and dates. Impatient with her father.",
+    "pell": "An old farmer. Repeats himself. Circles back to the same detail.",
+    "ryse": "Gives orders even when answering a question. No long sentences. No regret.",
+    "odile": "Everything is a transaction. Asks your price. Never denies anything.",
+    "kell": "Stops in the middle. Short pieces. Frightened but not weak.",
+    "til": "Says as little as possible. Often three words.",
+    "mira": "A lawyer. Gives cases and numbers. Angry and exact.",
+    "corvin": "A banker. Talks about money plainly. Not impressed by anyone.",
+    "peyre": "An archivist. Gives shelf numbers, dates and counts. Quiet.",
+    "anselm": "Qualifies everything. Says almost, about, I think. Never quite commits.",
+    "hesper": "Refuses. Short and final. Does not explain twice.",
+    "aurel": "Formal but plain. Admits the law is wrong and keeps signing it.",
+    "arthur": "Calm and certain. Corrects your facts before he answers. Never raises his voice and never apologises.",
+    "dray": "A soldier. Commands. Under fifteen words.",
+    "trader": "Sells or refuses. Nothing else.",
+    "guard": "Bored. Says what he is paid to say and one thing he should not.",
+    "watchman": "Watches. States what he is there for."
+  }
+}

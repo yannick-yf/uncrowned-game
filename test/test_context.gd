@@ -86,21 +86,44 @@ func test_the_packet_changes_when_the_world_does() -> void:
 	assert_ne(_packet(sim, &"maddox"), before, "he watched you do it and the packet says so")
 
 
-func test_a_packet_names_only_things_that_exist() -> void:
-	# It is assembled from ids rather than written, so this cannot fail today — it
-	# is here for the day something starts generating one.
+func test_a_packet_names_only_things_a_player_could_be_told() -> void:
+	# **The rule the first real generation run wrote.** This test used to assert the
+	# opposite: that the packet was built out of ids, `maddox knows_of kell`, which is
+	# what a person reads over somebody's shoulder. A model read it and put
+	# "il est dans Thornwood" into a French line — an English id for a wood the game
+	# calls la Ronceraie, a name no player has ever seen.
+	#
+	# Anything in the packet that names a thing may be repeated, so everything that
+	# names a thing must be sayable. The proof is the door's own rule, turned on the
+	# packet: every capitalised word in it is a real person or a real place.
+	var sim: Sim = _world()
+	var cast := sim.store(&"cast") as Cast
+	var known: PackedStringArray = ProseRules.known_names(cast)
+	for npc: Npc in cast.named():
+		for line: String in _packet(sim, npc.id).split("\n"):
+			if not (line.begins_with("KNOWS: ") or line.begins_with("HOLDS: ")
+					or line.begins_with("WHO: ")):
+				continue
+			var body: String = line.substr(line.find(":") + 1)
+			for name: String in ProseRules.names_not_in(body, known):
+				assert_true(false, "%s's packet says '%s', which no player has seen"
+					% [npc.id, name])
+	assert_true(true, "every name in every packet is one the world has a word for")
+
+
+func test_a_packet_never_shows_an_internal_id() -> void:
+	# The other half, and the one a name check cannot see: an id is lowercase, so
+	# `thornwood:kell` and `knows_of` sail past a capitalisation rule. They are still
+	# English, still unsayable, and still in front of something that will repeat them.
 	var sim: Sim = _world()
 	var cast := sim.store(&"cast") as Cast
 	for npc: Npc in cast.named():
 		for line: String in _packet(sim, npc.id).split("\n"):
-			if not line.begins_with("KNOWS: "):
-				continue
-			# "<from> <kind> <to>" — the ends are people, the middle is the relation.
-			var parts: PackedStringArray = line.substr(7).split(" ")
-			assert_eq(parts.size(), 3, "an edge line is three words: %s" % line)
-			for at: int in [0, 2]:
-				assert_not_null(cast.get_npc(StringName(parts[at])),
-					"%s's packet names '%s', who is nobody" % [npc.id, parts[at]])
+			if line.begins_with("VOICE:") or line.begins_with("MUST BE TRUE:"):
+				continue  # briefing, deliberately English, never a name
+			assert_false(line.contains(":") and line.split(":").size() > 2
+					and line.substr(line.find(":") + 1).contains("_"),
+				"%s's packet leaks an id: %s" % [npc.id, line])
 
 
 func test_a_packet_stays_a_packet_however_long_the_run() -> void:
