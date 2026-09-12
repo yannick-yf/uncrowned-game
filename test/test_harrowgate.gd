@@ -171,6 +171,23 @@ func test_some_things_bear_asking_twice() -> void:
 	assert_true(repeatable > 0, "somebody in the world can be asked the same thing twice")
 
 
+func test_every_line_that_causes_something_names_a_real_deed() -> void:
+	# Found the hard way: Sena's line said `causes: "turn_the_workers"` and the deed
+	# is `i_turned_the_workers`, so choosing it ran a deed nobody had written — no
+	# error, no effect, the furnaces merrily alight. An id typed in content and
+	# never compared against anything is a lever that silently does nothing.
+	var known: Array[StringName] = DeedRules.all_deeds()
+	var causing: int = 0
+	for id: StringName in _cast.npcs.keys():
+		for option: DialogueOption in _cast.get_npc(id).options:
+			if option.causes == &"":
+				continue
+			causing += 1
+			assert_true(known.has(option.causes),
+				"%s's '%s' causes '%s', which is not a deed" % [id, option.intent, option.causes])
+	assert_true(causing > 0, "somebody in the world can do something by saying it")
+
+
 func test_every_fact_keeps_one_source_nothing_can_gate_shut() -> void:
 	# Invariants 6 and 7, checked against the content rather than hoped for.
 	#

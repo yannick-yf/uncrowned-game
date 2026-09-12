@@ -35,6 +35,12 @@ var costs: StringName = &""
 ## Some things bear asking twice — a trader's stock, a guard's "anything moving on
 ## the road". Most do not: a man who has told you where the ford is has told you.
 var repeatable: bool = false
+## A deed this line performs. §3 lists levers like "turn the workers" that are
+## plainly things you *say* rather than things you do to a building, and until now
+## nothing in a conversation could cause anything — which is most of why a cast
+## risked being lore. The rules layer still decides whether the line is offered;
+## this only names what saying it does.
+var causes: StringName = &""
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible

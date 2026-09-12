@@ -94,6 +94,12 @@ func _choose(
 	# replays, and so the journal could one day show what you have already asked.
 	if not option.repeatable:
 		sim.facts.add_source(option.spent_by(npc.id), &"witnessed")
+	# And what saying it does, if it does anything. Raised rather than applied here:
+	# the dialogue system runs conversations and has no business knowing what a
+	# furnace is.
+	if option.causes != &"":
+		Deeds.perform(sim, option.causes, world.region().zone_at(world.player_tile()),
+			world.player_pos)
 	world.current_line = option.reply
 	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
 

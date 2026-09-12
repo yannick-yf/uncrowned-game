@@ -8,7 +8,8 @@
     "cairnwell:tiered_law": "The working record of how the tiered law is administered: three columns, and the third is calculated from the first two.",
     "cinderworks:ledger": "The Cinderworks ledger of what the furnaces cost in men, kept in the king's own hand, with the price set against the output.",
     "bank:debts": "The bank's book of what the crown owes and to whom. Nearly all of it is owed to one creditor.",
-    "muster:signed_orders": "The orders to clear the villages, signed. The men who carried them out are named underneath."
+    "muster:signed_orders": "The orders to clear the villages, signed. The men who carried them out are named underneath.",
+    "cinderworks:death_toll": "The Cinderworks has killed somewhere near four hundred men in eleven years. Arthur was sent the count every year and kept sending for more stone."
   },
   "npcs": {
     "maddox": {
@@ -231,6 +232,119 @@
           "intent": "ask_cinderworks",
           "text": "What do you sell, and to who?",
           "reply": "Scrap, to the Cinderworks. They buy metal and ask nothing, which tells you what they are. I'd not go in there without knowing when the shift changes.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "halgrave": {
+      "name": "Foreman Halgrave",
+      "role": "Foreman",
+      "zone": "overworld",
+      "tile": [
+        240,
+        171
+      ],
+      "sprite": "OldMan3",
+      "greeting": "Mind the slag, it stays hot for a day. You're looking at the third largest works in the kingdom and the only one that still makes its numbers.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Halgrave puts himself between you and the furnaces, and does not pretend it is anything else."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_works",
+          "text": "What is it you make here?",
+          "reply": "Steel. Rail, plate, tools, and every nail in every roof between here and the sea. Before the works, this valley buried its children in bad winters. It does not any more. I am not going to apologise for that and I would ask you not to expect it."
+        },
+        {
+          "intent": "ask_cost",
+          "text": "What has it cost?",
+          "reply": "Near four hundred men, in eleven years. I can give you the figure by year if you want it — I send it up every spring and I have never once rounded it down. Arthur reads them. He read them and he sent for more stone, and I have thought about that a great deal and I still think he was right.",
+          "teaches": "cinderworks:death_toll",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_ledger",
+          "text": "You keep a record of that.",
+          "reply": "Of course I keep a record. The crown requires it, and it would matter even if it did not. If a thing costs four hundred men, somebody had better be able to say so afterwards. It is in the office. I have never hidden where.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "sena": {
+      "name": "Sena",
+      "role": "Furnace worker",
+      "zone": "overworld",
+      "tile": [
+        245,
+        173
+      ],
+      "sprite": "Woman",
+      "greeting": "You're not from the works. Nobody from the works stands about looking at it.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Sena looks at your hands rather than your face, and keeps her own where you can see them."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_hand",
+          "text": "Your hand.",
+          "reply": "Number four furnace, six years ago. They gave me eleven days' pay and the doctor signed something that said I was careless. I have got the paper. I keep it where I can see it."
+        },
+        {
+          "intent": "ask_toll",
+          "text": "How many has it taken?",
+          "reply": "Halgrave will tell you four hundred, and he is not lying, he is just counting what he is allowed to count. I have got pages copied out of his book in my own hand. Men who went into the infirmary and came out in a cart don't go in the book at all.",
+          "teaches": "cinderworks:death_toll",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_organise",
+          "text": "They would listen to you.",
+          "reply": "They would. What I have never had is a number. A man will not walk off a shift for a feeling, but he will for four hundred, and for knowing somebody up there read it every spring. All right. Give me a week.",
+          "costs": "goodwill",
+          "causes": "i_turned_the_workers",
+          "requires": "cinderworks:death_toll"
+        }
+      ]
+    },
+    "ivo": {
+      "name": "Doctor Ivo Marsh",
+      "role": "Physician",
+      "zone": "overworld",
+      "tile": [
+        241,
+        177
+      ],
+      "sprite": "Monk",
+      "greeting": "If you are bleeding, sit. If you are here about somebody who is dead, the certificates are filed by year and I would rather you asked me than looked.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Marsh goes on writing, and does not look up until you have gone."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_certificates",
+          "text": "You sign the certificates.",
+          "reply": "I sign what I am given. Crush, burn, fall, fever. Four words and a date, and a man's whole account of himself is closed."
+        },
+        {
+          "intent": "ask_true_count",
+          "text": "Is the foreman's book accurate?",
+          "reply": "It is honest and it is wrong. He counts what dies at the furnace. I count what dies of the furnace — the lungs, mostly, eighteen months later, in a bed at home. His number is four hundred. Mine is not a number I say out loud in this valley.",
+          "teaches": "cinderworks:death_toll",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_why_stay",
+          "text": "Then why stay?",
+          "reply": "Because if I go they will find a man who does not keep his own count. That is the whole of my defence and I am aware of what it is worth.",
           "costs": "goodwill"
         }
       ]

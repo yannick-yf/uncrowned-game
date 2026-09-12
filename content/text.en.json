@@ -120,5 +120,8 @@
   "doc.bank:debts": "the book of debts",
   "doc.muster:signed_orders": "the signed orders",
   "prompt.rest": "E — sit down and rest",
-  "moment.rested": "you sleep. the world does not"
+  "moment.rested": "you sleep. the world does not",
+  "journal.who": "WHO IS WHERE   [debug]",
+  "journal.who.row": "{0} — {1}, {2} tiles {3}",
+  "journal.who.met": "met"
 }

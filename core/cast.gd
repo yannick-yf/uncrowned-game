@@ -82,6 +82,7 @@ static func load_from(path: String) -> Cast:
 			option.forbids_condition = StringName(data.get("forbids_condition", ""))
 			option.costs = StringName(data.get("costs", ""))
 			option.repeatable = bool(data.get("repeatable", false))
+			option.causes = StringName(data.get("causes", ""))
 			npc.options.append(option)
 		cast.npcs[npc.id] = npc
 
@@ -133,6 +134,7 @@ func _load_strangers(section: Dictionary) -> void:
 			option.forbids_condition = StringName(data.get("forbids_condition", ""))
 			option.costs = StringName(data.get("costs", ""))
 			option.repeatable = bool(data.get("repeatable", false))
+			option.causes = StringName(data.get("causes", ""))
 			npc.options.append(option)
 		npcs[npc.id] = npc
 

@@ -8,7 +8,8 @@
     "cairnwell:tiered_law": "Le registre de travail expliquant comment la loi par paliers est appliquée : trois colonnes, et la troisième se déduit des deux premières.",
     "cinderworks:ledger": "Le registre des Forges, ce que les fours ont coûté en hommes, tenu de la main du roi, le prix inscrit en face du rendement.",
     "bank:debts": "Le livre de la banque : ce que la couronne doit, et à qui. Presque tout est dû à un seul créancier.",
-    "muster:signed_orders": "Les ordres de raser les villages, signés. Les hommes qui les ont exécutés sont nommés en dessous."
+    "muster:signed_orders": "Les ordres de raser les villages, signés. Les hommes qui les ont exécutés sont nommés en dessous.",
+    "cinderworks:death_toll": "Les Forges ont tué près de quatre cents hommes en onze ans. On envoyait le compte à Arthur chaque année, et il continuait de demander plus de pierre."
   },
   "npcs": {
     "maddox": {
@@ -231,6 +232,119 @@
           "intent": "ask_cinderworks",
           "text": "Vous vendez quoi, et à qui ?",
           "reply": "De la ferraille, aux Forges. Ils achètent le métal et ne demandent rien, ce qui vous dit ce qu'ils sont. Je n'y entrerais pas sans savoir quand la relève passe.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "halgrave": {
+      "name": "Contremaître Halgrave",
+      "role": "Contremaître",
+      "zone": "overworld",
+      "tile": [
+        240,
+        171
+      ],
+      "sprite": "OldMan3",
+      "greeting": "Attention au laitier, ça reste brûlant une journée. Vous regardez la troisième forge du royaume, et la seule qui tienne encore ses chiffres.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Halgrave se place entre vous et les fours, et ne fait pas semblant que ce soit autre chose."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_works",
+          "text": "Qu'est-ce que vous faites ici ?",
+          "reply": "De l'acier. Des rails, des plaques, des outils, et chaque clou de chaque toit d'ici à la mer. Avant les Forges, cette vallée enterrait ses enfants les mauvais hivers. Plus maintenant. Je ne vais pas m'en excuser et je vous demanderai de ne pas l'attendre."
+        },
+        {
+          "intent": "ask_cost",
+          "text": "Qu'est-ce que ça a coûté ?",
+          "reply": "Près de quatre cents hommes, en onze ans. Je peux vous donner le chiffre année par année si vous le voulez — je l'envoie chaque printemps et je ne l'ai jamais arrondi vers le bas. Arthur les lit. Il les a lus et il a demandé plus de pierre, et j'y ai beaucoup pensé, et je crois toujours qu'il avait raison.",
+          "teaches": "cinderworks:death_toll",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_ledger",
+          "text": "Vous tenez un registre de ça.",
+          "reply": "Bien sûr que je tiens un registre. La couronne l'exige, et ça compterait même si elle ne l'exigeait pas. Si une chose coûte quatre cents hommes, il vaut mieux que quelqu'un puisse le dire après. Il est au bureau. Je n'ai jamais caché où.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "sena": {
+      "name": "Sena",
+      "role": "Ouvrière",
+      "zone": "overworld",
+      "tile": [
+        245,
+        173
+      ],
+      "sprite": "Woman",
+      "greeting": "Vous n'êtes pas des Forges. Personne des Forges ne reste planté à les regarder.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Sena regarde vos mains plutôt que votre visage, et garde les siennes bien en vue."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_hand",
+          "text": "Votre main.",
+          "reply": "Four numéro quatre, il y a six ans. Ils m'ont donné onze jours de paie et le médecin a signé quelque chose disant que j'avais été négligente. J'ai gardé le papier. Je le garde là où je le vois."
+        },
+        {
+          "intent": "ask_toll",
+          "text": "Combien en a-t-elle pris ?",
+          "reply": "Halgrave vous dira quatre cents, et il ne ment pas, il compte seulement ce qu'on l'autorise à compter. J'ai des pages recopiées de son livre, de ma main. Les hommes entrés à l'infirmerie et sortis sur une charrette n'entrent pas dans le livre du tout.",
+          "teaches": "cinderworks:death_toll",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_organise",
+          "text": "Ils vous écouteraient.",
+          "reply": "Ils m'écouteraient. Ce qui m'a toujours manqué, c'est un chiffre. Un homme ne quitte pas son poste pour un sentiment, mais il le quittera pour quatre cents, et pour savoir que quelqu'un là-haut les lisait chaque printemps. D'accord. Donnez-moi une semaine.",
+          "costs": "goodwill",
+          "causes": "i_turned_the_workers",
+          "requires": "cinderworks:death_toll"
+        }
+      ]
+    },
+    "ivo": {
+      "name": "Docteur Ivo Marsh",
+      "role": "Médecin",
+      "zone": "overworld",
+      "tile": [
+        241,
+        177
+      ],
+      "sprite": "Monk",
+      "greeting": "Si vous saignez, asseyez-vous. Si vous venez pour quelqu'un qui est mort, les certificats sont classés par année et je préférerais que vous me demandiez plutôt que de chercher.",
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "Marsh continue d'écrire, et ne lève pas les yeux avant que vous soyez parti."
+        }
+      ],
+      "options": [
+        {
+          "intent": "ask_certificates",
+          "text": "C'est vous qui signez les certificats.",
+          "reply": "Je signe ce qu'on me donne. Écrasement, brûlure, chute, fièvre. Quatre mots et une date, et toute la vie d'un homme est close."
+        },
+        {
+          "intent": "ask_true_count",
+          "text": "Le livre du contremaître est-il exact ?",
+          "reply": "Il est honnête et il est faux. Il compte ce qui meurt au four. Moi je compte ce qui meurt à cause du four — les poumons, surtout, dix-huit mois plus tard, dans un lit à la maison. Son chiffre est quatre cents. Le mien n'est pas un chiffre que je dis tout haut dans cette vallée.",
+          "teaches": "cinderworks:death_toll",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_why_stay",
+          "text": "Alors pourquoi rester ?",
+          "reply": "Parce que si je pars, ils trouveront un homme qui ne tient pas son propre compte. C'est toute ma défense et je sais ce qu'elle vaut.",
           "costs": "goodwill"
         }
       ]

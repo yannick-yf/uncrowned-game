@@ -120,5 +120,8 @@
   "doc.bank:debts": "le livre des dettes",
   "doc.muster:signed_orders": "les ordres signés",
   "prompt.rest": "E — s'asseoir et se reposer",
-  "moment.rested": "vous dormez. le monde, lui, continue"
+  "moment.rested": "vous dormez. le monde, lui, continue",
+  "journal.who": "QUI EST OÙ   [debug]",
+  "journal.who.row": "{0} — {1}, {2} cases {3}",
+  "journal.who.met": "rencontré"
 }

@@ -120,9 +120,13 @@ through the ordinary tick path, so a skipped day is identical to a waited one:
 same drift, same events, same replay. Which also means a day skipped standing in
 the Thornwood is a day of being eaten.
 
-It is gated on `OS.has_feature("debug")`, so it is absent from a release export.
-Anything else of this kind goes behind the same gate and gets listed here. A debug
-tool that is not written down is a debug tool that ships.
+**The journal's last section lists who is where.** Every named person, the town
+they stand in, the distance and the compass direction. Phase 6 brings eighteen more
+of them and "walk about until you find him" is not a way to review a character.
+
+Both are gated on `OS.has_feature("debug")`, so they are absent from a release
+export. Anything else of this kind goes behind the same gate and gets listed here.
+A debug tool that is not written down is a debug tool that ships.
 
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
 > so you cannot walk anywhere while time passes, which is the whole point.

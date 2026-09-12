@@ -780,6 +780,23 @@ func _draw_journal() -> void:
 		lines.append(Text.of(&"journal.deposed",
 			[Text.of(StringName("end.%s" % _world.reign_ended))]))
 
+	# Everybody with a name, where they stand, and how far off. A playtest tool:
+	# eighteen more people arrive over Phase 6 and "walk about until you find him"
+	# is not a way to review a character. Gated on a debug build and written down in
+	# CLAUDE.md, like the day-skip — a debug tool nobody recorded is one that ships.
+	if _debug_available:
+		lines.append("")
+		lines.append(Text.of(&"journal.who"))
+		for npc: Npc in _cast.named():
+			var delta: Vector2 = npc.centre() - _world.player_pos
+			var compass: String = ("%s%s" % [
+				"N" if delta.y < -1.0 else ("S" if delta.y > 1.0 else ""),
+				"W" if delta.x < -1.0 else ("E" if delta.x > 1.0 else "")])
+			lines.append("· " + Text.of(&"journal.who.row", [
+				npc.display_name,
+				Text.of(StringName("place.short.%s" % _world.region().zone_at(npc.tile))),
+				int(delta.length()), compass]))
+
 	var known: Array[Dictionary] = Journal.knowledge(_sim.facts, _cast)
 	if not known.is_empty():
 		lines.append("")

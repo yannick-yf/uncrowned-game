@@ -27,6 +27,10 @@ const DEED_WRECK_ROLLS: StringName = &"i_destroyed_the_muster_rolls"
 ## Reading a document aloud where people can hear it. It returns to the table now
 ## that there is evidence to read — it was cut when nothing could perform it.
 const DEED_MAKE_PUBLIC: StringName = &"i_made_it_public"
+## §3's second lever against the Cinderworks, and the first that is a thing you say
+## rather than a thing you break. Sena is organising the others; what she has never
+## had is a number to organise them around.
+const DEED_TURN_WORKERS: StringName = &"i_turned_the_workers"
 
 const FACTION_TOWNS: StringName = &"towns"
 const FACTION_UNDERWORLD: StringName = &"the unlawful"
@@ -62,6 +66,8 @@ static func town_effect(deed: StringName) -> float:
 		return -12.0
 	if deed == DEED_MAKE_PUBLIC:
 		return 25.0
+	if deed == DEED_TURN_WORKERS:
+		return 15.0
 	return 0.0
 
 
@@ -87,6 +93,8 @@ static func faction_effects(deed: StringName) -> Dictionary:
 		return {FACTION_CROWN: -24.0, FACTION_TOWNS: 6.0, FACTION_DISPOSSESSED: 14.0}
 	if deed == DEED_MAKE_PUBLIC:
 		return {FACTION_CROWN: -30.0, FACTION_DISPOSSESSED: 22.0, FACTION_TOWNS: 8.0}
+	if deed == DEED_TURN_WORKERS:
+		return {FACTION_CROWN: -26.0, FACTION_DISPOSSESSED: 24.0, FACTION_TOWNS: -8.0}
 	return {}
 
 
@@ -114,6 +122,8 @@ static func witness_effect(deed: StringName) -> float:
 		return -20.0
 	if deed == DEED_MAKE_PUBLIC:
 		return 30.0
+	if deed == DEED_TURN_WORKERS:
+		return 22.0
 	return 0.0
 
 
@@ -169,6 +179,9 @@ static func world_effects(deed: StringName) -> Dictionary:
 		# What the crown did stops being what the town suspects and becomes what it
 		# knows. §3's `discredited` ending is the sum of these.
 		return {&"town_sentiment": -20.0, &"faction_tension": 8.0}
+	if deed == DEED_TURN_WORKERS:
+		# Men who know what the furnaces cost tend the furnaces worse.
+		return {&"worker_morale": -30.0, &"steel_output": -15.0, &"town_sentiment": -10.0}
 	return {}
 
 
@@ -178,5 +191,5 @@ static func all_deeds() -> Array[StringName]:
 	return [
 		DEED_THEFT, DEED_RESTITUTION, DEED_WARNING,
 		DEED_SABOTAGE, DEED_BURN_STORES, DEED_ROB_BANK, DEED_WRECK_ROLLS,
-		DEED_MAKE_PUBLIC,
+		DEED_MAKE_PUBLIC, DEED_TURN_WORKERS,
 	]

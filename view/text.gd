@@ -15,6 +15,11 @@ extends RefCounted
 
 const PATH: String = "res://content/text.%s.json"
 const FALLBACK: String = "en"
+## What a player gets before they have chosen anything. French, because the game is
+## written and played in French first — the machine's language is not consulted, on
+## purpose: this one is authored in French and translated into English, not the
+## other way round. One line to change the day that stops being true.
+const DEFAULT: String = "fr"
 ## Every language the game ships in, in the order the switch walks them.
 const SHIPPED: Array[String] = ["en", "fr"]
 ## Where the player's choice is kept. Not a debug tool — §16 will grow an options
@@ -36,8 +41,8 @@ static func locale() -> String:
 static func _remembered() -> String:
 	var file := ConfigFile.new()
 	if file.load(SETTINGS) == OK:
-		return String(file.get_value("player", "language", OS.get_locale_language()))
-	return OS.get_locale_language()
+		return String(file.get_value("player", "language", DEFAULT))
+	return DEFAULT
 
 
 ## The next language along, remembered for next time.

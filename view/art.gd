@@ -30,6 +30,9 @@ const CASTING: Dictionary = {
 	&"ossa": "OldWoman",
 	&"garrick": "Villager2",
 	&"wren": "Villager5",
+	&"halgrave": "OldMan3",
+	&"sena": "Woman",
+	&"ivo": "Monk",
 	# Strangers are cast by trade, not by name — there is only one trader sheet
 	# however many traders the map ends up holding.
 	&"trader": "ManGreen",
