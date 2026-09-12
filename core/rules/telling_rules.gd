@@ -14,6 +14,24 @@ extends RefCounted
 ## §8's availability rule is the reason this takes no quest, no grant and no
 ## permission — only standing somewhere with people in it. An act you have to be
 ## given is not a counterweight to an act you can simply take.
+## The document you are holding, have not yet made public, and are somewhere with
+## people to say it to. Proof rather than testimony: §3's `discredited` ending is
+## the world *knowing* what he did, and your word alone has never been evidence.
+static func tellable_document(
+	town: StringName,
+	witnesses: PackedStringArray,
+	world: WorldState,
+	facts: FactBase,
+) -> StringName:
+	if town == &"" or witnesses.is_empty() or world == null or facts == null:
+		return &""
+	for fact: String in world.documents:
+		var held: StringName = StringName(fact)
+		if not facts.has(DocumentRules.made_public(held)):
+			return held
+	return &""
+
+
 static func can_warn(
 	town: StringName,
 	told_to: StringName,

@@ -22,6 +22,13 @@ const TEST_DIR: String = "res://test"
 
 
 func _initialize() -> void:
+	# English, whatever the machine or the player's saved setting says. Content
+	# tests assert on the words themselves — that Maddox blames the soldiers and
+	# never the player — so a suite that reads a preference is a suite that passes
+	# or fails depending on which language somebody last pressed L in. Found exactly
+	# that way (2026-09-12). test_language.gd exercises both on purpose.
+	Text.set_locale("en")
+
 	var started_usec: int = Time.get_ticks_usec()
 	var suites: int = 0
 	var ran: int = 0

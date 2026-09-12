@@ -76,6 +76,13 @@ static func deliver(sim: Sim, rumour: Rumour, town: StringName, carried: bool) -
 	var effect: float = DeedRules.town_effect(rumour.about)
 	standing.shift_town(town, effect)
 	_town_hears(sim, rumour, town, effect)
+	# And what it does to how they regard *him*, which is a different number from
+	# how they regard you and the one §3's `discredited` ending counts.
+	var about_the_crown: float = DeedRules.sentiment_on_arrival(rumour.about)
+	if about_the_crown != 0.0:
+		var ticked := sim.store(&"worldtick") as WorldTick
+		if ticked != null:
+			ticked.push_sentiment(town, about_the_crown)
 	sim.derive(&"rumour_arrived", {
 		"town": String(town),
 		"about": String(rumour.about),

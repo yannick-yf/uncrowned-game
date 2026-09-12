@@ -14,6 +14,12 @@ extends RefCounted
 ## Phase 4 revisits it beside combat, where being hurt has to mean more than this.
 
 ## Nothing may have hurt you for this long before anything mends.
+## How close you must be to sit down at a fire, and how long a rest lasts. Eight
+## in-game hours: long enough that the world moves while you sleep, which is what
+## makes the save point and the payoff the same moment (§19 Q5).
+const FIRE_REACH: float = 2.2
+const REST_TICKS: int = 8 * 60
+
 const CALM_SECONDS: float = 6.0
 ## Out in the country: a point every twenty seconds, so a full ten is three
 ## minutes of not being bitten. Slow enough that the Thornwood still frightens.

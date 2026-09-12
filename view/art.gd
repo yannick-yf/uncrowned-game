@@ -110,6 +110,8 @@ func _init() -> void:
 		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
 		&"granary": [&"house", Rect2i(0, 224, 48, 64)],
 		&"muster_rolls": [&"camp", Rect2i(96, 48, 32, 32)],
+		&"papers": [&"camp", Rect2i(96, 48, 32, 32)],
+		&"campfire": [&"camp", Rect2i(192, 80, 32, 32)],
 	}
 
 

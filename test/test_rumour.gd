@@ -299,6 +299,18 @@ func test_the_road_is_walked_the_same_way_every_time() -> void:
 		"the same road, walked identically")
 
 
+func test_a_patrolled_road_is_harder_to_pass_unremarked() -> void:
+	# §8's fourth quantity finally reads by something. The crown moves men about
+	# after crime reports, so the more it has heard the further along the King's
+	# Road somebody will put your face to the story — which pushes the player the
+	# same way the watch does, toward the trees.
+	assert_true(
+		TravelRules.recognise_range_for(100.0) > TravelRules.recognise_range_for(WorldTick.NEUTRAL),
+		"a busy road notices you from further off")
+	assert_eq(TravelRules.recognise_range_for(0.0), TravelRules.RECOGNISE_RANGE,
+		"and an empty one is the quiet figure")
+
+
 func test_travellers_keep_to_the_road() -> void:
 	var sim: Sim = _road_sim()
 	var region: Region = (sim.store(&"world") as WorldState).region()

@@ -77,7 +77,10 @@ func _recognise(sim: Sim, world: WorldState, walker: Traveller) -> void:
 	var rumours := sim.store(&"rumours") as Rumours
 	if rumours == null:
 		return
-	if walker.pos.distance_to(world.player_pos) > TravelRules.RECOGNISE_RANGE:
+	var ticked := sim.store(&"worldtick") as WorldTick
+	var reach: float = TravelRules.recognise_range_for(
+		ticked.patrol_density) if ticked != null else TravelRules.RECOGNISE_RANGE
+	if walker.pos.distance_to(world.player_pos) > reach:
 		return
 	for rumour: Rumour in rumours.live:
 		if not walker.is_carrying(rumour.id):

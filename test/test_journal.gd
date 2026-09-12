@@ -52,8 +52,8 @@ func test_the_act_and_its_consequence_are_both_there_in_order() -> void:
 	_steal_and_wait(sim, 4.0)
 	var rows: Array[Dictionary] = Journal.entries(sim.events)
 	assert_true(rows.size() >= 2, "the theft, and somewhere hearing about it")
-	assert_true(String(rows[0]["line"]).contains("took something"),
-		"the first thing in it is what you did: %s" % rows[0]["line"])
+	assert_eq(rows[0]["kind"], Journal.DEED, "the first thing in it is what you did")
+	assert_eq(rows[0]["deed"], DeedRules.DEED_THEFT, "and it was the theft")
 
 	var last: int = -1
 	for row: Dictionary in rows:
@@ -69,12 +69,11 @@ func test_the_journal_names_the_delay_and_the_place() -> void:
 	_steal_and_wait(sim, 4.0)
 	var found: bool = false
 	for row: Dictionary in Journal.entries(sim.events):
-		if String(row["line"]).contains("the Muster"):
-			found = true
-			assert_true(String(row["because"]).contains("Harrowgate"),
-				"it names where it started: %s" % row["because"])
-			assert_true(String(row["because"]).contains("day"),
-				"and how long the story took: %s" % row["because"])
+		if row["kind"] != Journal.ARRIVAL or row["town"] != &"muster":
+			continue
+		found = true
+		assert_eq(row["origin"], &"harrowgate", "it carries where it started")
+		assert_true(float(row["days"]) > 0.0, "and how long the story took")
 	assert_true(found, "the camp heard about it within four days")
 
 
@@ -83,15 +82,12 @@ func test_the_journal_is_pulled_and_never_pushed() -> void:
 	# accuse, and nothing outside it explains at all.
 	var sim: Sim = _run()
 	_steal_and_wait(sim, 4.0)
-	var forbidden: Array[String] = [
-		"your actions", "because you", "you caused", "as a result", "reputation",
-		"+", "-22", "standing",
-	]
+	# The rows carry no prose at all now, so what this guards is that they carry no
+	# *scoring* either: no number that is a reputation, no field that accuses.
 	for row: Dictionary in Journal.entries(sim.events):
-		var text: String = "%s %s" % [row["line"], row["because"]]
-		for phrase: String in forbidden:
-			assert_false(text.to_lower().contains(phrase),
-				"the journal says \"%s\" — it explains, it does not score you" % text)
+		for field: String in row.keys():
+			assert_false(field.contains("standing") or field.contains("reputation"),
+				"the journal row carries '%s' — it explains, it does not score you" % field)
 
 
 func test_a_fact_with_one_source_is_shown_as_a_fact_with_one_source() -> void:
@@ -121,11 +117,10 @@ func test_spending_the_telling_is_written_down() -> void:
 
 	var told: Dictionary = {}
 	for row: Dictionary in Journal.entries(sim.events):
-		if String(row["line"]).contains("told Harrowgate"):
+		if row["kind"] == Journal.DEED and row["deed"] == DeedRules.DEED_WARNING:
 			told = row
 	assert_false(told.is_empty(), "the warning is in the journal")
-	assert_true(String(told["because"]).contains("only telling"),
-		"and so is what it cost: \"%s\"" % told["because"])
+	assert_true(bool(told["spends_the_telling"]), "and so is what it cost")
 
 
 func test_the_camp_stops_advertising_what_you_can_no_longer_do() -> void:

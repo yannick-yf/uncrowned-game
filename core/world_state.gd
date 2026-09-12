@@ -39,6 +39,19 @@ var spent_sites: Dictionary = {}
 var last_act_step: int = -1
 var last_act: StringName = &""
 var last_act_seen: int = 0
+## The evidence in your hands. Append-only on purpose: §7's Q24 says a document
+## cannot be stolen, burned or confiscated once you hold it, because evidence that
+## can be lost is a route that can be closed.
+var documents: PackedStringArray = PackedStringArray()
+var last_taken: StringName = &""
+var last_taken_step: int = -1
+## The fire you last sat down at. §19 Q5: dying puts you back here, as you were.
+var rested_at: Vector2i = Vector2i(-1, -1)
+var rested_tick: int = -1
+
+
+func holds(fact: StringName) -> bool:
+	return documents.has(String(fact))
 var deaths: int = 0
 var touches_taken: int = 0
 var reached_blackcairn: bool = false
@@ -126,7 +139,12 @@ func hurt(amount: int, step: int) -> bool:
 	deaths += 1
 	player_hp = MAX_HP
 	mending_steps = 0
-	player_pos = region().brindle_centre()
+	# Back to the last fire you sat down at, as you were when you sat down (§19 Q5,
+	# 2026-09-12). Brindle only for somebody who has died before ever resting, so a
+	# first death is a lesson rather than a dead end — that is all that survives of
+	# Phase 0's "respawn in Brindle keeping everything".
+	player_pos = Vector2(rested_at) + Vector2(0.5, 1.5) if rested_at != Vector2i(-1, -1) \
+		else region().brindle_centre()
 	player_dir = Vector2i.ZERO
 	player_tile_last = player_tile()
 	return true

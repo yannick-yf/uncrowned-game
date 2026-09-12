@@ -24,6 +24,9 @@ const DEED_SABOTAGE: StringName = &"i_wrecked_a_furnace"
 const DEED_BURN_STORES: StringName = &"i_burned_the_stores"
 const DEED_ROB_BANK: StringName = &"i_emptied_the_vault"
 const DEED_WRECK_ROLLS: StringName = &"i_destroyed_the_muster_rolls"
+## Reading a document aloud where people can hear it. It returns to the table now
+## that there is evidence to read — it was cut when nothing could perform it.
+const DEED_MAKE_PUBLIC: StringName = &"i_made_it_public"
 
 const FACTION_TOWNS: StringName = &"towns"
 const FACTION_UNDERWORLD: StringName = &"the unlawful"
@@ -57,6 +60,8 @@ static func town_effect(deed: StringName) -> float:
 		return -20.0
 	if deed == DEED_WRECK_ROLLS:
 		return -12.0
+	if deed == DEED_MAKE_PUBLIC:
+		return 25.0
 	return 0.0
 
 
@@ -80,6 +85,8 @@ static func faction_effects(deed: StringName) -> Dictionary:
 		return {FACTION_TOWNS: -10.0, FACTION_CROWN: -28.0, FACTION_UNDERWORLD: 30.0}
 	if deed == DEED_WRECK_ROLLS:
 		return {FACTION_CROWN: -24.0, FACTION_TOWNS: 6.0, FACTION_DISPOSSESSED: 14.0}
+	if deed == DEED_MAKE_PUBLIC:
+		return {FACTION_CROWN: -30.0, FACTION_DISPOSSESSED: 22.0, FACTION_TOWNS: 8.0}
 	return {}
 
 
@@ -105,7 +112,22 @@ static func witness_effect(deed: StringName) -> float:
 		return -36.0
 	if deed == DEED_WRECK_ROLLS:
 		return -20.0
+	if deed == DEED_MAKE_PUBLIC:
+		return 30.0
 	return 0.0
+
+
+## What a deed does to how a town regards **the crown**, when word of it arrives.
+##
+## Only one deed does anything here, and it is the whole of Route C: reading a
+## document out is not news about you, it is news about *him*. A theft in Harrowgate
+## says nothing about the king; the Cinderworks ledger read aloud in a market says
+## everything, and it says it in every town the story reaches.
+##
+## Which is why Route C is a tour rather than an errand — and why the King's Road
+## and the people on it matter to a player who never steals anything.
+static func sentiment_on_arrival(deed: StringName) -> float:
+	return -12.0 if deed == DEED_MAKE_PUBLIC else 0.0
 
 
 ## Whether the story goes anywhere, which is not the same as whether it mattered.
@@ -134,12 +156,19 @@ static func world_effects(deed: StringName) -> Dictionary:
 		# The crown eats what the Wide Acres grow. Burn it and the crown buys it.
 		return {&"crown_treasury": -18.0}
 	if deed == DEED_ROB_BANK:
-		# §3's sixth power base. A bank that can be robbed is a bank nobody trusts,
-		# and the whole industrial project is leveraged on it.
-		return {&"crown_treasury": -26.0, &"bank_confidence": -34.0}
+		# §3's sixth power base, and there is only one counting house — so this is
+		# the single largest act in the game and is sized like it. It was -26/-34,
+		# which left the *coupling* carrying more of the fall than the robbery did:
+		# §8 says ambient drift stays small and player-caused change is large, and
+		# that had it the wrong way round.
+		return {&"crown_treasury": -40.0, &"bank_confidence": -52.0}
 	if deed == DEED_WRECK_ROLLS:
 		# You cannot pay men you cannot name, and the officers blame each other.
 		return {&"army_strength": -18.0, &"faction_tension": 16.0}
+	if deed == DEED_MAKE_PUBLIC:
+		# What the crown did stops being what the town suspects and becomes what it
+		# knows. §3's `discredited` ending is the sum of these.
+		return {&"town_sentiment": -20.0, &"faction_tension": 8.0}
 	return {}
 
 
@@ -149,4 +178,5 @@ static func all_deeds() -> Array[StringName]:
 	return [
 		DEED_THEFT, DEED_RESTITUTION, DEED_WARNING,
 		DEED_SABOTAGE, DEED_BURN_STORES, DEED_ROB_BANK, DEED_WRECK_ROLLS,
+		DEED_MAKE_PUBLIC,
 	]

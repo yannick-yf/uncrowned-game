@@ -55,8 +55,8 @@ func test_every_power_base_that_has_a_place_has_a_lever() -> void:
 	for kind: StringName in [&"kiln", &"granary", &"counting_house", &"muster_rolls"]:
 		assert_true(_sites_of(sim, kind).size() > 0, "nowhere to do anything to a %s" % kind)
 		assert_true(SiteRules.deed_at(kind) != &"", "%s offers no act" % kind)
-		assert_true(SiteRules.label_for(kind).begins_with("E — "),
-			"%s has nothing the prompt can say" % kind)
+		assert_true(Text.has(SiteRules.label_key(kind)),
+			"%s has nothing the prompt can say in the player's language" % kind)
 
 
 func test_an_act_moves_the_world_and_records_whose_doing_it_was() -> void:
@@ -169,6 +169,22 @@ func test_every_deed_still_names_who_is_offended_and_who_is_impressed() -> void:
 				down += 1
 		assert_true(up > 0, "%s impresses nobody" % deed)
 		assert_true(down > 0, "%s offends nobody, which makes it free" % deed)
+
+
+func test_the_deed_carries_the_fall_and_the_drift_only_garnishes_it() -> void:
+	# §8: ambient drift stays slow and small; player-caused change is large, fast
+	# and local. Measured and found backwards — robbing the bank took 34 points off
+	# confidence and the coupling carried the other 41, so most of a reign's fall
+	# was the world doing it rather than the player.
+	var sim: Sim = _world()
+	var ticked := sim.store(&"worldtick") as WorldTick
+	_act_at(sim, _sites_of(sim, &"counting_house")[0])
+	var from_the_act: float = WorldTick.BASELINE - ticked.bank_confidence
+	_days(sim, 14.0)
+	var from_the_drift: float = WorldTick.BASELINE - from_the_act - ticked.bank_confidence
+	assert_true(from_the_act > from_the_drift,
+		"the robbery moved %.0f and the world moved %.0f — the act has to be the bigger half"
+			% [from_the_act, from_the_drift])
 
 
 # ----------------------------------------------------------- the couplings ---

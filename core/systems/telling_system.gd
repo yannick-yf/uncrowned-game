@@ -30,6 +30,15 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var here: StringName = world.region().zone_at(world.player_tile())
 	var witnesses: PackedStringArray = CrimeRules.witnesses_to(
 		cast, world.current_zone, world.player_pos)
+	# Proof first. A document in your hand outranks a warning you can only give
+	# once, and it is the act §3's `discredited` ending is actually counting.
+	var paper: StringName = TellingRules.tellable_document(here, witnesses, world, sim.facts)
+	if paper != &"":
+		sim.facts.add_source(DocumentRules.made_public(paper), &"witnessed")
+		ticked.credit(&"facts_public", EndRules.HANDPRINT_NEEDED)
+		Deeds.perform(sim, DeedRules.DEED_MAKE_PUBLIC, here, world.player_pos)
+		return
+
 	if not TellingRules.can_warn(here, world.fraud_told_to, witnesses, sim.facts):
 		return
 

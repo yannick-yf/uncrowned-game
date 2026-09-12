@@ -95,15 +95,10 @@ static func handprint_of(reading: StringName, ticked: WorldTick) -> float:
 const SENTIMENT_SOUR: float = 35.0
 
 
-## What the world calls a reading, for the page. No units and no advice.
-static func label_for(reading: StringName) -> String:
-	match reading:
-		&"king_health": return "his health"
-		&"facts_public": return "what he did that is public"
-		&"towns_turned": return "towns turned against him"
-		&"kings_escort": return "men at his gate"
-		&"town_sentiment_at_blackcairn": return "how Blackcairn regards him"
-	return String(reading).replace("_", " ")
+## Which line names a reading on the page. The word belongs to the window; this
+## says only which reading it is.
+static func label_key(reading: StringName) -> StringName:
+	return StringName("holds.%s" % reading)
 
 
 ## The ending the world has reached, or NONE.
@@ -158,7 +153,7 @@ static func what_holds_him_up(ticked: WorldTick, world: WorldState, facts: FactB
 			seen[reading] = true
 			rows.append({
 				"reading": String(reading),
-				"name": label_for(reading),
+				"name_key": label_key(reading),
 				"value": value_of(reading, ticked, world, facts),
 				"yours": handprint_of(reading, ticked),
 				"line": float(need["line"]),

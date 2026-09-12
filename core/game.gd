@@ -67,32 +67,40 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(TheftSystem.new())
 	systems.append(RumourSystem.new())
 	systems.append(WildlifeSystem.new())
+	systems.append(RestSystem.new())
 	systems.append(RecoverySystem.new())
 	systems.append(ArrivalSystem.new())
 	systems.append(ContactSystem.new())
 	return systems
 
 
+## Rebuild a run from rows on disk. The same path a replay test takes, which is why
+## loading a save is not a feature with its own bugs — it is the thing every test
+## has been exercising since Phase 0.
+static func replay_rows(rows: Array, p_seed: int, final_step: int) -> Sim:
+	return Sim.replay(rows, p_seed, build_systems(), final_step, fresh_stores())
+
+
+static func fresh_stores() -> Dictionary:
+	return {
+		&"world": build_world(), &"cast": Cast.shared(),
+		&"wildlife": Wildlife.new(), &"worldtick": WorldTick.new(),
+		&"standing": Standing.new(), &"rumours": Rumours.new(),
+		&"travellers": Travellers.new(),
+	}
+
+
 ## Rebuild a run from its log alone, into a world that starts empty.
 static func replay(sim: Sim) -> Sim:
-	return Sim.replay(
-		sim.events.external_rows(),
-		sim.rng_seed,
-		build_systems(),
-		sim.step,
-		{
-			&"world": build_world(), &"cast": Cast.shared(),
-			&"wildlife": Wildlife.new(), &"worldtick": WorldTick.new(),
-			&"standing": Standing.new(), &"rumours": Rumours.new(),
-			&"travellers": Travellers.new(),
-		},
-	)
+	return replay_rows(sim.events.external_rows(), sim.rng_seed, sim.step)
 
 
 static func in_game_days(tick: int) -> float:
 	return float(tick) / float(TICKS_PER_IN_GAME_DAY)
 
 
-static func in_game_clock(tick: int) -> String:
+## Day, hour, minute — numbers, not a sentence. The window puts the word "day" in
+## front of it, because that word has a language and core does not have one.
+static func in_game_clock_parts(tick: int) -> Array:
 	var minutes: int = tick * IN_GAME_MINUTES_PER_TICK
-	return "day %d, %02d:%02d" % [1 + minutes / 1440, (minutes / 60) % 24, minutes % 60]
+	return [1 + minutes / 1440, "%02d" % ((minutes / 60) % 24), "%02d" % (minutes % 60)]

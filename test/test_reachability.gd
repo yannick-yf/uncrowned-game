@@ -58,6 +58,43 @@ func test_an_ending_is_reachable_by_acts_alone() -> void:
 	assert_true(sim.facts.size() > 0, "and the acts are on the record")
 
 
+func test_the_bloodless_route_finishes_the_game() -> void:
+	# §3's Route C, end to end, and the proof that the game is about what people
+	# know. Nothing is stolen, nothing is broken, nobody is touched: five documents
+	# picked up off tables, read out where people can hear, and word does the rest.
+	# With carriers, because Route C **needs the road**. A story spreads about as
+	# far as the next town on its own, so reading the ledger out in Harrowgate
+	# reaches Harrowgate — and the kingdom only learns what the king did because
+	# people walking the King's Road carry it. The bloodless route is a tour.
+	var sim: Sim = _levers_only()
+	sim.add_store(&"travellers", Travellers.new())
+	sim.add_system(TellingSystem.new())
+	sim.add_system(TravellerSystem.new())
+	var world := sim.store(&"world") as WorldState
+
+	for prop: Dictionary in world.region().props:
+		if (prop["kind"] as StringName) != &"papers":
+			continue
+		world.player_pos = Vector2(prop["at"] as Vector2i) + Vector2(0.5, 0.5)
+		sim.submit(&"act")
+		sim.advance(3)
+	assert_eq(world.documents.size(), DocumentRules.all().size(), "the evidence is in hand")
+
+	for i: int in DocumentRules.all().size():
+		world.player_pos = Vector2(148.5, 173.0)
+		sim.submit(&"tell_town")
+		sim.advance(3)
+		sim.advance_world_ticks(90)
+	assert_eq(EndRules.public_facts(sim.facts), DocumentRules.all().size(),
+		"and the kingdom has heard all of it")
+
+	_days(sim, 8.0)
+	assert_eq(world.reign_ended, EndRules.DISCREDITED,
+		"he is finished, and nobody was hurt doing it")
+	assert_eq(world.spent_sites.size(), 0, "nothing on the map was broken")
+	assert_eq(world.thefts, 0, "and nothing was taken that was not evidence")
+
+
 func test_killing_every_named_person_does_not_close_every_ending() -> void:
 	# Invariant 7, restated for predicates. The cast can carry facts and perform
 	# acts, but the levers that empty a treasury are **places**, and a place cannot

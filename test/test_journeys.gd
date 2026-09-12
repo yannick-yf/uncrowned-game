@@ -243,10 +243,10 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 	# rather than a snapshot is the whole design.
 	var told := PackedStringArray()
 	for row: Dictionary in Journal.entries(_sim.events):
-		told.append("%d|%s|%s" % [row["tick"], row["line"], row["because"]])
+		told.append(str(row))
 	var retold := PackedStringArray()
 	for row: Dictionary in Journal.entries(replayed.events):
-		retold.append("%d|%s|%s" % [row["tick"], row["line"], row["because"]])
+		retold.append(str(row))
 	assert_true(told.size() > 1, "there is a story to tell: %d entries" % told.size())
 	assert_eq(retold, told, "and the same log tells it again, rebuilt from nothing")
 

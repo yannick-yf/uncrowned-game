@@ -133,6 +133,44 @@ func _conversation(sim: Sim, world: WorldState, id: StringName) -> Array:
 	return [line, intents]
 
 
+func test_a_question_answered_is_a_question_spent() -> void:
+	# Found in play: you could ask Maddox the same thing forty times and he would
+	# answer identically every time, which is what talking to a machine feels like.
+	# A person is a finite resource in a game about information — you should leave a
+	# conversation having used somebody up.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+
+	sim.submit(&"talk", {"npc": "maddox"})
+	sim.advance(2)
+	var first: int = world.options.size()
+	assert_true(first >= 2, "he starts with things to say")
+
+	sim.submit(&"choose_intent", {"intent": "ask_town"})
+	sim.advance(2)
+	assert_eq(world.options.size(), first - 1, "and one fewer once he has answered")
+
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	sim.submit(&"talk", {"npc": "maddox"})
+	sim.advance(2)
+	for option: DialogueOption in world.options:
+		assert_ne(String(option.intent), "ask_town",
+			"and it is still answered when you come back tomorrow")
+
+
+func test_some_things_bear_asking_twice() -> void:
+	# Not everything is spent. A trader's stock and a guard's "anything moving on
+	# the road" are questions with a different answer each time you ask.
+	var cast := Cast.shared()
+	var repeatable: int = 0
+	for id: StringName in cast.npcs.keys():
+		for option: DialogueOption in cast.get_npc(id).options:
+			if option.repeatable:
+				repeatable += 1
+	assert_true(repeatable > 0, "somebody in the world can be asked the same thing twice")
+
+
 func test_every_fact_keeps_one_source_nothing_can_gate_shut() -> void:
 	# Invariants 6 and 7, checked against the content rather than hoped for.
 	#

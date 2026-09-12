@@ -18,6 +18,10 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	if world == null:
 		return
 
+	# Papers first: they lie on the ground and a landmark may be standing over them.
+	if _take_papers(sim, world):
+		return
+
 	var site: Dictionary = world.region().nearest_site(world.player_tile(), SiteRules.REACH)
 	if site.is_empty():
 		return
@@ -43,6 +47,28 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	world.last_act = deed
 	var where: StringName = world.region().zone_at(world.player_tile())
 	world.last_act_seen = Deeds.perform(sim, deed, where, world.player_pos, &"act_unseen").size()
+
+
+## Picking a document up. Reading it and holding it happen in the same movement —
+## §7's Q24 says it is both, and there is no sense in which you could carry one
+## without having looked at it.
+##
+## Nobody minds. It is not a theft: these are papers in a room, and the people who
+## would care are not in the room. That may change when there are people in it.
+func _take_papers(sim: Sim, world: WorldState) -> bool:
+	var papers: Dictionary = world.region().nearest_document(
+		world.player_tile(), DocumentRules.REACH)
+	if papers.is_empty():
+		return false
+	var fact: StringName = papers["fact"] as StringName
+	if world.holds(fact):
+		return false
+	world.documents.append(String(fact))
+	world.last_taken = fact
+	world.last_taken_step = sim.step
+	sim.facts.add_source(fact, &"read")
+	sim.derive(&"document_taken", {"fact": String(fact)})
+	return true
 
 
 func system_name() -> StringName:

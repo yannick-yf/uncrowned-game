@@ -14,8 +14,10 @@ extends SimSystem
 ## consequence more than one step from the act, and §3's endings would stop firing
 ## for the very runs that deserved them most.
 
-## How fast a coupled quantity follows the one that drives it.
-const FOLLOWS_PER_DAY: float = 3.0
+## How fast a coupled quantity follows the one that drives it. Deliberately modest:
+## the acts are what should move a number, and this is the world noticing. At 3.0
+## the drift carried more of a reign's fall than the deeds did.
+const FOLLOWS_PER_DAY: float = 5.0
 ## What a crime the world hears about does to the men paid to prevent it.
 const PATROL_PER_CRIME: float = 9.0
 ## What one deed the world hears about does to the watch where it happened. Tuned

@@ -90,6 +90,10 @@ func _choose(
 	var learned: StringName = DialogueRules.verdict(npc, intent, sim.facts, conditions, regard)
 	if learned != &"":
 		sim.facts.add_source(learned, npc.id)
+	# And he has now answered it. Recorded as a fact like everything else, so it
+	# replays, and so the journal could one day show what you have already asked.
+	if not option.repeatable:
+		sim.facts.add_source(option.spent_by(npc.id), &"witnessed")
 	world.current_line = option.reply
 	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
 

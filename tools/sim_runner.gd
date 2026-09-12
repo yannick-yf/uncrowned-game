@@ -21,7 +21,7 @@ func _initialize() -> void:
 
 	print("seed        %d" % sim.rng_seed)
 	print("ticks       %d  (%s, %.1f real minutes of play)" % [
-		sim.tick, Game.in_game_clock(sim.tick),
+		sim.tick, "day %d %s:%s" % Game.in_game_clock_parts(sim.tick),
 		float(sim.tick) / float(Game.TICKS_PER_REAL_SECOND) / 60.0,
 	])
 	print("steps       %d  (%d per world tick, %d per real second)" % [

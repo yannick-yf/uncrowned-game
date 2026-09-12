@@ -32,19 +32,20 @@ static func is_site(kind: StringName) -> bool:
 	return deed_at(kind) != &""
 
 
-## What the prompt says. A verb and a thing, never a consequence: the world shows,
-## the journal explains (§8), and the HUD never says what an act will cost (§15).
-static func label_for(kind: StringName) -> String:
+## Which line the prompt should use. A verb and a thing, never a consequence: the
+## world shows, the journal explains (§8), and the HUD never says what an act will
+## cost (§15). The words themselves belong to the window.
+static func label_key(kind: StringName) -> StringName:
 	match kind:
 		&"kiln":
-			return "E — put out the furnace"
+			return &"act.kiln"
 		&"granary":
-			return "E — burn the stores"
+			return &"act.granary"
 		&"counting_house":
-			return "E — empty the vault"
+			return &"act.counting_house"
 		&"muster_rolls":
-			return "E — destroy the muster rolls"
-	return ""
+			return &"act.muster_rolls"
+	return &""
 
 
 ## How close you must be, measured to the building's footprint rather than to its

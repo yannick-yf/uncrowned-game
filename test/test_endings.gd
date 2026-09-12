@@ -59,7 +59,7 @@ func test_drift_cannot_end_a_reign_even_at_the_threshold() -> void:
 	assert_eq((sim.store(&"world") as WorldState).reign_ended, &"",
 		"every line crossed and nobody's hand on any of it")
 	for row: Dictionary in EndRules.what_holds_him_up(ticked, null, sim.facts):
-		assert_eq(float(row["yours"]), 0.0, "%s is nobody's doing" % row["name"])
+		assert_eq(float(row["yours"]), 0.0, "%s is nobody's doing" % row["reading"])
 
 
 func test_the_same_numbers_end_it_when_they_are_yours() -> void:
@@ -102,7 +102,8 @@ func test_every_number_that_ends_the_game_is_on_the_page() -> void:
 	for row: Dictionary in EndRules.what_holds_him_up(
 			sim.store(&"worldtick") as WorldTick, sim.store(&"world") as WorldState, sim.facts):
 		shown.append(String(row["reading"]))
-		assert_true(String(row["name"]).length() > 0, "and it is in words, not a field name")
+		assert_true(Text.has(row["name_key"] as StringName),
+			"'%s' has no line in the player's language" % row["name_key"])
 
 	for ending: Dictionary in EndRules.endings():
 		for need: Dictionary in (ending["needs"] as Array):
@@ -118,9 +119,9 @@ func test_the_page_never_gives_advice() -> void:
 	var forbidden: Array[String] = ["should", "try ", "next", "you must", "in order to", "tip"]
 	for row: Dictionary in EndRules.what_holds_him_up(
 			sim.store(&"worldtick") as WorldTick, sim.store(&"world") as WorldState, sim.facts):
+		var name: String = Text.of(row["name_key"] as StringName)
 		for phrase: String in forbidden:
-			assert_false(String(row["name"]).to_lower().contains(phrase),
-				"the page says \"%s\"" % row["name"])
+			assert_false(name.to_lower().contains(phrase), "the page says \"%s\"" % name)
 
 
 # ------------------------------------------------------------- the endings ---

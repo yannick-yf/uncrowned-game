@@ -3,7 +3,12 @@
   "facts": {
     "muster:pay_fraud": "Quartermaster Odile at the Muster signs for soldiers who are dead or never existed, and keeps the difference.",
     "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks.",
-    "wide_acres:unwatched_stall": "There is a market stall in Saltmarch that nobody stands near — the marsh town is off the road and keeps no watch worth the name."
+    "wide_acres:unwatched_stall": "There is a market stall in Saltmarch that nobody stands near — the marsh town is off the road and keeps no watch worth the name.",
+    "acres:land_grants": "The land grants for the Wide Acres, naming each village cleared to make them. One of the names is the one you grew up in.",
+    "cairnwell:tiered_law": "The working record of how the tiered law is administered: three columns, and the third is calculated from the first two.",
+    "cinderworks:ledger": "The Cinderworks ledger of what the furnaces cost in men, kept in the king's own hand, with the price set against the output.",
+    "bank:debts": "The bank's book of what the crown owes and to whom. Nearly all of it is owed to one creditor.",
+    "muster:signed_orders": "The orders to clear the villages, signed. The men who carried them out are named underneath."
   },
   "npcs": {
     "maddox": {
@@ -251,7 +256,8 @@
             "text": "What will you sell me?",
             "reply": "Whatever you can pay for. Sit a while, I'll find something you need.",
             "forbids_condition": "they_think_ill_of_me",
-            "costs": "goodwill"
+            "costs": "goodwill",
+            "repeatable": true
           },
           {
             "intent": "ask_refusal",
@@ -296,7 +302,8 @@
             "intent": "ask_traffic",
             "text": "Much traffic lately?",
             "reply": "Soldiers going the wrong way. That's all I'll say about soldiers.",
-            "costs": "goodwill"
+            "costs": "goodwill",
+            "repeatable": true
           }
         ]
       },
@@ -315,7 +322,8 @@
           {
             "intent": "ask_post",
             "text": "Long shift?",
-            "reply": "Long enough. They pay me to stand here and notice things, and lately there's been a great deal to notice."
+            "reply": "Long enough. They pay me to stand here and notice things, and lately there's been a great deal to notice.",
+            "repeatable": true
           },
           {
             "intent": "ask_orders",

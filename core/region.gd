@@ -190,20 +190,10 @@ const ZONE_ORDER: Array[StringName] = [
 const ZONE_MARGIN: int = 3
 
 
-## What a place is called. World data rather than presentation: the journal in
-## core/ has to name where something happened, and the window is not the only thing
-## that needs the word.
-static func place_name(zone: StringName) -> String:
-	match zone:
-		&"brindle": return "Brindle"
-		&"cinderworks": return "the Cinderworks"
-		&"harrowgate": return "Harrowgate"
-		&"wide_acres": return "the Wide Acres"
-		&"muster": return "the Muster"
-		&"saltmarch": return "Saltmarch"
-		&"cairnwell": return "Cairnwell"
-		&"blackcairn": return "Blackcairn"
-	return ""
+## Places are identified, never named. The word belongs to the window, which knows
+## what language the player reads; core knows only which place it is.
+static func is_place(zone: StringName) -> bool:
+	return ZONE_ORDER.has(zone)
 
 var _zone_map: PackedByteArray = PackedByteArray()
 var _wild_map: PackedByteArray = PackedByteArray()
@@ -593,6 +583,73 @@ func _stamp_stalls() -> void:
 	# either. Which is why Wren sells the location — she picks over ruins, so she
 	# knows where nobody is looking.
 	_stall_at(SALTMARCH + Vector2i(4, -2))
+	_place_documents()
+	_place_campfires()
+
+
+## The evidence, on the ground where it lies. Placed as props so a document is a
+## thing in a place — which is what stops violence ever closing Route C (§7).
+func _place_documents() -> void:
+	for row: Dictionary in DocumentRules.all():
+		var at: Vector2i = (zone_sites()[row["zone"]] as Vector2i) + (row["at"] as Vector2i)
+		if not is_passable(at):
+			at = _nearest_open(at)
+		props.append({"kind": &"papers", "at": at, "size": Vector2i(1, 1),
+			"fact": row["fact"], "solid": false})
+
+
+## Papers must never be unreachable, so a spot inside a wall walks outward until it
+## is not. Spiral rather than a fixed nudge: the towns are laid out by hand and a
+## fixed offset would find a different wall.
+func _nearest_open(from: Vector2i) -> Vector2i:
+	for radius: int in range(1, 12):
+		for dx: int in range(-radius, radius + 1):
+			for dy: int in range(-radius, radius + 1):
+				var at: Vector2i = from + Vector2i(dx, dy)
+				if is_passable(at):
+					return at
+	return from
+
+
+## Somewhere to rest, in every place worth being and a few places between them.
+##
+## §19 Q5: you save at a campfire and dying puts you back at the last one. They have
+## to be common enough that reaching one is a plan rather than a pilgrimage — if
+## they are rare, death stops being a cost and becomes a punishment.
+const CAMP_SPURS: Array[Vector2i] = [
+	Vector2i(200, 168), Vector2i(150, 120), Vector2i(112, 96), Vector2i(228, 180),
+]
+
+
+func _place_campfires() -> void:
+	for zone: StringName in ZONE_ORDER:
+		var at: Vector2i = (zone_sites()[zone] as Vector2i) + Vector2i(-5, 5)
+		props.append({"kind": &"campfire", "at": _nearest_open(at),
+			"size": Vector2i(2, 2), "solid": false})
+	# And on the road between them, so a run does not have to end in a town.
+	for at: Vector2i in CAMP_SPURS:
+		props.append({"kind": &"campfire", "at": _nearest_open(at),
+			"size": Vector2i(2, 2), "solid": false})
+
+
+## The fire you could sit down at, or NOWHERE.
+func nearest_campfire(tile: Vector2i, reach: float) -> Vector2i:
+	for prop: Dictionary in props:
+		if (prop["kind"] as StringName) != &"campfire":
+			continue
+		if _distance_to_block(tile, prop["at"] as Vector2i, prop["size"] as Vector2i) <= reach:
+			return prop["at"] as Vector2i
+	return NOWHERE
+
+
+## The document lying within reach, or an empty dictionary.
+func nearest_document(tile: Vector2i, reach: float) -> Dictionary:
+	for prop: Dictionary in props:
+		if (prop["kind"] as StringName) != &"papers":
+			continue
+		if Vector2(tile).distance_to(Vector2(prop["at"] as Vector2i)) <= reach:
+			return prop
+	return {}
 
 
 func _stall_at(at: Vector2i) -> void:

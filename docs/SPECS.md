@@ -273,8 +273,23 @@ lord's man, a hero the crown wants to be seen with.
 - How it can fail: a reputation that contradicts itself; someone recognises you
 
 **Route C — Exposure.** The bloodless route. Assemble the evidence the pillars hold
-— the ledger, the land grants, the signed orders, the debts — and put it in front of
-him where it cannot be denied.
+and put it in front of him where it cannot be denied.
+
+> **Each document answers one break in his argument** (settled 2026-09-12, §19 Q18).
+> Before this the debts rebutted nothing and the tiered law — the break §5 calls the
+> one that gives him away — had no document at all.
+>
+> | Where his argument breaks (§5) | What proves it | Where it is |
+> |---|---|---|
+> | He counts the aggregate, never the individual | The land grants, naming the razed villages — including the player's | The Wide Acres |
+> | The tiered law gives him away | The record of how the law is actually administered | **Cairnwell** — the capital is where law is written |
+> | The wealth went upward, and he knew | The Cinderworks ledger of what the works cost in lives | The Cinderworks |
+> | The whole thing was borrowed | The debts, and the one creditor he is afraid of | The bank |
+> | Your village is the counterexample | The signed orders, and the names of the men | The Muster |
+>
+> The tiered-law record moved to Cairnwell because Greyhold is a power base with no
+> location on the map (Q40). If Greyhold is ever built it is the better home for it.
+
 - Requires knowing: enough from at least four pillars
 - Requires having: a venue and an audience that cannot be dismissed
 - How it can fail: incomplete evidence; an audience the crown can buy
@@ -590,6 +605,11 @@ orders himself and can produce them on request.
 - The player's village is the counterexample and he will say so out loud: *they were
   happy, and poor, and dead at forty.* The player has to decide whether that's an
   answer.
+- **The whole thing was borrowed** (added 2026-09-12). He says industry is the only
+  mechanism that has ever lifted a population out of poverty — and he mortgaged the
+  kingdom to one creditor to build it. His certainty was a bet, and other people's
+  villages were the stake. It is the break the bank's records answer, and it makes
+  him a gambler rather than a monster, which is worse for him.
 
 > This matters because Route C only works if his argument is real. Exposing a
 > pantomime villain is not a climax. Exposing a man who believed he was right, using
@@ -808,6 +828,44 @@ recovered memories.
 **How facts are acquired:** overheard, told, bought, extorted, read, witnessed,
 recovered as memory.
 
+### Documents: knowledge and proof are different things (2026-09-12)
+
+A document is **both**, and the two halves do different work.
+
+> **Reading** it puts the fact in your head: you can talk about it, ask about it,
+> and it unlocks what knowing unlocks.
+> **Holding** it is what lets you *prove* it. Your word has never been evidence.
+
+That is the distinction the game already had between knowing the pay fraud and
+being able to say it, one level up. §3's `discredited` ending counts what the
+kingdom has been *shown*, not what the player happens to know.
+
+**Documents lie in places, not in people.** A paper does not die with whoever owned
+it. Kill Hesper and her letters are still in her house — you have lost the person
+who would have told you where to look, or let you in, not the letters.
+
+> This is what makes **invariant 7 structural rather than hopeful**: violence can
+> never close Route C, only make it harder. It is the same guarantee the power bases
+> gave — *a place cannot be murdered* — and a test asserts no NPC's dialogue ever
+> hands one over, because a document that arrives through a person is a document a
+> death can destroy.
+
+**Nothing takes one off you.** Not stolen, not burned, not confiscated. Evidence that
+can be lost is a route that can be closed, and §7 does not allow that. The list is
+append-only and a test tries every way the world has of hurting you before checking
+it is still there.
+
+**Route C needs the road.** A story spreads about as far as the next town on its own,
+so reading the ledger aloud in Harrowgate reaches Harrowgate. The kingdom learns what
+the king did because people walking the King's Road carry it — which makes the
+bloodless route a *tour*, and makes travellers matter to a player who never steals
+anything.
+
+> **Not built, and why:** copies. Bell is a copyist and the obvious use is "give the
+> original away, keep the copy" — but the reason for a copy was to hedge against
+> losing the original, and nothing can take one. It returns the day handing a
+> document to somebody becomes an act.
+
 **Redundancy rule (hard).** Redundancy applies to **facts** and to
 **route-critical performers** — the people who perform an act a route needs, such
 as Hesper granting papers or Mother Crowe convening a congregation. It applies
@@ -903,7 +961,7 @@ quantities drift on their own and are pushed by the player's actions:
 | 1 | Grain price **(per town)** | Season, supply, **and mouths to feed — deserters buy the food they used to be issued** | Burning stores, redirecting convoys |
 | 2 | Steel output | Ore supply, worker morale | Sabotage, turning workers |
 | 3 | Worker morale | Wages, accidents | Agitation, exposure of the ledger |
-| 4 | Patrol density | Crime reports | Being seen committing violence. **Moved but not yet read by anything** — it feeds spawn tables, and there is nothing to spawn until Phase 4 |
+| 4 | Patrol density | Crime reports | Being seen committing violence — and it widens how far along the King's Road a traveller will recognise you |
 | 5 | Guard alertness **(per town)** | Recent incidents | Any witnessed crime — and above a threshold the watch stands over what it guards and the act is refused |
 | 6 | Crown treasury | Taxes, war costs | Robbery, exposing debts |
 | 7 | Bank confidence | Treasury, rumour | Robbery, handing over records |
@@ -1870,16 +1928,15 @@ Commissioned art replacing the approved pack, audio, and the accessibility pass
 | 2 | Why attempt #1 fails — the exact first-attempt experience | 2026-09-10 | It's the tutorial |
 | 3 | ~~Route C's venue~~ — answered: the church, before Mother Crowe's congregation | 2026-09-10 | Closed |
 | 4 | The levelling curve: target endgame HP and damage scaling | 2026-09-10 | Yes — combat |
-| 5 | What happens when the player dies? | 2026-09-10 | Yes |
+| 5 | ~~What happens when the player dies?~~ — answered 2026-09-12: **you wake where you last slept, as you were when you slept.** Saving happens at beds and camps, not anywhere; the save is the event log, with a snapshot written alongside it so loading need not replay the whole run | 2026-09-10 | Closed |
 | 6 | Trait point pool size (12?) | 2026-09-10 | |
 | 7 | **Closed 2026-09-11, see Q7b.** ~~Is the 9×9 screen grid the right scale?~~ — answered: 7×9 screens, ~280×200 tiles, ~4 tiles/sec. Phase 0 now measures the *pace* of the walk; the 4–6 min road-travel target is timed later | 2026-09-10 | Closed |
 | 8 | The five consequences that specify the reactivity system (§8) | 2026-09-10 | |
 | 9 | ~~Approved asset packs~~ — answered: Ninja Adventure Asset Pack, CC0 1.0, one pack only (§13) | 2026-09-10 | Closed |
 | 10 | Can facts be wrong? Rumours, lies, misinformation | 2026-09-10 | Yes — see Q25 |
 
-> Row 5 is now scoped rather than closed: Phase 0 respawns the player in Brindle and
-> keeps everything (CLAUDE.md, Phase 0 exceptions), but the real death and save
-> policy is still open. Row 6 is still open and its rationale was wrong — see Q22.
+> Row 5 closed 2026-09-12. Phase 0's "respawn in Brindle keeping everything" is
+> retired by it. Row 6 is still open and its rationale was wrong — see Q22.
 
 ### Decision queue — from the 2026-09-10 spec audit
 
@@ -1908,13 +1965,13 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q15 | **Who authors the option set?** Does `core/rules/` compute the legal intent set and the model only phrase it, or does the model choose which options exist? Invariant 8 against §9's "proposes the player's options" | §9 | Invariant 8 |
 | Q16 | **Prose leakage.** The schema constrains only mechanical output, so model prose can state a fact the fact base is deliberately withholding. What enforces the withholding? | §9 | Locked information |
 | Q17 | **Conversation history against a fixed token budget** — what gets dropped, and does dropping it change the packet hash? | §9 | Cache determinism |
-| Q18 | **Exposure's evidence set does not match the argument it must rebut.** §5 lists four places the king's argument breaks; §3 names four documents. The debts support no break, and the tiered law — the break §5 calls the one that "gives him away" — is in neither list | §3, §5 | Route C content |
+| Q18 | ~~**Exposure's evidence set does not match the argument it must rebut.**~~ — answered 2026-09-12: a fifth break added to §5 (*the whole thing was borrowed*), which is what the debts prove; and the tiered-law record moved to Cairnwell so the strongest break has a document without needing Greyhold. Each break now has exactly one document and each document a job — see §3 | §3, §5 | Closed |
 | Q19 | **Four resolutions, three routes, no mapping.** Killed / spared / publicly broken / walked away from, against Force / Access / Exposure — an ending state machine nobody has sized | §5, §17 | Endings |
 | Q20 | **The escort schedule is not integral.** "Roughly one and a half fewer per power base damaged" removes 9 of 10 across six, leaving one guard, not "a bare handful" — and 1.5 is not a person | §3 | The difficulty curve |
 | Q21 | **What is a guard worth?** The king's 1000 HP never changes, so the power bases close "most of" the gap only if the escort carries most of the threat. The third column has no unit | §3, §10 | Combat balance |
 | Q22 | **Trait pool and cap together.** 12 does not force two specialisms — it buys three at 5. No pool size forces a count; only a cap does | §11 | Character creation |
 | Q23 | **Can traits rise after creation?** Attunement gates whether some NPCs will speak at all, which is a creation-time gate. §11 says levelling raises "attributes", never defined against the six traits | §11 | Invariant 4 |
-| Q24 | **Is a document a fact, an item, or both** — and does it survive its holder's death? Decides every performer-chain walk | §7 | The test, inventory |
+| Q24 | ~~**Is a document a fact, an item, or both** — and does it survive its holder's death?~~ — answered 2026-09-12: **both.** Reading it is knowledge, holding it is proof, and they are different things — the same distinction the game already had between knowing the pay fraud and being able to say it. **Documents lie in places, not in people**, so no death destroys one; and nothing takes one off you once it is in your hands. See §7 | §7 | Closed |
 | Q25 | **Can facts be wrong?** Rumours already ship in §8. Decides the fact-base type | §7, §8 | The fact base |
 | Q26 | ~~**The road's shape.**~~ — answered 2026-09-11: the prose wins, trunk through the Muster, Saltmarch on a spur, and the dog-leg is held to a 1.30–1.50 ratio by test. See §4 | §4 | Closed |
 | Q26old | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
@@ -2016,6 +2073,22 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-11 | Travellers are simulated for the whole map always; only their drawing is culled. Movement runs per step, everything else per tick | Spawning them around the player like wildlife; running all of it per step | A carrier who stops existing when you look away cannot deliver anything, which is the one thing they are for. Deciding per step whether somebody recognises you cost more than the rest of the simulation put together, and a story does not need deciding sixty times a second |
 | 2026-09-11 | A stall in the Wide Acres, where no cast stands, and Wren sells its location | Leaving §8's "a crime nobody saw did not happen" with no reachable case; NPC schedules so the market empties at some hour | Closes Q37 and Q11 with one piece of content and no new machinery. Theft stops being a flat tax and becomes a decision about *where* — the same shape as road against wild, made on the map. And it fits who Wren is: she picks over ruins, so she knows where nobody is looking |
 | 2026-09-11 | **The player outruns gossip by ~35× and always will.** Not a defect | Raising rumour speed; slowing the player | For word to beat a 29-second walk it would need ~1,500 tiles a day, which is "instantly everywhere". Outrunning news is realistic and fine — you simply can never go back. What the wild buys is not outrunning the story but starving it, which is what travellers made true |
+| 2026-09-12 | A document is **both** knowledge and proof, lies in a **place** rather than with a person, and can never be taken from you | Documents as facts only; as items only; confiscation as drama | Knowledge alone makes "put it in front of him where it cannot be denied" into "know four things", which is no climax. Living in places is what makes invariant 7 structural — violence can never close Route C, only make it harder — and it is the same guarantee the power bases gave. Confiscation was considered and rejected by Yannick: evidence that can be lost is a route that can be closed |
+| 2026-09-12 | Reading a document aloud is what makes it public, and the news spreads as a rumour that turns towns against **the crown** — a different number from how they regard the player | Making a fact public by knowing it; turning only the town you stand in | Route C becomes a tour rather than an errand, and the King's Road matters to a player who never steals anything. It also gave `discredited` its first reachable path: five documents, read out where people can hear, and six towns had turned within a day of the last one |
+| 2026-09-12 | No copies, though Bell is a copyist | Building copies now, since the character exists | The reason for a copy was to hedge against losing the original, and nothing can take one — so it would be building the answer to a question the game does not ask. It returns the day handing a document to somebody becomes an act |
+| 2026-09-12 | Campfires **built**, twelve of them — one beside every place worth being and four on the road between | Beds in inns; one save point; saving anywhere | Recorded on 2026-09-12 and then not built for a day, which Yannick found by looking for them in play. They have to be common enough that reaching one is a plan rather than a pilgrimage: rare fires make death a punishment instead of a cost |
+| 2026-09-12 | The save file is the event log and nothing else; loading is replaying it | A snapshot of the world; both | Everything in the world is derived from the events, so there is no snapshot that can drift out of step with it — and loading is not a feature with its own bugs, it is the thing every replay test has exercised since Phase 0. The snapshot beside it stays the obvious optimisation when a long run gets slow to load: measure first |
+| 2026-09-12 | A test run forces English, whatever the machine or the player's saved language says | Letting the suite read the setting | Found the hard way: content tests assert on the words — that Maddox blames the soldiers and never the player — so the suite passed or failed depending on which language somebody last pressed `L` in. A test that reads a user preference is not a test |
+| 2026-09-12 | Trait brackets and document titles are keys, not words built in `core/` | Leaving `label()` to compose "[Wits] …" | `[Wits]` was still English in a French game because `DialogueOption.label()` was building the string — the same layering leak the journal had, found the same way, in play |
+| 2026-09-12 | **The game ships in French and English, and the split was done now rather than after Phase 6** | Doing it once the cast is written; writing the content in French only; Godot's CSV translations | 150 strings today against 25 NPCs and tens of thousands of generated lines later — the same job, about a day now and about a month after. Hand-rolled tables rather than Godot's CSV import because they load like any other content file, need no import step, and a test can read them. Godot's system is still the right answer the day this needs plurals, genders and right-to-left |
+| 2026-09-12 | **`core/` never chooses words.** It returns ids, counts and kinds; the window makes the sentence | Leaving the journal and the region to phrase things, as they did | `core/journal.gd` was building English prose and `Region.place_name()` was naming its own places — presentation inside the simulation, and the thing that would have made the game untranslatable. Localisation exposed a layering mistake that was worth fixing on its own merits |
+| 2026-09-12 | Languages are compared to each other on every test run: same keys, same cast shape, and the French must not still be the English | Trusting a translator to keep up; checking by playing | A missing line does not crash. It shows a key, or an English sentence in a French game, on one screen nobody opened while testing. The cheapest way for a translation to look complete is to paste the English in, so that is tested too |
+| 2026-09-12 | **A question answered is a question spent** — options disappear once asked, unless marked repeatable | Letting every line be asked for ever; a cooldown | Found in play: you could ask Maddox the same thing forty times and get the same answer, which is what talking to a machine feels like. A person is a finite resource in a game about information — you should leave a conversation having used somebody up. Three lines in the game are repeatable, all of them questions whose answer genuinely changes |
+| 2026-09-12 | **You save at a campfire, and dying puts you back at the last one you used, as you were.** One at every key location | Beds in inns; saving anywhere; autosave; no save at all (Phase 0's exception) | A campfire works in a town and in the wild, needs no interior, and can be placed wherever a save point should be — which a bed cannot. Death finally costs something, measured in the thing the game is made of: time and position. And it gives the phase its shape — do something, get away, rest — with the clock advancing as you rest, so the save point and the payoff are the same moment |
+| 2026-09-12 | The save is the **event log**, with a snapshot beside it | Snapshot only; log only | The log stays the authority — replay is what every test and the journal depend on — and the snapshot is a shortcut so loading does not have to replay hours. Build the log first and measure; add the snapshot when loading is actually slow rather than before |
+| 2026-09-12 | §5 gains a fifth break — **the whole thing was borrowed** — and each of Route C's documents answers exactly one break | Dropping the debts from Route C; leaving the tiered law without a document | The debts rebutted nothing and the tiered law, which §5 calls the break that gives him away, had no document anywhere reachable. The fifth break also makes him a gambler rather than a monster, which is worse for him and better for §5's rule that exposing a pantomime villain is not a climax |
+| 2026-09-11 | The **deed** carries a reign's fall and the coupling only garnishes it: robbing the bank goes to −40/−52, and coupled quantities follow at 5 a day rather than 3 | Leaving the balance as it was; shortening the in-game day | §8's own rule — ambient drift slow and small, player-caused change large, fast and local — and it was backwards. Robbing the bank took 34 points off bank confidence and the *coupling* carried the other 41, so most of a reign's fall was the world doing it rather than the player. Measured: a full run went from 84 real minutes to 30, and most of what was removed was waiting |
+| 2026-09-11 | Patrol density is read by the **road**: the busier the crown has made it, the further along it somebody puts your face to the story | Leaving it unread until Phase 4's spawn tables; inventing a consumer for it | It had been moving with nothing reading it — the same defect its neighbour had, which is how the defect gets caught twice in a week. Deliberately the same shape as the watch's sight: two dials on how hard it is to go unnoticed, one for the places you act in and one for the road between them, and both push the player toward the trees |
 | 2026-09-11 | Every power base is watched: watchmen posted at the kilns, the granaries, the counting house and the muster rolls | Leaving the levers unguarded; guards that fight you | Measured: eight of the ten levers stood in places with **no cast at all**, so wrecking a furnace or burning a winter's stores cost precisely nothing — no witness, no story, no standing, and a watch that never woke. A reign could be ended by walking to ten places and touching each. Guards as *witnesses* make acts cost without needing combat, which is what lets Phase 4 stay deferred |
 | 2026-09-11 | **A roused watch stands over what it guards and the act is refused.** Three acts in a place, then it shuts until things go quiet | Widening a watchman's sight only; a failure roll; guards that attack | §8's fifth quantity was an input with no output — built and read by nothing, the same defect the twelve had one level up. Widening sight alone barely changed the witness count on the shipped map, because posts stand near what they guard. Refusing the act is what makes a roused watch something to wait out, and it gives the phase a rhythm — act, move on, come back — that needs no fighting |
 | 2026-09-11 | Guard alertness becomes **per town** | Keeping §8's single global figure | A granary burned in the Wide Acres closed the bank a hundred and twenty tiles away, which no player could read as anything but a bug. Third quantity to take this change, after grain price and town sentiment, and for the same reason: it is about a place. §8's single figure survives as the worst-watched place in the kingdom, recomputed rather than accumulated |

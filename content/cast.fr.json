@@ -1,0 +1,412 @@
+{
+  "_note": "Hand-written. No generation, no LLM. Every line here was typed by a person and is shipped as reviewed content (SPECS §9). Trait tags in brackets are display-only until traits exist: the rules layer ignores them. Tiles are overworld coordinates — towns are laid out on the map at their real size rather than entered through a transition. Some lines are gated on a named world condition — the rules layer decides what the name means, so no line reads the world directly.",
+  "facts": {
+    "muster:pay_fraud": "La quartier-maître Odile, au Rassemblement, signe pour des soldats morts ou qui n'ont jamais existé, et garde la différence.",
+    "kettle:ford": "Un gué traverse la Bouilloire en aval du pont, praticable seulement en semaine sèche.",
+    "wide_acres:unwatched_stall": "Il y a un étal à Saltmarch devant lequel personne ne se tient — la ville des marais est hors de la route et ne tient pas de vraie garde.",
+    "acres:land_grants": "Les actes de concession des Grands Champs, nommant chaque village rasé pour les faire. L'un de ces noms est celui où vous avez grandi.",
+    "cairnwell:tiered_law": "Le registre de travail expliquant comment la loi par paliers est appliquée : trois colonnes, et la troisième se déduit des deux premières.",
+    "cinderworks:ledger": "Le registre des Forges, ce que les fours ont coûté en hommes, tenu de la main du roi, le prix inscrit en face du rendement.",
+    "bank:debts": "Le livre de la banque : ce que la couronne doit, et à qui. Presque tout est dû à un seul créancier.",
+    "muster:signed_orders": "Les ordres de raser les villages, signés. Les hommes qui les ont exécutés sont nommés en dessous."
+  },
+  "npcs": {
+    "maddox": {
+      "name": "Maddox",
+      "role": "Aubergiste",
+      "zone": "overworld",
+      "tile": [
+        148,
+        172
+      ],
+      "sprite": "OldMan",
+      "greeting": "Vous avez l'air d'être venu à pied. Personne ne vient à pied ici.",
+      "options": [
+        {
+          "intent": "ask_town",
+          "text": "Qui possède cette ville ?",
+          "reply": "Ça dépend de l'heure où vous demandez. Le Prévôt dit la couronne. La couronne dit le Prévôt. Moi je dis celui qui règle son ardoise."
+        },
+        {
+          "intent": "ask_law",
+          "tag": "Wits",
+          "text": "La loi, ici — sur qui tombe-t-elle ?",
+          "reply": "Tovin pourrait vous le dire. Il s'excuserait pendant tout le temps qu'il le fait.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_soldiers",
+          "tag": "Temper",
+          "text": "Les soldats passent-ils encore ?",
+          "reply": "Moins qu'avant. Demandez à Ossa pourquoi — c'est elle qui recoud ceux qui ne repartent pas.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_bread",
+          "tag": "Wits",
+          "text": "Pourquoi le pain a-t-il augmenté ?",
+          "reply": "Les soldats. On les nourrissait, maintenant ils achètent, et il y a toujours autant de grain. La moitié du Rassemblement est partie et chacun d'eux mange encore deux fois par jour.",
+          "requires_condition": "grain_is_dear_here"
+        },
+        {
+          "intent": "ask_favour",
+          "text": "Quelque chose que je devrais savoir ?",
+          "reply": "Il y a un homme qui boit ici, qui ne donne pas son nom et ne s'assoit jamais dos à la porte. Déserteur, ou pire. Je n'ai rien dit.",
+          "requires_condition": "they_think_well_of_me",
+          "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "grain_is_dear_here",
+          "text": "Le pain a doublé en un mois et personne ne me dit pourquoi. Vous, vous allez me le dire ?"
+        }
+      ]
+    },
+    "tovin": {
+      "name": "Tovin",
+      "role": "Prévôt",
+      "zone": "overworld",
+      "tile": [
+        152,
+        177
+      ],
+      "sprite": "Inspector",
+      "greeting": "Si vous venez vous inscrire, le registre est à l'intérieur. Si vous venez vous plaindre, la file aussi.",
+      "options": [
+        {
+          "intent": "ask_law",
+          "text": "Comment la loi s'applique-t-elle ici ?",
+          "reply": "Par paliers. Ce que vous devez dépend de ce que vous avez, et de qui était votre père. Je l'applique parce que quelqu'un doit l'appliquer, et je préfère que ce soit quelqu'un que ça gêne."
+        },
+        {
+          "intent": "ask_tiers",
+          "tag": "Wits",
+          "text": "Et vous trouvez cela défendable ?",
+          "reply": "Non. Je trouve cela écrit. Ce n'est pas la même chose et je suis trop vieux pour prétendre le contraire.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_muster",
+          "text": "Votre charge couvre-t-elle le camp ?",
+          "reply": "Elle devrait. En pratique le Rassemblement se juge lui-même, ce qui revient à ne pas se juger du tout.",
+          "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "the_army_is_shrinking",
+          "text": "Il me manque des hommes sur mes listes et personne au camp ne veut me dire combien."
+        }
+      ]
+    },
+    "bell": {
+      "name": "Bell",
+      "role": "Copiste",
+      "zone": "overworld",
+      "tile": [
+        152,
+        171
+      ],
+      "sprite": "Woman",
+      "greeting": "Ne vous appuyez pas là-dessus. L'encre est fraîche et le Prévôt compte ses feuilles.",
+      "options": [
+        {
+          "intent": "ask_tiers",
+          "text": "Vous connaissez les paliers de fortune ?",
+          "reply": "Je les recopie. Trois colonnes : ce que vous possédez, d'où vous venez, ce que vous devez. La troisième se déduit des deux premières et personne ne trouve ça étrange."
+        },
+        {
+          "intent": "ask_copy",
+          "tag": "Wits",
+          "text": "Vous arrive-t-il de copier ce que vous n'auriez pas dû voir ?",
+          "reply": "Il m'arrive de copier lentement. C'est tout ce que je dirai à quelqu'un que je ne connais pas.",
+          "costs": "goodwill"
+        },
+        {
+          "intent": "ask_soldiers",
+          "text": "Les papiers de l'armée passent-ils par votre bureau ?",
+          "reply": "Pas les vrais. Ceux qui arrivent sont déjà propres, et un papier propre venant d'un camp sale, ça se remarque.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "ossa": {
+      "name": "Ossa",
+      "role": "Herboriste",
+      "zone": "overworld",
+      "tile": [
+        147,
+        181
+      ],
+      "sprite": "OldWoman",
+      "greeting": "Asseyez-vous si vous saignez. Restez debout sinon, vous me cachez la lumière.",
+      "options": [
+        {
+          "intent": "ask_deserters",
+          "text": "On dit que vous soignez ceux qui ont fui.",
+          "reply": "Je soigne qui saigne. Je n'ai jamais demandé ses papiers à un homme avant de lui remettre un bras, et je ne vais pas commencer pour vous."
+        },
+        {
+          "intent": "ask_why",
+          "tag": "Wits",
+          "text": "Alors pourquoi sont-ils si nombreux à fuir ?",
+          "reply": "Pas les combats. La paie. Il y a une quartier-maître au Rassemblement — Odile — qui signe pour des hommes morts ou jamais nés, et garde la différence. Ce qui arrive aux vivants, c'est rien. Vous fuiriez aussi, et vous viendriez ici, parce que je suis la seule qui ne demande rien.",
+          "teaches": "muster:pay_fraud",
+          "forbids_condition": "they_think_ill_of_me"
+        },
+        {
+          "intent": "ask_kell",
+          "text": "Y en a-t-il un dont vous vous souvenez ?",
+          "reply": "Il y en a un que je vois encore. Il ne vient pas en ville. C'est tout ce que vous tirerez de moi aujourd'hui.",
+          "forbids_condition": "they_think_ill_of_me",
+          "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "they_think_ill_of_me",
+          "text": "J'ai vu ce que vous avez fait. Asseyez-vous si vous saignez — j'ai dit que je ne demandais jamais, et je le pensais. Mais vous n'aurez rien de plus."
+        }
+      ]
+    },
+    "garrick": {
+      "name": "Garrick",
+      "role": "Charretier",
+      "zone": "overworld",
+      "tile": [
+        137,
+        176
+      ],
+      "sprite": "Villager2",
+      "greeting": "Attention à la roue. Si vous voulez aller quelque part, je suis moins cher que des bottes et plus lent qu'une rumeur.",
+      "options": [
+        {
+          "intent": "ask_ford",
+          "text": "Le pont est-il le seul passage sur la Bouilloire ?",
+          "reply": "Non. Il y a un gué en aval, praticable en semaine sèche. Personne n'y compte les passages, ce qui est tout l'intérêt.",
+          "teaches": "kettle:ford"
+        },
+        {
+          "intent": "ask_muster",
+          "tag": "Wits",
+          "text": "Vous ravitaillez le camp ?",
+          "reply": "Je livrais. Maintenant je livre moins et on me paie plus tard. Demandez-vous qui garde la différence, parce que moi je me le demande.",
+          "teaches": "muster:pay_fraud",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_rumour",
+          "text": "Qu'est-ce qui circule sur la route à part vous ?",
+          "reply": "Des soldats dans le mauvais sens. Et des gens qui écoutent, ce qui est pire.",
+          "costs": "goodwill"
+        }
+      ]
+    },
+    "wren": {
+      "name": "Wren",
+      "role": "Chiffonnière",
+      "zone": "overworld",
+      "tile": [
+        258,
+        177
+      ],
+      "sprite": "Villager5",
+      "greeting": "Attention où vous mettez les pieds. La moitié de ce qu'il y a sous la cendre vaut encore quelque chose, l'autre moitié vous ouvrira la main.",
+      "options": [
+        {
+          "intent": "ask_ruins",
+          "text": "Vous vivez ici ?",
+          "reply": "Je travaille ici. Personne ne vit à Brindle. Je suis venue après, comme les corbeaux, et je n'en ai pas honte — il fallait bien que quelqu'un le fasse."
+        },
+        {
+          "intent": "ask_watched",
+          "tag": "Wits",
+          "text": "Vous devez savoir où personne ne regarde.",
+          "reply": "C'est la seule chose que je sache qui vaille une pièce. Saltmarch — il y a un étal près de l'eau devant lequel personne ne se tient d'une semaine à l'autre. C'est hors de la route, alors rien de ce qui s'y passe ne voyage. Je n'ai rien dit non plus.",
+          "teaches": "wide_acres:unwatched_stall",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_cinderworks",
+          "text": "Vous vendez quoi, et à qui ?",
+          "reply": "De la ferraille, aux Forges. Ils achètent le métal et ne demandent rien, ce qui vous dit ce qu'ils sont. Je n'y entrerais pas sans savoir quand la relève passe.",
+          "costs": "goodwill"
+        }
+      ]
+    }
+  },
+  "_strangers_note": "Generic types, not cast. §6's roster is twenty-five named people and these are not among them: a stranger has a trade, a line set shared by everyone of that trade, and no name. They exist so the world can react to you through somebody who has never met you — which is the whole point of a rumour arriving before you do. Placements are instances; the lines belong to the type.",
+  "strangers": {
+    "types": {
+      "trader": {
+        "name": "Un marchand",
+        "role": "Marchand",
+        "sprite": "ManGreen",
+        "greeting": "Toile, sel, huile de lampe. La pièce d'abord, et non, je ne fais pas de faveurs.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "Non. Quoi que ce soit, non. J'ai entendu parler de vous et je préfère garder ce que j'ai."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_trade",
+            "text": "Que me vendez-vous ?",
+            "reply": "Ce que vous pouvez payer. Restez un peu, je vous trouverai quelque chose.",
+            "forbids_condition": "they_think_ill_of_me",
+            "costs": "goodwill",
+            "repeatable": true
+          },
+          {
+            "intent": "ask_refusal",
+            "tag": "Temper",
+            "text": "Vous ne m'avez jamais vu.",
+            "reply": "Non. Mais le bruit est monté par la route avant vous, et il était précis.",
+            "requires_condition": "they_think_ill_of_me"
+          },
+          {
+            "intent": "ask_town",
+            "text": "Ville animée ?",
+            "reply": "Assez animée. La maison de compte donne l'heure et nous autres la suivons."
+          }
+        ]
+      },
+      "guard": {
+        "name": "Un garde du pont",
+        "role": "Garde",
+        "sprite": "Knight",
+        "greeting": "La route est ouverte. Qu'elle le reste et nous n'aurons pas de conversation.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "Je vous reconnais. Passez, et gardez les mains où je les vois."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_bridge",
+            "text": "Qui vous paie pour rester planté là ?",
+            "reply": "La couronne paie le pont. Le pont me paie. Redemandez-moi dans un mois et je vous dirai si l'un des deux tient encore."
+          },
+          {
+            "intent": "ask_ford",
+            "tag": "Wits",
+            "text": "Y a-t-il un autre passage ?",
+            "reply": "Il y a un gué en aval. Praticable en semaine sèche, et personne n'y compte les passages. Je n'ai pas dit ça.",
+            "teaches": "kettle:ford",
+            "costs": "free"
+          },
+          {
+            "intent": "ask_traffic",
+            "text": "Beaucoup de passage ces temps-ci ?",
+            "reply": "Des soldats dans le mauvais sens. C'est tout ce que je dirai sur les soldats.",
+            "costs": "goodwill",
+            "repeatable": true
+          }
+        ]
+      },
+      "watchman": {
+        "name": "Un homme du guet",
+        "role": "Homme du guet",
+        "sprite": "Knight",
+        "greeting": "Propriété des Forges. Regardez tant que vous voulez, ne touchez à rien, et nous resterons amis.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "Je vous connais. Restez où je vous vois et sortez vos mains."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_post",
+            "text": "Longue garde ?",
+            "reply": "Assez longue. On me paie pour rester là et remarquer les choses, et il y a eu beaucoup à remarquer ces temps-ci.",
+            "repeatable": true
+          },
+          {
+            "intent": "ask_orders",
+            "tag": "Wits",
+            "text": "Qui vous a dit de surveiller ça ?",
+            "reply": "Quelqu'un qui signe pour. C'est aussi haut qu'on me l'a jamais dit, et j'ai cessé de demander.",
+            "costs": "goodwill"
+          }
+        ]
+      }
+    },
+    "placements": [
+      {
+        "kind": "trader",
+        "zone": "overworld",
+        "tile": [
+          93,
+          59
+        ]
+      },
+      {
+        "kind": "guard",
+        "zone": "overworld",
+        "tile": [
+          228,
+          175
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          237,
+          170
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          232,
+          178
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          100,
+          153
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          92,
+          153
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          101,
+          53
+        ]
+      },
+      {
+        "kind": "watchman",
+        "zone": "overworld",
+        "tile": [
+          147,
+          105
+        ]
+      }
+    ]
+  },
+  "_dispositions_note": "How anybody opens a conversation when they have an opinion of you, used when that person has not been written a line of their own for that band. Narration rather than speech, deliberately: a shared line in nobody's voice sounds flat coming out of a named character, but a shared line about a stance works for everyone. %s is the speaker's name. This is what makes reaction the default rather than something each line has to opt into — before it existed, four of the five named cast chatted normally to a player the whole town had turned on.",
+  "dispositions": {
+    "hated": "%s se détourne avant que vous n'ayez pu dire un mot.",
+    "unwelcome": "%s ne vous rend pas votre salut.",
+    "wary": "%s vous regarde un instant de trop, et attend.",
+    "welcome": "%s est content de vous voir, et ne prend pas la peine de le cacher."
+  }
+}

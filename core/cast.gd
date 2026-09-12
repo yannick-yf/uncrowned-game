@@ -6,7 +6,16 @@ extends RefCounted
 ## Immutable content shared by the window and the tests, so a test can never pass
 ## against dialogue the player will not see.
 
-const CAST_PATH: String = "res://content/cast.json"
+## Sheets are content and content is written in the player's language, so there is
+## one file per language with identical ids and structure. A test asserts they match
+## exactly — a line missing from a translation is a build failure, not a surprise
+## somebody finds in play.
+const CAST_PATH: String = "res://content/cast.%s.json"
+
+
+static func path_for(locale: String) -> String:
+	var path: String = CAST_PATH % locale
+	return path if FileAccess.file_exists(path) else CAST_PATH % Text.FALLBACK
 
 var npcs: Dictionary = {}
 var fact_descriptions: Dictionary = {}
@@ -19,8 +28,13 @@ static var _shared: Cast = null
 
 static func shared() -> Cast:
 	if _shared == null:
-		_shared = load_from(CAST_PATH)
+		_shared = load_from(path_for(Text.locale()))
 	return _shared
+
+
+## Thrown away when the language changes, because every line in it is in the old one.
+static func forget() -> void:
+	_shared = null
 
 
 static func load_from(path: String) -> Cast:
@@ -67,6 +81,7 @@ static func load_from(path: String) -> Cast:
 			option.requires_condition = StringName(data.get("requires_condition", ""))
 			option.forbids_condition = StringName(data.get("forbids_condition", ""))
 			option.costs = StringName(data.get("costs", ""))
+			option.repeatable = bool(data.get("repeatable", false))
 			npc.options.append(option)
 		cast.npcs[npc.id] = npc
 
@@ -117,6 +132,7 @@ func _load_strangers(section: Dictionary) -> void:
 			option.requires_condition = StringName(data.get("requires_condition", ""))
 			option.forbids_condition = StringName(data.get("forbids_condition", ""))
 			option.costs = StringName(data.get("costs", ""))
+			option.repeatable = bool(data.get("repeatable", false))
 			npc.options.append(option)
 		npcs[npc.id] = npc
 

@@ -32,11 +32,26 @@ var forbids_condition: StringName = &""
 var costs: StringName = &""
 
 
+## Some things bear asking twice — a trader's stock, a guard's "anything moving on
+## the road". Most do not: a man who has told you where the ford is has told you.
+var repeatable: bool = false
+
+
+## An answer already given. Asking Maddox the same question forty times was possible
+## and felt like talking to a machine, which is the opposite of what a conversation
+## with a finite person should feel like: you leave having *used somebody up*.
+func spent_by(npc: StringName) -> StringName:
+	return StringName("asked:%s:%s" % [npc, intent])
+
+
 func asks_for_goodwill() -> bool:
 	if costs == &"free":
 		return false
 	return costs == &"goodwill" or teaches != &""
 
 
-func label() -> String:
-	return "[%s] %s" % [String(tag), text] if tag != &"" else text
+## Which trait this line visibly leans on, lowercased for lookup. The bracket and
+## the word belong to the window: `[Wits]` was still English in a French game
+## because core was building the string, which is the layering leak the journal had.
+func tag_key() -> StringName:
+	return StringName("trait.%s" % String(tag).to_lower()) if tag != &"" else &""

@@ -29,19 +29,10 @@ var _journal_open: bool = false
 ## The log length the page was built from. A journal held open would otherwise walk
 ## every event in the run sixty times a second to print the same page.
 var _journal_at: int = -1
+## Deaths already answered for, so one death triggers one reload.
+var _deaths_seen: int = 0
 
 ## Somewhere you cannot enter should still say what it is.
-const ZONE_NAMES: Dictionary = {
-	&"brindle": "Brindle",
-	&"cinderworks": "the Cinderworks",
-	&"harrowgate": "Harrowgate",
-	&"wide_acres": "the Wide Acres",
-	&"muster": "the Muster — an army camp, not a town",
-	&"saltmarch": "Saltmarch",
-	&"cairnwell": "Cairnwell, the capital",
-	&"blackcairn": "Blackcairn",
-}
-
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
@@ -93,7 +84,11 @@ func _ready() -> void:
 	_art = Art.new()
 	_seconds_per_step = Game.seconds_per_step()
 	_debug_available = OS.has_feature("debug")
-	_sim = Game.build()
+	# A run in progress is on disk as its event log, so starting the game is
+	# replaying it. If that fails or there is nothing there, a new run.
+	_sim = SaveFile.read()
+	if _sim == null:
+		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
 	_wild = _sim.store(&"wildlife") as Wildlife
@@ -153,13 +148,33 @@ func _read_input() -> void:
 			_sim.submit(&"give_back")
 		elif _can_steal():
 			_sim.submit(&"steal")
-		elif _site_in_reach() != "" or _watched_site() != "":
+		elif _can_rest():
+			_rest()
+		elif _papers_in_reach() or _site_in_reach() != "" or _watched_site() != "":
 			_sim.submit(&"act")
 
 	# A second key, because the two kinds of act are different kinds of thing and
 	# were fighting over one. E is what is in front of you; F is what you carry in
 	# your head. Splitting them is also what keeps §8's availability rule true —
 	# telling a town must not queue behind a stall that happens to be nearer.
+	# Death sends you back to the fire, and the run is rewound with you: the world
+	# has to forget what you did between the last rest and dying, or death would
+	# cost position and nothing else.
+	if _world.deaths > _deaths_seen:
+		_deaths_seen = _world.deaths
+		if SaveFile.exists():
+			_reload()
+			return
+
+	if Input.is_action_just_pressed(&"language"):
+		# The cast is written in a language too, so the sheets are reloaded with the
+		# HUD. Safe mid-run: sheets are immutable content and standing is keyed on
+		# ids, which do not change with the words.
+		Text.cycle()
+		_cast = Cast.shared()
+		_sim.add_store(&"cast", _cast)
+		_journal_at = -1
+
 	if Input.is_action_just_pressed(&"journal"):
 		_journal_open = not _journal_open
 		_draw_journal()
@@ -195,7 +210,7 @@ func _skip_a_day() -> void:
 	_sim.advance_world_ticks(Game.TICKS_PER_IN_GAME_DAY)
 	_skipped_days += 1
 	print("[debug] skipped a day: tick %d -> %d (%s)" % [
-		before, _sim.tick, Game.in_game_clock(_sim.tick)])
+		before, _sim.tick, _clock(_sim.tick)])
 
 
 func _read_direction() -> Vector2i:
@@ -249,7 +264,7 @@ func _site_in_reach() -> String:
 	var site: Dictionary = _world.region().nearest_site(_world.player_tile(), SiteRules.REACH)
 	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
 		return ""
-	return SiteRules.label_for(site["kind"] as StringName)
+	return Text.of(SiteRules.label_key(site["kind"] as StringName))
 
 
 ## Why there is no prompt at a site the watch is standing over. A place must never
@@ -261,7 +276,56 @@ func _watched_site() -> String:
 	if WatchRules.guarded_by(_cast, _world.current_zone, _world.player_pos,
 			_ticked.alertness_in(_world.region().zone_at(_world.player_tile()))) == &"":
 		return ""
-	return "the watch is standing over it"
+	return Text.of(&"prompt.watched")
+
+
+func _can_rest() -> bool:
+	return _world.region().nearest_campfire(
+		_world.player_tile(), RecoveryRules.FIRE_REACH) != Region.NOWHERE
+
+
+## Sitting down: the world moves eight hours while you do not, and then the run is
+## written to disk. Advancing and saving are here rather than in a system because
+## both are about the *run* — and a system that wrote a file could not be replayed.
+func _rest() -> void:
+	_sim.submit(&"rest")
+	_sim.advance(Sim.STEPS_PER_WORLD_TICK * RecoveryRules.REST_TICKS)
+	SaveFile.write(_sim)
+	_deaths_seen = _world.deaths
+
+
+## Rebuild the run from the last rest. Every reference has to be re-taken, because
+## replay builds a whole new world rather than rewinding this one.
+func _reload() -> void:
+	var loaded: Sim = SaveFile.read()
+	if loaded == null:
+		return
+	_sim = loaded
+	_world = _sim.store(&"world") as WorldState
+	_cast = _sim.store(&"cast") as Cast
+	_wild = _sim.store(&"wildlife") as Wildlife
+	_ticked = _sim.store(&"worldtick") as WorldTick
+	_standing = _sim.store(&"standing") as Standing
+	_road = _sim.store(&"travellers") as Travellers
+	_deaths_seen = _world.deaths
+	_journal_at = -1
+	_render_from = _world.player_pos
+	_render_to = _world.player_pos
+
+
+## Papers on the ground you have not picked up yet.
+func _papers_in_reach() -> bool:
+	var papers: Dictionary = _world.region().nearest_document(
+		_world.player_tile(), DocumentRules.REACH)
+	return not papers.is_empty() and not _world.holds(papers["fact"] as StringName)
+
+
+## A document you are carrying and have not yet read out where people could hear.
+func _can_read_out() -> bool:
+	return TellingRules.tellable_document(
+		_world.region().zone_at(_world.player_tile()),
+		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos),
+		_world, _sim.facts) != &""
 
 
 func _can_give_back() -> bool:
@@ -521,26 +585,37 @@ func _draw_escort() -> void:
 ## Somewhere you cannot enter should still say what it is. The Muster is a camp on
 ## the road, not a town, and looking identical to Harrowgate's gate while refusing
 ## to open is the kind of thing a player reasonably reads as broken.
+## A line the player may speak, with its trait bracket in their language.
+func _option_label(option: DialogueOption) -> String:
+	var key: StringName = option.tag_key()
+	if key == &"":
+		return option.text
+	return Text.of(&"option.tagged", [Text.of(key), option.text])
+
+
+## The clock, in the player's language.
+func _clock(tick: int) -> String:
+	return Text.of(&"clock.day", Game.in_game_clock_parts(tick))
+
+
 func _place_name() -> String:
-	if _world.current_zone == &"harrowgate":
-		return "Harrowgate"
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
-	if ZONE_NAMES.has(zone):
-		return String(ZONE_NAMES[zone])
+	if Region.is_place(zone):
+		return Text.of(StringName("place.%s" % zone))
 	match _world.region().terrain_at(_world.player_tile()):
 		Region.Terrain.ROAD:
-			return "the King's Road"
+			return Text.of(&"place.road")
 		Region.Terrain.FORD:
-			return "the ford"
+			return Text.of(&"place.ford")
 		Region.Terrain.FOREST:
-			return "the Thornwood"
+			return Text.of(&"place.forest")
 		Region.Terrain.MARSH:
-			return "the marshes"
+			return Text.of(&"place.marsh")
 		Region.Terrain.FARMLAND:
-			return "the Wide Acres"
+			return Text.of(&"place.farmland")
 		Region.Terrain.SAND:
-			return "the coast"
-	return "the wild"
+			return Text.of(&"place.coast")
+	return Text.of(&"place.wild")
 
 
 ## §8's AMBIENT register: how the place you are standing in regards you.
@@ -560,21 +635,21 @@ func _regard() -> String:
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
 	if zone == &"":
 		return ""
-	return " — %s" % StandingRules.word_for(_standing.in_town(zone))
+	return Text.of(&"hud.regard", [Text.of(StringName("regard.%s" % StandingRules.word_for(_standing.in_town(zone))))])
 
 
 func _draw_hud() -> void:
 	var walked: int = int(_real_seconds)
 	var where: String = _place_name()
 	var lines: Array[String] = [
-		"%s%s   ·   HP %d/%d   ·   deaths %d" % [
-			where, _regard(), _world.player_hp, WorldState.MAX_HP, _world.deaths,
-		],
-		"the king's escort: %d" % _ticked.kings_escort(),
+		Text.of(&"hud.line", [where, _regard(), _world.player_hp, WorldState.MAX_HP, _world.deaths]),
+		Text.of(&"hud.escort", [_ticked.kings_escort()]),
 	]
 	if _world.current_zone == WorldState.OVERWORLD:
-		lines.append("%d tiles to Blackcairn" % int(round(_world.tiles_to_blackcairn())))
-	lines.append("%s   ·   walked %d:%02d" % [Game.in_game_clock(_sim.tick), walked / 60, walked % 60])
+		lines.append(Text.of(&"hud.to_blackcairn", [int(round(_world.tiles_to_blackcairn()))]))
+	lines.append(Text.of(&"hud.clock",
+		[_clock(_sim.tick), walked / 60, "%02d" % (walked % 60)]))
+	lines.append(Text.of(&"hud.language", [Text.locale().to_upper()]))
 	if _debug_available:
 		lines.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
 	_info.text = "\n".join(lines)
@@ -585,8 +660,8 @@ func _draw_hud() -> void:
 		_line.text = _world.current_line
 		var rows: Array[String] = []
 		for index: int in _world.options.size():
-			rows.append("%d. %s" % [index + 1, _world.options[index].label()])
-		rows.append("%d. (say nothing and go)     — or E, or Esc" % _exit_slot())
+			rows.append("%d. %s" % [index + 1, _option_label(_world.options[index])])
+		rows.append(Text.of(&"prompt.exit", [_exit_slot()]))
 		_choices.text = "\n".join(rows)
 		_prompt.text = ""
 		return
@@ -606,19 +681,23 @@ func _draw_hud() -> void:
 		if beast.hunting and beast.pos.distance_to(_world.player_pos) <= CLOSE_ENOUGH_TO_FEAR:
 			hunted += 1
 	if hunted > 0:
-		rows.append("something is following you" if hunted == 1 else "%d of them have seen you" % hunted)
+		rows.append(Text.of(&"beast.one") if hunted == 1 else Text.of(&"beast.many", [hunted]))
 
 	var npc: Npc = _nearby_npc()
-	if npc != null:
-		rows.append("E — speak to %s, %s" % [npc.display_name, npc.role.to_lower()])
+	if _can_rest():
+		rows.append(Text.of(&"prompt.rest"))
+	elif _papers_in_reach():
+		rows.append(Text.of(&"prompt.papers"))
+	elif npc != null:
+		rows.append(Text.of(&"prompt.talk", [npc.display_name, npc.role.to_lower()]))
 	elif _can_give_back():
-		rows.append("E — put it back")
+		rows.append(Text.of(&"prompt.put_back"))
 	elif _can_steal():
 		# Who is watching is drawn over their heads, not counted here. The prompt
 		# never says what it will cost: the world shows, the journal explains (§8).
-		rows.append("E — take something")
+		rows.append(Text.of(&"prompt.take"))
 	elif _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH) != Region.NOWHERE:
-		rows.append("picked clean")
+		rows.append(Text.of(&"prompt.picked_clean"))
 	elif _site_in_reach() != "":
 		rows.append(_site_in_reach())
 	elif _watched_site() != "":
@@ -627,8 +706,10 @@ func _draw_hud() -> void:
 	# Its own row, never an `elif`. What you know is available wherever you are
 	# standing, and burying it behind whatever happens to be nearer would make the
 	# act that raises a town harder to reach than the act that lowers one.
-	if _can_warn() or _can_expose():
-		rows.append("F — say what you know")
+	if _can_read_out():
+		rows.append(Text.of(&"prompt.read_out"))
+	elif _can_warn() or _can_expose():
+		rows.append(Text.of(&"prompt.say"))
 	_prompt.text = "\n".join(rows)
 
 
@@ -640,15 +721,21 @@ func _draw_hud() -> void:
 ## ambient register's business, three days' walk away, and the player is meant to
 ## be the one who joins them up. Push the ambient, pull the attribution.
 func _just_happened() -> String:
+	# Papers first: picking one up is the quieter act and the one that was silent.
+	# Taking a document told the player nothing at all — no line, no name, nothing
+	# to say what they now had (found in play, 2026-09-12).
+	if _world.last_taken_step >= 0 and _sim.step - _world.last_taken_step <= MOMENT_STEPS:
+		return Text.of(&"moment.took_papers",
+			[Text.of(StringName("doc.%s" % _world.last_taken))])
 	if _world.last_theft_step < 0:
 		return ""
 	if _sim.step - _world.last_theft_step > MOMENT_STEPS:
 		return ""
 	if _world.last_theft_seen == 0:
-		return "you take it. nobody looks up"
+		return Text.of(&"moment.took.none")
 	if _world.last_theft_seen == 1:
-		return "you take it. one person looks up"
-	return "you take it. %d people look up" % _world.last_theft_seen
+		return Text.of(&"moment.took.one")
+	return Text.of(&"moment.took.many", [_world.last_theft_seen])
 
 
 ## §8's NARRATED register, and the only screen allowed to join an act to its
@@ -670,40 +757,125 @@ func _draw_journal() -> void:
 	var from: int = maxi(rows.size() - JOURNAL_ROWS, 0)
 	for i: int in range(from, rows.size()):
 		var row: Dictionary = rows[i]
-		lines.append("%s   %s" % [Game.in_game_clock(int(row["tick"])), row["line"]])
-		if String(row["because"]) != "":
-			lines.append("                  %s" % row["because"])
+		lines.append("%s   %s" % [_clock(int(row["tick"])), _journal_line(row)])
+		var because: String = _journal_because(row)
+		if because != "":
+			lines.append("                  %s" % because)
 	if lines.is_empty():
-		lines.append("Nothing worth writing down yet.")
+		lines.append(Text.of(&"journal.empty"))
 
 	# §15's second page. A predicate over ten numbers is invisible, and without this
 	# "push the world until he cannot hold it" is guesswork. State and attribution
 	# only: it says the treasury is empty and that you emptied it, and never that
 	# you should rob the bank next.
 	lines.append("")
-	lines.append("WHAT HOLDS HIM UP")
+	lines.append(Text.of(&"journal.holds"))
 	for row: Dictionary in EndRules.what_holds_him_up(_ticked, _world, _sim.facts):
 		lines.append("· %-30s %5d%s" % [
-			row["name"], int(round(float(row["value"]))),
-			"     — and you are why" if float(row["yours"]) > 0.0 else "",
+			Text.of(row["name_key"] as StringName), int(round(float(row["value"]))),
+			Text.of(&"journal.yours") if float(row["yours"]) > 0.0 else "",
 		])
 	if _world.reign_ended != &"":
 		lines.append("")
-		lines.append("HE IS NO LONGER KING — %s" % String(_world.reign_ended).to_upper())
+		lines.append(Text.of(&"journal.deposed",
+			[Text.of(StringName("end.%s" % _world.reign_ended))]))
 
 	var known: Array[Dictionary] = Journal.knowledge(_sim.facts, _cast)
 	if not known.is_empty():
 		lines.append("")
-		lines.append("WHAT YOU KNOW")
+		lines.append(Text.of(&"journal.known"))
 		for row: Dictionary in known:
-			lines.append("· %s" % row["line"])
+			var held: String = Text.of(&"journal.holding") \
+				if _world.holds(StringName(row["fact"])) else ""
+			lines.append("· %s%s" % [row["line"], held])
 			# Whether a fact would survive the death of the person who gave it to
 			# you. Invariant 6 made visible, because it is the player's problem as
 			# much as the designer's.
-			lines.append("      %s%s" % [row["from"],
-				"" if bool(row["safe"]) else "   — and nobody else has told you this"])
-	_journal_title.text = "THE JOURNAL          %s          J to close" % Game.in_game_clock(_sim.tick)
+			lines.append("      %s%s" % [
+				Text.of(&"journal.told_by", [", ".join(row["from"] as PackedStringArray)]),
+				"" if bool(row["safe"]) else Text.of(&"journal.only_source")])
+	_journal_title.text = Text.of(&"journal.title", [_clock(_sim.tick)])
 	_journal_body.text = "\n".join(lines)
+
+
+## The journal's rows arrive as facts — a kind, a town, a count — and become a
+## sentence here. Core stopped writing prose when the game learnt a second language.
+func _journal_line(row: Dictionary) -> String:
+	var town: String = _short_place(row.get("town", &"") as StringName)
+	match row["kind"] as StringName:
+		Journal.DEED:
+			return Text.of(_deed_key(row["deed"] as StringName),
+				[town, _seen(int(row["seen"]))])
+		Journal.UNSEEN:
+			return Text.of(&"journal.unseen", [town])
+		Journal.ARRIVAL:
+			return Text.of(&"journal.arrival", [town])
+		Journal.FRAUD:
+			return Text.of(&"journal.fraud")
+		Journal.ARMY:
+			return Text.of(&"journal.army")
+		Journal.GRAIN:
+			return Text.of(&"journal.grain", [town])
+		Journal.ESCORT:
+			return Text.of(&"journal.escort", [int(row["to"]), int(row["from"])])
+	return ""
+
+
+## The half that is allowed to say *why*, and the only text in the game that is.
+func _journal_because(row: Dictionary) -> String:
+	match row["kind"] as StringName:
+		Journal.DEED, Journal.FRAUD:
+			return Text.of(&"journal.spent") if bool(row.get("spends_the_telling", false)) else ""
+		Journal.ARRIVAL:
+			var key: StringName = &"journal.because.carried" if bool(row["carried"]) \
+				else &"journal.because.spread"
+			return Text.of(key, [
+				_elapsed(float(row["days"])),
+				Text.of(_phrase_key(row["deed"] as StringName)),
+				_short_place(row["origin"] as StringName)])
+		Journal.ARMY:
+			return Text.of(&"journal.because.army",
+				[_short_place(row["told_at"] as StringName)]) if row["told_at"] != &"" else ""
+		Journal.GRAIN:
+			return Text.of(&"journal.because.grain") if bool(row["after_the_army"]) else ""
+		Journal.ESCORT:
+			return Text.of(&"journal.because.escort") if bool(row["after_the_army"]) else ""
+	return ""
+
+
+func _short_place(zone: StringName) -> String:
+	return Text.of(StringName("place.short.%s" % zone)) if Region.is_place(zone) else ""
+
+
+func _seen(count: int) -> String:
+	return Text.of(&"journal.seen.one" if count == 1 else &"journal.seen.many", [count])
+
+
+func _elapsed(days: float) -> String:
+	if days < 1.0:
+		return Text.of(&"journal.elapsed.hours")
+	var whole: int = int(round(days))
+	return Text.of(&"journal.elapsed.day") if whole <= 1 \
+		else Text.of(&"journal.elapsed.days", [whole])
+
+
+func _deed_key(deed: StringName) -> StringName:
+	match deed:
+		DeedRules.DEED_THEFT: return &"journal.deed.theft"
+		DeedRules.DEED_RESTITUTION: return &"journal.deed.restitution"
+		DeedRules.DEED_WARNING: return &"journal.deed.warning"
+		DeedRules.DEED_SABOTAGE: return &"journal.deed.sabotage"
+		DeedRules.DEED_BURN_STORES: return &"journal.deed.burn"
+		DeedRules.DEED_ROB_BANK: return &"journal.deed.rob"
+		DeedRules.DEED_WRECK_ROLLS: return &"journal.deed.rolls"
+	return &"journal.unseen"
+
+
+func _phrase_key(deed: StringName) -> StringName:
+	match deed:
+		DeedRules.DEED_THEFT: return &"journal.phrase.theft"
+		DeedRules.DEED_WARNING: return &"journal.phrase.warning"
+	return &"journal.phrase.other"
 
 
 ## What a place looks like, which is not the same as what to do about it.
@@ -722,12 +894,12 @@ func _atmosphere() -> String:
 	if not _world.region().is_in_muster(_world.player_tile()):
 		return ""
 	if _world.pay_fraud_exposed:
-		return "half the tents are down, and nobody is striking the rest"
+		return Text.of(&"muster.struck")
 	# Told somewhere else. The camp has to stop advertising a thing that can no
 	# longer be done here — a world that describes an opportunity the player no
 	# longer has is worse than one that says nothing, and an absent prompt on its
 	# own is indistinguishable from a bug. It never says why: speaking it aloud
 	# anywhere is what reached Odile, and this is what that looks like from here.
 	if _world.fraud_told_to != &"":
-		return "the pay tent is shut, and the ledgers are not in it"
-	return "the pay tent has a queue and no money in it"
+		return Text.of(&"muster.shut")
+	return Text.of(&"muster.queue")

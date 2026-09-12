@@ -172,5 +172,5 @@ func test_the_tick_means_what_spec_8_says() -> void:
 	_sim.advance_world_ticks(1440)
 	assert_true(absf(Game.in_game_days(_sim.tick) - 1.0) < 0.001, "one in-game day")
 	assert_eq(1440 / Game.TICKS_PER_REAL_SECOND, 360, "which is six real minutes")
-	assert_eq(Game.in_game_clock(0), "day 1, 00:00")
-	assert_eq(Game.in_game_clock(90), "day 1, 01:30")
+	assert_eq(Game.in_game_clock_parts(0), [1, "00", "00"])
+	assert_eq(Game.in_game_clock_parts(90), [1, "01", "30"])
