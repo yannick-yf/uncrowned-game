@@ -188,3 +188,71 @@ func test_dying_before_you_ever_rest_puts_you_back_where_you_woke() -> void:
 	world.hurt(WorldState.MAX_HP, sim.step)
 	assert_eq(world.player_pos, world.region().clearing_centre(),
 		"back in the clearing, not in the ruins")
+
+
+# --------------------------------------------- stage 2: the protected ground ---
+
+func test_nothing_with_teeth_stands_on_ground_the_fairies_hold() -> void:
+	# The same shape as the test that keeps beasts off the King's Road, because it
+	# is the same kind of claim: a safe place is safe because nothing may enter it,
+	# not because nothing happened to.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wildlife") as Wildlife
+	var ticked := sim.store(&"worldtick") as WorldTick
+	world.player_pos = world.region().clearing_centre()
+	sim.advance(60 * 40)
+	var trespassers: int = 0
+	for beast: Beast in wild.beasts:
+		if BeastRules.is_protected(Vector2i(floori(beast.pos.x), floori(beast.pos.y)),
+				ticked.held_ground):
+			trespassers += 1
+	assert_eq(trespassers, 0, "forty seconds of standing in the clearing, and nothing came in")
+
+
+func test_the_walk_out_is_protected_too_at_the_start() -> void:
+	# The first walk out of the trees is the last walk on held ground. The corridor
+	# has to be inside it or the claim is only about the clearing.
+	var ticked := WorldTick.new()
+	var mouth := Vector2i(Region.CLEARING.x, Region.CLEARING.y + Region.CLEARING_RADIUS + 2)
+	assert_true(BeastRules.is_protected(Region.CLEARING, ticked.held_ground), "the clearing")
+	assert_true(BeastRules.is_protected(mouth, ticked.held_ground), "and the corridor out")
+	assert_false(BeastRules.is_protected(Region.BRINDLE, ticked.held_ground),
+		"but not the ruins — you step out of the last protected place to reach them")
+
+
+func test_the_wood_gets_smaller_while_the_furnaces_run() -> void:
+	var held: float = WorldRules.HELD_AT_START
+	for _tick: int in Game.TICKS_PER_IN_GAME_DAY * 10:
+		held = WorldRules.held_ground_after(held, 100.0)
+	assert_true(held < WorldRules.HELD_AT_START - 4.0,
+		"ten days of the works running flat out took %.1f tiles" % (WorldRules.HELD_AT_START - held))
+	assert_true(held > 0.0, "and did not finish it: %.1f left" % held)
+
+
+func test_putting_the_furnaces_out_stops_the_wood_shrinking() -> void:
+	# The point of driving it off steel output rather than the calendar. Stopping
+	# the clearing is already something the player can do with the levers they have,
+	# so "save us" is not a request the game cannot answer (§19 Q42/Q43 deferred).
+	var held: float = WorldRules.HELD_AT_START
+	for _tick: int in Game.TICKS_PER_IN_GAME_DAY * 10:
+		held = WorldRules.held_ground_after(held, 0.0)
+	assert_eq(held, WorldRules.HELD_AT_START, "nothing running, nothing taken")
+
+
+func test_the_edge_comes_in_so_a_later_visit_is_different() -> void:
+	# What makes the shrinking something the player walks into rather than is told.
+	var mouth := Vector2i(Region.CLEARING.x, Region.CLEARING.y + Region.CLEARING_RADIUS + 2)
+	assert_true(BeastRules.is_protected(mouth, WorldRules.HELD_AT_START), "held at the start")
+	assert_false(BeastRules.is_protected(mouth, 6.0),
+		"and not once the wood has lost most of what it had")
+
+
+func test_the_wood_shrinking_can_never_end_a_reign() -> void:
+	# §8's hard rule. Drift may move the world; only the player may end it. This is
+	# drift, so it writes no handprint and no ending can read it.
+	var sim: Sim = Game.build()
+	var ticked := sim.store(&"worldtick") as WorldTick
+	sim.advance(60 * 30)
+	assert_true(ticked.held_ground < WorldRules.HELD_AT_START, "the wood did shrink")
+	assert_eq(ticked.handprint_on(&"held_ground"), 0.0, "and none of it was the player's doing")

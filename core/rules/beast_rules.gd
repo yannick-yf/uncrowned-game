@@ -32,6 +32,20 @@ const HOME_RANGE: float = 9.0
 const FACT_WILD_IS_DANGEROUS: StringName = &"the_wild_bites"
 
 
+## Ground the fairies still hold, which nothing with teeth will walk onto.
+##
+## **Not a starting-area exemption.** It is a fact about the world: the ground they
+## still hold is the ground still protected, and it is shrinking. So the player's
+## first walk out of the trees is also their first step out of the last protected
+## place in the region — and coming back later to find the edge closer in is how the
+## shrinking gets *seen* rather than asserted (§8: a change nobody can perceive is
+## identical to no change).
+static func is_protected(tile: Vector2i, held: float) -> bool:
+	if held <= 0.0:
+		return false
+	return Vector2(tile).distance_to(Vector2(Region.CLEARING)) <= held
+
+
 static func speed_for(kind: StringName) -> float:
 	return float(SPEEDS.get(kind, 4.0))
 

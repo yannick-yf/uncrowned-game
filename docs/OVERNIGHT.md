@@ -45,7 +45,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 
 | # | Piece | Status |
 |---|---|---|
-| 1 | **The opening** — stages 1–5 below | **stages 1 and 4 done**; 2, 3, 5 next |
+| 1 | **The opening** — stages 1–5 below | **stages 1, 2 and 4 done**; 3 and 5 next |
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | not started |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | not started |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
@@ -180,6 +180,10 @@ Every entry here is a choice he was not present for. Newest last.
 | 4 | The corridor's **walls stop at y=168**, seven tiles short of Brindle | Walls where you could get lost, open where the destination is already in shot. By y=168 the ruins are in frame, and a destination you can see guides better than a wall does. It also keeps the first minute from reading as a tunnel |
 | 5 | **Stage 4 landed with stage 1**, not on its own | Stage 1 moved the start into the wood, which broke the save test: it walks to the nearest fire using real move events, and there was no fire reachable from the clearing. The honest fix was the fire stage 4 was going to add anyway. Committed together and recorded here rather than faked |
 | 6 | Dying **before any rest** returns the player to the clearing, not Brindle | It is where they woke the first time and the only ground left that could hold them. Three existing tests asserted Brindle and were updated, not worked around |
+| 8 | The held ground is **not a thirteenth tracked quantity** | §19 Q11 refused one of those and the refusal still holds. It lives on `WorldTick` beside `grain_price` and `town_sentiment`, which are the same kind of thing: a reading about a *place*. No ending consults it |
+| 9 | The wood shrinks at a rate driven by **`steel_output`**, not by the calendar | This is the fiction exactly — men came with axes, and the axes are the works' appetite. It also means **stopping the clearing is already something the player can do with the levers they have**, so the fairy's *"if you can, save us"* is answerable without the forest needing machinery of its own. Q42/Q43 stay deferred and this does not wait on them |
+| 10 | `HELD_AT_START` 22 tiles, `HELD_LOST_PER_DAY` 0.55 at full output | 22 covers the clearing (7), the ring that closes it (12) and the corridor as far as Brindle coming into frame (~20), so the first thing lost is the safe walk out, then the ring, then the clearing. 0.55 empties it in about forty in-game days of the furnaces running flat out |
+| 11 | **Sharpened** `test_a_world_with_no_cause_in_it_does_not_wander` rather than exempting the wood from it | The test said five days change nothing. The wood now changes — and that is the rule working, not breaking: there *is* a cause in the world from the first minute, and it is why the game has a plot. It is now asserted the harder way round: **stop the furnaces and nothing moves at all.** A drift you can switch off is a drift somebody reasoned about, which is what §8 was protecting against |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
 
 ---
@@ -234,3 +238,23 @@ Suite: **276 tests green**, fast suite 237 in 7.5 s.
 
 > Fast suite is **7.5 s against the 4 s target** in the polish brief. Not addressed
 > here; it belongs to the polish pass and is written down so it is not forgotten.
+
+### Opening, stage 2 — the protected ground
+
+Built: `WorldTick.held_ground`, `WorldRules.held_ground_after()`,
+`BeastRules.is_protected()`, the wildlife system threading it through spawning and
+movement, and the tick system taking the wood down as the furnaces run.
+
+**Written as a fact about the world, not a starting-area exemption**, which is what
+was asked for. The ground the fairies still hold is the ground still protected, and it
+shrinks — so the player's first walk out of the trees is also their first step out of
+the last protected place in the region, and coming back later to find the edge closer
+in is how the shrinking gets *seen* rather than asserted.
+
+`held_ground` is in `WorldTick.fingerprint()`, so replay checks it like everything else.
+
+The one collision worth reading: the wood shrinking breaks
+*a world with no cause in it does not wander*, and the fix was to sharpen that test
+rather than exempt the wood — see decision 11.
+
+Suite: **283 tests green**.

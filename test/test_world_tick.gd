@@ -60,11 +60,32 @@ func test_the_escort_is_read_off_army_strength_not_counted_by_hand() -> void:
 # ------------------------------------------------------------------ the drift ---
 
 func test_a_world_with_no_cause_in_it_does_not_wander() -> void:
+	# **Sharpened 2026-09-12.** This used to assert that five days change nothing at
+	# all. One thing now changes: the wood the fairies hold gets smaller. That is not
+	# the rule breaking — it is the rule working, because there *is* a cause in the
+	# world from the first minute and it is the reason the game has a plot. The
+	# Cinderworks is running, and the furnaces eat the wood.
+	#
+	# So the claim is stated the harder way round: stop the furnaces and nothing
+	# moves at all. A drift with a cause you can switch off is a drift somebody
+	# reasoned about, which is what §8 was protecting against when it refused twelve
+	# invented rates.
 	var sim: Sim = _bare()
 	var ticked := sim.store(&"worldtick") as WorldTick
+	ticked.steel_output = 0.0
 	var before: String = ticked.fingerprint()
 	_days(sim, 5.0)
-	assert_eq(ticked.fingerprint(), before, "nothing happened, so nothing changed")
+	assert_eq(ticked.fingerprint(), before, "nothing running, so nothing changed")
+
+
+func test_the_one_thing_that_moves_on_its_own_is_the_wood() -> void:
+	var sim: Sim = _bare()
+	var ticked := sim.store(&"worldtick") as WorldTick
+	var held: float = ticked.held_ground
+	var army: float = ticked.army_strength
+	_days(sim, 5.0)
+	assert_true(ticked.held_ground < held, "five days of furnaces took some of it")
+	assert_eq(ticked.army_strength, army, "and moved nothing else")
 
 
 func test_the_army_eases_toward_its_target_over_days() -> void:

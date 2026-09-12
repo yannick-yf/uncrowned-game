@@ -23,6 +23,36 @@ const ARMY_IMMEDIATE_LOSS: float = 25.0
 ## How fast the rest go, per in-game day.
 const ARMY_DRIFT_PER_DAY: float = 12.0
 
+# ------------------------------------------------------------- the fairies ---
+
+## How many tiles around the clearing the fairies still hold, at the start.
+##
+## Enough for the clearing (7), the thicket ring that closes it (12), and the
+## corridor south as far as Brindle coming into frame (~20). So the first thing the
+## player loses is the safe walk out, then the ring, then the clearing itself.
+const HELD_AT_START: float = 22.0
+
+## And how much of it goes in a day, **at full steel output**.
+##
+## 0.55 empties it in about forty in-game days of the works running flat out. It is
+## driven by `steel_output` rather than by the calendar because that is the fiction
+## exactly: men came with axes, and the axes are the Cinderworks' appetite. Put the
+## furnaces out and the wood stops shrinking — so *stopping the clearing* is already
+## a thing the player can do with the levers they have, without the forest needing
+## machinery of its own (§19 Q42/Q43 are deferred; this does not wait on them).
+##
+## It is drift, and §8 allows drift to move the world. It cannot end anything: the
+## end conditions ask for a handprint and this writes none.
+const HELD_LOST_PER_DAY: float = 0.55
+
+
+## What the wood loses this tick, given how hard the works is running.
+static func held_ground_after(held: float, steel_output: float) -> float:
+	if held <= 0.0:
+		return 0.0
+	var rate: float = HELD_LOST_PER_DAY * clampf(steel_output, 0.0, 100.0) / 100.0
+	return maxf(0.0, held - per_tick(rate))
+
 
 static func army_target_for(fraud_exposed: bool) -> float:
 	return ARMY_AFTER_FRAUD if fraud_exposed else 100.0

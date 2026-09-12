@@ -29,6 +29,14 @@ func on_tick(sim: Sim, _tick: int) -> void:
 	if floori(ticked.army_strength) != floori(was):
 		sim.derive(&"army_fell", {"to": ticked.army_strength})
 
+	# The wood gets smaller, at the rate the furnaces are running. Drift, not a
+	# deed: it moves the world and writes no handprint, so it can never end
+	# anything (§8's hard rule). Put the furnaces out and it stops.
+	var held_was: float = ticked.held_ground
+	ticked.held_ground = WorldRules.held_ground_after(ticked.held_ground, ticked.steel_output)
+	if floori(ticked.held_ground) != floori(held_was):
+		sim.derive(&"wood_lost", {"to": ticked.held_ground})
+
 
 func system_name() -> StringName:
 	return &"worldtick"
