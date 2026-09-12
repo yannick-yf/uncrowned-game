@@ -853,18 +853,53 @@ func _nearest_open(from: Vector2i) -> Vector2i:
 ## §19 Q5: you save at a campfire and dying puts you back at the last one. They have
 ## to be common enough that reaching one is a plan rather than a pilgrimage — if
 ## they are rare, death stops being a cost and becomes a punishment.
+## **Every fire is somewhere somebody would light one** (2026-09-13).
+##
+## They used to be scattered: one per zone at a fixed offset from its centre, which
+## dropped them in the middle of streets and against house walls, plus five on the
+## road. Fourteen fires in arbitrary places reads as *randomly placed*, which is what
+## it was — the offset was chosen once and applied eight times.
+##
+## Now each one is a reason. On the road they are a day's walk apart at the places a
+## carter would stop: before a river crossing, at the junction, on the long empty
+## stretch. Off it they belong to somebody.
 const CAMP_SPURS: Array[Vector2i] = [
-	Vector2i(200, 168), Vector2i(150, 120), Vector2i(112, 96), Vector2i(228, 180),
+	# The road, at the places you would stop on it.
+	Vector2i(228, 183),  # short of the bridge, on the Brindle side
+	Vector2i(196, 172),  # the long empty stretch west of the river
+	Vector2i(150, 120),  # the Muster junction, outside the camp
+	Vector2i(112, 96),   # the climb toward the capital
+	Vector2i(78, 44),    # the last stop before Blackcairn
 	# Kell's, deep in the Thornwood. A deserter hiding in a wood has a fire, and it
 	# is the only landmark out there — without it, Ossa telling you where he is
 	# would be telling you to search a forest.
 	Vector2i(175, 129),
+	# The ferryman's, on the Saltmarch spur where the marsh begins.
+	Vector2i(52, 150),
 ]
+
+
+## One within reach of every settlement, at the place that settlement would have one.
+##
+## The rule this keeps is real: reaching a fire has to be a plan rather than a
+## pilgrimage, or death stops being a cost and becomes a punishment. What changed is
+## that these are now *places* — a yard, a quay, a verge outside a gate — rather than
+## the same offset applied eight times.
+const CAMP_AT_ZONE: Dictionary = {
+	&"brindle": Vector2i(257, 184),      # Wren's, among the ruins she picks over
+	&"cinderworks": Vector2i(232, 181),  # the workers', downwind of the kilns
+	&"harrowgate": Vector2i(157, 182),   # the inn yard, outside the gate
+	&"wide_acres": Vector2i(103, 157),   # the tenants', at the field's edge
+	&"muster": Vector2i(147, 110),       # a picket fire, outside the camp proper
+	&"saltmarch": Vector2i(41, 164),     # the quay, where the boats tie up
+	&"cairnwell": Vector2i(103, 69),     # the carters' yard outside the walls
+	&"blackcairn": Vector2i(74, 33),     # the last verge before the gate
+}
 
 
 func _place_campfires() -> void:
 	for zone: StringName in ZONE_ORDER:
-		var at: Vector2i = (zone_sites()[zone] as Vector2i) + Vector2i(-5, 5)
+		var at: Vector2i = CAMP_AT_ZONE.get(zone, zone_sites()[zone]) as Vector2i
 		props.append({"kind": &"campfire", "at": _nearest_open(at),
 			"size": Vector2i(2, 2), "solid": false})
 	# **The fairies' fire**, in the clearing the player wakes in (§4's opening).
