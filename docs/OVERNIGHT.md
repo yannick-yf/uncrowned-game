@@ -48,7 +48,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 | 1 | **The opening** — stages 1–5 below | ✅ **done** |
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | ✅ **done** — all 12 pass |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | ✅ **done** |
-| 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
+| 4 | **Polish** — collision, enterability, suite, validator, no script errors | ✅ **done** (fast suite 4.71 s, not 4 s) |
 | 5 | **The look** — the cheap five. Real 2D lighting is **out of v1** | not started |
 
 ### 1. The opening — five stages
@@ -207,7 +207,30 @@ Every entry here is a choice he was not present for. Newest last.
 | 32 | The offer to join is **reactive**, not a standing line | It did not work as a standing line and the test caught it: the three-slot cap fills in the order options were written, so an offer authored last is an offer nobody is ever shown. It now appears while you have not joined and goes away the moment you do |
 | 33 | Ground changes hands on a **band, not a line** | A town sitting between two thresholds keeps whoever holds it, so a border cannot flicker every tick |
 | 34 | Rank is **read off service**, never stored | One number to replay, and no way for the two to disagree |
+| 35 | Fast suite **7.57 s → 4.71 s** without cutting a single test — but **the 4 s target is not met** | Two changes, both safe. Long simulated spans were trimmed where the claim survived (20 in-game days proves nothing 6 does not, when the army drifts 12 a day). And systems now opt out of the step and tick loops: `on_step` was being called on all 22 systems whether they did anything or not, which is **nine and a half million calls into empty functions** in a test that simulates twenty days. Getting the last 0.7 s would mean cutting coverage, and the suite has grown by 76 tests tonight, so I stopped and wrote the number down instead |
+| 36 | `SimSystem.steps()` and `ticks()` **default to true** | Opting in would mean a system that forgets is silently broken; opting out means a system that forgets is merely slower. Correctness should never be the thing you lose by being forgetful |
+| 37 | Collision is tested as **reachability**, not as traps | A trap in the sense people imagine cannot happen: passability is symmetric, so if you can walk in you can walk out. What can happen is something the player must reach being stranded, and that is what the walk checks — every zone, every fire, every named person, every stall and paper, and both places the game can put the player without asking |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
+
+---
+
+### Polish
+
+| | |
+|---|---|
+| Full suite | **332 tests green** |
+| Fast suite | **4.71 s** — was 7.57 s. Target was 4 s; see decision 35 |
+| Asset validator | **green**, 0 problems |
+| Long headless run | 20,000 ticks (~14 in-game days), **0 script errors** |
+| Collision | `test_collision.gd` — every zone, fire, person, stall and paper reachable; 90%+ of the passable map is one piece |
+
+**The text-key test earned itself immediately.** `Text.of` returns the key when a line
+is missing, so a forgotten string shows up as `journal.wood` in the middle of a
+sentence and no test notices — the same silent shape as the terrain colour table being
+one entry short. It scans `Text.of(&"…")` out of the source rather than working from a
+list, and it found `deed.heard.i_informed_the_crown` missing within a minute of being
+written: the informing deed added an hour earlier would have leaked its raw id into a
+context packet the first time anybody had heard about it.
 
 ---
 

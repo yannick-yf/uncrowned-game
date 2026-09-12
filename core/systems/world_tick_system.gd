@@ -38,5 +38,10 @@ func on_tick(sim: Sim, _tick: int) -> void:
 		sim.derive(&"wood_lost", {"to": ticked.held_ground})
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"worldtick"

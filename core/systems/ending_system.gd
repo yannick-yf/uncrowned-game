@@ -23,5 +23,10 @@ func on_tick(sim: Sim, _tick: int) -> void:
 	sim.derive(&"reign_ended", {"how": String(ending)})
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"ending"

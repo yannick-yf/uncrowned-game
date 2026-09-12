@@ -122,5 +122,10 @@ static func _wild_at(region: Region, pos: Vector2, held: float) -> bool:
 	return region.is_beast_ground(tile)
 
 
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"wildlife"

@@ -80,5 +80,10 @@ func on_tick(sim: Sim, _tick: int) -> void:
 			sim.derive(&"ground_changed_hands", {"zone": String(zone), "to": String(now)})
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"allegiance"

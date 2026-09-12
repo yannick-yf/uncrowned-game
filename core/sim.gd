@@ -71,6 +71,10 @@ func _init(p_seed: int = DEFAULT_SEED) -> void:
 
 func add_system(system: SimSystem) -> void:
 	_systems.append(system)
+	if system.steps():
+		_steppers.append(system)
+	if system.ticks():
+		_tickers.append(system)
 
 
 func system_count() -> int:
@@ -123,6 +127,12 @@ func pending_count() -> int:
 ## The only entry point that mutates state, measured in steps. advance(n) is
 ## exactly n single steps, so how a caller chunks its calls can never change the
 ## outcome — which is what lets replay rebuild a run from the log alone.
+## The systems that actually do something between ticks, worked out once when they
+## are added rather than asked sixty times a second. See `SimSystem.steps()`.
+var _steppers: Array[SimSystem] = []
+var _tickers: Array[SimSystem] = []
+
+
 func advance(steps: int = 1) -> void:
 	for _i: int in maxi(steps, 0):
 		var batch: Array[SimEvent] = _inbox
@@ -133,14 +143,14 @@ func advance(steps: int = 1) -> void:
 
 		step += 1
 		_derived_this_step = 0
-		for system: SimSystem in _systems:
+		for system: SimSystem in _steppers:
 			system.on_step(self, step)
 
 		_steps_into_tick += 1
 		if _steps_into_tick >= STEPS_PER_WORLD_TICK:
 			_steps_into_tick = 0
 			tick += 1
-			for system: SimSystem in _systems:
+			for system: SimSystem in _tickers:
 				system.on_tick(self, tick)
 
 

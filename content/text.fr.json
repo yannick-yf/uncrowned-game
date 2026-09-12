@@ -184,5 +184,6 @@
   "journal.ground.row": "· {0} : {1}",
   "ground.crown": "la couronne",
   "ground.opposition": "le bois",
-  "ground.none": "personne"
+  "ground.none": "personne",
+  "deed.heard.i_informed_the_crown": "vous avez porté à la couronne ce que vous saviez"
 }

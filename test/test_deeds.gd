@@ -137,7 +137,7 @@ func test_the_army_keeps_its_men() -> void:
 	var sim: Sim = _deed_sim()
 	var ticked := sim.store(&"worldtick") as WorldTick
 	_act(sim, IN_HARROWGATE, &"tell_town")
-	_days(sim, 10.0)
+	_days(sim, 5.0)
 	assert_eq(ticked.army_strength, 100.0,
 		"you spent the fraud on the town, so the Muster never heard it")
 

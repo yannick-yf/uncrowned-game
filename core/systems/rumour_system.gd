@@ -113,5 +113,10 @@ static func _town_hears(sim: Sim, rumour: Rumour, town: StringName, effect: floa
 		standing.shift_person(npc.id, effect)
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"rumour"

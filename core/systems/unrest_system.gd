@@ -97,5 +97,10 @@ func _calm(ticked: WorldTick, quantity: StringName) -> void:
 		ticked.get_quantity(quantity), WorldTick.NEUTRAL, CALM_PER_DAY))
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"unrest"

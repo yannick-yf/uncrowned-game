@@ -36,5 +36,22 @@ func on_tick(_sim: Sim, _tick: int) -> void:
 	pass
 
 
+## Whether this system has anything to do sixty times a second.
+##
+## **Defaults to yes**, deliberately: a system that forgets to answer is merely
+## slower, never broken. A tick-only system says no and is left out of the step loop
+## entirely — which matters because the loop called `on_step` on every system
+## whether it did anything or not, and a test that simulates twenty in-game days was
+## making nine and a half million calls into empty functions.
+func steps() -> bool:
+	return true
+
+
+## And whether it has anything to do once an in-game minute. Same rule as `steps()`:
+## defaults to yes, so forgetting costs speed and never correctness.
+func ticks() -> bool:
+	return true
+
+
 func system_name() -> StringName:
 	return &"system"

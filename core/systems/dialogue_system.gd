@@ -143,5 +143,15 @@ func _close(world: WorldState) -> void:
 	world.options = []
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"dialogue"

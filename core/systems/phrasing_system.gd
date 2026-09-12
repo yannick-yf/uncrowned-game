@@ -59,5 +59,15 @@ func _must_be_true(world: WorldState, cast: Cast) -> PackedStringArray:
 	return Answers.shared().must_be_true(npc.id, world.last_intent)
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"phrasing"
