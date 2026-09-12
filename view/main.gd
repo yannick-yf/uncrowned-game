@@ -55,23 +55,6 @@ var _real_seconds: float = 0.0
 var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
 
-var _terrain_colours: PackedColorArray = PackedColorArray([
-	Color(0.29, 0.38, 0.23),  # WILD      — open grass
-	Color(0.55, 0.47, 0.33),  # ROAD      — drawn from the atlas, not this
-	Color(0.35, 0.29, 0.27),  # RUINS
-	Color(0.29, 0.27, 0.36),  # CASTLE
-	Color(0.11, 0.17, 0.28),  # SEA
-	Color(0.22, 0.21, 0.24),  # MOUNTAIN
-	Color(0.45, 0.40, 0.29),  # TOWN
-	Color(0.42, 0.39, 0.36),  # WALL
-	Color(0.38, 0.31, 0.24),  # CAMP
-	Color(0.16, 0.31, 0.45),  # WATER     — the Kettle
-	Color(0.36, 0.44, 0.47),  # FORD
-	Color(0.15, 0.25, 0.16),  # FOREST    — the Thornwood
-	Color(0.27, 0.31, 0.26),  # MARSH
-	Color(0.47, 0.45, 0.24),  # FARMLAND
-	Color(0.68, 0.62, 0.44),  # SAND
-])
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
@@ -464,7 +447,7 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 
 	var entry: Array = _art.terrain_tiles.get(terrain, []) as Array
 	if entry.is_empty():
-		draw_rect(dest, _terrain_colours[terrain], true)
+		draw_rect(dest, _art.colour_for(terrain), true)
 		return
 
 	var column: int = entry[1] as int

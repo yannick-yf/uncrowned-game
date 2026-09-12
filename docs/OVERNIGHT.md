@@ -46,7 +46,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 | # | Piece | Status |
 |---|---|---|
 | 1 | **The opening** — stages 1–5 below | ✅ **done** |
-| 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | not started |
+| 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | ✅ **done** — all 12 pass |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | not started |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
 | 5 | **The look** — the cheap five. Real 2D lighting is **out of v1** | not started |
@@ -194,6 +194,11 @@ Every entry here is a choice he was not present for. Newest last.
 | 19 | The journal shows the wood **only once she has said it is happening** | A page explaining a thing the player has never been told is the game telling them their own story. Gated on `thornwood:axes`, which is her third line |
 | 20 | The ending line reads **differently by what became of the wood** | *"What she asked of you, you did"* against *"nobody did"*. It is the one place the five endings stop being five ways to win, and it is what stops her last line being a request the player can satisfy and never find out about |
 | 21 | SPECS corrected for the built opening: **she**, **seven** things, and §6's *"none of whom loved them"* amended | The spec said four things and "he". §6's protected note is better for having exactly one exception that walks away immediately — the warmth is real, offered once, and cannot be gone back to |
+| 22 | MAP_SPEC criterion 7's `[DECIDE]` set to **30 tiles** of Thornwood on the straight wild line | It measures 126, so 30 is a floor with room rather than a number tuned to today's map. The criterion is there to stop the wood drifting off the shortcut, and 30 catches that long before it matters |
+| 23 | Criterion 1 checked **from the clearing**, not from Brindle | Stricter: the clearing is behind the thicket, so it also holds the rule that thicket may never be the only thing between the player and anything. And it is where the player actually wakes now |
+| 24 | Criterion 9 **narrowed** to what it protects | Read literally — *no footprint on the road* — it fails, because inside a town streets and buildings interleave, which is what a town is. I tried nudging every such building clear and **it made things worse**: routes narrowed until the King's Road walk failed outright. Reverted. The criterion now checks the open road, where a house in the middle really is a mistake, plus the thing MAP_SPEC §8 actually cares about — that no building closes the way through |
+| 25 | The wound is **26 tiles** and keeps **4 clear** of the fairies' ring; the working face runs north, away from them | The works has eaten everything it can reach and stopped just short of the last of them, so the two are in the same thought and the gap is what the player is asked to save. The first stamp swallowed the ring and the corridor test caught it |
+| 26 | Terrain colours moved out of `view/main.gd` into `Art`, **keyed rather than indexed** | This was a real crash, not tidying. The table was a `PackedColorArray` read by terrain ordinal, so adding `CLEARING` in an earlier commit left it one short and the first frame drawn in the clearing would have read past the end. No test drew anything, so nothing caught it. A dictionary cannot go out of bounds, and a test now asserts every terrain the map lays down can be drawn |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
 
 ---
@@ -308,3 +313,49 @@ furnaces stop, so *"if you can, save us"* is answerable with the levers the play
 already has; this is where they find out whether they did it.
 
 Suite: **294 tests green. The opening is finished — stages 1 to 5.**
+
+---
+
+## THE MAP
+
+### All twelve of MAP_SPEC's criteria pass
+
+| # | Criterion | |
+|---|---|---|
+| 1 | every zone reachable over ground | from the clearing |
+| 2 | no walkable tile touches the edge | 0 leaks |
+| 3 | both crossings reach dry land | bridge and ford |
+| 4 | damming both cuts Blackcairn off | the river is a barrier by test |
+| 5 | road ratio ≥ 1.30 | **1.39** (348 road / 251 direct) |
+| 6 | road travel 45–90 s | **58.0 s** |
+| 7 | wild line crosses the Thornwood ≥ 30 | **126 tiles** |
+| 8 | every zone has a landmark in `core/` | 105 props |
+| 9 | nothing in the open road, none closes it | 0 and 0 |
+| 10 | every road bend has a reason within 8 tiles | 5 bends, 0 unexplained |
+| 11 | asset validator | **green**, 0 problems |
+| 12 | full test suite | **green**, 305 tests |
+
+`tools/map_criteria.gd` prints this on demand; `test/test_map.gd` is the gate that
+stops them quietly reopening.
+
+### The thesis, on the ground
+
+`Terrain.CLEARED` — stumps and bare earth where wood was. The Cinderworks is now a
+**wound with a radius** rather than a building standing on grass: 26 tiles of the
+Thornwood are gone around the furnaces, with a working face pushing north into what
+is left, so the clearing reads as a thing happening rather than a thing that happened.
+Cleared land is drawn on the same beaten dirt as the road and the towns, because that
+is exactly what it has become.
+
+And it **stops four tiles short of the fairies**. That gap is the smallest and most
+important measurement on the map: the works and the last of the wood are close enough
+to be in the same thought, and the gap is the thing the player is being asked to save.
+
+### One thing found that the polish pass has to answer
+
+**Nothing in this game is solid via props.** `is_passable` consults terrain and never
+the prop list, and every prop carries `"solid": false`. Buildings are not walk-through
+— `_place` stamps their footprint as `WALL` — but that is a different mechanism, and
+it deliberately refuses to wall a protected tile so a building can never close the
+road. The `solid` flag is dead weight. Recorded for the polish pass rather than
+changed here, because making things solid can trap a player and needs its own test.

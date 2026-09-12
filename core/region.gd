@@ -25,6 +25,13 @@ enum Terrain {
 	SAND,
 	## The fairies' clearing, where the player wakes. Open ground inside the wood.
 	CLEARING,
+	## Ground the works has already taken: stumps, bare earth, a working face.
+	##
+	## **The map's thesis, on the ground** (§4). The road is the king's world and the
+	## forest is what he is destroying, and the edge between them has to be legible
+	## at a glance or the argument is a caption. The Cinderworks is a wound with a
+	## radius, not a building standing on grass.
+	CLEARED,
 	## Wood too dense to walk into. **Geography, not a gate** — the map already
 	## closes itself with sea and mountain, and Pillar 1 is about progression checks
 	## rather than walls. The rule that keeps it honest: thicket may never be the
@@ -418,6 +425,10 @@ static func _build_overworld() -> Region:
 	var region := Region.new()
 	region._stamp_bounds()
 	region._stamp_thornwood()
+	# The bite the works has taken out of the wood, before the clearing, so that the
+	# fairies' ground wins where the two nearly meet — which is the point: the wound
+	# stops just short of them, and the gap is what is left to lose.
+	region._stamp_wound()
 	# Before the road, the river and the settlements, so that if any of this
 	# geometry is ever wrong they overwrite it rather than the other way round.
 	region._stamp_clearing()
@@ -460,6 +471,54 @@ func _stamp_thornwood() -> void:
 	# scenery; wood on the shortcut is a decision. The road bows south and west
 	# around most of it.
 	_stamp_line(Vector2i(220, 165), Vector2i(145, 85), 24, Terrain.FOREST, false)
+
+
+## How far the works has eaten into the Thornwood.
+##
+## 26 tiles of wood gone around the furnaces. The works is a wound with a radius,
+## not a building standing on grass.
+const WOUND_RADIUS: int = 26
+## And the face they are working now: a strip pushing north-west into the wood, so
+## the clearing reads as a thing happening rather than a thing that happened. Aimed
+## away from the fairies, because the point below is that they have not reached them.
+const WORKING_FACE: Vector2i = Vector2i(238, 138)
+const WORKING_FACE_WIDTH: int = 7
+
+## How much untouched wood is left between the wound and the fairies' ring.
+##
+## **The most important number on the map and the smallest.** The works has eaten
+## everything it can reach and stopped four tiles short of the last of them, so the
+## two are in the same thought and the gap is the thing the player is being asked to
+## save. Without it the wound simply swallows the clearing and there is nothing left
+## to lose — which is also what happened the first time this was stamped, and the
+## corridor test caught it.
+const WOUND_KEEPS_CLEAR: int = 4
+
+
+func _stamp_wound() -> void:
+	var spare: float = float(CLEARING_RADIUS + THICKET_DEPTH + WOUND_KEEPS_CLEAR)
+	for x: int in range(CINDERWORKS.x - WOUND_RADIUS, CINDERWORKS.x + WOUND_RADIUS + 1):
+		for y: int in range(CINDERWORKS.y - WOUND_RADIUS, CINDERWORKS.y + WOUND_RADIUS + 1):
+			var tile := Vector2i(x, y)
+			if terrain_at(tile) != Terrain.FOREST:
+				continue
+			if Vector2(tile).distance_to(Vector2(CLEARING)) <= spare:
+				continue
+			if Vector2(tile).distance_to(Vector2(CINDERWORKS)) <= float(WOUND_RADIUS):
+				set_terrain(tile, Terrain.CLEARED)
+	# Its own loop rather than `_stamp_line`, which would happily lay stumps over the
+	# works, the road and the town — it only refuses sea, mountain and water. Like
+	# `_stamp_wound` above, this touches nothing but standing wood.
+	var face_from := Vector2(CINDERWORKS)
+	var face_to := Vector2(WORKING_FACE)
+	var steps: int = int(face_from.distance_to(face_to))
+	for step: int in steps + 1:
+		var point: Vector2 = face_from.lerp(face_to, float(step) / float(maxi(steps, 1)))
+		for dx: int in range(-WORKING_FACE_WIDTH, WORKING_FACE_WIDTH + 1):
+			for dy: int in range(-WORKING_FACE_WIDTH, WORKING_FACE_WIDTH + 1):
+				var tile := Vector2i(int(point.x) + dx, int(point.y) + dy)
+				if terrain_at(tile) == Terrain.FOREST:
+					set_terrain(tile, Terrain.CLEARED)
 
 
 ## The clearing, the thicket that closes it, and the one corridor south.

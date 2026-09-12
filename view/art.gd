@@ -110,6 +110,13 @@ func _init() -> void:
 		Region.Terrain.SAND: [&"water", 0, 5],
 		Region.Terrain.MARSH: [&"water", 0, 6],
 		Region.Terrain.FARMLAND: [&"field", 1, 4],
+		# The thesis, on the ground. Cleared land reads as the road's world — the
+		# same beaten dirt the road and the towns are drawn on — because that is
+		# exactly what it has become. The fairies' clearing keeps the wood's own
+		# floor. The thicket keeps it too and is buried under trees by `scatter_at`.
+		Region.Terrain.CLEARED: [&"floor", 11, 19],
+		Region.Terrain.CLEARING: [&"floor", 11, 12],
+		Region.Terrain.THICKET: [&"floor", 11, 12],
 	}
 
 	props = {
@@ -204,6 +211,42 @@ static func scatter_hash(x: int, y: int) -> int:
 	return absi(h) % 1000
 
 
+## The flat colour a terrain falls back to when it has no atlas tile.
+##
+## **Keyed, not indexed.** It was a `PackedColorArray` in the window, read by terrain
+## ordinal — so adding `CLEARING` to `core/` in one commit left the table one short
+## and the first frame drawn in the clearing would have read off the end of it. No
+## test drew anything, so nothing caught it. A dictionary cannot go out of bounds,
+## and `colour_for` answers for a terrain nobody has coloured yet.
+const TERRAIN_COLOURS: Dictionary = {
+	Region.Terrain.WILD: Color(0.29, 0.38, 0.23),
+	Region.Terrain.ROAD: Color(0.55, 0.47, 0.33),
+	Region.Terrain.RUINS: Color(0.35, 0.29, 0.27),
+	Region.Terrain.CASTLE: Color(0.29, 0.27, 0.36),
+	Region.Terrain.SEA: Color(0.11, 0.17, 0.28),
+	Region.Terrain.MOUNTAIN: Color(0.22, 0.21, 0.24),
+	Region.Terrain.TOWN: Color(0.45, 0.40, 0.29),
+	Region.Terrain.WALL: Color(0.42, 0.39, 0.36),
+	Region.Terrain.CAMP: Color(0.38, 0.31, 0.24),
+	Region.Terrain.WATER: Color(0.16, 0.31, 0.45),
+	Region.Terrain.FORD: Color(0.36, 0.44, 0.47),
+	Region.Terrain.FOREST: Color(0.15, 0.25, 0.16),
+	Region.Terrain.MARSH: Color(0.27, 0.31, 0.26),
+	Region.Terrain.FARMLAND: Color(0.47, 0.45, 0.24),
+	Region.Terrain.SAND: Color(0.68, 0.62, 0.44),
+	Region.Terrain.CLEARED: Color(0.31, 0.40, 0.24),
+	Region.Terrain.CLEARING: Color(0.20, 0.30, 0.19),
+	Region.Terrain.THICKET: Color(0.09, 0.16, 0.10),
+}
+
+## Magenta, deliberately. A terrain nobody has drawn should be impossible to miss.
+const NO_COLOUR: Color = Color(1.0, 0.0, 1.0)
+
+
+func colour_for(terrain: int) -> Color:
+	return TERRAIN_COLOURS.get(terrain, NO_COLOUR) as Color
+
+
 ## [atlas, source rect] for whatever grows on this tile, or an empty array.
 func scatter_at(terrain: int, x: int, y: int) -> Array:
 	var roll: int = scatter_hash(x, y)
@@ -216,6 +259,22 @@ func scatter_at(terrain: int, x: int, y: int) -> Array:
 			if roll < 200:
 				return [&"nature", Rect2i(32, 0, 32, 32)]
 			if roll < 260:
+				return [&"nature", Rect2i(0, 0, 32, 32)]
+		Region.Terrain.THICKET:
+			# Nearly every tile. The thicket is impassable, and the only honest way
+			# to say so without a wall is to make it read as solid wood.
+			if roll < 248:
+				return [&"nature", Rect2i(32, 0, 32, 32)]
+			return [&"nature", Rect2i(0, 0, 32, 32)]
+		Region.Terrain.CLEARING:
+			# Open ground. A little scrub at the margins and nothing in the middle,
+			# so it reads as a room rather than a thinner wood.
+			if roll < 26:
+				return [&"nature", Rect2i(96, 0, 32, 32)]
+		Region.Terrain.CLEARED:
+			# What is left standing after the axes: a few dead trees, drawn grey by
+			# the window, and otherwise bare.
+			if roll < 34:
 				return [&"nature", Rect2i(0, 0, 32, 32)]
 		Region.Terrain.WILD:
 			if roll < 22:
