@@ -162,5 +162,11 @@
   "deed.heard.i_organised_a_withholding": "vous avez poussé les fermiers à garder la récolte",
   "deed.heard.i_recruited_deserters": "vous avez rassemblé des déserteurs",
   "deed.heard.i_redirected_a_convoy": "vous avez fait partir une cargaison du mauvais côté",
-  "deed.heard.i_turned_the_lord": "vous avez convaincu un seigneur de changer de camp"
+  "deed.heard.i_turned_the_lord": "vous avez convaincu un seigneur de changer de camp",
+  "journal.wood": "CE QUI RESTE DU BOIS",
+  "journal.wood.falling": "· Les fées tiennent encore {0} pas de terrain. Les fours tournent, et il en part un peu chaque jour.",
+  "journal.wood.holding": "· Les fées tiennent encore {0} pas de terrain. Plus rien ne le prend.",
+  "journal.wood.gone": "· Elles ne tiennent plus rien.",
+  "journal.wood.saved": "Le bois tient encore. Ce qu'elle vous a demandé, vous l'avez fait.",
+  "journal.wood.lost": "Le bois a fini de partir. Ce qu'elle vous a demandé, personne ne l'a fait."
 }

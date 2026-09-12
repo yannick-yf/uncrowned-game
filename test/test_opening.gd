@@ -363,3 +363,57 @@ func test_the_whole_opening_replays_from_the_log() -> void:
 	assert_eq(replayed.facts.fingerprint(), sim.facts.fingerprint(),
 		"rebuilt from the log, down to what she told you")
 	assert_false(OpeningRules.fairy_is_here(replayed.facts), "and she is gone there too")
+
+
+# -------------------------------- stage 5: what you did to the wood ---
+
+func test_the_journal_says_nothing_about_a_wood_you_have_not_heard_of() -> void:
+	# A journal that explains a thing the player has never been told is the game
+	# telling them their own story. She has to say it first.
+	var sim: Sim = Game.build()
+	assert_false(OpeningRules.knows_about_the_wood(sim.facts), "nothing yet")
+	_wake_and_listen(sim, 9)
+	assert_true(OpeningRules.knows_about_the_wood(sim.facts), "and now she has said it")
+
+
+func test_the_page_says_how_much_is_left_and_whether_it_is_still_going() -> void:
+	var sim: Sim = Game.build()
+	var ticked := sim.store(&"worldtick") as WorldTick
+	var running: Dictionary = OpeningRules.wood_row(ticked)
+	assert_eq(int(running["paces"]), int(round(WorldRules.HELD_AT_START)), "all of it, at the start")
+	assert_true(bool(running["falling"]), "and the furnaces are running")
+
+	ticked.steel_output = 0.0
+	assert_false(bool(OpeningRules.wood_row(ticked)["falling"]),
+		"put them out and nothing is taking it")
+
+	ticked.held_ground = 0.0
+	assert_true(bool(OpeningRules.wood_row(ticked)["gone"]), "and it can run out")
+
+
+func test_an_ending_reads_differently_depending_on_what_became_of_the_wood() -> void:
+	# The proof for this stage, and the reason her last line is not empty. "If you
+	# can, save us" is answerable with the levers the player already has, and this
+	# is where they find out whether they did it.
+	Text.set_locale("en")
+	var saved: String = Text.of(&"journal.wood.saved")
+	var lost: String = Text.of(&"journal.wood.lost")
+	assert_ne(saved, lost, "the two endings do not read the same")
+	assert_true(saved.contains("you did"), "one says you did it")
+	assert_true(lost.contains("nobody did"), "the other says nobody did")
+
+
+func test_the_wood_page_never_gives_advice() -> void:
+	# Same rule as §15's second page: state and attribution only. It may say the
+	# furnaces are running and that the wood is going; it may never say to go and
+	# put them out.
+	var forbidden: Array[String] = ["should", "try ", "next", "you must", "in order to", "tip"]
+	for language: String in ["en", "fr"]:
+		Text.set_locale(language)
+		for key: StringName in [&"journal.wood", &"journal.wood.falling",
+				&"journal.wood.holding", &"journal.wood.gone",
+				&"journal.wood.saved", &"journal.wood.lost"]:
+			for phrase: String in forbidden:
+				assert_false(Text.of(key).to_lower().contains(phrase),
+					"%s: '%s' says \"%s\"" % [language, key, Text.of(key)])
+	Text.set_locale("en")

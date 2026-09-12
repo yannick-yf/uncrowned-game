@@ -162,5 +162,11 @@
   "deed.heard.i_organised_a_withholding": "you talked the farmers into keeping the harvest",
   "deed.heard.i_recruited_deserters": "you gathered deserters",
   "deed.heard.i_redirected_a_convoy": "you sent a cargo the wrong way",
-  "deed.heard.i_turned_the_lord": "you talked a lord into changing sides"
+  "deed.heard.i_turned_the_lord": "you talked a lord into changing sides",
+  "journal.wood": "WHAT IS LEFT OF THE WOOD",
+  "journal.wood.falling": "· The fairies still hold {0} paces of ground. The furnaces are running, and a little of it goes every day.",
+  "journal.wood.holding": "· The fairies still hold {0} paces of ground. Nothing is taking it now.",
+  "journal.wood.gone": "· They hold nothing now.",
+  "journal.wood.saved": "The wood is still standing. What she asked of you, you did.",
+  "journal.wood.lost": "The wood is gone. What she asked of you, nobody did."
 }

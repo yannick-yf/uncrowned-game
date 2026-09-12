@@ -46,3 +46,37 @@ static func fairy_is_here(facts: FactBase) -> bool:
 ## Whether this is somebody the world should stop drawing and stop offering.
 static func is_gone(who: StringName, facts: FactBase) -> bool:
 	return who == FAIRY and not fairy_is_here(facts)
+
+
+# ------------------------------------------------------- what became of it ---
+
+## The wood's state, for the journal.
+##
+## **Why this is on the page at all.** The fairy's last word is *if you can, save
+## us*, and until now that was a request the player could satisfy and never find out
+## about: the wood stops shrinking when the furnaces stop, and nothing said so. §8's
+## rule is that a change the player cannot perceive is identical to no change, so
+## either this is shown or the asking was empty.
+##
+## State and attribution, never advice. It says how much ground is left and whether
+## anything is still taking it. It never says to go and put the furnaces out.
+static func wood_row(ticked: WorldTick) -> Dictionary:
+	if ticked == null:
+		return {}
+	var held: float = ticked.held_ground
+	return {
+		"held": held,
+		"paces": int(round(held)),
+		"gone": held <= 0.0,
+		# Running furnaces are what takes it, so "is anything still taking it" is a
+		# question about the works rather than about the wood.
+		"falling": held > 0.0 and ticked.steel_output > 0.0,
+	}
+
+
+## Whether the player has any business being shown the wood at all.
+##
+## Only once she has told them it is happening. A journal that explains a thing the
+## player has never heard of is the game telling them their own story.
+static func knows_about_the_wood(facts: FactBase) -> bool:
+	return facts != null and facts.has(&"thornwood:axes")

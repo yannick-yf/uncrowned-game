@@ -852,10 +852,31 @@ func _draw_journal() -> void:
 			Text.of(row["name_key"] as StringName), int(round(float(row["value"]))),
 			Text.of(&"journal.yours") if float(row["yours"]) > 0.0 else "",
 		])
+	# What became of the wood, once she has told the player it is happening. Her
+	# last word is "if you can, save us", and without this that is a request the
+	# player can satisfy and never find out about.
+	if OpeningRules.knows_about_the_wood(_sim.facts):
+		var wood: Dictionary = OpeningRules.wood_row(_ticked)
+		lines.append("")
+		lines.append(Text.of(&"journal.wood"))
+		if bool(wood.get("gone", false)):
+			lines.append(Text.of(&"journal.wood.gone"))
+		elif bool(wood.get("falling", false)):
+			lines.append(Text.of(&"journal.wood.falling", [int(wood["paces"])]))
+		else:
+			lines.append(Text.of(&"journal.wood.holding", [int(wood["paces"])]))
+
 	if _world.reign_ended != &"":
 		lines.append("")
 		lines.append(Text.of(&"journal.deposed",
 			[Text.of(StringName("end.%s" % _world.reign_ended))]))
+		# And whether the thing she asked for happened. This is the one place the
+		# five endings stop being five ways to win: a reign ended while the wood was
+		# still being cleared reads differently from one ended after it stopped.
+		if OpeningRules.knows_about_the_wood(_sim.facts):
+			lines.append(Text.of(&"journal.wood.gone" if _ticked.held_ground <= 0.0
+				else (&"journal.wood.lost" if _ticked.steel_output > 0.0
+					else &"journal.wood.saved")))
 
 	# Everybody with a name, where they stand, and how far off. A playtest tool:
 	# eighteen more people arrive over Phase 6 and "walk about until you find him"

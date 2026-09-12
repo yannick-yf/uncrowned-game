@@ -45,7 +45,7 @@ decisions recorded below, this file and SPECS win** (Yannick, explicitly).
 
 | # | Piece | Status |
 |---|---|---|
-| 1 | **The opening** — stages 1–5 below | **1, 2, 3, 4 done**; 5 next |
+| 1 | **The opening** — stages 1–5 below | ✅ **done** |
 | 2 | **The map** — refine against the thesis, close MAP_SPEC's 12 criteria | not started |
 | 3 | **Factions** — two sides; mechanism **plus** ranks, jobs and quests | not started |
 | 4 | **Polish** — collision, enterability, suite, validator, no script errors | not started |
@@ -191,6 +191,9 @@ Every entry here is a choice he was not present for. Newest last.
 | 16 | **Refined** `test_every_fact_keeps_one_source_nothing_can_gate_shut` to tell a *gate* from a *sequence* | `requires` counted as a gate on its own, so her chain read as seven facts with no open source. But the first line needs nothing, she never leaves until she has finished, and no condition or standing is consulted anywhere in it — nothing can shut that door, you simply have to listen in order. The test now walks each speaker's own chain to a fixpoint. It can distinguish two things it previously could not, so it is stronger, not looser |
 | 17 | She is drawn as **three soft discs and five drifting motes**, dimmer and slower than anything else on screen | No fairy in the pack, §13 forbids mixing, and a twinkling humanoid would undo the plain register the cast was rewritten for. She still had to be findable and followable rather than a voice from nowhere |
 | 18 | The named cast is now **25**, exactly §6's budget | `test_overworld` asserts `<= 25`. She fits with nothing to spare, which is worth knowing before anybody adds a twenty-sixth |
+| 19 | The journal shows the wood **only once she has said it is happening** | A page explaining a thing the player has never been told is the game telling them their own story. Gated on `thornwood:axes`, which is her third line |
+| 20 | The ending line reads **differently by what became of the wood** | *"What she asked of you, you did"* against *"nobody did"*. It is the one place the five endings stop being five ways to win, and it is what stops her last line being a request the player can satisfy and never find out about |
+| 21 | SPECS corrected for the built opening: **she**, **seven** things, and §6's *"none of whom loved them"* amended | The spec said four things and "he". §6's protected note is better for having exactly one exception that walks away immediately — the warmth is real, offered once, and cannot be gone back to |
 | 7 | `_stamp_clearing` only ever overwrites `FOREST` | So the river, the road and every settlement are safe from it by construction rather than by getting the arithmetic right. Asserted anyway, for whoever moves the clearing next |
 
 ---
@@ -289,3 +292,19 @@ refused.** She never says the king, the crown, the law, steel, the works, land o
 and a test asserts that word by word in English and French rather than trusting it.
 
 Suite: **290 tests green**.
+
+### Opening, stage 5 — what you did to the wood
+
+Built: `OpeningRules.wood_row()` and `knows_about_the_wood()`, six text keys a
+language, the journal page, and four tests.
+
+The page says how much ground the fairies still hold and whether anything is still
+taking it — state and attribution, never advice, asserted against the same forbidden
+phrases §15's second page uses. And when a reign ends it says whether the thing she
+asked for happened.
+
+**This is what makes her last line mean anything.** The wood stops shrinking when the
+furnaces stop, so *"if you can, save us"* is answerable with the levers the player
+already has; this is where they find out whether they did it.
+
+Suite: **294 tests green. The opening is finished — stages 1 to 5.**

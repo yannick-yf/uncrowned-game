@@ -441,16 +441,35 @@ The player wakes in Brindle, and from the first screen can see the Cinderworks
 smoking on their village's ground, a minute or two's walk away. No exposition is
 needed: the crime and the industry it served are in the same frame.
 
-**One fairy, once, and then never again.** He is there when the player wakes, because
-he is the reason they woke. He is the only fairy in the game and the only time one
-appears; walk away and he is gone. That is the one miracle, spent in front of you.
+**One fairy, once, and then never again.** She is there when the player wakes, because
+she is the reason they woke. She is the only fairy in the game and the only time one
+appears. That is the one miracle, spent in front of you.
 
-**Four things only he can tell you, and nothing else:**
+**She does not leave until she has finished**, so a player who walks away without
+listening loses nothing and is forced into nothing — Pillar 1 holds. She is gone when
+the player knows her last word, which means the facts the player holds *are* the
+state: there is no flag, and nothing to keep in step.
 
-1. You died here.
-2. We brought you back.
-3. The king is clearing the forest and it is killing us. You were the one with cause.
-4. Your memory was the price.
+**Seven things only she can tell you, and nothing else:**
+
+1. You died with the others.
+2. I brought you back. It cost you your memory.
+3. Men came with axes and fire. The wood is smaller every year.
+4. We are dying.
+5. **I knew you, before.**
+6. I did not pick someone special. I picked someone who is owed.
+7. Find your way in this world. And if you can, save us.
+
+**Five is the one that does the most work.** She knew them. That makes her a source
+for the player's own past and not only for hers — and §6's *"three independent
+sources, none of whom loved them"* now has a fourth who did. It is deliberately the
+only warm thing in the recovery of their history, and the only witness to their life
+that is not a piece of paper.
+
+**Seven is answerable.** The wood stops shrinking when the furnaces stop (§8), so
+*"save us"* is a request the player can satisfy with the levers they already have —
+and §15's journal shows what became of it, so it is a request they can satisfy and
+*find out about*.
 
 **What he must not say**, and this is the hard part of the decision: who the king is,
 what he did to the villages, why he thinks he was right, the tiered law, the works,
@@ -673,10 +692,11 @@ walked out of it with half a memory and no account of how. This is the account.
 **The fairies of the Thornwood raised them.** Magic lives in the forest and nowhere
 else, and the raising is the only one it has performed in living memory.
 
-> **One of them appears, once, in the opening, and never again** (2026-09-12). He
-> tells the player four things — that they died, that the fairies raised them, why,
-> and what it cost — and he is forbidden the rest. See §4's *The opening* for what he
-> may not say and why that restriction is the whole design.
+> **One of them appears, once, in the opening, and never again** (2026-09-12). **She**
+> tells the player seven things and is forbidden the rest. See §4's *The opening* for
+> the seven, for what she may not say, and for why that restriction is the whole
+> design. Built 2026-09-12: `core/rules/opening_rules.gd`, and a test asserts her
+> silence word by word in both languages rather than trusting it.
 
 **Their motive was not kindness.** The king is clearing the forest for stone, coal
 and land, and the fairies are what lives in it. He is killing them — steadily, and
@@ -1026,13 +1046,20 @@ ledger in Harrowgate reaches Harrowgate.
 
 ### How the player recovers their own past
 
-With no survivors from Brindle, the player's history is reconstructed entirely from
-the records of the people who erased it. Three independent sources, none of whom
+With no survivors from Brindle, the player's history is reconstructed almost entirely
+from the records of the people who erased it. Three independent sources, none of whom
 loved them:
 
 1. **Old Pell** — worked the soil, knew the family, does not recognise the face
 2. **Kell** — was there that night, on the wrong side
 3. **The land grants** — Brindle, named on paper, with a date and a signature
+
+**And a fourth, who did** (2026-09-12). The fairy knew them before the fire and says
+so — *"I knew you, before"* — in the first minute of the game. She is the only
+witness to their life that is not a document, and she is gone by the second minute.
+The note below said *none of whom loved them*, and it is better for having exactly
+one exception that walks away immediately: the warmth is real, it is offered once, and
+it cannot be gone back to for more.
 
 > This is the thematic centre of the game and should be protected: you find out who
 > you were by reading the paperwork of your own erasure.
