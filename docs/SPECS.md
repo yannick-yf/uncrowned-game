@@ -1373,6 +1373,41 @@ makes a door shutting affordable at all.
 > `unknown`. It walks every speaker at every band through a real conversation, and
 > it is what stops this returning the next time somebody is added to the cast.
 
+### House style, and the generation constraints (2026-09-12)
+
+Measured after twenty-four characters had been written: **53% of all replies ended
+with the speaker turning back on themselves** in a wry, self-aware coda. A
+scavenger, a foreman, a banker, an archivist, a deserter and a king all landed the
+same closing beat, three of them in every single line. Arthur's argument ran to 987
+characters against a dialogue box that holds about 420, so half of the most
+important speech in the game was never displayed.
+
+That is not "AI writing" in the sense of a model having written it. It is **one
+writer's tic applied twenty-four times**, which is the same failure and the same
+smell. Nobody notices it line by line; it is only visible when the closing
+sentences are listed side by side.
+
+**The rules, all machine-checked** (`test/test_prose.gd`):
+
+| Rule | Why |
+|---|---|
+| No em dash, in either language | The most recognisable tell in English, and French typography uses it differently anyway |
+| No line over 420 characters | The dialogue box holds four lines of about 120. Longer is text the player never sees |
+| No reply over 40 words, no voice averaging over 32 | These are busy people answering a question |
+| At most a quarter of replies end on the speaker | A good device, and it was doing the work of characterisation for the whole cast |
+
+**Each character gets one concrete verbal habit that is not wit.** Halgrave answers
+in figures, Sena in under a dozen words, Dray in orders, Pell repeats himself, Til
+says as little as he can, Wren prices everything, Nessa lists, Peyre gives shelf
+numbers. Ivo and Mira keep the self-examining close, because examining themselves is
+what a physician who signs certificates and an advocate actually do.
+
+> **These are the generation constraints.** A model asked to write for this game
+> will imitate what is already in it, tics included, so the corpus has to be clean
+> before it is ever used as an example. `test_prose.gd` then becomes the automatic
+> reject filter on anything generated: every rule in it is checkable without a
+> human reading the line.
+
 ### Determinism rules
 
 - The model never decides a mechanical outcome. The rules layer issues the verdict;
@@ -2092,6 +2127,9 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | A document is **both** knowledge and proof, lies in a **place** rather than with a person, and can never be taken from you | Documents as facts only; as items only; confiscation as drama | Knowledge alone makes "put it in front of him where it cannot be denied" into "know four things", which is no climax. Living in places is what makes invariant 7 structural — violence can never close Route C, only make it harder — and it is the same guarantee the power bases gave. Confiscation was considered and rejected by Yannick: evidence that can be lost is a route that can be closed |
 | 2026-09-12 | Reading a document aloud is what makes it public, and the news spreads as a rumour that turns towns against **the crown** — a different number from how they regard the player | Making a fact public by knowing it; turning only the town you stand in | Route C becomes a tour rather than an errand, and the King's Road matters to a player who never steals anything. It also gave `discredited` its first reachable path: five documents, read out where people can hear, and six towns had turned within a day of the last one |
 | 2026-09-12 | No copies, though Bell is a copyist | Building copies now, since the character exists | The reason for a copy was to hedge against losing the original, and nothing can take one — so it would be building the answer to a question the game does not ask. It returns the day handing a document to somebody becomes an act |
+| 2026-09-12 | **A house style, machine-checked, and it doubles as the generation constraints** | Style by review; fixing it after the model exists | Measured: 53% of replies ended on a self-aware coda and Arthur's argument was twice the size of the dialogue box. One writer's tic applied twenty-four times is the same failure as a model's, and it is invisible line by line — only listing the closing sentences side by side shows it. A model will imitate the corpus, tics included, so the corpus had to be cleaned before it is ever used as an example |
+| 2026-09-12 | Each character gets **one concrete verbal habit that is not wit** | Distinguishing voices by what they say rather than how | Halgrave answers in figures, Sena in under a dozen words, Dray in orders, Pell repeats himself, Wren prices everything. Ivo and Mira keep the self-examining close because it is what their work is. Wit was the only register the whole cast had, and wit is the easiest thing for a model to over-supply |
+| 2026-09-12 | Arthur's argument is **six short beats** the player asks for, not one speech | One long reply, as written | It was 987 characters in a box that holds 420, so half of §5's case was never on screen. Split, the player assembles his argument by asking for it, which is also a better scene than being lectured |
 | 2026-09-12 | **The cast is complete: twenty-four named people across all eight zones**, every line written in French and English | Writing English first and translating; leaving towns empty until later | Six of §3's levers are now things you *say* — turn the workers, organise a withholding, recruit deserters, redirect a convoy, turn the lord, read a document out — which is what stops twenty-four people being lore |
 | 2026-09-12 | The Captain of the Guard is **Dray**; Arthur stands at `king_pos` and is the king you already walk up to | A separate NPC beside the king entity | Drawing him twice put a second king half a pixel behind the first. And nobody is stabbed mid-sentence now: contact damage and wildlife both stand down while a conversation is open, which is what makes Arthur a person you can speak to rather than a wall that hurts |
 | 2026-09-12 | **§9's context assembler is built, and there is no model anywhere** | Building the model first; building the assembler only as a model input | The packet is worth having on its own: it is what a hand-written line chooses between, what a cache would be keyed on, and the thing to *read* before deciding whether a model should ever see it. A thin packet means no model would save it; a rich one makes the bake-versus-runtime decision worth having with evidence rather than opinion |
