@@ -120,6 +120,18 @@ through the ordinary tick path, so a skipped day is identical to a waited one:
 same drift, same events, same replay. Which also means a day skipped standing in
 the Thornwood is a day of being eaten.
 
+**`M` opens the map of Erileo.** Every tile in its terrain colour, the eight places
+named, the fairies' clearing, and where you are standing. Asked for as a debug tool
+and kept as a real one: a game whose argument is *the road against the forest* should
+let you see the shape of the argument. It is painted once into a texture rather than
+redrawn, because 56,000 rectangles a frame is a slideshow.
+
+**`UNCROWNED_SHOT=/tmp/a.png UNCROWNED_AT=241,150 godot --path . --quit-after 40`**
+renders one frame to a file and quits, with `UNCROWNED_MAP=1` to open the map first.
+This exists because a night was spent shipping things that drew wrong without
+erroring — `--headless` never calls `_draw()`, so the test suite cannot see the
+screen at all, and "no script errors" says nothing about what is on it.
+
 **The journal's last section lists who is where.** Every named person, the town
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more
 of them and "walk about until you find him" is not a way to review a character.

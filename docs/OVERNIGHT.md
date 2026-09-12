@@ -43,7 +43,7 @@ at the picture is the check, and I did not do it.
 | F | **Which beast lives where, with a reason** | ✅ done |
 | G | **Each settlement its own identity** | |
 | H | **A real town and a real castle** | 🟡 castle done |
-| I | **The map screen** | |
+| I | **The map screen** | ✅ done |
 
 ---
 
@@ -105,6 +105,20 @@ bear** in the castle. Checked against the sheet and replaced.
 > the cliff path. Only the gate exists, so **the gate stands open** — a castle nobody
 > can enter would close every route at once. The other two are the thing to build
 > before the gate is ever shut.
+
+---
+
+### The map of Erileo, on M
+
+Every tile in its terrain colour, the eight places named, the fairies' clearing, and
+where you are standing. Painted once into a texture, because 56,000 rectangles a frame
+is a slideshow rather than a map.
+
+**It found a bug in its first frame**: Blackcairn came out **magenta**, which is the
+"nobody has coloured this terrain" sentinel doing exactly what it was put there for —
+`RAMPART` had gone into the enum without a colour an hour earlier. A map that shows
+you every terrain at once turns out to be a decent test of whether every terrain can
+be drawn.
 
 ---
 

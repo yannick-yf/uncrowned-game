@@ -185,5 +185,7 @@
   "ground.crown": "the crown",
   "ground.opposition": "the wood",
   "ground.none": "nobody",
-  "deed.heard.i_informed_the_crown": "you carried what you knew to the crown"
+  "deed.heard.i_informed_the_crown": "you carried what you knew to the crown",
+  "map.title": "ERILEO",
+  "map.close": "M to close"
 }

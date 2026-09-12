@@ -185,5 +185,7 @@
   "ground.crown": "la couronne",
   "ground.opposition": "le bois",
   "ground.none": "personne",
-  "deed.heard.i_informed_the_crown": "vous avez porté à la couronne ce que vous saviez"
+  "deed.heard.i_informed_the_crown": "vous avez porté à la couronne ce que vous saviez",
+  "map.title": "ERILEO",
+  "map.close": "M pour fermer"
 }

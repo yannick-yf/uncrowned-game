@@ -448,6 +448,10 @@ const TERRAIN_COLOURS: Dictionary = {
 	Region.Terrain.CLEARED: Color(0.31, 0.40, 0.24),
 	Region.Terrain.CLEARING: Color(0.20, 0.30, 0.19),
 	Region.Terrain.THICKET: Color(0.09, 0.16, 0.10),
+	# Added after the map screen drew Blackcairn in magenta — which is the sentinel
+	# working exactly as intended: a terrain nobody has coloured is impossible to
+	# miss, and `RAMPART` went into the enum without one.
+	Region.Terrain.RAMPART: Color(0.42, 0.44, 0.40),
 }
 
 ## Magenta, deliberately. A terrain nobody has drawn should be impossible to miss.

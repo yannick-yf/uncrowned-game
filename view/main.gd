@@ -56,6 +56,10 @@ var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
 
 var _mine: Allegiance = null
+var _map_open: bool = false
+## The region, painted once into an image, because 56,000 `draw_rect` calls a frame
+## is not a map screen, it is a slideshow.
+var _map_image: Texture2D = null
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
@@ -85,12 +89,70 @@ func _ready() -> void:
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
+	if OS.has_feature("debug") and not OS.get_environment("UNCROWNED_MAP").is_empty():
+		_map_open = true
 	var stand: String = OS.get_environment("UNCROWNED_AT")
 	if OS.has_feature("debug") and stand.contains(","):
 		var parts: PackedStringArray = stand.split(",")
 		_world.player_pos = Vector2(float(parts[0]) + 0.5, float(parts[1]) + 0.5)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
+
+
+## **M — the map of Erileo.**
+##
+## Asked for as a debug tool and worth having as a real one: a game whose whole
+## argument is *the road against the forest* should let you see the shape of the
+## argument. Every tile in its terrain colour, the eight places named, and where you
+## are standing.
+##
+## Painted once into a texture and kept, because a 280 × 200 region is 56,000 tiles
+## and drawing that many rectangles every frame is a slideshow rather than a map.
+func _map_texture() -> Texture2D:
+	if _map_image != null:
+		return _map_image
+	var region: Region = _world.region()
+	var image := Image.create(region.width, region.height, false, Image.FORMAT_RGBA8)
+	for x: int in region.width:
+		for y: int in region.height:
+			image.set_pixel(x, y, _art.colour_for(region.terrain_at(Vector2i(x, y))))
+	_map_image = ImageTexture.create_from_image(image)
+	return _map_image
+
+
+func _draw_map() -> void:
+	var region: Region = _world.region()
+	var screen: Vector2 = get_viewport_rect().size
+	var scale: float = minf((screen.x - 48.0) / float(region.width),
+		(screen.y - 64.0) / float(region.height))
+	var size := Vector2(float(region.width), float(region.height)) * scale
+	var at: Vector2 = -position + (screen - size) * 0.5
+
+	draw_rect(Rect2(-position, screen), Color(0.05, 0.05, 0.07, 0.86), true)
+	draw_texture_rect(_map_texture(), Rect2(at, size), false)
+	draw_rect(Rect2(at, size), Color(0.75, 0.70, 0.55, 0.9), false, 1.0)
+
+	# The eight places, and the one you are standing in.
+	for zone: StringName in Region.ZONE_ORDER:
+		var site: Vector2i = Region.zone_sites()[zone] as Vector2i
+		var dot: Vector2 = at + Vector2(site) * scale
+		draw_circle(dot, 2.5, Color(0.96, 0.93, 0.86, 1.0))
+		draw_string(ThemeDB.fallback_font, dot + Vector2(4.0, 3.0),
+			Text.of(StringName("place.short.%s" % zone)), HORIZONTAL_ALIGNMENT_LEFT,
+			-1.0, 8, Color(0.96, 0.93, 0.86, 0.92))
+
+	# The fairies' clearing, which is not a zone and is where you woke up.
+	draw_circle(at + Vector2(Region.CLEARING) * scale, 2.0, Color(0.78, 0.96, 0.80, 1.0))
+
+	draw_string(ThemeDB.fallback_font, at + Vector2(0.0, -8.0), Text.of(&"map.title"),
+		HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, Color(0.96, 0.93, 0.86, 1.0))
+	draw_string(ThemeDB.fallback_font, at + Vector2(size.x - 64.0, -8.0),
+		Text.of(&"map.close"), HORIZONTAL_ALIGNMENT_LEFT, -1.0, 8,
+		Color(0.80, 0.78, 0.70, 0.85))
+
+	var you: Vector2 = at + _world.player_pos * scale
+	draw_circle(you, 3.5, Color(0.15, 0.12, 0.10, 1.0))
+	draw_circle(you, 2.5, Color(1.0, 0.42, 0.28, 1.0))
 
 
 ## Render a frame to a file and quit, for looking at the game without playing it.
@@ -200,6 +262,8 @@ func _read_input() -> void:
 
 	_find_words()
 
+	if Input.is_action_just_pressed(&"map_screen"):
+		_map_open = not _map_open
 	if Input.is_action_just_pressed(&"journal"):
 		_journal_open = not _journal_open
 		_draw_journal()
@@ -490,6 +554,8 @@ func _draw() -> void:
 
 	_draw_particles(min_x, max_x, min_y, max_y)
 	_draw_witnesses()
+	if _map_open:
+		_draw_map()
 
 
 ## How many of the Muster's tents are still up. Struck in proportion to the army
