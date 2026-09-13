@@ -136,6 +136,12 @@ func _ready() -> void:
 	if OS.has_feature("debug") and stand.contains(","):
 		var parts: PackedStringArray = stand.split(",")
 		_world.player_pos = Vector2(float(parts[0]) + 0.5, float(parts[1]) + 0.5)
+	# One of the four places, freed for this frame, so §13's free-state ground and its
+	# sign can be looked at without playing to them. The same debug gate as the tile
+	# above, and listed with it in CLAUDE.md.
+	var freed: String = OS.get_environment("UNCROWNED_FREE")
+	if OS.has_feature("debug") and freed != "" and _mine != null:
+		_mine.decide(StringName(freed), FactionRules.OPPOSITION, _sim.tick)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -642,11 +648,17 @@ func _draw() -> void:
 	# emptying while you were elsewhere looks emptied. This is the visible half of
 	# §8's fifth consequence: the world moved without you.
 	var tents_standing: int = _tents_standing()
+	# §13's free-state ground: a freed place is its own kit with things missing. The
+	# Muster strikes half its rows; the Wide Acres loses its fences (below).
+	if _is_free(&"muster"):
+		tents_standing = maxi(1, tents_standing / 2)
 	var crowd: int = _crowd_size()
 	var tent: int = 0
 	var folk: int = 0
 	for prop: Dictionary in region.props:
 		var kind: StringName = prop["kind"] as StringName
+		if kind == &"fence" and _is_free(&"wide_acres"):
+			continue
 		if kind == &"tent" or kind == &"tent_b":
 			tent += 1
 			if tent > tents_standing:
@@ -851,7 +863,8 @@ func _draw_particles(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
 		var kind: StringName = prop["kind"] as StringName
 		var embers: int = 0
 		var colour := Color.WHITE
-		if kind == &"kiln":
+		# A freed Cinderworks is cold: the same kilns, no embers (§13).
+		if kind == &"kiln" and not _is_free(&"cinderworks"):
 			embers = 5
 			colour = Color(1.0, 0.62, 0.28, 0.75)
 		elif kind == &"campfire":
@@ -896,10 +909,15 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 	# tiles nobody is standing on.
 	var covers: bool = Rect2(dest, Vector2(source.size)).grow(-2.0).has_point(
 		_draw_position() * float(TILE))
+	var tint: Color = Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE
+	# A shuttered counting house: the same building, unlit, once the bank is the
+	# creditor's rather than the crown's (§13's free variant).
+	if (prop["kind"] as StringName) == &"counting_house" and _is_free(&"cairnwell"):
+		tint = tint.darkened(0.4)
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(dest.round(), Vector2(source.size)),
-		Rect2(source), Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE)
+		Rect2(source), tint)
 
 
 ## The fairy, who is **light and movement and not a body**.
@@ -1140,6 +1158,9 @@ func _draw_hud() -> void:
 	var mood: String = _atmosphere()
 	if mood != "":
 		rows.append(mood)
+	var sign: String = _sign()
+	if sign != "":
+		rows.append(sign)
 
 	var npc: Npc = _nearby_npc()
 	if _can_rest():
@@ -1437,6 +1458,9 @@ func _journal_line(row: Dictionary) -> String:
 			return Text.of(key, [town, _seen(int(row["seen"]))])
 		Journal.HARDSHIP:
 			return Text.of(&"journal.hardship", [town])
+		Journal.FLIP:
+			return Text.of(&"journal.flip.free" if PlaceRules.is_free(row["to"] as StringName)
+				else &"journal.flip.crown", [town])
 		Journal.UNSEEN:
 			return Text.of(&"journal.unseen", [town])
 		Journal.ARRIVAL:
@@ -1474,6 +1498,9 @@ func _journal_because(row: Dictionary) -> String:
 		Journal.HARDSHIP:
 			return Text.of(&"journal.because.hardship",
 				[Text.of(StringName("deed.heard.%s" % String(row["deed"])))])
+		Journal.FLIP:
+			return Text.of(&"journal.because.you_decided" if bool(row["by_player"])
+				else &"journal.because.turned")
 	return ""
 
 
@@ -1537,3 +1564,18 @@ func _atmosphere() -> String:
 	if _world.fraud_told_to != &"":
 		return Text.of(&"muster.shut")
 	return Text.of(&"muster.queue")
+
+
+## The entrance sign, in the place's own words (§15). Propaganda: a claim the player
+## can doubt and later find false. Which one shows is the rules layer's verdict; the
+## words are content, French first.
+func _sign() -> String:
+	if _world.current_zone != WorldState.OVERWORLD or _mine == null:
+		return ""
+	var here: StringName = _world.region().zone_at(_world.player_tile())
+	var key: StringName = PlaceRules.sign_key_for(here, _mine.holder(here), _mine.was_decided(here))
+	return Text.of(key) if key != &"" else ""
+
+
+func _is_free(zone: StringName) -> bool:
+	return _mine != null and PlaceRules.is_free(_mine.holder(zone))

@@ -124,9 +124,10 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **4.7 s**, which is the one to run without
-thinking. `--all` adds the journeys and the asset pack and takes about **18 s**.
-(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people.
+walks, no asset pack — in about **7.5 s**, which is the one to run without
+thinking. `--all` adds the journeys and the asset pack and takes about **21 s**.
+(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people,
+and 4.7 s and 18 s when v1 shipped; v2's place tests each build a full world.
 The numbers are here to be kept true, not to be admired: if the fast suite ever
 stops being the thing you run without thinking, that is the thing to fix.)
 A suite marked `const SLOW := true` is in the second group.
@@ -167,6 +168,11 @@ This exists because a night was spent shipping things that drew wrong without
 erroring — `--headless` never calls `_draw()`, so the test suite cannot see the
 screen at all, and "no script errors" says nothing about what is on it.
 
+**`UNCROWNED_FREE=zone`** (2026-09-13) frees one of the four places for the frame
+`shot.sh` takes, so the free-state ground and its sign can be looked at without playing
+to them. Same gate, same reason: `--headless` never draws, and a fence that fails to go
+missing is invisible to the suite.
+
 **The journal's last section lists who is where.** Every named person, the town
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more
 of them and "walk about until you find him" is not a way to review a character.
@@ -200,11 +206,13 @@ from is `docs/history/V2_INTENT.md`. The roadmap is SPECS §18, Phases A–E. **
 country at 0.65, routes measured (road 57 s, wild 69 s, attuned 66 s), travellers drawn
 as traffic, Attunement's speed half. **Phase B (the second axis) is delivered**: hardship
 per town, the ten building acts as spoken deeds with a cost each, the face rule walked by
-test, `hardship_is_high_here`. **Phase C (four places, two states) is next**: the binary
-state per place, the decisive act with two outcomes at each landmark, the freeze window as
-a tick stamp, the band kept for the borders, the free-state ground and the entrance sign.
-v2 is a content and coupling change; SPECS §18 lists what it does not touch, and nothing
-structural moves without asking Yannick.
+test, `hardship_is_high_here`. **Phase C (four places, two states) is delivered**: the
+binary state in `Allegiance`, freeing by reading a place's thing there, holding by four
+spoken acts, the two-day freeze enforced by not offering, the free-state ground, the sign
+as a HUD line. **Phase D (the crown as a play) is next**: rank from crown standing, the
+crown's service list, the reworked opening, the throne reading. v2 is a content and
+coupling change; SPECS §18 lists what it does not touch, and nothing structural moves
+without asking Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that

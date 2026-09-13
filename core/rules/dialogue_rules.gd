@@ -36,11 +36,12 @@ static func conditions(
 	ticked: WorldTick,
 	standing: Standing = null,
 	allegiance: Allegiance = null,
+	tick: int = 0,
 ) -> Dictionary:
 	if world == null or ticked == null:
 		return {}
 	var here: StringName = world.region().zone_at(world.player_tile())
-	return {
+	var out: Dictionary = {
 		&"grain_is_dear_here": here != &"" and ticked.grain_in(here) >= GRAIN_IS_DEAR,
 		&"the_army_is_shrinking": ticked.army_strength < 90.0,
 		&"hardship_is_high_here": here != &"" and ticked.hardship_in(here) >= HARDSHIP_BITES,
@@ -62,7 +63,21 @@ static func conditions(
 		# written, so an offer authored last is an offer nobody is ever shown. The
 		# same reason the rest of this table exists.
 		&"nobody_has_your_name": allegiance == null or allegiance.side == FactionRules.NEUTRAL,
+		# The four places' state (§8, 2026-09-13): what the person in front of you can
+		# see out of the window. `frozen` is the two-day hold after a decisive act, and
+		# the acts that would reverse it forbid it — refused by not being offered.
+		&"this_place_is_free": allegiance != null and PlaceRules.has_state(here)
+			and PlaceRules.is_free(allegiance.holder(here)),
+		&"this_place_is_crown_held": allegiance != null and PlaceRules.has_state(here)
+			and allegiance.holder(here) == FactionRules.CROWN,
+		&"this_place_is_frozen": allegiance != null and here != &"" and allegiance.is_frozen(here, tick),
 	}
+	# And each place from anywhere, so Maddox can mention that the Acres went to the
+	# smallholders three days after they did.
+	for place: StringName in PlaceRules.PLACES:
+		out[StringName("%s_is_free" % place)] = allegiance != null \
+			and PlaceRules.is_free(allegiance.holder(place))
+	return out
 
 
 ## Which of an NPC's authored options are legal right now.

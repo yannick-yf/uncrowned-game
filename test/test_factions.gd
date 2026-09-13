@@ -120,7 +120,7 @@ func test_a_border_turns_when_the_town_under_it_turns() -> void:
 	var sim: Sim = _world()
 	var mine := sim.store(&"allegiance") as Allegiance
 	var ticked := sim.store(&"worldtick") as WorldTick
-	assert_eq(mine.holder(&"saltmarch"), FactionRules.NEUTRAL, "a border, to begin with")
+	assert_eq(mine.holder(&"saltmarch"), FactionRules.CROWN, "a border, and the king's to begin with (2026-09-13)")
 	ticked.town_sentiment[&"saltmarch"] = 10.0
 	sim.advance(Sim.STEPS_PER_WORLD_TICK * 2)
 	assert_eq(mine.holder(&"saltmarch"), FactionRules.OPPOSITION,

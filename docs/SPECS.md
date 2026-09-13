@@ -280,6 +280,16 @@ said they were on. Never a menu at the landmark.
 | **The Muster** | The **rolls** at the pay tent: the fraud exposed and the rolls destroyed, the camp empties — **free**. The camp paid and the deserters handed back, the rolls made honest — **crown-held** | The names of the men who burned Brindle, the orders they were given, signed — **and how the king fights** | Free it and deserters buy the bread the towns ate (§8's second consequence). Hold it and the men Ossa hides are handed back, Kell first |
 | **The bank at Cairnwell** | The **debts** at the counting house: the records handed to the creditor, he calls them in — **free**. The creditors brought to the table, the crown's credit stands — **crown-held** | The whole project is leveraged, and the king is personally afraid of one specific creditor | Free it and the works stop paying and the towns pay in kind. Hold it and the debt is serviced from the tiered law's fees — Mira's clients |
 
+**Built 2026-09-13 (Phase C).** `PlaceRules` names the thing each place holds and the
+act that holds it; the state lives in `Allegiance.owner_of`, where the borders' band
+already kept it. **Freeing** is reading the place's thing aloud *in that place* — the
+grants at the Wide Acres, the ledger at the Cinderworks, the debts at Cairnwell — or
+exposing the fraud at the Muster; the telling system announces `document_read` and the
+allegiance system decides. **Holding** is the four spoken acts of §8's table, each of
+which needs the same thing in hand: enforce the grants, settle the wage, pay the
+Muster, bring the creditors. Read the grants in Harrowgate for the `discredited`
+ending and they can never free the Acres — told once, to one audience, chosen.
+
 **The other acts move the quantities; only the decisive one moves the state.** Burn
 the stores and grain rises and hardship lands, and the Wide Acres is still the
 crown's. That is deliberate: a place should be able to be *hurt* without being
@@ -583,6 +593,13 @@ what is *there*.
 **The starting state is crown-held for all four**, and the ground at the start is the
 crown-held column — which is what v1 built. The free column is new tile work, one
 variant per place. Nothing is a third variant.
+
+**Built 2026-09-13**, as far as the pack allows: a freed Wide Acres loses its fences, a
+freed Muster strikes half its rows on top of what the army's strength already struck, a
+freed Cinderworks keeps its kilns and loses their embers, and a freed counting house
+is the same building drawn dark. Nothing is stored on a node: the window reads the
+place's state and draws less. The convoys, the queue and the shutters wait on art that
+is not in the pack.
 
 **The Thornwood belt is the Cinderworks' second face.** `Terrain.CLEARED` already
 draws the works as a wound with a radius; in v2 that radius is what "feeding it the
@@ -1850,6 +1867,19 @@ no second clock — so a replay lands on the same tick in the same state.
 `core/` and read by everything that needs a window. §4's instability reading for Blackcairn
 uses **this window and no other** for "how recently": a flip inside the last window is
 recent, and four of them inside one window is a crisis.
+
+**Built 2026-09-13.** `Allegiance.decide()` is the player path — it sets the state,
+stamps `decided_at` and sets `held_until` to the tick plus `PlaceRules.freeze_ticks()`
+— and `drift_to()` is the band's, which writes neither. Both append to `flips`, which is
+what Blackcairn's instability will read. The hold is enforced **by not offering**: the
+four holding lines forbid `this_place_is_frozen`, the telling rule leaves the frozen
+place's own document off the list, and the fraud cannot be exposed at a camp paid two
+days ago or less — so the landmark never advertises an act it will refuse, and a
+decisive act reaching a frozen place is recorded as `place_held` rather than hidden.
+A decision that keeps a place where it was is a stamp, not a flip: enforcing the grants
+on an Acres the crown already held freezes it and changes the sign, and counts nothing
+toward instability. And a freed place has no watch — the crown's men left with the
+crown, so a roused watch does not stand over a granary it no longer holds.
 
 **What each path leaves behind.** A drift flip writes no handprint, so a place the
 world moved is a place the player did not move — the journal (§15) can say *the Wide
@@ -3261,6 +3291,12 @@ the player reads it, walks in, and finds out whether it is true. So:
 - Blackcairn's gate says what a castle says about itself, and the wall behind it may
   disagree (§4's two readings).
 
+**Built 2026-09-13** as a line on the HUD while the player stands in the place — the
+ambient register, beside the Muster's own lines — thirteen keys (`sign.<place>.crown`,
+`.restored`, `.free`, and the castle's one), in both languages, and the doings page
+gains a row when a place changes hands: *the Wide Acres is out of the crown's hands —
+by your hand*, or *— it turned on its own, as the town's mood went*.
+
 Every sign is written **French first, then English**, in the house register (§9), and
 a test asserts both exist for every place × state. The words are content
 (`sign.<place>.<state>`); which one shows is the rules layer's verdict.
@@ -3524,7 +3560,7 @@ proposal — Yannick's to change — and the reasoning for it is under the table
 |---|---|---|---|
 | **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
 | **B** ✅ | **The second axis** — delivered 2026-09-13 | Hardship per town, at 50, pushed only by deeds; the ten building acts as spoken deeds with a cost each; `hardship_effects` on every deed that moves the kingdom, walked by test; eight faces as greetings; `hardship_is_high_here`; the journal's worse-off rows (§8, §9, §15) | **Held:** burn the stores and feed the works the forest in one run — the Wide Acres and Brindle both past the line, Pell's and Wren's greetings changed without naming the player, two journal rows with two different causes. 36 suites, 378 tests |
-| **C** | **Four places, two states** | Binary state per place; the decisive act with two outcomes at each landmark; the freeze window as a tick stamp; the band kept for the borders; the free-state ground; the entrance sign as a voice (§3, §8, §13, §15) | Free the Wide Acres, watch the band fail to take it back for two days, then restore it; a replay from the log lands on the same tick; the sign says something different each time |
+| **C** ✅ | **Four places, two states** — delivered 2026-09-13 | `PlaceRules`; the state in `Allegiance` with `decided_at`, `held_until` and `flips`; freeing by reading the place's thing there or exposing the fraud, holding by the four spoken acts that need the same thing; the freeze enforced by not offering; the band kept for the borders, which now start crown-held; the free-state ground; the sign as a HUD line; the journal's changed-hands rows (§3, §4, §8, §13, §15) | **Held:** the grants read to the tenants free the Acres; a town at 90 cannot take them back for two days and then does; Nessa will not enforce them while the place is held and will after; a paid camp cannot be exposed for two days and then can; the sign reads loyal, freed, restored in turn. 37 suites, 391 tests |
 | **D** | **The crown as a play** | Rank from crown standing, falling as well as rising; the gate knowing your face as one of the three ways in; the crown's service list; the reworked opening — Halgrave audible in the first hour, the fairy checked (§5, §11) | §5's test: a playtester who wants to serve can name a first step unprompted. A loyal run reaches the throne reading and is shown hardship the morning after — and the same run can still turn |
 | **E** | **Blackcairn reads the kingdom** | Wealth and instability as derived readings, on the castle and in the towns' talk; the journal's kingdom page (§4, §15) | Four flips in one window and the same four over a season look different at the gate and sound different in Harrowgate |
 
@@ -3871,6 +3907,11 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **The face is a greeting, one per place, and it may not name the player** | A reply the player asks for; faces only where costs land today | A reply is pulled; a greeting is the world speaking first, which is the ambient register. Every place, because reading a document aloud lands a cost wherever it is read. Naming the player would be attribution pushed, and the journal is the only place allowed to join an act to its cost |
 | 2026-09-13 | **The second direction restores; it never raises a full quantity past 100** | Raising the ceiling for the crown's acts; a separate 'prosperity' figure | Four of the twelve start full. Found by building it, and kept: it is §8's ceiling on place states one level down, and it puts the crown's acts where a loyal player has work — in a kingdom somebody has already broken. Steel at 100 fed the forest still widens the belt, costs Brindle and counts as service |
 | 2026-09-13 | **A spoken deed's journal line is what people heard, capitalised** | Leaving the fallback; a bespoke line per deed | The fallback said *nobody was looking* for every spoken lever, which was false and read as a bug. `deed.heard.*` already exists for every deed in both languages, so one generic line covers the six old levers and the ten new acts |
+| 2026-09-13 | **Freeing a place is reading its thing aloud there; holding it is one of four spoken acts that need the same thing in hand** | A new act at each landmark with two outcomes; a menu at the landmark; two unrelated deeds | The machinery already existed twice — a fact told once to one audience, and making a thing public against informing on it. One thing, two ways to spend it, and the way is where and to whom, never a choice offered at the door. A grants read in Harrowgate for `discredited` can never free the Acres, which is the opportunity cost §8 wanted |
+| 2026-09-13 | **The freeze is enforced by not offering the act**: the holding line forbids `this_place_is_frozen`, the frozen place's document is left off the telling list, the fraud cannot be exposed at a camp paid two days ago | Letting the act happen and refusing the flip; a message refusing it | An act that happens and changes nothing spends a one-shot for nothing, which is a trap. The roused watch already refuses by not offering, and the landmark never advertises an act it will refuse |
+| 2026-09-13 | **A decision that keeps a place where it was is a stamp, not a flip** | Ignoring it; counting it as a flip | Enforcing the grants on an Acres the crown already held is the player deciding it stays so: it freezes the place and the sign says *strengthened*, and it counts nothing toward instability, because to the men on the wall nothing moved |
+| 2026-09-13 | **A freed place has no watch** | Keeping the watchmen posted whoever holds the place | The crown's men left with the crown. It is also §4's free variant made mechanical — the granary door open and no watchman — and it costs one check in the act system |
+| 2026-09-13 | **The entrance sign is a HUD line while you stand in the place** | A sign prop at the gate; a line only on entering | The Muster's atmosphere lines already work this way and the pack has no sign sprite. It is the ambient register speaking, which is what §15 asked for; a prop can come with v3's art |
 
 ---
 

@@ -37,7 +37,11 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var ticked := sim.store(&"worldtick") as WorldTick
 	var cast := sim.store(&"cast") as Cast
 	var here_now: StringName = world.region().zone_at(world.player_tile())
-	if ticked != null and WatchRules.guarded_by(
+	# A freed place has no watch: the crown's men left with the crown (§4's free
+	# variant — the granary door open, no watchman).
+	var mine := sim.store(&"allegiance") as Allegiance
+	var unwatched: bool = mine != null and PlaceRules.is_free(mine.holder(here_now))
+	if not unwatched and ticked != null and WatchRules.guarded_by(
 			cast, world.current_zone, world.player_pos, ticked.alertness_in(here_now)) != &"":
 		sim.derive(&"act_prevented", {"town": String(here_now)})
 		return

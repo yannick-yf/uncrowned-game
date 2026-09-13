@@ -433,9 +433,10 @@
           "intent": "settle_wage",
           "text": "Payez-les mieux et ils resteront. Je peux régler ça avec Sena.",
           "causes": "i_settled_the_wage",
-          "requires": "cinderworks:death_toll",
+          "requires": "cinderworks:ledger",
           "costs": "goodwill",
-          "reply": "2 sous de plus par jour. Le roi paiera, et il demandera plus de pierre pour ça. Va pour Sena."
+          "reply": "2 sous de plus par jour. Le roi paiera, et il demandera plus de pierre pour ça. Va pour Sena.",
+          "forbids_condition": "this_place_is_frozen"
         },
         {
           "intent": "feed_forest",
@@ -588,7 +589,8 @@
           "causes": "i_enforced_the_grants",
           "requires": "acres:land_grants",
           "costs": "goodwill",
-          "reply": "Alors je sors les actes. Pell paiera ce qu'il doit, et les autres aussi. Vous savez ce que ça leur coûte."
+          "reply": "Alors je sors les actes. Pell paiera ce qu'il doit, et les autres aussi. Vous savez ce que ça leur coûte.",
+          "forbids_condition": "this_place_is_frozen"
         }
       ]
     },
@@ -728,7 +730,8 @@
           "requires": "muster:pay_fraud",
           "hides_after": "public:muster:pay_fraud",
           "costs": "goodwill",
-          "reply": "Vous savez, donc. Bien. La paie part ce soir, et le roi la paiera deux fois. Ne dites à personne pourquoi."
+          "reply": "Vous savez, donc. Bien. La paie part ce soir, et le roi la paiera deux fois. Ne dites à personne pourquoi.",
+          "forbids_condition": "this_place_is_frozen"
         },
         {
           "intent": "feed_muster",
@@ -909,9 +912,10 @@
           "intent": "bring_creditors",
           "text": "Amenez le créancier à la table. La couronne rééchelonne, il garde ses gages.",
           "causes": "i_brought_the_creditors",
-          "requires": "bank:leveraged",
+          "requires": "bank:debts",
           "costs": "goodwill",
-          "reply": "Il viendra si c'est vous qui le demandez. La dette court 10 ans de plus. Ce sont les fermages des Champs qui la paient, et les taxes des pauvres."
+          "reply": "Il viendra si c'est vous qui le demandez. La dette court 10 ans de plus. Ce sont les fermages des Champs qui la paient, et les taxes des pauvres.",
+          "forbids_condition": "this_place_is_frozen"
         }
       ]
     },

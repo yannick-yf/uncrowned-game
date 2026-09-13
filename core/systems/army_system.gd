@@ -17,7 +17,9 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 		return
 	var in_muster: bool = world.current_zone == WorldState.OVERWORLD \
 		and world.region().is_in_muster(world.player_tile())
-	if not ArmyRules.can_expose(in_muster, world.fraud_told_to, sim.facts):
+	var mine := sim.store(&"allegiance") as Allegiance
+	var frozen: bool = mine != null and mine.is_frozen(&"muster", sim.tick)
+	if not ArmyRules.can_expose(in_muster, world.fraud_told_to, sim.facts, frozen):
 		return
 
 	world.pay_fraud_exposed = true

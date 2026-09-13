@@ -156,9 +156,12 @@ static func holds_at_start() -> Dictionary:
 		out[zone] = CROWN
 	for zone: StringName in FOREST_HOLDS:
 		out[zone] = OPPOSITION
-	# A border is not a side. These two start neutral and are the only ones that move.
+	# The borders start as the king's too (2026-09-13). "A border is not a side" was
+	# v1's, and a place has exactly two states now — crown-held or free — so the neutral
+	# start is retired. What makes these two borders is that the band can still move
+	# them; the other places with a state move only by the player's hand (PlaceRules).
 	for zone: StringName in CONTESTED:
-		out[zone] = NEUTRAL
+		out[zone] = CROWN
 	return out
 
 

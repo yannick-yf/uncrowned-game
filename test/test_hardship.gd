@@ -145,10 +145,12 @@ func test_every_building_act_can_be_said_to_somebody() -> void:
 
 func test_hardship_never_drifts() -> void:
 	# §8: it barely drifts and moves sharply when acted on, so it always reads as
-	# caused. Three quiet days and every town sits exactly where it started.
+	# caused. A quiet day and every town sits exactly where it started. One day rather
+	# than three: there is no drift path to it at all, so a day proves what a week would,
+	# and the fast suite has to stay the thing you run without thinking.
 	var sim: Sim = Game.build()
 	var ticked := sim.store(&"worldtick") as WorldTick
-	sim.advance_world_ticks(Game.TICKS_PER_IN_GAME_DAY * 3)
+	sim.advance_world_ticks(Game.TICKS_PER_IN_GAME_DAY)
 	for town: StringName in Region.ZONE_ORDER:
 		assert_eq(ticked.hardship_in(town), WorldTick.NEUTRAL, "%s drifted" % town)
 	assert_eq(ticked.handprint_on(&"hardship"), 0.0, "and none of it was anybody's doing")

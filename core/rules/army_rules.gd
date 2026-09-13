@@ -24,5 +24,9 @@ static func made_public(fact: StringName) -> StringName:
 ## `told_to` is the whole of §8's opportunity cost. Warn a town and the army keeps
 ## its men: a quartermaster who has heard she was named does not leave the books
 ## where she left them, and the second audience gets a story rather than proof.
-static func can_expose(in_muster: bool, told_to: StringName, facts: FactBase) -> bool:
-	return in_muster and told_to == &"" and facts.has(FACT_PAY_FRAUD)
+static func can_expose(
+	in_muster: bool, told_to: StringName, facts: FactBase, frozen: bool = false,
+) -> bool:
+	# `frozen`: the camp was paid and made honest two days ago or less (§8's freeze);
+	# the men will not hear it yet, and the prompt does not offer it.
+	return in_muster and not frozen and told_to == &"" and facts.has(FACT_PAY_FRAUD)

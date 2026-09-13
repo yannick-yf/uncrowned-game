@@ -32,6 +32,7 @@ const ARMY: StringName = &"army"
 const GRAIN: StringName = &"grain"
 const ESCORT: StringName = &"escort"
 const HARDSHIP: StringName = &"hardship"
+const FLIP: StringName = &"flip"
 
 
 ## One chronological list. Every row carries facts, never phrasing.
@@ -89,6 +90,19 @@ static func entries(events: EventLog, _facts: FactBase = null) -> Array[Dictiona
 				grain_reported[at] = true
 				rows.append({"tick": tick, "kind": GRAIN, "town": at,
 					"after_the_army": army_has_fallen})
+			&"place_decided":
+				# A place the player decided. Once per change; a decision that kept a
+				# place where it was is a stamp, not news.
+				if not bool(event.data.get("changed", false)):
+					continue
+				rows.append({"tick": tick, "kind": FLIP,
+					"town": StringName(event.data.get("zone", "")),
+					"to": StringName(event.data.get("to", "")), "by_player": true})
+			&"ground_changed_hands":
+				# The band moved it. The row says it turned, and nothing about you.
+				rows.append({"tick": tick, "kind": FLIP,
+					"town": StringName(event.data.get("zone", "")),
+					"to": StringName(event.data.get("to", "")), "by_player": false})
 			&"hardship_moved":
 				# Who an act cost, once per town per cause. The only place in the game
 				# that joins the two (§8): the town shows it and the person there says

@@ -5,6 +5,8 @@
 #   tools/shot.sh out.png                     the title
 #   tools/shot.sh out.png creation            character creation
 #   tools/shot.sh out.png play 241,150        the world, standing at a tile
+#   UNCROWNED_FREE=wide_acres tools/shot.sh out.png play 90,151
+#                                             the same, with one place freed
 #
 # The check that "zero script errors" is not. Looking at the output is cheap, and
 # every bug the first two nights shipped would have been caught by one of these.
