@@ -51,6 +51,12 @@ rendering layer replaceable. Everything below protects it.
 
 ## Art rule
 
+**Amended 2026-09-13 (v3).** The pack rule above describes the 2D window, which stays
+the play screen until the migration's cut-over. In the 3D world the same rule reads:
+one asset family — the workshop's library and what the brother adds in the same hand —
+with a provenance-and-licence manifest the validator refuses to ship without. Mixing
+artists is the mark of an amateur game in meshes exactly as in pixels.
+
 Free assets may be used, but only from the packs approved in `docs/SPECS.md` §13.
 **Never mix packs from different artists** — palettes, pixel densities and light
 angles do not reconcile, and mixing them is the clearest mark of an amateur game.
@@ -74,8 +80,11 @@ tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
 docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
+           MIGRATION_3D.md — how the world moves onto the 3D workshop, and who does what.
            V1.md — what shipped the morning before v2.
   history/   Finished working logs. Never authoritative; kept for the reasoning.
+prototypes/  The Brindle 3D workshop: a separate Godot project, kept out of the game's
+           import by `.gdignore` until the migration's M2. Open its own `project.godot`.
 ```
 
 ## Commands
@@ -205,10 +214,21 @@ which is 4,000 lines and answers a different question.
 and marked *built* — and the intent it was written from is `docs/history/V2_INTENT.md`.
 A: beasts out, terrain speeds on, the wild measured. B: hardship and the second
 direction. C: four places, two states. D: rank from standing and the throne reading.
-E: Blackcairn's two readings and the journal's kingdom page. **What comes next is not
-decided**: SPECS §13 expects a v3 art pass (a new pack, through the validator), and
-combat is the oldest debt in the project. Nothing structural moves without asking
-Yannick.
+E: Blackcairn's two readings and the journal's kingdom page.
+
+**v3 is decided and being planned (2026-09-13, evening).** The world moves onto the
+Brindle 3D workshop in `prototypes/brindle_3d/` — Yannick's brother's, a stylised 3D
+landscape walked by 2D characters. **The plan is `docs/MIGRATION_3D.md`**; read it
+before touching anything the map or the view depends on. The map and the graphics are
+the brother's; the systems, the content and the bridge are ours, and the bridge is the
+one architectural rule below applied once more: the simulation keeps its grid, the 3D
+data is *baked* into a `Region`, and a 3D window reads the sim and never moves the
+player. Combat is still the oldest debt in the project. Nothing structural moves
+without asking Yannick. **One discipline starts today, before the bake exists:** new
+positional content — a person, a paper, a fire, a post — is written as an *anchor*
+(a place and a named feature, `content/places.json` once M1 lands) and never as a new
+tile constant in a `.gd`. The map is about to move, and content that names what it
+stands next to survives the move.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that
