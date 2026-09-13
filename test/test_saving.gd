@@ -83,8 +83,10 @@ func test_a_run_is_saved_and_comes_back_the_same() -> void:
 		"and six towns remember you exactly as they did")
 
 
-## Walk to the fire nearest Brindle, where the player starts, using the same event
-## the keyboard sends. Everything a save can reproduce goes through here.
+## Walk to the nearest fire, using the same event the keyboard sends. Everything a
+## save can reproduce goes through here — a position set directly is not an event,
+## so it is not in the log, and replay would put the player where they really were.
+## Since the opening, the nearest fire is the fairies' own, a few tiles away.
 func _walk_to_a_fire(sim: Sim) -> void:
 	var world := sim.store(&"world") as WorldState
 	var fire: Vector2i = Region.NOWHERE
@@ -138,9 +140,11 @@ func test_dying_puts_you_back_at_the_fire() -> void:
 
 func test_a_first_death_before_any_rest_is_not_a_dead_end() -> void:
 	# All that survives of Phase 0's "respawn in Brindle keeping everything": a
-	# player who dies before ever sitting down has to wake up somewhere.
+	# player who dies before ever sitting down has to wake up somewhere. Since the
+	# opening that somewhere is the fairies' clearing — where they woke the first
+	# time, and the only ground left that could hold them.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
 	world.player_pos = Vector2(200.5, 140.5)
 	world.hurt(WorldState.MAX_HP, sim.step)
-	assert_eq(world.player_tile(), Region.BRINDLE, "you wake where you started")
+	assert_eq(world.player_tile(), Region.CLEARING, "you wake where you first woke")

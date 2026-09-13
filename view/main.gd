@@ -9,6 +9,14 @@ extends Node2D
 ## would cost one frame of smoothing and nothing else.
 ##
 ## _process() here is not game logic. It is the crank.
+##
+## It is handed its run by `screens.gd` and does not choose one. The fallback in
+## `_ready` is for opening this scene on its own, which is worth keeping: a
+## screenshot of the world should not have to walk a menu first.
+
+## What this screen asks the game to do next. Only `&"title"` is ever emitted —
+## everything else a player can do from here is done inside the world.
+signal chose(what: StringName, carrying: Variant)
 
 const TILE: int = Art.TILE
 const FIGURE: float = 16.0
@@ -24,8 +32,13 @@ const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
 ## not a feed: the oldest thing you did is rarely the thing you are trying to
 ## understand.
 const JOURNAL_ROWS: int = 9
+## Room under the pause menu's rows for the two lines saying what leaving costs.
+const PAUSE_NOTE_ROOM: float = 32.0
 
 var _journal_open: bool = false
+## Which page of the journal is showing. Kept between openings: a player who was
+## reading the quests wants the quests again.
+var _journal_page: int = 0
 ## The log length the page was built from. A journal held open would otherwise walk
 ## every event in the run sixty times a second to print the same page.
 var _journal_at: int = -1
@@ -55,23 +68,21 @@ var _real_seconds: float = 0.0
 var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
 
-var _terrain_colours: PackedColorArray = PackedColorArray([
-	Color(0.29, 0.38, 0.23),  # WILD      — open grass
-	Color(0.55, 0.47, 0.33),  # ROAD      — drawn from the atlas, not this
-	Color(0.35, 0.29, 0.27),  # RUINS
-	Color(0.29, 0.27, 0.36),  # CASTLE
-	Color(0.11, 0.17, 0.28),  # SEA
-	Color(0.22, 0.21, 0.24),  # MOUNTAIN
-	Color(0.45, 0.40, 0.29),  # TOWN
-	Color(0.42, 0.39, 0.36),  # WALL
-	Color(0.38, 0.31, 0.24),  # CAMP
-	Color(0.16, 0.31, 0.45),  # WATER     — the Kettle
-	Color(0.36, 0.44, 0.47),  # FORD
-	Color(0.15, 0.25, 0.16),  # FOREST    — the Thornwood
-	Color(0.27, 0.31, 0.26),  # MARSH
-	Color(0.47, 0.45, 0.24),  # FARMLAND
-	Color(0.68, 0.62, 0.44),  # SAND
-])
+var _mine: Allegiance = null
+var _map_open: bool = false
+## The menu over a stopped world, or null while it is running. Stopping the world is
+## the point: the simulation only advances from `_process`, so not calling it is a
+## complete pause with nothing to remember to re-enable.
+var _paused: Menu = null
+## The last thing the world made a noise about, so one event makes one noise. Steps
+## rather than booleans: the simulation already stamps when each of these happened.
+var _sounded_take: int = -1
+var _sounded_theft: int = -1
+var _sounded_line: String = ""
+## The region, painted once into an image, because 56,000 `draw_rect` calls a frame
+## is not a map screen, it is a slideshow.
+var _map_image: Texture2D = null
+@onready var _hud: CanvasLayer = $HUD
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
@@ -83,45 +94,226 @@ var _terrain_colours: PackedColorArray = PackedColorArray([
 @onready var _journal_body: Label = $HUD/JournalBox/Body
 
 
+## The run to play, handed over by `screens.gd` before this enters the tree.
+##
+## Plain assignment only: this is called before `_ready`, so no `@onready` member
+## exists yet and nothing here may touch the HUD.
+func begin(carrying: Variant) -> void:
+	_sim = carrying as Sim
+
+
 ## Wiring, not logic: one call into core/, then cache what is read every frame.
 func _ready() -> void:
+	# Ignored when `screens.gd` has already done it, which is every run but a debug
+	# one that opens this scene by itself.
+	Sound.install(self)
 	_art = Art.new()
 	_seconds_per_step = Game.seconds_per_step()
 	_debug_available = OS.has_feature("debug")
-	# A run in progress is on disk as its event log, so starting the game is
-	# replaying it. If that fails or there is nothing there, a new run.
-	_sim = SaveFile.read()
+	# Nobody handed us a run, so this scene was opened on its own. A run in progress
+	# is on disk as its event log, so starting the game is replaying it; if that
+	# fails or there is nothing there, a new run.
+	if _sim == null:
+		_sim = SaveFile.read()
 	if _sim == null:
 		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
 	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
+	_mine = _sim.store(&"allegiance") as Allegiance
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
+	# Which of this screen's own overlays to open before the first frame, for the
+	# screenshot tool. `screens.gd` routes all three of these here, so there is one
+	# variable naming every screen in the game rather than one per overlay.
+	if _debug_available:
+		match OS.get_environment("UNCROWNED_SCREEN"):
+			"map":
+				_map_open = true
+			"journal":
+				_journal_open = true
+			"pause":
+				_pause_menu()
+	var stand: String = OS.get_environment("UNCROWNED_AT")
+	if OS.has_feature("debug") and stand.contains(","):
+		var parts: PackedStringArray = stand.split(",")
+		_world.player_pos = Vector2(float(parts[0]) + 0.5, float(parts[1]) + 0.5)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
 
+## **M — the map of Erileo.**
+##
+## Asked for as a debug tool and worth having as a real one: a game whose whole
+## argument is *the road against the forest* should let you see the shape of the
+## argument. Every tile in its terrain colour, the eight places named, and where you
+## are standing.
+##
+## Painted once into a texture and kept, because a 280 × 200 region is 56,000 tiles
+## and drawing that many rectangles every frame is a slideshow rather than a map.
+func _map_texture() -> Texture2D:
+	if _map_image != null:
+		return _map_image
+	var region: Region = _world.region()
+	var image := Image.create(region.width, region.height, false, Image.FORMAT_RGBA8)
+	for x: int in region.width:
+		for y: int in region.height:
+			image.set_pixel(x, y, _art.colour_for(region.terrain_at(Vector2i(x, y))))
+	_map_image = ImageTexture.create_from_image(image)
+	return _map_image
+
+
+func _draw_map() -> void:
+	var region: Region = _world.region()
+	var screen: Vector2 = get_viewport_rect().size
+	var scale: float = minf((screen.x - 48.0) / float(region.width),
+		(screen.y - 64.0) / float(region.height))
+	var size := Vector2(float(region.width), float(region.height)) * scale
+	var at: Vector2 = -position + (screen - size) * 0.5
+
+	draw_rect(Rect2(-position, screen), Color(0.05, 0.05, 0.07, 0.86), true)
+	draw_texture_rect(_map_texture(), Rect2(at, size), false)
+	draw_rect(Rect2(at, size), Color(0.75, 0.70, 0.55, 0.9), false, 1.0)
+
+	# The eight places, and the one you are standing in.
+	for zone: StringName in Region.ZONE_ORDER:
+		var site: Vector2i = Region.zone_sites()[zone] as Vector2i
+		var dot: Vector2 = at + Vector2(site) * scale
+		draw_circle(dot, 2.5, Color(0.96, 0.93, 0.86, 1.0))
+		Ui.write_over(self, dot + Vector2(4.0, 3.0),
+			Text.of(StringName("place.short.%s" % zone)), Ui.NOTE,
+			Color(0.96, 0.93, 0.86, 0.92))
+
+	# The fairies' clearing, which is not a zone and is where you woke up.
+	draw_circle(at + Vector2(Region.CLEARING) * scale, 2.0, Color(0.78, 0.96, 0.80, 1.0))
+
+	Ui.write_over(self, at + Vector2(0.0, -8.0), Text.of(&"map.title"), Ui.HEADING,
+		Ui.INK)
+	Ui.write_over(self, at + Vector2(0.0, -8.0), Text.of(&"map.close"), Ui.NOTE,
+		Ui.DIM, HORIZONTAL_ALIGNMENT_RIGHT, size.x)
+
+	var you: Vector2 = at + _world.player_pos * scale
+	draw_circle(you, 3.5, Color(0.15, 0.12, 0.10, 1.0))
+	draw_circle(you, 2.5, Color(1.0, 0.42, 0.28, 1.0))
+
+
 func _process(delta: float) -> void:
 	_real_seconds += delta
-	_read_input()
+	if _paused != null:
+		_read_pause()
+		# Leaving for the title frees this screen inside that call. It is out of the
+		# tree but not yet deleted, so the rest of the frame would run on a window
+		# that is no longer anybody's.
+		if not is_inside_tree():
+			return
+	else:
+		_read_input()
+		_accumulator += delta
+		while _accumulator >= _seconds_per_step:
+			_accumulator -= _seconds_per_step
+			_render_from = _world.player_pos
+			_sim.advance(1)
+			_render_to = _world.player_pos
+		_draw_hud()
+		_draw_journal()
+		_listen()
 
-	_accumulator += delta
-	while _accumulator >= _seconds_per_step:
-		_accumulator -= _seconds_per_step
-		_render_from = _world.player_pos
-		_sim.advance(1)
-		_render_to = _world.player_pos
-
-	position = (get_viewport_rect().size * 0.5 - _draw_position() * float(TILE)).round()
+	# The HUD is a CanvasLayer and therefore draws *over* everything this node draws,
+	# including the map and the pause panel. Anything that takes the whole screen
+	# takes the HUD with it.
+	_hud.visible = _paused == null and not _map_open
+	# The journal is itself inside the HUD, so only the two readouts drawn over the
+	# world step aside for it.
+	_info.visible = not _journal_open
+	_prompt.visible = not _journal_open
+	# Placed even while paused, so the first frame of a run that opens paused is not
+	# a view of the top-left corner of the map.
+	position = (get_viewport_rect().size * 0.5 - _camera_at(delta) * float(TILE)).round()
 	queue_redraw()
-	_draw_hud()
-	_draw_journal()
+
+
+# ------------------------------------------------------------------- sound ---
+
+## What the world sounds like from where the player is standing, and one noise for
+## each thing that just happened.
+##
+## Asked every frame and answered by a table: `Sound` refuses a track that is already
+## playing, so this is a lookup rather than a decision. The one thing decided here is
+## that **a theft nobody saw and a theft somebody saw are different sounds** — the
+## world tells you it noticed before the journal explains what that cost (§8's
+## immediate register).
+func _listen() -> void:
+	var region: Region = _world.region()
+	var here: Vector2i = _world.player_tile()
+	var ground: int = region.terrain_at(here)
+	Sound.play_music(Sound.track_for(region.zone_at(here), ground))
+	Sound.play_ambient(ground)
+
+	if _world.last_taken_step > _sounded_take:
+		_sounded_take = _world.last_taken_step
+		Sound.cue(&"learnt")
+	if _world.last_theft_step > _sounded_theft:
+		_sounded_theft = _world.last_theft_step
+		Sound.cue(&"took" if _world.last_theft_seen == 0 else &"seen")
+	if _world.in_dialogue() and _world.current_line != _sounded_line:
+		_sounded_line = _world.current_line
+		Sound.cue(&"spoke")
+	elif not _world.in_dialogue():
+		_sounded_line = ""
 
 
 # ------------------------------------------------------------------- input ---
+
+## **Escape, with the world stopped.** Everything else on this screen is something
+## the player does *in* the world; this is the one thing they do to the run.
+##
+## It is deliberately not a save menu. §19 settled that you save by resting at a fire,
+## and a second way to save would make the fire a formality — so this says plainly
+## that leaving costs whatever has happened since the last one.
+func _read_pause() -> void:
+	if Input.is_action_just_pressed(&"move_down") and _paused.move(1):
+		Sound.cue(&"move")
+	if Input.is_action_just_pressed(&"move_up") and _paused.move(-1):
+		Sound.cue(&"move")
+	if Input.is_action_just_pressed(&"back"):
+		Sound.cue(&"cancel")
+		_paused = null
+		return
+	if not Input.is_action_just_pressed(&"interact"):
+		return
+	Sound.cue(&"accept")
+	match _paused.chosen():
+		&"resume":
+			_paused = null
+		&"language":
+			Text.cycle()
+			_cast = Cast.shared()
+			_sim.add_store(&"cast", _cast)
+			_journal_at = -1
+			_pause_menu()
+		&"sound":
+			Sound.set_muted(not Sound.muted())
+			_pause_menu()
+		&"title":
+			chose.emit(&"title", null)
+		&"quit":
+			chose.emit(&"quit", null)
+
+
+func _pause_menu() -> void:
+	var was: StringName = _paused.chosen() if _paused != null else &""
+	_paused = Menu.new([
+		{"id": &"resume", "key": &"pause.resume"},
+		{"id": &"language", "key": &"title.language", "args": [Text.locale().to_upper()]},
+		{"id": &"sound", "key": &"title.sound",
+			"args": [Text.of(&"sound.off" if Sound.muted() else &"sound.on")]},
+		{"id": &"title", "key": &"pause.title_screen"},
+		{"id": &"quit", "key": &"pause.quit"},
+	])
+	_paused.point_at(was)
+
 
 func _read_input() -> void:
 	if _world.in_dialogue():
@@ -137,7 +329,22 @@ func _read_input() -> void:
 			_sim.submit(&"end_talk")
 		return
 
-	var dir: Vector2i = _read_direction()
+	# Escape backs out of whatever is open, one layer at a time, and stops the world
+	# when there is nothing left to close. One key that always means "out of this"
+	# beats a key per screen that the player has to remember.
+	if Input.is_action_just_pressed(&"back"):
+		if _map_open:
+			_map_open = false
+		elif _journal_open:
+			_journal_open = false
+			_draw_journal()
+		else:
+			_pause_menu()
+		return
+
+	# Left and right turn the journal's pages while it is open, so they cannot also
+	# be walking. Reading a page while walking into a bear was never a feature.
+	var dir: Vector2i = Vector2i.ZERO if _journal_open else _read_direction()
 	if dir != _held_dir:
 		_held_dir = dir
 		_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
@@ -167,6 +374,7 @@ func _read_input() -> void:
 	# cost position and nothing else.
 	if _world.deaths > _deaths_seen:
 		_deaths_seen = _world.deaths
+		Sound.cue(&"died")
 		if SaveFile.exists():
 			_reload()
 			return
@@ -182,6 +390,13 @@ func _read_input() -> void:
 
 	_find_words()
 
+	if Input.is_action_just_pressed(&"map_screen"):
+		_map_open = not _map_open
+	if _journal_open:
+		if Input.is_action_just_pressed(&"move_right"):
+			_turn_page(1)
+		if Input.is_action_just_pressed(&"move_left"):
+			_turn_page(-1)
 	if Input.is_action_just_pressed(&"journal"):
 		_journal_open = not _journal_open
 		_draw_journal()
@@ -234,7 +449,12 @@ func _read_direction() -> Vector2i:
 
 
 func _nearby_npc() -> Npc:
-	return _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH)
+	var who: Npc = _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH)
+	# Somebody who has left is not somebody to prompt about. The simulation refuses
+	# the conversation anyway; this is so the window does not offer it.
+	if who != null and OpeningRules.is_gone(who.id, _sim.facts):
+		return null
+	return who
 
 
 ## The stall within reach that still has something on it, or NOWHERE.
@@ -299,6 +519,7 @@ func _rest() -> void:
 	_sim.advance(Sim.STEPS_PER_WORLD_TICK * RecoveryRules.REST_TICKS)
 	SaveFile.write(_sim)
 	_deaths_seen = _world.deaths
+	Sound.cue(&"rested")
 
 
 ## Rebuild the run from the last rest. Every reference has to be re-taken, because
@@ -315,8 +536,14 @@ func _reload() -> void:
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
+	_mine = _sim.store(&"allegiance") as Allegiance
 	_deaths_seen = _world.deaths
 	_journal_at = -1
+	# A rebuilt run has its own step numbers, and the old marks would silence the
+	# first few things that happen in it.
+	_sounded_take = -1
+	_sounded_theft = -1
+	_sounded_line = ""
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -343,6 +570,40 @@ func _can_give_back() -> bool:
 
 # ----------------------------------------------------------------- drawing ---
 
+## How far ahead of the player the camera sits, in tiles, and how fast it catches up.
+##
+## Lookahead shows you where you are going rather than where you have been, which
+## matters on a map whose whole point is choosing a route. Kept small: more than a
+## tile or two and the player stops being the thing you are looking at.
+const CAMERA_LOOKAHEAD: float = 1.6
+## Per second, as a share of the remaining distance. Fast enough that it never feels
+## like dragging something, slow enough that changing your mind is visible.
+const CAMERA_CATCHES_UP: float = 7.0
+
+var _camera: Vector2 = Vector2.ZERO
+var _camera_placed: bool = false
+
+
+## Where the camera is, as opposed to where the player is.
+##
+## Eased toward the player plus a lead in the direction they are facing. Snapped
+## rather than eased when the player has moved further than they could have walked —
+## a death puts them back at a fire, and a camera that *travels* there sweeps the
+## whole map and tells everybody where the fairies are.
+func _camera_at(delta: float) -> Vector2:
+	var looking: Vector2 = Vector2(_world.player_dir)
+	if looking.length() > 0.01:
+		looking = looking.normalized()
+	var want: Vector2 = _draw_position() + looking * CAMERA_LOOKAHEAD
+	if not _camera_placed or _camera.distance_to(want) > TELEPORT_TILES:
+		_camera = want
+		_camera_placed = true
+		return _camera
+	# Frame-rate independent easing: the same catch-up at 30 fps and at 144.
+	_camera = _camera.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
+	return _camera
+
+
 func _draw_position() -> Vector2:
 	if _render_from.distance_to(_render_to) > TELEPORT_TILES:
 		return _render_to
@@ -355,11 +616,16 @@ func _draw() -> void:
 		return
 	var region: Region = _world.region()
 	var centre: Vector2 = _draw_position()
+	# What to draw is decided by where the **camera** is, not where the player is.
+	# The two parted company when the camera gained a lead: culling from the player
+	# leaves a strip of unpainted ground on the side you are walking toward, and the
+	# lead is exactly the size of that strip.
+	var eye: Vector2 = _camera if _camera_placed else centre
 	var half: Vector2 = get_viewport_rect().size * 0.5 / float(TILE)
-	var min_x: int = maxi(floori(centre.x - half.x) - 1, 0)
-	var max_x: int = mini(ceili(centre.x + half.x) + 1, region.width - 1)
-	var min_y: int = maxi(floori(centre.y - half.y) - 2, 0)
-	var max_y: int = mini(ceili(centre.y + half.y) + 1, region.height - 1)
+	var min_x: int = maxi(floori(eye.x - half.x) - 2, 0)
+	var max_x: int = mini(ceili(eye.x + half.x) + 2, region.width - 1)
+	var min_y: int = maxi(floori(eye.y - half.y) - 3, 0)
+	var max_y: int = mini(ceili(eye.y + half.y) + 2, region.height - 1)
 
 	# Ground first, then everything that stands on it, so a tree drawn at the top
 	# of one tile overlaps the tile behind it rather than being clipped by it.
@@ -367,8 +633,14 @@ func _draw() -> void:
 		for y: int in range(min_y, max_y + 1):
 			_draw_ground(region, x, y)
 
+	# **Canopy.** Everything growing *behind* the player is drawn now; everything in
+	# front of them waits until after they are drawn, so walking south through the
+	# Thornwood puts you under the branches rather than in front of them. The row the
+	# player is standing on is the canopy proper and is drawn faded, because a wood
+	# that swallows you is not atmospheric, it is a lost player.
+	var on_foot: Vector2i = _world.player_tile()
 	for x: int in range(min_x, max_x + 1):
-		for y: int in range(min_y, max_y + 1):
+		for y: int in range(min_y, mini(on_foot.y, max_y + 1)):
 			_draw_scatter(region, x, y)
 
 	# The Muster's tents are drawn from army strength, so a camp that has been
@@ -393,6 +665,11 @@ func _draw() -> void:
 		_draw_prop(prop, min_x, max_x, min_y, max_y)
 
 	for npc: Npc in _cast.in_zone(_world.current_zone):
+		if OpeningRules.is_gone(npc.id, _sim.facts):
+			continue
+		if npc.id == OpeningRules.FAIRY:
+			_draw_fairy(npc.centre())
+			continue
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
 
 	_draw_travellers(min_x, max_x, min_y, max_y)
@@ -407,7 +684,40 @@ func _draw() -> void:
 		# a second king half a pixel behind the first.
 
 	_draw_actor(centre, &"player", Art.column_for(_world.player_facing))
+
+	# The other half of the canopy, over the player.
+	for x: int in range(min_x, max_x + 1):
+		for y: int in range(maxi(on_foot.y, min_y), max_y + 1):
+			var over: bool = y <= on_foot.y + 1 and absi(x - on_foot.x) <= 1
+			_draw_scatter(region, x, y, Color(1.0, 1.0, 1.0, 0.55) if over else Color.WHITE)
+
+	_draw_particles(min_x, max_x, min_y, max_y)
 	_draw_witnesses()
+	if _map_open:
+		_draw_map()
+	if _paused != null:
+		_draw_paused()
+
+
+## Over the stopped world, in screen coordinates — `-position` undoes the camera, the
+## same way the map screen does.
+func _draw_paused() -> void:
+	var screen: Vector2 = get_viewport_rect().size
+	draw_rect(Rect2(-position, screen), Color(0.04, 0.04, 0.05, 0.72), true)
+	# Sized from the rows it holds rather than from a number typed once. Adding the
+	# sound row to a box measured for four put "quit the game" through the middle of
+	# the sentence explaining what quitting costs.
+	var body: float = float(_paused.rows.size()) * Menu.SPACING
+	var box := Rect2(-position + Vector2(screen.x * 0.5 - 130.0, 96.0),
+		Vector2(260.0, 78.0 + body + PAUSE_NOTE_ROOM))
+	Ui.panel(self, box)
+	Ui.write(self, box.position + Vector2(0.0, 30.0), Text.of(&"pause.heading"),
+		Ui.HEADING, Ui.GOLD, HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	_paused.draw_on(self, box.position.x + 42.0, box.position.y + 58.0)
+	draw_multiline_string(Ui.font(),
+		box.position + Vector2(16.0, box.size.y - PAUSE_NOTE_ROOM + 12.0),
+		Text.of(&"pause.note"), HORIZONTAL_ALIGNMENT_CENTER, box.size.x - 32.0,
+		Ui.NOTE, 2, Ui.DIM)
 
 
 ## How many of the Muster's tents are still up. Struck in proportion to the army
@@ -452,13 +762,61 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 	var dest := Rect2(float(x * TILE), float(y * TILE), float(TILE), float(TILE))
 	var terrain: int = region.terrain_at(Vector2i(x, y))
 
+	# **Shorelines.** Water that touches anything else is drawn as its own bank, so a
+	# coast is a coast rather than a straight line between two colours. The bank is
+	# chosen by what it is meeting: sand against a beach, grass against a field.
+	if Art.is_water(terrain):
+		var here := Vector2i(x, y)
+		var around: Array = [
+			Art.is_water(region.terrain_at(here + Vector2i(0, -1))),
+			Art.is_water(region.terrain_at(here + Vector2i(1, 0))),
+			Art.is_water(region.terrain_at(here + Vector2i(0, 1))),
+			Art.is_water(region.terrain_at(here + Vector2i(-1, 0))),
+			Art.is_water(region.terrain_at(here + Vector2i(1, -1))),
+			Art.is_water(region.terrain_at(here + Vector2i(-1, -1))),
+			Art.is_water(region.terrain_at(here + Vector2i(1, 1))),
+			Art.is_water(region.terrain_at(here + Vector2i(-1, 1))),
+		]
+		var bank: Vector2i = Art.BANK_GRASS
+		for step: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
+			if region.terrain_at(here + step) == Region.Terrain.SAND:
+				bank = Art.BANK_SAND
+		var edge: Vector2i = Art.water_edge(bank, around)
+		if edge.x >= 0:
+			draw_texture_rect_region(
+				_art.atlas(&"water"), dest, Art.tile_rect(edge.x, edge.y))
+			return
+
+	# The surface, base or detail, hashed off the position so it never shimmers.
+	# Towns are asked which town they are, so a quay is planks and a capital is paved.
+	var ground: Array = Art.ground_tile(terrain, x, y,
+		region.zone_at(Vector2i(x, y)) if terrain == Region.Terrain.TOWN
+			or terrain == Region.Terrain.CAMP else &"")
+	if not ground.is_empty():
+		var cell: Vector2i = ground[1] as Vector2i
+		draw_texture_rect_region(
+			_art.atlas(ground[0] as StringName), dest, Art.tile_rect(cell.x, cell.y))
+		return
+
 	var entry: Array = _art.terrain_tiles.get(terrain, []) as Array
 	if entry.is_empty():
-		draw_rect(dest, _terrain_colours[terrain], true)
+		draw_rect(dest, _art.colour_for(terrain), true)
 		return
 
 	var column: int = entry[1] as int
 	var row: int = entry[2] as int
+	# **No column-shift animation here, and a note about why**, because it looks like
+	# an obvious thing to add and it is wrong.
+	#
+	# `TilesetWater.png` is a sheet of **autotile blobs**, not animation frames: each
+	# patch of water is a 3×3 of interior plus shoreline, and the tile beside an
+	# interior tile is its *edge*, not its next frame. Nudging the column by one to
+	# animate it walked the whole sea onto shoreline tiles, which is why the ocean
+	# came out covered in tan blobs. Shipped for one night, found by looking at it.
+	#
+	# Water is animated properly below — by its shoreline, which `_water_frame`
+	# picks from the blob — and anything wanting a moving surface needs a sheet that
+	# actually has frames.
 	# Break up the flat fills so ground does not read as graph paper.
 	if terrain == Region.Terrain.WILD or terrain == Region.Terrain.FOREST:
 		if Art.scatter_hash(x + 7, y + 3) < 90:
@@ -470,7 +828,7 @@ func _draw_ground(region: Region, x: int, y: int) -> void:
 		_art.atlas(entry[0] as StringName), dest, Art.tile_rect(column, row))
 
 
-func _draw_scatter(region: Region, x: int, y: int) -> void:
+func _draw_scatter(region: Region, x: int, y: int, tint: Color = Color.WHITE) -> void:
 	var entry: Array = _art.scatter_at(region.terrain_at(Vector2i(x, y)), x, y)
 	if entry.is_empty():
 		return
@@ -483,7 +841,45 @@ func _draw_scatter(region: Region, x: int, y: int) -> void:
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(at.round(), Vector2(source.size)),
-		Rect2(source))
+		Rect2(source), tint)
+
+
+## Embers over the kilns, and smoke off the fires.
+##
+## Drawn rather than spawned: there is no particle node anywhere in this game, and
+## adding one would mean a scene tree the window does not otherwise need. A few dozen
+## sine waves cost nothing and stop at the edge of the screen.
+##
+## Deliberately only two places — the furnaces, because the Cinderworks running is the
+## thing the whole map is about, and the campfires, because a fire you can save at
+## should look like one from across a field.
+func _draw_particles(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
+	var now: float = _real_seconds
+	for prop: Dictionary in _world.region().props:
+		var kind: StringName = prop["kind"] as StringName
+		var embers: int = 0
+		var colour := Color.WHITE
+		if kind == &"kiln":
+			embers = 5
+			colour = Color(1.0, 0.62, 0.28, 0.75)
+		elif kind == &"campfire":
+			embers = 3
+			colour = Color(1.0, 0.74, 0.40, 0.70)
+		if embers == 0:
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		if at.x < min_x - 2 or at.x > max_x + 2 or at.y < min_y - 2 or at.y > max_y + 2:
+			continue
+		var base := Vector2(float(at.x) + 0.5, float(at.y)) * float(TILE)
+		for i: int in embers:
+			# Each ember has its own period and its own drift, so the group never
+			# pulses together — which is the thing that reads as fake.
+			var life: float = fposmod(now * (0.34 + float(i) * 0.07) + float(i) * 0.41, 1.0)
+			var rise: float = life * 22.0
+			var sway: float = sin((now + float(i) * 2.1) * 1.7) * (2.0 + life * 4.0)
+			var fade: float = colour.a * (1.0 - life) * (1.0 - life)
+			draw_circle(base + Vector2(sway, -rise), 1.0 + (1.0 - life), Color(
+				colour.r, colour.g, colour.b, fade))
 
 
 func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int) -> void:
@@ -501,10 +897,17 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 		float(at.x * TILE) + float(size.x * TILE) * 0.5 - float(source.size.x) * 0.5,
 		float((at.y + size.y) * TILE) - float(source.size.y),
 	)
+	# **Occlusion fade.** A building the player is standing behind goes part
+	# transparent, so walking behind the counting house does not mean disappearing
+	# for four seconds. Judged on the drawn rectangle rather than the footprint,
+	# because what hides the player is the part that overhangs — a tall roof covers
+	# tiles nobody is standing on.
+	var covers: bool = Rect2(dest, Vector2(source.size)).grow(-2.0).has_point(
+		_draw_position() * float(TILE))
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(dest.round(), Vector2(source.size)),
-		Rect2(source))
+		Rect2(source), Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE)
 
 
 func _draw_beast(beast: Beast) -> void:
@@ -517,6 +920,31 @@ func _draw_beast(beast: Beast) -> void:
 		Rect2(top_left.round(), Vector2(FIGURE, FIGURE)),
 		Art.tile_rect(Art.column_for(beast.facing), 0),
 	)
+
+
+## The fairy, who is **light and movement and not a body**.
+##
+## There is no fairy in the asset pack, §13 forbids mixing packs, and a twinkling
+## humanoid would undo the plain register the whole cast was rewritten for — so she
+## is drawn rather than sprited. She still has to be *visible*: something the eye can
+## find and follow, not a voice from nowhere.
+##
+## Three soft discs and a few motes that drift on their own clock. Deliberately
+## dimmer and slower than anything else on screen, because she is dying.
+func _draw_fairy(at: Vector2) -> void:
+	var centre: Vector2 = at * float(TILE)
+	var now: float = float(Time.get_ticks_msec()) * 0.001
+	# The glow: three discs, the outermost barely there. Breathing slowly.
+	var breath: float = 0.82 + 0.18 * sin(now * 1.1)
+	for ring: int in 3:
+		var radius: float = (14.0 - float(ring) * 4.0) * breath
+		var alpha: float = 0.07 + float(ring) * 0.09
+		draw_circle(centre, radius, Color(0.78, 0.94, 0.80, alpha))
+	# And the motes, on their own periods so the pattern never repeats cleanly.
+	for mote: int in 5:
+		var phase: float = now * (0.5 + float(mote) * 0.13) + float(mote) * 1.7
+		var sway: Vector2 = Vector2(cos(phase) * 9.0, sin(phase * 0.7) * 6.0 - 3.0)
+		draw_circle(centre + sway, 1.2, Color(0.90, 1.0, 0.88, 0.55))
 
 
 func _draw_actor(at: Vector2, role: StringName, column: int) -> void:
@@ -794,67 +1222,215 @@ func _draw_journal() -> void:
 	if _journal_at == _sim.events.size():
 		return
 	_journal_at = _sim.events.size()
-	var rows: Array[Dictionary] = Journal.entries(_sim.events)
-	var lines: Array[String] = []
-	var from: int = maxi(rows.size() - JOURNAL_ROWS, 0)
-	for i: int in range(from, rows.size()):
-		var row: Dictionary = rows[i]
-		lines.append("%s   %s" % [_clock(int(row["tick"])), _journal_line(row)])
+	var pages: Array[Dictionary] = _journal_pages()
+	_journal_page = posmod(_journal_page, pages.size())
+	var page: Dictionary = pages[_journal_page]
+	_journal_title.text = "%s      %s" % [
+		Text.of(&"journal.title", [_clock(_sim.tick)]),
+		Text.of(&"journal.paging", [Text.of(page["name"] as StringName),
+			_journal_page + 1, pages.size()]),
+	]
+	_journal_body.text = "\n".join(page["lines"] as Array[String])
+
+
+## Turn to the next page, and make the next frame rebuild it.
+func _turn_page(by: int) -> void:
+	_journal_page += by
+	_journal_at = -1
+
+
+## §8's NARRATED register, **as pages rather than as one scroll**.
+##
+## It was one list and it had outgrown the box long before anybody noticed: the
+## quests, the two factions and the debug roll of everybody's position ran off the
+## bottom, where a Label draws the lines that fit and says nothing about the rest.
+## Widening the font made it visible, which is the only reason it was found.
+##
+## Two things come out of that. A page per question the player might be asking, so a
+## new section is a row here rather than a squeeze. And **every page is cut to the box
+## rather than trusted to fit** — silently losing the end of a page is the bug; losing
+## the oldest blocks and saying how many is a page.
+func _journal_pages() -> Array[Dictionary]:
+	var pages: Array[Dictionary] = [
+		{"name": &"journal.doings", "blocks": _page_doings()},
+		{"name": &"journal.holds", "blocks": _page_the_king()},
+		{"name": &"journal.quests", "blocks": _page_quests()},
+		{"name": &"journal.side", "blocks": _page_you()},
+	]
+	var known: Array[Array] = _page_known()
+	if not known.is_empty():
+		pages.append({"name": &"journal.known", "blocks": known})
+	# Everybody with a name, where they stand, and how far off, nearest first. A
+	# playtest tool: eighteen more people arrive over Phase 6 and "walk about until
+	# you find him" is not a way to review a character. Gated on a debug build and
+	# written down in CLAUDE.md, like the day-skip — a debug tool nobody recorded is
+	# one that ships.
+	if _debug_available:
+		pages.append({"name": &"journal.who", "blocks": _page_who()})
+	for page: Dictionary in pages:
+		page["lines"] = _last_that_fit(page["blocks"] as Array[Array])
+	return pages
+
+
+## How many lines of the box a string takes once it has wrapped.
+func _rows_for(line: String, width: float, size: int) -> int:
+	return maxi(1, ceili(Ui.width_of(line, size) / width))
+
+
+## As much of the end of a page as the box will hold, and a line saying what was left
+## out. Blocks rather than lines, because an entry and the reason underneath it are
+## one thing and half of one is worse than neither.
+##
+## The end rather than the start: on every page here the last block is the one being
+## looked for — the newest deed, the nearest person, the most recent thing learnt.
+func _last_that_fit(blocks: Array[Array]) -> Array[String]:
+	var size: int = _journal_body.get_theme_font_size(&"font_size")
+	var width: float = _journal_body.size.x
+	# One line held back for the count, so saying "and 4 more" cannot itself overflow.
+	var room: int = floori(_journal_body.size.y / Ui.font().get_height(size)) - 1
+	var kept: Array[Array] = []
+	var used: int = 0
+	for at: int in range(blocks.size() - 1, -1, -1):
+		var cost: int = 0
+		for line: String in blocks[at]:
+			cost += _rows_for(line, width, size)
+		if used + cost > room:
+			break
+		used += cost
+		kept.push_front(blocks[at])
+	var out: Array[String] = []
+	if kept.size() < blocks.size():
+		out.append(Text.of(&"journal.more", [blocks.size() - kept.size()]))
+	for block: Array in kept:
+		out.append_array(block)
+	return out
+
+
+## What you did, oldest first, with why it mattered under each line.
+func _page_doings() -> Array[Array]:
+	var blocks: Array[Array] = []
+	for row: Dictionary in Journal.entries(_sim.events):
+		var block: Array[String] = [
+			"%s   %s" % [_clock(int(row["tick"])), _journal_line(row)]]
 		var because: String = _journal_because(row)
 		if because != "":
-			lines.append("                  %s" % because)
-	if lines.is_empty():
-		lines.append(Text.of(&"journal.empty"))
+			block.append("                  %s" % because)
+		blocks.append(block)
+	if blocks.is_empty():
+		blocks.append([Text.of(&"journal.empty")] as Array[String])
+	return blocks
 
-	# §15's second page. A predicate over ten numbers is invisible, and without this
-	# "push the world until he cannot hold it" is guesswork. State and attribution
-	# only: it says the treasury is empty and that you emptied it, and never that
-	# you should rob the bank next.
-	lines.append("")
-	lines.append(Text.of(&"journal.holds"))
+
+## §15's second page. A predicate over ten numbers is invisible, and without this
+## "push the world until he cannot hold it" is guesswork. State and attribution only:
+## it says the treasury is empty and that you emptied it, and never that you should
+## rob the bank next.
+func _page_the_king() -> Array[Array]:
+	var blocks: Array[Array] = []
 	for row: Dictionary in EndRules.what_holds_him_up(_ticked, _world, _sim.facts):
-		lines.append("· %-30s %5d%s" % [
+		blocks.append(["- %-30s %5d%s" % [
 			Text.of(row["name_key"] as StringName), int(round(float(row["value"]))),
 			Text.of(&"journal.yours") if float(row["yours"]) > 0.0 else "",
-		])
+		]] as Array[String])
+	# What became of the wood, once she has told the player it is happening. Her last
+	# word is "if you can, save us", and without this that is a request the player can
+	# satisfy and never find out about.
+	if OpeningRules.knows_about_the_wood(_sim.facts):
+		var wood: Dictionary = OpeningRules.wood_row(_ticked)
+		var said: StringName = &"journal.wood.holding"
+		if bool(wood.get("gone", false)):
+			said = &"journal.wood.gone"
+		elif bool(wood.get("falling", false)):
+			said = &"journal.wood.falling"
+		blocks.append(["", Text.of(&"journal.wood"),
+			Text.of(said, [int(wood.get("paces", 0))])] as Array[String])
 	if _world.reign_ended != &"":
-		lines.append("")
-		lines.append(Text.of(&"journal.deposed",
-			[Text.of(StringName("end.%s" % _world.reign_ended))]))
+		var block: Array[String] = ["", Text.of(&"journal.deposed",
+			[Text.of(StringName("end.%s" % _world.reign_ended))])]
+		# And whether the thing she asked for happened. This is the one place the five
+		# endings stop being five ways to win: a reign ended while the wood was still
+		# being cleared reads differently from one ended after it stopped.
+		if OpeningRules.knows_about_the_wood(_sim.facts):
+			block.append(Text.of(&"journal.wood.gone" if _ticked.held_ground <= 0.0
+				else (&"journal.wood.lost" if _ticked.steel_output > 0.0
+					else &"journal.wood.saved")))
+		blocks.append(block)
+	return blocks
 
-	# Everybody with a name, where they stand, and how far off. A playtest tool:
-	# eighteen more people arrive over Phase 6 and "walk about until you find him"
-	# is not a way to review a character. Gated on a debug build and written down in
-	# CLAUDE.md, like the day-skip — a debug tool nobody recorded is one that ships.
-	if _debug_available:
-		lines.append("")
-		lines.append(Text.of(&"journal.who"))
-		for npc: Npc in _cast.named():
-			var delta: Vector2 = npc.centre() - _world.player_pos
-			var compass: String = ("%s%s" % [
-				"N" if delta.y < -1.0 else ("S" if delta.y > 1.0 else ""),
-				"W" if delta.x < -1.0 else ("E" if delta.x > 1.0 else "")])
-			lines.append("· " + Text.of(&"journal.who.row", [
-				npc.display_name,
-				Text.of(StringName("place.short.%s" % _world.region().zone_at(npc.tile))),
-				int(delta.length()), compass]))
 
-	var known: Array[Dictionary] = Journal.knowledge(_sim.facts, _cast)
-	if not known.is_empty():
-		lines.append("")
-		lines.append(Text.of(&"journal.known"))
-		for row: Dictionary in known:
-			var held: String = Text.of(&"journal.holding") \
-				if _world.holds(StringName(row["fact"])) else ""
-			lines.append("· %s%s" % [row["line"], held])
-			# Whether a fact would survive the death of the person who gave it to
-			# you. Invariant 6 made visible, because it is the player's problem as
-			# much as the designer's.
-			lines.append("      %s%s" % [
+## What you are looking for. A pure view over the fact base — nothing is stored, so
+## there is nothing that can disagree with what you actually know. Answered questions
+## first, so that a page too full to hold them all keeps the open ones.
+func _page_quests() -> Array[Array]:
+	var blocks: Array[Array] = []
+	for quest: Dictionary in QuestRules.done_ones(_sim.facts):
+		blocks.append([Text.of(&"journal.quests.done",
+			[Text.of(QuestRules.name_key(quest))])] as Array[String])
+	for quest: Dictionary in QuestRules.open_ones(_sim.facts):
+		var step: Array = QuestRules.progress(quest, _sim.facts)
+		blocks.append([
+			Text.of(&"journal.quests.row",
+				[Text.of(QuestRules.name_key(quest)), int(step[0]), int(step[1])]),
+			"     %s" % Text.of(QuestRules.note_key(quest)),
+		] as Array[String])
+	if blocks.is_empty():
+		blocks.append([Text.of(&"journal.quests.none")] as Array[String])
+	return blocks
+
+
+## What you are, and what it has bought. Joining is worn (§8's appearance register),
+## so the one screen that joins acts to consequences should say it — and under that,
+## who holds what, which is the map answering back. Only the two borders can move, so
+## only the two borders are worth a line.
+func _page_you() -> Array[Array]:
+	var first: Array[String] = [Text.of(&"journal.side.none")]
+	if _mine.side != FactionRules.NEUTRAL:
+		first = [Text.of(&"journal.side.row",
+			[Text.of(_mine.rank_key()), int(round(_mine.served))])]
+	var ground: Array[String] = ["", Text.of(&"journal.ground")]
+	for zone: StringName in FactionRules.CONTESTED:
+		var held: StringName = _mine.holder(zone)
+		ground.append(Text.of(&"journal.ground.row", [
+			Text.of(StringName("place.short.%s" % zone)),
+			Text.of(StringName("ground.%s" % (held if held != FactionRules.NEUTRAL else &"none"))),
+		]))
+	return [first, ground] as Array[Array]
+
+
+## What you know, and — invariant 6 made visible — whether it would survive the death
+## of the person who told you. That is the player's problem as much as the designer's.
+func _page_known() -> Array[Array]:
+	var blocks: Array[Array] = []
+	for row: Dictionary in Journal.knowledge(_sim.facts, _cast):
+		var held: String = Text.of(&"journal.holding") \
+			if _world.holds(StringName(row["fact"])) else ""
+		blocks.append([
+			"- %s%s" % [row["line"], held],
+			"      %s%s" % [
 				Text.of(&"journal.told_by", [", ".join(row["from"] as PackedStringArray)]),
-				"" if bool(row["safe"]) else Text.of(&"journal.only_source")])
-	_journal_title.text = Text.of(&"journal.title", [_clock(_sim.tick)])
-	_journal_body.text = "\n".join(lines)
+				"" if bool(row["safe"]) else Text.of(&"journal.only_source")],
+		] as Array[String])
+	return blocks
+
+
+func _page_who() -> Array[Array]:
+	var people: Array[Npc] = _cast.named().duplicate()
+	# Farthest first, so the cut takes the far end and leaves the people you could
+	# actually walk to.
+	people.sort_custom(func(a: Npc, b: Npc) -> bool:
+		return a.centre().distance_to(_world.player_pos) \
+			> b.centre().distance_to(_world.player_pos))
+	var blocks: Array[Array] = []
+	for npc: Npc in people:
+		var delta: Vector2 = npc.centre() - _world.player_pos
+		var compass: String = ("%s%s" % [
+			"N" if delta.y < -1.0 else ("S" if delta.y > 1.0 else ""),
+			"W" if delta.x < -1.0 else ("E" if delta.x > 1.0 else "")])
+		blocks.append(["- " + Text.of(&"journal.who.row", [
+			npc.display_name,
+			Text.of(StringName("place.short.%s" % _world.region().zone_at(npc.tile))),
+			int(delta.length()), compass])] as Array[String])
+	return blocks
 
 
 ## The journal's rows arrive as facts — a kind, a town, a count — and become a

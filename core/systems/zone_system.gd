@@ -28,5 +28,10 @@ func on_step(sim: Sim, _step: int) -> void:
 	sim.facts.add_source(StringName("zone:%s:entered" % zone), &"witnessed")
 
 
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"zone"

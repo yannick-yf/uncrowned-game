@@ -40,6 +40,15 @@ const DEED_RECRUIT: StringName = &"i_recruited_deserters"
 const DEED_CONVOY: StringName = &"i_redirected_a_convoy"
 const DEED_TURN_LORD: StringName = &"i_turned_the_lord"
 
+## Telling the crown something you know.
+##
+## **The mirror of making a thing public**, and the only act in the game that helps
+## him. Everything else in this table costs him something, which was fine while the
+## player could only be against him — and stopped being fine the moment they could
+## join. The same fact, spent the other way: it buys you standing with the crown and
+## it is gone, exactly as telling a town is (§8's one-shot rule).
+const DEED_INFORM: StringName = &"i_informed_the_crown"
+
 const FACTION_TOWNS: StringName = &"towns"
 const FACTION_UNDERWORLD: StringName = &"the unlawful"
 const FACTION_CROWN: StringName = &"the crown"
@@ -59,6 +68,12 @@ static func town_effect(deed: StringName) -> float:
 		return -22.0
 	if deed == DEED_RESTITUTION:
 		return 14.0
+	# Nobody likes an informer, including the people the crown is protecting. This
+	# is what stops the crown route being free: every step up costs you the ground
+	# you are standing on, and a crown officer can be despised in every town he has
+	# jurisdiction over.
+	if deed == DeedRules.DEED_INFORM:
+		return -20.0
 	if deed == DEED_WARNING:
 		return 30.0
 	# Acts against the power bases cost you with the place they happen in. The
@@ -119,6 +134,10 @@ static func faction_effects(deed: StringName) -> Dictionary:
 		return {FACTION_CROWN: -22.0, FACTION_UNDERWORLD: 20.0, FACTION_TOWNS: -6.0}
 	if deed == DEED_TURN_LORD:
 		return {FACTION_CROWN: -32.0, FACTION_DISPOSSESSED: 26.0, FACTION_TOWNS: 12.0}
+	if deed == DEED_INFORM:
+		# The only row that moves the crown *up*. It costs you with the people it is
+		# about, which is the price of it being worth anything.
+		return {FACTION_CROWN: 28.0, FACTION_DISPOSSESSED: -30.0, FACTION_TOWNS: -12.0}
 	return {}
 
 
@@ -239,5 +258,5 @@ static func all_deeds() -> Array[StringName]:
 		DEED_THEFT, DEED_RESTITUTION, DEED_WARNING,
 		DEED_SABOTAGE, DEED_BURN_STORES, DEED_ROB_BANK, DEED_WRECK_ROLLS,
 		DEED_MAKE_PUBLIC, DEED_TURN_WORKERS, DEED_WITHHOLDING, DEED_RECRUIT,
-		DEED_CONVOY, DEED_TURN_LORD,
+		DEED_CONVOY, DEED_TURN_LORD, DEED_INFORM,
 	]

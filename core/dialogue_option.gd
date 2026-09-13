@@ -41,6 +41,11 @@ var repeatable: bool = false
 ## risked being lore. The rules layer still decides whether the line is offered;
 ## this only names what saying it does.
 var causes: StringName = &""
+## A side this line joins you to. Separate from `causes`, which names a deed: joining
+## is not an act against the world, it is a declaration about yourself, and the two
+## want different machinery. Content names the side; `FactionRules` decides whether
+## it is one.
+var joins: StringName = &""
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible
@@ -59,5 +64,12 @@ func asks_for_goodwill() -> bool:
 ## Which trait this line visibly leans on, lowercased for lookup. The bracket and
 ## the word belong to the window: `[Wits]` was still English in a French game
 ## because core was building the string, which is the layering leak the journal had.
+## The trait this line leans on, or nothing. §11 always meant `tag` to be the
+## visibly trait-gated marker Fallout uses — it was display-only because traits did
+## not exist. They exist now, so it gates.
+func needs_trait() -> StringName:
+	return StringName(String(tag).to_lower()) if tag != &"" else &""
+
+
 func tag_key() -> StringName:
 	return StringName("trait.%s" % String(tag).to_lower()) if tag != &"" else &""

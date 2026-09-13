@@ -32,6 +32,20 @@ const HOME_RANGE: float = 9.0
 const FACT_WILD_IS_DANGEROUS: StringName = &"the_wild_bites"
 
 
+## Ground the fairies still hold, which nothing with teeth will walk onto.
+##
+## **Not a starting-area exemption.** It is a fact about the world: the ground they
+## still hold is the ground still protected, and it is shrinking. So the player's
+## first walk out of the trees is also their first step out of the last protected
+## place in the region — and coming back later to find the edge closer in is how the
+## shrinking gets *seen* rather than asserted (§8: a change nobody can perceive is
+## identical to no change).
+static func is_protected(tile: Vector2i, held: float) -> bool:
+	if held <= 0.0:
+		return false
+	return Vector2(tile).distance_to(Vector2(Region.CLEARING)) <= held
+
+
 static func speed_for(kind: StringName) -> float:
 	return float(SPEEDS.get(kind, 4.0))
 
@@ -51,14 +65,55 @@ static func sight_for(kind: StringName) -> float:
 ## the road *safe* rather than merely long, which is the whole of the choice now
 ## that the ground no longer slows anyone down.
 static func is_wild_ground(terrain: Region.Terrain) -> bool:
-	match terrain:
-		Region.Terrain.WILD, Region.Terrain.FOREST, Region.Terrain.MARSH:
-			return true
-	return false
+	return density_for(terrain) > 0.0
 
 
-## Thicker cover, more of them: the Thornwood is where the danger lives.
+## What lives where, and why.
+##
+## It used to be "forest gets all three, everywhere else gets two", which is not a
+## reason, it is a shrug. Each of these is an animal in the place that animal would be:
+##
+## - **Bears** want deep cover and are the slowest and hardest thing out there, so
+##   they belong to the Thornwood and nowhere else. Meeting one is how the wood tells
+##   you it is not the road.
+## - **Spiders** want undergrowth: the open wild, the wood's edges, the marsh.
+## - **Bats** want somewhere to hang, which is the wood, and somewhere to hunt over,
+##   which is the marsh at dusk. They are the only thing faster than a walk.
+##
+## And **nothing lives on cleared ground**. The works took the wood and everything in
+## it went with it — which is the thesis stated by absence, and the quietest way the
+## map says what the Cinderworks is.
 static func kind_for(terrain: Region.Terrain, roll: int) -> StringName:
-	if terrain == Region.Terrain.FOREST:
-		return KINDS[roll % KINDS.size()]
-	return KINDS[1 + roll % 2]
+	match terrain:
+		Region.Terrain.FOREST, Region.Terrain.THICKET:
+			return KINDS[roll % KINDS.size()]
+		Region.Terrain.MARSH:
+			return &"bat" if roll % 3 == 0 else &"spider"
+	return &"spider"
+
+
+## How likely anything is to be here at all, against the ordinary chance.
+##
+## Deep wood is thick with them, the wood's edge less so, and the ground the works has
+## taken is empty. Returns 0 for somewhere nothing lives.
+static func density_for(terrain: Region.Terrain) -> float:
+	match terrain:
+		# Nothing stands in a thicket, because nothing can: it is impassable, and a
+		# bear spawned inside one is a bear that cannot move. Before this, closing
+		# the wood turned every tile of it into somewhere a beast could appear and
+		# the crossing became unsurvivable — the wild test stopped being able to
+		# finish at all.
+		#
+		# So the wood is dangerous **on its paths**, which is better anyway: you meet
+		# things where you are, not where you cannot go.
+		Region.Terrain.THICKET:
+			return 0.0
+		Region.Terrain.FOREST:
+			return 1.0
+		Region.Terrain.MARSH:
+			return 0.6
+		Region.Terrain.WILD:
+			return 0.45
+		Region.Terrain.CLEARED:
+			return 0.0
+	return 0.0

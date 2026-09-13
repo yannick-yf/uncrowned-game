@@ -14,7 +14,8 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	if world == null or cast == null:
 		return
 	var standing := sim.store(&"standing") as Standing
-	var conditions: Dictionary = DialogueRules.conditions(world, ticked, standing)
+	var conditions: Dictionary = DialogueRules.conditions(
+		world, ticked, standing, sim.store(&"allegiance") as Allegiance)
 	# Whose opinion is being asked is a property of the conversation, not of the
 	# world, so it is added per conversation rather than computed in the rules
 	# layer — which has no way of knowing who you walked up to.
@@ -40,6 +41,10 @@ func _open(
 	conditions: Dictionary,
 	regard: float,
 ) -> void:
+	# She leaves when she has finished (§4's opening). The authoritative gate, so a
+	# stale prompt or a replayed event cannot reopen a conversation that is over.
+	if OpeningRules.is_gone(id, sim.facts):
+		return
 	var npc: Npc = cast.get_npc(id)
 	if npc == null or npc.zone != world.current_zone:
 		return
@@ -47,7 +52,8 @@ func _open(
 	world.speaker_name = npc.display_name
 	world.last_intent = &""
 	world.current_line = _opening(cast, npc, conditions, regard)
-	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
+	world.options = DialogueRules.available(npc, sim.facts, conditions, regard,
+		sim.store(&"traits") as Traits)
 	world.player_dir = Vector2i.ZERO
 	sim.facts.add_source(StringName("met:%s" % npc.id), &"witnessed")
 
@@ -92,10 +98,13 @@ func _choose(
 	# spoken regardless — so an unoffered line was read aloud and taught nothing,
 	# which looks exactly like a fact that failed to register. The keyboard cannot
 	# reach one; a tool or a test can, and did.
-	if not DialogueRules.available(npc, sim.facts, conditions, regard).has(option):
+	var offered: Array[DialogueOption] = DialogueRules.available(
+		npc, sim.facts, conditions, regard, sim.store(&"traits") as Traits)
+	if not offered.has(option):
 		return
-	# The verdict is the rules layer's, and it is issued before the line is read.
-	var learned: StringName = DialogueRules.verdict(npc, intent, sim.facts, conditions, regard)
+	# The verdict is the rules layer's, and it is issued before the line is read —
+	# against the same list that just approved it, not a second one computed here.
+	var learned: StringName = DialogueRules.verdict(option, offered)
 	if learned != &"":
 		sim.facts.add_source(learned, npc.id)
 	# And he has now answered it. Recorded as a fact like everything else, so it
@@ -105,6 +114,12 @@ func _choose(
 	# And what saying it does, if it does anything. Raised rather than applied here:
 	# the dialogue system runs conversations and has no business knowing what a
 	# furnace is.
+	# Taking a side is something you say. It goes through a conversation like
+	# everything else rather than through a menu, so it is in the log and replays.
+	if option.joins != &"":
+		var mine := sim.store(&"allegiance") as Allegiance
+		if mine != null and mine.join(option.joins):
+			sim.derive(&"joined", {"side": String(option.joins), "turned": mine.turned})
 	if option.causes != &"":
 		Deeds.perform(sim, option.causes, world.region().zone_at(world.player_tile()),
 			world.player_pos)
@@ -120,7 +135,8 @@ func _choose(
 	world.said_before.append("%s -> %s" % [option.text, spoken])
 	world.current_line = spoken
 	world.last_intent = intent
-	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
+	world.options = DialogueRules.available(npc, sim.facts, conditions, regard,
+		sim.store(&"traits") as Traits)
 
 
 func _close(world: WorldState) -> void:
@@ -130,6 +146,16 @@ func _close(world: WorldState) -> void:
 	world.current_line = ""
 	world.said_before = []
 	world.options = []
+
+
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
 
 
 func system_name() -> StringName:

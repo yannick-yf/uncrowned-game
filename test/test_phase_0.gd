@@ -33,9 +33,15 @@ func test_the_region_is_bounded_on_all_four_sides() -> void:
 	assert_false(region.is_passable(Vector2i(-1, -1)), "and outside is not walkable")
 
 
-func test_the_player_wakes_in_brindle_at_full_health() -> void:
-	assert_eq(_world.player_tile(), Region.BRINDLE, "in the ruins of their village")
-	assert_eq(_world.region().zone_at(_world.player_tile()), &"brindle")
+func test_the_player_wakes_in_the_fairies_clearing_at_full_health() -> void:
+	# **Changed 2026-09-12.** Phase 0 woke the player in Brindle. The opening now
+	# wakes them in the fairies' clearing inside the Thornwood, and the walk out of
+	# the trees into the ruins — with the furnaces in the same frame — is the
+	# opening. The clearing is deliberately not a zone: it is a place in the wood,
+	# not a settlement, so `zone_at` is empty and that is correct.
+	assert_eq(_world.player_tile(), Region.CLEARING, "on open ground in the wood")
+	assert_eq(_world.region().zone_at(_world.player_tile()), &"",
+		"which belongs to no settlement")
 	assert_eq(_world.player_hp, WorldState.MAX_HP)
 	assert_eq(_world.player_hp, 10, "SPECS §3: ten hit points")
 	assert_eq(_world.deaths, 0)
@@ -146,7 +152,7 @@ func test_death_respawns_in_brindle_and_keeps_everything() -> void:
 	_world.player_pos = _world.king_pos
 	_sim.advance(ContactRules.invulnerable_steps() * 3)
 	assert_eq(_world.deaths, 1)
-	assert_eq(_world.player_tile(), Region.BRINDLE, "back where they woke up")
+	assert_eq(_world.player_tile(), Region.CLEARING, "back where they woke up")
 	assert_eq(_world.player_hp, WorldState.MAX_HP, "at full health")
 	assert_eq(_world.player_dir, Vector2i.ZERO, "and standing still")
 	assert_true(_world.reached_blackcairn, "having kept what they learned")

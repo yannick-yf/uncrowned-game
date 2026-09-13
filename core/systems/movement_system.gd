@@ -30,5 +30,10 @@ func on_step(sim: Sim, _step: int) -> void:
 	world.player_pos = MovementRules.step(world.player_pos, world.player_dir, world.region())
 
 
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"movement"

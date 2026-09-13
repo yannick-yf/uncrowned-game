@@ -110,15 +110,26 @@ func test_the_road_costs_distance_and_the_wild_will_cost_something_else() -> voi
 
 
 func test_the_thornwood_lies_east_of_the_river_where_spec_4_puts_it() -> void:
+	# **Counts wood, not only open wood** (2026-09-13). The deep Thornwood is mostly
+	# `THICKET` now — closed wood with ways carved through it — and `FOREST` is what
+	# is left open. Asking only about `FOREST` said the wood had almost gone, when
+	# what had happened is that it had finally become a wood.
 	var east: int = 0
 	var west: int = 0
+	var open_east: int = 0
 	for y: int in range(20, 170):
-		if _region.terrain_at(Vector2i(250, y)) == Region.Terrain.FOREST:
+		var here: Region.Terrain = _region.terrain_at(Vector2i(250, y))
+		if here == Region.Terrain.FOREST or here == Region.Terrain.THICKET:
 			east += 1
-		if _region.terrain_at(Vector2i(40, y)) == Region.Terrain.FOREST:
+		if here == Region.Terrain.FOREST:
+			open_east += 1
+		var there: Region.Terrain = _region.terrain_at(Vector2i(40, y))
+		if there == Region.Terrain.FOREST or there == Region.Terrain.THICKET:
 			west += 1
-	assert_true(east > 100, "the Thornwood covers the eastern strip")
+	assert_true(east > 100, "the Thornwood covers the eastern strip: %d tiles" % east)
 	assert_eq(west, 0, "and does not reach the western coast")
+	assert_true(open_east > 0,
+		"and there is a way through it rather than a wall: %d open tiles" % open_east)
 
 
 # ------------------------------------------------------- stage 2: identity ---
@@ -143,13 +154,20 @@ func test_every_landmark_kind_has_art() -> void:
 
 
 func test_every_walkable_terrain_has_a_tile_or_a_deliberate_colour() -> void:
+	# **Updated 2026-09-13.** There are three ways a surface can be drawn now, in
+	# the order the window tries them: `Art.GROUND`, which gives a terrain a base and
+	# its detail tiles; `terrain_tiles`, the single-tile table it grew out of; and the
+	# flat colour, which is the thing this test exists to keep anything from falling
+	# back to. Asking only about the middle one failed the moment sand moved up to
+	# the first.
 	var art := Art.new()
 	for terrain: int in [Region.Terrain.WILD, Region.Terrain.ROAD, Region.Terrain.FOREST,
 			Region.Terrain.WATER, Region.Terrain.FORD, Region.Terrain.SAND,
 			Region.Terrain.MARSH, Region.Terrain.FARMLAND, Region.Terrain.SEA,
 			Region.Terrain.RUINS, Region.Terrain.TOWN, Region.Terrain.CAMP,
-			Region.Terrain.CASTLE]:
-		assert_true(art.terrain_tiles.has(terrain),
+			Region.Terrain.CASTLE, Region.Terrain.CLEARED, Region.Terrain.CLEARING,
+			Region.Terrain.THICKET]:
+		assert_true(Art.GROUND.has(terrain) or art.terrain_tiles.has(terrain),
 			"terrain %d would be drawn as a flat rectangle" % terrain)
 
 

@@ -32,6 +32,8 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"rumours", Rumours.new())
 	sim.add_store(&"travellers", Travellers.new())
 	sim.add_store(&"phrasebook", Phrasebook.new())
+	sim.add_store(&"allegiance", Allegiance.new())
+	sim.add_store(&"traits", Traits.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -42,7 +44,10 @@ static func build_world() -> WorldState:
 	var world := WorldState.new()
 	world.zones[WorldState.OVERWORLD] = overworld
 	world.current_zone = WorldState.OVERWORLD
-	world.player_pos = overworld.brindle_centre()
+	# The player wakes in the fairies' clearing, not in Brindle (§4's opening).
+	# One corridor leads south out of it; walking out of the trees into the ruins,
+	# with the furnaces in the same frame, is the opening and needs no exposition.
+	world.player_pos = overworld.clearing_centre()
 	world.player_tile_last = world.player_tile()
 	world.king_pos = overworld.blackcairn_centre()
 	return world
@@ -64,6 +69,8 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(UnrestSystem.new())
 	systems.append(TellingSystem.new())
 	systems.append(TravellerSystem.new())
+	systems.append(CreationSystem.new())
+	systems.append(AllegianceSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
@@ -89,6 +96,7 @@ static func fresh_stores() -> Dictionary:
 		&"wildlife": Wildlife.new(), &"worldtick": WorldTick.new(),
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
+		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
 	}
 
 

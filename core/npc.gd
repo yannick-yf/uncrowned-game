@@ -11,15 +11,13 @@ var display_name: String = ""
 var role: String = ""
 var zone: StringName = &""
 var tile: Vector2i = Vector2i.ZERO
-var sprite: String = ""
-## Strangers. A generic is one of a trade rather than one of the twenty-five: it
-## shares its lines with everyone else of that trade and has no name (§6). Marked
-## so nothing counts it against the roster, and so a test can tell them apart.
 ## What this person says in front of an answer at a given standing, when the band's
 ## shared line is not right for them. Wren prices everything and Til says as little
 ## as possible, and neither sounds like the other saying "I will answer you".
 var reactions: Dictionary = {}
-
+## Strangers. A generic is one of a trade rather than one of the twenty-five: it
+## shares its lines with everyone else of that trade and has no name (§6). Marked
+## so nothing counts it against the roster, and so a test can tell them apart.
 var generic: bool = false
 var kind: StringName = &""
 var greeting: String = ""

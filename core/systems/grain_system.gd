@@ -39,5 +39,10 @@ func on_tick(sim: Sim, _tick: int) -> void:
 			sim.derive(&"grain_moved", {"town": String(town), "to": now})
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"grain"

@@ -27,5 +27,10 @@ func on_step(sim: Sim, step: int) -> void:
 		sim.facts.add_source(&"the_king_killed_me", &"witnessed")
 
 
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"contact"

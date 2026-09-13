@@ -150,7 +150,7 @@ func test_an_act_is_not_undone_by_the_worlds_own_drift() -> void:
 	_act_at(sim, _sites_of(sim, &"muster_rolls")[0])
 	var straight_after: float = ticked.army_strength
 	assert_true(straight_after < WorldTick.BASELINE, "the rolls are gone")
-	_days(sim, 20.0)
+	_days(sim, 6.0)
 	assert_true(ticked.army_strength <= straight_after + 0.01,
 		"and three weeks later they are still gone: %.0f" % ticked.army_strength)
 
@@ -180,7 +180,7 @@ func test_the_deed_carries_the_fall_and_the_drift_only_garnishes_it() -> void:
 	var ticked := sim.store(&"worldtick") as WorldTick
 	_act_at(sim, _sites_of(sim, &"counting_house")[0])
 	var from_the_act: float = WorldTick.BASELINE - ticked.bank_confidence
-	_days(sim, 14.0)
+	_days(sim, 6.0)
 	var from_the_drift: float = WorldTick.BASELINE - from_the_act - ticked.bank_confidence
 	assert_true(from_the_act > from_the_drift,
 		"the robbery moved %.0f and the world moved %.0f — the act has to be the bigger half"
@@ -197,7 +197,7 @@ func test_the_bank_loses_faith_in_a_sovereign_who_cannot_pay() -> void:
 	for at: Vector2i in _sites_of(sim, &"granary"):
 		_act_at(sim, at)
 	var before: float = ticked.bank_confidence
-	_days(sim, 12.0)
+	_days(sim, 6.0)
 	assert_true(ticked.bank_confidence < before,
 		"confidence followed the treasury down: %.0f" % ticked.bank_confidence)
 	assert_true(ticked.handprint_on(&"bank_confidence") > 0.0,

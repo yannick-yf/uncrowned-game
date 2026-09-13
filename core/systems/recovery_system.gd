@@ -19,5 +19,10 @@ func on_step(sim: Sim, step: int) -> void:
 	world.player_hp = mini(world.player_hp + 1, WorldState.MAX_HP)
 
 
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"recovery"

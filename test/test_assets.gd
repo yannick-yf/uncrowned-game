@@ -98,3 +98,147 @@ func test_the_casting_table_uses_nothing_forbidden() -> void:
 		assert_false(AssetValidator.FORBIDDEN_SPRITES.has(String(Art.CASTING[role])),
 			"%s is cast as a forbidden sprite" % role)
 	assert_true(art.sheet_for(&"player") != null, "and the casting still resolves")
+
+
+# -------------------------------------------------------------- the casting ---
+
+## One face each.
+##
+## Twenty-nine roles shared eighteen sheets, so Bell, Sena and Mira were the same
+## woman standing in three towns and the bank and the estate were run by the same man
+## in a hat. Nothing failed: a sheet that is drawn twice is drawn correctly twice.
+## This is the check that was missing, and the spare faces are the margin — when it
+## fails, somebody has joined the cast and the pack has run out of people.
+
+func _sheet_path(folder: String) -> String:
+	return "%s/Actor/Character/%s/SpriteSheet.png" % [Art.PACK, folder]
+
+
+func test_every_role_is_cast_as_somebody_the_pack_actually_ships() -> void:
+	assert_true(Art.CASTING.size() >= 25, "%d roles cast" % Art.CASTING.size())
+	for role: StringName in Art.CASTING.keys():
+		assert_true(FileAccess.file_exists(_sheet_path(String(Art.CASTING[role]))),
+			"%s is cast as %s, which is not in the pack" % [role, Art.CASTING[role]])
+
+
+func test_nobody_in_the_cast_shares_a_face() -> void:
+	var taken: Dictionary = {}
+	for role: StringName in Art.CASTING.keys():
+		var folder: String = String(Art.CASTING[role])
+		assert_false(taken.has(folder),
+			"%s and %s are both drawn as %s" % [role, taken.get(folder, ""), folder])
+		taken[folder] = String(role)
+
+
+func test_everybody_with_a_name_has_a_face() -> void:
+	# The fairy is light rather than a body (§4's opening) and is drawn by hand.
+	Cast.forget()
+	var cast: Cast = Cast.shared()
+	for npc: Npc in cast.named():
+		if npc.id == OpeningRules.FAIRY:
+			continue
+		assert_true(Art.CASTING.has(npc.id), "%s has no face" % npc.id)
+	Cast.forget()
+
+
+func test_the_crowd_is_drawn_from_faces_that_exist() -> void:
+	assert_true(Art.TOWNSFOLK.size() >= 8, "%d faces in the crowd" % Art.TOWNSFOLK.size())
+	for folder: String in Art.TOWNSFOLK:
+		assert_true(FileAccess.file_exists(_sheet_path(folder)),
+			"the crowd draws on %s, which is not in the pack" % folder)
+
+
+func test_every_building_the_map_puts_up_has_a_sprite() -> void:
+	# `Art.props` is the other half of the identity table: `core/` says a workshop
+	# stands at a tile and this is what says what a workshop looks like. A kind with
+	# no entry draws nothing at all, silently.
+	var art := Art.new()
+	for zone: StringName in Region.BUILDINGS_AT.keys():
+		for kind: Variant in Region.BUILDINGS_AT[zone] as Array:
+			assert_true(art.props.has(kind as StringName),
+				"%s puts up a %s and nothing knows how to draw one" % [zone, kind])
+	for zone: StringName in Region.SCENERY_AT.keys():
+		for kind: Variant in Region.SCENERY_AT[zone] as Array:
+			assert_true(art.props.has(kind as StringName),
+				"%s keeps a %s in the street and nothing knows how to draw one" % [zone, kind])
+
+
+func test_no_two_places_are_built_out_of_the_same_kit() -> void:
+	# What "each town has its own identity" means when it is a test rather than a
+	# wish: no two settlements may put up the same set of buildings.
+	var seen: Dictionary = {}
+	for zone: StringName in Region.BUILDINGS_AT.keys():
+		var kit: Array = (Region.BUILDINGS_AT[zone] as Array).duplicate()
+		kit.sort()
+		var key: String = ",".join(PackedStringArray(kit.map(func(k: Variant) -> String:
+			return String(k))))
+		assert_false(seen.has(key), "%s is built exactly like %s" % [zone, seen.get(key, "")])
+		seen[key] = String(zone)
+
+
+# ------------------------------------------------------------------- audio ---
+
+## Every noise the game can make is a file that is actually in the pack.
+##
+## A missing sound is the quietest bug there is: `load()` returns null, the player
+## plays nothing, and the game carries on. Nobody notices for a month, and then
+## somebody notices that the Muster has always been silent.
+
+func _sound_exists(path: String) -> bool:
+	return ResourceLoader.exists("%s/%s" % [Sound.PACK, path])
+
+
+func test_every_track_the_game_can_ask_for_is_in_the_pack() -> void:
+	var tracks: Array[String] = [Sound.MUSIC_ROAD, Sound.MUSIC_TITLE, Sound.MUSIC_CREATION]
+	for zone: StringName in Sound.MUSIC_AT.keys():
+		tracks.append(String(Sound.MUSIC_AT[zone]))
+	for terrain: Variant in Sound.MUSIC_ON.keys():
+		tracks.append(String(Sound.MUSIC_ON[terrain]))
+	assert_true(tracks.size() >= 12, "%d tracks named" % tracks.size())
+	for track: String in tracks:
+		assert_true(_sound_exists("Musics/%s" % track), "no track called %s" % track)
+
+
+func test_every_place_on_the_map_has_something_to_sound_like() -> void:
+	# The check that a new zone cannot arrive silently. Blackcairn and the Muster both
+	# have to sound like themselves, and the road is what everywhere else falls to.
+	for zone: StringName in Region.ZONE_ORDER:
+		assert_true(Sound.MUSIC_AT.has(zone), "%s has no music" % zone)
+	assert_eq(Sound.track_for(&"", Region.Terrain.WILD), Sound.MUSIC_ROAD,
+		"open country falls back to the travelling track")
+	assert_eq(Sound.track_for(&"", Region.Terrain.THICKET),
+		String(Sound.MUSIC_ON[Region.Terrain.THICKET]), "and the wood does not")
+	assert_eq(Sound.track_for(&"blackcairn", Region.Terrain.THICKET),
+		String(Sound.MUSIC_AT[&"blackcairn"]), "a place beats the ground it stands on")
+
+
+func test_every_ambience_and_every_cue_is_in_the_pack() -> void:
+	for terrain: Variant in Sound.AMBIENT_ON.keys():
+		assert_true(_sound_exists("Sounds/Ambient/%s" % Sound.AMBIENT_ON[terrain]),
+			"no ambience called %s" % Sound.AMBIENT_ON[terrain])
+	assert_true(Sound.CUES.size() >= 8, "%d cues" % Sound.CUES.size())
+	for what: StringName in Sound.CUES.keys():
+		assert_true(_sound_exists(String(Sound.CUES[what])),
+			"the cue '%s' names %s, which is not in the pack" % [what, Sound.CUES[what]])
+
+
+func test_nothing_asks_for_a_noise_the_table_does_not_name() -> void:
+	# Cues are looked up by a name in the source, so a typo is silence. Scanned out of
+	# view/ rather than listed, because a list goes stale and this cannot.
+	var listing: DirAccess = DirAccess.open("res://view")
+	assert_not_null(listing, "view/ is readable")
+	var asked: int = 0
+	for file: String in listing.get_files():
+		if not file.ends_with(".gd") or file == "sound.gd":
+			continue
+		var source: String = FileAccess.get_file_as_string("res://view/%s" % file)
+		var at: int = source.find("Sound.cue(&\"")
+		while at >= 0:
+			var from: int = at + "Sound.cue(&\"".length()
+			var to: int = source.find("\"", from)
+			var name: String = source.substr(from, to - from)
+			assert_true(Sound.CUES.has(StringName(name)),
+				"%s asks for the cue '%s', which is not in the table" % [file, name])
+			asked += 1
+			at = source.find("Sound.cue(&\"", from)
+	assert_true(asked >= 8, "%d cues asked for across the screens" % asked)

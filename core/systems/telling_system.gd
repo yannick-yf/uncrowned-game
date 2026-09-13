@@ -56,5 +56,15 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	Deeds.perform(sim, DeedRules.DEED_WARNING, here, world.player_pos)
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"telling"

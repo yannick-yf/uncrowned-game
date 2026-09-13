@@ -80,5 +80,15 @@ func _give_back(sim: Sim) -> void:
 ## Both branches hand off to the shared pipe, which every deed in the game uses.
 
 
+## Nothing to do between ticks.
+func steps() -> bool:
+	return false
+
+
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
+
+
 func system_name() -> StringName:
 	return &"theft"

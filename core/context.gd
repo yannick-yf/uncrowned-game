@@ -43,6 +43,7 @@ static func build(
 	facts: FactBase,
 	relations: Relations = null,
 	asking: DialogueOption = null,
+	allegiance: Allegiance = null,
 ) -> String:
 	var npc: Npc = cast.get_npc(who) if cast != null else null
 	if npc == null:
@@ -95,6 +96,14 @@ static func build(
 					lines.append("HAS HEARD: %s" % heard)
 		if facts.has(ArmyRules.FACT_FRAUD_EXPOSED):
 			lines.append("HAS HEARD: the pay fraud was said aloud at the camp")
+
+	# 4b. And what you have declared yourself to be, which everybody can see.
+	#
+	# §8's appearance register: joining is worn. A place does not have to be told
+	# what you are, the way it has to be told what you did — so this is in the packet
+	# beside what they think of you rather than among the facts they may not know.
+	if allegiance != null and allegiance.side != FactionRules.NEUTRAL:
+		lines.append("SEES YOU AS: %s" % Text.of(allegiance.rank_key()))
 
 	# 5. And what *you* know, which nothing here has ever said.
 	#

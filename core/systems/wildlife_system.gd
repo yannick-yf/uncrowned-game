@@ -21,13 +21,15 @@ func on_step(sim: Sim, step: int) -> void:
 	var wild := sim.store(&"wildlife") as Wildlife
 	if world == null or wild == null or world.current_zone != WorldState.OVERWORLD:
 		return
+	var ticked := sim.store(&"worldtick") as WorldTick
+	var held: float = ticked.held_ground if ticked != null else 0.0
 
 	# Spawning and forgetting share a heartbeat: both rebuild or allocate, and
 	# doing either sixty times a second costs more than the animals do.
 	if step % BeastRules.SPAWN_EVERY_STEPS == 0:
 		_forget_distant(world, wild)
-		_try_spawn(sim, world, wild)
-	_move(sim, world, wild, step)
+		_try_spawn(sim, world, wild, held)
+	_move(sim, world, wild, step, held)
 
 
 func _forget_distant(world: WorldState, wild: Wildlife) -> void:
@@ -38,7 +40,7 @@ func _forget_distant(world: WorldState, wild: Wildlife) -> void:
 	wild.beasts = kept
 
 
-func _try_spawn(sim: Sim, world: WorldState, wild: Wildlife) -> void:
+func _try_spawn(sim: Sim, world: WorldState, wild: Wildlife, held: float) -> void:
 	if wild.count() >= BeastRules.MAX_NEARBY:
 		return
 	var region: Region = world.region()
@@ -58,13 +60,16 @@ func _try_spawn(sim: Sim, world: WorldState, wild: Wildlife) -> void:
 	var tile := Vector2i(floori(at.x), floori(at.y))
 	if not region.is_beast_ground(tile):
 		return
+	# Nothing with teeth walks onto ground the fairies still hold.
+	if BeastRules.is_protected(tile, held):
+		return
 	var beast: Beast = wild.add(BeastRules.kind_for(region.terrain_at(tile), sim.rng.randi()), at)
 	beast.turn_at_step = sim.step
 	beast.heading = Vector2(cos(angle), sin(angle))
 	beast.home = at
 
 
-func _move(sim: Sim, world: WorldState, wild: Wildlife, step: int) -> void:
+func _move(sim: Sim, world: WorldState, wild: Wildlife, step: int, held: float) -> void:
 	var region: Region = world.region()
 	var seconds: float = 1.0 / float(Sim.STEPS_PER_REAL_SECOND)
 	for beast: Beast in wild.beasts:
@@ -86,7 +91,7 @@ func _move(sim: Sim, world: WorldState, wild: Wildlife, step: int) -> void:
 				beast.heading = Vector2(cos(angle), sin(angle))
 
 		var delta: Vector2 = beast.heading * BeastRules.speed_for(beast.kind) * seconds
-		beast.pos = _slide(region, beast.pos, delta)
+		beast.pos = _slide(region, beast.pos, delta, held)
 		if beast.heading.length() > 0.01:
 			beast.facing = Vector2i(
 				0 if absf(beast.heading.x) < 0.4 else signi(int(signf(beast.heading.x))),
@@ -101,17 +106,25 @@ func _move(sim: Sim, world: WorldState, wild: Wildlife, step: int) -> void:
 
 
 ## Per axis, and only onto ground a beast will set foot on.
-static func _slide(region: Region, from: Vector2, delta: Vector2) -> Vector2:
+static func _slide(region: Region, from: Vector2, delta: Vector2, held: float) -> Vector2:
 	var to: Vector2 = from
-	if _wild_at(region, Vector2(from.x + delta.x, from.y)):
+	if _wild_at(region, Vector2(from.x + delta.x, from.y), held):
 		to.x = from.x + delta.x
-	if _wild_at(region, Vector2(to.x, from.y + delta.y)):
+	if _wild_at(region, Vector2(to.x, from.y + delta.y), held):
 		to.y = from.y + delta.y
 	return to
 
 
-static func _wild_at(region: Region, pos: Vector2) -> bool:
-	return region.is_beast_ground(Vector2i(floori(pos.x), floori(pos.y)))
+static func _wild_at(region: Region, pos: Vector2, held: float) -> bool:
+	var tile := Vector2i(floori(pos.x), floori(pos.y))
+	if BeastRules.is_protected(tile, held):
+		return false
+	return region.is_beast_ground(tile)
+
+
+## Nothing to do on the world's clock.
+func ticks() -> bool:
+	return false
 
 
 func system_name() -> StringName:

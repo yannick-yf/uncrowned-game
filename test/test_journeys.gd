@@ -152,6 +152,11 @@ func test_the_kettle_actually_divides_the_map() -> void:
 # --------------------------------------------------------- the two routes ---
 
 func test_walking_the_kings_road_costs_nothing() -> void:
+	# Start on the road rather than wherever the game happens to begin. This used to
+	# lean on the player starting in Brindle; the opening now starts them in the
+	# wood, and a test about whether *the road* is safe should not also be a test
+	# about walking to it.
+	_world.player_pos = _world.region().brindle_centre()
 	var hp: int = _world.player_hp
 	var deaths: int = _world.deaths
 	# Stopping short of the castle gate: the road is safe, but the man standing at
@@ -164,15 +169,36 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 	assert_eq(_blood_price(hp, deaths), 0, "the long way round is the safe way round")
 
 
+## **Four crossings, not one.** Beasts are slower than the player (by design — a wild
+## you cannot outrun is a wall), so whether one crossing costs anything depends on
+## where the spawns land, and a single seed asserts luck rather than design. Measured
+## over eight seeds: seven drew blood and one did not, and for two nights the suite
+## happened to be standing on the one.
+##
+## So the claim under test is the one the design actually makes — *the wild is
+## dangerous*, not *the wild always bites* — and it is worth at most one seed going
+## quietly wrong before this fails.
 func test_cutting_through_the_thornwood_draws_blood() -> void:
-	var hp: int = _world.player_hp
-	var deaths: int = _world.deaths
-	assert_true(_walk_to(Vector2i(150, 90), 180.0), "crossed the wild")
-	var price: int = _blood_price(hp, deaths)
-	assert_true(price > 0, "the wild took nothing, so it is not a choice")
-	assert_true(price <= 24, "the wild took %d health, which is a wall rather than a risk" % price)
-	assert_true(_sim.facts.has(BeastRules.FACT_WILD_IS_DANGEROUS),
-		"and you now know it, which is a fact like any other")
+	var crossings: int = 4
+	var bled: int = 0
+	var learnt: int = 0
+	for offset: int in crossings:
+		_sim = Game.build(Sim.DEFAULT_SEED + offset)
+		_world = _sim.store(&"world") as WorldState
+		var hp: int = _world.player_hp
+		var deaths: int = _world.deaths
+		assert_true(_walk_to(Vector2i(150, 90), 180.0), "crossed the wild on seed %d" % offset)
+		var price: int = _blood_price(hp, deaths)
+		assert_true(price <= 24,
+			"the wild took %d health on seed %d, which is a wall rather than a risk"
+				% [price, offset])
+		if price > 0:
+			bled += 1
+			if _sim.facts.has(BeastRules.FACT_WILD_IS_DANGEROUS):
+				learnt += 1
+	assert_true(bled >= crossings - 1,
+		"%d of %d crossings cost nothing, so the wild is not a choice" % [crossings - bled, crossings])
+	assert_eq(learnt, bled, "and every crossing that cost something taught it")
 
 
 func test_beasts_never_stand_on_the_road_however_long_you_wait() -> void:
@@ -207,7 +233,7 @@ func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 
 	assert_true(_world.reached_blackcairn, "the player got there")
 	assert_eq(_world.deaths, 1, "and lost, once")
-	assert_eq(_world.player_tile(), Region.BRINDLE, "and woke up in Brindle again")
+	assert_eq(_world.player_tile(), Region.CLEARING, "and woke up in the clearing again")
 
 	var replayed: Sim = Game.replay(_sim)
 	assert_eq(replayed.step, _sim.step, "same clock")
@@ -252,6 +278,8 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 
 
 func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
+	# Somebody who notices things, because the chain goes through Ossa's Wits line.
+	_say(&"create_character", {"wits": 4})
 	assert_eq(_ticked.kings_escort(), 10, "before: ten guards stand between me and the king")
 
 	assert_true(_walk_to(Region.HARROWGATE, 180.0), "walked the road to Harrowgate")
@@ -294,6 +322,10 @@ func test_the_world_moves_while_the_player_does_nothing() -> void:
 
 
 func test_the_whole_chain_replays_identically_from_its_log() -> void:
+	# Through Ossa's Wits line again, so this needs the same person the chain test
+	# makes. Creation is an ordinary event, so it replays with everything else —
+	# which is half of what this test is checking.
+	_say(&"create_character", {"wits": 4})
 	assert_true(_walk_to(Region.HARROWGATE, 180.0))
 	var ossa: Npc = _cast.get_npc(&"ossa")
 	assert_true(_walk_to(ossa.tile, 60.0))

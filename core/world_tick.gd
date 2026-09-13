@@ -26,6 +26,13 @@ var bank_confidence: float = BASELINE
 var army_strength: float = BASELINE
 var faction_tension: float = NEUTRAL
 var rumour_spread: float = 0.0
+## How many tiles around the fairies' clearing are still theirs.
+##
+## **Not a thirteenth tracked quantity** — §19 Q11 refused one of those and the
+## refusal still holds. This is the same kind of thing as `grain_price` and
+## `town_sentiment`: a reading about a *place*, kept here because here is where
+## readings live. Nothing about an ending consults it.
+var held_ground: float = WorldRules.HELD_AT_START
 
 # -- per town (§8) --------------------------------------------------------
 var grain_price: Dictionary = {}
@@ -176,8 +183,8 @@ func fingerprint() -> String:
 	var towns := PackedStringArray()
 	for town: StringName in Region.ZONE_ORDER:
 		towns.append("%s:%.2f/%.2f" % [town, grain_in(town), sentiment_in(town)])
-	return "army=%.3f->%.1f escort=%d steel=%.1f morale=%.1f patrol=%.1f alert=%.1f treasury=%.1f bank=%.1f tension=%.1f rumour=%.1f | %s" % [
+	return "army=%.3f->%.1f escort=%d steel=%.1f morale=%.1f patrol=%.1f alert=%.1f treasury=%.1f bank=%.1f tension=%.1f rumour=%.1f held=%.3f | %s" % [
 		army_strength, army_target, kings_escort(), steel_output, worker_morale,
 		patrol_density, guard_alertness, crown_treasury, bank_confidence,
-		faction_tension, rumour_spread, ";".join(towns),
+		faction_tension, rumour_spread, held_ground, ";".join(towns),
 	]
