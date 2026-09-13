@@ -6,6 +6,16 @@ extends RefCounted
 ## Two regions exist: the overworld, and Harrowgate on its own grid. Zones are the
 ## loadable unit (SPECS §19 Q28) — a town is its own Region and the overworld holds
 ## portal tiles into it.
+##
+## **Where things stand is data, not code** (MIGRATION_3D §6.2, M1a, 2026-09-13). The
+## eight sites, their footprints, the clearing, the crossings, every fire, stall and
+## paper, and every person are read from `content/places.json` as *anchors* — a place
+## or point plus an offset — and resolved by `resolve()`. Nothing that a person stands
+## next to is a literal in this file any more. What *is* still here are the offsets
+## inside `_stamp_landmarks` and its neighbours: **the shape of a settlement**, kilns
+## round a works and tents in rows — the kit the bake (M1c) will use to scaffold any
+## place the 3D map has not built yet. The map is about to move; content that names
+## what it stands next to survives the move.
 
 enum Terrain {
 	WILD,
@@ -61,14 +71,18 @@ const MOUNTAIN_EAST: int = 271
 ## That bow is what makes the road about a third longer than a direct wild crossing
 ## — without it the wild costs time and blood and saves no distance, which would
 ## make it strictly worse forever, witnesses or not.
-const BRINDLE: Vector2i = Vector2i(262, 180)
-const CINDERWORKS: Vector2i = Vector2i(241, 172)
-const HARROWGATE: Vector2i = Vector2i(150, 174)
-const WIDE_ACRES: Vector2i = Vector2i(95, 150)
-const SALTMARCH: Vector2i = Vector2i(34, 158)
-const MUSTER: Vector2i = Vector2i(140, 103)
-const CAIRNWELL: Vector2i = Vector2i(95, 60)
-const BLACKCAIRN: Vector2i = Vector2i(66, 24)
+##
+## `static var`, not `const`, **read from `content/places.json`**: a const cannot be
+## initialised from data, and the value has to be the file's so the bake can move a
+## place without anyone editing this class. Every caller still reads `Region.BRINDLE`.
+static var BRINDLE: Vector2i = Places.shared().centre(&"brindle")
+static var CINDERWORKS: Vector2i = Places.shared().centre(&"cinderworks")
+static var HARROWGATE: Vector2i = Places.shared().centre(&"harrowgate")
+static var WIDE_ACRES: Vector2i = Places.shared().centre(&"wide_acres")
+static var SALTMARCH: Vector2i = Places.shared().centre(&"saltmarch")
+static var MUSTER: Vector2i = Places.shared().centre(&"muster")
+static var CAIRNWELL: Vector2i = Places.shared().centre(&"cairnwell")
+static var BLACKCAIRN: Vector2i = Places.shared().centre(&"blackcairn")
 
 ## Towns are laid out on the overworld at the size they actually are, rather than
 ## marked by a rectangle you walk into. A transition now means a change of *scale
@@ -76,14 +90,14 @@ const BLACKCAIRN: Vector2i = Vector2i(66, 24)
 ##
 ## Harrowgate and Cairnwell are the two you spend time in (§6), so they are a
 ## screenful and a bit across; the rest are smaller because they are smaller.
-const HARROWGATE_SIZE: Vector2i = Vector2i(40, 28)
-const CAIRNWELL_SIZE: Vector2i = Vector2i(40, 28)
-const CINDERWORKS_SIZE: Vector2i = Vector2i(24, 16)
-const SALTMARCH_SIZE: Vector2i = Vector2i(26, 18)
-const WIDE_ACRES_SIZE: Vector2i = Vector2i(24, 16)
-const BRINDLE_SIZE: Vector2i = Vector2i(15, 11)
-const MUSTER_SIZE: Vector2i = Vector2i(20, 14)
-const BLACKCAIRN_SIZE: Vector2i = Vector2i(24, 18)
+static var HARROWGATE_SIZE: Vector2i = Places.shared().size(&"harrowgate")
+static var CAIRNWELL_SIZE: Vector2i = Places.shared().size(&"cairnwell")
+static var CINDERWORKS_SIZE: Vector2i = Places.shared().size(&"cinderworks")
+static var SALTMARCH_SIZE: Vector2i = Places.shared().size(&"saltmarch")
+static var WIDE_ACRES_SIZE: Vector2i = Places.shared().size(&"wide_acres")
+static var BRINDLE_SIZE: Vector2i = Places.shared().size(&"brindle")
+static var MUSTER_SIZE: Vector2i = Places.shared().size(&"muster")
+static var BLACKCAIRN_SIZE: Vector2i = Places.shared().size(&"blackcairn")
 
 const ROAD_HALF_WIDTH: int = 1
 
@@ -108,7 +122,7 @@ const KETTLE_HALF_WIDTH: int = 2
 ## seconds of walking: long enough to be a walk out of the trees, short enough that
 ## §4's rule against empty walking still holds. East of the Kettle, so it sits on
 ## Brindle's own side of the river.
-const CLEARING: Vector2i = Vector2i(261, 150)
+static var CLEARING: Vector2i = Places.shared().point(&"clearing")
 const CLEARING_RADIUS: int = 7
 ## How deep the thicket ring is. Five, because 8-way movement will find a diagonal
 ## seam in anything thinner.
@@ -118,8 +132,8 @@ const PATH_HALF_WIDTH: int = 1
 ## already in frame, and a destination you can see guides better than a wall does.
 const PATH_WALLED_TO: int = 168
 
-const BRIDGE: Vector2i = Vector2i(228, 177)
-const FORD: Vector2i = Vector2i(233, 188)
+static var BRIDGE: Vector2i = Places.shared().point(&"bridge")
+static var FORD: Vector2i = Places.shared().point(&"ford")
 const CROSSING_HALF_WIDTH: int = 2
 
 var width: int = 0
@@ -405,6 +419,10 @@ static func build_overworld(fresh: bool = false) -> Region:
 
 static func _build_overworld() -> Region:
 	var region := Region.new()
+	# Zones first: they depend on nothing but the sites, and a feature anchor asked
+	# for while the world is still being laid out has to know which place a prop
+	# stands in.
+	region._bake_zones()
 	region._stamp_bounds()
 	region._stamp_thornwood()
 	# The bite the works has taken out of the wood, before the clearing, so that the
@@ -425,7 +443,6 @@ static func _build_overworld() -> Region:
 	region._stamp_landmarks()
 	region._stamp_crowd()
 	region._stamp_stalls()
-	region._bake_zones()
 	return region
 
 
@@ -799,11 +816,7 @@ func _place_scenery(kind: StringName, at: Vector2i, size: Vector2i = Vector2i.ON
 ## same way the tents do. These are the places they stand.
 ##
 ## Scenery, not cast. No names, no sheets, no dialogue, outside the 25 (§6).
-## Market stalls: something to steal from, and a reason for a market square.
-const STALL_SPOTS: Array[Vector2i] = [
-	Vector2i(-4, -3), Vector2i(0, -4), Vector2i(4, -3),
-]
-
+## Market stalls are anchors in `content/places.json` (see `_stamp_stalls`).
 const CROWD_SPOTS: Array[Vector2i] = [
 	Vector2i(-8, -6), Vector2i(-3, -9), Vector2i(4, -7), Vector2i(9, -4),
 	Vector2i(-11, -2), Vector2i(-6, 3), Vector2i(2, 5), Vector2i(7, 2),
@@ -812,12 +825,9 @@ const CROWD_SPOTS: Array[Vector2i] = [
 
 
 func _stamp_stalls() -> void:
-	for offset: Vector2i in STALL_SPOTS:
-		_stall_at(HARROWGATE + offset)
-	# One in Cairnwell, beside the trader, so a stranger who will not sell to you
-	# is standing in front of the thing he will not sell.
-	_stall_at(CAIRNWELL + Vector2i(-3, -3))
-	# And one in Saltmarch, which has no cast, no power base and no watch.
+	# Every stall is an anchor in `content/places.json`: three on Harrowgate's square,
+	# one in Cairnwell beside the trader, and **one in Saltmarch, which has no cast,
+	# no power base and no watch.**
 	#
 	# §8 says a crime nobody saw did not happen, and that rule had no reachable
 	# case: every stall on the map stood inside somebody's nine tiles, so theft was
@@ -826,12 +836,12 @@ func _stamp_stalls() -> void:
 	# started in the Wide Acres and moved here when the granaries got a watch:
 	# Saltmarch is off the trunk road, so no traveller carries word out of it
 	# either. Which is why Wren sells the location — she picks over ruins, so she
-	# knows where nobody is looking.
-	# Moved twice now, each time because the town it stood in acquired people: first
-	# out of the Wide Acres when the granaries got a watch, then to the north edge
-	# of Saltmarch when Til and Mira arrived. Verified against a *roused* watch, so
-	# it stays unwatched at the worst moment rather than the calmest.
-	_stall_at(SALTMARCH + Vector2i(0, -10))
+	# knows where nobody is looking. Moved twice, each time because the town it
+	# stood in acquired people, and verified against a *roused* watch, so it stays
+	# unwatched at the worst moment rather than the calmest. Moving it a third time
+	# is now an edit to the file, and the same test still guards it.
+	for anchor: Dictionary in Places.shared().stalls():
+		_stall_at(resolve(anchor))
 	_place_documents()
 	_place_campfires()
 
@@ -840,7 +850,12 @@ func _stamp_stalls() -> void:
 ## thing in a place — which is what stops violence ever closing Route C (§7).
 func _place_documents() -> void:
 	for row: Dictionary in DocumentRules.all():
-		var at: Vector2i = (zone_sites()[row["zone"]] as Vector2i) + (row["at"] as Vector2i)
+		var fact: StringName = row["fact"] as StringName
+		var at: Vector2i = resolve(Places.shared().document(fact))
+		if at == NOWHERE:
+			# Named by `unresolved_anchors()` and failed by test_anchors; a paper that
+			# is nowhere would otherwise close Route C silently.
+			continue
 		if not is_passable(at):
 			at = _nearest_open(at)
 		props.append({"kind": &"papers", "at": at, "size": Vector2i(1, 1),
@@ -850,7 +865,15 @@ func _place_documents() -> void:
 ## Papers must never be unreachable, so a spot inside a wall walks outward until it
 ## is not. Spiral rather than a fixed nudge: the towns are laid out by hand and a
 ## fixed offset would find a different wall.
+##
+## **The tile itself first** (M1a, 2026-09-13). The spiral used to start at radius 1
+## and never look at `from`, so anything open that was asked for at a tile landed one
+## tile up and left of it — every campfire on the map sat at its constant minus (1, 1)
+## for as long as the constants existed. Found by dumping the old and the new worlds
+## tile for tile when the positions moved to data; fixed rather than reproduced.
 func _nearest_open(from: Vector2i) -> Vector2i:
+	if is_passable(from):
+		return from
 	for radius: int in range(1, 12):
 		for dx: int in range(-radius, radius + 1):
 			for dy: int in range(-radius, radius + 1):
@@ -872,59 +895,19 @@ func _nearest_open(from: Vector2i) -> Vector2i:
 ## road. Fourteen fires in arbitrary places reads as *randomly placed*, which is what
 ## it was — the offset was chosen once and applied eight times.
 ##
-## Now each one is a reason. On the road they are a day's walk apart at the places a
-## carter would stop: before a river crossing, at the junction, on the long empty
-## stretch. Off it they belong to somebody.
-const CAMP_SPURS: Array[Vector2i] = [
-	# The road, at the places you would stop on it.
-	Vector2i(228, 183),  # short of the bridge, on the Brindle side
-	Vector2i(196, 172),  # the long empty stretch west of the river
-	Vector2i(150, 120),  # the Muster junction, outside the camp
-	Vector2i(112, 96),   # the climb toward the capital
-	Vector2i(78, 44),    # the last stop before Blackcairn
-	# Kell's, deep in the Thornwood. A deserter hiding in a wood has a fire, and it
-	# is the only landmark out there — without it, Ossa telling you where he is
-	# would be telling you to search a forest.
-	Vector2i(175, 129),
-	# The ferryman's, on the Saltmarch spur where the marsh begins.
-	Vector2i(52, 150),
-]
-
-
-## One within reach of every settlement, at the place that settlement would have one.
-##
-## The rule this keeps is real: reaching a fire has to be a plan rather than a
-## pilgrimage, or death stops being a cost and becomes a punishment. What changed is
-## that these are now *places* — a yard, a quay, a verge outside a gate — rather than
-## the same offset applied eight times.
-const CAMP_AT_ZONE: Dictionary = {
-	&"brindle": Vector2i(257, 184),      # Wren's, among the ruins she picks over
-	&"cinderworks": Vector2i(232, 181),  # the workers', downwind of the kilns
-	&"harrowgate": Vector2i(157, 182),   # the inn yard, outside the gate
-	&"wide_acres": Vector2i(103, 157),   # the tenants', at the field's edge
-	&"muster": Vector2i(147, 110),       # a picket fire, outside the camp proper
-	&"saltmarch": Vector2i(41, 164),     # the quay, where the boats tie up
-	&"cairnwell": Vector2i(103, 69),     # the carters' yard outside the walls
-	&"blackcairn": Vector2i(74, 33),     # the last verge before the gate
-}
-
-
+## Now each one is a reason, and each reason is written beside its anchor in
+## `content/places.json` (`_why`): one within reach of every settlement, at the yard
+## or quay or verge that settlement would have one; **the fairies' fire** in the
+## clearing — the first save in the game, on the last protected ground, and the reason
+## to come back and *see* that ground shrink (§8: a change the player cannot perceive
+## is identical to no change); the road's, a day's walk apart where a carter would
+## stop; Kell's, the only landmark in the deep wood; the ferryman's. The file's order
+## is the search order, a place's own fire first.
 func _place_campfires() -> void:
-	for zone: StringName in ZONE_ORDER:
-		var at: Vector2i = CAMP_AT_ZONE.get(zone, zone_sites()[zone]) as Vector2i
-		props.append({"kind": &"campfire", "at": _nearest_open(at),
-			"size": Vector2i(2, 2), "solid": false})
-	# **The fairies' fire**, in the clearing the player wakes in (§4's opening).
-	#
-	# The first save in the game, and it earns that twice over. It is the last
-	# protected ground in the region, so the place that can hold you is the place
-	# that is still held; and it gives the player a reason to come back, which is the
-	# only way the ground the fairies keep can be *seen* to be shrinking rather than
-	# said to be. §8: a change the player cannot perceive is identical to no change.
-	props.append({"kind": &"campfire", "at": CLEARING + Vector2i(0, 2),
-		"size": Vector2i(2, 2), "solid": false})
-	# And on the road between them, so a run does not have to end in a town.
-	for at: Vector2i in CAMP_SPURS:
+	for anchor: Dictionary in Places.shared().campfires():
+		var at: Vector2i = resolve(anchor)
+		if at == NOWHERE:
+			continue
 		props.append({"kind": &"campfire", "at": _nearest_open(at),
 			"size": Vector2i(2, 2), "solid": false})
 
@@ -1002,6 +985,59 @@ static func _distance_to_block(tile: Vector2i, at: Vector2i, size: Vector2i) -> 
 		clampf(float(tile.y), float(at.y), float(at.y + size.y - 1)),
 	)
 	return Vector2(tile).distance_to(nearest)
+
+
+# ---------------------------------------------------------------- anchors ---
+
+## An anchor as a tile, or NOWHERE (see `Places` for the three forms).
+##
+## A *feature* anchor names a prop by kind standing in a place — `harrowgate.inn` —
+## and is answered here because only a built region knows where its props are. The
+## first prop of that kind inside the place wins, in placement order, which is the
+## order `_stamp_landmarks` lays them down. Anything else is `Places.locate`.
+func resolve(anchor: Dictionary) -> Vector2i:
+	if anchor.is_empty():
+		return NOWHERE
+	if not anchor.has("feature"):
+		return Places.shared().locate(anchor)
+	var place: StringName = anchor.get("place", &"") as StringName
+	var kind: StringName = anchor["feature"] as StringName
+	var offset: Vector2i = anchor.get("offset", Vector2i.ZERO) as Vector2i
+	for prop: Dictionary in props:
+		if (prop["kind"] as StringName) != kind:
+			continue
+		if zone_at(prop["at"] as Vector2i) == place:
+			return (prop["at"] as Vector2i) + offset
+	return NOWHERE
+
+
+## Every anchor the content references that resolves nowhere, **by name**. Empty is
+## the contract holding. This is what turns a map change that broke the game into a
+## sentence — `cast:maddox harrowgate.inn+(0,1)` — before anyone plays it.
+func unresolved_anchors() -> Array[String]:
+	var out: Array[String] = []
+	var places: Places = Places.shared()
+	for id: StringName in places.cast_ids():
+		_note_unresolved(out, "cast:%s" % id, places.cast_anchor(id))
+	var strangers: Array[Dictionary] = places.strangers()
+	for i: int in strangers.size():
+		_note_unresolved(out, "stranger:%s#%d" % [String(strangers[i].get("kind", &"?")), i + 1],
+			strangers[i])
+	var fires: Array[Dictionary] = places.campfires()
+	for i: int in fires.size():
+		_note_unresolved(out, "campfire:%d" % (i + 1), fires[i])
+	var stalls: Array[Dictionary] = places.stalls()
+	for i: int in stalls.size():
+		_note_unresolved(out, "stall:%d" % (i + 1), stalls[i])
+	for fact: StringName in DocumentRules.facts():
+		_note_unresolved(out, "document:%s" % fact, places.document(fact))
+	return out
+
+
+func _note_unresolved(out: Array[String], name: String, anchor: Dictionary) -> void:
+	var at: Vector2i = resolve(anchor)
+	if at == NOWHERE or not in_bounds(at):
+		out.append("%s %s" % [name, Places.describe(anchor)])
 
 
 func _stamp_crowd() -> void:

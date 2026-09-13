@@ -3669,6 +3669,13 @@ billboards where the simulation says; **parity** with the v2 screenshot set, inc
 contract, the decisions taken on 2026-09-13 and the two defaults that stand until
 somebody objects are in that file, not here. Combat remains outside it.
 
+- ✅ **M1a — anchors** (2026-09-13). Where everything stands is data: `content/places.json`
+  holds the eight sites, the clearing, the crossings and an anchor for every person,
+  fire, stall and paper; `Region.resolve()` turns an anchor into a tile; the cast sheets
+  carry no coordinate; `test_anchors` names what resolves nowhere. Checked tile for tile
+  against the old world: nobody moved, and thirteen campfires moved one tile onto the
+  tile their reason names — `_nearest_open` had never tested the tile it was given.
+
 ---
 
 ## 19. Open questions

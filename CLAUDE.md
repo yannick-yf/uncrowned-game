@@ -79,6 +79,7 @@ view/      Godot nodes. Replaceable.
 tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
+           places.json — where everything stands, as anchors. No .gd carries a position.
 docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
            MIGRATION_3D.md — how the world moves onto the 3D workshop, and who does what.
            V1.md — what shipped the morning before v2.
@@ -224,11 +225,14 @@ the brother's; the systems, the content and the bridge are ours, and the bridge 
 one architectural rule below applied once more: the simulation keeps its grid, the 3D
 data is *baked* into a `Region`, and a 3D window reads the sim and never moves the
 player. Combat is still the oldest debt in the project. Nothing structural moves
-without asking Yannick. **One discipline starts today, before the bake exists:** new
-positional content — a person, a paper, a fire, a post — is written as an *anchor*
-(a place and a named feature, `content/places.json` once M1 lands) and never as a new
-tile constant in a `.gd`. The map is about to move, and content that names what it
-stands next to survives the move.
+without asking Yannick. **One discipline, in force since M1a (2026-09-13):** anything
+positional — a person, a paper, a fire, a stall, a site — is an *anchor* in
+`content/places.json` (a place or point plus an offset, or a feature standing in a
+place) and never a tile constant in a `.gd`. `Region.resolve()` turns an anchor into a
+tile and `test_anchors` fails **by name** on one that resolves nowhere. The offsets
+inside `_stamp_landmarks` are the exception on purpose: they are the shape of a
+scaffold settlement, not where content stands. The map is about to move, and content
+that names what it stands next to survives the move.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that
