@@ -31,6 +31,7 @@ const FRAUD: StringName = &"fraud"
 const ARMY: StringName = &"army"
 const GRAIN: StringName = &"grain"
 const ESCORT: StringName = &"escort"
+const HARDSHIP: StringName = &"hardship"
 
 
 ## One chronological list. Every row carries facts, never phrasing.
@@ -40,6 +41,7 @@ static func entries(events: EventLog, _facts: FactBase = null) -> Array[Dictiona
 	var fraud_told: StringName = &""
 	var army_has_fallen: bool = false
 	var grain_reported: Dictionary = {}
+	var hardship_reported: Dictionary = {}
 
 	for event: SimEvent in events.all():
 		var tick: int = _tick_of(event)
@@ -87,6 +89,19 @@ static func entries(events: EventLog, _facts: FactBase = null) -> Array[Dictiona
 				grain_reported[at] = true
 				rows.append({"tick": tick, "kind": GRAIN, "town": at,
 					"after_the_army": army_has_fallen})
+			&"hardship_moved":
+				# Who an act cost, once per town per cause. The only place in the game
+				# that joins the two (§8): the town shows it and the person there says
+				# it, and neither of them says why.
+				if float(event.data.get("amount", 0.0)) <= 0.0:
+					continue
+				var cause: StringName = StringName(event.data.get("about", ""))
+				var place: StringName = StringName(event.data.get("town", ""))
+				var key: String = "%s|%s" % [place, cause]
+				if hardship_reported.has(key):
+					continue
+				hardship_reported[key] = true
+				rows.append({"tick": tick, "kind": HARDSHIP, "town": place, "deed": cause})
 			&"escort_changed":
 				rows.append({"tick": tick, "kind": ESCORT,
 					"from": int(event.data.get("from", 0)),

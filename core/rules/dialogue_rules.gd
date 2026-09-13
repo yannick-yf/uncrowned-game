@@ -20,6 +20,10 @@ const MAX_OPTIONS: int = 4
 ## about or tested — and §9's whole point is that the rules layer issues the
 ## verdict and the words only phrase it.
 const GRAIN_IS_DEAR: float = 60.0
+## Where a town's people are visibly worse off (§8's hardship, 2026-09-13). One act
+## against a place carries it from the ordinary 50 past this, so the person standing
+## there can say so the same day, without saying who did it.
+const HARDSHIP_BITES: float = 62.0
 
 ## Where a town stops being willing is decided by StandingRules, not here, because
 ## the HUD reads its word off the same number. One witnessed theft costs more than
@@ -39,6 +43,7 @@ static func conditions(
 	return {
 		&"grain_is_dear_here": here != &"" and ticked.grain_in(here) >= GRAIN_IS_DEAR,
 		&"the_army_is_shrinking": ticked.army_strength < 90.0,
+		&"hardship_is_high_here": here != &"" and ticked.hardship_in(here) >= HARDSHIP_BITES,
 		# Asked of the town you are standing in, never of a global number. Word
 		# reaching Cairnwell shuts a door there and nowhere else.
 		#

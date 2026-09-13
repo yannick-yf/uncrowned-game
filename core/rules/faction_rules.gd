@@ -84,10 +84,24 @@ static func rank_key(side: StringName, rank: int) -> StringName:
 ## crown's is shorter and deliberately so — there was **nothing pro-crown in the
 ## game** before this, and inventing ten new systems to fix that would have been the
 ## wrong repair. Two acts: give back what you took, and tell them something you know.
+##
+## **Extended 2026-09-13** (§8's second direction): the crown's list is now the whole
+## "builds it by" column — every act that strengthens one of the four places is
+## service, and each costs somebody with a face, which is what stops it being free.
 const WORTH: Dictionary = {
 	CROWN: {
 		&"i_gave_it_back": 12.0,
 		&"i_informed_the_crown": 30.0,
+		&"i_enforced_the_grants": 24.0,
+		&"i_got_the_convoys_moving": 20.0,
+		&"i_delivered_labour": 22.0,
+		&"i_settled_the_wage": 18.0,
+		&"i_fed_it_the_forest": 20.0,
+		&"i_paid_the_muster": 26.0,
+		&"i_fed_the_muster": 18.0,
+		&"i_handed_over_the_deserters": 30.0,
+		&"i_restored_confidence": 24.0,
+		&"i_brought_the_creditors": 28.0,
 	},
 	OPPOSITION: {
 		&"i_wrecked_a_furnace": 26.0,

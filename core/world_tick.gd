@@ -42,6 +42,18 @@ var town_sentiment: Dictionary = {}
 ## away, which nobody could read as anything but a bug. Same change grain price and
 ## town sentiment already took, for the same reason: this one is about a place.
 var guard_alertness_by_town: Dictionary = {}
+## **Hardship**, per town (2026-09-13, §8). What an act costs the people who live in a
+## place, held apart from what it costs the crown. Not a thirteenth quantity: the
+## twelve are untouched and this stands beside them the way `held_ground` does, a
+## reading about a *place*.
+##
+## **Up is worse.** Like grain price, and unlike the eight global figures where 100 is
+## as good as it gets: 50 is the ordinary lot of a place under this crown, and it rises
+## when the people there are worse off. It barely drifts and moves sharply when acted
+## on — every deed that moves the kingdom pushes it somewhere, in either direction
+## (DeedRules.hardship_effects) — so it always reads as caused. Nothing about an ending
+## reads it as a threshold; the journal reads it out.
+var hardship: Dictionary = {}
 
 ## What army strength is easing toward. Set by events; reached over in-game days.
 var army_target: float = BASELINE
@@ -125,6 +137,7 @@ func _init() -> void:
 		grain_target[town] = NEUTRAL
 		town_sentiment[town] = NEUTRAL
 		guard_alertness_by_town[town] = NEUTRAL
+		hardship[town] = NEUTRAL
 
 
 func grain_in(town: StringName) -> float:
@@ -169,6 +182,17 @@ func push_sentiment(town: StringName, amount: float) -> void:
 	handprint[&"town_sentiment"] = handprint_on(&"town_sentiment") + absf(amount)
 
 
+func hardship_in(town: StringName) -> float:
+	return float(hardship.get(town, NEUTRAL))
+
+
+## The one way hardship moves. A deed's doing, so it carries the handprint like every
+## other push; there is no drift path to it at all.
+func push_hardship(town: StringName, amount: float) -> void:
+	hardship[town] = clampf(hardship_in(town) + amount, 0.0, BASELINE)
+	handprint[&"hardship"] = handprint_on(&"hardship") + absf(amount)
+
+
 ## The king's escort, quantity #12 — a count of men, derived rather than stored.
 ##
 ## §3's "roughly one and a half fewer per power base damaged" never worked: six
@@ -182,7 +206,7 @@ func kings_escort() -> int:
 func fingerprint() -> String:
 	var towns := PackedStringArray()
 	for town: StringName in Region.ZONE_ORDER:
-		towns.append("%s:%.2f/%.2f" % [town, grain_in(town), sentiment_in(town)])
+		towns.append("%s:%.2f/%.2f/%.2f" % [town, grain_in(town), sentiment_in(town), hardship_in(town)])
 	return "army=%.3f->%.1f escort=%d steel=%.1f morale=%.1f patrol=%.1f alert=%.1f treasury=%.1f bank=%.1f tension=%.1f rumour=%.1f held=%.3f | %s" % [
 		army_strength, army_target, kings_escort(), steel_output, worker_morale,
 		patrol_density, guard_alertness, crown_treasury, bank_confidence,

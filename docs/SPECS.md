@@ -1519,6 +1519,33 @@ kingdom names who it costs*.
 | 11 | Rumour spread | Time | Being witnessed | Neither direction pushes it: **a readout** (2026-09-11) of how many stories are in the air |
 | 12 | King's escort | **Derived from army strength** (below), not stored | Whatever hollows the army | Whatever fills it |
 
+**Built 2026-09-13 (Phase B).** The ten building acts are rows in `DeedRules` and
+**things you say**, through §9's `causes`, to the person whose business it is — the
+same shape as v1's six spoken levers. None needs a rank or a side; each is a question,
+spent once, and most cost goodwill, so nobody does the crown's business with a man they
+think ill of.
+
+| Act | Said to | Needs knowing |
+|---|---|---|
+| Enforce the grants | Nessa, at the Wide Acres | the land grants |
+| Get the convoys moving | Garrick, in Harrowgate | — |
+| Deliver labour | Halgrave, at the Cinderworks | — |
+| Settle the wage | Halgrave | the death toll |
+| Feed it the forest | Halgrave | — |
+| Pay the Muster | Odile, at the Muster | the pay fraud — and it goes when the fraud is public |
+| Feed the Muster | Odile | — |
+| Hand over the deserters | Ryse, at the Muster | where Kell is |
+| Restore confidence | Corvin Ash, in Cairnwell | the debts |
+| Bring the creditors | Corvin Ash | that the whole thing was borrowed |
+
+**A ceiling, found by building it.** The twelve are clamped at 100 and four of them
+start there — steel, treasury, bank, army — so the second direction **restores**; it
+never raises a full quantity fuller. Feed the works the forest on day one and steel
+stays at 100, the belt still widens, Brindle is still worse off and the crown still
+counts it as service. That is §8's ceiling on place states arriving one level down,
+and it is right: the crown's acts are worth most where the kingdom has been broken,
+which is exactly when a loyal player has something to do.
+
 Each is a number the simulation core owns, updated on tick, and readable by
 dialogue, prices, spawn tables and the pillar system. Nothing here requires
 simulating a person's day.
@@ -1598,6 +1625,16 @@ the granary), in what people say (§9: a condition content may name, like
 the throne (§3) is shown the hardship figures in the towns they changed, the morning
 after. Those channels are later items of the v2 rewrite; the figure is defined here
 so that all of them read one thing.
+
+**Built 2026-09-13.** `WorldTick.hardship`, one figure per town, at **50** to start —
+the ordinary lot of a place under this crown — moved only by `push_hardship()`, which
+writes the handprint under `hardship` like every other push; there is no drift path to
+it at all. Every deed that moves any of the twelve declares `DeedRules.hardship_effects`
+— town → how much worse off, `here` for the town the act was done in — and a test
+walks the table: a deed with world effects and no cost, or a cost that makes everybody
+better off, fails the build. One act carries a place past **62**
+(`DialogueRules.HARDSHIP_BITES`), which is the line §9's `hardship_is_high_here` reads.
+Each push is a derived event, `hardship_moved`, and the journal reads those.
 
 > **What was rejected.** Folding it into town sentiment — sentiment is what a town
 > thinks of the crown, and a town can be loyal and hungry, which is the whole of the
@@ -1870,6 +1907,14 @@ Sena or Ivo for the Cinderworks, Kell and the men Ossa treats for the Muster, Mi
 clients for the bank. A deed that moves a quantity and writes hardship nowhere is not
 finished, in either direction, and the test that already walks every deed for its
 counterpart must walk it for its face too.
+
+**Built 2026-09-13.** The face is a **greeting**, not a reply: an `alt_greeting` on
+`hardship_is_high_here`, so it is the world speaking before the player has asked
+anything, and a test refuses any that names the player — the attribution stays in the
+journal. One in every place, because a cost can land anywhere a document is read:
+Wren for Brindle, Sena for the Cinderworks, Ossa for Harrowgate, Pell for the Wide
+Acres, Odile for the Muster, Mira for Saltmarch, Anselm for Cairnwell, Dray for
+Blackcairn. Eight lines a language.
 
 > This is why the second direction needed hardship before it needed acts. Nine ways
 > to break the kingdom and none to build it was a missing sign, and filling in the
@@ -2527,7 +2572,7 @@ decides what each means:
 |---|---|---|
 | `this_place_is_free` / `this_place_is_crown_held` | The place the speaker stands in (§8's state) | A worker at cold furnaces has a different answer from one at lit ones |
 | `<place>_is_free` | Any of the four, from anywhere | Maddox can mention that the Acres went to the smallholders, three days after they did |
-| `hardship_is_high_here` | The speaker's town (§8) | The loyal-and-hungry line, which is the whole of the Wide Acres |
+| `hardship_is_high_here` | The speaker's town (§8) | The loyal-and-hungry line, which is the whole of the Wide Acres. **Built 2026-09-13**: eight greetings, one face per place |
 | `crown_rank_is_at_least_N` | The player's crown standing, read as rank (§11) | Greeting, offers, assumptions, what is told — never a gate |
 | `blackcairn_is_unstable` / `blackcairn_is_rich` | The castle's two readings (§4) | The second channel for both readings: what towns say about the castle |
 
@@ -3130,6 +3175,12 @@ the woman who said it.
 
 ### The journal gains the kingdom's state (2026-09-13)
 
+**The first of it is built (2026-09-13, Phase B):** the doings page carries a row the
+first time an act makes a town worse off — *the Wide Acres: people there are worse
+off* — with the reason underneath, *because you burned a store of grain*, once per town
+per cause. Spoken deeds also stopped reading as *nobody was looking*: a deed with no
+line of its own now uses what people heard, capitalised, as the line.
+
 The thesis says the ending is a reading of what the kingdom became; the journal is
 where the player reads it before the end. One more page, pulled like the others and
 never pushed:
@@ -3233,6 +3284,7 @@ TBD.
 | Power bases | 6 named | **4 deep**, 2 deferred | The Cinderworks, the Wide Acres, the Muster, the bank. Greyhold and Harrowgate deferred, not cut (§3) |
 | Place states | — | **2 × 4** | crown-held / free, never a third (§8) |
 | Decisive changes | — | **4** | One per place, two outcomes each (§3) |
+| Building acts, spoken | 2 | **12** | Ten new (§8's table) beside informing and giving back; each with a face and a cost |
 | Routes to the confrontation | 3 | 3 | Force / Access / Exposure — descriptions, not machinery |
 | Endings | 5 | 5 | No sixth; the throne is a reading of one (§3) |
 | Traits | 6 | 6 | Settled |
@@ -3471,7 +3523,7 @@ proposal — Yannick's to change — and the reasoning for it is under the table
 | | Phase | What it builds | Proof |
 |---|---|---|---|
 | **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
-| **B** | **The second axis** | Hardship per town; the "builds it by" rows for every quantity, each with a face and a hardship push; the counterpart test extended to faces; §9's conditions (§8, §9) | Burn the stores and feed the works the forest in one run; the journal shows two towns worse off in two different ways, and a named person in each says so without naming you |
+| **B** ✅ | **The second axis** — delivered 2026-09-13 | Hardship per town, at 50, pushed only by deeds; the ten building acts as spoken deeds with a cost each; `hardship_effects` on every deed that moves the kingdom, walked by test; eight faces as greetings; `hardship_is_high_here`; the journal's worse-off rows (§8, §9, §15) | **Held:** burn the stores and feed the works the forest in one run — the Wide Acres and Brindle both past the line, Pell's and Wren's greetings changed without naming the player, two journal rows with two different causes. 36 suites, 378 tests |
 | **C** | **Four places, two states** | Binary state per place; the decisive act with two outcomes at each landmark; the freeze window as a tick stamp; the band kept for the borders; the free-state ground; the entrance sign as a voice (§3, §8, §13, §15) | Free the Wide Acres, watch the band fail to take it back for two days, then restore it; a replay from the log lands on the same tick; the sign says something different each time |
 | **D** | **The crown as a play** | Rank from crown standing, falling as well as rising; the gate knowing your face as one of the three ways in; the crown's service list; the reworked opening — Halgrave audible in the first hour, the fairy checked (§5, §11) | §5's test: a playtester who wants to serve can name a first step unprompted. A loyal run reaches the throne reading and is shown hardship the morning after — and the same run can still turn |
 | **E** | **Blackcairn reads the kingdom** | Wealth and instability as derived readings, on the castle and in the towns' talk; the journal's kingdom page (§4, §15) | Four flips in one window and the same four over a season look different at the gate and sound different in Harrowgate |
@@ -3815,6 +3867,10 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **Open country walks at 0.65, not 0.80; farmland keeps 0.80** | 0.70 (the least change that passes); 0.60; keeping 0.80 and widening the Thornwood instead | Measured, with the beasts gone and speeds on: the least-watched line from Brindle to the castle is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a plain walker by 2.4 s and lost to an attuned one. At 0.65 it wins by 12 s and 9 s, a fifth of the walk. The table had been reasoned about while speeds were off and never measured against the claim it exists for. Widening the wood is Phase-7-scale map work and the forest's size is already Q42/Q43 |
 | 2026-09-13 | **The wild line is the least-watched path**, not the shortest walkable one: a road tile costs ten wild tiles | The shortest walkable path (v1's instrument); forbidding the road outright | The shortest walkable path from Brindle to the castle is 42% King's Road, so v1 never measured the wild. Forbidding the road finds no path at all: the road runs from the south-east coast to the castle and seals the east, so every way to Blackcairn crosses it once. Dear rather than forbidden crosses where it must, never runs along, and takes the ford — which is what §4 always said the wild did |
 | 2026-09-13 | **Travellers are drawn as a pack horse** from the approved pack's `Animal/Horse` side sheet | The crowd's sheets, as before; a cart (the pack has none); a pair of figures | A face is how furniture becomes a character by being looked at often enough, and the crowd's faces are shared with the cast on purpose. An animal on the road is traffic. Checked with a screenshot, not with the suite, because `--headless` never draws |
+| 2026-09-13 | **Hardship starts at 50 and one act carries a place past 62** | Starting at 0; a threshold two acts away | At 0 the acts that lower it — the wage settled, the Muster paid — would do nothing visible, and a number that only rises is a scoreboard again. Fifty is the shape grain price and sentiment already have. One act past the line is §8's own rule: player-caused change is large, fast and local, and a face that needs two acts before it speaks is a face nobody meets |
+| 2026-09-13 | **The face is a greeting, one per place, and it may not name the player** | A reply the player asks for; faces only where costs land today | A reply is pulled; a greeting is the world speaking first, which is the ambient register. Every place, because reading a document aloud lands a cost wherever it is read. Naming the player would be attribution pushed, and the journal is the only place allowed to join an act to its cost |
+| 2026-09-13 | **The second direction restores; it never raises a full quantity past 100** | Raising the ceiling for the crown's acts; a separate 'prosperity' figure | Four of the twelve start full. Found by building it, and kept: it is §8's ceiling on place states one level down, and it puts the crown's acts where a loyal player has work — in a kingdom somebody has already broken. Steel at 100 fed the forest still widens the belt, costs Brindle and counts as service |
+| 2026-09-13 | **A spoken deed's journal line is what people heard, capitalised** | Leaving the fallback; a bespoke line per deed | The fallback said *nobody was looking* for every spoken lever, which was false and read as a bug. `deed.heard.*` already exists for every deed in both languages, so one generic line covers the six old levers and the ten new acts |
 
 ---
 

@@ -198,10 +198,13 @@ which is 3,000 lines and answers a different question.
 from is `docs/history/V2_INTENT.md`. The roadmap is SPECS §18, Phases A–E. **Phase A
 (the wild without teeth) is delivered**: beasts out, `TERRAIN_SLOWS_YOU` on with open
 country at 0.65, routes measured (road 57 s, wild 69 s, attuned 66 s), travellers drawn
-as traffic, Attunement's speed half. **Phase B (the second axis) is next**: hardship per
-town, the "builds it by" rows with a face each, the counterpart test extended to faces,
-§9's conditions. v2 is a content and coupling change; SPECS §18 lists what it does not
-touch, and nothing structural moves without asking Yannick.
+as traffic, Attunement's speed half. **Phase B (the second axis) is delivered**: hardship
+per town, the ten building acts as spoken deeds with a cost each, the face rule walked by
+test, `hardship_is_high_here`. **Phase C (four places, two states) is next**: the binary
+state per place, the decisive act with two outcomes at each landmark, the freeze window as
+a tick stamp, the band kept for the borders, the free-state ground and the entrance sign.
+v2 is a content and coupling change; SPECS §18 lists what it does not touch, and nothing
+structural moves without asking Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that

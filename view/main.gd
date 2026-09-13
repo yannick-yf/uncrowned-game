@@ -1427,8 +1427,16 @@ func _journal_line(row: Dictionary) -> String:
 	var town: String = _short_place(row.get("town", &"") as StringName)
 	match row["kind"] as StringName:
 		Journal.DEED:
-			return Text.of(_deed_key(row["deed"] as StringName),
-				[town, _seen(int(row["seen"]))])
+			var key: StringName = _deed_key(row["deed"] as StringName)
+			if key == &"":
+				# The spoken levers and the second direction have no line of their own:
+				# what people heard, said to you, is the line.
+				var heard: String = Text.of(StringName("deed.heard.%s" % String(row["deed"])))
+				return Text.of(&"journal.deed.generic",
+					[heard.substr(0, 1).to_upper() + heard.substr(1), _seen(int(row["seen"]))])
+			return Text.of(key, [town, _seen(int(row["seen"]))])
+		Journal.HARDSHIP:
+			return Text.of(&"journal.hardship", [town])
 		Journal.UNSEEN:
 			return Text.of(&"journal.unseen", [town])
 		Journal.ARRIVAL:
@@ -1463,6 +1471,9 @@ func _journal_because(row: Dictionary) -> String:
 			return Text.of(&"journal.because.grain") if bool(row["after_the_army"]) else ""
 		Journal.ESCORT:
 			return Text.of(&"journal.because.escort") if bool(row["after_the_army"]) else ""
+		Journal.HARDSHIP:
+			return Text.of(&"journal.because.hardship",
+				[Text.of(StringName("deed.heard.%s" % String(row["deed"])))])
 	return ""
 
 
@@ -1491,7 +1502,7 @@ func _deed_key(deed: StringName) -> StringName:
 		DeedRules.DEED_BURN_STORES: return &"journal.deed.burn"
 		DeedRules.DEED_ROB_BANK: return &"journal.deed.rob"
 		DeedRules.DEED_WRECK_ROLLS: return &"journal.deed.rolls"
-	return &"journal.unseen"
+	return &""
 
 
 func _phrase_key(deed: StringName) -> StringName:

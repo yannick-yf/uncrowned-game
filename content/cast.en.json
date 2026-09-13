@@ -298,6 +298,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "I saw what you did. Sit if you're bleeding, I said I never ask, and I meant it. But you'll get no more than that from me."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "4 more patients and no more bread. Be quick."
         }
       ]
     },
@@ -330,6 +334,13 @@
           "text": "What else travels the road?",
           "reply": "Soldiers walking away from the camp instead of towards it. And people who listen to what carters say.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "move_convoys",
+          "text": "Get the convoys moving again, for the crown.",
+          "causes": "i_got_the_convoys_moving",
+          "costs": "goodwill",
+          "reply": "Fine. The grain leaves tomorrow for the camp and the capital. The Wide Acres will see less of it."
         }
       ]
     },
@@ -364,6 +375,12 @@
           "text": "What do you sell, and to who?",
           "reply": "Scrap metal. I sell it to the ironworks west of here. 2 copper coins a sack. They never ask where it came from.",
           "costs": "goodwill"
+        }
+      ],
+      "alt_greetings": [
+        {
+          "when": "hardship_is_high_here",
+          "text": "The works' fire is nearer than yesterday. There is less wood between us and it."
         }
       ]
     },
@@ -404,6 +421,28 @@
           "text": "You keep a record of the dead?",
           "reply": "A book with every name and every date. The crown asks for it. I would keep it anyway. If a thing kills 381 men somebody should write it down.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "deliver_labour",
+          "text": "I can bring you hands. Men who need a wage.",
+          "causes": "i_delivered_labour",
+          "costs": "goodwill",
+          "reply": "Bring them. The furnaces run better on 3 shifts. I write their names in the book like the others."
+        },
+        {
+          "intent": "settle_wage",
+          "text": "Pay them better and they will stay. I can settle it with Sena.",
+          "causes": "i_settled_the_wage",
+          "requires": "cinderworks:death_toll",
+          "costs": "goodwill",
+          "reply": "2 coins more a day. The king pays, and he will ask for more stone for it. Sena it is."
+        },
+        {
+          "intent": "feed_forest",
+          "text": "The Thornwood burns. Take more of it.",
+          "causes": "i_fed_it_the_forest",
+          "costs": "goodwill",
+          "reply": "We already cut toward the clearing. On your word we cut 4 rows more. The furnaces want for nothing this winter."
         }
       ]
     },
@@ -420,6 +459,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Sena watches your hands instead of your face."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "3 more men in the book this month. We work, we do not talk."
         }
       ],
       "options": [
@@ -538,6 +581,14 @@
           "reply": "9 villages. I can name them: Brindle, Ashcote, Wenn, Upper Harrow, Lower Harrow and 4 more. I copied that list when I was 14.",
           "teaches": "acres:razed_villages",
           "costs": "free"
+        },
+        {
+          "intent": "enforce_grants",
+          "text": "Enforce the grants. All of them.",
+          "causes": "i_enforced_the_grants",
+          "requires": "acres:land_grants",
+          "costs": "goodwill",
+          "reply": "Then I take out the deeds. Pell pays what he owes, and so do the others. You know what that costs them."
         }
       ]
     },
@@ -558,6 +609,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Pell keeps working his row and lets you stand there."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "The rent has gone up. I sow more and keep less. That is how it is."
         }
       ],
       "options": [
@@ -613,6 +668,14 @@
           "reply": "For 11 years. He always attacks with the shield first and answers to the left. He learned it at 19 and nobody is allowed to beat him.",
           "teaches": "muster:how_the_king_fights",
           "costs": "goodwill"
+        },
+        {
+          "intent": "hand_over_deserters",
+          "text": "There is a deserter in the Thornwood. I know where.",
+          "causes": "i_handed_over_the_deserters",
+          "requires": "thornwood:kell",
+          "costs": "goodwill",
+          "reply": "Then say it, and 6 men leave tonight. You get the bounty. His healer in town will be spoken to as well."
         }
       ]
     },
@@ -633,6 +696,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Odile shuts the book before you are close enough to read it."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "The men queue at the tent and leave with nothing. Do not stand there."
         }
       ],
       "options": [
@@ -653,6 +720,22 @@
           "text": "I know you are stealing the pay.",
           "reply": "Then you know what I would pay to have you stop saying it here. Name your price.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "pay_muster",
+          "text": "Pay the men. Everything on the roll, to the ones who are alive.",
+          "causes": "i_paid_the_muster",
+          "requires": "muster:pay_fraud",
+          "hides_after": "public:muster:pay_fraud",
+          "costs": "goodwill",
+          "reply": "So you know. Fine. The pay goes out tonight, and the king pays it twice over. Tell nobody why."
+        },
+        {
+          "intent": "feed_muster",
+          "text": "The camp is hungry. Buy grain in Harrowgate.",
+          "causes": "i_fed_the_muster",
+          "costs": "goodwill",
+          "reply": "With what money? Yours, then. 40 sacks, and bread goes up in town. Not my problem."
         }
       ]
     },
@@ -765,6 +848,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Mira closes the file she was reading and waits for you to go."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "3 more cases on my table this week, and none of them will pay."
         }
       ],
       "options": [
@@ -809,6 +896,22 @@
           "reply": "Almost everything he has built, and almost all of it is owed to me. He did not pay for the ironworks with his money. He paid with mine.",
           "teaches": "bank:leveraged",
           "costs": "goodwill"
+        },
+        {
+          "intent": "restore_confidence",
+          "text": "I can have it said in town that the bank stands. That is worth something.",
+          "causes": "i_restored_confidence",
+          "requires": "bank:debts",
+          "costs": "goodwill",
+          "reply": "It is worth a great deal. A word from you, and the deposits stay. So does the interest."
+        },
+        {
+          "intent": "bring_creditors",
+          "text": "Bring the creditor to the table. The crown reschedules, he keeps his security.",
+          "causes": "i_brought_the_creditors",
+          "requires": "bank:leveraged",
+          "costs": "goodwill",
+          "reply": "He will come if it is you who asks. The debt runs 10 more years. The Wide Acres' rents pay it, and the poor's fees."
         }
       ]
     },
@@ -869,6 +972,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Anselm says the steward is not seeing anyone and does not soften it."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "More people come to the church door for bread than for the service."
         }
       ],
       "options": [
@@ -1027,6 +1134,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Dray moves between you and the gate without hurrying."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "The guard has eaten cold for 2 days. Move along."
         }
       ],
       "options": [
