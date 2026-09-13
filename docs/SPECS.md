@@ -2413,7 +2413,44 @@ Two scoping facts, stated rather than buried:
 
 ## 14. Audio
 
-TBD.
+Settled 2026-09-13. Everything comes out of the approved pack (§13), which shipped 41
+tracks, nine ambient loops and a folder of menu noises — **the same never-mix rule as
+the art**, and for the same reason: a score from one artist under tiles from another
+is audible immediately even to people who could not say why.
+
+**Three layers, and each is a table in `view/sound.gd`.**
+
+| | |
+|---|---|
+| **Music** | one track for where you are. `MUSIC_AT` by zone, `MUSIC_ON` by terrain when you are in none, and the travelling track for everywhere else |
+| **Ambience** | one loop under it, by terrain: wind in the wood, water at the river and the marsh, waves at the coast. A town is silent underneath, because a town has the music |
+| **Cues** | one-shots named by *what happened* — `cue(&"refused")`, `cue(&"seen")` — so a caller never learns which file that is |
+
+**The map's argument is audible.** §4 says the road and the forest are two worlds; the
+score does not share a single track between them. The clearing has its own music, the
+Thornwood has its own, and the ground the Cinderworks has already taken plays a
+lament — the one piece of the map that is nothing but a loss, said before it is
+explained.
+
+**Two rules that stop it becoming noise.** A track crossfades over 1.4 seconds, and a
+track holds the floor for at least six — without the second, walking the line between
+the wood and the road turns the score into a stutter. And the music sits well under
+the cues on purpose: this game is read, and a score that competes with the dialogue
+box is a score somebody switches off.
+
+**Sound can be switched off**, from the title screen and the pause menu, and the
+choice is kept in `user://settings.cfg` beside the language. Muting does not stop the
+music, it silences it, so unmuting picks the place up rather than starting the track
+again.
+
+There is one `Sound` node, installed by `screens.gd` under the root and never
+replaced, so walking out of a town does not restart anything and neither does opening
+the pause menu. It is reached through a static façade that answers null when there is
+no tree to speak into — which is what makes the headless suite silent instead of
+broken.
+
+**Not built, on purpose:** per-bus volume sliders, footsteps, and any sound for
+combat, which does not exist yet (§10).
 
 ---
 

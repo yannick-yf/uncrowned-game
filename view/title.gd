@@ -41,6 +41,7 @@ var _elapsed: float = 0.0
 func _ready() -> void:
 	_art = Art.new()
 	_build()
+	Sound.play_music_now(Sound.MUSIC_TITLE)
 	set_process(true)
 
 
@@ -53,6 +54,7 @@ func _build() -> void:
 		{"id": &"continue", "key": &"title.continue", "enabled": has_save},
 		{"id": &"new", "key": &"title.new"},
 		{"id": &"language", "key": &"title.language", "args": [Text.locale().to_upper()]},
+		{"id": &"sound", "key": &"title.sound", "args": [Text.of(_sound_word())]},
 		{"id": &"quit", "key": &"title.quit"},
 	])
 	if not _menu.point_at(was) and has_save:
@@ -65,16 +67,22 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 
+func _sound_word() -> StringName:
+	return &"sound.off" if Sound.muted() else &"sound.on"
+
+
 func _read_input() -> void:
 	var menu: Menu = _asking if _asking != null else _menu
-	if Input.is_action_just_pressed(&"move_down"):
-		menu.move(1)
-	if Input.is_action_just_pressed(&"move_up"):
-		menu.move(-1)
+	if Input.is_action_just_pressed(&"move_down") and menu.move(1):
+		Sound.cue(&"move")
+	if Input.is_action_just_pressed(&"move_up") and menu.move(-1):
+		Sound.cue(&"move")
 	if Input.is_action_just_pressed(&"back") and _asking != null:
+		Sound.cue(&"cancel")
 		_asking = null
 		return
 	if Input.is_action_just_pressed(&"interact"):
+		Sound.cue(&"accept")
 		_take(menu.chosen())
 
 
@@ -98,11 +106,15 @@ func _take(id: StringName) -> void:
 		&"language":
 			Text.cycle()
 			_build()
+		&"sound":
+			Sound.set_muted(not Sound.muted())
+			_build()
 		&"quit":
 			chose.emit(&"quit", null)
 		&"replace":
 			chose.emit(&"creation", null)
 		&"keep":
+			Sound.cue(&"cancel")
 			_asking = null
 
 

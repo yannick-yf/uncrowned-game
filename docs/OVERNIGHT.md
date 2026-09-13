@@ -837,3 +837,41 @@ not. It crosses four times now and allows one to come free, which is the claim t
 design actually makes.
 
 Suite: **35 suites, 367 tests, 10,382 assertions, 0 failed.**
+
+### 5. Audio — music per place, ambience per ground, and the small noises
+
+Everything out of the approved pack, which shipped 41 tracks, nine ambient loops and
+a folder of menu noises. **Nothing was downloaded all night** — §13's never-mix rule
+applies to a score exactly as it does to a tileset, and the pack that drew the tiles
+wrote the music.
+
+Three tables in `view/sound.gd`, and `core/` learns none of it: the simulation says
+the player is standing in Saltmarch, and this is the only file that knows Saltmarch
+sounds like water.
+
+**The map's argument is audible.** §4 says the road and the forest are two worlds, and
+the score shares no track between them: the clearing has its own music, the Thornwood
+has its own, and the ground the Cinderworks has already taken plays a lament — the one
+piece of the map that is nothing but a loss, said before it is explained.
+
+Two rules stop it becoming noise. A track crossfades over 1.4 seconds, and a track
+holds the floor for at least six — without the second, walking the line between the
+wood and the road turns the score into a stutter. And a **sound row** now sits beside
+the language row on the title screen and in the pause menu, kept in `settings.cfg`.
+
+**It was an autoload for an hour.** The suite runs as `godot -s tools/test_runner.gd`,
+which replaces the main loop, and an autoload never loads in that mode — so every
+`view/` file that mentioned `Sound` failed to parse and thirty tests went red at once.
+Creating it lazily instead failed differently and more interestingly: the first screen
+asks for music inside `Screens._ready()`, which is inside the engine's own
+`root.add_child`, and **Godot refuses to add a child to a node that is busy adding
+children**. The node came back half-built and the first track crashed on an empty
+array of players. It is installed explicitly now, by `screens.gd`, before the first
+screen exists — and reached through a static façade that answers null when there is no
+tree to speak into, which is what makes the headless suite silent rather than broken.
+
+Checked by running the game at four places and reading what it said it was playing:
+the title gets *Intro*, the clearing gets *Clearing* and wind, Saltmarch gets
+*Aquatic*, and the shore gets the travelling track and waves.
+
+Suite: **35 suites, 371 tests, 10,479 assertions, 0 failed.**

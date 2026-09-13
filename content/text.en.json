@@ -239,5 +239,8 @@
   "creation.ready": "Six traits, ten points. Neither changes again: nobody levels up here.",
   "journal.doings": "WHAT YOU HAVE DONE",
   "journal.paging": "{0}   {1}/{2}   < > turn   |   J close",
-  "journal.more": "( and {0} more )"
+  "journal.more": "( and {0} more )",
+  "title.sound": "Sound: {0}",
+  "sound.on": "on",
+  "sound.off": "off"
 }

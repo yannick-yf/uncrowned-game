@@ -34,6 +34,7 @@ var _levels: Dictionary = TraitRules.at_the_floor()
 
 func _ready() -> void:
 	_build()
+	Sound.play_music_now(Sound.MUSIC_CREATION)
 	set_process(true)
 
 
@@ -57,18 +58,20 @@ func _process(_delta: float) -> void:
 
 
 func _read_input() -> void:
-	if Input.is_action_just_pressed(&"move_down"):
-		_menu.move(1)
-	if Input.is_action_just_pressed(&"move_up"):
-		_menu.move(-1)
+	if Input.is_action_just_pressed(&"move_down") and _menu.move(1):
+		Sound.cue(&"move")
+	if Input.is_action_just_pressed(&"move_up") and _menu.move(-1):
+		Sound.cue(&"move")
 	if Input.is_action_just_pressed(&"move_right"):
 		_spend(1)
 	if Input.is_action_just_pressed(&"move_left"):
 		_spend(-1)
 	if Input.is_action_just_pressed(&"back"):
+		Sound.cue(&"cancel")
 		chose.emit(&"title", null)
 		return
 	if Input.is_action_just_pressed(&"interact") and _menu.chosen() == &"begin":
+		Sound.cue(&"accept")
 		_begin()
 
 
@@ -81,10 +84,13 @@ func _spend(by: int) -> void:
 		return
 	var wanted: int = int(_levels[what]) + by
 	if wanted < TraitRules.FLOOR or wanted > TraitRules.CAP:
+		Sound.cue(&"refused")
 		return
 	if by > 0 and _left() <= 0:
+		Sound.cue(&"refused")
 		return
 	_levels[what] = wanted
+	Sound.cue(&"move")
 	_build()
 
 

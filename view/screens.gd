@@ -22,6 +22,10 @@ var _shot_frames: int = 0
 
 
 func _ready() -> void:
+	# Before the first screen, so the title has music the moment it appears. This node
+	# is the one thing in the game that is never replaced, which is what makes it the
+	# right place to hang something that must outlive every screen.
+	Sound.install(self)
 	_go(_first_screen(), null)
 
 

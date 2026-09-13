@@ -174,3 +174,71 @@ func test_no_two_places_are_built_out_of_the_same_kit() -> void:
 			return String(k))))
 		assert_false(seen.has(key), "%s is built exactly like %s" % [zone, seen.get(key, "")])
 		seen[key] = String(zone)
+
+
+# ------------------------------------------------------------------- audio ---
+
+## Every noise the game can make is a file that is actually in the pack.
+##
+## A missing sound is the quietest bug there is: `load()` returns null, the player
+## plays nothing, and the game carries on. Nobody notices for a month, and then
+## somebody notices that the Muster has always been silent.
+
+func _sound_exists(path: String) -> bool:
+	return ResourceLoader.exists("%s/%s" % [Sound.PACK, path])
+
+
+func test_every_track_the_game_can_ask_for_is_in_the_pack() -> void:
+	var tracks: Array[String] = [Sound.MUSIC_ROAD, Sound.MUSIC_TITLE, Sound.MUSIC_CREATION]
+	for zone: StringName in Sound.MUSIC_AT.keys():
+		tracks.append(String(Sound.MUSIC_AT[zone]))
+	for terrain: Variant in Sound.MUSIC_ON.keys():
+		tracks.append(String(Sound.MUSIC_ON[terrain]))
+	assert_true(tracks.size() >= 12, "%d tracks named" % tracks.size())
+	for track: String in tracks:
+		assert_true(_sound_exists("Musics/%s" % track), "no track called %s" % track)
+
+
+func test_every_place_on_the_map_has_something_to_sound_like() -> void:
+	# The check that a new zone cannot arrive silently. Blackcairn and the Muster both
+	# have to sound like themselves, and the road is what everywhere else falls to.
+	for zone: StringName in Region.ZONE_ORDER:
+		assert_true(Sound.MUSIC_AT.has(zone), "%s has no music" % zone)
+	assert_eq(Sound.track_for(&"", Region.Terrain.WILD), Sound.MUSIC_ROAD,
+		"open country falls back to the travelling track")
+	assert_eq(Sound.track_for(&"", Region.Terrain.THICKET),
+		String(Sound.MUSIC_ON[Region.Terrain.THICKET]), "and the wood does not")
+	assert_eq(Sound.track_for(&"blackcairn", Region.Terrain.THICKET),
+		String(Sound.MUSIC_AT[&"blackcairn"]), "a place beats the ground it stands on")
+
+
+func test_every_ambience_and_every_cue_is_in_the_pack() -> void:
+	for terrain: Variant in Sound.AMBIENT_ON.keys():
+		assert_true(_sound_exists("Sounds/Ambient/%s" % Sound.AMBIENT_ON[terrain]),
+			"no ambience called %s" % Sound.AMBIENT_ON[terrain])
+	assert_true(Sound.CUES.size() >= 8, "%d cues" % Sound.CUES.size())
+	for what: StringName in Sound.CUES.keys():
+		assert_true(_sound_exists(String(Sound.CUES[what])),
+			"the cue '%s' names %s, which is not in the pack" % [what, Sound.CUES[what]])
+
+
+func test_nothing_asks_for_a_noise_the_table_does_not_name() -> void:
+	# Cues are looked up by a name in the source, so a typo is silence. Scanned out of
+	# view/ rather than listed, because a list goes stale and this cannot.
+	var listing: DirAccess = DirAccess.open("res://view")
+	assert_not_null(listing, "view/ is readable")
+	var asked: int = 0
+	for file: String in listing.get_files():
+		if not file.ends_with(".gd") or file == "sound.gd":
+			continue
+		var source: String = FileAccess.get_file_as_string("res://view/%s" % file)
+		var at: int = source.find("Sound.cue(&\"")
+		while at >= 0:
+			var from: int = at + "Sound.cue(&\"".length()
+			var to: int = source.find("\"", from)
+			var name: String = source.substr(from, to - from)
+			assert_true(Sound.CUES.has(StringName(name)),
+				"%s asks for the cue '%s', which is not in the table" % [file, name])
+			asked += 1
+			at = source.find("Sound.cue(&\"", from)
+	assert_true(asked >= 8, "%d cues asked for across the screens" % asked)

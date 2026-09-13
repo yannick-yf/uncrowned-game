@@ -32,6 +32,8 @@ const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
 ## not a feed: the oldest thing you did is rarely the thing you are trying to
 ## understand.
 const JOURNAL_ROWS: int = 9
+## Room under the pause menu's rows for the two lines saying what leaving costs.
+const PAUSE_NOTE_ROOM: float = 32.0
 
 var _journal_open: bool = false
 ## Which page of the journal is showing. Kept between openings: a player who was
@@ -72,6 +74,11 @@ var _map_open: bool = false
 ## the point: the simulation only advances from `_process`, so not calling it is a
 ## complete pause with nothing to remember to re-enable.
 var _paused: Menu = null
+## The last thing the world made a noise about, so one event makes one noise. Steps
+## rather than booleans: the simulation already stamps when each of these happened.
+var _sounded_take: int = -1
+var _sounded_theft: int = -1
+var _sounded_line: String = ""
 ## The region, painted once into an image, because 56,000 `draw_rect` calls a frame
 ## is not a map screen, it is a slideshow.
 var _map_image: Texture2D = null
@@ -97,6 +104,9 @@ func begin(carrying: Variant) -> void:
 
 ## Wiring, not logic: one call into core/, then cache what is read every frame.
 func _ready() -> void:
+	# Ignored when `screens.gd` has already done it, which is every run but a debug
+	# one that opens this scene by itself.
+	Sound.install(self)
 	_art = Art.new()
 	_seconds_per_step = Game.seconds_per_step()
 	_debug_available = OS.has_feature("debug")
@@ -208,6 +218,7 @@ func _process(delta: float) -> void:
 			_render_to = _world.player_pos
 		_draw_hud()
 		_draw_journal()
+		_listen()
 
 	# The HUD is a CanvasLayer and therefore draws *over* everything this node draws,
 	# including the map and the pause panel. Anything that takes the whole screen
@@ -223,6 +234,36 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 
+# ------------------------------------------------------------------- sound ---
+
+## What the world sounds like from where the player is standing, and one noise for
+## each thing that just happened.
+##
+## Asked every frame and answered by a table: `Sound` refuses a track that is already
+## playing, so this is a lookup rather than a decision. The one thing decided here is
+## that **a theft nobody saw and a theft somebody saw are different sounds** — the
+## world tells you it noticed before the journal explains what that cost (§8's
+## immediate register).
+func _listen() -> void:
+	var region: Region = _world.region()
+	var here: Vector2i = _world.player_tile()
+	var ground: int = region.terrain_at(here)
+	Sound.play_music(Sound.track_for(region.zone_at(here), ground))
+	Sound.play_ambient(ground)
+
+	if _world.last_taken_step > _sounded_take:
+		_sounded_take = _world.last_taken_step
+		Sound.cue(&"learnt")
+	if _world.last_theft_step > _sounded_theft:
+		_sounded_theft = _world.last_theft_step
+		Sound.cue(&"took" if _world.last_theft_seen == 0 else &"seen")
+	if _world.in_dialogue() and _world.current_line != _sounded_line:
+		_sounded_line = _world.current_line
+		Sound.cue(&"spoke")
+	elif not _world.in_dialogue():
+		_sounded_line = ""
+
+
 # ------------------------------------------------------------------- input ---
 
 ## **Escape, with the world stopped.** Everything else on this screen is something
@@ -232,15 +273,17 @@ func _process(delta: float) -> void:
 ## and a second way to save would make the fire a formality — so this says plainly
 ## that leaving costs whatever has happened since the last one.
 func _read_pause() -> void:
-	if Input.is_action_just_pressed(&"move_down"):
-		_paused.move(1)
-	if Input.is_action_just_pressed(&"move_up"):
-		_paused.move(-1)
+	if Input.is_action_just_pressed(&"move_down") and _paused.move(1):
+		Sound.cue(&"move")
+	if Input.is_action_just_pressed(&"move_up") and _paused.move(-1):
+		Sound.cue(&"move")
 	if Input.is_action_just_pressed(&"back"):
+		Sound.cue(&"cancel")
 		_paused = null
 		return
 	if not Input.is_action_just_pressed(&"interact"):
 		return
+	Sound.cue(&"accept")
 	match _paused.chosen():
 		&"resume":
 			_paused = null
@@ -249,6 +292,9 @@ func _read_pause() -> void:
 			_cast = Cast.shared()
 			_sim.add_store(&"cast", _cast)
 			_journal_at = -1
+			_pause_menu()
+		&"sound":
+			Sound.set_muted(not Sound.muted())
 			_pause_menu()
 		&"title":
 			chose.emit(&"title", null)
@@ -261,6 +307,8 @@ func _pause_menu() -> void:
 	_paused = Menu.new([
 		{"id": &"resume", "key": &"pause.resume"},
 		{"id": &"language", "key": &"title.language", "args": [Text.locale().to_upper()]},
+		{"id": &"sound", "key": &"title.sound",
+			"args": [Text.of(&"sound.off" if Sound.muted() else &"sound.on")]},
 		{"id": &"title", "key": &"pause.title_screen"},
 		{"id": &"quit", "key": &"pause.quit"},
 	])
@@ -326,6 +374,7 @@ func _read_input() -> void:
 	# cost position and nothing else.
 	if _world.deaths > _deaths_seen:
 		_deaths_seen = _world.deaths
+		Sound.cue(&"died")
 		if SaveFile.exists():
 			_reload()
 			return
@@ -470,6 +519,7 @@ func _rest() -> void:
 	_sim.advance(Sim.STEPS_PER_WORLD_TICK * RecoveryRules.REST_TICKS)
 	SaveFile.write(_sim)
 	_deaths_seen = _world.deaths
+	Sound.cue(&"rested")
 
 
 ## Rebuild the run from the last rest. Every reference has to be re-taken, because
@@ -489,6 +539,11 @@ func _reload() -> void:
 	_mine = _sim.store(&"allegiance") as Allegiance
 	_deaths_seen = _world.deaths
 	_journal_at = -1
+	# A rebuilt run has its own step numbers, and the old marks would silence the
+	# first few things that happen in it.
+	_sounded_take = -1
+	_sounded_theft = -1
+	_sounded_line = ""
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -649,13 +704,18 @@ func _draw() -> void:
 func _draw_paused() -> void:
 	var screen: Vector2 = get_viewport_rect().size
 	draw_rect(Rect2(-position, screen), Color(0.04, 0.04, 0.05, 0.72), true)
+	# Sized from the rows it holds rather than from a number typed once. Adding the
+	# sound row to a box measured for four put "quit the game" through the middle of
+	# the sentence explaining what quitting costs.
+	var body: float = float(_paused.rows.size()) * Menu.SPACING
 	var box := Rect2(-position + Vector2(screen.x * 0.5 - 130.0, 96.0),
-		Vector2(260.0, 152.0))
+		Vector2(260.0, 78.0 + body + PAUSE_NOTE_ROOM))
 	Ui.panel(self, box)
 	Ui.write(self, box.position + Vector2(0.0, 30.0), Text.of(&"pause.heading"),
 		Ui.HEADING, Ui.GOLD, HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
-	_paused.draw_on(self, box.position.x + 42.0, box.position.y + 60.0)
-	draw_multiline_string(Ui.font(), box.position + Vector2(16.0, 128.0),
+	_paused.draw_on(self, box.position.x + 42.0, box.position.y + 58.0)
+	draw_multiline_string(Ui.font(),
+		box.position + Vector2(16.0, box.size.y - PAUSE_NOTE_ROOM + 12.0),
 		Text.of(&"pause.note"), HORIZONTAL_ALIGNMENT_CENTER, box.size.x - 32.0,
 		Ui.NOTE, 2, Ui.DIM)
 

@@ -239,5 +239,8 @@
   "creation.ready": "Six traits, dix points. Aucun des deux ne bougera : on ne monte pas de niveau ici.",
   "journal.doings": "CE QUE VOUS AVEZ FAIT",
   "journal.paging": "{0}   {1}/{2}   < > tourner   |   J fermer",
-  "journal.more": "( et {0} de plus )"
+  "journal.more": "( et {0} de plus )",
+  "title.sound": "Son : {0}",
+  "sound.on": "actif",
+  "sound.off": "coupé"
 }
