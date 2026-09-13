@@ -20,6 +20,10 @@ const MAX_OPTIONS: int = 4
 ## about or tested — and §9's whole point is that the rules layer issues the
 ## verdict and the words only phrase it.
 const GRAIN_IS_DEAR: float = 60.0
+## Where a town's people are visibly worse off (§8's hardship, 2026-09-13). One act
+## against a place carries it from the ordinary 50 past this, so the person standing
+## there can say so the same day, without saying who did it.
+const HARDSHIP_BITES: float = 62.0
 
 ## Where a town stops being willing is decided by StandingRules, not here, because
 ## the HUD reads its word off the same number. One witnessed theft costs more than
@@ -32,13 +36,15 @@ static func conditions(
 	ticked: WorldTick,
 	standing: Standing = null,
 	allegiance: Allegiance = null,
+	tick: int = 0,
 ) -> Dictionary:
 	if world == null or ticked == null:
 		return {}
 	var here: StringName = world.region().zone_at(world.player_tile())
-	return {
+	var out: Dictionary = {
 		&"grain_is_dear_here": here != &"" and ticked.grain_in(here) >= GRAIN_IS_DEAR,
 		&"the_army_is_shrinking": ticked.army_strength < 90.0,
+		&"hardship_is_high_here": here != &"" and ticked.hardship_in(here) >= HARDSHIP_BITES,
 		# Asked of the town you are standing in, never of a global number. Word
 		# reaching Cairnwell shuts a door there and nowhere else.
 		#
@@ -57,7 +63,36 @@ static func conditions(
 		# written, so an offer authored last is an offer nobody is ever shown. The
 		# same reason the rest of this table exists.
 		&"nobody_has_your_name": allegiance == null or allegiance.side == FactionRules.NEUTRAL,
+		# The four places' state (§8, 2026-09-13): what the person in front of you can
+		# see out of the window. `frozen` is the two-day hold after a decisive act, and
+		# the acts that would reverse it forbid it — refused by not being offered.
+		&"this_place_is_free": allegiance != null and PlaceRules.has_state(here)
+			and PlaceRules.is_free(allegiance.holder(here)),
+		&"this_place_is_crown_held": allegiance != null and PlaceRules.has_state(here)
+			and allegiance.holder(here) == FactionRules.CROWN,
+		&"this_place_is_frozen": allegiance != null and here != &"" and allegiance.is_frozen(here, tick),
 	}
+	# And each place from anywhere, so Maddox can mention that the Acres went to the
+	# smallholders three days after they did.
+	for place: StringName in PlaceRules.PLACES:
+		out[StringName("%s_is_free" % place)] = allegiance != null \
+			and PlaceRules.is_free(allegiance.holder(place))
+	# Blackcairn's two readings (§4), for the second channel: what people in the towns
+	# say about the castle. Derived from the store, never kept.
+	var unrest: StringName = CastleRules.instability(allegiance, tick)
+	var wealth: StringName = CastleRules.wealth(ticked)
+	out[&"blackcairn_is_unstable"] = unrest == CastleRules.CRISIS
+	out[&"blackcairn_is_rich"] = wealth == CastleRules.BUILDING
+	out[&"blackcairn_is_poor"] = wealth == CastleRules.SHUTTERED
+
+	# Rank (§11): derived from crown standing, read here for greetings and offers, and
+	# gating nothing — the guard knowing your face is one of three ways in, never the
+	# only one, and a test holds that no fact sits behind a rank.
+	if standing != null:
+		var rank: int = FactionRules.rank_from(FactionRules.CROWN, standing)
+		for step: int in [1, 2, 3]:
+			out[StringName("crown_rank_is_at_least_%d" % step)] = rank >= step
+	return out
 
 
 ## Which of an NPC's authored options are legal right now.

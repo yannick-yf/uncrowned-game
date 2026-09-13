@@ -173,6 +173,10 @@
         {
           "when": "grain_is_dear_here",
           "text": "Le pain a doublé en un mois et personne ne me dit pourquoi. Vous, vous allez me le dire ?"
+        },
+        {
+          "when": "blackcairn_is_unstable",
+          "text": "On dit que la porte du château est fermée en plein jour. Je n'ai jamais vu ça."
         }
       ]
     },
@@ -225,6 +229,10 @@
         {
           "when": "the_army_is_shrinking",
           "text": "Il me manque des hommes sur mes listes et personne au camp ne veut me dire combien."
+        },
+        {
+          "when": "crown_rank_is_at_least_1",
+          "text": "Tovin se lève. Le roi a votre nom sur ses listes, et moi aussi."
         }
       ]
     },
@@ -298,6 +306,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "J'ai vu ce que vous avez fait. Asseyez-vous si vous saignez, j'ai dit que je ne demandais jamais, et je le pensais. Mais vous n'aurez rien de plus."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "4 patients de plus et pas plus de pain. Faites vite."
         }
       ]
     },
@@ -330,6 +342,19 @@
           "text": "Qu'est-ce qui circule d'autre sur la route ?",
           "reply": "Des soldats qui s'éloignent du camp au lieu d'y aller. Et des gens qui écoutent ce que disent les charretiers.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "move_convoys",
+          "text": "Remettez les convois en route pour la couronne.",
+          "causes": "i_got_the_convoys_moving",
+          "costs": "goodwill",
+          "reply": "Bon. Le grain part demain pour le camp et la capitale. Aux Grands Champs, ils en verront moins."
+        },
+        {
+          "intent": "ask_castle_stone",
+          "text": "Le château achète toujours ?",
+          "reply": "De la pierre et du grain, deux fois par semaine, par la route. Bon pour la route, bon pour moi.",
+          "requires_condition": "blackcairn_is_rich"
         }
       ]
     },
@@ -365,6 +390,12 @@
           "reply": "De la ferraille. Je la vends aux forges, à l'ouest d'ici. 2 pièces de cuivre le sac. Ils ne demandent jamais d'où ça vient.",
           "costs": "goodwill"
         }
+      ],
+      "alt_greetings": [
+        {
+          "when": "hardship_is_high_here",
+          "text": "Le feu des Forges est plus près qu'hier. Il y a moins de bois entre nous et lui."
+        }
       ]
     },
     "halgrave": {
@@ -393,6 +424,12 @@
           "reply": "Du fer et de l'acier. Des rails, des plaques, des outils, des clous. Avant les forges, 1 enfant sur 4 mourait ici chaque hiver. Maintenant c'est 1 sur 40."
         },
         {
+          "intent": "ask_the_king",
+          "text": "Pourquoi le roi en veut-il encore plus ?",
+          "reply": "Avant les Forges, un homme mourait ici à 40 ans, ses enfants avant lui. Maintenant il y a une route, du pain l'hiver, 1 enfant sur 40 perdu au lieu de 1 sur 4. Il veut ça partout. Moi aussi.",
+          "costs": "free"
+        },
+        {
           "intent": "ask_cost",
           "text": "Combien d'hommes a-t-elle tués ?",
           "reply": "381 en 11 ans. J'écris le chiffre et je l'envoie au roi Arthur chaque printemps. Il le lit et il ordonne d'agrandir les forges.",
@@ -404,6 +441,29 @@
           "text": "Vous tenez un registre des morts ?",
           "reply": "Un livre avec chaque nom et chaque date. La couronne le demande. Je le tiendrais quand même. Si une chose tue 381 hommes, quelqu'un doit l'écrire.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "deliver_labour",
+          "text": "Je peux vous amener des bras. Des hommes qui ont besoin d'une paie.",
+          "causes": "i_delivered_labour",
+          "costs": "goodwill",
+          "reply": "Amenez-les. Les fours tournent mieux à 3 équipes. J'écris leurs noms dans le livre comme les autres."
+        },
+        {
+          "intent": "settle_wage",
+          "text": "Payez-les mieux et ils resteront. Je peux régler ça avec Sena.",
+          "causes": "i_settled_the_wage",
+          "requires": "cinderworks:ledger",
+          "costs": "goodwill",
+          "reply": "2 sous de plus par jour. Le roi paiera, et il demandera plus de pierre pour ça. Va pour Sena.",
+          "forbids_condition": "this_place_is_frozen"
+        },
+        {
+          "intent": "feed_forest",
+          "text": "La Ronceraie brûle bien. Prenez-en plus.",
+          "causes": "i_fed_it_the_forest",
+          "costs": "goodwill",
+          "reply": "On coupe déjà vers la clairière. Sur votre mot, on coupe 4 rangs de plus. Les fours ne manqueront de rien cet hiver."
         }
       ]
     },
@@ -420,6 +480,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Sena regarde vos mains au lieu de votre visage."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "3 hommes de plus dans le livre ce mois. On travaille, on ne parle pas."
         }
       ],
       "options": [
@@ -538,6 +602,15 @@
           "reply": "9 villages. Je peux les nommer : Brindle, Ashcote, Wenn, Harrow-le-Haut, Harrow-le-Bas et 4 autres. J'ai copié cette liste à 14 ans.",
           "teaches": "acres:razed_villages",
           "costs": "free"
+        },
+        {
+          "intent": "enforce_grants",
+          "text": "Faites appliquer les concessions. Toutes.",
+          "causes": "i_enforced_the_grants",
+          "requires": "acres:land_grants",
+          "costs": "goodwill",
+          "reply": "Alors je sors les actes. Pell paiera ce qu'il doit, et les autres aussi. Vous savez ce que ça leur coûte.",
+          "forbids_condition": "this_place_is_frozen"
         }
       ]
     },
@@ -558,6 +631,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Pell continue son rang et vous laisse planté là."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "La redevance a monté. Je sème plus et je garde moins. C'est comme ça."
         }
       ],
       "options": [
@@ -613,6 +690,14 @@
           "reply": "Pendant 11 ans. Il attaque toujours bouclier en avant et il répond à gauche. Il a appris ça à 19 ans et personne n'a le droit de le battre.",
           "teaches": "muster:how_the_king_fights",
           "costs": "goodwill"
+        },
+        {
+          "intent": "hand_over_deserters",
+          "text": "Il y a un déserteur dans la Ronceraie. Je sais où.",
+          "causes": "i_handed_over_the_deserters",
+          "requires": "thornwood:kell",
+          "costs": "goodwill",
+          "reply": "Alors dites-le, et 6 hommes partent ce soir. Vous aurez la prime. Sa guérisseuse en ville aussi, on lui parlera."
         }
       ]
     },
@@ -633,6 +718,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Odile ferme le livre avant que vous soyez assez près pour le lire."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "Les hommes font la queue à la tente et repartent les mains vides. Ne restez pas là."
         }
       ],
       "options": [
@@ -653,6 +742,23 @@
           "text": "Je sais que vous volez la paie.",
           "reply": "Alors vous savez ce que je paierais pour que vous arrêtiez de le dire ici. Dites votre prix.",
           "costs": "goodwill"
+        },
+        {
+          "intent": "pay_muster",
+          "text": "Payez les hommes. Tout ce qui est sur le rôle, à ceux qui vivent.",
+          "causes": "i_paid_the_muster",
+          "requires": "muster:pay_fraud",
+          "hides_after": "public:muster:pay_fraud",
+          "costs": "goodwill",
+          "reply": "Vous savez, donc. Bien. La paie part ce soir, et le roi la paiera deux fois. Ne dites à personne pourquoi.",
+          "forbids_condition": "this_place_is_frozen"
+        },
+        {
+          "intent": "feed_muster",
+          "text": "Le camp a faim. Faites acheter du grain à Harrowgate.",
+          "causes": "i_fed_the_muster",
+          "costs": "goodwill",
+          "reply": "Avec quel argent ? Le vôtre, alors. 40 sacs, et le pain montera en ville. Pas mon problème."
         }
       ]
     },
@@ -765,6 +871,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Mira ferme le dossier qu'elle lisait et attend que vous partiez."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "3 dossiers de plus sur ma table cette semaine, et aucun ne paiera."
         }
       ],
       "options": [
@@ -809,6 +919,23 @@
           "reply": "Presque tout ce qu'il a construit, et presque tout est dû à moi. Il n'a pas payé les forges avec son argent. Il a payé avec le mien.",
           "teaches": "bank:leveraged",
           "costs": "goodwill"
+        },
+        {
+          "intent": "restore_confidence",
+          "text": "Je peux faire dire en ville que la banque tient. Ça vaut quelque chose.",
+          "causes": "i_restored_confidence",
+          "requires": "bank:debts",
+          "costs": "goodwill",
+          "reply": "Ça vaut beaucoup. Un mot de vous, et les dépôts restent. Les intérêts restent aussi."
+        },
+        {
+          "intent": "bring_creditors",
+          "text": "Amenez le créancier à la table. La couronne rééchelonne, il garde ses gages.",
+          "causes": "i_brought_the_creditors",
+          "requires": "bank:debts",
+          "costs": "goodwill",
+          "reply": "Il viendra si c'est vous qui le demandez. La dette court 10 ans de plus. Ce sont les fermages des Champs qui la paient, et les taxes des pauvres.",
+          "forbids_condition": "this_place_is_frozen"
         }
       ]
     },
@@ -825,6 +952,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Peyre retourne à ses rayons et ne vous offre pas de chaise."
+        },
+        {
+          "when": "blackcairn_is_poor",
+          "text": "Le chantier du mur nord s'est arrêté. Pas de pierre ce mois-ci."
         }
       ],
       "options": [
@@ -869,6 +1000,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Anselm dit que l'intendante ne reçoit personne et ne l'adoucit pas."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "Il y a plus de monde à la porte de l'église pour le pain que pour la messe."
         }
       ],
       "options": [
@@ -908,6 +1043,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Hesper ne lève pas les yeux de la liste qu'elle annote."
+        },
+        {
+          "when": "crown_rank_is_at_least_3",
+          "text": "Hesper pose sa plume. Pour vous, les papiers sont une formalité."
         }
       ],
       "options": [
@@ -1027,6 +1166,14 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Dray se place entre vous et la porte sans se presser."
+        },
+        {
+          "when": "hardship_is_high_here",
+          "text": "La garde mange froid depuis 2 jours. Passez votre chemin."
+        },
+        {
+          "when": "crown_rank_is_at_least_3",
+          "text": "Dray vous fait signe de passer. La porte est à vous, on connaît votre visage."
         }
       ],
       "options": [

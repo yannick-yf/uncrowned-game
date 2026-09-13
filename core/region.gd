@@ -159,21 +159,32 @@ func is_passable(tile: Vector2i) -> bool:
 	return true
 
 
+
+## The king's ground: the road, town streets, the camp. Everything done on it is
+## seen (§4), so "the wild" means the walk that touches it as little as it can — it
+## cannot be never, because the road seals the east (Navigation). The instrument and
+## the route tests ask this so that a measured "wild" line is actually wild: the
+## shortest walkable path from Brindle to the castle was 42% road before it did.
+func is_watched(tile: Vector2i) -> bool:
+	match terrain_at(tile):
+		Terrain.ROAD, Terrain.TOWN, Terrain.CAMP:
+			return true
+	return false
+
+
 ## Whether the ground slows you at all.
 ##
-## Off. Everything walkable moves at the road's 6 tiles/sec — a forest is not a
-## slog and a marsh is not a punishment for going the interesting way. The tuned
-## table below is kept intact rather than deleted, so turning this back on is one
-## word and the numbers are still the ones that were reasoned about.
+## **On again (2026-09-13, §4).** It was switched off on 2026-09-11 because "a forest
+## should be dangerous, not tiring" — and then the beasts went, so "dangerous" has no
+## first half left and tiring is the price the table below was reasoned for. The wild
+## is *slow and unwatched*, the road *fast and watched*, and the choice is what §4
+## said first: speed against witnesses. Time is the only price of the wild now, which
+## is why MAP_SPEC's road ratio matters more rather than less, and why
+## `tools/measure_routes.gd` has to be run after touching the map or this table.
 ##
-## What this costs, and what it buys: §4's trade-off was "speed versus witnesses",
-## and the speed half is now gone. What replaces it is better. The road is a
-## deliberate dog-leg — 351 tiles against a 250-tile wild line — so taking the road
-## costs about 17 seconds and buys safety, while cutting through the Thornwood
-## saves those seconds and (from stage 3) draws blood. Distance against danger,
-## and later against being seen. The dog-leg is now load-bearing rather than
-## flavour: it is the entire price of the safe route.
-const TERRAIN_SLOWS_YOU: bool = false
+## One exception, by trait: an attuned walker is not slowed by the wood as much
+## (MovementRules.ATTUNED_WOOD_MULTIPLIER, §11).
+const TERRAIN_SLOWS_YOU: bool = true
 
 
 static func speed_multiplier(terrain: Terrain) -> float:
@@ -181,14 +192,25 @@ static func speed_multiplier(terrain: Terrain) -> float:
 
 
 ## The tuned figures, as settled in §4. Consulted only when TERRAIN_SLOWS_YOU.
+##
+## **Open country is 0.65, not the 0.80 it was tuned to** (Yannick, 2026-09-13,
+## measured). The table was reasoned about while speeds were off and never measured
+## against the claim it exists for. Measured, the least-watched line from Brindle to
+## the castle is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a
+## plain walker by 2.4 s and lost to an attuned one. At 0.65 the road wins by 12 s and
+## 9 s — a fifth of the walk, noticeable, not a slog. Worked fields keep 0.80: they
+## have paths, and the Wide Acres is a place you walk around in. Cleared ground and the
+## clearing are not in the table and walk at 1.00 — bare earth — until it matters.
 static func speed_table(terrain: Terrain) -> float:
 	match terrain:
 		Terrain.ROAD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
 			return 1.00
 		Terrain.RUINS:
 			return 0.90
-		Terrain.WILD, Terrain.FARMLAND:
+		Terrain.FARMLAND:
 			return 0.80
+		Terrain.WILD:
+			return 0.65
 		Terrain.SAND:
 			return 0.75
 		Terrain.FOREST:
@@ -218,8 +240,7 @@ func is_in_muster(tile: Vector2i) -> bool:
 ## can a fixed radius, now that Harrowgate is forty tiles across and Brindle is
 ## fifteen. It is baked from each zone's own footprint when the region is built:
 ## correct for towns of different sizes, and a byte lookup rather than eight
-## square roots, which matters because the wildlife asks it four times per animal
-## per step.
+## square roots, which matters because it is asked every step.
 const ZONE_ORDER: Array[StringName] = [
 	&"brindle", &"cinderworks", &"harrowgate", &"wide_acres",
 	&"muster", &"saltmarch", &"cairnwell", &"blackcairn",
@@ -234,7 +255,6 @@ static func is_place(zone: StringName) -> bool:
 	return ZONE_ORDER.has(zone)
 
 var _zone_map: PackedByteArray = PackedByteArray()
-var _wild_map: PackedByteArray = PackedByteArray()
 
 
 func zone_at(tile: Vector2i) -> StringName:
@@ -256,50 +276,6 @@ func _bake_zones() -> void:
 			for y: int in range(site.y - half.y, site.y + half.y + 1):
 				if in_bounds(Vector2i(x, y)):
 					_zone_map[y * width + x] = i + 1
-
-
-## Ground a wild animal will set foot on: open country, wood or marsh, outside
-## every settlement, and **clear of the road by a margin**.
-##
-## The margin is the point. Keeping beasts off road *tiles* was not enough — a
-## walker wobbles a tile either side of a three-wide road, and a wolf standing on
-## the verge can reach them. §4 calls the King's Road patrolled; patrolled means
-## nothing hunts along it, not merely that nothing stands in it.
-const ROAD_STANDOFF: int = 3
-
-
-func is_beast_ground(tile: Vector2i) -> bool:
-	if not in_bounds(tile) or _wild_map.is_empty():
-		return false
-	return _wild_map[tile.y * width + tile.x] == 1
-
-
-func _bake_wild() -> void:
-	_wild_map.resize(width * height)
-	_wild_map.fill(0)
-
-	# Two passes, both linear. The obvious version asks every tile "is there road
-	# near me?" — fifty-six thousand tiles times a seven-by-seven box is 2.7
-	# million lookups and two seconds, paid on every launch. Asking instead "what
-	# is near *this* road tile" is the same answer for a tenth of the work,
-	# because there is far less road than there is world.
-	for x: int in width:
-		for y: int in height:
-			var tile := Vector2i(x, y)
-			if BeastRules.is_wild_ground(terrain_at(tile)) and zone_at(tile) == &"":
-				_wild_map[y * width + x] = 1
-
-	for x: int in width:
-		for y: int in height:
-			match terrain_at(Vector2i(x, y)):
-				Terrain.ROAD, Terrain.FORD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
-					_clear_around(x, y)
-
-
-func _clear_around(cx: int, cy: int) -> void:
-	for x: int in range(maxi(cx - ROAD_STANDOFF, 0), mini(cx + ROAD_STANDOFF + 1, width)):
-		for y: int in range(maxi(cy - ROAD_STANDOFF, 0), mini(cy + ROAD_STANDOFF + 1, height)):
-			_wild_map[y * width + x] = 0
 
 
 static func zone_footprints() -> Dictionary:
@@ -450,7 +426,6 @@ static func _build_overworld() -> Region:
 	region._stamp_crowd()
 	region._stamp_stalls()
 	region._bake_zones()
-	region._bake_wild()
 	return region
 
 

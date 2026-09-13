@@ -9,7 +9,7 @@ extends TestCase
 ## every one of those levers is an act at a landmark, not a conversation.
 
 
-## Lean: wildlife and travellers cost steps and move none of the numbers an act
+## Lean: travellers cost steps and move none of the numbers an act
 ## touches. Through the full build these ran in seventeen seconds; through this, two.
 func _world() -> Sim:
 	var sim := Sim.new()

@@ -103,7 +103,7 @@ static func build(
 	# what you are, the way it has to be told what you did — so this is in the packet
 	# beside what they think of you rather than among the facts they may not know.
 	if allegiance != null and allegiance.side != FactionRules.NEUTRAL:
-		lines.append("SEES YOU AS: %s" % Text.of(allegiance.rank_key()))
+		lines.append("SEES YOU AS: %s" % Text.of(allegiance.rank_key_with(standing)))
 
 	# 5. And what *you* know, which nothing here has ever said.
 	#

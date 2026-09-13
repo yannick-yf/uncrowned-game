@@ -32,6 +32,17 @@ const ARMY_DRIFT_PER_DAY: float = 12.0
 ## player loses is the safe walk out, then the ring, then the clearing itself.
 const HELD_AT_START: float = 22.0
 
+
+## Whether a tile is still the fairies' — inside the ground they hold around the
+## clearing. Moved here from the beast rules when the beasts went (2026-09-13): the
+## geometry is a fact about the wood, not about what hunted in it, and it is what
+## the belt (§4) and the opening's tests read.
+static func holds(tile: Vector2i, held: float) -> bool:
+	if held <= 0.0:
+		return false
+	return Vector2(tile).distance_to(Vector2(Region.CLEARING)) <= held
+
+
 ## And how much of it goes in a day, **at full steel output**.
 ##
 ## 0.55 empties it in about forty in-game days of the works running flat out. It is

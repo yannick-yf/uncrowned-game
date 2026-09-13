@@ -103,3 +103,24 @@ func test_every_trait_has_a_name_and_a_note_in_both_languages() -> void:
 				"%s: %s" % [language, TraitRules.name_key(what)])
 			assert_true(known.has(String(TraitRules.note_key(what))),
 				"%s: %s" % [language, TraitRules.note_key(what)])
+
+
+func test_the_wood_does_not_slow_an_attuned_walker_as_much() -> void:
+	# §11's second half of Attunement (2026-09-13, Q50). At the tag threshold and not
+	# below, because "you put points here" means one thing for all six.
+	var forest_build: Dictionary = TraitRules.at_the_floor()
+	forest_build[TraitRules.ATTUNEMENT] = TraitRules.SPEAKS_AT
+	var traits := Traits.new()
+	assert_true(traits.choose(forest_build))
+	assert_true(traits.is_attuned(), "3 is attuned")
+	forest_build[TraitRules.ATTUNEMENT] = TraitRules.SPEAKS_AT - 1
+	assert_true(traits.choose(forest_build))
+	assert_false(traits.is_attuned(), "2 is not")
+
+	var plain: float = MovementRules.multiplier_for(Region.Terrain.FOREST, false)
+	var attuned: float = MovementRules.multiplier_for(Region.Terrain.FOREST, true)
+	assert_true(attuned > plain, "the wood costs them less: %.2f against %.2f" % [attuned, plain])
+	assert_true(attuned < 1.0, "but it is still a wood, not a road")
+	assert_true(absf(MovementRules.multiplier_for(Region.Terrain.MARSH, true)
+		- MovementRules.multiplier_for(Region.Terrain.MARSH, false)) < 0.001,
+		"a marsh is a marsh whoever you are")

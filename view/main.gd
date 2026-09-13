@@ -23,8 +23,6 @@ const FIGURE: float = 16.0
 ## Interpolating across a respawn or a zone change would streak the player over
 ## the whole map for a frame.
 const TELEPORT_TILES: float = 2.0
-## How near something hunting you has to be before the HUD mentions it.
-const CLOSE_ENOUGH_TO_FEAR: float = 7.0
 ## How long a thing that just happened stays on screen: two seconds, then the
 ## world stops mentioning it and never brings it up again.
 const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
@@ -49,7 +47,6 @@ var _deaths_seen: int = 0
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
-var _wild: Wildlife = null
 var _ticked: WorldTick = null
 var _standing: Standing = null
 var _road: Travellers = null
@@ -119,7 +116,6 @@ func _ready() -> void:
 		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
-	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
 	_standing = _sim.store(&"standing") as Standing
@@ -140,6 +136,14 @@ func _ready() -> void:
 	if OS.has_feature("debug") and stand.contains(","):
 		var parts: PackedStringArray = stand.split(",")
 		_world.player_pos = Vector2(float(parts[0]) + 0.5, float(parts[1]) + 0.5)
+	# One of the four places, freed for this frame, so §13's free-state ground and its
+	# sign can be looked at without playing to them. The same debug gate as the tile
+	# above, and listed with it in CLAUDE.md.
+	var freed: String = OS.get_environment("UNCROWNED_FREE")
+	if OS.has_feature("debug") and freed != "" and _mine != null:
+		# Comma-separated, so two places freed at once photograph a crisis at the wall.
+		for zone: String in freed.split(","):
+			_mine.decide(StringName(zone.strip_edges()), FactionRules.OPPOSITION, _sim.tick)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -531,7 +535,6 @@ func _reload() -> void:
 	_sim = loaded
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
-	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
@@ -647,11 +650,17 @@ func _draw() -> void:
 	# emptying while you were elsewhere looks emptied. This is the visible half of
 	# §8's fifth consequence: the world moved without you.
 	var tents_standing: int = _tents_standing()
+	# §13's free-state ground: a freed place is its own kit with things missing. The
+	# Muster strikes half its rows; the Wide Acres loses its fences (below).
+	if _is_free(&"muster"):
+		tents_standing = maxi(1, tents_standing / 2)
 	var crowd: int = _crowd_size()
 	var tent: int = 0
 	var folk: int = 0
 	for prop: Dictionary in region.props:
 		var kind: StringName = prop["kind"] as StringName
+		if kind == &"fence" and _is_free(&"wide_acres"):
+			continue
 		if kind == &"tent" or kind == &"tent_b":
 			tent += 1
 			if tent > tents_standing:
@@ -673,9 +682,6 @@ func _draw() -> void:
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
 
 	_draw_travellers(min_x, max_x, min_y, max_y)
-
-	for beast: Beast in _wild.beasts:
-		_draw_beast(beast)
 
 	if _world.current_zone == WorldState.OVERWORLD:
 		_draw_escort()
@@ -859,7 +865,8 @@ func _draw_particles(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
 		var kind: StringName = prop["kind"] as StringName
 		var embers: int = 0
 		var colour := Color.WHITE
-		if kind == &"kiln":
+		# A freed Cinderworks is cold: the same kilns, no embers (§13).
+		if kind == &"kiln" and not _is_free(&"cinderworks"):
 			embers = 5
 			colour = Color(1.0, 0.62, 0.28, 0.75)
 		elif kind == &"campfire":
@@ -904,22 +911,21 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 	# tiles nobody is standing on.
 	var covers: bool = Rect2(dest, Vector2(source.size)).grow(-2.0).has_point(
 		_draw_position() * float(TILE))
+	var tint: Color = Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE
+	# A shuttered counting house: the same building, unlit, once the bank is the
+	# creditor's rather than the crown's (§13's free variant).
+	if (prop["kind"] as StringName) == &"counting_house" and _is_free(&"cairnwell"):
+		tint = tint.darkened(0.4)
+	# And the castle's wealth reading (§4): shuttered works and an unfinished wall,
+	# drawn as the keep, the towers and the gate gone dark.
+	var kind: StringName = prop["kind"] as StringName
+	if (kind == &"keep" or kind == &"tower" or kind == &"gatehouse") \
+			and CastleRules.wealth(_ticked) == CastleRules.SHUTTERED:
+		tint = tint.darkened(0.35)
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(dest.round(), Vector2(source.size)),
-		Rect2(source), Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE)
-
-
-func _draw_beast(beast: Beast) -> void:
-	var sheet: Texture2D = _art.beast_sheet_for(beast.kind)
-	if sheet == null:
-		return
-	var top_left: Vector2 = beast.pos * float(TILE) - Vector2(FIGURE, FIGURE) * 0.5
-	draw_texture_rect_region(
-		sheet,
-		Rect2(top_left.round(), Vector2(FIGURE, FIGURE)),
-		Art.tile_rect(Art.column_for(beast.facing), 0),
-	)
+		Rect2(source), tint)
 
 
 ## The fairy, who is **light and movement and not a body**.
@@ -992,20 +998,37 @@ func _draw_witnesses() -> void:
 ## They are simulated for the whole map whether or not you are looking, which is
 ## the point — a carrier who stops existing when you turn away cannot deliver
 ## anything. Only the drawing is culled.
+##
+## **Drawn as traffic, not as people** (2026-09-13, §13): a pack horse walking the
+## road, never a face from any sheet the cast or the crowd uses. The side sheet faces
+## left; a walker heading the other way is the same frame drawn with a negative width.
 func _draw_travellers(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
 	if _road == null:
 		return
+	var sheet: Texture2D = _art.traffic_sheet()
+	if sheet == null:
+		return
+	var line: Array[Vector2i] = _world.region().road_waypoints()
+	var size := Vector2(Art.TRAFFIC_FRAME)
 	for walker: Traveller in _road.walkers:
 		var at: Vector2i = walker.tile()
 		if at.x < min_x or at.x > max_x or at.y < min_y or at.y > max_y:
 			continue
-		var sheet: Texture2D = _art.townsfolk_sheet(walker.id)
-		if sheet == null:
-			continue
-		var column: int = Art.column_for(Vector2i(walker.heading, 0))
-		var top_left: Vector2 = walker.pos * float(TILE) - Vector2(FIGURE, FIGURE) * 0.5
-		draw_texture_rect_region(
-			sheet, Rect2(top_left.round(), Vector2(FIGURE, FIGURE)), Art.tile_rect(column, 0))
+		# Which way it is actually going, read off the next waypoint rather than off
+		# the leg index, which says nothing about east or west.
+		var facing_right: bool = false
+		if not line.is_empty():
+			var target: int = clampi(walker.leg + walker.heading, 0, line.size() - 1)
+			facing_right = float(line[target].x) + 0.5 > walker.pos.x
+		# Two frames, alternated by where it stands, so a walking animal walks.
+		var frame: int = absi(int(floorf(walker.pos.x + walker.pos.y))) % 2
+		var src := Rect2(float(frame * Art.TRAFFIC_FRAME.x), 0.0, size.x, size.y)
+		var rect := Rect2((walker.pos * float(TILE) - size * 0.5).round(), size)
+		if facing_right:
+			rect.position.x += size.x
+			rect.size.x = -size.x
+		draw_texture_rect_region(sheet, rect, src)
+
 
 
 ## The escort, drawn because it has to be *seen* to drop. Ten bodies in two ranks
@@ -1016,6 +1039,14 @@ func _draw_escort() -> void:
 		var file: int = i % 5
 		var at: Vector2 = _world.king_pos + Vector2(float(file) - 2.0, 2.0 + float(rank) * 1.2)
 		_draw_actor(at, &"guard", Art.FACE_DOWN)
+	# §4's instability reading, on the wall: more guards than the escort accounts for,
+	# posted either side of the gate. Drawn from the reading, never stored, and never
+	# fought — the escort is the number the endings read; this is what the wall looks
+	# like from the road when places have been changing hands.
+	var unrest: StringName = CastleRules.instability(_mine, _sim.tick)
+	var posts: Array[Vector2] = [Vector2(-5.0, 9.0), Vector2(3.0, 9.0), Vector2(-8.0, 9.0), Vector2(11.0, 9.0)]
+	for i: int in CastleRules.extra_guards(unrest):
+		_draw_actor(_world.king_pos + posts[i], &"guard", Art.FACE_DOWN)
 
 
 # --------------------------------------------------------------------- hud ---
@@ -1143,15 +1174,9 @@ func _draw_hud() -> void:
 	var mood: String = _atmosphere()
 	if mood != "":
 		rows.append(mood)
-
-	# Only what can actually reach you. A wolf that has seen you from the treeline
-	# while you stand in a camp it cannot enter is not a warning, it is a lie.
-	var hunted: int = 0
-	for beast: Beast in _wild.beasts:
-		if beast.hunting and beast.pos.distance_to(_world.player_pos) <= CLOSE_ENOUGH_TO_FEAR:
-			hunted += 1
-	if hunted > 0:
-		rows.append(Text.of(&"beast.one") if hunted == 1 else Text.of(&"beast.many", [hunted]))
+	var sign: String = _sign()
+	if sign != "":
+		rows.append(sign)
 
 	var npc: Npc = _nearby_npc()
 	if _can_rest():
@@ -1254,6 +1279,7 @@ func _journal_pages() -> Array[Dictionary]:
 	var pages: Array[Dictionary] = [
 		{"name": &"journal.doings", "blocks": _page_doings()},
 		{"name": &"journal.holds", "blocks": _page_the_king()},
+		{"name": &"journal.kingdom", "blocks": _page_kingdom()},
 		{"name": &"journal.quests", "blocks": _page_quests()},
 		{"name": &"journal.side", "blocks": _page_you()},
 	]
@@ -1354,8 +1380,50 @@ func _page_the_king() -> Array[Array]:
 			block.append(Text.of(&"journal.wood.gone" if _ticked.held_ground <= 0.0
 				else (&"journal.wood.lost" if _ticked.steel_output > 0.0
 					else &"journal.wood.saved")))
+		# §3's throne reading. If the throne is the player's, the ending shows one thing
+		# of what they do with it: the towns they changed, the morning after, in words.
+		if _world.reign_reading != &"":
+			block.append(Text.of(StringName("journal.throne.%s" % _world.reign_reading)))
+			if _world.reign_reading == EndRules.CROWNED:
+				for town: StringName in Region.ZONE_ORDER:
+					var lot: float = _ticked.hardship_in(town)
+					if absf(lot - WorldTick.NEUTRAL) < 0.5:
+						continue
+					block.append(Text.of(&"journal.throne.worse" if lot > WorldTick.NEUTRAL
+						else &"journal.throne.better", [_short_place(town)]))
 		blocks.append(block)
 	return blocks
+
+
+## §15's kingdom page (2026-09-13). The thesis says the ending is a reading of what
+## the kingdom became; this is where the player reads it before the end. Pulled, like
+## every page, and it never scores: words for the places, the people and the castle,
+## with whose doing it was beside each — never a number, never advice.
+func _page_kingdom() -> Array[Array]:
+	var places: Array[String] = [Text.of(&"journal.kingdom.places")]
+	var people: Array[String] = ["", Text.of(&"journal.kingdom.hardship")]
+	var castle: Array[String] = ["", Text.of(&"journal.kingdom.castle")]
+	for row: Dictionary in Journal.kingdom(_mine, _ticked, _sim.tick):
+		match row["kind"] as StringName:
+			&"place":
+				var who: String = ""
+				if int(row["tick"]) >= 0:
+					who = Text.of(&"journal.kingdom.by_you" if bool(row["by_player"])
+						else &"journal.kingdom.turned", [_clock(int(row["tick"]))])
+				places.append(Text.of(&"journal.kingdom.place", [
+					_short_place(row["town"] as StringName),
+					Text.of(&"journal.kingdom.free" if bool(row["free"]) else &"journal.kingdom.crown"),
+					who]))
+			&"hardship":
+				people.append(Text.of(&"journal.kingdom.worse" if bool(row["worse"])
+					else &"journal.kingdom.better", [_short_place(row["town"] as StringName)]))
+			&"castle":
+				castle.append(Text.of(StringName("journal.kingdom.wealth.%s" % row["wealth"])))
+				castle.append(Text.of(StringName("journal.kingdom.unrest.%s" % row["unrest"])))
+	if people.size() == 2:
+		people.append(Text.of(&"journal.kingdom.same"))
+	return [places, people, castle] as Array[Array]
+
 
 
 ## What you are looking for. A pure view over the fact base — nothing is stored, so
@@ -1386,7 +1454,7 @@ func _page_you() -> Array[Array]:
 	var first: Array[String] = [Text.of(&"journal.side.none")]
 	if _mine.side != FactionRules.NEUTRAL:
 		first = [Text.of(&"journal.side.row",
-			[Text.of(_mine.rank_key()), int(round(_mine.served))])]
+			[Text.of(_mine.rank_key_with(_standing))])]
 	var ground: Array[String] = ["", Text.of(&"journal.ground")]
 	for zone: StringName in FactionRules.CONTESTED:
 		var held: StringName = _mine.holder(zone)
@@ -1439,8 +1507,19 @@ func _journal_line(row: Dictionary) -> String:
 	var town: String = _short_place(row.get("town", &"") as StringName)
 	match row["kind"] as StringName:
 		Journal.DEED:
-			return Text.of(_deed_key(row["deed"] as StringName),
-				[town, _seen(int(row["seen"]))])
+			var key: StringName = _deed_key(row["deed"] as StringName)
+			if key == &"":
+				# The spoken levers and the second direction have no line of their own:
+				# what people heard, said to you, is the line.
+				var heard: String = Text.of(StringName("deed.heard.%s" % String(row["deed"])))
+				return Text.of(&"journal.deed.generic",
+					[heard.substr(0, 1).to_upper() + heard.substr(1), _seen(int(row["seen"]))])
+			return Text.of(key, [town, _seen(int(row["seen"]))])
+		Journal.HARDSHIP:
+			return Text.of(&"journal.hardship", [town])
+		Journal.FLIP:
+			return Text.of(&"journal.flip.free" if PlaceRules.is_free(row["to"] as StringName)
+				else &"journal.flip.crown", [town])
 		Journal.UNSEEN:
 			return Text.of(&"journal.unseen", [town])
 		Journal.ARRIVAL:
@@ -1475,6 +1554,12 @@ func _journal_because(row: Dictionary) -> String:
 			return Text.of(&"journal.because.grain") if bool(row["after_the_army"]) else ""
 		Journal.ESCORT:
 			return Text.of(&"journal.because.escort") if bool(row["after_the_army"]) else ""
+		Journal.HARDSHIP:
+			return Text.of(&"journal.because.hardship",
+				[Text.of(StringName("deed.heard.%s" % String(row["deed"])))])
+		Journal.FLIP:
+			return Text.of(&"journal.because.you_decided" if bool(row["by_player"])
+				else &"journal.because.turned")
 	return ""
 
 
@@ -1503,7 +1588,7 @@ func _deed_key(deed: StringName) -> StringName:
 		DeedRules.DEED_BURN_STORES: return &"journal.deed.burn"
 		DeedRules.DEED_ROB_BANK: return &"journal.deed.rob"
 		DeedRules.DEED_WRECK_ROLLS: return &"journal.deed.rolls"
-	return &"journal.unseen"
+	return &""
 
 
 func _phrase_key(deed: StringName) -> StringName:
@@ -1538,3 +1623,18 @@ func _atmosphere() -> String:
 	if _world.fraud_told_to != &"":
 		return Text.of(&"muster.shut")
 	return Text.of(&"muster.queue")
+
+
+## The entrance sign, in the place's own words (§15). Propaganda: a claim the player
+## can doubt and later find false. Which one shows is the rules layer's verdict; the
+## words are content, French first.
+func _sign() -> String:
+	if _world.current_zone != WorldState.OVERWORLD or _mine == null:
+		return ""
+	var here: StringName = _world.region().zone_at(_world.player_tile())
+	var key: StringName = PlaceRules.sign_key_for(here, _mine.holder(here), _mine.was_decided(here))
+	return Text.of(key) if key != &"" else ""
+
+
+func _is_free(zone: StringName) -> bool:
+	return _mine != null and PlaceRules.is_free(_mine.holder(zone))

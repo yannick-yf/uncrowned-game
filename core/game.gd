@@ -26,7 +26,6 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	var sim := Sim.new(p_seed)
 	sim.add_store(&"world", build_world())
 	sim.add_store(&"cast", Cast.shared())
-	sim.add_store(&"wildlife", Wildlife.new())
 	sim.add_store(&"worldtick", WorldTick.new())
 	sim.add_store(&"standing", Standing.new())
 	sim.add_store(&"rumours", Rumours.new())
@@ -75,7 +74,6 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
 	systems.append(RumourSystem.new())
-	systems.append(WildlifeSystem.new())
 	systems.append(RestSystem.new())
 	systems.append(RecoverySystem.new())
 	systems.append(ArrivalSystem.new())
@@ -93,7 +91,7 @@ static func replay_rows(rows: Array, p_seed: int, final_step: int) -> Sim:
 static func fresh_stores() -> Dictionary:
 	return {
 		&"world": build_world(), &"cast": Cast.shared(),
-		&"wildlife": Wildlife.new(), &"worldtick": WorldTick.new(),
+		&"worldtick": WorldTick.new(),
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
