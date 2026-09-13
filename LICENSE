@@ -1,0 +1,39 @@
+MIT License
+
+Copyright (c) 2026 Yannick Flores
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+The MIT License above ends here. The note below is not part of it; it records
+where the non-code material comes from.
+
+## Third-party assets
+
+The art and audio under `assets/` are **not** covered by the licence above.
+They come from the Ninja Adventure pack by Pixel-Boy, released under CC0 1.0
+(public domain dedication). The pack and the URL it was downloaded from are
+recorded in `assets/NinjaAdventure/LICENCE-as-downloaded.md`.
+
+CC0 asks for nothing, but crediting the author costs nothing either, so the
+credit stays in that file and in the game's credits.
+
+Anything added to `assets/` later must have its own licence recorded the same
+way, before it is committed — see `CONTRIBUTING.md`.

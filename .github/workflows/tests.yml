@@ -1,0 +1,69 @@
+name: tests
+
+# The gate on main. A pull request that cannot go green does not get merged.
+#
+# The suite is the same one run locally — tools/run_tests.sh is the sanctioned
+# entry point because the runner cannot see its own stderr, so a test that
+# crashes after its first assertion would otherwise report "ok".
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel an in-flight run when the branch gets a new push. Two runs of the same
+# PR tell you nothing the later one does not.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  suite:
+    name: suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      # Keep this in step with the version in project.godot.
+      GODOT_VERSION: "4.7.2"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Godot ${{ env.GODOT_VERSION }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="${GODOT_VERSION}-stable"
+
+          # Resolve the asset from the release rather than guessing the filename:
+          # Godot's linux asset naming has changed between minor versions before.
+          URL=$(curl -sfL -H "Authorization: Bearer ${GH_TOKEN}" \
+                  "https://api.github.com/repos/godotengine/godot/releases/tags/${TAG}" \
+                | grep -o 'https://[^"]*linux[._]x86_64\.zip' \
+                | grep -v mono | head -n1)
+
+          if [ -z "${URL}" ]; then
+            echo "Could not find a linux x86_64 asset for ${TAG}." >&2
+            exit 1
+          fi
+          echo "Using ${URL}"
+
+          curl -sfL -o godot.zip "${URL}"
+          unzip -q godot.zip
+          BIN=$(find . -maxdepth 1 -type f -name 'Godot_v*' | head -n1)
+          mv "${BIN}" godot-bin
+          chmod +x godot-bin
+          ./godot-bin --version
+
+      - name: Import assets
+        run: ./godot-bin --headless --path . --import
+
+      - name: Run the whole suite
+        env:
+          GODOT: ./godot-bin
+        run: |
+          chmod +x tools/run_tests.sh
+          tools/run_tests.sh --all
