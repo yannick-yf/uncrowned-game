@@ -96,8 +96,11 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **0.9 s**, which is the one to run without
-thinking. `--all` adds the journeys and the asset pack and takes about **5.8 s**.
+walks, no asset pack — in about **4.7 s**, which is the one to run without
+thinking. `--all` adds the journeys and the asset pack and takes about **18 s**.
+(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people.
+The numbers are here to be kept true, not to be admired: if the fast suite ever
+stops being the thing you run without thinking, that is the thing to fix.)
 A suite marked `const SLOW := true` is in the second group.
 
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
