@@ -688,3 +688,110 @@ the prop list, and every prop carries `"solid": false`. Buildings are not walk-t
 it deliberately refuses to wall a protected tile so a building can never close the
 road. The `solid` flag is dead weight. Recorded for the polish pass rather than
 changed here, because making things solid can trap a player and needs its own test.
+
+---
+
+## NIGHT THREE — RUNNING LOG
+
+### 1. Quests, as predicates over the fact base
+
+`core/rules/quest_rules.gd` and nothing else: no store, no system, no migration. A
+quest is two fact patterns — what you must know for it to be a question you could be
+asking, and what makes it answered — so **the state is the fact base** and a reloaded
+save has exactly the quests its facts imply.
+
+Invariant 5 comes out of that shape rather than out of discipline. Because §7 already
+requires every fact to have more than one source, **every quest has more than one way
+in for free**: kill the person who would have told you and somebody else still can. No
+test has to police it.
+
+Eight quests, one journal page, 22 text keys a language, 142 lines of test.
+
+### 2. Character creation — six traits, a pool of 10, a cap of 5
+
+Closes §19 Q6 and Q22. Q22's complaint was right: twelve points buys *three* maxed
+traits and leaves three at the floor, which is a shopping list. Ten buys two at five
+with two spare, or one at five and two at three, and each of those is a different
+person.
+
+Creation is **one external event carrying six numbers**, checked before anything is
+written, so it lives in the save and replays like a keypress. Traits do not rise (Q23)
+so the store holds no history.
+
+Section 11's tag was display-only because traits did not exist; it gates now, at 3 or
+more. That is not the progression check invariant 4 forbids — traits are chosen once,
+so nothing opens because you did the previous thing. What keeps it legal is invariant
+6: redundancy counts a trait gate as a gate, so no fact sits behind one, and a
+character at the floor of all six can still finish the game.
+
+It also found a real bug: `DialogueRules.verdict()` recomputed availability with its
+own arguments, so when `available()` learnt about traits and `verdict` did not, the
+line was read aloud and taught nothing. `verdict` now takes the offered list.
+
+### 3. A title screen, and the front of the game
+
+The save system existed and was unreachable: the game booted into the world and
+silently loaded whatever was on disk. There was no way to say *new* and no way to say
+*continue*.
+
+**`view/screens.gd` is now the root** and owns which screen is up. Screens do not know
+about each other — each emits `chose(what, carrying)` and the root routes it — so any
+of them opens on its own, and `main.tscn` still runs by itself because it falls back
+to reading the save when nobody hands it a run.
+
+| | |
+|---|---|
+| `view/ui.gd` | the font, six sizes, ten colours, a panel, a sky, a caret. One file, so a new screen matches the rest of the game for free |
+| `view/menu.gd` | rows with a cursor. The title, the confirmation, creation and the pause screen are all this object with a different table in it |
+| `view/title.gd` | night, a treeline in silhouette, three fairies, four rows |
+| `view/creation.gd` | §11's pool on screen; Begin closed until the last point is placed |
+| pause, in `main.gd` | Escape backs out one layer at a time and stops the world when there is nothing left to close |
+
+**New replaces the old run only after being asked.** One save slot means a new game
+overwrites the old one, and that is a thing to be asked about rather than discovered
+afterwards. The new run is also **written to disk at creation** — the file otherwise
+still holds the previous run, and dying before the first campfire would have reloaded
+it, so a player would start a new game, walk into the wood, die, and find themselves
+in somebody else's afternoon.
+
+### The font, which turned out to be the graphics jump
+
+The pack drew a typeface for the tiles and the game was not using it. §13's rule is
+one pack and never a mix, and Godot's fallback sans is exactly the mismatch that rule
+exists to prevent. It is now `gui/theme/custom_font`, so the HUD, the dialogue box and
+the journal take it without a line of code.
+
+Three things had to be true first, and each was found by looking at a screenshot:
+
+- **The pack's word space is a tenth of an em**, so "Nouvelle partie" drew as
+  "Nouvellepartie". `view/font.tres` is the same face with `spacing_space` widened.
+  The only text above twenty pixels is the word UNCROWNED and it has no space in it,
+  which is why one resource covers every size.
+- **The font has no glyph for `·`, `—`, `…` or the guillemets.** Godot silently
+  substitutes a system font for a missing glyph, so the symptom is one bullet in the
+  wrong typeface. Twelve lines a language were rewritten and a test now walks every
+  shipped string and the cast sheets and fails on any of them.
+- **The HUD's 4-pixel outline ate the space between words.** Swapped for the offset
+  shadow the rest of the game draws with.
+
+### The journal had outgrown its box, and nobody could have known
+
+A Label given more lines than it has room for draws the ones that fit and says nothing
+about the rest. The journal had been running off the bottom since the faction sections
+arrived; widening the font is the only reason it was found.
+
+It is **pages now**, turned with left and right: what you have done, what holds him up,
+what you are looking for, what you are, what you know, and the debug roll of who is
+where. And every page is **cut to the box rather than trusted to fit** — the oldest
+blocks go and a line says how many. Silently losing the end of a page is the bug;
+losing the oldest and saying so is a page. A test measures every page against the real
+Label and fails on an overflow.
+
+Suite: **35 suites, 361 tests, 10,215 assertions, 0 failed.**
+
+### `tools/shot.sh` — the check the suite cannot do
+
+`tools/shot.sh out.png [title|creation|play|pause|journal|map] [x,y]` renders one frame
+and quits. `--headless` never calls `_draw()`, so the suite cannot see the screen at
+all; every bug in this section was found by looking at a picture, and none of them
+would have failed a test.

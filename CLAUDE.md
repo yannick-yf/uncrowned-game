@@ -126,8 +126,12 @@ and kept as a real one: a game whose argument is *the road against the forest* s
 let you see the shape of the argument. It is painted once into a texture rather than
 redrawn, because 56,000 rectangles a frame is a slideshow.
 
-**`UNCROWNED_SHOT=/tmp/a.png UNCROWNED_AT=241,150 godot --path . --quit-after 40`**
-renders one frame to a file and quits, with `UNCROWNED_MAP=1` to open the map first.
+**`tools/shot.sh out.png [title|creation|play|pause|journal|map] [x,y]`** renders one
+frame of a screen to a file and quits. It is the only check that catches what the
+suite cannot see — the ocean shipped covered in shoreline tiles because "300 frames,
+zero script errors" was reported as though it meant the picture was right. Under it:
+`UNCROWNED_SHOT` names the file, `UNCROWNED_SCREEN` the screen, `UNCROWNED_AT` the
+tile to stand on.
 This exists because a night was spent shipping things that drew wrong without
 erroring — `--headless` never calls `_draw()`, so the test suite cannot see the
 screen at all, and "no script errors" says nothing about what is on it.
