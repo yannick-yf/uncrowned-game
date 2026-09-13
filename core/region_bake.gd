@@ -394,14 +394,18 @@ func _buildings(sectors: Dictionary, brief: Dictionary) -> void:
 		var building: Dictionary = entry as Dictionary
 		var kind: String = String(kinds.get(String(building.get("asset", "")), "ruin_house"))
 		var centre: Vector2i = _tile(building.get("center_xz", [0, 0]))
-		place(StringName(kind), centre - size / 2, size)
+		place(StringName(kind), centre - size / 2, size, true)
 	report.append("buildings: %d of his stand as props" % (sectors.get("buildings", []) as Array).size())
 
 
 ## A prop with a solid footprint, as `Region._place` does for the procedural map.
-## The road is never closed by it.
-func place(kind: StringName, at: Vector2i, size: Vector2i) -> void:
-	region.props.append({"kind": kind, "at": at, "size": size})
+## The road is never closed by it. `his` marks a building his data stands, so a
+## window showing his scenes draws his mesh and not our sprite for it.
+func place(kind: StringName, at: Vector2i, size: Vector2i, his: bool = false) -> void:
+	var prop: Dictionary = {"kind": kind, "at": at, "size": size}
+	if his:
+		prop["his"] = true
+	region.props.append(prop)
 	for dx: int in size.x:
 		for dy: int in size.y:
 			var tile: Vector2i = at + Vector2i(dx, dy)
@@ -550,6 +554,8 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 			"size": [(prop["size"] as Vector2i).x, (prop["size"] as Vector2i).y]}
 		if prop.has("solid"):
 			out["solid"] = bool(prop["solid"])
+		if bool(prop.get("his", false)):
+			out["his"] = true
 		props_out.append(out)
 	var trunk_out: Array = []
 	for id: StringName in trunk:
@@ -604,5 +610,7 @@ static func read(data: Dictionary) -> Region:
 			"at": _pair(prop.get("at", [0, 0])), "size": _pair(prop.get("size", [1, 1]))}
 		if prop.has("solid"):
 			out["solid"] = bool(prop["solid"])
+		if bool(prop.get("his", false)):
+			out["his"] = true
 		region.props.append(out)
 	return region

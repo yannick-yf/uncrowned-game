@@ -58,6 +58,12 @@ jobs:
           chmod +x godot-bin
           ./godot-bin --version
 
+      # His scenes, copied into the project with their paths repointed
+      # (docs/MIGRATION_3D.md §6, M2b). Generated here and never committed, so the
+      # import below sees them.
+      - name: Vendor the Brindle 3D workshop
+        run: ./godot-bin --headless --path . -s tools/vendor_workshop.gd
+
       - name: Import assets
         run: ./godot-bin --headless --path . --import
 

@@ -36,6 +36,22 @@ const CHUNK_CELLS: int = 48
 const WATER_SHOWS_FROM: float = 0.02
 ## The escort's ranks in front of the gate, as the 2D window draws them.
 const ESCORT_FILES: int = 5
+## His scenes, once the workshop has been vendored (`tools/vendor_workshop.sh`): the
+## map plate — his terrain and water with their shaders, the relief stamps, his
+## Brindle, his forests, the mine and the bridge, his sun and sky — minus his map
+## camera and its labels. Absent, the window builds the bake's ground itself and
+## says so once. Nothing of his is edited: it is a copy with its paths repointed.
+const HIS_MAP: String = "res://view3d/workshop/scenes/map_plate.tscn"
+## Terrain kinds the bake or the kit laid, drawn as a thin overlay on his ground so a
+## road or a town the map does not yet have is seen where the simulation has it.
+## Grass, rock, sand, water and the wood are his to show.
+const OVERLAY_KINDS: Array[int] = [
+	Region.Terrain.ROAD, Region.Terrain.FORD, Region.Terrain.TOWN, Region.Terrain.CAMP,
+	Region.Terrain.CASTLE, Region.Terrain.RAMPART, Region.Terrain.FARMLAND, Region.Terrain.MARSH,
+	Region.Terrain.CLEARED, Region.Terrain.CLEARING,
+]
+## The overlay sits this far above his ground, so the two never fight for a pixel.
+const OVERLAY_LIFT: float = 0.06
 
 var _region: Region = null
 var _sim: Sim = null
@@ -77,6 +93,12 @@ const OCCLUDED_ALPHA: float = 0.45
 var chunk_count: int = 0
 var water_triangles: int = 0
 var tree_count: int = 0
+## His world, when vendored; the tiles under his trees, so ours are not planted there;
+## how many of his buildings are his meshes rather than our sprites; the overlay.
+var _his: Node3D = null
+var _his_canopy: Dictionary = {}
+var his_props_skipped: int = 0
+var overlay_chunks: int = 0
 
 
 # ------------------------------------------------------------------ building ---
@@ -97,13 +119,151 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_metres_per_tile = extent / float(_samples - 1)
 		_origin_m = Vector2(-extent * 0.5, -extent * 0.5)
 	_build_camera()
-	_build_light()
-	_build_ground()
-	_build_water()
+	_adopt_his_world()
+	if _his == null:
+		_build_light()
+		_build_ground()
+		_build_water()
+	else:
+		_build_overlay()
 	_build_trees()
 	_build_props()
 	_build_fairy()
 	_build_embers()
+
+
+## His map plate as the world, with his lights and sky, minus his map camera and its
+## labels. The copy under `view3d/workshop/` is his tree with its paths repointed.
+func _adopt_his_world() -> void:
+	if not ResourceLoader.exists(HIS_MAP):
+		push_warning("his scenes are not vendored at %s — showing the bake's ground; run tools/vendor_workshop.sh" % HIS_MAP)
+		return
+	var scene: PackedScene = load(HIS_MAP) as PackedScene
+	if scene == null:
+		return
+	var world: Node3D = scene.instantiate() as Node3D
+	if world == null:
+		return
+	for extra_name: String in ["MapCamera", "MapInfo"]:
+		var extra: Node = world.get_node_or_null(extra_name)
+		if extra != null:
+			world.remove_child(extra)
+			extra.free()
+	world.name = "HisWorld"
+	add_child(world)
+	_his = world
+	# His site labels are editor guides — a forty-eight-point "Brindle" over the
+	# ruins — and his playtest hides them the moment play starts. They are built when
+	# his terrain rebuilds, a frame later, so they are hidden then.
+	var terrain: Node = world.get_node_or_null("Terrain")
+	if terrain != null and terrain.has_signal("rebuilt"):
+		terrain.connect("rebuilt", _hide_his_guides)
+	_read_his_canopy()
+
+
+func _hide_his_guides() -> void:
+	if _his == null:
+		return
+	for path: String in ["Terrain/Landscape/SiteGuides", "Decor/MineAcierie/RepereMine"]:
+		var guide: Node3D = _his.get_node_or_null(path) as Node3D
+		if guide != null:
+			guide.visible = false
+
+
+## The tiles his trees stand on, from his placements, so the bake's wood is planted
+## everywhere but there.
+func _read_his_canopy() -> void:
+	var path: String = RegionBake.WORKSHOP + "planning/forest-placements-v1.json"
+	if not FileAccess.file_exists(path):
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Array):
+		return
+	for entry: Variant in parsed as Array:
+		var row: Dictionary = entry as Dictionary
+		if row == null or not row.has("xz"):
+			continue
+		var xz: Array = row["xz"] as Array
+		var tile: Vector2i = BakeRules.tile_for(float(xz[0]), float(xz[1]), _origin_m, _metres_per_tile)
+		for dx: int in range(-RegionBake.CANOPY, RegionBake.CANOPY + 1):
+			for dy: int in range(-RegionBake.CANOPY, RegionBake.CANOPY + 1):
+				_his_canopy[tile + Vector2i(dx, dy)] = true
+
+
+## What the simulation's ground has that his does not — the road, the towns, the
+## fields, the marsh, the wound, the clearing — as a thin skin over his terrain, one
+## quad per tile at his own corner heights. A road over his river becomes a deck at
+## water level: the crossing the bake laid, seen.
+func _build_overlay() -> void:
+	if _samples < 2:
+		return
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# Part transparent, so his grass and his path ribbons show through: a road reads
+	# as a worn track over his ground rather than a lid on it.
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	var overlay := Node3D.new()
+	overlay.name = "Overlay"
+	add_child(overlay)
+	for z0: int in range(0, _region.height, CHUNK_CELLS):
+		for x0: int in range(0, _region.width, CHUNK_CELLS):
+			_build_overlay_chunk(overlay, material, x0, z0, mini(x0 + CHUNK_CELLS, _region.width),
+				mini(z0 + CHUNK_CELLS, _region.height))
+
+
+func _build_overlay_chunk(parent: Node3D, material: Material, x0: int, z0: int, x1: int, z1: int) -> void:
+	var vertices := PackedVector3Array()
+	var colours := PackedColorArray()
+	var indices := PackedInt32Array()
+	for z: int in range(z0, z1):
+		for x: int in range(x0, x1):
+			var kind: Region.Terrain = _region.terrain_at(Vector2i(x, z))
+			if not OVERLAY_KINDS.has(kind):
+				continue
+			var colour: Color = _art.colour_for(kind)
+			var deck: bool = kind == Region.Terrain.ROAD or kind == Region.Terrain.FORD
+			colour.a = 0.7 if kind == Region.Terrain.ROAD else 0.88
+			var base: int = vertices.size()
+			for corner: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
+				vertices.append(_overlay_corner(x + corner.x, z + corner.y, deck))
+				colours.append(colour)
+			indices.append_array(PackedInt32Array([base, base + 2, base + 1, base + 1, base + 2, base + 3]))
+	if vertices.is_empty():
+		return
+	var normals := PackedVector3Array()
+	normals.resize(vertices.size())
+	normals.fill(Vector3.UP)
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_COLOR] = colours
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	mesh.surface_set_material(0, material)
+	var surface := MeshInstance3D.new()
+	surface.name = "Overlay_%d_%d" % [x0, z0]
+	surface.mesh = mesh
+	parent.add_child(surface)
+	overlay_chunks += 1
+
+
+func _overlay_corner(x: int, z: int, deck: bool) -> Vector3:
+	var sx: int = mini(x, _samples - 1)
+	var sz: int = mini(z, _samples - 1)
+	var i: int = sz * _samples + sx
+	var y: float = _heights[i]
+	if deck and _waters.size() == _heights.size() and _waters[i] > y:
+		y = _waters[i]
+	return Vector3(_origin_m.x + float(x) * _metres_per_tile, y + OVERLAY_LIFT,
+		_origin_m.y + float(z) * _metres_per_tile)
+
+
+func his_present() -> bool:
+	return _his != null
 
 
 func _build_camera() -> void:
@@ -284,7 +444,14 @@ func _build_trees() -> void:
 	var groups: Dictionary = {}
 	for y: int in _region.height:
 		for x: int in _region.width:
-			var entry: Array = _art.scatter_at(_region.terrain_at(Vector2i(x, y)), x, y)
+			# Under his trees his trees stand; ours fill the wood the brief planted.
+			if _his != null and _his_canopy.has(Vector2i(x, y)):
+				continue
+			var kind: Region.Terrain = _region.terrain_at(Vector2i(x, y))
+			# His rock is painted by his shader; a pixel boulder on it is a second rock.
+			if _his != null and kind == Region.Terrain.MOUNTAIN:
+				continue
+			var entry: Array = _art.scatter_at(kind, x, y)
 			if entry.is_empty():
 				continue
 			var key: String = "%s:%s" % [String(entry[0]), str(entry[1])]
@@ -371,6 +538,12 @@ func _build_props() -> void:
 		var kind: StringName = prop["kind"] as StringName
 		var at: Vector2i = prop["at"] as Vector2i
 		var size: Vector2i = prop.get("size", Vector2i(4, 3)) as Vector2i
+		# A building his data stands is his mesh when his scenes are here, and only
+		# then: the simulation still knows it as a prop, the window just does not
+		# draw a second one.
+		if _his != null and bool(prop.get("his", false)):
+			his_props_skipped += 1
+			continue
 		var sprite: Sprite3D = null
 		if kind == &"townsfolk":
 			folk += 1

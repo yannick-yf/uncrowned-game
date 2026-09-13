@@ -87,7 +87,9 @@ docs/      SPECS.md — the source of truth. V2.md — what the game is now, rea
            V1.md — what shipped the morning before v2.
   history/   Finished working logs. Never authoritative; kept for the reasoning.
 prototypes/  The Brindle 3D workshop: a separate Godot project, kept out of the game's
-           import by `.gdignore` until the migration's M2. Open its own `project.godot`.
+           import by `.gdignore`. His; open its own `project.godot`. Never edited by us.
+view3d/workshop/  A generated copy of his project with its paths repointed, so his
+           scenes load in ours (tools/vendor_workshop.sh). Never committed, never edited.
 ```
 
 ## Commands
@@ -100,6 +102,8 @@ tools/shot.sh /tmp/a.png play 150,174       # look at it — see "Development to
 godot --headless --path . -s tools/sim_runner.gd -- --ticks 5000
 godot --headless --path . -s tools/measure_routes.gd
 godot --headless --path . -s tools/validate_assets.gd -- --no-cache
+tools/vendor_workshop.sh                                    # after cloning, and after each delivery of his:
+                                                            # his scenes into view3d/workshop/, then import
 godot --headless --path . -s tools/bake_region.gd          # his data + the brief -> content/region.json
 godot --headless --path . -s tools/bake_region.gd -- --check   # is the checked-in bake stale? (CI)
 tools/run_tests.sh --baked --all                            # the same suite on the baked world

@@ -3694,6 +3694,12 @@ somebody objects are in that file, not here. Combat remains outside it.
   the bridge and is otherwise unchanged; the window writes nothing back. Nothing of his
   moved (decision 6, MIGRATION_3D §9). Photographed at the clearing, in Harrowgate, in
   his Brindle, at the castle gate, with the journal and the map over it.
+- ✅ **M2b — his scenes in our window** (2026-09-13). `tools/vendor_workshop.gd` copies his
+  project's folders into `view3d/workshop/` with their `res://` paths repointed —
+  generated, never committed, run after each delivery and by CI. The window adopts his map
+  plate (terrain, water, relief, Brindle, forests, mine, sun) and lays the simulation's
+  ground over it as a part-transparent skin; the brief's wood grows everywhere but under
+  his trees; his buildings are his meshes. His project untouched.
 - ✅ **M3a — the window's own parity** (2026-09-13). What the 3D window shows that needs
   none of his art: the marks over whoever can see you, embers over fires and kilns and
   cold kilns for a freed works, the fairy's breathing glow, the occlusion fade, and every

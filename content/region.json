@@ -299,7 +299,8 @@
       "size": [
         2,
         2
-      ]
+      ],
+      "his": true
     },
     {
       "kind": "ruin_house",
@@ -310,7 +311,8 @@
       "size": [
         2,
         2
-      ]
+      ],
+      "his": true
     },
     {
       "kind": "ruin_house",
@@ -321,7 +323,8 @@
       "size": [
         2,
         2
-      ]
+      ],
+      "his": true
     },
     {
       "kind": "ruin_house",
@@ -332,7 +335,8 @@
       "size": [
         2,
         2
-      ]
+      ],
+      "his": true
     },
     {
       "kind": "ruin_house",
@@ -343,7 +347,8 @@
       "size": [
         2,
         2
-      ]
+      ],
+      "his": true
     },
     {
       "kind": "ruin_house",
@@ -354,7 +359,8 @@
       "size": [
         2,
         2
-      ]
+      ],
+      "his": true
     },
     {
       "kind": "kiln",

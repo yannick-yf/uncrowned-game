@@ -27,8 +27,19 @@ func test_the_window_stands_on_his_ground() -> void:
 	var window := World3d.new()
 	window.build(region, landscape, Art.new(), sim)
 
-	assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
-	assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)
+	# With his scenes vendored (tools/vendor_workshop.sh) the window stands on his map
+	# plate and lays only the simulation's ground over it; without them it builds the
+	# bake's ground itself. CI vendors first, so here the first is the rule.
+	assert_true(window.his_present(),
+		"his scenes stand in the window — run tools/vendor_workshop.sh if %s is missing" % World3d.HIS_MAP)
+	if window.his_present():
+		assert_eq(window.chunk_count, 0, "the bake's ground is not built under his")
+		assert_true(window.overlay_chunks > 0,
+			"the bake's roads and towns lie over his ground: %d overlay chunks" % window.overlay_chunks)
+		assert_eq(window.his_props_skipped, 6, "his six ruins are his meshes, not our sprites")
+	else:
+		assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
+		assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)
 	assert_true(window.tree_count > 1000, "the wood stands: %d billboards" % window.tree_count)
 	assert_true(window.prop_count() >= 100, "every prop has a sprite: %d" % window.prop_count())
 
