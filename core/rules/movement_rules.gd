@@ -13,9 +13,28 @@ extends RefCounted
 ## whole point of the two clocks.
 const TILES_PER_SECOND: float = 6.0
 
+## What the wood costs somebody who was raised in it.
+##
+## §11's second half of Attunement (2026-09-13, closing §19 Q50): *the wood does not
+## slow you*. The beasts took the trait's old combat half with them, and time is the
+## wild's price now, so the forest build does not pay all of it. Not the road's 1.0 —
+## a worked field's 0.80, so the road still comes out faster (57 s against 66 s,
+## measured 2026-09-13) and the choice stays a choice for everyone. The Thornwood only:
+## a marsh is a marsh whoever you are.
+const ATTUNED_WOOD_MULTIPLIER: float = 0.80
+
 
 static func tiles_per_step() -> float:
 	return TILES_PER_SECOND / float(Sim.STEPS_PER_REAL_SECOND)
+
+
+## How much of a step the ground under you allows. The one place the trait touches
+## the ground, so a test can ask it directly.
+static func multiplier_for(terrain: Region.Terrain, attuned: bool = false) -> float:
+	var ground: float = Region.speed_multiplier(terrain)
+	if attuned and terrain == Region.Terrain.FOREST:
+		return maxf(ground, ATTUNED_WOOD_MULTIPLIER)
+	return ground
 
 
 ## 8-way. The direction is normalised, so walking diagonally is not a way to travel
@@ -39,9 +58,10 @@ static func step(
 	dir: Vector2i,
 	region: Region,
 	distance: float = -1.0,
+	attuned: bool = false,
 ) -> Vector2:
 	var tiles_per_tick: float = distance if distance >= 0.0 else tiles_per_step()
-	var multiplier: float = Region.speed_multiplier(region.terrain_at(tile_of(from)))
+	var multiplier: float = multiplier_for(region.terrain_at(tile_of(from)), attuned)
 	var delta: Vector2 = direction_of(dir) * tiles_per_tick * multiplier
 	if delta == Vector2.ZERO:
 		return from

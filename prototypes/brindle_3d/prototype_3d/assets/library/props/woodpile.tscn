@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_lmrtl"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/woodpile_00.res" id="2_k6364"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rope.tres" id="3_oy07g"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/woodpile_01.res" id="4_ecaby"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s0u0x"]
+size = Vector3(1.55, 0.95, 1.25)
+
+[node name="Woodpile" type="Node3D" unique_id=1915621686]
+metadata/asset_id = "woodpile"
+metadata/family = "props"
+metadata/label = "Réserve de bûches"
+metadata/habitat = "Maison du forestier"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="WoodpileBody" type="StaticBody3D" parent="." unique_id=196379460]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WoodpileBody" unique_id=834270944]
+shape = SubResource("BoxShape3D_s0u0x")
+
+[node name="Geometry_wood" type="MeshInstance3D" parent="." unique_id=75444330]
+material_override = ExtResource("1_lmrtl")
+mesh = ExtResource("2_k6364")
+
+[node name="Geometry_rope" type="MeshInstance3D" parent="." unique_id=669109417]
+material_override = ExtResource("3_oy07g")
+mesh = ExtResource("4_ecaby")

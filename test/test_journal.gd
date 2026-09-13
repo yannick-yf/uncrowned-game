@@ -13,7 +13,7 @@ extends TestCase
 const AT_A_STALL: Vector2 = Vector2(147.5, 173.0)
 
 
-## Lean: the journal is read from events, and wildlife and movement cost steps
+## Lean: the journal is read from events, and travellers and movement cost steps
 ## while raising none of the ones it reads.
 func _run() -> Sim:
 	var sim := Sim.new()

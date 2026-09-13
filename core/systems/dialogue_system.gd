@@ -15,7 +15,7 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 		return
 	var standing := sim.store(&"standing") as Standing
 	var conditions: Dictionary = DialogueRules.conditions(
-		world, ticked, standing, sim.store(&"allegiance") as Allegiance)
+		world, ticked, standing, sim.store(&"allegiance") as Allegiance, sim.tick)
 	# Whose opinion is being asked is a property of the conversation, not of the
 	# world, so it is added per conversation rather than computed in the rules
 	# layer — which has no way of knowing who you walked up to.

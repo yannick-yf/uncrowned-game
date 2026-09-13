@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=4]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/coastal_water_v2.gdshader" id="1_ry4ua"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ry4ua")
+shader_parameter/deep_color = Color(0.028, 0.14, 0.225, 1)
+shader_parameter/shallow_color = Color(0.085, 0.32, 0.4, 1)
+shader_parameter/foam_color = Color(0.8, 0.88, 0.76, 1)
+shader_parameter/flow_a = Vector2(0.035, 0.022)
+shader_parameter/flow_b = Vector2(-0.024, 0.031)
+shader_parameter/wave_height = 0.045
+shader_parameter/wave_speed = 0.7
+shader_parameter/pattern_scale = 1.0
+shader_parameter/shoreline_z = 15.0
+shader_parameter/shore_rocks = PackedVector4Array(-18, 14.968245, 0.7018027, 0, -14, 15.297868, 0.6994644, 0, -10, 14.878873, 0.9658301, 0, 2.5, 15.1672735, 0.8272017, 0, 6.5, 15.219812, 0.65173054, 0, 12, 14.434971, 0.6664789, 0, 16, 14.378407, 0.6603873, 0)

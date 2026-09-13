@@ -12,7 +12,7 @@ extends TestCase
 ## and **a number that decides the game is on the page the player can read**.
 
 
-## Lean on purpose: an ending is a question about numbers, and wildlife and
+## Lean on purpose: an ending is a question about numbers, and travellers and
 ## travellers cost steps without moving any of them. Thirty in-game days through the
 ## full build took twenty-five seconds; through this it takes under one.
 func _quiet() -> Sim:

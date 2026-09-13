@@ -192,32 +192,14 @@ func test_dying_before_you_ever_rest_puts_you_back_where_you_woke() -> void:
 
 # --------------------------------------------- stage 2: the protected ground ---
 
-func test_nothing_with_teeth_stands_on_ground_the_fairies_hold() -> void:
-	# The same shape as the test that keeps beasts off the King's Road, because it
-	# is the same kind of claim: a safe place is safe because nothing may enter it,
-	# not because nothing happened to.
-	var sim: Sim = Game.build()
-	var world := sim.store(&"world") as WorldState
-	var wild := sim.store(&"wildlife") as Wildlife
-	var ticked := sim.store(&"worldtick") as WorldTick
-	world.player_pos = world.region().clearing_centre()
-	sim.advance(60 * 40)
-	var trespassers: int = 0
-	for beast: Beast in wild.beasts:
-		if BeastRules.is_protected(Vector2i(floori(beast.pos.x), floori(beast.pos.y)),
-				ticked.held_ground):
-			trespassers += 1
-	assert_eq(trespassers, 0, "forty seconds of standing in the clearing, and nothing came in")
-
-
 func test_the_walk_out_is_protected_too_at_the_start() -> void:
 	# The first walk out of the trees is the last walk on held ground. The corridor
 	# has to be inside it or the claim is only about the clearing.
 	var ticked := WorldTick.new()
 	var mouth := Vector2i(Region.CLEARING.x, Region.CLEARING.y + Region.CLEARING_RADIUS + 2)
-	assert_true(BeastRules.is_protected(Region.CLEARING, ticked.held_ground), "the clearing")
-	assert_true(BeastRules.is_protected(mouth, ticked.held_ground), "and the corridor out")
-	assert_false(BeastRules.is_protected(Region.BRINDLE, ticked.held_ground),
+	assert_true(WorldRules.holds(Region.CLEARING, ticked.held_ground), "the clearing")
+	assert_true(WorldRules.holds(mouth, ticked.held_ground), "and the corridor out")
+	assert_false(WorldRules.holds(Region.BRINDLE, ticked.held_ground),
 		"but not the ruins — you step out of the last protected place to reach them")
 
 
@@ -243,8 +225,8 @@ func test_putting_the_furnaces_out_stops_the_wood_shrinking() -> void:
 func test_the_edge_comes_in_so_a_later_visit_is_different() -> void:
 	# What makes the shrinking something the player walks into rather than is told.
 	var mouth := Vector2i(Region.CLEARING.x, Region.CLEARING.y + Region.CLEARING_RADIUS + 2)
-	assert_true(BeastRules.is_protected(mouth, WorldRules.HELD_AT_START), "held at the start")
-	assert_false(BeastRules.is_protected(mouth, 6.0),
+	assert_true(WorldRules.holds(mouth, WorldRules.HELD_AT_START), "held at the start")
+	assert_false(WorldRules.holds(mouth, 6.0),
 		"and not once the wood has lost most of what it had")
 
 

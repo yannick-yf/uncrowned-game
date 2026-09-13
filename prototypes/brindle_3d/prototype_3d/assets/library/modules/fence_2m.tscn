@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_cgwwp"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/modules/meshes/fence_2m_00.res" id="2_in558"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ylqa3"]
+size = Vector3(0.19, 1.2, 0.19)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4sev6"]
+size = Vector3(0.19, 1.2, 0.19)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wca0l"]
+size = Vector3(2, 1.1, 0.14)
+
+[node name="Fence2m" type="Node3D" unique_id=1371935435]
+metadata/asset_id = "fence_2m"
+metadata/family = "modules"
+metadata/label = "Clôture 2 m"
+metadata/habitat = "Village ; raccord sur X, pas de 2 m"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="PostBody" type="StaticBody3D" parent="." unique_id=1093407279]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.6, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PostBody" unique_id=1717969127]
+shape = SubResource("BoxShape3D_ylqa3")
+
+[node name="@StaticBody3D@4" type="StaticBody3D" parent="." unique_id=1442686016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.6, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="@StaticBody3D@4" unique_id=583752616]
+shape = SubResource("BoxShape3D_4sev6")
+
+[node name="RailsBody" type="StaticBody3D" parent="." unique_id=1453305933]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RailsBody" unique_id=1834157259]
+shape = SubResource("BoxShape3D_wca0l")
+
+[node name="ConnectLeft" type="Marker3D" parent="." unique_id=1733420582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="ConnectRight" type="Marker3D" parent="." unique_id=1422940572]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="Geometry_wood" type="MeshInstance3D" parent="." unique_id=132559921]
+material_override = ExtResource("1_cgwwp")
+mesh = ExtResource("2_in558")

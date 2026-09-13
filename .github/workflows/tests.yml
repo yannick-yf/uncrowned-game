@@ -67,3 +67,10 @@ jobs:
         run: |
           chmod +x tools/run_tests.sh
           tools/run_tests.sh --all
+
+      # The art workshop has its own project.godot and resource root. The
+      # production importer ignores prototypes/, so it needs a separate check.
+      - name: Import and check the Brindle 3D workshop
+        env:
+          GODOT: ./godot-bin
+        run: bash prototypes/brindle_3d/tools/check_workshop.sh

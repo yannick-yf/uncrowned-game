@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_om6rc"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/props/meshes/crate_single_00.res" id="2_bh761"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/crate_single_01.res" id="3_cymgo"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ws8op"]
+size = Vector3(0.75, 0.7, 0.72)
+
+[node name="CrateSingle" type="Node3D" unique_id=798712072]
+metadata/asset_id = "crate_single"
+metadata/family = "props"
+metadata/label = "Caisse"
+metadata/habitat = "Village et ponton"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Crate_00" type="Node3D" parent="." unique_id=815022131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+
+[node name="Box" type="MeshInstance3D" parent="Crate_00" unique_id=764432539]
+material_override = ExtResource("1_om6rc")
+mesh = ExtResource("2_bh761")
+
+[node name="Body" type="StaticBody3D" parent="Crate_00/Box" unique_id=1416035721]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Crate_00/Box/Body" unique_id=1722043124]
+shape = SubResource("BoxShape3D_ws8op")
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Crate_00" unique_id=1015227316]
+material_override = ExtResource("1_om6rc")
+mesh = ExtResource("3_cymgo")

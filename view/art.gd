@@ -71,14 +71,6 @@ const CASTING: Dictionary = {
 }
 
 
-## What lives in the wild. Monster sheets are 4x4 — the same four directions as a
-## character, with fewer frames.
-const BEASTS: Dictionary = {
-	&"bear": "Bear",
-	&"spider": "SpiderRed",
-	&"bat": "BlueBat",
-}
-
 ## Faces for the crowd. Never the same one twice in a row, and none of them is
 ## anybody: §6 keeps townsfolk out of the cast precisely so they cannot acquire a name
 ## by being drawn often enough.
@@ -210,14 +202,6 @@ func atlas(id: StringName) -> Texture2D:
 	return _atlases.get(id, null) as Texture2D
 
 
-func beast_sheet_for(kind: StringName) -> Texture2D:
-	var id := StringName("beast:%s" % kind)
-	if _sheets.has(id):
-		return _sheets[id] as Texture2D
-	_sheets[id] = load("%s/Actor/Monster/%s/SpriteSheet.png" % [PACK, String(BEASTS.get(kind, "Bear"))]) as Texture2D
-	return _sheets[id] as Texture2D
-
-
 ## Whether anything at all knows how to draw this kind of prop. Landmarks come
 ## from the props table; the crowd comes from its own faces.
 func can_draw(kind: StringName) -> bool:
@@ -231,6 +215,21 @@ func townsfolk_sheet(index: int) -> Texture2D:
 	if not _sheets.has(id):
 		_sheets[id] = load("%s/Actor/Character/%s/SpriteSheet.png" % [PACK, folder]) as Texture2D
 	return _sheets[id] as Texture2D
+
+
+## Travellers are traffic, not people (§9, §13): a pack horse on the road, never a
+## face — a face is how furniture turns into a character by being looked at often
+## enough. The pack's horse seen from the side is two frames of 23 × 16 facing left;
+## walking the other way is the same frame flipped by the window.
+const TRAFFIC_FRAME: Vector2i = Vector2i(23, 16)
+
+
+func traffic_sheet() -> Texture2D:
+	var id := StringName("traffic:horse")
+	if not _sheets.has(id):
+		_sheets[id] = load("%s/Actor/Animal/Horse/SpriteSheetBrownSide.png" % PACK) as Texture2D
+	return _sheets[id] as Texture2D
+
 
 
 func sheet_for(role: StringName) -> Texture2D:

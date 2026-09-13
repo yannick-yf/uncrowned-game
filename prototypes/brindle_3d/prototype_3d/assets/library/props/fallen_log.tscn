@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_jbhom"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/fallen_log_00.res" id="2_v5eni"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rope.tres" id="3_ux7j3"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/fallen_log_01.res" id="4_vwcqs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m6ve6"]
+size = Vector3(2.5, 0.68, 0.65)
+
+[node name="FallenLog" type="Node3D" unique_id=515144263]
+metadata/asset_id = "fallen_log"
+metadata/family = "props"
+metadata/label = "Tronc au sol"
+metadata/habitat = "Sous-bois ; longueur 2,5 m"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="LogBody" type="StaticBody3D" parent="." unique_id=72170306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 0.05)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LogBody" unique_id=1861038221]
+shape = SubResource("BoxShape3D_m6ve6")
+
+[node name="Geometry_wood" type="MeshInstance3D" parent="." unique_id=1985407533]
+material_override = ExtResource("1_jbhom")
+mesh = ExtResource("2_v5eni")
+
+[node name="Geometry_rope" type="MeshInstance3D" parent="." unique_id=1848682676]
+material_override = ExtResource("3_ux7j3")
+mesh = ExtResource("4_vwcqs")

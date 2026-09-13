@@ -20,7 +20,9 @@ func on_tick(sim: Sim, _tick: int) -> void:
 		return
 	world.reign_ended = ending
 	world.reign_ended_tick = sim.tick
-	sim.derive(&"reign_ended", {"how": String(ending)})
+	# And the reading of what was left, which §3 says is not a sixth ending.
+	world.reign_reading = EndRules.reading_for(ending, sim.store(&"standing") as Standing)
+	sim.derive(&"reign_ended", {"how": String(ending), "reading": String(world.reign_reading)})
 
 
 ## Nothing to do between ticks.

@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_g2uo5"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/pine_coastal_00.res" id="2_bmfcy"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_leaves.tres" id="3_cxc5j"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/pine_coastal_01.res" id="4_xbuan"]
+[ext_resource type="Material" path="res://prototype_3d/materials/fir_bough.tres" id="5_ofake"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/pine_coastal_02.res" id="6_ewnct"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6ndcd"]
+height = 3.0
+radius = 0.38
+
+[node name="PineCoastal" type="Node3D" unique_id=1215868389]
+metadata/asset_id = "pine_coastal"
+metadata/family = "trees"
+metadata/label = "Pin côtier étalé"
+metadata/habitat = "Lisière et bord de côte"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="CrookedBark_wood" type="MeshInstance3D" parent="." unique_id=1964084012]
+material_override = ExtResource("1_g2uo5")
+mesh = ExtResource("2_bmfcy")
+
+[node name="NeedleVolumes" type="MeshInstance3D" parent="." unique_id=1810717733]
+material_override = ExtResource("3_cxc5j")
+mesh = ExtResource("4_xbuan")
+
+[node name="PaintedNeedles" type="MeshInstance3D" parent="." unique_id=252040296]
+material_override = ExtResource("5_ofake")
+cast_shadow = 0
+mesh = ExtResource("6_ewnct")
+
+[node name="TrunkBody" type="StaticBody3D" parent="." unique_id=1582915437]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrunkBody" unique_id=1296883913]
+shape = SubResource("CylinderShape3D_6ndcd")

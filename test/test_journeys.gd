@@ -13,7 +13,6 @@ const SLOW: bool = true
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
-var _wild: Wildlife = null
 var _ticked: WorldTick = null
 
 
@@ -21,7 +20,6 @@ func before_each() -> void:
 	_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
-	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
 
 
@@ -169,58 +167,84 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 	assert_eq(_blood_price(hp, deaths), 0, "the long way round is the safe way round")
 
 
-## **Four crossings, not one.** Beasts are slower than the player (by design — a wild
-## you cannot outrun is a wall), so whether one crossing costs anything depends on
-## where the spawns land, and a single seed asserts luck rather than design. Measured
-## over eight seeds: seven drew blood and one did not, and for two nights the suite
-## happened to be standing on the one.
-##
-## So the claim under test is the one the design actually makes — *the wild is
-## dangerous*, not *the wild always bites* — and it is worth at most one seed going
-## quietly wrong before this fails.
-func test_cutting_through_the_thornwood_draws_blood() -> void:
-	var crossings: int = 4
-	var bled: int = 0
-	var learnt: int = 0
-	for offset: int in crossings:
-		_sim = Game.build(Sim.DEFAULT_SEED + offset)
-		_world = _sim.store(&"world") as WorldState
-		var hp: int = _world.player_hp
-		var deaths: int = _world.deaths
-		assert_true(_walk_to(Vector2i(150, 90), 180.0), "crossed the wild on seed %d" % offset)
-		var price: int = _blood_price(hp, deaths)
-		assert_true(price <= 24,
-			"the wild took %d health on seed %d, which is a wall rather than a risk"
-				% [price, offset])
-		if price > 0:
-			bled += 1
-			if _sim.facts.has(BeastRules.FACT_WILD_IS_DANGEROUS):
-				learnt += 1
-	assert_true(bled >= crossings - 1,
-		"%d of %d crossings cost nothing, so the wild is not a choice" % [crossings - bled, crossings])
-	assert_eq(learnt, bled, "and every crossing that cost something taught it")
+## **The wild costs time, not blood** (2026-09-13). The beasts are gone and the ground
+## slows you again, so the claim under test is the one §4 makes now: the road is the
+## *fast* way and the wild the *slow* one, and neither draws blood. If the road ever
+## stops being faster, the wild is faster *and* unwatched — strictly better — and the
+## map has stopped making its argument. Measured, not assumed: the same walk both
+## ways, in seconds. `tools/measure_routes.gd` prints the same figures.
+func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
+	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
+	var road_blood: int = _blood_price(WorldState.MAX_HP, 0)
+
+	_sim = Game.build()
+	_world = _sim.store(&"world") as WorldState
+	var wild_seconds: float = _seconds_to_cross(_wild_line())
+	var wild_blood: int = _blood_price(WorldState.MAX_HP, 0)
+
+	assert_eq(road_blood, 0, "the road drew blood")
+	assert_eq(wild_blood, 0, "the wild drew blood, and nothing lives in it now")
+	assert_true(road_seconds < wild_seconds,
+		"road %.0f s, wild %.0f s: the wild is faster and unwatched, so the road has no case"
+			% [road_seconds, wild_seconds])
+	assert_true(wild_seconds - road_seconds >= 5.0,
+		"and the difference is worth noticing: %.0f s" % (wild_seconds - road_seconds))
 
 
-func test_beasts_never_stand_on_the_road_however_long_you_wait() -> void:
-	var region: Region = _world.region()
-	_world.player_pos = Vector2(200.5, 140.5)
-	_world.player_tile_last = _world.player_tile()
-	_sim.advance(Sim.STEPS_PER_REAL_SECOND * 40)
-	assert_true(_wild.count() > 0, "the wood is inhabited")
-	for beast: Beast in _wild.beasts:
-		assert_true(BeastRules.is_wild_ground(region.terrain_at(beast.tile())),
-			"a %s is standing on terrain %d" % [beast.kind, region.terrain_at(beast.tile())])
-		assert_eq(region.zone_at(beast.tile()), &"", "and not inside a settlement")
+## §11's second half of Attunement, on the ground. Faster through the wood than
+## anybody else, and still slower than the road — or the forest build gets the wild
+## for free and the choice stops being a choice for exactly the player it is about.
+func test_an_attuned_walker_crosses_the_wood_faster_but_not_as_fast_as_the_road() -> void:
+	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
+
+	_sim = Game.build()
+	_world = _sim.store(&"world") as WorldState
+	var plain: float = _seconds_to_cross(_wild_line())
+
+	_sim = Game.build()
+	_world = _sim.store(&"world") as WorldState
+	var wanted: Dictionary = TraitRules.at_the_floor()
+	wanted[TraitRules.ATTUNEMENT] = TraitRules.SPEAKS_AT
+	assert_true((_sim.store(&"traits") as Traits).choose(wanted), "a forest build")
+	var attuned: float = _seconds_to_cross(_wild_line())
+
+	assert_true(attuned < plain,
+		"attuned %.0f s against %.0f s: the wood should slow them less" % [attuned, plain])
+	assert_true(road_seconds < attuned,
+		"road %.0f s, attuned wild %.0f s: the road must stay the fast way for everyone"
+			% [road_seconds, attuned])
 
 
-func test_a_mauling_replays_from_the_log() -> void:
-	assert_true(_walk_to(Vector2i(180, 120), 120.0), "walked into the wood")
-	assert_true(_wild.count() > 0)
+func test_a_walk_through_the_wood_replays_from_the_log() -> void:
+	assert_true(_walk_to(Vector2i(180, 120), 200.0), "walked into the wood")
 	var replayed: Sim = Game.replay(_sim)
 	assert_eq((replayed.store(&"world") as WorldState).fingerprint(), _world.fingerprint(),
-		"the same walk rebuilds the same wounds")
-	assert_eq((replayed.store(&"wildlife") as Wildlife).fingerprint(), _wild.fingerprint(),
-		"and the same animals, in the same places, hunting or not")
+		"the same walk rebuilds the same position, to the step")
+
+
+## Brindle to the castle along a line, in real seconds, stopping short of the man at
+## the end of it. What `tools/measure_routes.gd` prints, as an assertion.
+func _seconds_to_cross(line: Array[Vector2i]) -> float:
+	_world.player_pos = _world.region().brindle_centre()
+	_world.player_tile_last = _world.player_tile()
+	var route: Array[Vector2i] = []
+	for point: Vector2i in line:
+		if Vector2(point).distance_to(Vector2(Region.BLACKCAIRN)) <= 14.0:
+			break
+		route.append(point)
+	var started: int = _sim.step
+	assert_true(_follow(route, 400.0), "crossed within the budget")
+	return float(_sim.step - started) / float(Sim.STEPS_PER_REAL_SECOND)
+
+
+## The shortest walkable way, which finds its own crossing of the Kettle. A ruled
+## line is not a route: the river is in it.
+func _wild_line() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for point: Vector2 in Navigation.waypoints(_world.region(), Region.BRINDLE, Region.BLACKCAIRN, 5, true):
+		out.append(Vector2i(point.floor()))
+	return out
+
 
 
 # ------------------------------------------------------------ end to end ---

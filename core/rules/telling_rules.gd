@@ -22,11 +22,17 @@ static func tellable_document(
 	witnesses: PackedStringArray,
 	world: WorldState,
 	facts: FactBase,
+	refuse: StringName = &"",
 ) -> StringName:
 	if town == &"" or witnesses.is_empty() or world == null or facts == null:
 		return &""
 	for fact: String in world.documents:
 		var held: StringName = StringName(fact)
+		# A place the player has just decided is held for two days against everything,
+		# including the reading that would free it (§8). Not offered, rather than
+		# offered and refused: the landmark never advertises an act it will refuse.
+		if held == refuse:
+			continue
 		if not facts.has(DocumentRules.made_public(held)):
 			return held
 	return &""

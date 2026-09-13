@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_fqpiv"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/plants/meshes/shrub_hazel_00.res" id="2_v3qbs"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_leaves_light.tres" id="3_61pde"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/plants/meshes/shrub_hazel_01.res" id="4_oclx0"]
+
+[node name="ShrubHazel" type="Node3D" unique_id=1872997500]
+metadata/asset_id = "shrub_hazel"
+metadata/family = "plants"
+metadata/label = "Noisetier bas"
+metadata/habitat = "Bordure de forêt ; décoration traversable"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Geometry_wood" type="MeshInstance3D" parent="." unique_id=1884926992]
+material_override = ExtResource("1_fqpiv")
+mesh = ExtResource("2_v3qbs")
+
+[node name="Geometry_leaves_light" type="MeshInstance3D" parent="." unique_id=1105836452]
+material_override = ExtResource("3_61pde")
+mesh = ExtResource("4_oclx0")

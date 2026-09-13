@@ -49,6 +49,30 @@ const DEED_TURN_LORD: StringName = &"i_turned_the_lord"
 ## it is gone, exactly as telling a town is (§8's one-shot rule).
 const DEED_INFORM: StringName = &"i_informed_the_crown"
 
+## **The second direction** (2026-09-13, §8). Ten acts that build the kingdom rather
+## than break it — the "builds it by" column, one row each, in step with the four
+## places' "strengthen it" lists (§3). Every one costs somebody with a face, exactly as
+## the breaking acts do: `hardship_effects` says whom.
+const DEED_ENFORCE_GRANTS: StringName = &"i_enforced_the_grants"
+const DEED_MOVE_CONVOYS: StringName = &"i_got_the_convoys_moving"
+const DEED_DELIVER_LABOUR: StringName = &"i_delivered_labour"
+const DEED_SETTLE_WAGE: StringName = &"i_settled_the_wage"
+const DEED_FEED_FOREST: StringName = &"i_fed_it_the_forest"
+const DEED_PAY_MUSTER: StringName = &"i_paid_the_muster"
+const DEED_FEED_MUSTER: StringName = &"i_fed_the_muster"
+const DEED_HAND_OVER_DESERTERS: StringName = &"i_handed_over_the_deserters"
+const DEED_RESTORE_CONFIDENCE: StringName = &"i_restored_confidence"
+const DEED_BRING_CREDITORS: StringName = &"i_brought_the_creditors"
+
+const BUILDS: Array[StringName] = [
+	DEED_ENFORCE_GRANTS, DEED_MOVE_CONVOYS, DEED_DELIVER_LABOUR, DEED_SETTLE_WAGE,
+	DEED_FEED_FOREST, DEED_PAY_MUSTER, DEED_FEED_MUSTER, DEED_HAND_OVER_DESERTERS,
+	DEED_RESTORE_CONFIDENCE, DEED_BRING_CREDITORS,
+]
+
+## Where a cost lands when it lands where the deed was done. Resolved by Deeds.perform.
+const HERE: StringName = &"here"
+
 const FACTION_TOWNS: StringName = &"towns"
 const FACTION_UNDERWORLD: StringName = &"the unlawful"
 const FACTION_CROWN: StringName = &"the crown"
@@ -99,6 +123,30 @@ static func town_effect(deed: StringName) -> float:
 		return -4.0
 	if deed == DEED_TURN_LORD:
 		return 20.0
+	# The second direction, from the town it is done in. The crown's business is not
+	# always welcome where it is done: nobody in the Wide Acres thanks the man who had
+	# the grants enforced, and the works town likes hands and a wage.
+	if deed == DEED_ENFORCE_GRANTS:
+		return -10.0
+	if deed == DEED_MOVE_CONVOYS:
+		return 6.0
+	if deed == DEED_DELIVER_LABOUR:
+		return 8.0
+	if deed == DEED_SETTLE_WAGE:
+		return 14.0
+	if deed == DEED_FEED_FOREST:
+		return 6.0
+	if deed == DEED_PAY_MUSTER:
+		return 10.0
+	if deed == DEED_FEED_MUSTER:
+		return 6.0
+	if deed == DEED_HAND_OVER_DESERTERS:
+		return 8.0
+	if deed == DEED_RESTORE_CONFIDENCE:
+		return 8.0
+	if deed == DEED_BRING_CREDITORS:
+		return 4.0
+
 	return 0.0
 
 
@@ -138,6 +186,30 @@ static func faction_effects(deed: StringName) -> Dictionary:
 		# The only row that moves the crown *up*. It costs you with the people it is
 		# about, which is the price of it being worth anything.
 		return {FACTION_CROWN: 28.0, FACTION_DISPOSSESSED: -30.0, FACTION_TOWNS: -12.0}
+	# The second direction. Every row moves the crown *up* and the dispossessed
+	# *down*, which is the counterpart rule read the other way: serving him is paid
+	# for by the people his project ruined, and they know who did it.
+	if deed == DEED_ENFORCE_GRANTS:
+		return {FACTION_CROWN: 22.0, FACTION_DISPOSSESSED: -24.0, FACTION_TOWNS: -6.0}
+	if deed == DEED_MOVE_CONVOYS:
+		return {FACTION_CROWN: 18.0, FACTION_DISPOSSESSED: -12.0, FACTION_TOWNS: 4.0}
+	if deed == DEED_DELIVER_LABOUR:
+		return {FACTION_CROWN: 20.0, FACTION_DISPOSSESSED: -18.0, FACTION_TOWNS: 4.0}
+	if deed == DEED_SETTLE_WAGE:
+		return {FACTION_CROWN: 16.0, FACTION_DISPOSSESSED: -8.0, FACTION_TOWNS: 10.0}
+	if deed == DEED_FEED_FOREST:
+		return {FACTION_CROWN: 16.0, FACTION_DISPOSSESSED: -26.0, FACTION_TOWNS: 4.0}
+	if deed == DEED_PAY_MUSTER:
+		return {FACTION_CROWN: 22.0, FACTION_DISPOSSESSED: -10.0, FACTION_UNDERWORLD: -8.0, FACTION_TOWNS: 4.0}
+	if deed == DEED_FEED_MUSTER:
+		return {FACTION_CROWN: 16.0, FACTION_TOWNS: -8.0, FACTION_DISPOSSESSED: -6.0}
+	if deed == DEED_HAND_OVER_DESERTERS:
+		return {FACTION_CROWN: 28.0, FACTION_DISPOSSESSED: -32.0, FACTION_UNDERWORLD: -16.0, FACTION_TOWNS: -10.0}
+	if deed == DEED_RESTORE_CONFIDENCE:
+		return {FACTION_CROWN: 20.0, FACTION_DISPOSSESSED: -10.0, FACTION_UNDERWORLD: -12.0}
+	if deed == DEED_BRING_CREDITORS:
+		return {FACTION_CROWN: 26.0, FACTION_DISPOSSESSED: -14.0, FACTION_TOWNS: -6.0}
+
 	return {}
 
 
@@ -175,6 +247,27 @@ static func witness_effect(deed: StringName) -> float:
 		return -8.0
 	if deed == DEED_TURN_LORD:
 		return 26.0
+	if deed == DEED_ENFORCE_GRANTS:
+		return -20.0
+	if deed == DEED_MOVE_CONVOYS:
+		return 8.0
+	if deed == DEED_DELIVER_LABOUR:
+		return 10.0
+	if deed == DEED_SETTLE_WAGE:
+		return 18.0
+	if deed == DEED_FEED_FOREST:
+		return 8.0
+	if deed == DEED_PAY_MUSTER:
+		return 12.0
+	if deed == DEED_FEED_MUSTER:
+		return 8.0
+	if deed == DEED_HAND_OVER_DESERTERS:
+		return 10.0
+	if deed == DEED_RESTORE_CONFIDENCE:
+		return 10.0
+	if deed == DEED_BRING_CREDITORS:
+		return 12.0
+
 	return 0.0
 
 
@@ -248,15 +341,112 @@ static func world_effects(deed: StringName) -> Dictionary:
 		# The man who signs the sentences stops signing them. Nothing in the region
 		# changes for a month and then everything does.
 		return {&"faction_tension": 20.0, &"town_sentiment": -14.0}
+	# The second direction (2026-09-13). The store already takes a sign — push() is
+	# signed and clamped, and credit_from() carries the hand along a coupling — so
+	# building the kingdom is rows here, not machinery.
+	if deed == DEED_ENFORCE_GRANTS:
+		# Rent, collected. The estates produce for the man who owns them.
+		return {&"crown_treasury": 14.0}
+	if deed == DEED_MOVE_CONVOYS:
+		# What the Acres grow reaches the camp and the capital again.
+		return {&"army_strength": 10.0, &"crown_treasury": 10.0}
+	if deed == DEED_DELIVER_LABOUR:
+		# Three shifts instead of two: more steel, and shorter turns at the furnace.
+		return {&"steel_output": 16.0, &"worker_morale": 6.0}
+	if deed == DEED_SETTLE_WAGE:
+		# Men who are paid tend the furnaces better, and the crown pays for it.
+		return {&"worker_morale": 22.0, &"steel_output": 8.0, &"crown_treasury": -8.0}
+	if deed == DEED_FEED_FOREST:
+		# Fuel. The works run hotter and the belt of cut ground widens toward the
+		# clearing (§4) — the one act that moves the wood by hand rather than by drift.
+		return {&"steel_output": 20.0, &"held_ground": -4.0}
+	if deed == DEED_PAY_MUSTER:
+		return {&"army_strength": 14.0, &"crown_treasury": -16.0}
+	if deed == DEED_FEED_MUSTER:
+		return {&"army_strength": 10.0, &"crown_treasury": -8.0}
+	if deed == DEED_HAND_OVER_DESERTERS:
+		# Men back on the roll, men on the road, one fewer reason for anybody to move.
+		return {&"army_strength": 12.0, &"patrol_density": 8.0, &"faction_tension": -6.0}
+	if deed == DEED_RESTORE_CONFIDENCE:
+		return {&"bank_confidence": 24.0, &"crown_treasury": 6.0}
+	if deed == DEED_BRING_CREDITORS:
+		return {&"crown_treasury": 22.0, &"bank_confidence": 14.0, &"faction_tension": -8.0}
+
 	return {}
+
+
+## **Every act that moves the kingdom names who it costs** (§8's hard rule,
+## 2026-09-13). Town -> how much worse off the people there are for it; `HERE` is the
+## town the deed was done in. A deed with world effects and nothing here is not
+## finished, and the test that walks the table for counterparts walks it for this.
+##
+## The cost lands where the spec says it does, which is frequently not where the act
+## was: free the Wide Acres and the Muster goes hungry; feed the works the forest and
+## it is Brindle's ground — the clearing, Kell's fire — that gets smaller. A negative
+## entry is a place made better off, and a row may not consist only of those.
+static func hardship_effects(deed: StringName) -> Dictionary:
+	# Breaking the kingdom.
+	if deed == DEED_SABOTAGE:
+		return {&"cinderworks": 16.0}
+	if deed == DEED_BURN_STORES:
+		return {&"wide_acres": 20.0, &"harrowgate": 8.0}
+	if deed == DEED_ROB_BANK:
+		return {&"cairnwell": 14.0, &"cinderworks": 6.0}
+	if deed == DEED_WRECK_ROLLS:
+		return {&"muster": 14.0}
+	if deed == DEED_MAKE_PUBLIC:
+		# The watch comes down on the town that heard it.
+		return {HERE: 6.0}
+	if deed == DEED_TURN_WORKERS:
+		return {&"cinderworks": 12.0}
+	if deed == DEED_WITHHOLDING:
+		return {&"muster": 12.0, &"cairnwell": 6.0}
+	if deed == DEED_RECRUIT:
+		return {&"harrowgate": 8.0}
+	if deed == DEED_CONVOY:
+		return {&"cairnwell": 8.0, &"muster": 6.0}
+	if deed == DEED_TURN_LORD:
+		return {&"cairnwell": 6.0}
+	# Building it.
+	if deed == DEED_ENFORCE_GRANTS:
+		return {&"wide_acres": 18.0}
+	if deed == DEED_MOVE_CONVOYS:
+		return {&"wide_acres": 12.0}
+	if deed == DEED_DELIVER_LABOUR:
+		return {&"cinderworks": 10.0}
+	if deed == DEED_SETTLE_WAGE:
+		return {&"brindle": 10.0, &"cinderworks": -12.0}
+	if deed == DEED_FEED_FOREST:
+		return {&"brindle": 16.0}
+	if deed == DEED_PAY_MUSTER:
+		return {&"cairnwell": 8.0, &"muster": -8.0}
+	if deed == DEED_FEED_MUSTER:
+		return {&"harrowgate": 10.0, &"muster": -6.0}
+	if deed == DEED_HAND_OVER_DESERTERS:
+		return {&"harrowgate": 8.0, &"brindle": 10.0}
+	if deed == DEED_RESTORE_CONFIDENCE:
+		return {&"cairnwell": 10.0}
+	if deed == DEED_BRING_CREDITORS:
+		return {&"cairnwell": 14.0, &"wide_acres": 6.0}
+	return {}
+
+
+## Whether a deed moves any of the twelve — the ones the face rule binds.
+static func moves_the_kingdom(deed: StringName) -> bool:
+	return not world_effects(deed).is_empty()
+
 
 
 ## Deeds nobody performed do nothing, and a deed with no counterpart is a bug. Used
 ## by the test that walks every deed in the table.
 static func all_deeds() -> Array[StringName]:
-	return [
+	var out: Array[StringName] = [
 		DEED_THEFT, DEED_RESTITUTION, DEED_WARNING,
 		DEED_SABOTAGE, DEED_BURN_STORES, DEED_ROB_BANK, DEED_WRECK_ROLLS,
 		DEED_MAKE_PUBLIC, DEED_TURN_WORKERS, DEED_WITHHOLDING, DEED_RECRUIT,
 		DEED_CONVOY, DEED_TURN_LORD, DEED_INFORM,
 	]
+	# Typed all the way: `[...] + BUILDS` hands back a plain Array, and a test that
+	# declares Array[StringName] then dies with a script error rather than a failure.
+	out.append_array(BUILDS)
+	return out

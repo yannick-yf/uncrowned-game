@@ -23,6 +23,13 @@ func speaks_with(what: StringName) -> bool:
 	return level_of(what) >= TraitRules.SPEAKS_AT
 
 
+## §11's second half of Attunement (2026-09-13, Q50): the wood does not slow somebody
+## who was raised in it. Same threshold as a tagged line — one number for all six —
+## so "you put points here" means the same thing on the ground as in a conversation.
+func is_attuned() -> bool:
+	return speaks_with(TraitRules.ATTUNEMENT)
+
+
 func choose(wanted: Dictionary) -> bool:
 	if not TraitRules.is_legal(wanted):
 		return false

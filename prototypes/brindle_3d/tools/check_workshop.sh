@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Import and check this independent Godot project from any working directory.
+# Scan stderr as well as the exit code: GDScript runtime errors can leave a
+# function early without recording a failed assertion.
+set -uo pipefail
+
+GODOT="${GODOT:-godot}"
+WORKSHOP="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LOG="$(mktemp)"
+trap 'rm -f "$LOG"' EXIT
+
+"$GODOT" --headless --editor --path "$WORKSHOP" --import --quit >"$LOG" 2>&1
+CODE=$?
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG"; then
+  cat "$LOG"
+  echo "FAILED: workshop import"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --script res://tools/verify_workshop.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'WORKSHOP_CHECK_RESULT PASS failures=0' "$LOG"; then
+  echo "FAILED: workshop verification"
+  exit 1
+fi

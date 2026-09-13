@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://shaders/ruin_smoke.gdshader" id="1_flhvi"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flhvi"]
+render_priority = 0
+shader = ExtResource("1_flhvi")
+shader_parameter/smoke_color = null
+
+[sub_resource type="QuadMesh" id="QuadMesh_t6j8c"]
+material = SubResource("ShaderMaterial_flhvi")
+size = Vector2(1.5, 1.5)
+
+[sub_resource type="Curve" id="Curve_ccd6v"]
+_data = [Vector2(0, 0.27), 0.0, 0.0, 0, 0, Vector2(0.35, 0.68), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_82mce"]
+offsets = PackedFloat32Array(0, 0.12, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.27, 1, 1, 1, 0.15, 1, 1, 1, 0)
+
+[node name="FumeeResiduelle" type="CPUParticles3D" unique_id=881395570]
+cast_shadow = 0
+amount = 18
+lifetime = 4.4
+preprocess = 5.0
+randomness = 0.4
+lifetime_randomness = 0.2
+mesh = SubResource("QuadMesh_t6j8c")
+emission_shape = 1
+emission_sphere_radius = 0.17
+direction = Vector3(0, 1, 0)
+spread = 9.0
+gravity = Vector3(0.025, 0.075, -0.008)
+initial_velocity_min = 0.28
+initial_velocity_max = 0.42
+scale_amount_min = 0.65
+scale_amount_max = 0.93
+scale_amount_curve = SubResource("Curve_ccd6v")
+color_ramp = SubResource("Gradient_82mce")

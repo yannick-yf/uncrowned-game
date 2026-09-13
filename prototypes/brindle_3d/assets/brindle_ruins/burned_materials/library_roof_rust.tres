@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/burned_surface.gdshader" id="1_di4ss"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_di4ss")
+shader_parameter/tint = Color(0.6117647, 0.4627451, 0.3137255, 1)
+shader_parameter/surface_kind = 2
+shader_parameter/texture_strength = 0.2
+shader_parameter/moss_amount = 0.0
+shader_parameter/wind_strength = 0.0
+shader_parameter/vertex_srgb = false
+shader_parameter/use_painted_texture = false
+shader_parameter/painted_scale = 0.25
+shader_parameter/painted_strength = 0.9
+shader_parameter/facet_softness = 0.4
+shader_parameter/burn_amount = 0.99
+shader_parameter/ground_charring = false
+shader_parameter/scorch_bounds = null
+shader_parameter/charcoal = null
+shader_parameter/ash = null

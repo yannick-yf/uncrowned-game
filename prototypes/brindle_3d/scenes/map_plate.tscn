@@ -1,0 +1,102 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/flat_ground.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/map_camera.gd" id="2"]
+[ext_resource type="Material" path="res://materials/brindle_landscape.tres" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/relief_godot.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/brindle.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/forets_brindle.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/forets_nord_est.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/mine_acierie.tscn" id="8"]
+
+[sub_resource type="Environment" id="Environment_map"]
+background_mode = 1
+background_color = Color(0.58, 0.68, 0.70, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.61, 0.70, 0.76, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 2
+ssao_enabled = true
+ssao_radius = 2.0
+ssao_intensity = 1.1
+fog_enabled = true
+fog_light_color = Color(0.63, 0.72, 0.73, 1)
+fog_density = 0.00006
+
+[node name="UncrownedMap" type="Node3D"]
+
+[node name="Terrain" type="Node3D" parent="."]
+script = ExtResource("1")
+width_m = 768.0
+depth_m = 768.0
+chunk_size_m = 32.0
+grass_material = ExtResource("3")
+mine_cutout = Rect2(300,70,28,20)
+
+[node name="Decor" type="Node3D" parent="."]
+
+[node name="Brindle" parent="Decor" instance=ExtResource("5")]
+
+[node name="ForetsBrindle" parent="Decor" instance=ExtResource("6")]
+
+[node name="ForetsNordEst" parent="Decor" instance=ExtResource("7")]
+
+[node name="MineAcierie" parent="Decor" instance=ExtResource("8")]
+
+[node name="ReliefGodot" parent="." instance=ExtResource("4")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_map")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-55, -28, 0)
+light_color = Color(1, 0.93, 0.79, 1)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 2800.0
+
+[node name="MapCamera" type="Camera3D" parent="."]
+position = Vector3(0, 1200, 840)
+rotation_degrees = Vector3(-55, 0, 0)
+projection = 1
+current = true
+size = 780.0
+far = 5000.0
+script = ExtResource("2")
+
+[node name="MapInfo" type="CanvasLayer" parent="."]
+
+[node name="Dimensions" type="Label" parent="MapInfo"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 600.0
+offset_bottom = 80.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.91, 0.94, 0.86, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 18
+text = "UNCROWNED  /  ATELIER DE CARTE\n768 × 768 m  ·  Brindle, forêts et mine"
+
+[node name="Controls" type="Label" parent="MapInfo"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -45.0
+offset_right = -24.0
+offset_bottom = -18.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.81, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Molette : zoom · Clic droit / ZQSD : déplacer · Clic central : tourner · R : ensemble · B : Brindle · M : mine · F : lac · G : repères"
+
+[editable path="ReliefGodot"]
+[editable path="Decor/Brindle"]
+[editable path="Decor/MineAcierie"]

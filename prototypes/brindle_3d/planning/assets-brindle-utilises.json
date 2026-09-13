@@ -1,0 +1,798 @@
+{
+  "files": [
+    "res://prototype_3d/assets/library/trees/fir_mature.tscn",
+    "res://prototype_3d/materials/styled_wood.tres",
+    "res://prototype_3d/shaders/painted_surface.gdshader",
+    "res://prototype_3d/assets/library/trees/meshes/fir_mature_00.res",
+    "res://prototype_3d/materials/styled_leaves.tres",
+    "res://prototype_3d/assets/library/trees/meshes/fir_mature_01.res",
+    "res://prototype_3d/materials/fir_bough.tres",
+    "res://prototype_3d/shaders/needle_cards.gdshader",
+    "res://prototype_3d/assets/fir_bough.png",
+    "res://prototype_3d/assets/library/trees/meshes/fir_mature_02.res",
+    "res://prototype_3d/assets/library/trees/spruce_slender.tscn",
+    "res://prototype_3d/assets/library/trees/meshes/spruce_slender_00.res",
+    "res://prototype_3d/assets/library/trees/meshes/spruce_slender_01.res",
+    "res://prototype_3d/assets/library/trees/meshes/spruce_slender_02.res",
+    "res://prototype_3d/assets/library/trees/pine_coastal.tscn",
+    "res://prototype_3d/assets/library/trees/meshes/pine_coastal_00.res",
+    "res://prototype_3d/assets/library/trees/meshes/pine_coastal_01.res",
+    "res://prototype_3d/assets/library/trees/meshes/pine_coastal_02.res",
+    "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+    "res://prototype_3d/materials/library_bark_birch.tres",
+    "res://prototype_3d/assets/library/trees/meshes/birch_twin_00.res",
+    "res://prototype_3d/materials/styled_dark.tres",
+    "res://prototype_3d/assets/library/trees/meshes/birch_twin_01.res",
+    "res://prototype_3d/materials/styled_leaves_light.tres",
+    "res://prototype_3d/assets/library/trees/meshes/birch_twin_02.res",
+    "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+    "res://prototype_3d/materials/styled_plants.tres",
+    "res://prototype_3d/assets/library/plants/meshes/fern_fan_00.res",
+    "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+    "res://prototype_3d/assets/library/plants/meshes/grass_meadow_00.res",
+    "res://prototype_3d/assets/library/plants/meshes/grass_meadow_01.res",
+    "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+    "res://prototype_3d/assets/library/plants/meshes/shrub_hazel_00.res",
+    "res://prototype_3d/assets/library/plants/meshes/shrub_hazel_01.res",
+    "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+    "res://prototype_3d/assets/library/plants/meshes/flowers_daisy_00.res",
+    "res://prototype_3d/assets/library/houses/cottage_village.tscn",
+    "res://prototype_3d/materials/styled_rock.tres",
+    "res://prototype_3d/assets/painted_cliff.png",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_00.res",
+    "res://prototype_3d/materials/styled_plaster.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_01.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_02.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_03.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_04.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_05.res",
+    "res://prototype_3d/materials/styled_iron.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_06.res",
+    "res://prototype_3d/materials/styled_rope.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_07.res",
+    "res://prototype_3d/materials/window.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_08.res",
+    "res://prototype_3d/materials/styled_roof.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_roof_v2.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_10.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_11.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_12.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_13.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_14.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_15.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_16.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_17.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_18.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_village_19.res",
+    "res://prototype_3d/assets/library/houses/cottage_fisher.tscn",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_00.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_01.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_02.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_03.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_04.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_05.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_06.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_07.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_08.res",
+    "res://prototype_3d/materials/library_shutters.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_09.res",
+    "res://prototype_3d/materials/library_roof_rust.tres",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_10.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_11.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_12.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_13.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_14.res",
+    "res://prototype_3d/assets/library/houses/meshes/cottage_fisher_15.res",
+    "res://prototype_3d/assets/library/houses/storehouse.tscn",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_00.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_01.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_02.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_03.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_04.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_05.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_06.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_07.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_08.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_09.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_10.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_11.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_12.res",
+    "res://prototype_3d/assets/library/houses/meshes/storehouse_13.res",
+    "res://prototype_3d/assets/library/props/well.tscn",
+    "res://prototype_3d/assets/library/props/meshes/well_00.res",
+    "res://prototype_3d/assets/library/props/meshes/well_01.res",
+    "res://prototype_3d/assets/library/props/meshes/well_02.res",
+    "res://prototype_3d/assets/library/props/meshes/well_03.res",
+    "res://prototype_3d/assets/library/props/bench.tscn",
+    "res://prototype_3d/assets/library/props/meshes/bench_00.res",
+    "res://prototype_3d/assets/library/props/woodpile.tscn",
+    "res://prototype_3d/assets/library/props/meshes/woodpile_00.res",
+    "res://prototype_3d/assets/library/props/meshes/woodpile_01.res",
+    "res://prototype_3d/assets/library/props/crate_single.tscn",
+    "res://prototype_3d/assets/library/props/meshes/crate_single_00.res",
+    "res://prototype_3d/assets/library/props/meshes/crate_single_01.res",
+    "res://prototype_3d/assets/library/props/barrel_closed.tscn",
+    "res://prototype_3d/assets/library/props/meshes/barrel_closed_00.res",
+    "res://prototype_3d/assets/library/props/meshes/barrel_closed_01.res",
+    "res://prototype_3d/assets/library/props/stump.tscn",
+    "res://prototype_3d/assets/library/props/meshes/stump_00.res",
+    "res://prototype_3d/assets/library/props/meshes/stump_01.res",
+    "res://prototype_3d/assets/library/props/fallen_log.tscn",
+    "res://prototype_3d/assets/library/props/meshes/fallen_log_00.res",
+    "res://prototype_3d/assets/library/props/meshes/fallen_log_01.res",
+    "res://prototype_3d/assets/library/modules/fence_2m.tscn",
+    "res://prototype_3d/assets/library/modules/meshes/fence_2m_00.res",
+    "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+    "res://prototype_3d/assets/library/rocks/meshes/boulder_round_00.res",
+    "res://prototype_3d/assets/library/rocks/boulder_cluster.tscn",
+    "res://prototype_3d/assets/library/rocks/meshes/boulder_cluster_00.res",
+    "res://prototype_3d/materials/styled_water.tres",
+    "res://prototype_3d/shaders/coastal_water_v2.gdshader"
+  ],
+  "scenes": [
+    "trees/fir_mature",
+    "trees/spruce_slender",
+    "trees/pine_coastal",
+    "trees/birch_twin",
+    "plants/fern_fan",
+    "plants/grass_meadow",
+    "plants/shrub_hazel",
+    "plants/flowers_daisy",
+    "houses/cottage_village",
+    "houses/cottage_fisher",
+    "houses/storehouse",
+    "props/well",
+    "props/bench",
+    "props/woodpile",
+    "props/crate_single",
+    "props/barrel_closed",
+    "props/stump",
+    "props/fallen_log",
+    "modules/fence_2m",
+    "rocks/boulder_round",
+    "rocks/boulder_cluster"
+  ],
+  "source": "Bibliothèque Brindle-assets-3D récupérée le 13 septembre 2026",
+  "verified_original_files": [
+    {
+      "path": "prototype_3d/assets/library/trees/fir_mature.tscn",
+      "sha256": "4E111F3E7D54F05CD8A27EDA39D49E7D2206248D16DAC5C0088F46F07316E4EF",
+      "bytes": 1872
+    },
+    {
+      "path": "prototype_3d/materials/styled_wood.tres",
+      "sha256": "C9A48C55CC3413D03E3821EEF5408C7DE753579F222C027E8A017E8407C17B69",
+      "bytes": 641
+    },
+    {
+      "path": "prototype_3d/shaders/painted_surface.gdshader",
+      "sha256": "A24629D30B910FE7F4F1DCC03E62ABBE7E331F70D0A02C8102EAE274729E6857",
+      "bytes": 2676
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/fir_mature_00.res",
+      "sha256": "E8D434B96C00A165522B17C907793EE626E1D0F2D540716E5FCC889848412AD3",
+      "bytes": 3555
+    },
+    {
+      "path": "prototype_3d/materials/styled_leaves.tres",
+      "sha256": "5FA4BF88D98B2DD2CD6EFD9166E5EBBDA9E2BBCA9A0F15730511CC6D8652EB77",
+      "bytes": 637
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/fir_mature_01.res",
+      "sha256": "B2A4390F1BB9E1E4FDF2D5B22677B48A2CC9EAE53400DF7ABF5D5235662B109D",
+      "bytes": 16420
+    },
+    {
+      "path": "prototype_3d/materials/fir_bough.tres",
+      "sha256": "E8AEF508D69B0F84A042E22B60809B4F90D042557F97E2ED29AE7B17384832C4",
+      "bytes": 396
+    },
+    {
+      "path": "prototype_3d/shaders/needle_cards.gdshader",
+      "sha256": "BCB24FBD945791D4D32096E212B55C121027E3B95A21B2147F7A90284483DB19",
+      "bytes": 643
+    },
+    {
+      "path": "prototype_3d/assets/fir_bough.png",
+      "sha256": "870E897C5D3BB86CCEBEB7B514AE9FE8EE50CA116D30AAE5FBC02997DB51EF0B",
+      "bytes": 1700191
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/fir_mature_02.res",
+      "sha256": "6A9ABBF3D19922715C74EE71C25DFA930B09D7C1C58C984CE54BFA4CE087F8A3",
+      "bytes": 3548
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/spruce_slender.tscn",
+      "sha256": "A750C87E014AF2FB7A97013508C838E3D1E1AD8B9329231546E21DC7EDFDF8C8",
+      "bytes": 1800
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/spruce_slender_00.res",
+      "sha256": "A1DF3BB72BF6565CAECE80CBF39B0E606609ED985FCEE19969A48549083EDC4F",
+      "bytes": 944
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/spruce_slender_01.res",
+      "sha256": "F8EE3FF7EB2BE15C5BE436E130CD4DA7C61D07B6E2CBA4CA6B078A39A50B8F7C",
+      "bytes": 16389
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/spruce_slender_02.res",
+      "sha256": "91940989EA3251A035AA59EC46223CDBFB00F9F57B009E8357D64320568B8EA0",
+      "bytes": 3301
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/pine_coastal.tscn",
+      "sha256": "C45D4E3BFA6EBDFB0C2A117EA30E9E2444543D6752967B7F8E38EB5EDBC6FFF5",
+      "bytes": 1810
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/pine_coastal_00.res",
+      "sha256": "3F72D34EC79328C18462D24981B4AFC3CC86476CC7C37DBB4585A10145C77EC6",
+      "bytes": 4116
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/pine_coastal_01.res",
+      "sha256": "050D6CBF8C83884D061D64EECD96CE801D37061202B065E8B33DA2B0770A269D",
+      "bytes": 10375
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/pine_coastal_02.res",
+      "sha256": "757FFFC283B041186C3609E2BC0E7F893AA3452A708307342969099BB9704195",
+      "bytes": 2037
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/birch_twin.tscn",
+      "sha256": "0FC1B3F6E06701C07CF74248ECECB8A78F218754FF944901E285D6B35AFB9C77",
+      "bytes": 1817
+    },
+    {
+      "path": "prototype_3d/materials/library_bark_birch.tres",
+      "sha256": "D0E457B7D21EDAA418AD0986E1D82FFA412C63BD1009D33F4AFAABCEF39AD941",
+      "bytes": 586
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/birch_twin_00.res",
+      "sha256": "FB01E8F7C6A6F4EA0745E64E7C4E6069669C25610C9D72F2AC044F2747484BE8",
+      "bytes": 7715
+    },
+    {
+      "path": "prototype_3d/materials/styled_dark.tres",
+      "sha256": "BDDAEEF218D963928146150ADF08279D296EF4C8E1A404CB740CB0AE5F0F6520",
+      "bytes": 587
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/birch_twin_01.res",
+      "sha256": "5E71FD364F27D39971E8F545CB9CC70BCD029419B12719A78167BEA78DB7CCC0",
+      "bytes": 4876
+    },
+    {
+      "path": "prototype_3d/materials/styled_leaves_light.tres",
+      "sha256": "AEEA54596B78D1F95458330838138296339A7E168911AB44DC530DE660F37E5D",
+      "bytes": 645
+    },
+    {
+      "path": "prototype_3d/assets/library/trees/meshes/birch_twin_02.res",
+      "sha256": "177915D168128766234CE8301E4B51B1CF821BE050A8F13B7E69151604788D6A",
+      "bytes": 381642
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/fern_fan.tscn",
+      "sha256": "6016FE9C10260F9FF7362FA830F1DD4F1BC7FF71AE164579DF019AFF4E1613DE",
+      "bytes": 656
+    },
+    {
+      "path": "prototype_3d/materials/styled_plants.tres",
+      "sha256": "FDD8815508A8EC0C5027B0FC415F12B7B3867FF2D4A5D2670FFA120D2EA40D7E",
+      "bytes": 616
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/meshes/fern_fan_00.res",
+      "sha256": "5F4C47424BF1CC2F65B841659AFD6299A8FB4A4D36C91DCCFEDC2ADCD4F1B52D",
+      "bytes": 39056
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "sha256": "293AB135D946D7A2F2604649948F818627A16FA2C8909C5A44B0B089BA8D8028",
+      "bytes": 922
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/meshes/grass_meadow_00.res",
+      "sha256": "F24FCA219824466C53CC3D08878D035A3A30D7992E7FAF3C361EF6E80F477962",
+      "bytes": 1232
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/meshes/grass_meadow_01.res",
+      "sha256": "B4BE37156496B5EBF3225D926E9A8C12D67B8304C15B26FE1F6FFC99CC4609B0",
+      "bytes": 1569
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "sha256": "84657F9481575AA1154A9D3DA7CA9426F4135A97E12086A37257D46B7E090717",
+      "bytes": 1054
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/meshes/shrub_hazel_00.res",
+      "sha256": "B386FF162C224D1DA096FA383E5E0CAB662D836653258DADDECC31A9D8A7C9E0",
+      "bytes": 3031
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/meshes/shrub_hazel_01.res",
+      "sha256": "42A1850D56F331CD9724C069F8BD7A645532AAFD357F9F4FC845B432E71B7921",
+      "bytes": 147667
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "sha256": "557CAC5C80790E69390F831D73844AD4C87472749791D35CBDF151FD30384EC2",
+      "bytes": 687
+    },
+    {
+      "path": "prototype_3d/assets/library/plants/meshes/flowers_daisy_00.res",
+      "sha256": "D1651C4A81AC82DA3D07DFF8B00809FE5D934A02F96142A6D77C08355704B8F8",
+      "bytes": 18903
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/cottage_village.tscn",
+      "sha256": "90D2B3A3185AD408CB2834B9FEA5EF8587F76E1CC067D6798A0F6ADDD34E1318",
+      "bytes": 10248
+    },
+    {
+      "path": "prototype_3d/materials/styled_rock.tres",
+      "sha256": "E5026675622DE1AA7E0C7A0594E34D0C79B096ECC407ACF85F46467FA4C0CABC",
+      "bytes": 739
+    },
+    {
+      "path": "prototype_3d/assets/painted_cliff.png",
+      "sha256": "2734B86964033E74CFB86B8A6DDBB3DDD6BD53B1BD6DF807A33909D6B933D112",
+      "bytes": 3055472
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_00.res",
+      "sha256": "D3BA866188D286F9CA1D380BE3E9ED49E032E7E8C49745C464773382198AE8A4",
+      "bytes": 278
+    },
+    {
+      "path": "prototype_3d/materials/styled_plaster.tres",
+      "sha256": "2137B056BF156552FB5E3CEA70C737AAE2E7C5738AF7B1B076D2A73DCB21E467",
+      "bytes": 585
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_01.res",
+      "sha256": "281738F52E75A42B00531C55A34ED8E2273CC4BAA8D6CCA58CD812C538491D76",
+      "bytes": 279
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_02.res",
+      "sha256": "835BD9289F37CC83B3D08DB1B9418D75F8527EB7143E68B342F8A36ECCD93374",
+      "bytes": 292
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_03.res",
+      "sha256": "3B2C9DCE641F748D55AA3F7147E882D5215A5A9497E8ABF5A710AC2E6FDEFE76",
+      "bytes": 9739
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_04.res",
+      "sha256": "A056AD44F4407B9C6B0637A9441FD8A37E2DA525C98CFEA023FDD9844B7D4DFF",
+      "bytes": 9585
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_05.res",
+      "sha256": "08A1DD7546541FB682FCC2147F241139EC9523AD485AB1A678DC0639E584C95B",
+      "bytes": 727
+    },
+    {
+      "path": "prototype_3d/materials/styled_iron.tres",
+      "sha256": "4AD0787D96D60A10C40940936BA51F77E7D9F627C3EF35C53AF745B041184543",
+      "bytes": 584
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_06.res",
+      "sha256": "5728082FAA7C58A8A0BFF62AEBA8E2D763E61E8C0D3D5F43EF3B11480B892D24",
+      "bytes": 683
+    },
+    {
+      "path": "prototype_3d/materials/styled_rope.tres",
+      "sha256": "E9B7DB1B40F9D779AAFF62A14C624E9012DC813E070E49760333CA08D67022B0",
+      "bytes": 586
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_07.res",
+      "sha256": "DC529F79E0AD43E9894B850CD872FBBE839F41C6BFDB74BB89651AD92251BD32",
+      "bytes": 562
+    },
+    {
+      "path": "prototype_3d/materials/window.tres",
+      "sha256": "1FEB362BECFC5CBFB142569533C2720E66B0726C16E511A8B8437F2225BA3598",
+      "bytes": 267
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_08.res",
+      "sha256": "16E974F62A181AAD46C1F2D7CE6B16FD74A0F2523F4D49DD67D848C3C38CED8D",
+      "bytes": 822
+    },
+    {
+      "path": "prototype_3d/materials/styled_roof.tres",
+      "sha256": "5CC764F00C1FF77BBAF48F4065A56D090029904183229070CAC3EC1AC46F75DA",
+      "bytes": 640
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_roof_v2.res",
+      "sha256": "4C474B9FBEA00670D58C8E7A7CF0AD8C940B4C0CF89DBFE4A3957B4C122B0953",
+      "bytes": 37486
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_10.res",
+      "sha256": "635FFAA326340B1FDBD8C8FCDE1596C741D19E61B7014031ADC81CAAAC79D90A",
+      "bytes": 543
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_11.res",
+      "sha256": "EFC0ECB9C47EA26DE66A06364117FCE028EC94A5E35D9AA2EE53A4562E7260FE",
+      "bytes": 1543
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_12.res",
+      "sha256": "8E674635235F6BA791C1152194A9542E0B1489F729D58362171D5DEDCC468CE2",
+      "bytes": 543
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_13.res",
+      "sha256": "08559EFDAB84F15B252512A708355C52AE847FD4F193F7E655B649EC6F9A1711",
+      "bytes": 1543
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_14.res",
+      "sha256": "CE801FD68472C55E8AC6CC0AB15E648D303670A3D1C1D4F4A8ACE9B77F6A9919",
+      "bytes": 2746
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_15.res",
+      "sha256": "10EFC7B50D2A386A4A44F98FC5B2E1CC20BA270D2E052982D4249A60F0F623AB",
+      "bytes": 1539
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_16.res",
+      "sha256": "B856987499FE41DEBFDA491BD21ADCECBEA060F0657382E676195D093071C5B7",
+      "bytes": 2727
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_17.res",
+      "sha256": "2F95E89C77E4ECD19F9F4E97BF4EBB4B71E4D93BDF48F839895C991C0B83F9BA",
+      "bytes": 1525
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_18.res",
+      "sha256": "E3F11F9ABE15B461A727EF81BF726441A40982C762C582A49313F3566A2100E2",
+      "bytes": 276
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_village_19.res",
+      "sha256": "A5E6590828D6EDEFD3C61E415A6DD2FFA3E62DF2305912FF261C821CD3810F48",
+      "bytes": 1149
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/cottage_fisher.tscn",
+      "sha256": "5D50E85E4FE810EA86876F7C351725F37974DA716C00EDB65D59ECE52A326B82",
+      "bytes": 7950
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_00.res",
+      "sha256": "20BF9C1E23E7737217C23D1E5D9ED68139D1882FE864A6D2B063F2AD27EDF157",
+      "bytes": 280
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_01.res",
+      "sha256": "D88703F40132769BBBA9BC09E0C65EC5F8CE3678208A96E2EA76E3537C42CCDA",
+      "bytes": 275
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_02.res",
+      "sha256": "E44A9C81B998834969D84AA069B81D346C1683AACE560D71C1FDE2A9CE133233",
+      "bytes": 287
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_03.res",
+      "sha256": "21B5E362BBE688C608E3C0CBF5603F48A66062EC27457F27A512C29039569301",
+      "bytes": 8287
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_04.res",
+      "sha256": "206F214009B684E8A0D057DCCDA2E427B29AA27DB2189D308FAD23EFD8911947",
+      "bytes": 3516
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_05.res",
+      "sha256": "57860EE22945DB818E5459C1C1D4FF863712454BD16A135439786EBA3808FFAA",
+      "bytes": 563
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_06.res",
+      "sha256": "2FB98B18BC3CD6FCF8180EAF4F97969036282516E60D995D0B835392E798C6D7",
+      "bytes": 670
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_07.res",
+      "sha256": "2B8250089C15E8F6ED9D2A9FEF44CA0C3439FDAC399108623523640410133C00",
+      "bytes": 560
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_08.res",
+      "sha256": "5919BC4531709F4B500C158EEEE35F7D59457E4C0718F0D46BDCD426B72A0AF5",
+      "bytes": 806
+    },
+    {
+      "path": "prototype_3d/materials/library_shutters.tres",
+      "sha256": "1F311A50F709D41ED05AF31CB8DC5F1DD278CAB44326FD36EADFB4EF19588B77",
+      "bytes": 586
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_09.res",
+      "sha256": "6624A456B8F4EB6FED4B6CB484D1BD78C782DF769B3413A0FE06FED92DF11B18",
+      "bytes": 965
+    },
+    {
+      "path": "prototype_3d/materials/library_roof_rust.tres",
+      "sha256": "ACF03A796DBA4B3DF145424F8B0CBE76ED4538FD7789254D7F2536D74C4FCFB2",
+      "bytes": 638
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_10.res",
+      "sha256": "86F3B5C89E0CDFB09AB7C73C36563D3A455848690EB3580679E1374B4B0F8B12",
+      "bytes": 592
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_11.res",
+      "sha256": "52791AEA683AB1D5479892C60719733FF0412079F990577943CF0841AC3E4386",
+      "bytes": 19488
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_12.res",
+      "sha256": "6A1C7FAF203A4B7941CC1B2472D2DC0BD4D9DA8F6A5B502E2509C522175DDEC6",
+      "bytes": 545
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_13.res",
+      "sha256": "2E39CA9090FB496775D206CC04A86A197621A16D82B566B9F4695519EC49B316",
+      "bytes": 1546
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_14.res",
+      "sha256": "A3B4A98DA973DEA1A7A02AAFD79C6B90358A633CC942BC46A6C9C29CFDDB1883",
+      "bytes": 2725
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/cottage_fisher_15.res",
+      "sha256": "22178BDF190292BDD65C90A8579D969A1E9355FC90589EEE8819437A7501D466",
+      "bytes": 1543
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/storehouse.tscn",
+      "sha256": "FA4A63C08B3306F65E11530C410D8F7934C2A74A7FABD4D08A7E459FAC899E56",
+      "bytes": 6536
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_00.res",
+      "sha256": "239EE48E29A94331D9E58DD9DC143149217A77923197968090D4C89FE7C65B15",
+      "bytes": 280
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_01.res",
+      "sha256": "667AA4BA59EE9003393947A57B58504DDCFF0A3CF41C9200795AFDE8263F88A2",
+      "bytes": 277
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_02.res",
+      "sha256": "92CABCF4BDDEE846E84A649E35665D1FA25BAC007A219FE8AA574317DF0D68BA",
+      "bytes": 286
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_03.res",
+      "sha256": "7B5C195B2D5093BBF2C03E2A84AD37AE8440FA61DCB2256152FF70DF49848BF0",
+      "bytes": 9365
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_04.res",
+      "sha256": "55307D2BCF24CA9EFD65CA21C96CFDDCB0752EFE6CFCDF8FFB17A225482E96BD",
+      "bytes": 3353
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_05.res",
+      "sha256": "48EA768B92EB2815923E7D87A50B3088BD6892F24E688139C1598B71EB8F38A6",
+      "bytes": 556
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_06.res",
+      "sha256": "0521DF24747055F5305FFA8BD2EA39FD1044D4E49F34359E2C74C0BDAE20E6B2",
+      "bytes": 663
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_07.res",
+      "sha256": "BA8C6F5B7CD9858E2C724EBE57E1258AAFF8153807CDD3E4954676E32033ED1C",
+      "bytes": 559
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_08.res",
+      "sha256": "E02D709EEB3535C2AA39EDBFD0F2437E893ADC2B0DEDAC978B643062953AE9C6",
+      "bytes": 666
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_09.res",
+      "sha256": "92976D852A23A69E7A5D6D29EE6B537A084E7B9CB59D0EE1550F88D46A846A6D",
+      "bytes": 23995
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_10.res",
+      "sha256": "163EA3FC7E6A09BEAAEE506405369346088E9CE930CB1CB67B34A8449A38C681",
+      "bytes": 543
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_11.res",
+      "sha256": "2C977A1BE47035EAE19ADF264BF945817A7C21073707681A318866901037C37A",
+      "bytes": 1545
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_12.res",
+      "sha256": "CF5F744319DD9F3E0873B1348AD8B63A004D7E438ECCE5D059DD9CBF56C94425",
+      "bytes": 277
+    },
+    {
+      "path": "prototype_3d/assets/library/houses/meshes/storehouse_13.res",
+      "sha256": "948592D1F309B9D31508BC9F659D820015C039BA4CBB6C44806A96584FFAA43C",
+      "bytes": 1148
+    },
+    {
+      "path": "prototype_3d/assets/library/props/well.tscn",
+      "sha256": "DA4670676A111DC5E96C6C3B38E59CE31639D35729C1A69412802864C11D6237",
+      "bytes": 2125
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/well_00.res",
+      "sha256": "22C31D19AA957501D79597CB1F1FF465D7B8AAB1142FAA3D331F7A158EEE76EC",
+      "bytes": 5814
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/well_01.res",
+      "sha256": "17C97D0B74EB9A27E547A71A6330CDB745326071F83EA1F4FA00947E3A3512D5",
+      "bytes": 3098
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/well_02.res",
+      "sha256": "A4EDDA5031CD3DA71C1B1826A99D036C896819CA2F4CD9AAD6B9534A17413DE0",
+      "bytes": 780
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/well_03.res",
+      "sha256": "B46EF66222101840E4BA20B4D8A45257C6D8E35F5967334A56A090F42D7CB61B",
+      "bytes": 5780
+    },
+    {
+      "path": "prototype_3d/assets/library/props/bench.tscn",
+      "sha256": "9969B42A0AF4972BAEC5F54AAE0F1D948F34E67AF4DC9F8C1081D6C819191964",
+      "bytes": 1003
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/bench_00.res",
+      "sha256": "9C54E6A6BA86202021EE21C35392318A1A7329F1AB6FFA704CE24EDB2954E848",
+      "bytes": 1613
+    },
+    {
+      "path": "prototype_3d/assets/library/props/woodpile.tscn",
+      "sha256": "8CA1B7AEFE572168D97838DDF17F2FCC5255C8BB2B160073332530845B8DE8B9",
+      "bytes": 1391
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/woodpile_00.res",
+      "sha256": "CB72B5596075492A64A7FB67AD391848BE64C35B9A717B9C79BB21CF2E528479",
+      "bytes": 2766
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/woodpile_01.res",
+      "sha256": "A58F7FFD0955292806DD8D5C38CFB6A99DD9A5AE12F5C1302F52AD8CD9C5C53B",
+      "bytes": 2712
+    },
+    {
+      "path": "prototype_3d/assets/library/props/crate_single.tscn",
+      "sha256": "F9BF1231DA019C4DB99E257CB808E512646056E34E9353E947C3F45D7237B66B",
+      "bytes": 1373
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/crate_single_00.res",
+      "sha256": "A012B248F13A94DE5BDCC2AE01C80A637372E05B34A8178C33FCCFFB2B76ED74",
+      "bytes": 275
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/crate_single_01.res",
+      "sha256": "D10A05F55A0A31497EDAE4BED3F45A925F39B961E95E1C312B7CEF99F63F2FAC",
+      "bytes": 1148
+    },
+    {
+      "path": "prototype_3d/assets/library/props/barrel_closed.tscn",
+      "sha256": "3481C40FF07A754B1B450DA00D2313CA60249D8DC1DDBAF6AF4EB1A0D95DE6EB",
+      "bytes": 1500
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/barrel_closed_00.res",
+      "sha256": "BA42A8220AD8F4F10FFDB62DC97B1CB4FF20E548345948F9847753DF2595C71B",
+      "bytes": 2766
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/barrel_closed_01.res",
+      "sha256": "7CFA8150808D28A2029ADCA417D6A5311AAE1FAEF921FF74B9B4BC4FB6B639C6",
+      "bytes": 1557
+    },
+    {
+      "path": "prototype_3d/assets/library/props/stump.tscn",
+      "sha256": "E594A64FA5866E8ED21E9DEFB3C246AB73590647E36E3FB030026B85FD32C5C6",
+      "bytes": 1381
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/stump_00.res",
+      "sha256": "1BC8E71C640A3A2F282E8101EF1D8A50A1E9ACB4E8213EEE48C195640D4F94E5",
+      "bytes": 3559
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/stump_01.res",
+      "sha256": "D307D8161E30CFD2E66FF7D4B9C8ECB707F72673B0D0694E9714B6D25DCD0541",
+      "bytes": 786
+    },
+    {
+      "path": "prototype_3d/assets/library/props/fallen_log.tscn",
+      "sha256": "140A367DC0284C9A874BD16DA617880474C804056AA964424CBE8428CA167061",
+      "bytes": 1392
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/fallen_log_00.res",
+      "sha256": "47E84143B805374842E60E9EFFCB77E4B669B92E9D8BE670CE92107932B565C5",
+      "bytes": 1508
+    },
+    {
+      "path": "prototype_3d/assets/library/props/meshes/fallen_log_01.res",
+      "sha256": "D4B59F92EBFFAEFE4C494E0EE441910F62FE8AA5AD2A8E9EC3268B6A79E2B8F1",
+      "bytes": 1033
+    },
+    {
+      "path": "prototype_3d/assets/library/modules/fence_2m.tscn",
+      "sha256": "002FE0B4815DF604A1E83701ECB7D4ACE2E73C430F3E1FD8EE0A3DC65C7C6B2A",
+      "bytes": 2075
+    },
+    {
+      "path": "prototype_3d/assets/library/modules/meshes/fence_2m_00.res",
+      "sha256": "36D5187C02D1E9EC35C3E52E711F80FD25DB80CF360773832225E7D4536E97B3",
+      "bytes": 1543
+    },
+    {
+      "path": "prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "sha256": "3850FC3355A10EA6356ECF7F555D865E84FECD4B956AE8DB980CE6EEDAFC02A6",
+      "bytes": 6634
+    },
+    {
+      "path": "prototype_3d/assets/library/rocks/meshes/boulder_round_00.res",
+      "sha256": "27991F92C0152A979D2059B1445A970BE7E46CDED0001AFDB87C12AEC73DF994",
+      "bytes": 1411
+    },
+    {
+      "path": "prototype_3d/assets/library/rocks/boulder_cluster.tscn",
+      "sha256": "55BA2CA481DBDA80A8F03458D4ECA1343390FBA892ABA3D456117F6C25B7D445",
+      "bytes": 18849
+    },
+    {
+      "path": "prototype_3d/assets/library/rocks/meshes/boulder_cluster_00.res",
+      "sha256": "1FD24A7D018B8423408EBAA2E8E58376329331E7C5414B8D1A076E6F49356D80",
+      "bytes": 3688
+    },
+    {
+      "path": "prototype_3d/materials/styled_water.tres",
+      "sha256": "886CF5B334A83FC41D46DB26943208DD1DBF6619EDA3314E2695D050E1BD0FD4",
+      "bytes": 888
+    },
+    {
+      "path": "prototype_3d/shaders/coastal_water_v2.gdshader",
+      "sha256": "BABB1C8840730EB4A7BA7A0A32E1A22219140560DF38704DA49912E50F920C96",
+      "bytes": 2195
+    }
+  ]
+}

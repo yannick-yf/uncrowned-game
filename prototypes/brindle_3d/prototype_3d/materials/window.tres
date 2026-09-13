@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "Window"
+albedo_color = Color(0.91764706, 0.73333335, 0.40784314, 1)
+roughness = 0.92
+emission_enabled = true
+emission = Color(1, 0.73333335, 0.4117647, 1)
+emission_energy_multiplier = 0.35

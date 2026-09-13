@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/library_bark_birch.tres" id="1_2buai"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/birch_twin_00.res" id="2_5jp5x"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_dark.tres" id="3_imewq"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/birch_twin_01.res" id="4_02ml2"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_leaves_light.tres" id="5_eesjm"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/birch_twin_02.res" id="6_qh0wd"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ka8fw"]
+height = 2.8
+radius = 0.47
+
+[node name="BirchTwin" type="Node3D" unique_id=507059408]
+metadata/asset_id = "birch_twin"
+metadata/family = "trees"
+metadata/label = "Bouleau à deux troncs"
+metadata/habitat = "Lisière humide ; petits groupes"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="TrunkBody" type="StaticBody3D" parent="." unique_id=1141056361]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrunkBody" unique_id=143998828]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="Geometry_bark_birch" type="MeshInstance3D" parent="." unique_id=1388018282]
+material_override = ExtResource("1_2buai")
+mesh = ExtResource("2_5jp5x")
+
+[node name="Geometry_dark" type="MeshInstance3D" parent="." unique_id=1206456476]
+material_override = ExtResource("3_imewq")
+mesh = ExtResource("4_02ml2")
+
+[node name="Geometry_leaves_light" type="MeshInstance3D" parent="." unique_id=865920066]
+material_override = ExtResource("5_eesjm")
+mesh = ExtResource("6_qh0wd")

@@ -21,7 +21,7 @@ const AT_THE_TRADER: Vector2 = Vector2(93.5, 60.0)
 const TRADER: StringName = &"trader@1"
 
 
-## Lean on purpose: wildlife and movement cost steps and prove nothing here.
+## Lean on purpose: travellers and movement cost steps and prove nothing here.
 func _crime_sim(cast: Cast = Cast.shared()) -> Sim:
 	var sim := Sim.new()
 	sim.add_store(&"world", Game.build_world())

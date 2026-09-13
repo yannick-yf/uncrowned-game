@@ -1,5 +1,11 @@
 # Uncrowned — Design Document
 
+> **The game is not about weakening the king. It is about what the kingdom becomes.
+> Breaking it and strengthening it are both real plays, both cost someone, and the
+> ending is a reading of the state left behind — including the reading where the
+> player is the one on the throne.** *(The thesis, 2026-09-13. Everything below is it,
+> made mechanical.)*
+
 > **How to use this doc.** It is the source of truth: when the code and this
 > document disagree, one of them is wrong and you decide which. Leave `TBD`
 > everywhere you're unsure — an empty section is information.
@@ -10,13 +16,14 @@
 > **Sections marked 🟡 were invented by Claude at Yannick's request** and need his
 > approval or rejection. Everything else came from him.
 
-**Status:** **v1 delivered, 2026-09-13.** This document now describes a finished
-thing rather than a plan, and v2 is being specified separately. Five sections still
-carry 🟡 — they were invented by Claude, they were *built* anyway because v1 needed
-them, and they still want Yannick's yes or no about whether they should survive into
-v2. §3's power bases, §6's roster and §8's world tick were approved long ago.
+**Status:** **v1 and v2 delivered, 2026-09-13.** v2 was specified in this document
+from `docs/history/V2_INTENT.md` and built the same day, Phases A–E of §18; every
+passage dated 2026-09-13 says *built* where it is, and `docs/V2.md` says what the game
+is now. Five sections still carry 🟡 — they were invented by Claude, they were *built*
+anyway because v1 needed them, and they still want Yannick's yes or no. §3's power
+bases, §6's roster and §8's world tick were approved long ago.
 **Last updated:** 2026-09-13
-**Version:** 1.0
+**Version:** 2.0 — delivered
 **Location:** this file, `uncrowned-game/docs/SPECS.md`, is the single source of
 truth on *what the game is*. For *what currently exists* — which is the question you
 have if you have just arrived — read `docs/V1.md` first; it is two pages. `CLAUDE.md`
@@ -44,10 +51,10 @@ placeholders** and may change; what each thing *is* should not.
 | **Cairnwell** | The capital, north-west. The bank is in it | §3, §4 |
 | **Blackcairn** | The castle, against the northern mountains. The king is here, reachable from minute one | §4 |
 | **The Kettle** | The river, running from the northern mountains to the southern sea. One guarded bridge, one ford downstream | §4 |
-| **The Thornwood** | The wood off the road: unwatched, dangerous, the short way — and where magic still lives | §4, §5 |
+| **The Thornwood** | The wood off the road: unwatched, slow, the short way — and where magic still lives | §4, §5 |
 | **The Iron Spine** | The impassable mountains along the eastern edge | §4 |
 | **The Redcut** | The iron quarry in the eastern mountains. An optional zone, cut first if behind | §4 |
-| **The King's Road** | The paved, patrolled route across the region. Fast and safe; everything done on it is seen | §4 |
+| **The King's Road** | The paved, patrolled route across the region. Fast and watched; everything done on it is seen | §4 |
 
 ### People
 
@@ -95,8 +102,13 @@ is deliberate — see §6.
 | **Route A / Force** | Fight through the door | §3 |
 | **Route B / Access** | Be admitted: become someone the castle lets in | §3 |
 | **Route C / Exposure** | The bloodless route: assemble the evidence and put it in front of him | §3 |
-| **The six power bases** | The Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank. **Never** "Pillar N" | §3 |
+| **The six power bases** | The Cinderworks, the Wide Acres, the Muster, Greyhold, Harrowgate, the bank. **Never** "Pillar N". In v2 four are built deeply and carry a state; Greyhold and Harrowgate are deferred | §3 |
 | **The five design pillars** | §1's numbered pillars — the only thing "Pillar" ever means | §1 |
+| **Hardship** | What an act costs the people who live in a place, held per town beside the twelve quantities. Up is worse. The second axis, which makes both directions cost something | §8 |
+| **Crown-held / free** | The two states a place can be in — never a third, never better than it started. Four places carry one; Blackcairn has one state and never flips | §8, §3, §4 |
+| **The decisive change** | One act per place, at its landmark, with the thing the place holds — the grants, the ledger, the rolls, the debts — whose outcome lands crown-held or free | §3 |
+| **The freeze window** | 2 in-game days = 2880 ticks = 12 real minutes. How long a state the player set holds against everything — the sentiment band and the opposite decisive act alike; also what "recently" means to Blackcairn | §8, §4 |
+| **The throne reading** | Deposed, with the player's handprint, at high crown standing: the player takes the throne. A reading of one ending, not a sixth | §3 |
 
 ---
 
@@ -154,12 +166,29 @@ fight if it comes to that.
 **Short loop (10 min):** follow one thread — a rumour, a person, a building — and
 come away with a fact, an item, or a changed relationship.
 
-**Session loop (1h):** study or damage one of the king's six pillars, and watch the
-region react to it over the following in-game days.
+**Session loop (1h):** study, break or strengthen one of the four places, and watch
+the region react to it over the following in-game days — including the people it cost.
 
 **Full playthrough:** arrive with nothing and no memory. Learn what the king did and
-why he became the man who did it. Dismantle enough of his power that a confrontation
-is survivable. Decide, standing in front of him, what you actually came for.
+why he became the man who did it. Move the kingdom — break what holds him up, or
+build it, or some of each — until a confrontation is survivable or unnecessary.
+Decide, standing in front of him or in his place, what you actually came for, and
+read what the kingdom became.
+
+### Three phases of play — a description, never gates (2026-09-13)
+
+A playthrough tends to take this shape, the way §3 says routes are names for what
+tends to work. Nothing checks which phase you are in; nothing opens or closes on it.
+
+| | Phase | What it tends to be |
+|---|---|---|
+| 1 | **Creation, the fairy, the tutorial** | Six traits and a pool of ten; seven things said once; the walk out of the clearing with the furnaces in frame. Ninety seconds that must point both ways (§5) |
+| 2 | **The organic world** | The four places, the twelve quantities and hardship, the two directions, rank, rumour on the road. Most of a game is here, and none of it is a step |
+| 3 | **Confront the king** | Blackcairn, by any of the three ways in, with whatever the kingdom has become behind you — or the reading where the throne is yours and there is nobody left to confront (§3) |
+
+**Phase 3 is available in minute one.** That is Pillar 1 and it is not negotiable. A
+player who walks there at 10 HP gets their confrontation and loses it; the phases
+describe when a confrontation tends to *go well*, never when it is *allowed*.
 
 **After the ending:** the world continues (see §5, Endings).
 
@@ -174,10 +203,14 @@ is survivable. Decide, standing in front of him, what you actually came for.
 **Who he is, in one paragraph:**
 > TBD — needs a name. His argument is written in §5.
 
-**Why the player wants him dead:**
-The player's village was a small farming community, destroyed by the king's men to
-clear ground for a steel works. Everyone the player loved was killed. The player
-survived, barely, and lost most of their memory — but not that.
+**Why the player has cause against him** *(retitled 2026-09-13; was "why the player
+wants him dead")*:
+The player's village was a small farming community, cleared by the king's men because
+the steel works needed the ground. Everyone the player loved was killed. The player
+survived, barely, and lost most of their memory — but not that. It was policy, not
+malice, and that is the point (§5): the grievance is whole, the target is a decision
+and the man who signed it, and it can be answered by breaking him or by changing what
+the kingdom does with its ground.
 
 **Why attempt #1 fails:**
 > TBD — write the exact first-attempt experience: what the player sees, tries, and
@@ -192,7 +225,7 @@ Three levers, deliberately unequal:
 
 | Lever | What it changes | How much of the gap it closes |
 |---|---|---|
-| **Pillars** | The king's *escort*: ten guards at full power, roughly one and a half fewer per pillar damaged, down to a bare handful | Most of it |
+| **Power bases** | The king's *escort*, derived from army strength (§8): ten men at full, five once the pay fraud is public, two when nothing is left | Most of it |
 | **Knowledge** | Fights the king's tells and phases — knowing how he fights turns a wall into a duel | A lot |
 | **Levels & equipment** | Player HP and damage | The rest |
 
@@ -201,28 +234,84 @@ between the player and him, and how well the player understands the man they're
 fighting. This keeps grinding from being the answer, which matters — a game where
 levelling closes a 100× gap is a game about levelling.
 
-> **Design rule:** the pillars are the difficulty curve. Levelling is the fine
+> **Design rule:** the power bases are the difficulty curve. Levelling is the fine
 > adjustment, never the strategy.
 
-### The six pillars of his power
+### The four places, and what can be done to them (2026-09-13)
 
-> Approved 2026-09-11. Each is a place the player can go, study and damage. The
-> "teaches" column is not flavour — it is the evidence Route C (Exposure) is
-> assembled from.
+> Approved 2026-09-11 as *the six pillars of his power*; retitled and given its
+> second direction 2026-09-13. Each is a place the player can go, study, **break or
+> strengthen**. The "teaches" column is not flavour — it is the evidence Route C
+> (Exposure) is assembled from — and the old "how it can be weakened" column is now
+> one half of a pair.
 >
-> **Naming rule (hard).** These six are referred to **by name** — the Cinderworks,
-> the Wide Acres, the Muster, Greyhold, Harrowgate, the bank — and never as
-> "Pillar N". "Pillar" alone means one of the five design pillars in §1. The
-> numbers below are row labels for this table only; nothing else may cite them.
+> **Naming rule (hard).** These are referred to **by name** — the Cinderworks, the
+> Wide Acres, the Muster, the bank, and the two deferred, Greyhold and Harrowgate —
+> and never as "Pillar N". "Pillar" alone means one of the five design pillars in §1.
 
-| # | Power base | What it is | How it can be weakened | What it teaches |
+**Four places, deeply — not six thinly.** Each supplies the crown with one thing,
+carries one of two **states** (§8: crown-held or free, never a third, never better
+than it started), and can be moved either way by acts that cost somebody with a face
+(§8's hard rule). They are already the four landmarks `SiteRules` reaches — kiln,
+granary, counting house, muster rolls — so the spine needs no new landmark machinery.
+
+| Place | Supplies | States | Break it | Strengthen it |
 |---|---|---|---|---|
-| 1 | **The Cinderworks** — stone & steel | The industry the villages were razed for; the kingdom's furnaces | Sabotage the furnaces; turn the workers; cut its ore supply from the quarry; expose its death toll | The ledger of what the works cost in lives — and that the king kept that ledger himself, and considered the price worth paying |
-| 2 | **The Wide Acres** — the farms | Consolidated estates feeding the capital and the standing army | Burn stores; organise a withholding; redirect a supply convoy; buy the harvest out from under the crown | That the estates sit on the ground of specific razed villages, named in the land grants. This is where the player can find their own village on paper |
-| 3 | **The Muster** — the military camp | The standing force, and the officers who executed the clearances | Kill the commander; expose the pay fraud; recruit deserters; destroy the muster rolls | The names of the men who burned the player's village, and the orders they were given, signed. **And how the king fights** — he trained with his own guard, so his officers have drilled against him |
-| 4 | **Greyhold** — the sub-castle | The regional seat and its lord — the king's enforcer of the wealth-tiered law | Turn the lord; blackmail him; kill him; discredit him publicly | How the tiered law is actually administered, and that the lord privately believes it is indefensible |
-| 5 | **Harrowgate** — the town | The civil population whose loyalty the crown assumes | Shift its reputation of the king; expose the tiered law's local effects; provoke or prevent a riot | That consent is manufactured, and how — which is also the mechanism Route C exploits |
-| 6 | **The bank**, at Cairnwell | Where the war gold sits, and the debts that finance the works | Rob it; expose the debts; ruin its confidence; hand its records to the right person | That the whole industrial project is leveraged, and that the king is personally afraid of one specific creditor |
+| **The Wide Acres** | Food — the capital and the army eat what the estates grow | crown-held, or **free**: the land back with the smallholders who farmed it | Burn the stores; organise a withholding; redirect a convoy; return the land to smallholders | Enforce the grants; get the convoys moving |
+| **The Cinderworks** | Steel — and it eats the Thornwood for fuel | crown-held, or **free**: the furnaces cold, or the works run by the men who work it | Sabotage the furnaces; turn the workers; cut the ore from the quarry | Deliver labour; settle the wage dispute; **feed it the forest** |
+| **The Muster** | Force — the standing army, and the escort derived from it (§8) | crown-held, or **free**: the camp hollow, the captains turned | Expose the pay fraud; starve it; turn the captains; recruit deserters; destroy the rolls | Pay it; feed it; hand it the deserters |
+| **The bank at Cairnwell** | Money — the debts that finance the works | crown-held, or **free**: the crown's credit gone, and the creditor's word the only one that counts | Rob it; hand over the records; expose the debts | Restore confidence; bring it the crown's creditors |
+
+**The decisive change is one act with two outcomes, not two acts.** Each place holds
+one thing — the grants, the ledger and the men who keep it running, the rolls and the
+fraud in them, the debts — and the decisive change is what the player does with that
+thing *at the landmark*. Spent one way it frees the place; spent the other it holds
+the place for the crown. It is the same shape §8 already has for a fact — told once,
+to one audience, chosen — and the same shape as making a thing public against
+informing on it. That is what lets invariant 5 stay literally true with one quest's
+worth of writing per place: nothing about the deed says which way it will land, and
+what decides it is what the player brought — facts held, standing, whose side they
+said they were on. Never a menu at the landmark.
+
+| Place | The decisive change — one act, two outcomes | What it teaches | Whose face the cost has |
+|---|---|---|---|
+| **The Wide Acres** | The **land grants** at the estate: read to the tenants, the land goes back — **free**. Enforced for Vale, the estates stay his and produce for the crown — **crown-held** | The estates sit on razed villages, named in the grants. This is where the player finds their own village on paper | Free it and the Muster and the towns go hungry — Ossa's patients, the bread price. Hold it and Pell works razed ground for the man who owns it, harder |
+| **The Cinderworks** | The **ledger and the wage** at the works: the ledger read to the men who are in it, they walk — **free**. The wage settled and labour delivered, the furnaces run hotter — **crown-held** | What the works cost in lives, that Arthur kept the ledger himself, and that he considered the price worth paying | Free it and the men Sena organises lose the only wage on this ground. Hold it and the wood shrinks faster — Kell's fire, the fairies' clearing — and the ledger grows |
+| **The Muster** | The **rolls** at the pay tent: the fraud exposed and the rolls destroyed, the camp empties — **free**. The camp paid and the deserters handed back, the rolls made honest — **crown-held** | The names of the men who burned Brindle, the orders they were given, signed — **and how the king fights** | Free it and deserters buy the bread the towns ate (§8's second consequence). Hold it and the men Ossa hides are handed back, Kell first |
+| **The bank at Cairnwell** | The **debts** at the counting house: the records handed to the creditor, he calls them in — **free**. The creditors brought to the table, the crown's credit stands — **crown-held** | The whole project is leveraged, and the king is personally afraid of one specific creditor | Free it and the works stop paying and the towns pay in kind. Hold it and the debt is serviced from the tiered law's fees — Mira's clients |
+
+**Built 2026-09-13 (Phase C).** `PlaceRules` names the thing each place holds and the
+act that holds it; the state lives in `Allegiance.owner_of`, where the borders' band
+already kept it. **Freeing** is reading the place's thing aloud *in that place* — the
+grants at the Wide Acres, the ledger at the Cinderworks, the debts at Cairnwell — or
+exposing the fraud at the Muster; the telling system announces `document_read` and the
+allegiance system decides. **Holding** is the four spoken acts of §8's table, each of
+which needs the same thing in hand: enforce the grants, settle the wage, pay the
+Muster, bring the creditors. Read the grants in Harrowgate for the `discredited`
+ending and they can never free the Acres — told once, to one audience, chosen.
+
+**The other acts move the quantities; only the decisive one moves the state.** Burn
+the stores and grain rises and hardship lands, and the Wide Acres is still the
+crown's. That is deliberate: a place should be able to be *hurt* without being
+*decided*, or every act at a landmark would be the last one, and the freeze window
+(§8) would be doing the work the player's judgement should.
+
+**Wood gets no town of its own.** The Thornwood is terrain and the Cinderworks needs
+fuel, so felling the forest is a *Cinderworks* consequence: feed it the forest and
+`held_ground` (§4) falls faster; put the furnaces out and it stops. The factory eating
+the forest that saved the player's life becomes a mechanic rather than backstory, at
+the cost of one belt of tile work (§4, §13) rather than a whole zone.
+
+**Greyhold and Harrowgate are deferred, not cut.** Greyhold has no location (Q40) and
+its lord stands in Cairnwell; Harrowgate is the first town, and what it taught — that
+consent is manufactured, and how — is now taught at every gate by the entrance signs
+(§15). Neither carries a state in v2. Their v1 rows are kept here so that nothing is
+lost if either is built:
+
+| Deferred | What it was | How it could be weakened | What it teaches |
+|---|---|---|---|
+| **Greyhold** — the sub-castle | The regional seat and its lord, the king's enforcer of the wealth-tiered law | Turn the lord; blackmail him; kill him; discredit him publicly | How the tiered law is actually administered, and that the lord privately believes it indefensible |
+| **Harrowgate** — the town | The civil population whose loyalty the crown assumes | Shift its reputation of the king; expose the tiered law's local effects; provoke or prevent a riot | That consent is manufactured, and how — which is also the mechanism Route C exploits |
 
 ### How a reign ends (2026-09-11)
 
@@ -261,6 +350,50 @@ minimum handprint on the quantities it reads.
 > never tells the player what they caused — but the game has to know, or it cannot
 > tell a reign the player brought down from one that fell over on its own.
 
+#### Taking the throne is a reading, not a sixth ending (2026-09-13)
+
+The thesis at the top of this document says the ending is a reading of the state left
+behind, *including the reading where the player is the one on the throne*. Nothing new
+is needed to express it: `EndRules` already reads predicates over the quantities, the
+handprint already says how much of each is the player's doing, and crown standing is
+a faction standing that already exists. **Deposed** is the predicate; two figures
+beside it say who fills the vacancy.
+
+| State at the end | Reads as |
+|---|---|
+| Deposed · high handprint · **high crown standing** | **The player takes the throne.** The army is hollow, the court already calls them by its last rank (§11), and the one who hollowed it is the one the crown knows |
+| Deposed · high handprint · low crown standing | The player made a vacancy, and somebody else filled it |
+| Deposed · low handprint | It fell over. Already forbidden — an ending needs a handprint |
+
+"High crown standing" is the standing that earns the crown's last rank (§11) — the
+same number, read once, so the throne cannot be reached by a player the gate does not
+know. No new predicate, no new quantity, no sixth row in `EndRules.endings()`: the
+reading is taken *after* the predicate fires, from figures the journal's second page
+(§15) already shows.
+
+**Built 2026-09-13.** `EndRules.reading_for(ending, standing)` — Deposed at the
+crown's last rank is `crowned`, below it `vacancy`, every other ending nothing — taken
+by the ending system when the reign ends and kept as `WorldState.reign_reading`. The
+journal's second page says which, and for a crowned player lists every town whose
+hardship moved, in words: *worse off than when you came*, or *better*.
+
+**And it must show what they do with it.** If the player can take the throne, the
+ending shows one thing: the **hardship figures** (§8) in the towns they changed, the
+morning after. Not a verdict — a reading, in the towns' own words (§15), of what the
+kingdom became. A player who freed the Wide Acres and starved the Muster is shown the
+Muster; one who fed the Cinderworks the forest is shown the wood.
+
+**A loyal run keeps every ending.** High crown standing never removes the others
+(invariant 7): a player loyal all game can still turn at the end — read the ledger
+aloud, empty the vault. Rank opens the gate; it closes nothing.
+
+> **What was rejected.** A sixth ending, `crowned` — a new predicate needs a new
+> threshold and a new row on the journal's page, and it would make the throne a
+> *goal* with a correct path rather than a reading of what was left. A stored "the
+> player is the heir" flag — invariant 4; it is a progression flag by another name.
+> Reading crown *rank* rather than crown *standing* — they are one number, rank being
+> derived from standing (§11), and naming the standing keeps one source.
+
 #### Routes are descriptions, not machinery
 
 > Three at launch, each using a different verb. **They are ways of thinking about
@@ -278,6 +411,7 @@ minimum handprint on the quantities it reads.
 lord's man, a hero the crown wants to be seen with.
 - Requires knowing: who grants access, and what they want (Greyhold, the bank)
 - Requires being: a reputation that survives scrutiny
+- Requires being, in v2: **the crown's last rank** (§11) is the gate knowing your face — derived from crown standing, gating nothing, one of the three ways in
 - How it can fail: a reputation that contradicts itself; someone recognises you
 
 **Route C — Exposure.** The bloodless route. Assemble the evidence the pillars hold
@@ -366,8 +500,9 @@ it, and the choice is a *systemic* one:
 - **The King's Road** runs from the Cinderworks in the south-east, north-west
   through Harrowgate and the Muster, to Cairnwell and the castle. It is fast, it is
   paved, and it is patrolled. Everything the player does on it is **seen**.
-- **Everything else** — the Thornwood, the hill tracks, the river bank — is slower,
-  holds wild animals and monsters, and is **unwatched**.
+- **Everything else** — the Thornwood, the hill tracks, the river bank — is slower
+  and is **unwatched**. *(It also held monsters until 2026-09-13; see "The wild is
+  slow and unwatched" below.)*
 
 Speed versus witnesses. That single trade-off connects the map directly to the
 reputation and rumour systems, and it means the map itself makes the player choose
@@ -414,6 +549,13 @@ forest enough presence to answer back or the thesis stays a caption. See §19.
 > that was a village, for the man who owns it now. Saltmarch is the king's town that
 > his own order has stopped reaching. Neither is a side; both are the border.
 
+> **v2 (2026-09-13).** Four of the king's rows — the Cinderworks, the Wide Acres, the
+> Muster and Cairnwell's bank — now carry a state the player can set (§8): crown-held,
+> which is the side above, or free, which is the forest's. So the argument can be won
+> ground by ground, and the lopsidedness stated above is the *starting* position rather
+> than the fixed one. The Wide Acres and Saltmarch keep their band; the other three
+> move only by the player's hand.
+
 ### Barriers that are knowledge, not walls
 
 Consistent with Pillar 1: nothing is locked, some things are simply unknown.
@@ -439,7 +581,80 @@ Consistent with Pillar 1: nothing is locked, some things are simply unknown.
 
 **Optional zones** (cut first if behind): **The Redcut**, the iron quarry in the
 eastern mountains — cutting the Cinderworks' ore supply; **the Thornwood depths**,
-wild and unpatrolled, where things that are not people live.
+wild and unpatrolled, where the fairies' ground is.
+
+### Two ground states, four places (2026-09-13)
+
+The four places §3 names carry a state — **crown-held or free** (§8) — and the state
+is on the ground before it is in any journal. §13 says how each is drawn; this is
+what is *there*.
+
+| Place | Crown-held | Free |
+|---|---|---|
+| **The Wide Acres** | The estate's fences, the granary row under its watch, convoys loading for the road, Vale's house lit | Fences down, the fields cut into smallholdings, the granary open and unwatched, the convoys gone from the road — and the Muster's queue longer |
+| **The Cinderworks** | Four furnaces alight, smoke over Brindle, the cleared ground widening into the Thornwood — faster when it is fed the forest | Furnaces cold, or the works run by the men who work it; the smoke thin; the clearing stops where it stood |
+| **The Muster** | Tents in rows, the pay tent with a queue and money in it, patrols leaving for the road | Half the tents down, the pay tent shut, the rolls gone, fewer men on the road and more in Harrowgate's crowd |
+| **The bank at Cairnwell** | The counting house open, the tallest thing in Erileo, the crown's men at its door | The counting house shuttered, and the creditor's men at its door instead |
+
+**The starting state is crown-held for all four**, and the ground at the start is the
+crown-held column — which is what v1 built. The free column is new tile work, one
+variant per place. Nothing is a third variant.
+
+**Built 2026-09-13**, as far as the pack allows: a freed Wide Acres loses its fences, a
+freed Muster strikes half its rows on top of what the army's strength already struck, a
+freed Cinderworks keeps its kilns and loses their embers, and a freed counting house
+is the same building drawn dark. Nothing is stored on a node: the window reads the
+place's state and draws less. The convoys, the queue and the shutters wait on art that
+is not in the pack.
+
+**The Thornwood belt is the Cinderworks' second face.** `Terrain.CLEARED` already
+draws the works as a wound with a radius; in v2 that radius is what "feeding it the
+forest" moves, and `held_ground` (§8) is the number under it. A player who strengthens
+the works watches the belt widen toward the clearing they woke in. That is the one
+belt of tile work the wood costs, and it is a Cinderworks consequence rather than a
+zone of its own (§3).
+
+**Every place has a voice at its gate** (§15): a sign or a speaker stating its status
+in its own words — propaganda, a claim the player can doubt and later find false —
+and a place strengthened for the crown boasts differently from one that was always
+loyal.
+
+### Blackcairn — one state, two readings (2026-09-13)
+
+**Blackcairn cannot be taken and has one state.** It is the end of the road and the
+place the king stands; it is not one of the four and never flips. What it carries
+instead is two **derived** readings, both legible from anywhere in the region:
+
+| Reading | Derived from | Shows as, on the ground | Shows as, in the towns |
+|---|---|---|---|
+| **Wealth** | Crown treasury, steel output, grain supply | Scaffolding and new stone on the walls; or shuttered works and unfinished walls | What people say about the king's building — the new tower, or the tower that stopped |
+| **Instability** | How many places have flipped, **how recently** (inside §8's freeze window), and how far apart they are | Banners down, more guards on the wall, the gate shut in daylight | What people say about the castle — the gate, the guards, who has been seen leaving |
+
+**Recency is what makes it political rather than statistical.** Four places flipping
+in a week is a crisis; the same four over a season is policy. A flip counts toward
+instability whichever path moved it (§8) — to the men on the wall a flip is a flip —
+and the window it counts for is §8's freeze window and no other.
+
+**Both readings need a second channel**, per §8's rule that a change the player cannot
+perceive is identical to no change: the castle's face for a player standing at it, and
+what people in the towns say about it for a player who is not. Neither reading is a
+number on the HUD (§15).
+
+**Built 2026-09-13 (Phase E).** `CastleRules`, pure and stored nowhere: wealth is the
+mean of the treasury, steel output and a grain-supply score, *building* from 85 and
+*shuttered* below 45 — so the castle starts building, which is the king's programme
+and true, and one large act against the treasury or the works takes it to *holding*.
+Instability counts `Allegiance.flips` inside the last freeze window, by either path:
+one is *uneasy*, two is a *crisis*, and the same two a window later are *calm* again.
+On the castle: extra guards on the south wall — two uneasy, four in a crisis — beside
+the escort, and the keep, towers and gate drawn dark when shuttered. In the towns:
+Maddox has heard the gate is shut in daylight, Peyre has seen the north wall stop,
+and Garrick can be asked what the castle is buying while it still is. Nothing about
+an ending reads either figure; a test holds that.
+
+> **On the word "capital".** §0 calls Cairnwell the capital and Blackcairn the castle,
+> and this document keeps to that: the two readings are **Blackcairn's**. Where v2's
+> working notes say "the capital's readings" they mean the castle.
 
 ### The opening (2026-09-12)
 
@@ -476,6 +691,13 @@ that is not a piece of paper.
 *"save us"* is a request the player can satisfy with the levers they already have —
 and §15's journal shows what became of it, so it is a request they can satisfy and
 *find out about*.
+
+**She names no enemy, and that is now load-bearing (2026-09-13).** Checked against
+the seven: *men came with axes*, never *the king*; *save us*, never *stop him*. Seven
+is answerable from either side — put the furnaces out, or make the works efficient
+enough to stop expanding — and §5's reworked opening depends on her staying exactly
+this neutral. Any edit to the seven is checked against that as well as against the
+list of what she must not say.
 
 **What he must not say**, and this is the hard part of the decision: who the king is,
 what he did to the villages, why he thinks he was right, the tiered law, the works,
@@ -598,7 +820,8 @@ for the interiors that genuinely need it.
 |---|---:|---:|
 | Road, town streets, camp, castle | 1.00 | 6.0 |
 | Ruins | 0.90 | 5.4 |
-| Open grass, farmland | 0.80 | 4.8 |
+| Farmland | 0.80 | 4.8 |
+| Open country — heath, hill tracks | **0.65** | 3.9 |
 | Coast sand | 0.75 | 4.5 |
 | Thornwood | 0.55 | 3.3 |
 | The ford (wading) | 0.50 | 3.0 |
@@ -607,6 +830,15 @@ for the interiors that genuinely need it.
 The road is the **1.00 reference rather than a bonus**: 6 tiles/sec is the speed
 that was tuned and approved, so every other surface is a penalty. Were the wild
 1.00 and the road faster, the approved feel would become the slow case.
+
+> **Open country was 0.80 and is 0.65** (Yannick, 2026-09-13, measured). The table was
+> reasoned about while speeds were off and never measured against the claim it exists
+> for. Measured with the beasts gone, the least-watched line from Brindle to the castle
+> is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a plain walker
+> by 2.4 s and *lost* to an attuned one. At 0.65 the road wins by 12 s and 9 s — a fifth
+> of the walk. Farmland keeps 0.80: fields have paths, and the Wide Acres is a place you
+> walk around in. Cleared ground and the clearing are not in the table and walk at 1.00
+> until it matters.
 
 > **Terrain speeds are currently off** (2026-09-11). Everything walkable moves at
 > the road's 6 tiles/sec: a forest should be dangerous, not tiring, and trudging
@@ -622,53 +854,81 @@ that was tuned and approved, so every other surface is a penalty. Were the wild
 > dog-leg stops being flavour and becomes the entire price of the safe route, which
 > is why its 1.30–1.50 ratio is guarded by a test.
 
-### The wild is dangerous (settled 2026-09-11)
+> **Switched back on for v2 (2026-09-13).** The beasts are out (below), so "dangerous,
+> not tiring" has no first half left, and tiring is the price the table was reasoned
+> for. `Region.TERRAIN_SLOWS_YOU` is the one word. "Distance against danger" goes back
+> to being what this section said first: **speed against witnesses**.
+> One exception, by trait: an attuned character is not slowed by the wood, or not as
+> much (§11, Q50).
 
-§4 says everything off the road "holds wild animals and monsters". Three of them:
-a **bear** (slow, 2 damage), a **spider** (quick, 1) and a **bat** (quickest, 1).
-All are slower than the player's 6 tiles/sec — **a predator you cannot outrun is a
-tax, not a risk** — so the wild is survivable by running and lethal to dawdling.
+### The wild is slow and unwatched (2026-09-13; was *dangerous*, settled 2026-09-11)
 
-They exist only near the player: spawned on a ring just past sight and forgotten
-once left behind, so a map of 56,000 tiles is populated for the cost of four
-animals, and it replays exactly because the spawns follow from the seed and from
-where the player walked.
+**Monsters are out of the whole map** — not only the forests. The bear, the spider
+and the bat go, and with them `BeastRules`, `core/beast.gd`, `core/wildlife.gd`,
+`WildlifeSystem`, their tests, and every beast entry in the region, the world state,
+the art table, the text files and the journeys. §21 has the row.
 
-Three things the first version got wrong, each worth keeping written down:
+**What it costs, and why the choice survives it.** The terrain table called the wild
+*slow, unwatched, dangerous*; it is now **slow and unwatched**. The road keeps its
+teeth because it is *fast and watched* — the choice moves from "will I survive it" to
+"will I be seen", which was always the half of the trade the reputation system was
+built for (§8's first consequence, and the travellers who made the wild a real choice
+on 2026-09-11). **Time is now the only price of the wild**, so two things that were
+switched off or optional become load-bearing:
 
-- **Spawns are biased toward where you are going.** Everything is slower than you,
-  so anything behind is scenery. A wood that is only dangerous if you stop is not
-  dangerous.
-- **Beasts keep a margin from the road, not merely off it.** Keeping them off road
-  *tiles* was not enough: a walker wobbles either side of a three-wide road and a
-  wolf on the verge can reach them. §4 calls the road patrolled — patrolled means
-  nothing hunts along it. That margin is what makes the long way round *safe*
-  rather than merely long, which is the whole of the choice now that the ground no
-  longer slows anyone.
-- **Beasts have territory.** Without it they wandered off, were forgotten, and the
-  wood emptied itself while the player stood and watched — so waiting became a way
-  to make the dangerous route safe.
+- **Terrain speeds come back on.** They were turned off on 2026-09-11 because *"a
+  forest should be dangerous, not tiring"*. With danger gone, tiring is the price, and
+  the tuned table above is the one that was reasoned about: a wood at 0.55 is walked
+  at 3.3 tiles/sec against a road at 6. The road is faster and seen; the wood is slower
+  and not. `Region.TERRAIN_SLOWS_YOU` turns it back on in one word, which is why the
+  table was kept.
+- **MAP_SPEC's road ratio matters more, not less.** The road is 1.41 times the wild
+  line. With the wood slowed the road should still come out faster — that is the whole
+  of its case now, since a road that is neither faster nor unwatched is a road nobody
+  takes — and the 1.30–1.50 band the test guards is guarding the choice itself.
 
-**Measured, on a straight run without evading** (`tools/measure_routes.gd`):
+**Measured, 2026-09-13**, with the speeds on and the wood empty
+(`tools/measure_routes.gd`; two `SLOW` tests in `test_journeys.gd` hold the same three
+relationships). Brindle to the castle gate, stopping short of the man at the end:
 
 | Route | Distance | Time | Cost |
 |---|---:|---:|---|
-| The King's Road | 342 tiles | **57 s** | nothing |
-| The wild | 260 tiles | **43 s** | **8 of 10 health** |
+| The King's Road | 342 tiles | **57 s** | seen the whole way |
+| The wild — the least-watched line, over the ford | 269 tiles | **69 s** | 17 tiles of road, crossed where it must |
+| The wild, attuned (§11) | 268 tiles | **66 s** | the same, and the wood slows you less |
 
-Fourteen seconds faster, and you arrive on two health. That is the trade the map
-is for. Run it after touching the map, the speed table or the wildlife, and check
-the two rows still say different things.
+Twelve seconds slower and unseen; nine for the forest build. That is the trade the map
+is for. The v1 figures — 57 s against 43 s and 8 of 10 health — measured a different
+game and are in §20.
 
-> Not in Phase 2: you cannot fight back. There is no combat screen until Phase 4,
-> so the wild is something you run from or die to.
+**The instrument was wrong twice, and both are worth keeping.** The "wild line" had
+always been `Navigation`'s shortest *walkable* path, and on this map that path is
+**42% King's Road** — 118 of 280 tiles, plus the Muster's camp and a town street — so
+v1 never measured the wild at all, and the first v2 measurement had the road winning by
+2 s against a route that was mostly road. Forbidding the road outright is not the
+repair: **no walk from Brindle reaches Blackcairn without crossing the King's Road**,
+because the road runs from the south-east coast to the castle against the mountains and
+seals the east. So the wild line is the *least-watched* path — a road tile costs ten
+wild tiles (`Navigation.WATCHED_COST`) — which crosses the road where it must, never
+runs along it, and takes the ford because the bridge is the road's. Crossing a road is
+a moment of being seen; walking one is a route.
+
+> **What v1 had, kept for the reasoning.** Three beasts, all slower than the player,
+> spawned on a ring just past sight and biased toward where you were going, keeping a
+> three-tile margin from the road, with territory so the wood did not empty while you
+> waited. Each of those was learned the hard way and each stays true of anything that
+> ever hunts in the wood again: danger has to be ahead, the road has to be safe by
+> margin and not by tile, and waiting must never make the dangerous route safe. The
+> beasts went because a wild whose cost is blood asks "will I survive" — a question the
+> combat screen (§10) answers, not the map — and the map's question is "will I be
+> seen". Recorded in §20 and §21.
 
 ### The Kettle, the bridge and the ford
 
 The river runs from the northern mountains to the southern sea down the east of the
 map, dividing the eastern strip — Brindle, the Cinderworks, the near Thornwood —
 from everything else. **It is a real barrier:** dam both crossings and Blackcairn
-becomes unreachable from Brindle, which is a test rather than a claim.
+becomes unreachable from Brindle, which is a test rather than a claim. And the measured wild line crosses at the ford (above), as §4 always said it would.
 
 Both crossings are **bands, not tiles** (§19 Q28b), and both are sized to span the
 river's *slant* rather than its width — a crossing measured against the width alone
@@ -777,6 +1037,67 @@ because it was ever common — which is a better reason than the systemic one §
 gives, and replaces it. One raising, in the forest, by the things that live there.
 Nothing else in the game does anything a reasonable person would call magic.
 
+### The opening points two ways (2026-09-13)
+
+v1's opening pointed one way: the king destroyed your village, so go and kill him. If
+serving the crown is a real play — and the thesis at the top of this document says it
+is — then the first ninety seconds must not close that door. **Nothing that happened
+is softened.** What changes is what *kind* of thing it was.
+
+**Policy, not malice.** Brindle was cleared because the Cinderworks needed the ground,
+not because the king hated it. That is worse in some ways — nobody even decided to
+hurt you — and it is what leaves the door open: people in this game already serve a
+system that did this, and none of them is a monster. §3's *why the player wants him
+dead* is retitled accordingly; the grievance is intact, the target is a policy and the
+man who signed it, and both can be answered by breaking him or by changing what the
+kingdom does with its ground.
+
+**The fairy wants something; she does not name an enemy.** Checked against §4's
+seven: she says *men came with axes and fire*, never *the king*, and her last word is
+*save us*, which is a goal rather than a target. The wood stops shrinking when the
+furnaces stop — **or when the works are made efficient enough to stop expanding**.
+Both plays answer her. A player who strengthens the Cinderworks and settles its wage
+so that it stops eating the Thornwood has done what she asked by a road she would
+never have taken, and the game must let that count: `held_ground` (§8) is the number,
+and it does not ask who moved it.
+
+**One credible pro-works voice in the first hour, who is not a fool.** §5's king's
+argument, below, exists in full and is audible only at Blackcairn. In v2 it is audible
+at the Cinderworks, a minute's walk from where the player wakes, in **Halgrave's**
+mouth: a man who keeps the death ledger because he thinks the record matters, who
+answers in figures, and who will tell anybody what the works has paid for — the road,
+the bread, the years added to a life — before anybody has read the ledger. He is ★,
+he is the open source of the fact that damns Arthur, and he is not ashamed of it,
+which is exactly the shape that makes him credible: the argument and the indefensible
+ledger in one man, as §5 already gives to the king and to the church. He is not
+written as right. He is written as somebody a reasonable person could follow, in the
+first hour, before the case against him has been assembled.
+
+**Built 2026-09-13.** Halgrave's second question, offered to anybody and costing
+nothing: *Why does the king want more of this?* — a man here died at 40 and his
+children before him; now a road, bread in winter, 1 child in 40 lost instead of 1 in 4;
+he wants that everywhere, and so does Halgrave. The same figures as his first answer,
+which is what makes it an argument rather than a slogan. A test holds it among the
+first three things he offers a stranger, and another holds the fairy's forbidden list
+with *king*, *roi*, *Arthur*, *crown* and *couronne* on it.
+
+**The test.** After the tutorial — creation, the fairy, the walk out of the clearing —
+a player who wants to *serve* the crown can say what their first step would be,
+**without the game having offered it**: walk to the works and offer their hands; walk
+to Harrowgate and let Tovin write them down. If a playtester who wants that play
+cannot name a first step, the opening still points one way, whatever this section
+says.
+
+> **What was rejected.** Softening the burning — a cleared village is the premise and
+> the counterexample the king will name to your face (below); take it away and there
+> is nothing to hold him to account for. A fairy who names the king — she would be
+> exposition, which §4 has forbidden since the first draft, and she would be picking a
+> side in a game whose thesis is that both are plays. A crown voice in the clearing —
+> the miracle is one, and the crown's voice belongs in the crown's world, which is the
+> works, one frame away. Making Halgrave sympathetic by making him doubt — a man who
+> half-believes is a fool with a ledger; the version that costs the player something
+> is the one who believes completely and can show you the figures.
+
 ### The king's argument 🟡
 
 He is not a cruel man in his own account, and the spec must be able to state his
@@ -855,14 +1176,18 @@ it is no longer the *reason*.
 
 ### Endings
 
-The game does not end. The king is resolved — killed, spared, publicly broken, or
-walked away from — and play continues in a changed region.
+The game does not end. The king is resolved — killed, spared, publicly broken,
+walked away from, or **succeeded** (§3, 2026-09-13) — and play continues in a
+changed region.
 
 **What concretely changes afterwards:**
 - The world tick values shift permanently: prices, patrol density, faction tension.
 - Who is in charge changes, per the resolution taken. A killed king leaves a vacuum
   someone fills; a broken king leaves an administration that has to answer for
   itself.
+- **Or the player is in charge** (2026-09-13): deposed at the crown's last rank is
+  §3's throne reading, and what changes first is what the ending shows — the
+  hardship (§8) in the towns they changed, the morning after.
 - All existing side quests remain playable. No content is closed off by the ending.
 - NPC dialogue acknowledges the new state.
 
@@ -884,8 +1209,8 @@ walked away from — and play continues in a changed region.
 > who has never met them, and so that "he needs something to say" cannot turn a
 > prop into a named character by degrees.
 
-Monsters, wolves, bandits and generic guards are enemy *types*, budgeted separately
-(§17) and reused across the region.
+Generic guards and strangers are *types*, budgeted separately (§17) and reused across
+the region. Monsters and animals were cut from the whole map on 2026-09-13 (§4, §21).
 
 **Townsfolk are scenery, and are not cast.** The figures standing about in a town
 have no names, no sheets, no dialogue and no facts, and they are **not part of the
@@ -1209,22 +1534,60 @@ resumes from the tick it stopped on. Real-time combat therefore never needs a se
 world clock, and never drifts prices while the player is blocking.
 
 The world advances on a coarse clock, not a life simulation. Twelve tracked
-quantities drift on their own and are pushed by the player's actions:
+quantities drift on their own and are pushed by the player's actions — **in either
+direction** (2026-09-13). The "breaks it by" column is v1's; "builds it by" is v2's,
+and the two are the same kind of thing: a deed, at a landmark or in a conversation,
+that writes the quantity and the player's handprint.
 
-| # | Quantity | Drifts because | Player pushes it by |
-|---|---|---|---|
-| 1 | Grain price **(per town)** | Season, supply, **and mouths to feed — deserters buy the food they used to be issued** | Burning stores, redirecting convoys |
-| 2 | Steel output | Ore supply, worker morale | Sabotage, turning workers |
-| 3 | Worker morale | Wages, accidents | Agitation, exposure of the ledger |
-| 4 | Patrol density | Crime reports | Being seen committing violence — and it widens how far along the King's Road a traveller will recognise you |
-| 5 | Guard alertness **(per town)** | Recent incidents | Any witnessed crime — and above a threshold the watch stands over what it guards and the act is refused |
-| 6 | Crown treasury | Taxes, war costs | Robbery, exposing debts |
-| 7 | Bank confidence | Treasury, rumour | Robbery, handing over records |
-| 8 | Town sentiment **(per town)** | Prices, patrols, law | Almost everything |
-| 9 | Army strength *(global — there is one army)* | Pay, food, desertion | The Wide Acres, the Muster, the bank |
-| 10 | Faction tension | The above | Taking sides |
-| 11 | Rumour spread | Time | Being witnessed |
-| 12 | King's escort | Pillar states | Damaging pillars |
+Read the first of those columns as a list of verbs and v1 was nine ways to damage the
+kingdom and none to build it. That was not a missing feature but a missing **sign**.
+The store already takes one — `push()` is signed and clamped, and `credit_from()`
+already carries the handprint along a coupling — so the second direction costs no
+engine work. It is rows in this table, and every row must satisfy the two hard rules
+further down: *every door that shuts opens another*, and *every act that moves the
+kingdom names who it costs*.
+
+| # | Quantity | Drifts because | Player breaks it by | Player builds it by |
+|---|---|---|---|---|
+| 1 | Grain price **(per town)** | Season, supply, **and mouths to feed — deserters buy the food they used to be issued** | Burning stores, redirecting convoys | Enforcing the grants; getting the convoys moving; warning a town in time, so it lays in stores |
+| 2 | Steel output | Ore supply, worker morale | Sabotage, turning workers | Delivering labour; **feeding it the forest** — the Thornwood is the works' fuel, so felling it is a Cinderworks act and its cost lands in the wood |
+| 3 | Worker morale | Wages, accidents | Agitation, exposure of the ledger | Settling the wage dispute; labour delivered, which is shorter shifts |
+| 4 | Patrol density | Crime reports | Being seen committing violence — and it widens how far along the King's Road a traveller will recognise you | Informing the crown; handing deserters back to the Muster, which puts men on the road. Its cost lands on everyone who lives by being unseen |
+| 5 | Guard alertness **(per town)** | Recent incidents | Any witnessed crime — and above a threshold the watch stands over what it guards and the act is refused | Informing the crown about this place — the watch is roused where you point it, and stands over the granary against the hungry as well as against you |
+| 6 | Crown treasury | Taxes, war costs | Robbery, exposing debts | Bringing the bank the crown's creditors; the grants enforced and the convoys moving, which is rent and sale |
+| 7 | Bank confidence | Treasury, rumour | Robbery, handing over records | Restoring confidence — the creditors brought to the table, the treasury refilled. It follows the treasury in both directions |
+| 8 | Town sentiment **(per town)** | Prices, patrols, law | Almost everything | Almost everything, the other way: cheap bread, wages paid, a town warned in time |
+| 9 | Army strength *(global — there is one army)* | Pay, food, desertion | The Wide Acres, the Muster, the bank | Paying it, feeding it, handing it the deserters |
+| 10 | Faction tension | The above | Taking sides | Settling what it feeds on — the wage dispute, the unpaid army, the empty granary. Downstream of the others in both directions |
+| 11 | Rumour spread | Time | Being witnessed | Neither direction pushes it: **a readout** (2026-09-11) of how many stories are in the air |
+| 12 | King's escort | **Derived from army strength** (below), not stored | Whatever hollows the army | Whatever fills it |
+
+**Built 2026-09-13 (Phase B).** The ten building acts are rows in `DeedRules` and
+**things you say**, through §9's `causes`, to the person whose business it is — the
+same shape as v1's six spoken levers. None needs a rank or a side; each is a question,
+spent once, and most cost goodwill, so nobody does the crown's business with a man they
+think ill of.
+
+| Act | Said to | Needs knowing |
+|---|---|---|
+| Enforce the grants | Nessa, at the Wide Acres | the land grants |
+| Get the convoys moving | Garrick, in Harrowgate | — |
+| Deliver labour | Halgrave, at the Cinderworks | — |
+| Settle the wage | Halgrave | the death toll |
+| Feed it the forest | Halgrave | — |
+| Pay the Muster | Odile, at the Muster | the pay fraud — and it goes when the fraud is public |
+| Feed the Muster | Odile | — |
+| Hand over the deserters | Ryse, at the Muster | where Kell is |
+| Restore confidence | Corvin Ash, in Cairnwell | the debts |
+| Bring the creditors | Corvin Ash | that the whole thing was borrowed |
+
+**A ceiling, found by building it.** The twelve are clamped at 100 and four of them
+start there — steel, treasury, bank, army — so the second direction **restores**; it
+never raises a full quantity fuller. Feed the works the forest on day one and steel
+stays at 100, the belt still widens, Brindle is still worse off and the crown still
+counts it as service. That is §8's ceiling on place states arriving one level down,
+and it is right: the crown's acts are worth most where the kingdom has been broken,
+which is exactly when a loyal player has something to do.
 
 Each is a number the simulation core owns, updated on tick, and readable by
 dialogue, prices, spawn tables and the pillar system. Nothing here requires
@@ -1261,6 +1624,68 @@ consequence of *witnessed* actions, never of a quest completion flag.
 
 **Who witnesses what, and how word travels:** witnesses record what they saw;
 rumours propagate on a delay; a crime nobody saw did not happen.
+
+### Hardship — a reading about a place, beside the twelve (2026-09-13)
+
+**What an act costs the people who live somewhere, held apart from what it costs the
+crown.** One figure per town, in the same store as grain price and town sentiment.
+It is the keystone of v2: with one bidirectional axis the game is a scoreboard with
+two ends and the player picks an end. Hardship is the second axis — the one that
+makes both ends cost something and neither of them correct.
+
+**It is not a thirteenth quantity, and the twelve are untouched.** They are not
+renamed, renumbered or merged. Hardship stands beside them the way `held_ground`
+already does: a reading about a *place*, kept where readings live. The refusal
+further down this section ("Can the twelve quantities carry these five?") does not
+reach it, and now says so.
+
+**Up is worse.** Like grain price, and unlike the global figures where 100 is as good
+as it gets for whoever owns them, hardship is a cost: it rises when the people of a
+place are worse off. Named here so nobody inverts it by accident.
+
+**Raised from either direction.** The crown's policies raise it — the grants enforced
+on the people who work razed ground, the works fed with longer shifts. The player's
+disruptions raise it too — a granary burned is the Wide Acres' winter, a cold furnace
+is the Cinderworks' wage. Strengthening a place for the crown and breaking it both
+cost the people in it, and often the people somewhere else: free the Wide Acres and
+the Muster goes hungry; feed the Cinderworks the forest and Kell's fire has less wood
+around it. **An act writes hardship where its cost lands, which is frequently not
+where the act was done.** That is the hard rule below — *a cost has a face* — made
+into a number.
+
+**It barely drifts and moves sharply when acted on.** §8's own warning applies with
+full force: a world where everything drifts is a world where nothing reads as caused,
+and hardship exists to read as caused. So it has no lively drift rate and must never
+acquire one. What moves it is a deed, through `push()`, with the handprint written
+beside it. Whatever small easing it turns out to need gets its rate the way the twelve
+got theirs — when the consequence that needs it is built, not here.
+
+**What reads it.** In v2 it is not a predicate input: an ending reads it *out*, never
+*in*. Making it a threshold would hand it a correct direction, which is the one thing
+it exists not to have. It is *shown* — in the place (§13: a shuttered works, a queue at
+the granary), in what people say (§9: a condition content may name, like
+`grain_is_dear_here`), in the journal (§15), and at the end, where a player who takes
+the throne (§3) is shown the hardship figures in the towns they changed, the morning
+after. Those channels are later items of the v2 rewrite; the figure is defined here
+so that all of them read one thing.
+
+**Built 2026-09-13.** `WorldTick.hardship`, one figure per town, at **50** to start —
+the ordinary lot of a place under this crown — moved only by `push_hardship()`, which
+writes the handprint under `hardship` like every other push; there is no drift path to
+it at all. Every deed that moves any of the twelve declares `DeedRules.hardship_effects`
+— town → how much worse off, `here` for the town the act was done in — and a test
+walks the table: a deed with world effects and no cost, or a cost that makes everybody
+better off, fails the build. One act carries a place past **62**
+(`DialogueRules.HARDSHIP_BITES`), which is the line §9's `hardship_is_high_here` reads.
+Each push is a derived event, `hardship_moved`, and the journal reads those.
+
+> **What was rejected.** Folding it into town sentiment — sentiment is what a town
+> thinks of the crown, and a town can be loyal and hungry, which is the whole of the
+> Wide Acres. Folding it into the player's per-town standing — that is what a town
+> thinks of *you*, and a place can love the man who ruined it. One global figure — it
+> is about a place, and a global misery index would be the thirteenth quantity the
+> refusal is actually about. A third state for a place, "ruined" — hardship is a
+> reading, not a state, and a state would freeze what should keep costing.
 
 ### A change the player cannot perceive is identical to no change
 
@@ -1379,10 +1804,11 @@ only when you say so, and **everyone can see it** (§8's appearance register —
 context packet carries `SEES YOU AS`). A crown officer can be despised in Harrowgate
 and still get through the gate at Blackcairn.
 
-**Four ranks a side, read off service rather than stored**, so there is one number to
-replay and no way for the two to disagree. Service comes off the **deed table**: every
-act already in the game counts as work for the opposition without being authored
-twice, which is why joining them needed no new verbs at all.
+**Four ranks a side, read off standing rather than stored** (service, until
+2026-09-13 — see §11), so there is one number to replay and no way for the two to
+disagree. Every act in the deed table moves the crown and the dispossessed, so every
+act is service to one side and offence to the other without being authored twice; the
+crown's list is §8's "builds it by" column.
 
 **The crown needed exactly one new act.** Every one of the thirteen deeds cost the
 king something — fine while the player could only be against him, and untenable the
@@ -1392,19 +1818,117 @@ It is one-shot, it requires actually knowing something, and **it costs you the t
 because nobody likes an informer. That last part is what stops the crown route being
 free: every step up costs you the ground you are standing on.
 
+> **v1's answer, and v2 extends it (2026-09-13).** One act was enough to make joining
+> the crown *possible*; it was never enough to make it a *play*. Informing stays, with
+> its cost. The rest of the crown's service is the "builds it by" column of the table
+> above — the grants enforced, the convoys moving, the works fed, the army paid, the
+> creditors brought in — each a deed with a face, each worth rank (§11). Eleven ways to
+> serve the opposition against two to serve the crown was the count when v1 shipped;
+> the second direction fixes the count by fixing its cause.
+
 **You join by saying so to somebody** — Tovin writes you down, Kell takes you in —
 never from a menu, so it is in the log and there is a person who took your name.
 
-**Ownership is a fact, not a constant.** The crown's five points and the forest's one
-do not move; you do not take Blackcairn by being disliked there. The **Wide Acres and
-Saltmarch** are borders rather than sides, and they are the only two that change hands,
-on the sentiment of the town under them — on a band rather than a line, so a border
-cannot flicker. The player's choices show on the map, in the only two places where
-showing is honest.
+**Ownership is a fact, not a constant.** Blackcairn does not move — you do not take
+the castle by being disliked there — and neither does Brindle, which was never his.
+In v1 only the two borders, the **Wide Acres and Saltmarch**, changed hands, on the
+sentiment of the town under them — on a band rather than a line, so a border cannot
+flicker. **v2 keeps that band and adds a second way for a place to change hands**
+(2026-09-13), below.
 
 > **The disguise is proposed and not built**, by decision. See `docs/history/OVERNIGHT.md`:
 > worn rather than toggled, fools strangers and never the twenty-five named people,
 > broken by being seen acting, and gating nothing.
+
+### A place changes hands two ways, and holds for two days (2026-09-13)
+
+Two models of a place changing hands existed — the band above, and v2's decisive act
+— and both are kept, as the two paths the hard rule above already names: *drift may
+move the world; only the player may end it.*
+
+**Four places carry a state: the Wide Acres, the Cinderworks, the Muster and the bank
+at Cairnwell.** The state is binary — **crown-held or free** (the code's
+"opposition") — and there is no third. A place is never pushed past its starting
+state: all four start crown-held, because that is what a power base is, and you
+either **liberate** one or **restore** it. The Wide Acres never becomes better than it
+has ever been, and nothing may build a "held by the player" or "better than the crown
+had it" state by accident. Harrowgate and Greyhold are deferred, not cut, and carry no
+state in v2; Blackcairn cannot be taken and has one state (§4).
+
+| Path | What moves it | Handprint | Stamp |
+|---|---|---|---|
+| **Drift** | The sentiment band, unchanged from v1: below 30 the town under a place turns it free, above 70 turns it back. **The two borders only** — the Wide Acres and Saltmarch | None | None |
+| **Player** | **One decisive act per place** — a deed at its landmark (`SiteRules` already reaches all four: kiln, granary, counting house, muster rolls), whose outcome can land either way. Sets the state directly | Written | The tick it happened on, in the event log |
+
+**One decisive change per place, two directions.** Not two quests per place — one
+deed, whose outcome is crown-held or free depending on what the player did with it.
+Invariant 5 stays literally true (*a quest that can only start one way is a bug*), the
+writing is halved, and there is still no quest store: a decisive change is a deed, not
+a quest object. The other acts for and against a place — burn the stores, get the
+convoys moving — move the quantities and write hardship; they do not flip the state.
+Which act is decisive for which place, and what decides which way it lands, is §3's
+table.
+
+**The freeze window — one constant, defined here and nowhere else.**
+
+> **2 in-game days = 2 × 1440 = 2880 world ticks = 12 real minutes.**
+
+A state the player set holds for that long, **against everything** (Yannick,
+2026-09-13): the town's sentiment cannot move the place back, whatever it reads, and
+the opposite decisive act is **refused** for the length of the hold — the way a roused
+watch refuses an act (above). That is world state refusing a deed, the same shape v1
+already has, not a progression gate: the place has just been decided and stays decided
+for two days, and everything else at the place still works — the other acts move the
+quantities and write hardship as before. As with the roused watch, the ambient shows
+the door shut and the journal says what shut it; the landmark never advertises an act
+it will refuse. After the hold both paths apply again. A place is **reversible**: a
+freed Wide Acres whose town swings above 70 goes back to the crown by drift, exactly as
+v1 would have moved it, and the player may restore it by hand. The hold is what makes a
+decisive act decisive — without it a band at 70 could undo a liberation on the next
+tick, or the player could flip a place twice in a minute, and the largest act in a
+place would read as a switch.
+
+The window is **a tick stamp in the event log** and nothing else — no timer, no node,
+no second clock — so a replay lands on the same tick in the same state.
+`Game.TICKS_PER_IN_GAME_DAY` is 1440; the constant is that, twice, defined once in
+`core/` and read by everything that needs a window. §4's instability reading for Blackcairn
+uses **this window and no other** for "how recently": a flip inside the last window is
+recent, and four of them inside one window is a crisis.
+
+**Built 2026-09-13.** `Allegiance.decide()` is the player path — it sets the state,
+stamps `decided_at` and sets `held_until` to the tick plus `PlaceRules.freeze_ticks()`
+— and `drift_to()` is the band's, which writes neither. Both append to `flips`, which is
+what Blackcairn's instability will read. The hold is enforced **by not offering**: the
+four holding lines forbid `this_place_is_frozen`, the telling rule leaves the frozen
+place's own document off the list, and the fraud cannot be exposed at a camp paid two
+days ago or less — so the landmark never advertises an act it will refuse, and a
+decisive act reaching a frozen place is recorded as `place_held` rather than hidden.
+A decision that keeps a place where it was is a stamp, not a flip: enforcing the grants
+on an Acres the crown already held freezes it and changes the sign, and counts nothing
+toward instability. And a freed place has no watch — the crown's men left with the
+crown, so a roused watch does not stand over a granary it no longer holds.
+
+**What each path leaves behind.** A drift flip writes no handprint, so a place the
+world moved is a place the player did not move — the journal (§15) can say *the Wide
+Acres turned* and cannot say *you turned it*, which is the truth. A player flip writes
+the handprint and the stamp, and the stamp is what Blackcairn reads. Both raise the
+instability reading: a flip is a flip to the men on the wall, whoever caused it. Only
+the player's counts toward an ending, per the hard rule.
+
+> **What was rejected.** Keeping only the decisive act — the band is v1's honest model
+> of a border, it is tested, and it is the one way a place moves *without* the player,
+> which Pillar 4 requires. Keeping only the band — a band writes no handprint, so a
+> player who freed the Wide Acres by souring it would be indistinguishable from
+> weather, and the throne reading (§3) would never fire. A longer freeze — a season
+> makes the first flip final in practice, and a place that cannot be restored is a
+> ratchet. A shorter one — under two days the band could reverse a liberation before
+> the player had walked to the next town. Extending the band to all four — a
+> Cinderworks that went free on a bad week of bread would be a power base falling to
+> weather; drift is for borders, not for what holds a reign up. The borders' neutral
+> start — *a border is not a side* was v1's and is retired by the binary rule: the Wide
+> Acres and Saltmarch start crown-held (§4: *the king's, contested*; *the king's,
+> barely*), and what makes them borders is that they are the two the band can still
+> move.
 
 ### Every door that shuts opens another (hard rule)
 
@@ -1420,6 +1944,40 @@ way to play.
 
 Practically: every reaction rule names who is offended *and* who is impressed. If a
 change has no counterpart, it is not finished.
+
+### Every act that moves the kingdom names who it costs, and the cost has a face (hard rule, 2026-09-13)
+
+The companion to the rule above, and it binds **both directions**. That rule says a
+reputation change is never only a loss; this one says a change to the kingdom is never
+free — not for the player, for *somebody* — and the game must be able to say who.
+
+Not "steel +20": a valley that cannot drink its water because the works' runoff is in
+it; a garrison that goes hungry because the estates that fed it went back to the
+people who farmed them; a family an NPC can name. A cost with no face is a scoreboard,
+and a scoreboard has exactly one correct way to play — the failure the rule above was
+written against, one level up.
+
+Practically: **every deed row names where its cost lands and who there can say it.**
+Where it lands is a hardship push in a town (above), and *who* is one of the
+twenty-five or a place's own people, in their own words — Pell for the Wide Acres,
+Sena or Ivo for the Cinderworks, Kell and the men Ossa treats for the Muster, Mira's
+clients for the bank. A deed that moves a quantity and writes hardship nowhere is not
+finished, in either direction, and the test that already walks every deed for its
+counterpart must walk it for its face too.
+
+**Built 2026-09-13.** The face is a **greeting**, not a reply: an `alt_greeting` on
+`hardship_is_high_here`, so it is the world speaking before the player has asked
+anything, and a test refuses any that names the player — the attribution stays in the
+journal. One in every place, because a cost can land anywhere a document is read:
+Wren for Brindle, Sena for the Cinderworks, Ossa for Harrowgate, Pell for the Wide
+Acres, Odile for the Muster, Mira for Saltmarch, Anselm for Cairnwell, Dray for
+Blackcairn. Eight lines a language.
+
+> This is why the second direction needed hardship before it needed acts. Nine ways
+> to break the kingdom and none to build it was a missing sign, and filling in the
+> sign alone gives a scoreboard with two ends. The face is what makes strengthening
+> the Cinderworks cost the Thornwood and freeing the Wide Acres cost the Muster — so
+> that a loyal run and a rebel run are both *plays*, and neither is the answer.
 
 ### What raises a town: giving away what you know (2026-09-11)
 
@@ -1521,6 +2079,16 @@ consequences are about *the player's standing in the world*, which is a differen
 kind of thing: it is indexed by town, by faction and by person. It does not belong
 in the tick table at all, and adding a thirteenth, fourteenth and fifteenth quantity
 would be the wrong repair.
+
+> **What that refusal covers, and what it does not (2026-09-13).** It refuses
+> *standing-shaped* numbers — what each town, faction and person thinks of the player,
+> which is indexed three ways and lives in its own structure. It was never a refusal
+> of a reading about a *place*. Three of the twelve are already held per town in the
+> same store — grain price, town sentiment, guard alertness — and so is `held_ground`,
+> which the code itself marks as *not a thirteenth quantity* for this exact reason.
+> **Hardship is that kind of number**: a condition of a place, defined earlier in this
+> section, and the refusal does not reach it. `core/world_tick.gd` repeats the refusal
+> on `held_ground`; read it the same way.
 
 So Phase 3 keeps the twelve as the world's vital signs and adds a **second
 structure** beside them — standing and knowledge, indexed rather than global:
@@ -2051,6 +2619,32 @@ that French runs long and the pair overflows the box — checked against every
 combination that can actually occur rather than against a worst case that pairs a
 long reply with an opener that person never says.
 
+### What the world can say about itself in v2 (2026-09-13)
+
+§8's rule stands — *content names a condition, the rules layer defines it* — and v2
+adds the conditions its new state produces. Content may name these, and `core/rules/`
+decides what each means:
+
+| Condition | About | Reads |
+|---|---|---|
+| `this_place_is_free` / `this_place_is_crown_held` | The place the speaker stands in (§8's state) | A worker at cold furnaces has a different answer from one at lit ones |
+| `<place>_is_free` | Any of the four, from anywhere | Maddox can mention that the Acres went to the smallholders, three days after they did |
+| `hardship_is_high_here` | The speaker's town (§8) | The loyal-and-hungry line, which is the whole of the Wide Acres. **Built 2026-09-13**: eight greetings, one face per place |
+| `crown_rank_is_at_least_N` | The player's crown standing, read as rank (§11) | Greeting, offers, assumptions, what is told — never a gate. **Built 2026-09-13**: Dray and Hesper at 3, Tovin at 1 |
+| `blackcairn_is_unstable` / `blackcairn_is_rich` / `blackcairn_is_poor` | The castle's two readings (§4) | The second channel for both readings: what towns say about the castle. **Built 2026-09-13**: Maddox and Peyre as greetings; Garrick's *rich* line is a question he answers, because the castle is rich from minute one and a greeting that never lifts would hide his disposition band |
+
+A conditional line outranks a standing one, as before, so each of these takes its slot
+the day it applies. None of them gates a fact: invariant 6's `costs: "free"` source
+still exists for every fact whatever the state or the rank.
+
+**Travellers are never conversational, never named, never part of the twenty-five.**
+Kept in v2 by decision (§20): they are how rumour physically travels between towns,
+and removing them would remove rumour propagation, the point of the Thornwood and the
+reason MAP_SPEC's road ratio exists. They have no sheet, no voice note and no line,
+and nothing in this section applies to them. If they read as fake, that is a
+presentation problem for §13 — draw them as traffic — and never a reason to give them
+words.
+
 ### Determinism rules
 
 - The model never decides a mechanical outcome. The rules layer issues the verdict;
@@ -2147,7 +2741,7 @@ ever wasted:
 | **Temper** | Accusation, threat, fury; the emotional register, not an ability | Higher damage, less control — a real trade-off |
 | **Hands** | Craft knowledge — how the works, the farms and the ledgers actually function | Speed, blocking, precision |
 | **Body** | Physical presence in a room | Health, stamina, carrying |
-| **Attunement** | The forest's register: you can read what is dying and who is doing it, and some people only speak to somebody who can | The wild does not treat you as prey — fights you never have, rather than damage you deal |
+| **Attunement** | The forest's register: you can read what is dying and who is doing it, and some people only speak to somebody who can | **The wood does not slow you** (2026-09-13): at 3 or more the Thornwood's speed penalty does not apply, or applies less — a cost you do not pay, rather than damage you deal |
 
 **Point-buy:** each trait starts at 1, with a pool of **10** to distribute; maximum
 **5** at creation (settled 2026-09-13, closing §19 Q6 and Q22).
@@ -2179,13 +2773,21 @@ one miracle and it happened to the player rather than being performed by them.
 Attunement is the ability to *notice* it: what the clearing is doing, what is in the
 wood, and what the people pushed into it will say to somebody who can tell.
 
-Its combat half is the same sensitivity pointed the other way: **the wild stops
-treating you as prey.** That is fights you never have, not damage you deal — the
-precedent is *Presence*, whose combat use is ending fights without violence. And it
-makes the two social traits the map's two sides: **Presence is the road build** (the
-Access route, papers, being seen and being let in) and **Attunement is the forest
-build** (unwatched, unprovoked, and able to hear the half of the region the king is
-clearing). §4's thesis, bought at character creation.
+Its second half is the same sensitivity pointed at the ground: **the wood does not
+slow you** (Yannick, 2026-09-13, closing Q50). v1 had *the wild stops treating you as
+prey* — fights you never have — and the beasts went with v2 (§4), so the price of the
+wild is now time, and an attuned character does not pay all of it: at Attunement 3 or
+more — the one threshold every tag uses — the Thornwood's speed penalty does not
+apply, or applies less: **0.80 in the wood, a worked field's pace** (measured
+2026-09-13, `MovementRules.ATTUNED_WOOD_MULTIPLIER`). On the shipped map the shortcut
+holds 29 tiles of wood, so the trait buys about 3 s of a 69 s crossing — real, small,
+and it grows with the forest, which is the deferred map question (Q42/Q43).
+The precedent is still *Presence*, whose second use is ending fights without violence:
+a trait's second half is a cost you do not pay, not damage you deal. And it makes the
+two social traits the map's two sides: **Presence is the road build** (the Access
+route, papers, being seen and being let in) and **Attunement is the forest build**
+(unwatched, unslowed, and able to hear the half of the region the king is clearing).
+§4's thesis, bought at character creation.
 
 > **Still open, and downstream of Q42/Q43**: *who* only speaks to somebody attuned.
 > The forest has no people in it yet, so the dialogue half of this trait currently
@@ -2197,6 +2799,87 @@ quests, discovered facts, and damaged pillars.
 
 **What the player accumulates besides levels:** knowledge, reputation, equipment,
 allies, recovered memory.
+
+### Rank — derived, never gating (2026-09-13)
+
+`FactionRules` already has four crown ranks read off service — at 0, 25, 60 and 110 —
+and its own comment says *"the crown's last rank is the castle door."* That is the
+design. It is written down here and extended; nothing new is invented.
+
+**Rank is derived, exactly as the escort is derived from army strength.** Nothing
+stores "you are a Baron". The title is what the court calls somebody at a given
+**crown standing** — the faction standing that already exists (§8) — and it is
+recomputed from that number every time it is asked for. It therefore **falls as well
+as rises**: burn the crown's granary and the court stops using the title, because the
+number it was read from went down. A rank that can only climb is a ratchet, and a
+court that kept calling a man Baron after he burned its stores would be storing
+something.
+
+| Rank | Crown standing | What changes |
+|---|---|---|
+| 0 | 0 | Nobody. The everyday greeting; the gate turns you away; nothing assumed |
+| 1 | 25 | Known to the crown's people. Greeted as someone; offered what a stranger is not |
+| 2 | 60 | Trusted. What people will *tell* you changes — the crown's side of a thing, said openly |
+| 3 | **90** | **The castle door.** The guard knows your face and the gate opens without papers |
+
+Three of the thresholds are v1's; the last was 110 and is **90** (2026-09-13, built):
+standing clamps at ±100, so a door at 110 would never have opened. The words are
+content — `rank.crown.0` to `rank.crown.3`, written French first — and "Baron" in
+this document is a placeholder, not a title.
+
+**What rank changes.** How you are greeted, what is offered, what is assumed, and what
+people will tell you — all of it through §9's existing machinery: the rank is a
+**condition content may name**, the way `grain_is_dear_here` is, and the rules layer
+decides what the name means. A conditional line outranks a standing one, so a rank
+line takes its slot the day it applies.
+
+**It never gates.** Invariant 4 is absolute here. At high standing the gate at
+Blackcairn opens because the guard knows your face; at low standing you climb the wall
+— the culvert, the cliff path, Hesper's papers (§4's three ways in). **Same
+destination, different route.** Rank is one more way through a door that already had
+others, and it is never the only one. A test asserts that every place a rank opens
+has at least one way in that reads no rank at all.
+
+**High crown standing never removes the other endings** (invariant 7). A player loyal
+all game can still turn at the end — read the ledger aloud, empty the vault, depose
+the man who knighted them. That last case is §3's throne reading: Deposed, with the
+handprint, at the crown's last rank. Rank is what makes taking the throne
+*expressible*; it is not what makes it happen.
+
+**The crown's service is a real list now.** v1 had two acts that served the crown —
+`i_gave_it_back` and `i_informed_the_crown` — against eleven that served the
+opposition, and `FactionRules.WORTH` says so in its own comment. In step with §8's
+second direction, every act in the "builds it by" column is crown service: the grants
+enforced, the convoys moving, labour delivered, the wage dispute settled, the forest
+fed to the works, the Muster paid and fed, deserters handed back, confidence restored,
+the creditors brought in. Each is a deed row with a face (§8), and each is worth
+standing with the crown as the opposition's acts are worth standing with the
+dispossessed. Worths are tuning and live in the table, not here.
+
+**Built 2026-09-13 (Phase D).** `FactionRules.rank_from(side, standing)` reads the
+side's faction standing — the crown's for the crown, the dispossessed's for the
+opposition — and `Allegiance` stores only the last rank it saw, so a change can be
+announced as `rose` or `fell`; the service tally and `WORTH` are gone, and the deed
+table's faction effects are the whole of service. Three greetings read the rank
+(`crown_rank_is_at_least_N`, §9): Dray and Hesper at the last rank, Tovin at the
+first — after personal regard, because a man who watched you steal does not wave you
+through however the court styles you. The gate itself stands open as v1 left it; the
+rank changes who says what at it, and a test holds that no fact and no deed sit
+behind a rank.
+
+**The opposition's ladder is unchanged.** Four ranks, same thresholds, and its last
+rank is still a room to read in rather than a door — the shape v1 gave it in §8.
+
+> **What was rejected.** A stored rank, awarded by an event — invariant 4, a
+> progression flag by another name, and a second number that could disagree with the
+> standing it was meant to summarise. Reading rank off the **service tally**
+> (`Allegiance.served`) as v1's code does — it only ever rises, so a man who served
+> the crown for a week and then burned its granary would still be its Baron; standing
+> moves both ways and is the number the court would actually be reading. Letting the
+> last rank *be* the way in — the gate opening only at rank 3 is a gate, and the
+> culvert and cliff path exist so that it is never the only one. A fifth rank above
+> the castle door — there is nothing above the door but the throne, and the throne is
+> a reading (§3), not a rank.
 
 ---
 
@@ -2276,6 +2959,40 @@ a town somebody laid out with a ruler and nobody has ever walked on. The fray ma
 only eat ground the town could sit beside — grass, field, marsh — because skipping
 whatever it landed on left a corner of the Thornwood's thicket standing inside the
 Muster, impassable, with a watchman posted in it.
+
+### Two ground states × four places, and the castle's two faces (2026-09-13)
+
+§4 says what is on the ground in each state; this says what is drawn. **One kit per
+place still holds** — a free Wide Acres is built from the Wide Acres' kit with things
+missing and things moved, not from another place's. The free variant of each place is
+one authored arrangement, and the test that refuses two places the same kit also
+refuses a place a third variant.
+
+| | Crown-held (v1, as built) | Free (v2, new) |
+|---|---|---|
+| **Wide Acres** | Farmhouse and barn ×4 in fenced fields; the granary row with a watchman | Fences gone; fields cut smaller; the granary door open and no watchman; no carts on the road leg |
+| **Cinderworks** | Four furnaces lit, smoke, the cleared ring | Furnaces unlit — the same sprites with the fire frames off; smoke gone; the cleared ring stopped |
+| **Muster** | Tents in rows; the pay tent with its queue | Half the tent rows gone; the pay tent shut; the crowd figures the Muster lost stand in Harrowgate (§6) |
+| **The bank** | The counting house open, the tallest thing in Erileo | Shutters on the counting house; different men at its door |
+
+**Blackcairn's two readings are drawn on the castle** (§4): wealth as scaffolding and
+new stone against the north wall, or shuttered works and an unfinished course;
+instability as banners down, more guards on the wall, the gate shut in daylight. Each
+is a handful of props toggled by a reading, on the same rule as the Muster's tents —
+drawn from the number, never stored on a node.
+
+**Built 2026-09-13**, as far as the pack allows: the wall guards are the escort's sprite
+posted on the rampart either side of the gate, and *shuttered* is the keep, the towers
+and the gate drawn dark. Scaffolding, new stone and banners wait on v3's art.
+
+**The Thornwood belt** is the cleared ring's radius, already drawn by
+`Terrain.CLEARED`. Widening it is a number, not new art.
+
+**Travellers are drawn as traffic, not as characters.** They are kept (§9) and they
+are furniture. If they read as fake it is a presentation problem, and the answer is to
+draw them as what they are — a cart, a pair at a distance, somebody leaving a gate —
+never to give them a face from the cast's thirty or a routine that makes them look
+like people with somewhere to be. **Built 2026-09-13**: a pack horse, from the pack's `Animal/Horse` side sheet, flipped for the direction of travel — and looked at with `tools/shot.sh` before it was called done.
 
 ### Approved asset pack (settled) — exactly one
 
@@ -2413,7 +3130,25 @@ Two scoping facts, stated rather than buried:
   than 26 tiles. A flaw in the pack, not in the project. The validator prints every
   exception on every run so that the list cannot quietly grow.
 
-**Path to the final look:** placeholder → approved pack → commissioned art.
+### The pack and the palette are locked for v2; v3 replaces both (2026-09-13)
+
+**v2 changes what the world means; v3 changes what it looks like.** They are kept
+apart on purpose: an art swap during a systems rewrite makes every visual bug
+ambiguous between the two. So for v2, Ninja Adventure is the pack and the 340 colours
+are the palette, and every new thing v2 draws — the free variants, the castle's two
+faces, the entrance signs — comes out of that pack or is not drawn.
+
+A real graphics jump is a wall rather than a download, and the wall is the four rules
+above: one approved pack, a locked palette extracted from it, the validator enforcing
+both by test, and one kit per place with one face each. **The validator is what makes
+a replacement safe, not what blocks it** — a new pack that covers all four places, the
+castle and thirty faces goes in by replacing the table above and re-extracting the
+palette, and the suite says immediately what it does not cover. Licence matters as
+much as looks: CC0, or a licence that survives a Steam release, checked before
+anything is drawn against it.
+
+**Path to the final look:** placeholder → approved pack (v1, v2) → a new pack or
+commissioned art (v3), through the validator.
 
 ---
 
@@ -2511,6 +3246,37 @@ person has ever told you. That makes invariant 6 the player's problem as well as
 designer's: the journal is where you find out that the thing you know would die with
 the woman who said it.
 
+### The journal gains the kingdom's state (2026-09-13)
+
+**The first of it is built (2026-09-13, Phase B):** the doings page carries a row the
+first time an act makes a town worse off — *the Wide Acres: people there are worse
+off* — with the reason underneath, *because you burned a store of grain*, once per town
+per cause. Spoken deeds also stopped reading as *nobody was looking*: a deed with no
+line of its own now uses what people heard, capitalised, as the line.
+
+The thesis says the ending is a reading of what the kingdom became; the journal is
+where the player reads it before the end. One more page, pulled like the others and
+never pushed:
+
+- **Each of the four places**: its state — crown-held or free — and, if the player set
+  it, when, in the same voice as the rumour lines: *day 9, 06:12 — the Wide Acres went
+  to the smallholders. You read them the grants.* If the band moved it, the second line
+  says *it turned*, and nothing about you.
+- **Hardship, per town**, in words rather than figures — the same discipline the HUD
+  uses for standing — and beside it *whose doing*, exactly as the second page shows the
+  handprint.
+- **Blackcairn's two readings**, in words: what the walls look like, what the gate is
+  doing.
+
+**Built 2026-09-13 (Phase E)**: the page is `journal.kingdom`, third of the journal's
+pages, read from `Journal.kingdom()` — the four places with who moved them and when,
+the towns whose people are worse or better off, and the castle's two readings — and
+a test holds that none of its words is a number.
+
+It still never scores. The vocabulary test that forbids "+22" and "reputation" covers
+this page too. It explains what the kingdom is and how much of it is yours; it never
+says what to do about it.
+
 ### The overworld HUD tells you how you are regarded, never what you did (2026-09-11)
 
 §8 requires all three feedback registers, and the HUD carries two of them. What it
@@ -2554,6 +3320,35 @@ surveillance furniture; this answers a question the player is asking at that mom
 journal is the only place that joins an act to its consequence, and the player has
 to go and open it.
 
+### The entrance sign is a voice, not a readout (2026-09-13)
+
+Each of the four places, and Blackcairn, carries a sign or a speaker at its entrance
+stating the place's status **in its own words** — a claim the player can doubt and
+later find false. *"CornTown, proud to provide food to our lovely king"* is exactly the
+register: it is propaganda, and propaganda is a fact about a place.
+
+A status readout — `Wide Acres: crown-held` — would flatten discovery and break §8's
+*push the ambient, pull the attribution*. The sign is the ambient register speaking:
+the player reads it, walks in, and finds out whether it is true. So:
+
+- A place that was **always loyal** boasts the way it always did.
+- A place the player **strengthened** for the crown boasts *differently* — newer,
+  louder, with a figure in it the player recognises, because they put it there.
+- A **freed** place says something careful if the patrols still ride past, and
+  something plainer once they stop.
+- Blackcairn's gate says what a castle says about itself, and the wall behind it may
+  disagree (§4's two readings).
+
+**Built 2026-09-13** as a line on the HUD while the player stands in the place — the
+ambient register, beside the Muster's own lines — thirteen keys (`sign.<place>.crown`,
+`.restored`, `.free`, and the castle's one), in both languages, and the doings page
+gains a row when a place changes hands: *the Wide Acres is out of the crown's hands —
+by your hand*, or *— it turned on its own, as the town's mood went*.
+
+Every sign is written **French first, then English**, in the house register (§9), and
+a test asserts both exist for every place × state. The words are content
+(`sign.<place>.<state>`); which one shows is the rules layer's verdict.
+
 Everything else: TBD.
 
 ---
@@ -2566,22 +3361,34 @@ TBD.
 
 ## 17. Scope budget
 
-| Thing | Launch target | Notes |
-|---|---|---|
-| Region | 1 | Settled |
-| Zones | 8 core + 2 optional | Settled, see §4 |
-| Pillars | 6 | Settled |
-| Routes to the confrontation | 3 | Force / Access / Exposure |
-| Traits | 6 | Settled |
-| World-tick quantities | 12 | Settled |
-| Named NPCs | 25 | Drafted, §6 |
-| Facts / secrets | TBD | each needs ≥2 sources |
-| Enemy tiers | 6 | 0–5, occupation-driven |
-| Enemy types (monsters, animals, generic) | 8–12 | Separate from named NPCs; reused region-wide |
-| Combat moves (v1) | 5 | light, heavy, block, dodge, special |
-| Playtime | TBD | |
+| Thing | v1 shipped | v2 target | Notes |
+|---|---|---|---|
+| Region | 1 | 1 | Settled |
+| Zones | 8 | 8 | Settled, §4. The Redcut and the Thornwood depths stay optional |
+| Power bases | 6 named | **4 deep**, 2 deferred | The Cinderworks, the Wide Acres, the Muster, the bank. Greyhold and Harrowgate deferred, not cut (§3) |
+| Place states | — | **2 × 4** | crown-held / free, never a third (§8) |
+| Decisive changes | — | **4** | One per place, two outcomes each (§3) |
+| Building acts, spoken | 2 | **12** | Ten new (§8's table) beside informing and giving back; each with a face and a cost |
+| Routes to the confrontation | 3 | 3 | Force / Access / Exposure — descriptions, not machinery |
+| Endings | 5 | 5 | No sixth; the throne is a reading of one (§3) |
+| Traits | 6 | 6 | Settled |
+| World-tick quantities | 12 | 12 + **hardship per town** | The twelve untouched; hardship beside them (§8) |
+| Crown ranks | 4 | 4 | Kept; derived from standing, never gating (§11) |
+| Named NPCs | 25 | 25 | No new cast. The second direction is spoken by people who already exist |
+| Facts / secrets | 32 | TBD | each needs ≥2 sources |
+| Entrance signs | — | 4 places × 2 states, plus Blackcairn | A voice each, French first (§15) |
+| Free-state ground variants | — | 4 | One per place, plus the Thornwood belt as a radius (§13) |
+| Beasts | 3 | **0** | Cut 2026-09-13 (§21) |
+| Enemy tiers | 6, unused | 6 | 0–5, occupation-driven; waits on combat |
+| Combat moves | 0 | 0 | Combat stays out of v2 unless Yannick says otherwise (§18) |
+| Playtime | TBD | TBD | |
 
-**What gets cut first if I'm behind:** TBD
+**What gets cut first if behind, in v2** 🟡: Blackcairn's readings drawn on the castle
+(keep the towns' talk about it, the cheaper channel); the free-state ground variants
+(keep the entrance signs, which carry the state in words); the Thornwood belt widening
+(keep `held_ground` falling faster, which is the number). **Never cut:** hardship, the
+second direction's rows and their faces, the decisive acts, the freeze window, rank
+never gating.
 
 ---
 
@@ -2772,9 +3579,10 @@ finished.
 ### v1 ends here
 
 Phase 7 was the last of it. **The roadmap above is complete apart from Phase 4**, and
-what comes next is a v2 specification written separately — so nothing in this section
-should be read as a plan any more. The two largest things it leaves on the table, in
-the order they would change the game most:
+is kept as finished work: nothing in it is a plan any more. The v2 specification is now
+in this document, dated 2026-09-13 throughout, and its roadmap is the next section.
+The two largest things v1 left on the table, in the order they would change the game
+most:
 
 1. **Combat**, and with it the fifth ending and the standing exception that has
    outlived every phase since Phase 0.
@@ -2782,6 +3590,45 @@ the order they would change the game most:
    promises. Only the gate exists, which is why it stands open.
 
 `docs/V1.md` lists the rest of what v1 does not have, plainly and in one place.
+
+---
+
+### v2 — the roadmap 🟡 (2026-09-13)
+
+**v2 is a content and coupling change**, and it does not touch: the `core/` / `view/`
+split and the event log; the twelve quantities as a set; the handprint rule;
+standing's three indexes; quests as predicates; determinism; the twelve invariants;
+French first. Everything below is rows, readings and words on machinery that exists.
+
+Five phases, each with the proof that closes it, in the same rule as v1: **a phase is
+done when its proof is playable, not when its code is written.** The order is a
+proposal — Yannick's to change — and the reasoning for it is under the table.
+
+**All five were delivered on 2026-09-13**, in the order below; the ✅ rows say what held.
+
+| | Phase | What it builds | Proof |
+|---|---|---|---|
+| **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
+| **B** ✅ | **The second axis** — delivered 2026-09-13 | Hardship per town, at 50, pushed only by deeds; the ten building acts as spoken deeds with a cost each; `hardship_effects` on every deed that moves the kingdom, walked by test; eight faces as greetings; `hardship_is_high_here`; the journal's worse-off rows (§8, §9, §15) | **Held:** burn the stores and feed the works the forest in one run — the Wide Acres and Brindle both past the line, Pell's and Wren's greetings changed without naming the player, two journal rows with two different causes. 36 suites, 378 tests |
+| **C** ✅ | **Four places, two states** — delivered 2026-09-13 | `PlaceRules`; the state in `Allegiance` with `decided_at`, `held_until` and `flips`; freeing by reading the place's thing there or exposing the fraud, holding by the four spoken acts that need the same thing; the freeze enforced by not offering; the band kept for the borders, which now start crown-held; the free-state ground; the sign as a HUD line; the journal's changed-hands rows (§3, §4, §8, §13, §15) | **Held:** the grants read to the tenants free the Acres; a town at 90 cannot take them back for two days and then does; Nessa will not enforce them while the place is held and will after; a paid camp cannot be exposed for two days and then can; the sign reads loyal, freed, restored in turn. 37 suites, 391 tests |
+| **D** ✅ | **The crown as a play** — delivered 2026-09-13 | Rank from crown standing through `FactionRules.rank_from`, falling as well as rising, `rose`/`fell` announced, the last rank at 90; the service tally gone; `crown_rank_is_at_least_N` and three greetings that read it; Halgrave's argument as his second, free question; the throne reading in `EndRules` and the journal (§3, §5, §9, §11) | **Held:** a clerk after informing, a chamberlain after four crown acts, an officer again after one furnace; a stranger is offered the argument with its figures; Deposed at the last rank reads *crowned*, as a nobody *vacancy*, and a chamberlain who empties the vault still ruins the reign. 38 suites, 403 tests |
+| **E** ✅ | **Blackcairn reads the kingdom** — delivered 2026-09-13 | `CastleRules`: wealth from treasury, steel and supply; instability from flips inside the freeze window, whoever caused them; the wall's extra guards and the dark keep; three townsfolk who speak of the castle; the journal's kingdom page (§4, §9, §13, §15) | **Held:** a building castle at the start, holding after one bad season, shuttered in a ruin; one flip uneasy, two a crisis, the same two a window later calm; Maddox and Peyre say so in both languages; the kingdom page carries no number. 39 suites, 412 tests |
+
+**Why this order.** A is a removal, and deleting before adding means every later
+measurement is taken against the map v2 will actually have. B before C because a
+decisive act writes hardship and needs the store to exist. C before D because rank's
+"what people tell you" reads place state, and the throne reading is shown against
+hardship in *changed* towns. E last because it reads flips, which C produces.
+
+**Combat is not in this roadmap.** Phase 4 stays where v1 left it — out, by decision —
+and the standing exception in CLAUDE.md stands with it. v2 does not open it; if Yannick
+does, it is a sixth phase and goes after E, because the wild's question is "will I be
+seen" until a fight is something the player can do.
+
+**Done, 2026-09-13.** All five phases delivered in one day; `docs/V2.md` is the sibling
+that says what v2 is, and `docs/history/V2_INTENT.md` is what it was written from.
+What comes next is not in this document: §13 expects a v3 art pass, and combat is the
+oldest debt in the project.
 
 ---
 
@@ -2869,6 +3716,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q48 | ~~**Mother Crowe does not exist, and somebody else has her job.**~~ — answered 2026-09-12: **Route C rebuilds around Corvin Ash.** He is built, he is good, and the debt is already his in dialogue and in `bank:debts`. The church keeps the *venue* — it is a better church for being against magic (Q47) than it ever was for being a creditor. Crowe is cut, and §6's ★★ row and §7's redundancy prose both name her and must be rewritten before invariant 7's walk can run | §6, §7 | Closed 2026-09-12 |
 | Q49 | **Does the raising survive being said out loud?** The church is against magic, the player was raised by it, and Route C's climax happens in that church before its congregation. Whether the congregation can learn what the player is — and what happens if they do — is the most interesting consequence of Q47 and is unwritten | §5, §6 | Route C's cost |
 | Q34 | ~~**Bookkeeping.** The header's populated-sections list is stale; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared directories.~~ — swept 2026-09-13, at the end of v1: the header says v1 rather than draft, §20 gained the seventeen decisions that had been recorded only in a working log, §19 closed the questions the code had already answered, and the directories all exist and are full. **It came back three times**, which is the real finding: a document that is edited faster than it is re-read goes stale in the places nobody looks, and only a pass with a date on it fixes that. §17's "Settled" rows inside 🟡 sections are still there and are still the same complaint | header, §17, §20, repo | Closed; §17 outstanding |
+| Q50 | ~~**Attunement's combat half has nothing to point at.**~~ — answered 2026-09-13: **the wood does not slow you.** Time is the wild's price now, and an attuned character does not pay all of it, at Attunement 3 or more. The same shape as before — a cost you do not pay — pointed at the new price. Measured: 0.80 in the wood, about 3 s on the shipped map's shortcut, more as the forest grows | §11, §4 | Closed |
 
 ---
 
@@ -3085,6 +3933,47 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **§14 Audio: three tables — music by place, ambience by ground, cues by what happened** | A sound call at each site that makes one | `core/` says you are standing in Saltmarch and must never learn that Saltmarch sounds like water. A cue is named by the event, so no caller knows which file it is |
 | 2026-09-13 | **The score shares no track between the road and the forest** | One overworld theme | §4's thesis is that they are two worlds, and music is the one place that can say so without a caption. The ground the works has taken plays a lament |
 | 2026-09-13 | **The audio is committed to the repo**, and sound can be switched off from the title and the pause menu | Leaving it re-downloadable from itch.io, as the art rule had it | A clone without it is a silent game with three tests that pass only on the machine the files happen to be on, which is worse than having no tests |
+| 2026-09-13 | **The thesis: the game is about what the kingdom becomes, not about weakening the king.** Breaking and strengthening are both plays, both cost someone, and the ending is a reading of the state left behind — including the player on the throne | Keeping "weaken the king" as the frame, with pro-crown acts as flavour | Nine deeds, every effect negative, eleven ways to serve the opposition against two for the crown: the game could express breaking the kingdom in nine ways and building it in none. That is a missing sign, not a missing feature, and a game with one direction has one correct way to play |
+| 2026-09-13 | **Hardship is a per-town reading beside the twelve**, and the thirteenth-quantity refusal is amended to cover standing-shaped numbers only | Folding it into town sentiment; into the player's standing; one global figure; a genuine thirteenth quantity | Sentiment is what a town thinks of the crown and a town can be loyal and hungry; standing is what it thinks of *you*. The refusal was about numbers indexed by town, faction and person — a condition of a *place* is what grain price already is, and `held_ground` had already set the precedent |
+| 2026-09-13 | **Every quantity has a "builds it by" direction, as rows, and every act that moves the kingdom names who it costs — with a face** | Ten pro-crown systems; informing alone; "steel +20" with no cost | `push()` is signed and `credit_from()` carries the hand along a coupling, so the second direction is table rows. Without the face it is a scoreboard with two ends and the player picks an end; hardship is what makes both ends cost something and neither correct |
+| 2026-09-13 | **A place changes hands two ways, and both are kept**: the sentiment band (drift, no handprint, the two borders) and one decisive act per place (handprint, tick stamp) | Only the band; only the act; the band extended to all four | The band is v1's honest model of a border and the one way a place moves without the player (Pillar 4). The act is the only way a flip can carry a handprint, without which the throne reading never fires. A Cinderworks that went free on a bad week of bread would be a power base falling to weather |
+| 2026-09-13 | **The freeze window is 2 in-game days — 2880 ticks, 12 real minutes — one constant, a tick stamp in the log, and during it nothing moves the place: not the band, not the player** | A season; under a day; a timer; a hold that binds the band only and lets the player reverse at once | A season makes the first flip final and a place that cannot be restored is a ratchet; under a day the band could reverse a liberation before the player reached the next town. A stamp replays; a timer does not. Blocking the player too was Yannick's call: a place flipped twice in a minute is a switch, not a decision. It is the roused-watch shape — world state refusing an act, with the door shown shut — and not a progression gate, so it is no new exception |
+| 2026-09-13 | **Four places, deeply — not six thinly.** The Cinderworks, the Wide Acres, the Muster, the bank; Greyhold and Harrowgate deferred; **wood gets no town** | Six places each with two directions; a Thornwood zone for fuel | Four is what `SiteRules` already reaches and what can be written to depth. Felling the forest is a Cinderworks consequence — the works needs fuel — so the factory eating the forest becomes a mechanic for one belt of tile work instead of a zone |
+| 2026-09-13 | **One decisive change per place, with two outcomes** — a deed at the landmark with the thing the place holds, spent one way or the other | Two quests per place; a quest store; a menu at the landmark | Halves the writing and keeps invariant 5 literally true. The shape already exists twice: a fact told once to one audience, and making a thing public against informing on it. What decides the outcome is what the player brought, never a choice offered at the door |
+| 2026-09-13 | **Two states per place, crown-held or free, with a ceiling at the starting state**; the borders' neutral start is retired | A third state; a "held by the player" state; "better than the crown had it" | You restore or you liberate; the Wide Acres never becomes better than it has ever been. Neutral was v1's "a border is not a side", and a binary rule has no room for it — what makes the borders borders is that the band can still move them |
+| 2026-09-13 | **Rank is derived from crown standing, falls as well as rises, and never gates**; the crown's service becomes the whole "builds it by" column | A stored rank; rank from the service tally (`Allegiance.served`); the last rank as the only way through the gate | A stored rank is a progression flag by another name. The service tally only rises, so a man who burned the crown's granary would still be its Baron. Rank is one more way through a door that already had others — the guard knows your face at high standing, you climb the wall at low |
+| 2026-09-13 | **Blackcairn cannot be taken and has one state; it carries two derived readings**, wealth and instability, with instability read from **recency** inside the freeze window | A flippable castle; a stored instability score; instability as a count | You do not take the castle by being disliked there. Recency is what makes it political: four towns in a week is a crisis, the same four over a season is policy. Both readings get a second channel — what towns say about it — because a change the player cannot perceive is no change |
+| 2026-09-13 | **Taking the throne is a reading, not a sixth ending**: Deposed × high handprint × high crown standing, and it must show the hardship in the towns the player changed | A `crowned` predicate; an heir flag; reading rank instead of standing | A new predicate needs a new threshold and a page row and makes the throne a goal with a correct path. The reading is taken after Deposed fires from figures the journal already shows, and showing hardship the morning after is what stops it being a victory screen |
+| 2026-09-13 | **The entrance sign is a voice, not a readout** — propaganda in the place's own words, different for always-loyal, strengthened and freed | A status line at the gate; no sign | A readout flattens discovery and breaks "push the ambient, pull the attribution". A claim the player can doubt and later find false is the ambient register speaking |
+| 2026-09-13 | **Three phases of play are a description, never gates**, and phase 3 is available in minute one | Gating the confrontation on the world's state | Pillar 1. The phases say when a confrontation tends to go well, never when it is allowed |
+| 2026-09-13 | **The opening points two ways**: policy not malice, the fairy names no enemy, Halgrave's argument audible in the first hour | Softening the burning; a fairy who names the king; a doubting Halgrave | The village stays cleared — it is the counterexample the king names to your face. A fairy who names him is exposition and a side taken. A man who half-believes is a fool with a ledger; the one who believes completely and can show figures is the one who costs the player something |
+| 2026-09-13 | **Monsters are out of the whole map, and terrain speeds come back on** | Beasts in the forests only; keeping speeds off | The wild becomes slow and unwatched against a fast and watched road: the choice moves from "will I survive" to "will I be seen", which is the half the reputation system was built for. Blood asks a combat question the map should not be answering; time is the price the speed table was reasoned for |
+| 2026-09-13 | **Road travellers are kept**, never conversational, never named, drawn as traffic | Removing them with the beasts; making them people | They are how rumour physically travels; before them a story reached every town whichever way the player walked. Removing them removes rumour propagation, the point of the Thornwood and the reason the road ratio exists. If they read as fake it is a drawing problem |
+| 2026-09-13 | **The pack and the palette are locked for v2; a v3 art pass replaces both**, and the validator is what makes that safe | Swapping art during the systems rewrite | An art swap during a rewrite makes every visual bug ambiguous between the two. The four rules — one pack, a locked palette, the validator, one kit per place — are the wall a new pack has to clear, and the validator says immediately what it does not cover. Licence checked before anything is drawn |
+| 2026-09-13 | **v2 is a content and coupling change** and does not touch the split, the log, the twelve as a set, the handprint, standing's three indexes, quests as predicates, determinism, the invariants or French-first | A snapshot save; renaming quantities; a new standing index; a quest store | Every one of those is load-bearing and finished, and every v2 change is expressible as rows, readings and words on it. The freeze window is a tick stamp so that a replay lands identically |
+| 2026-09-13 | **Attunement's second half is "the wood does not slow you"**, at 3 or more | Accepting one trait doing one thing; leaving it open until Phase A is measured | The beasts took its combat half with them. Time is the wild's price now, so the forest build not paying all of it is the same idea — a cost you do not pay, Presence's shape — pointed at the new price. Six traits keep their double duty (Q50) |
+| 2026-09-13 | **Open country walks at 0.65, not 0.80; farmland keeps 0.80** | 0.70 (the least change that passes); 0.60; keeping 0.80 and widening the Thornwood instead | Measured, with the beasts gone and speeds on: the least-watched line from Brindle to the castle is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a plain walker by 2.4 s and lost to an attuned one. At 0.65 it wins by 12 s and 9 s, a fifth of the walk. The table had been reasoned about while speeds were off and never measured against the claim it exists for. Widening the wood is Phase-7-scale map work and the forest's size is already Q42/Q43 |
+| 2026-09-13 | **The wild line is the least-watched path**, not the shortest walkable one: a road tile costs ten wild tiles | The shortest walkable path (v1's instrument); forbidding the road outright | The shortest walkable path from Brindle to the castle is 42% King's Road, so v1 never measured the wild. Forbidding the road finds no path at all: the road runs from the south-east coast to the castle and seals the east, so every way to Blackcairn crosses it once. Dear rather than forbidden crosses where it must, never runs along, and takes the ford — which is what §4 always said the wild did |
+| 2026-09-13 | **Travellers are drawn as a pack horse** from the approved pack's `Animal/Horse` side sheet | The crowd's sheets, as before; a cart (the pack has none); a pair of figures | A face is how furniture becomes a character by being looked at often enough, and the crowd's faces are shared with the cast on purpose. An animal on the road is traffic. Checked with a screenshot, not with the suite, because `--headless` never draws |
+| 2026-09-13 | **Hardship starts at 50 and one act carries a place past 62** | Starting at 0; a threshold two acts away | At 0 the acts that lower it — the wage settled, the Muster paid — would do nothing visible, and a number that only rises is a scoreboard again. Fifty is the shape grain price and sentiment already have. One act past the line is §8's own rule: player-caused change is large, fast and local, and a face that needs two acts before it speaks is a face nobody meets |
+| 2026-09-13 | **The face is a greeting, one per place, and it may not name the player** | A reply the player asks for; faces only where costs land today | A reply is pulled; a greeting is the world speaking first, which is the ambient register. Every place, because reading a document aloud lands a cost wherever it is read. Naming the player would be attribution pushed, and the journal is the only place allowed to join an act to its cost |
+| 2026-09-13 | **The second direction restores; it never raises a full quantity past 100** | Raising the ceiling for the crown's acts; a separate 'prosperity' figure | Four of the twelve start full. Found by building it, and kept: it is §8's ceiling on place states one level down, and it puts the crown's acts where a loyal player has work — in a kingdom somebody has already broken. Steel at 100 fed the forest still widens the belt, costs Brindle and counts as service |
+| 2026-09-13 | **A spoken deed's journal line is what people heard, capitalised** | Leaving the fallback; a bespoke line per deed | The fallback said *nobody was looking* for every spoken lever, which was false and read as a bug. `deed.heard.*` already exists for every deed in both languages, so one generic line covers the six old levers and the ten new acts |
+| 2026-09-13 | **Freeing a place is reading its thing aloud there; holding it is one of four spoken acts that need the same thing in hand** | A new act at each landmark with two outcomes; a menu at the landmark; two unrelated deeds | The machinery already existed twice — a fact told once to one audience, and making a thing public against informing on it. One thing, two ways to spend it, and the way is where and to whom, never a choice offered at the door. A grants read in Harrowgate for `discredited` can never free the Acres, which is the opportunity cost §8 wanted |
+| 2026-09-13 | **The freeze is enforced by not offering the act**: the holding line forbids `this_place_is_frozen`, the frozen place's document is left off the telling list, the fraud cannot be exposed at a camp paid two days ago | Letting the act happen and refusing the flip; a message refusing it | An act that happens and changes nothing spends a one-shot for nothing, which is a trap. The roused watch already refuses by not offering, and the landmark never advertises an act it will refuse |
+| 2026-09-13 | **A decision that keeps a place where it was is a stamp, not a flip** | Ignoring it; counting it as a flip | Enforcing the grants on an Acres the crown already held is the player deciding it stays so: it freezes the place and the sign says *strengthened*, and it counts nothing toward instability, because to the men on the wall nothing moved |
+| 2026-09-13 | **A freed place has no watch** | Keeping the watchmen posted whoever holds the place | The crown's men left with the crown. It is also §4's free variant made mechanical — the granary door open and no watchman — and it costs one check in the act system |
+| 2026-09-13 | **The entrance sign is a HUD line while you stand in the place** | A sign prop at the gate; a line only on entering | The Muster's atmosphere lines already work this way and the pack has no sign sprite. It is the ambient register speaking, which is what §15 asked for; a prop can come with v3's art |
+| 2026-09-13 | **The crown's last rank is at 90, not 110** | Keeping 110; raising the standing clamp | Standing clamps at ±100 and rank is read off standing now, so a door at 110 never opens. Ninety keeps it dear — four crown acts, or three and informing — and inside the clamp. The other three thresholds are v1's |
+| 2026-09-13 | **The service tally and `WORTH` are removed; rank is `FactionRules.rank_from(side, standing)`** | Keeping both numbers; reading the tally | Two numbers for one idea disagree, and the tally only rose. The deed table's faction effects already move the crown and the dispossessed on every act, so service was being counted twice. The store keeps only the last rank it saw, to announce a change |
+| 2026-09-13 | **A rank greeting comes after personal regard and after hardship** | Rank first | A man who watched you steal does not wave you through however the court styles you, and a place that is worse off says so before it says anything about your title. The gate still opens: greetings are what rank changes, not doors |
+| 2026-09-13 | **The throne is read by the ending system when Deposed fires and kept as `reign_reading`** | Reading it in the journal each time; a stored flag set by an act | Taken once, from standing at the moment the reign ends — the same moment `reign_ended` is stamped — so a replay reads the same throne. The journal only phrases it, and shows the morning after in words |
+| 2026-09-13 | **Halgrave's argument is his second question and costs nothing** | A new NPC for the crown's case; a reply gated on goodwill | §5 wants one credible voice in the first hour who is not a fool; Halgrave already had the figures and the belief. Second, so the cap of three offers it to a stranger; free, because he is not ashamed of it, which is what makes him credible |
+| 2026-09-13 | **Wealth is the mean of treasury, steel and grain supply; building from 85, shuttered below 45** | Treasury alone; a stored prosperity figure | §4 names the three; the mean makes one bad season *holding* and a ruin *shuttered*. Building at the start is true — the king is building — and derived, so nothing new is stored |
+| 2026-09-13 | **Two flips inside one freeze window is a crisis; one is uneasy; both count whoever caused them** | A separate window; counting only the player's flips; a stored unrest figure | Recency is what makes it political: four towns in a week is a crisis and the same four over a season is policy, and the window is §8's, not a second one. To the men on the wall a flip is a flip, and a stamp that moved nothing is not one |
+| 2026-09-13 | **The castle's rich reading is a question Garrick answers, not a greeting** | A greeting, like the other two | The castle is rich from minute one, so a greeting on it never lifts and hides the speaker's disposition band — the coverage test caught it. Unstable and poor are false at the start and stay greetings |
+| 2026-09-13 | **The wall's extra guards are drawn from the reading and never fought; the escort stays the number the endings read** | Raising the escort in a crisis | The escort is derived from army strength and read by two endings; a crisis that added men to it would make Blackcairn's face an input to the ending, which §4 forbids. The wall looks fuller; the door is no harder |
+| 2026-09-13 | **The journal's kingdom page is the third page and carries no number** | Folding it into the second page; figures for hardship | The second page is the endings' readings and the kingdom is not one. Words for the places, the people and the castle, with whose doing beside each, is what §15 asked for and a test holds the digits out |
 
 ---
 
@@ -3099,6 +3988,8 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Child characters | Out of scope permanently, by decision | Never |
 | Mother Sabine Crowe | Cut 2026-09-12. The spec made her the creditor the king fears; the built game gave that to Corvin Ash at the bank, and Ash is good. The church keeps Route C's venue | The church ever gets a leader |
 | **Absolution or Coercion** — Route C's choice of *how you get the room* | Went with Crowe. She was an accomplice who had to be either absolved into convening the reckoning or coerced into it, with a different enemy left standing at the end of each. A real choice, and Route C is dramatically poorer without it | A convener exists again. Not before: the deed that replaced her needs nobody's permission, and adding a gate to the one route no death can close would be spending its best property for drama |
+| **The beasts** — the bear, the spider, the bat | Cut 2026-09-13, from the whole map. A wild whose cost is blood asks "will I survive", which is a combat question; the map's question is "will I be seen". The three lessons they taught — danger ahead, safety by margin not tile, waiting must not make the route safe — are kept in §4 for whatever hunts there next. Attunement's combat half went with them and was replaced (Q50: the wood does not slow you) | Combat exists (Phase 4) and the wild is meant to draw blood again — through the combat screen, not on contact |
+| **A Thornwood town for wood** | Wood gets no town of its own (2026-09-13). The Cinderworks needs fuel, so felling the forest is a Cinderworks consequence and one belt of tile work | The forest gets people (Q42/Q43) and needs a place for them to stand — which is a different reason from fuel |
 
 ---
 

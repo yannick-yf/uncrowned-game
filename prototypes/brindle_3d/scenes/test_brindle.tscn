@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/map_plate.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/brindle_player.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/playtest_camera.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/playtest_session.gd" id="4"]
+
+[node name="BrindlePlaytest" type="Node3D"]
+script = ExtResource("4")
+
+[node name="World" parent="." instance=ExtResource("1")]
+
+[node name="Characters" type="Node3D" parent="World"]
+
+[node name="Player" parent="World/Characters" instance=ExtResource("2")]
+position = Vector3(181, 26, 252)
+
+[node name="PlayerCamera" type="Camera3D" parent="World"]
+projection = 1
+size = 24.0
+near = 0.1
+far = 1200.0
+script = ExtResource("3")
+target_path = NodePath("../Characters/Player")
+tilt_degrees = 48.0
+azimuth_degrees = -12.0
+zoom_size = 24.0
+min_zoom = 12.0
+max_zoom = 48.0
+distance = 65.0
+focus_offset = Vector3(0, 0.8, 0)

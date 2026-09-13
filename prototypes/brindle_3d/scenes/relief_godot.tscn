@@ -1,0 +1,89 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/terrain_stamp.gd" id="1"]
+
+[node name="ReliefGodot" type="Node3D"]
+
+[node name="TerrasseBrindle" type="Node3D" parent="."]
+position = Vector3(174,25.1,256)
+script = ExtResource("1")
+footprint_m = Vector2(63,51)
+blend_m = 24.0
+slope = Vector2(-0.016,-0.025)
+outline = "Ellipse"
+undulation_m = 0.38
+
+[node name="RampeNordBrindle" type="Node3D" parent="."]
+position = Vector3(151,29.3,218)
+script = ExtResource("1")
+footprint_m = Vector2(15,22)
+blend_m = 15.0
+slope = Vector2(-0.03,-0.16)
+outline = "Ellipse"
+
+[node name="SolMaisonHaut" type="Node3D" parent="."]
+position = Vector3(157,27.2,234)
+rotation_degrees = Vector3(0,125,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,7)
+blend_m = 5.0
+outline = "Ellipse"
+
+[node name="SolMaisonChemin" type="Node3D" parent="."]
+position = Vector3(170,26.3,242)
+rotation_degrees = Vector3(0,48,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,7)
+blend_m = 4.5
+outline = "Ellipse"
+
+[node name="SolMaisonBouleaux" type="Node3D" parent="."]
+position = Vector3(193,25.8,244)
+rotation_degrees = Vector3(0,-82,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,7)
+blend_m = 4.5
+outline = "Ellipse"
+
+[node name="SolMaisonBasse" type="Node3D" parent="."]
+position = Vector3(197,25.1,257)
+rotation_degrees = Vector3(0,-102,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,7)
+blend_m = 4.0
+outline = "Ellipse"
+
+[node name="SolMaisonSud" type="Node3D" parent="."]
+position = Vector3(166,24.3,282)
+rotation_degrees = Vector3(0,-146,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,7)
+blend_m = 5.0
+outline = "Ellipse"
+
+[node name="SolGrange" type="Node3D" parent="."]
+position = Vector3(143,25.1,270)
+rotation_degrees = Vector3(0,78,0)
+script = ExtResource("1")
+footprint_m = Vector2(10,7)
+blend_m = 5.0
+outline = "Ellipse"
+
+[node name="CourMine" type="Node3D" parent="."]
+position = Vector3(301,46,80)
+script = ExtResource("1")
+footprint_m = Vector2(16,18)
+blend_m = 4.0
+
+[node name="RampeMine" type="Node3D" parent="."]
+position = Vector3(297,44.8,68)
+script = ExtResource("1")
+footprint_m = Vector2(8,14)
+blend_m = 3.0
+slope = Vector2(0,0.17)
+
+[node name="ApprocheMine" type="Node3D" parent="."]
+position = Vector3(289,43.8,62)
+script = ExtResource("1")
+footprint_m = Vector2(16,7)
+blend_m = 3.0
+slope = Vector2(0.06,0)

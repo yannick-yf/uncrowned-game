@@ -73,7 +73,8 @@ view/      Godot nodes. Replaceable.
 tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
-docs/      SPECS.md — the source of truth. V1.md — what shipped, read this first.
+docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
+           V1.md — what shipped the morning before v2.
   history/   Finished working logs. Never authoritative; kept for the reasoning.
 ```
 
@@ -124,9 +125,10 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **4.7 s**, which is the one to run without
-thinking. `--all` adds the journeys and the asset pack and takes about **18 s**.
-(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people.
+walks, no asset pack — in about **7.5 s**, which is the one to run without
+thinking. `--all` adds the journeys and the asset pack and takes about **21 s**.
+(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people,
+and 4.7 s and 18 s when v1 shipped; v2's place tests each build a full world.
 The numbers are here to be kept true, not to be admired: if the fast suite ever
 stops being the thing you run without thinking, that is the thing to fix.)
 A suite marked `const SLOW := true` is in the second group.
@@ -167,6 +169,11 @@ This exists because a night was spent shipping things that drew wrong without
 erroring — `--headless` never calls `_draw()`, so the test suite cannot see the
 screen at all, and "no script errors" says nothing about what is on it.
 
+**`UNCROWNED_FREE=zone[,zone]`** (2026-09-13) frees one or more of the four places for the frame
+`shot.sh` takes, so the free-state ground and its sign can be looked at without playing
+to them. Same gate, same reason: `--headless` never draws, and a fence that fails to go
+missing is invisible to the suite.
+
 **The journal's last section lists who is where.** Every named person, the town
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more
 of them and "walk about until you find him" is not a way to review a character.
@@ -188,18 +195,25 @@ what it would cost in time and tokens and ask first.
 
 ## Current phase
 
-**v1 is delivered (2026-09-13).** Phases 0, 1, 2, 3, 5, 6 and 7 are done. **Start at
-`docs/V1.md`** — it is two pages and it says what the game actually is, what is built,
-what is deliberately inert, and what v1 does not have. Read it before `SPECS.md`,
-which is 3,000 lines and answers a different question.
+**v1 was delivered on 2026-09-13, and v2 on the same day.** Phases 0–3 and 5–7 of v1,
+then v2's Phases A–E (SPECS §18). **Start at `docs/V2.md`** — two pages on what the
+game actually is now, what is built, what is deliberately inert, and what v2 does not
+have; `docs/V1.md` is the same for the morning before. Read them before `SPECS.md`,
+which is 4,000 lines and answers a different question.
 
-**v2 is being specified separately.** Until that spec lands, treat `SPECS.md` as the
-description of a finished thing rather than a plan, and change nothing structural
-without asking Yannick.
+**v2 is delivered (2026-09-13).** It lives in `SPECS.md` — everything dated 2026-09-13
+and marked *built* — and the intent it was written from is `docs/history/V2_INTENT.md`.
+A: beasts out, terrain speeds on, the wild measured. B: hardship and the second
+direction. C: four places, two states. D: rank from standing and the throne reading.
+E: Blackcairn's two readings and the journal's kingdom page. **What comes next is not
+decided**: SPECS §13 expects a v3 art pass (a new pack, through the validator), and
+combat is the oldest debt in the project. Nothing structural moves without asking
+Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that
-waits. It is the largest single thing v2 could pick up.
+waits. **It is out of v2 as well** (Yannick, 2026-09-13): §18's roadmap is A–E, and
+combat would be a phase after it, or v3.
 
 **There is no LLM in v1, decided 2026-09-12 and tested rather than argued.** Two
 local models, sixteen real packets, four prompt designs, on this machine. The
@@ -248,8 +262,8 @@ without asking.
 1. **No combat screen.** SPECS §10 rules that fights happen never in the overworld.
    Phase 0 breaches that and v1 still does: the king kills the player **on contact in
    the overworld, three touches**. The real side-on combat screen is Phase 4, which is
-   out of v1 — so this exception outlived the phase that created it and is now the
-   oldest debt in the project. Nothing may assume the combat screen's shape.
+   out of v1 and out of v2 — so this exception outlived the phase that created it and
+   is now the oldest debt in the project. Nothing may assume the combat screen's shape.
 
 **Retired, kept here so the history reads straight:**
 

@@ -31,6 +31,8 @@ const FRAUD: StringName = &"fraud"
 const ARMY: StringName = &"army"
 const GRAIN: StringName = &"grain"
 const ESCORT: StringName = &"escort"
+const HARDSHIP: StringName = &"hardship"
+const FLIP: StringName = &"flip"
 
 
 ## One chronological list. Every row carries facts, never phrasing.
@@ -40,6 +42,7 @@ static func entries(events: EventLog, _facts: FactBase = null) -> Array[Dictiona
 	var fraud_told: StringName = &""
 	var army_has_fallen: bool = false
 	var grain_reported: Dictionary = {}
+	var hardship_reported: Dictionary = {}
 
 	for event: SimEvent in events.all():
 		var tick: int = _tick_of(event)
@@ -87,12 +90,68 @@ static func entries(events: EventLog, _facts: FactBase = null) -> Array[Dictiona
 				grain_reported[at] = true
 				rows.append({"tick": tick, "kind": GRAIN, "town": at,
 					"after_the_army": army_has_fallen})
+			&"place_decided":
+				# A place the player decided. Once per change; a decision that kept a
+				# place where it was is a stamp, not news.
+				if not bool(event.data.get("changed", false)):
+					continue
+				rows.append({"tick": tick, "kind": FLIP,
+					"town": StringName(event.data.get("zone", "")),
+					"to": StringName(event.data.get("to", "")), "by_player": true})
+			&"ground_changed_hands":
+				# The band moved it. The row says it turned, and nothing about you.
+				rows.append({"tick": tick, "kind": FLIP,
+					"town": StringName(event.data.get("zone", "")),
+					"to": StringName(event.data.get("to", "")), "by_player": false})
+			&"hardship_moved":
+				# Who an act cost, once per town per cause. The only place in the game
+				# that joins the two (§8): the town shows it and the person there says
+				# it, and neither of them says why.
+				if float(event.data.get("amount", 0.0)) <= 0.0:
+					continue
+				var cause: StringName = StringName(event.data.get("about", ""))
+				var place: StringName = StringName(event.data.get("town", ""))
+				var key: String = "%s|%s" % [place, cause]
+				if hardship_reported.has(key):
+					continue
+				hardship_reported[key] = true
+				rows.append({"tick": tick, "kind": HARDSHIP, "town": place, "deed": cause})
 			&"escort_changed":
 				rows.append({"tick": tick, "kind": ESCORT,
 					"from": int(event.data.get("from", 0)),
 					"to": int(event.data.get("to", 0)),
 					"after_the_army": army_has_fallen})
 	return rows
+
+
+## The kingdom's state, for §15's page of it: the four places and who moved them, the
+## towns whose people are worse or better off, and Blackcairn's two readings. Data,
+## never words — the window phrases it, and it never says what to do about any of it.
+static func kingdom(mine: Allegiance, ticked: WorldTick, tick: int) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	if mine == null or ticked == null:
+		return rows
+	for place: StringName in PlaceRules.PLACES:
+		var last: Dictionary = {}
+		for flip: Dictionary in mine.flips:
+			if flip.get("zone", &"") == place:
+				last = flip
+		rows.append({
+			"kind": &"place", "town": place,
+			"free": PlaceRules.is_free(mine.holder(place)),
+			"decided": mine.was_decided(place),
+			"tick": int(mine.decided_at.get(place, -1)) if mine.was_decided(place) else int(last.get("tick", -1)),
+			"by_player": bool(last.get("by_player", mine.was_decided(place))),
+		})
+	for town: StringName in Region.ZONE_ORDER:
+		var lot: float = ticked.hardship_in(town)
+		if absf(lot - WorldTick.NEUTRAL) < 0.5:
+			continue
+		rows.append({"kind": &"hardship", "town": town, "worse": lot > WorldTick.NEUTRAL})
+	rows.append({"kind": &"castle", "wealth": CastleRules.wealth(ticked),
+		"unrest": CastleRules.instability(mine, tick)})
+	return rows
+
 
 
 ## What you know, and who you had it from. §15's other half: progression here is

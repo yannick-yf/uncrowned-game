@@ -51,6 +51,21 @@ static func perform(
 			ticked.army_target = clampf(
 				ticked.army_target + float(effects[&"army_strength"]), 0.0, WorldTick.BASELINE)
 
+		# And who it costs. §8's hard rule: every act that moves the kingdom names the
+		# people it lands on, as hardship in their town — and the journal is what joins
+		# the two, so each push is announced as a derived event it can read.
+		var costs: Dictionary = DeedRules.hardship_effects(deed)
+		for town_key: StringName in costs.keys():
+			var town: StringName = where if town_key == DeedRules.HERE else town_key
+			if town == &"":
+				continue
+			var cost: float = float(costs[town_key])
+			ticked.push_hardship(town, cost)
+			sim.derive(&"hardship_moved", {
+				"town": String(town), "about": String(deed), "amount": cost,
+				"to": ticked.hardship_in(town),
+			})
+
 	if standing != null:
 		standing.shift_factions(DeedRules.faction_effects(deed))
 		for who: String in witnesses:

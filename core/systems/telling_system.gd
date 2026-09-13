@@ -32,8 +32,13 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 		cast, world.current_zone, world.player_pos)
 	# Proof first. A document in your hand outranks a warning you can only give
 	# once, and it is the act §3's `discredited` ending is actually counting.
-	var paper: StringName = TellingRules.tellable_document(here, witnesses, world, sim.facts)
+	var mine := sim.store(&"allegiance") as Allegiance
+	var refuse: StringName = PlaceRules.thing_of(here) \
+		if mine != null and mine.is_frozen(here, sim.tick) else &""
+	var paper: StringName = TellingRules.tellable_document(here, witnesses, world, sim.facts, refuse)
 	if paper != &"":
+		# Which paper, and where: the decisive change reads this (PlaceRules).
+		sim.derive(&"document_read", {"fact": String(paper), "town": String(here)})
 		sim.facts.add_source(DocumentRules.made_public(paper), &"witnessed")
 		ticked.credit(&"facts_public", EndRules.HANDPRINT_NEEDED)
 		Deeds.perform(sim, DeedRules.DEED_MAKE_PUBLIC, here, world.player_pos)

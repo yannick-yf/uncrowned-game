@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/painted_surface.gdshader" id="1_bokk5"]
+[ext_resource type="Texture2D" path="res://prototype_3d/assets/painted_cliff.png" id="2_fbub7"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_bokk5")
+shader_parameter/tint = Color(0.57254905, 0.58431375, 0.6039216, 1)
+shader_parameter/surface_kind = 1
+shader_parameter/texture_strength = 0.33
+shader_parameter/moss_amount = 0.3
+shader_parameter/wind_strength = 0.0
+shader_parameter/vertex_srgb = false
+shader_parameter/use_painted_texture = true
+shader_parameter/painted_texture = ExtResource("2_fbub7")
+shader_parameter/painted_scale = 0.25
+shader_parameter/painted_strength = 0.9
