@@ -284,7 +284,11 @@ func test_she_is_standing_there_when_you_wake() -> void:
 	assert_not_null(her, "there is a fairy")
 	assert_true(her.centre().distance_to(world.player_pos) <= Game.TALK_REACH,
 		"within reach of where the player wakes, without walking anywhere")
-	assert_eq(her.sprite, "", "and she is not a body: no sprite, drawn as light")
+	# She is light and movement, never a body (§4). The way that is enforced is that
+	# nothing casts her: `Art` draws whoever is in `CASTING` from a character sheet,
+	# and a fairy with a face would be a twinkling humanoid, which is the one thing
+	# the opening must not be.
+	assert_false(Art.CASTING.has(&"fairy"), "and nobody has given her a face")
 
 
 func test_she_says_seven_things_one_at_a_time_and_in_order() -> void:

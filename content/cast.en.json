@@ -48,7 +48,6 @@
         261,
         149
       ],
-      "sprite": "",
       "greeting": "You are awake. Do not go yet.",
       "options": [
         {
@@ -123,7 +122,6 @@
         148,
         172
       ],
-      "sprite": "OldMan",
       "greeting": "You walked here. Nobody walks here.",
       "reactions": {
         "unwelcome": "One answer, then you go.",
@@ -186,7 +184,6 @@
         152,
         177
       ],
-      "sprite": "Inspector",
       "greeting": "If you want to register, go inside. If you want to complain, go inside. It is the same queue.",
       "options": [
         {
@@ -239,7 +236,6 @@
         152,
         171
       ],
-      "sprite": "Woman",
       "greeting": "Careful, the ink is wet. The Reeve counts the pages at the end of the day.",
       "options": [
         {
@@ -270,7 +266,6 @@
         147,
         181
       ],
-      "sprite": "OldWoman",
       "greeting": "Sit down if you are bleeding. Stand somewhere else if you are not.",
       "reactions": {
         "unwelcome": "I answer everyone, you as well.",
@@ -314,7 +309,6 @@
         137,
         176
       ],
-      "sprite": "Villager2",
       "greeting": "Mind the wheel. I carry people and goods. I am cheaper than boots.",
       "options": [
         {
@@ -347,7 +341,6 @@
         258,
         177
       ],
-      "sprite": "Villager5",
       "greeting": "Watch your feet. Half of what is under the ash is worth money. The other half will cut you.",
       "reactions": {
         "unwelcome": "You pay first.",
@@ -382,7 +375,6 @@
         240,
         171
       ],
-      "sprite": "OldMan3",
       "greeting": "Careful, the slag stays hot all day. This is the third biggest ironworks in the kingdom.",
       "reactions": {
         "unwelcome": "I hide nothing, you included.",
@@ -423,7 +415,6 @@
         245,
         173
       ],
-      "sprite": "Woman",
       "greeting": "You are not from the works. Nobody from the works stands looking at it.",
       "alt_greetings": [
         {
@@ -462,7 +453,6 @@
         241,
         177
       ],
-      "sprite": "Monk",
       "greeting": "Sit down if you are hurt. If you are here about a dead man, ask me. Do not open the files.",
       "alt_greetings": [
         {
@@ -499,7 +489,6 @@
         99,
         147
       ],
-      "sprite": "Noble",
       "greeting": "You are standing on the best barley land in the kingdom and you have not looked down once.",
       "alt_greetings": [
         {
@@ -530,7 +519,6 @@
         102,
         146
       ],
-      "sprite": "Princess",
       "greeting": "My father is busy. If you want the papers, that is my job and I am easier to find.",
       "alt_greetings": [
         {
@@ -561,7 +549,6 @@
         90,
         151
       ],
-      "sprite": "OldMan2",
       "greeting": "Mind the furrow. It looks like soil. It is mostly stone, and under the stone there are old walls.",
       "reactions": {
         "unwelcome": "I answer, then I go back to my row.",
@@ -605,7 +592,6 @@
         142,
         104
       ],
-      "sprite": "KnightGold",
       "greeting": "You walk into an army camp like a man nobody has ever stopped. Enjoy it.",
       "alt_greetings": [
         {
@@ -638,7 +624,6 @@
         137,
         105
       ],
-      "sprite": "Inspector",
       "greeting": "Supply requests on the left. Complaints anywhere you like, I do not read them.",
       "reactions": {
         "unwelcome": "This will cost you more.",
@@ -679,7 +664,6 @@
         176,
         128
       ],
-      "sprite": "Villager4",
       "greeting": "Do not do that again. Do not walk up to a man out here without making noise.",
       "reactions": {
         "unwelcome": "Stay where you are and talk.",
@@ -730,7 +714,6 @@
         26,
         158
       ],
-      "sprite": "ManGreen",
       "greeting": "The tide left an hour ago. Anything else, say it quietly and say it once.",
       "reactions": {
         "unwelcome": "Not here, and keep your voice down.",
@@ -773,7 +756,6 @@
         37,
         159
       ],
-      "sprite": "Woman",
       "greeting": "Sit down or do not. If you came to tell me the law is the law, I have heard it.",
       "reactions": {
         "unwelcome": "I answer, but I will not defend you.",
@@ -808,7 +790,6 @@
         100,
         53
       ],
-      "sprite": "Sultan2",
       "greeting": "You look like a man who wants something explained. That is what a bank is for. It is not free.",
       "alt_greetings": [
         {
@@ -839,7 +820,6 @@
         84,
         67
       ],
-      "sprite": "Monk",
       "greeting": "Quietly, please. 40 years in this room and I have got used to the quiet.",
       "alt_greetings": [
         {
@@ -884,7 +864,6 @@
         93,
         62
       ],
-      "sprite": "Monk2",
       "greeting": "The steward is not seeing anyone. I say that 11 times a day and it is true about 10 of them.",
       "alt_greetings": [
         {
@@ -924,7 +903,6 @@
         96,
         61
       ],
-      "sprite": "OldWoman",
       "greeting": "I have four minutes and you were not announced. Let us see which of us is wasting them.",
       "alt_greetings": [
         {
@@ -956,7 +934,6 @@
         90,
         58
       ],
-      "sprite": "Knight",
       "greeting": "They tell me you have been asking about the wealth levels. Ask me instead.",
       "alt_greetings": [
         {
@@ -990,7 +967,6 @@
         66,
         24
       ],
-      "sprite": "Sultan",
       "greeting": "You came all this way and you have not drawn a weapon. Say what you came to say.",
       "alt_greetings": [
         {
@@ -1046,7 +1022,6 @@
         70,
         24
       ],
-      "sprite": "KnightGold",
       "greeting": "Stop there. You are close enough for talking.",
       "alt_greetings": [
         {
@@ -1077,7 +1052,6 @@
       "trader": {
         "name": "A trader",
         "role": "Trader",
-        "sprite": "ManGreen",
         "greeting": "Cloth, salt, lamp oil. Coin first, and no, I don't do favours.",
         "alt_greetings": [
           {
@@ -1111,7 +1085,6 @@
       "guard": {
         "name": "A bridge guard",
         "role": "Guard",
-        "sprite": "Knight",
         "greeting": "Road's open. Keep it that way and we'll not have a conversation.",
         "alt_greetings": [
           {
@@ -1145,7 +1118,6 @@
       "watchman": {
         "name": "A watchman",
         "role": "Watchman",
-        "sprite": "Knight",
         "greeting": "Works property. Look all you like, touch nothing, and we stay friends.",
         "alt_greetings": [
           {

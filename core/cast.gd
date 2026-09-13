@@ -81,7 +81,6 @@ static func load_from(path: String) -> Cast:
 		npc.zone = StringName(row.get("zone", ""))
 		var at: Array = row.get("tile", [0, 0]) as Array
 		npc.tile = Vector2i(int(at[0]), int(at[1]))
-		npc.sprite = String(row.get("sprite", ""))
 		npc.greeting = String(row.get("greeting", ""))
 		for band: String in (row.get("reactions", {}) as Dictionary).keys():
 			npc.reactions[StringName(band)] = String(
@@ -137,7 +136,6 @@ func _load_strangers(section: Dictionary) -> void:
 		npc.zone = StringName(spot.get("zone", ""))
 		var at: Array = spot.get("tile", [0, 0]) as Array
 		npc.tile = Vector2i(int(at[0]), int(at[1]))
-		npc.sprite = String(row.get("sprite", ""))
 		npc.greeting = String(row.get("greeting", ""))
 		for alt_entry: Variant in (row.get("alt_greetings", []) as Array):
 			var alt: Dictionary = alt_entry as Dictionary

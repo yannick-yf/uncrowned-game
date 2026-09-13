@@ -2236,6 +2236,41 @@ that fails the first time somebody is tired. Matched as path segments
 (`Character/Child`, not `Child`) so that `get_child()` does not trip it: a denylist
 that cries wolf gets switched off.
 
+### One face each, and one kit per place (2026-09-13)
+
+Two rules about *identity*, added after playing: "each town and village needs its
+own identity, same for specific characters."
+
+**Nobody in the cast shares a face.** Twenty-nine roles shared eighteen sprite
+sheets, so Bell, Sena and Mira were the same woman standing in three towns, and the
+bank and the estate were run by the same man in a hat. The pack ships 94 character
+sheets, most of them ninjas and robots; what is left that can stand in a kingdom is
+about thirty, which is exactly enough. `Art.CASTING` is now one-to-one and a test
+fails if two roles are cast the same. When the cast grows past thirty this test is
+what will say so.
+
+**No two settlements are built out of the same kit.** `Region.BUILDINGS_AT` gives
+each place the kinds of building it puts up, `Region.SCENERY_AT` what it leaves
+lying in the street, and `Art.TOWN_GROUND` the floor underfoot. A test refuses two
+places the same kit. What each says about itself:
+
+| | Built of | In the street |
+|---|---|---|
+| **Harrowgate** | houses, shops, a workshop, an inn | a well, market produce, barrels |
+| **Cairnwell** | stone houses, shops, and the bank, the tallest thing in Erileo | a well, crates |
+| **Cinderworks** | workshops round four furnaces | log piles, a bread oven |
+| **Wide Acres** | a farmhouse and a barn, four times, in fields that are left alone | fences, crates |
+| **Saltmarch** | stone on planks over the marsh, and boats | crates, barrels |
+| **Blackcairn** | a keep against the north wall, four towers, a gate | crates, a well |
+| **Brindle** | what is left of it | — |
+| **the Muster** | tents, in rows | — |
+
+**A settlement's ground is a ragged ellipse, never a rectangle.** A straight edge is
+a town somebody laid out with a ruler and nobody has ever walked on. The fray may
+only eat ground the town could sit beside — grass, field, marsh — because skipping
+whatever it landed on left a corner of the Thornwood's thicket standing inside the
+Muster, impassable, with a watchman posted in it.
+
 ### Approved asset pack (settled) — exactly one
 
 | | |

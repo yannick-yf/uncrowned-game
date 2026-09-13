@@ -169,15 +169,36 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 	assert_eq(_blood_price(hp, deaths), 0, "the long way round is the safe way round")
 
 
+## **Four crossings, not one.** Beasts are slower than the player (by design — a wild
+## you cannot outrun is a wall), so whether one crossing costs anything depends on
+## where the spawns land, and a single seed asserts luck rather than design. Measured
+## over eight seeds: seven drew blood and one did not, and for two nights the suite
+## happened to be standing on the one.
+##
+## So the claim under test is the one the design actually makes — *the wild is
+## dangerous*, not *the wild always bites* — and it is worth at most one seed going
+## quietly wrong before this fails.
 func test_cutting_through_the_thornwood_draws_blood() -> void:
-	var hp: int = _world.player_hp
-	var deaths: int = _world.deaths
-	assert_true(_walk_to(Vector2i(150, 90), 180.0), "crossed the wild")
-	var price: int = _blood_price(hp, deaths)
-	assert_true(price > 0, "the wild took nothing, so it is not a choice")
-	assert_true(price <= 24, "the wild took %d health, which is a wall rather than a risk" % price)
-	assert_true(_sim.facts.has(BeastRules.FACT_WILD_IS_DANGEROUS),
-		"and you now know it, which is a fact like any other")
+	var crossings: int = 4
+	var bled: int = 0
+	var learnt: int = 0
+	for offset: int in crossings:
+		_sim = Game.build(Sim.DEFAULT_SEED + offset)
+		_world = _sim.store(&"world") as WorldState
+		var hp: int = _world.player_hp
+		var deaths: int = _world.deaths
+		assert_true(_walk_to(Vector2i(150, 90), 180.0), "crossed the wild on seed %d" % offset)
+		var price: int = _blood_price(hp, deaths)
+		assert_true(price <= 24,
+			"the wild took %d health on seed %d, which is a wall rather than a risk"
+				% [price, offset])
+		if price > 0:
+			bled += 1
+			if _sim.facts.has(BeastRules.FACT_WILD_IS_DANGEROUS):
+				learnt += 1
+	assert_true(bled >= crossings - 1,
+		"%d of %d crossings cost nothing, so the wild is not a choice" % [crossings - bled, crossings])
+	assert_eq(learnt, bled, "and every crossing that cost something taught it")
 
 
 func test_beasts_never_stand_on_the_road_however_long_you_wait() -> void:

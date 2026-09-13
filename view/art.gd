@@ -17,42 +17,59 @@ const FACE_RIGHT: int = 3
 
 ## Casting. Cosmetic and swappable — no rule depends on any of it.
 ##
-## Deliberately no child sprites, ever: the pack ships Child/, EggBoy/, EggGirl/
-## and LionBoy/, and CLAUDE.md invariant 10 puts them permanently out of scope.
-## Bell is an apprentice and an adult; she is cast as one.
+## **One face each.** Twenty-nine roles shared eighteen sheets, so Bell, Sena and Mira
+## were the same woman in three towns, and the bank and the estate were run by the same
+## man in a hat. Told apart by the name over their head and nothing else, which for a
+## game about walking up to twenty-five specific people is the whole problem.
+##
+## The pack ships 94 character sheets and most of them are ninjas, robots and demons.
+## What is left after the ones that cannot stand in a kingdom is about thirty human
+## faces, which is exactly enough — so the table is now one-to-one and a test says so.
+## The next person to join the cast needs a face nobody has, and there are three spare.
+##
+## Deliberately no child sprites, ever: the pack ships Child/, EggBoy/, EggGirl/ and
+## LionBoy/, and CLAUDE.md invariant 10 puts them permanently out of scope. Bell is an
+## apprentice and an adult; she is cast as one.
 const CASTING: Dictionary = {
 	&"player": "Villager",
-	&"king": "Noble",
 	&"guard": "Knight",
+	# Harrowgate, and the road through it.
 	&"maddox": "OldMan",
 	&"tovin": "Inspector",
-	&"bell": "Woman",
+	&"bell": "Villager4",
 	&"ossa": "OldWoman",
 	&"garrick": "Villager2",
 	&"wren": "Villager5",
+	# The Cinderworks.
 	&"halgrave": "OldMan3",
-	&"sena": "Woman",
-	&"ivo": "Monk",
-	&"cadan": "Noble",
+	&"sena": "Villager3",
+	&"ivo": "Master",
+	# The Wide Acres.
+	&"cadan": "Sultan",
 	&"nessa": "Princess",
 	&"pell": "OldMan2",
+	# The Muster, and the man who walked out of it.
 	&"ryse": "KnightGold",
-	&"odile": "Inspector",
-	&"kell": "Villager4",
+	&"odile": "FighterWhite",
+	&"kell": "Villager6",
+	# Saltmarch.
 	&"til": "ManGreen",
 	&"mira": "Woman",
-	&"corvin": "Sultan2",
+	# Cairnwell.
+	&"corvin": "Noble",
 	&"peyre": "Monk",
 	&"anselm": "Monk2",
-	&"hesper": "OldWoman",
-	&"aurel": "Knight",
-	&"arthur": "Sultan",
-	&"dray": "KnightGold",
+	# Blackcairn.
+	&"hesper": "Village6",
+	&"aurel": "FighterRed",
+	&"arthur": "Sultan2",
+	&"dray": "RedGladiator",
 	# Strangers are cast by trade, not by name — there is only one trader sheet
 	# however many traders the map ends up holding.
-	&"trader": "ManGreen",
-	&"watchman": "Knight",
+	&"trader": "Hunter",
+	&"watchman": "GladiatorBlue",
 }
+
 
 ## What lives in the wild. Monster sheets are 4x4 — the same four directions as a
 ## character, with fewer frames.
@@ -63,11 +80,17 @@ const BEASTS: Dictionary = {
 }
 
 ## Faces for the crowd. Never the same one twice in a row, and none of them is
-## anybody: §6 keeps townsfolk out of the cast precisely so they cannot acquire a
-## name by being drawn often enough.
+## anybody: §6 keeps townsfolk out of the cast precisely so they cannot acquire a name
+## by being drawn often enough.
+##
+## They are **men who walked out of the Muster** — that is what the crowd in Harrowgate
+## is and why the bread price moves — so they are cast as armed men standing about,
+## not as villagers. Faces are shared with the cast on purpose here: the alternative is
+## thirty more sheets that do not exist, and a crowd is meant to be a crowd. Nobody in
+## it stands in the same town as the named person they resemble.
 const TOWNSFOLK: Array[String] = [
-	"Villager3", "Villager4", "Villager5", "Villager6", "Woman", "OldMan2",
-	"OldWoman", "ManGreen", "Monk", "Villager2",
+	"Samurai", "SamuraiBlue", "GladiatorBlue", "FighterRed", "Hunter",
+	"Villager2", "Villager5", "ManGreen", "Knight", "Villager",
 ]
 
 var _atlases: Dictionary = {}
@@ -124,33 +147,60 @@ func _init() -> void:
 		Region.Terrain.THICKET: [&"floor", 11, 12],
 	}
 
+	# Every rect here was found by measuring the sheet rather than by guessing at it.
+	# The pack packs its buildings edge to edge with no transparent gutter, so the
+	# seams are the columns of black outline between them — which is how `granary`
+	# came to be a stone statue standing in a wheat field for two nights, and why
+	# nobody noticed until somebody looked at a screenshot of the Wide Acres.
 	props = {
+		# Houses. Three roofs, and the difference between them is what stops two towns
+		# being the same town (§6: every place has its own face).
 		&"house_0": [&"house", Rect2i(0, 0, 64, 48)],
-		&"house_1": [&"house", Rect2i(64, 0, 64, 48)],
+		&"house_1": [&"house", Rect2i(64, 0, 62, 48)],
 		&"house_2": [&"house", Rect2i(128, 0, 64, 48)],
-		&"house_big": [&"house", Rect2i(64, 0, 64, 48)],
+		# Trade. A shop with a sign over it and a workshop with its front open are the
+		# two buildings that say "town" rather than "village" without a word of text.
+		&"shop": [&"house", Rect2i(256, 0, 48, 48)],
+		&"workshop": [&"house", Rect2i(304, 0, 64, 48)],
+		# Stone. Saltmarch builds in it because timber rots in a marsh, and a castle
+		# is made of nothing else.
+		&"stone_house": [&"house", Rect2i(368, 0, 48, 48)],
+		&"tower": [&"house", Rect2i(368, 0, 48, 48)],
+		# Two storeys over an arch: an inn on the road, and the same shape either side
+		# of a castle gate.
+		&"inn": [&"house", Rect2i(416, 0, 48, 48)],
+		&"gatehouse": [&"house", Rect2i(416, 0, 48, 48)],
+		# The two biggest things in Erileo, and they belong to the two powers that are
+		# not the crown's army: the bank's hall in Cairnwell, and the king's keep.
+		&"counting_house": [&"house", Rect2i(400, 224, 64, 80)],
+		&"keep": [&"house", Rect2i(464, 0, 64, 63)],
+		# A barn. What the Wide Acres keeps the grain in — §3's second power base, and
+		# for two nights it was drawn as a statue.
+		&"granary": [&"house", Rect2i(400, 176, 64, 48)],
+		&"house_big": [&"house", Rect2i(64, 0, 62, 48)],
 		&"kiln": [&"house", Rect2i(464, 64, 48, 64)],
+		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
 		&"tent": [&"camp", Rect2i(96, 0, 48, 48)],
 		&"tent_b": [&"camp", Rect2i(144, 0, 48, 48)],
 		&"ruin_house": [&"ruin", Rect2i(192, 97, 64, 80)],
 		&"overgrowth": [&"ruin", Rect2i(0, 144, 64, 48)],
-		&"tower": [&"ruin", Rect2i(192, 97, 64, 80)],
 		&"boat": [&"boat", Rect2i(0, 0, 80, 32)],
-		&"counting_house": [&"house", Rect2i(400, 224, 64, 80)],
-		# Checked against the sheet rather than picked by arithmetic: the first two
-		# guesses put a ladder rack and a stone bear in the castle.
-		&"keep": [&"house", Rect2i(400, 224, 64, 80)],
-		&"gatehouse": [&"house", Rect2i(128, 0, 64, 48)],
-		&"stall": [&"house", Rect2i(240, 64, 64, 80)],
-		&"granary": [&"house", Rect2i(0, 224, 48, 64)],
 		&"muster_rolls": [&"camp", Rect2i(96, 48, 32, 32)],
 		# A book, not a barrel. The first version reused the muster-rolls art without
 		# looking at it, so the five documents lay on the ground as pots and the
 		# player walked up to some crockery and was told they had taken a ledger.
 		&"papers": [&"camp", Rect2i(114, 122, 16, 16)],
 		&"campfire": [&"camp", Rect2i(192, 80, 32, 32)],
+		# Scenery: what a place has lying about, which is most of what tells you what
+		# the place does for a living.
+		&"well": [&"camp", Rect2i(160, 48, 32, 32)],
+		&"crates": [&"camp", Rect2i(0, 16, 48, 32)],
+		&"barrels": [&"camp", Rect2i(0, 0, 48, 16)],
+		&"logs": [&"camp", Rect2i(16, 88, 32, 32)],
+		&"fence": [&"camp", Rect2i(0, 118, 48, 16)],
+		&"produce": [&"house", Rect2i(240, 208, 64, 32)],
+		&"oven": [&"house", Rect2i(464, 176, 32, 48)],
 	}
-
 
 func _load(id: StringName, path: String) -> void:
 	_atlases[id] = load("%s/%s" % [PACK, path]) as Texture2D
@@ -273,9 +323,10 @@ const GROUND: Dictionary = {
 	# Ground the works has taken. The darker, rougher dirt, with the twig and the
 	# stone that are literally the stumps left behind.
 	# The bailey: swept earth, worn where people walk, and no weeds — somebody keeps
-	# this ground.
+	# this ground. Paving it with the capital's stone was tried and rejected: that
+	# tile family is the pale pink one, and it turned the castle into a ballroom.
 	Region.Terrain.CASTLE: {
-		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 150,
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 120,
 		"detail": [Vector2i(13, 19), Vector2i(15, 19)],
 	},
 	Region.Terrain.CLEARED: {
@@ -431,6 +482,16 @@ const TOWN_GROUND: Dictionary = {
 	&"cinderworks": {
 		"sheet": &"floor", "base": Vector2i(11, 18), "chance": 380,
 		"detail": [Vector2i(12, 18), Vector2i(14, 18), Vector2i(15, 18)],
+	},
+	# A market town's ground: grass trodden into dirt by everybody walking over it.
+	# Not paved — Harrowgate is a place things pass through, and the only place in
+	# Erileo that pays to pave itself is the capital.
+	# Beaten earth with every rut and stone the sheet has, because a market town is
+	# the road widened out. Row 20 was tried and is an autotile edge family, not a
+	# scatter family: used as detail it drew green stripes down the whole town.
+	&"harrowgate": {
+		"sheet": &"floor", "base": Vector2i(11, 19), "chance": 360,
+		"detail": [Vector2i(12, 19), Vector2i(13, 19), Vector2i(14, 19), Vector2i(15, 19)],
 	},
 	# Trodden mud between the tents, which is what a camp turns its ground into.
 	&"muster": {

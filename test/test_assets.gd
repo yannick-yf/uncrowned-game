@@ -98,3 +98,79 @@ func test_the_casting_table_uses_nothing_forbidden() -> void:
 		assert_false(AssetValidator.FORBIDDEN_SPRITES.has(String(Art.CASTING[role])),
 			"%s is cast as a forbidden sprite" % role)
 	assert_true(art.sheet_for(&"player") != null, "and the casting still resolves")
+
+
+# -------------------------------------------------------------- the casting ---
+
+## One face each.
+##
+## Twenty-nine roles shared eighteen sheets, so Bell, Sena and Mira were the same
+## woman standing in three towns and the bank and the estate were run by the same man
+## in a hat. Nothing failed: a sheet that is drawn twice is drawn correctly twice.
+## This is the check that was missing, and the spare faces are the margin — when it
+## fails, somebody has joined the cast and the pack has run out of people.
+
+func _sheet_path(folder: String) -> String:
+	return "%s/Actor/Character/%s/SpriteSheet.png" % [Art.PACK, folder]
+
+
+func test_every_role_is_cast_as_somebody_the_pack_actually_ships() -> void:
+	assert_true(Art.CASTING.size() >= 25, "%d roles cast" % Art.CASTING.size())
+	for role: StringName in Art.CASTING.keys():
+		assert_true(FileAccess.file_exists(_sheet_path(String(Art.CASTING[role]))),
+			"%s is cast as %s, which is not in the pack" % [role, Art.CASTING[role]])
+
+
+func test_nobody_in_the_cast_shares_a_face() -> void:
+	var taken: Dictionary = {}
+	for role: StringName in Art.CASTING.keys():
+		var folder: String = String(Art.CASTING[role])
+		assert_false(taken.has(folder),
+			"%s and %s are both drawn as %s" % [role, taken.get(folder, ""), folder])
+		taken[folder] = String(role)
+
+
+func test_everybody_with_a_name_has_a_face() -> void:
+	# The fairy is light rather than a body (§4's opening) and is drawn by hand.
+	Cast.forget()
+	var cast: Cast = Cast.shared()
+	for npc: Npc in cast.named():
+		if npc.id == OpeningRules.FAIRY:
+			continue
+		assert_true(Art.CASTING.has(npc.id), "%s has no face" % npc.id)
+	Cast.forget()
+
+
+func test_the_crowd_is_drawn_from_faces_that_exist() -> void:
+	assert_true(Art.TOWNSFOLK.size() >= 8, "%d faces in the crowd" % Art.TOWNSFOLK.size())
+	for folder: String in Art.TOWNSFOLK:
+		assert_true(FileAccess.file_exists(_sheet_path(folder)),
+			"the crowd draws on %s, which is not in the pack" % folder)
+
+
+func test_every_building_the_map_puts_up_has_a_sprite() -> void:
+	# `Art.props` is the other half of the identity table: `core/` says a workshop
+	# stands at a tile and this is what says what a workshop looks like. A kind with
+	# no entry draws nothing at all, silently.
+	var art := Art.new()
+	for zone: StringName in Region.BUILDINGS_AT.keys():
+		for kind: Variant in Region.BUILDINGS_AT[zone] as Array:
+			assert_true(art.props.has(kind as StringName),
+				"%s puts up a %s and nothing knows how to draw one" % [zone, kind])
+	for zone: StringName in Region.SCENERY_AT.keys():
+		for kind: Variant in Region.SCENERY_AT[zone] as Array:
+			assert_true(art.props.has(kind as StringName),
+				"%s keeps a %s in the street and nothing knows how to draw one" % [zone, kind])
+
+
+func test_no_two_places_are_built_out_of_the_same_kit() -> void:
+	# What "each town has its own identity" means when it is a test rather than a
+	# wish: no two settlements may put up the same set of buildings.
+	var seen: Dictionary = {}
+	for zone: StringName in Region.BUILDINGS_AT.keys():
+		var kit: Array = (Region.BUILDINGS_AT[zone] as Array).duplicate()
+		kit.sort()
+		var key: String = ",".join(PackedStringArray(kit.map(func(k: Variant) -> String:
+			return String(k))))
+		assert_false(seen.has(key), "%s is built exactly like %s" % [zone, seen.get(key, "")])
+		seen[key] = String(zone)

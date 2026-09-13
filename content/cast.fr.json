@@ -48,7 +48,6 @@
         261,
         149
       ],
-      "sprite": "",
       "greeting": "Vous êtes réveillé. Ne partez pas encore.",
       "options": [
         {
@@ -123,7 +122,6 @@
         148,
         172
       ],
-      "sprite": "OldMan",
       "greeting": "Vous êtes venu à pied. Personne ne vient à pied ici.",
       "reactions": {
         "unwelcome": "Un renseignement, et vous partez.",
@@ -186,7 +184,6 @@
         152,
         177
       ],
-      "sprite": "Inspector",
       "greeting": "Si vous venez vous inscrire, entrez. Si vous venez vous plaindre, entrez. C'est la même file.",
       "options": [
         {
@@ -239,7 +236,6 @@
         152,
         171
       ],
-      "sprite": "Woman",
       "greeting": "Attention, l'encre est fraîche. Le Prévôt compte les pages en fin de journée.",
       "options": [
         {
@@ -270,7 +266,6 @@
         147,
         181
       ],
-      "sprite": "OldWoman",
       "greeting": "Asseyez-vous si vous saignez. Allez ailleurs si vous ne saignez pas.",
       "reactions": {
         "unwelcome": "Je réponds à tout le monde, vous aussi.",
@@ -314,7 +309,6 @@
         137,
         176
       ],
-      "sprite": "Villager2",
       "greeting": "Attention à la roue. Je transporte des gens et des marchandises. Je coûte moins cher que des bottes.",
       "options": [
         {
@@ -347,7 +341,6 @@
         258,
         177
       ],
-      "sprite": "Villager5",
       "greeting": "Attention où vous marchez. La moitié de ce qu'il y a sous la cendre vaut de l'argent. L'autre moitié vous coupera.",
       "reactions": {
         "unwelcome": "Vous, vous payez d'avance.",
@@ -382,7 +375,6 @@
         240,
         171
       ],
-      "sprite": "OldMan3",
       "greeting": "Attention, les déchets du four restent brûlants toute la journée. Ce sont les troisièmes forges du royaume.",
       "reactions": {
         "unwelcome": "Je ne cache rien, même à vous.",
@@ -423,7 +415,6 @@
         245,
         173
       ],
-      "sprite": "Woman",
       "greeting": "Vous n'êtes pas des forges. Personne des forges ne reste à les regarder.",
       "alt_greetings": [
         {
@@ -462,7 +453,6 @@
         241,
         177
       ],
-      "sprite": "Monk",
       "greeting": "Asseyez-vous si vous êtes blessé. Si vous venez pour un mort, demandez-moi. N'ouvrez pas les dossiers.",
       "alt_greetings": [
         {
@@ -499,7 +489,6 @@
         99,
         147
       ],
-      "sprite": "Noble",
       "greeting": "Vous êtes debout sur la meilleure terre à orge du royaume et vous n'avez pas baissé les yeux une seule fois.",
       "alt_greetings": [
         {
@@ -530,7 +519,6 @@
         102,
         146
       ],
-      "sprite": "Princess",
       "greeting": "Mon père est occupé. Si vous voulez les papiers, c'est mon travail et je suis plus facile à trouver.",
       "alt_greetings": [
         {
@@ -561,7 +549,6 @@
         90,
         151
       ],
-      "sprite": "OldMan2",
       "greeting": "Attention au sillon. Ça ressemble à de la terre. C'est surtout de la pierre, et sous la pierre il y a de vieux murs.",
       "reactions": {
         "unwelcome": "Je réponds, puis je retourne à mon rang.",
@@ -605,7 +592,6 @@
         142,
         104
       ],
-      "sprite": "KnightGold",
       "greeting": "Vous entrez dans un camp militaire comme un homme que personne n'a jamais arrêté. Profitez-en.",
       "alt_greetings": [
         {
@@ -638,7 +624,6 @@
         137,
         105
       ],
-      "sprite": "Inspector",
       "greeting": "Les demandes de matériel à gauche. Les plaintes où vous voulez, je ne les lis pas.",
       "reactions": {
         "unwelcome": "Ça vous coûtera plus cher.",
@@ -679,7 +664,6 @@
         176,
         128
       ],
-      "sprite": "Villager4",
       "greeting": "Ne refaites pas ça. N'approchez pas un homme ici sans faire de bruit.",
       "reactions": {
         "unwelcome": "Restez où vous êtes et parlez.",
@@ -730,7 +714,6 @@
         26,
         158
       ],
-      "sprite": "ManGreen",
       "greeting": "La marée est partie il y a une heure. Autre chose, dites-le doucement et une seule fois.",
       "reactions": {
         "unwelcome": "Pas ici, et baissez la voix.",
@@ -773,7 +756,6 @@
         37,
         159
       ],
-      "sprite": "Woman",
       "greeting": "Asseyez-vous ou non. Si vous venez me dire que la loi est la loi, je l'ai déjà entendu.",
       "reactions": {
         "unwelcome": "Je réponds, mais je ne vous défendrai pas.",
@@ -808,7 +790,6 @@
         100,
         53
       ],
-      "sprite": "Sultan2",
       "greeting": "Vous avez l'air d'un homme à qui il faut expliquer quelque chose. C'est à ça que sert une banque. Ce n'est pas gratuit.",
       "alt_greetings": [
         {
@@ -839,7 +820,6 @@
         84,
         67
       ],
-      "sprite": "Monk",
       "greeting": "Doucement, s'il vous plaît. 40 ans dans cette salle et j'ai pris l'habitude du silence.",
       "alt_greetings": [
         {
@@ -884,7 +864,6 @@
         93,
         62
       ],
-      "sprite": "Monk2",
       "greeting": "L'intendante ne reçoit personne. Je le dis 11 fois par jour et c'est vrai 10 fois sur 11.",
       "alt_greetings": [
         {
@@ -924,7 +903,6 @@
         96,
         61
       ],
-      "sprite": "OldWoman",
       "greeting": "J'ai quatre minutes et vous n'étiez pas annoncé. Voyons lequel de nous deux les gaspille.",
       "alt_greetings": [
         {
@@ -956,7 +934,6 @@
         90,
         58
       ],
-      "sprite": "Knight",
       "greeting": "On me dit que vous posez des questions sur les paliers de fortune. Posez-les-moi plutôt.",
       "alt_greetings": [
         {
@@ -990,7 +967,6 @@
         66,
         24
       ],
-      "sprite": "Sultan",
       "greeting": "Vous êtes venu jusqu'ici et vous n'avez pas tiré d'arme. Dites ce que vous êtes venu dire.",
       "alt_greetings": [
         {
@@ -1046,7 +1022,6 @@
         70,
         24
       ],
-      "sprite": "KnightGold",
       "greeting": "Arrêtez-vous là. Vous êtes assez près pour parler.",
       "alt_greetings": [
         {
@@ -1077,7 +1052,6 @@
       "trader": {
         "name": "Un marchand",
         "role": "Marchand",
-        "sprite": "ManGreen",
         "greeting": "Toile, sel, huile de lampe. La pièce d'abord, et non, je ne fais pas de faveurs.",
         "alt_greetings": [
           {
@@ -1111,7 +1085,6 @@
       "guard": {
         "name": "Un garde du pont",
         "role": "Garde",
-        "sprite": "Knight",
         "greeting": "La route est ouverte. Qu'elle le reste et nous n'aurons pas de conversation.",
         "alt_greetings": [
           {
@@ -1145,7 +1118,6 @@
       "watchman": {
         "name": "un homme du guet",
         "role": "Homme du guet",
-        "sprite": "Knight",
         "greeting": "Propriété des Forges. Regardez tant que vous voulez, ne touchez à rien, et nous resterons amis.",
         "alt_greetings": [
           {

@@ -795,3 +795,45 @@ Suite: **35 suites, 361 tests, 10,215 assertions, 0 failed.**
 and quits. `--headless` never calls `_draw()`, so the suite cannot see the screen at
 all; every bug in this section was found by looking at a picture, and none of them
 would have failed a test.
+
+### 4. Identity — the town, the buildings, the faces
+
+Yannick's complaint, from playing: *"for v1 I expect each town and village to have
+their own identity, same for specific characters"*, and *"for v1 Phase 7 polishing I
+also expect finally a real town and castle."*
+
+**Everything here was found by looking at a screenshot.** Six of them, side by side,
+and the two biggest problems were visible in the first second: Harrowgate and
+Cairnwell were the same picture with a different name over it, and the Wide Acres'
+four granaries — §3's second power base — were **stone statues standing in a wheat
+field**. The pack packs its buildings edge to edge with no transparent gutter, so a
+rect picked by arithmetic lands on whatever is next to what you wanted. Every rect in
+`Art.props` is now measured off the sheet, by finding the columns of black outline
+that separate one sprite from the next.
+
+| | |
+|---|---|
+| **Faces** | 29 roles shared 18 sheets. One-to-one now, with three spare, and a test that fails when the cast outgrows the pack |
+| **Buildings** | `BUILDINGS_AT` per place — shops and a workshop say "town" without a word of text, and nowhere else has an inn |
+| **Scenery** | `SCENERY_AT` per place, positioned as a *share of the settlement's size* so Blackcairn's barrels stop landing outside its own wall |
+| **Ground** | a ragged ellipse instead of a rectangle |
+| **Blackcairn** | the keep moved to the north wall with a tower hard against each side, so what you see through the gate is one mass rather than four sheds round an empty yard |
+
+**Two dead things found and removed.** `Npc.sprite` was loaded from both cast sheets
+and read by nothing — a second answer to "what does this person look like" waiting to
+disagree with `Art.CASTING`. And `_stamp_town`'s `streets: bool` returned early, so
+**every town with streets never laid its ground**: the per-place floors written last
+night — planks over the marsh at Saltmarch, paving at Cairnwell, ash at the works —
+had never drawn a tile. Four towns shared the road's dirt because of a `return`.
+Split into `_lay_ground` and `_lay_streets`, which is also why Saltmarch has stopped
+looking like a swimming pool.
+
+**One test was passing on luck.** `test_cutting_through_the_thornwood_draws_blood`
+asserted that crossing the wild costs health, on one seed. Beasts are slower than the
+player by design, so whether a single crossing costs anything depends on where the
+spawns land — measured over eight seeds, seven drew blood and one did not, and moving
+three buildings at the Cinderworks was enough to shift the path onto the one that did
+not. It crosses four times now and allows one to come free, which is the claim the
+design actually makes.
+
+Suite: **35 suites, 367 tests, 10,382 assertions, 0 failed.**
