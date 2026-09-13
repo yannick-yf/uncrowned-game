@@ -141,13 +141,20 @@ Described as areas with a purpose, not as decoration.
 | Ruins | Brindle | 0.90 | |
 | Open grass, farmland | the broad middle | 0.80 | |
 | Coast sand | south and west margins | 0.75 | |
-| **Thornwood** | **across the wild diagonal**, so the road bows around it | 0.55 | Slow, unwatched, dangerous |
+| **Thornwood** | **across the wild diagonal**, so the road bows around it | 0.55 | Slow, unwatched *(was: dangerous — see note)* |
 | Ford | the crossing | 0.50 | |
 | Marsh | around Saltmarch | 0.45 | |
 
 > **The Thornwood rule:** wood *behind* the start line is scenery; wood *on the
 > shortcut* is a decision. The belt must lie across the line a player would actually
 > take when cutting the corner.
+
+> **Amended 2026-09-13 (v2).** "Dangerous" is struck: monsters are out of the whole map
+> (SPECS §4, §21). The wild is *slow and unwatched*; the road is *fast and watched*; the
+> only price of the wild is time, so the speed multipliers in this table are **on** in
+> v2 and the road ratio in §5 carries the whole of the road's case. Re-run
+> `tools/measure_routes.gd` with speeds on and the wood empty before trusting §5's
+> travel-time row.
 
 **Assertion:** the straight wild line from Brindle to Blackcairn passes through the
 Thornwood for at least `[DECIDE]` tiles.
