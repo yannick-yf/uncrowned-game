@@ -1,7 +1,7 @@
 class_name RegionBake
 extends RefCounted
 
-## A `Region` built from the 3D workshop's data and our brief (MIGRATION_3D §6, M1b).
+## A `Region` built from the 3D workshop's data and our brief (MIGRATION_3D §6, M1b–c).
 ##
 ## The bake is a build step with one input and one output (§6.2): the brother's files
 ## in `prototypes/brindle_3d/` plus `content/bake_brief.json` in, `content/region.json`
@@ -9,15 +9,20 @@ extends RefCounted
 ## replaying. `tools/bake_region.gd` runs it; `Region.load_baked()` reads the result
 ## through `read()` and never touches his files.
 ##
-## Order, and why. Ground first from his samples; his trees close the wood; roads —
-## his, then ours — are laid over everything walkable and *over water where his roads
-## cross it*, because a road drawn through a river is a crossing whether or not a
-## bridge was modelled, and the report names every one so the brief can ask for the
-## bridge. The ford is a band on the river. His buildings stand last, as walls under
-## a prop, and the border is closed so nothing walks off the world.
+## Order, and why. Ground first from his samples. Then the brief's woods and grounds,
+## over open ground only and never inside a place — his map has the works on grass,
+## and §4 needs it in a wound in a wood. His trees close their tiles. The kit's wound
+## and clearing. Roads — his, then ours — over everything walkable and *over water
+## where his roads cross it*, because a road drawn through a river is a crossing
+## whether or not a bridge was modelled, and the report names every one so the brief
+## can ask for the bridge. The ford is a band on the river. His buildings stand as
+## walls under a prop. Then **the kit**: every place marked scaffold gets its ground,
+## streets, landmarks and scenery from `Region.scaffold_place`; a place of his gets the
+## same only if his data stands no building in it. Last, the border is closed.
 ##
 ## Uses only the public face of `Region` — `set_terrain`, `terrain_at`, `is_passable`,
-## `in_bounds`, `props` — so the two classes stay separable.
+## `in_bounds`, `zone_at`, `props`, `sites`, `footprints`, `bake_zones` and the
+## `scaffold_*` kit — so the two classes stay separable.
 
 ## How far a scaffold site may be nudged onto dry ground before the bake gives up.
 const NUDGE_RADIUS: int = 12
@@ -27,13 +32,18 @@ const FORD_HALF: int = 5
 const ROAD_HALF: int = 1
 ## A village path narrower than this many metres is one tile wide.
 const PATH_WIDE_FROM_M: float = 2.0
+## A tree closes its own tile and the ring around it: a mature fir's crown is five
+## metres across, and a wood of single tiles is a lawn with dots on it.
+const CANOPY: int = 1
+## The brief's woods stop this many tiles short of a place's built ground.
+const WOOD_KEEPS_OFF: int = 2
 
 var width: int = 0
 var height: int = 0
 var origin_m: Vector2 = Vector2.ZERO
 var metres_per_tile: float = BakeRules.METRES_PER_TILE
 var region: Region = null
-## Place id -> {"centre": Vector2i, "size": Vector2i, "scaffold": bool, "from": String}
+## Place id -> {"centre", "size" (the zone), "kit" (the built ground), "scaffold", "from"}
 var places: Dictionary = {}
 var place_order: Array[StringName] = []
 ## Point id -> {"at": Vector2i, "scaffold": bool}
@@ -72,12 +82,16 @@ static func bake(
 	out.region = Region.new(out.width, out.height)
 
 	out._ground(samples, heights, waters, paint)
-	out._trees(trees)
 	out._places(geography, brief)
 	out._points(sectors, brief)
+	out._woods(brief)
+	out._grounds(brief)
+	out._trees(trees)
+	out._wound_and_clearing()
 	out._roads(geography, sectors, brief)
 	out._ford()
 	out._buildings(sectors, brief)
+	out._kit(brief)
 	out._border()
 	out._summarise()
 	return out
@@ -92,22 +106,8 @@ func _ground(samples: int, heights: PackedFloat32Array, waters: PackedFloat32Arr
 				heights[i], waters[i], paint[i * 3], paint[i * 3 + 1]))
 
 
-## Every tree closes its tile. Open ground only: a tree drawn on sand or in a river is
-## his to move, not ours to rewrite.
-func _trees(trees: Array) -> void:
-	var planted: int = 0
-	for entry: Variant in trees:
-		var row: Dictionary = entry as Dictionary
-		if row == null or not row.has("xz"):
-			continue
-		var at: Vector2i = _tile(row["xz"])
-		if region.in_bounds(at) and region.terrain_at(at) == Region.Terrain.WILD:
-			region.set_terrain(at, Region.Terrain.FOREST)
-			planted += 1
-	report.append("trees: %d placed, %d tiles of wood" % [trees.size(), planted])
-
-
-## The eight places: his where he has them, the brief's where he does not.
+## The eight places: his where he has them, the brief's where he does not. The zone
+## is his envelope; the kit's ground is `kit_footprint_xz` when the brief gives one.
 func _places(geography: Dictionary, brief: Dictionary) -> void:
 	var his: Dictionary = {}
 	for entry: Variant in (geography.get("sites", []) as Array):
@@ -131,12 +131,16 @@ func _places(geography: Dictionary, brief: Dictionary) -> void:
 		else:
 			report.append("PLACE %s: neither his site '%s' nor a proposal — skipped" % [id, from])
 			continue
+		var kit: Vector2i = _tiles(row["kit_footprint_xz"]) if row.has("kit_footprint_xz") else size
 		var landed: Vector2i = _dry(centre)
 		if landed != centre:
 			report.append("PLACE %s: centre %s is not dry ground, nudged to %s" % [id, centre, landed])
-		places[StringName(id)] = {"centre": landed, "size": size, "scaffold": scaffold,
+		places[StringName(id)] = {"centre": landed, "size": size, "kit": kit, "scaffold": scaffold,
 			"from": from if from != "" else "brief"}
 		place_order.append(StringName(id))
+		region.sites[StringName(id)] = landed
+		region.footprints[StringName(id)] = size
+	region.bake_zones()
 	for id: String in (brief.get("ignored_sites", []) as Array):
 		report.append("his site '%s' ignored, as the brief says" % id)
 	for id: StringName in (brief.get("trunk", []) as Array):
@@ -153,7 +157,14 @@ func _points(sectors: Dictionary, brief: Dictionary) -> void:
 		var row: Dictionary = (brief["points"] as Dictionary)[id] as Dictionary
 		if not row.has("xz"):
 			continue
-		points[StringName(id)] = {"at": _tile(row["xz"]), "scaffold": bool(row.get("scaffold", true))}
+		var at: Vector2i = _tile(row["xz"])
+		# A proposal lands on ground somebody can stand on, and the report says when it
+		# had to move. The crossings belong in the water — the road is laid over them
+		# later — and the working face is a direction, not a place to stand.
+		var landed: Vector2i = at if id in ["ford", "bridge", "working_face"] else _dry(at)
+		if landed != at:
+			report.append("POINT %s: %s is not dry ground, nudged to %s" % [id, at, landed])
+		points[StringName(id)] = {"at": landed, "scaffold": bool(row.get("scaffold", true))}
 	# His bridge is data he owns: recorded as a point of its own so the report and
 	# the map can name it, whatever the brief calls the King's Road's crossing.
 	var ends: Array = sectors.get("bridge_endpoints_xzy", []) as Array
@@ -163,6 +174,113 @@ func _points(sectors: Dictionary, brief: Dictionary) -> void:
 		var mid: Vector2 = (Vector2(float(a[0]), float(a[1])) + Vector2(float(b[0]), float(b[1]))) * 0.5
 		points[&"his_bridge"] = {"at": BakeRules.tile_for(mid.x, mid.y, origin_m, metres_per_tile),
 			"scaffold": false}
+
+
+## The brief's woods: an ellipse, or a belt between two points. Open ground only, and
+## never on a place's built ground.
+func _woods(brief: Dictionary) -> void:
+	for entry: Variant in (brief.get("woods", []) as Array):
+		var wood: Dictionary = entry as Dictionary
+		var planted: int = 0
+		if wood.has("ellipse_xz"):
+			var centre: Vector2i = _tile(wood["ellipse_xz"])
+			var radii: Vector2i = _tiles(wood.get("radii_xz", [20, 20]))
+			for x: int in range(centre.x - radii.x, centre.x + radii.x + 1):
+				for y: int in range(centre.y - radii.y, centre.y + radii.y + 1):
+					var dx: float = float(x - centre.x) / float(maxi(radii.x, 1))
+					var dy: float = float(y - centre.y) / float(maxi(radii.y, 1))
+					if dx * dx + dy * dy <= 1.0 and _plant(Vector2i(x, y)):
+						planted += 1
+		elif wood.has("belt_xz"):
+			var ends: Array = wood["belt_xz"] as Array
+			var from: Vector2i = _tile(ends[0])
+			var to: Vector2i = _tile(ends[1])
+			var half: int = int(round(float(wood.get("half_m", 40.0)) / metres_per_tile))
+			var steps: int = maxi(absi(to.x - from.x), absi(to.y - from.y))
+			for step: int in steps + 1:
+				var point := Vector2i(Vector2(from).lerp(Vector2(to), float(step) / float(maxi(steps, 1))).round())
+				for dx: int in range(-half, half + 1):
+					for dy: int in range(-half, half + 1):
+						if _plant(point + Vector2i(dx, dy)):
+							planted += 1
+		report.append("wood %-16s %d tiles planted%s" % [String(wood.get("id", "?")), planted,
+			" (scaffold)" if bool(wood.get("scaffold", true)) else ""])
+
+
+## Wood grows on open ground, and not where a place has built.
+func _plant(tile: Vector2i) -> bool:
+	if not region.in_bounds(tile) or region.terrain_at(tile) != Region.Terrain.WILD:
+		return false
+	for id: StringName in place_order:
+		var row: Dictionary = places[id] as Dictionary
+		var half: Vector2i = (row["kit"] as Vector2i) / 2 + Vector2i(WOOD_KEEPS_OFF, WOOD_KEEPS_OFF)
+		var centre: Vector2i = row["centre"] as Vector2i
+		if absi(tile.x - centre.x) <= half.x and absi(tile.y - centre.y) <= half.y:
+			return false
+	region.set_terrain(tile, Region.Terrain.FOREST)
+	return true
+
+
+## The brief's grounds: farmland round the farms, marsh round the port — an ellipse
+## of one terrain over open ground, as the 2D map lays them.
+func _grounds(brief: Dictionary) -> void:
+	for entry: Variant in (brief.get("grounds", []) as Array):
+		var ground: Dictionary = entry as Dictionary
+		var place: StringName = StringName(String(ground.get("place", "")))
+		if not places.has(place):
+			report.append("GROUND for '%s': no such place" % place)
+			continue
+		var terrain: Region.Terrain = _terrain_named(String(ground.get("terrain", "wild")))
+		var centre: Vector2i = (places[place] as Dictionary)["centre"] as Vector2i
+		var radii: Vector2i = _tiles(ground.get("radii_xz", [40, 30]))
+		var laid: int = 0
+		for x: int in range(centre.x - radii.x, centre.x + radii.x + 1):
+			for y: int in range(centre.y - radii.y, centre.y + radii.y + 1):
+				var tile := Vector2i(x, y)
+				var dx: float = float(x - centre.x) / float(maxi(radii.x, 1))
+				var dy: float = float(y - centre.y) / float(maxi(radii.y, 1))
+				if dx * dx + dy * dy > 1.0 or not region.in_bounds(tile):
+					continue
+				if region.terrain_at(tile) == Region.Terrain.WILD:
+					region.set_terrain(tile, terrain)
+					laid += 1
+		report.append("ground %-9s round %-11s %d tiles" % [String(ground.get("terrain", "?")), place, laid])
+
+
+static func _terrain_named(name: String) -> Region.Terrain:
+	var index: int = Region.Terrain.keys().find(name.to_upper())
+	return (index if index >= 0 else Region.Terrain.WILD) as Region.Terrain
+
+
+## Every tree closes its tile and its canopy. Open ground only: a tree drawn on sand
+## or in a river is his to move, not ours to rewrite.
+func _trees(trees: Array) -> void:
+	var planted: int = 0
+	for entry: Variant in trees:
+		var row: Dictionary = entry as Dictionary
+		if row == null or not row.has("xz"):
+			continue
+		var at: Vector2i = _tile(row["xz"])
+		for dx: int in range(-CANOPY, CANOPY + 1):
+			for dy: int in range(-CANOPY, CANOPY + 1):
+				var tile: Vector2i = at + Vector2i(dx, dy)
+				if region.in_bounds(tile) and region.terrain_at(tile) == Region.Terrain.WILD:
+					region.set_terrain(tile, Region.Terrain.FOREST)
+					planted += 1
+	report.append("trees: %d placed, %d tiles of wood under their crowns" % [trees.size(), planted])
+
+
+## The kit's two pieces of terrain thesis: the works' wound and the fairies' clearing.
+func _wound_and_clearing() -> void:
+	if places.has(&"cinderworks") and points.has(&"clearing") and points.has(&"working_face"):
+		region.scaffold_wound((places[&"cinderworks"] as Dictionary)["centre"] as Vector2i,
+			(points[&"clearing"] as Dictionary)["at"] as Vector2i,
+			(points[&"working_face"] as Dictionary)["at"] as Vector2i)
+	if points.has(&"clearing") and places.has(&"brindle"):
+		var brindle: Dictionary = places[&"brindle"] as Dictionary
+		var walled_to: int = (brindle["centre"] as Vector2i).y - (brindle["size"] as Vector2i).y / 2 \
+			- Region.CORRIDOR_STOPS_SHORT
+		region.scaffold_clearing((points[&"clearing"] as Dictionary)["at"] as Vector2i, walled_to)
 
 
 ## His roads, his village paths, his bridge, then the brief's roads.
@@ -187,10 +305,14 @@ func _roads(geography: Dictionary, sectors: Dictionary, brief: Dictionary) -> vo
 			ROAD_HALF, Region.Terrain.ROAD)
 
 
-## Lay one terrain along a polyline in metres. Never over the sea or the mountain;
-## over a river yes, and every such tile is a crossing the report names.
+## Lay one terrain along a polyline in metres. Never over the sea; over rock yes — his
+## rock paint is steepness, and a road drawn up a steep bank is a cutting, which is
+## what roads do to banks — and over a river yes, and every such tile is a crossing
+## the report names. Found the hard way: his farms road met seven tiles of rock at the
+## river's bank, and everything west of the junction was unreachable by road.
 func _polyline(id: String, points_xz: Array, half: int, terrain: Region.Terrain) -> void:
 	var wet: int = 0
+	var cut: int = 0
 	var first_wet: Vector2i = Region.NOWHERE
 	for i: int in points_xz.size() - 1:
 		var from: Vector2 = _metres(points_xz[i])
@@ -205,8 +327,10 @@ func _polyline(id: String, points_xz: Array, half: int, terrain: Region.Terrain)
 					if not region.in_bounds(tile):
 						continue
 					var here: Region.Terrain = region.terrain_at(tile)
-					if here == Region.Terrain.SEA or here == Region.Terrain.MOUNTAIN:
+					if here == Region.Terrain.SEA:
 						continue
+					if here == Region.Terrain.MOUNTAIN:
+						cut += 1
 					if here == Region.Terrain.WATER:
 						wet += 1
 						if first_wet == Region.NOWHERE:
@@ -215,6 +339,8 @@ func _polyline(id: String, points_xz: Array, half: int, terrain: Region.Terrain)
 	if wet > 0:
 		crossings.append({"road": id, "at": first_wet,
 			"metres": BakeRules.metres_for(first_wet, origin_m, metres_per_tile), "tiles": wet})
+	if cut > 0:
+		report.append("cutting %-28s %d tiles of rock under the road" % [id, cut])
 
 
 ## The ford: a band of wadeable river around the brief's point. Only water turns to
@@ -263,6 +389,33 @@ func place(kind: StringName, at: Vector2i, size: Vector2i) -> void:
 			region.set_terrain(tile, Region.Terrain.WALL)
 
 
+## The kit, per place (§6.2, point 3). A scaffold gets everything; a place of his gets
+## the same only if his data stands nothing in it, so the day he draws the works the
+## kilns of ours disappear on the next bake.
+func _kit(_brief: Dictionary) -> void:
+	for id: StringName in place_order:
+		var row: Dictionary = places[id] as Dictionary
+		var centre: Vector2i = row["centre"] as Vector2i
+		var kit: Vector2i = row["kit"] as Vector2i
+		if bool(row["scaffold"]):
+			region.scaffold_place(id, centre, kit)
+			report.append("kit   %-12s scaffold: ground, streets, landmarks, scenery at %s" % [id, kit])
+		elif _his_props_in(id) == 0:
+			region.scaffold_place(id, centre, kit)
+			row["kit_on_his"] = true
+			report.append("kit   %-12s his site, nothing built in it yet: our kit at %s" % [id, kit])
+		else:
+			report.append("kit   %-12s his: %d of his buildings stand in it, nothing of ours" % [id, _his_props_in(id)])
+
+
+func _his_props_in(zone: StringName) -> int:
+	var count: int = 0
+	for prop: Dictionary in region.props:
+		if region.zone_at(prop["at"] as Vector2i) == zone:
+			count += 1
+	return count
+
+
 ## Nothing walks off the edge: the outer ring is closed with what already bounds it.
 func _border() -> void:
 	for x: int in width:
@@ -288,13 +441,16 @@ func _summarise() -> void:
 	for kind: int in counts.keys():
 		parts.append("%s %d" % [Region.Terrain.keys()[kind], counts[kind]])
 	report.append("terrain: " + ", ".join(parts))
+	report.append("props: %d" % region.props.size())
 	for place: StringName in place_order:
 		var row: Dictionary = places[place] as Dictionary
-		report.append("place %-12s %s %s %s" % [place, row["centre"], row["size"],
+		report.append("place %-12s %s zone %s %s" % [place, row["centre"], row["size"],
 			"SCAFFOLD" if bool(row["scaffold"]) else "his (%s)" % row["from"]])
 	for id: StringName in points.keys():
 		var row: Dictionary = points[id] as Dictionary
-		report.append("point %-22s %s %s" % [id, row["at"], "scaffold" if bool(row["scaffold"]) else "his"])
+		var at: Vector2i = row["at"] as Vector2i
+		report.append("point %-22s %s on %-8s %s" % [id, at, Region.Terrain.keys()[region.terrain_at(at)],
+			"scaffold" if bool(row["scaffold"]) else "his"])
 	for crossing: Dictionary in crossings:
 		report.append("CROSSING %-28s over %2d tiles of river at %s (%.0f, %.0f m)" % [
 			crossing["road"], crossing["tiles"], crossing["at"],
@@ -355,7 +511,9 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		places_out[String(id)] = {
 			"centre": [(row["centre"] as Vector2i).x, (row["centre"] as Vector2i).y],
 			"size": [(row["size"] as Vector2i).x, (row["size"] as Vector2i).y],
-			"scaffold": bool(row["scaffold"]), "from": String(row["from"]),
+			"kit": [(row["kit"] as Vector2i).x, (row["kit"] as Vector2i).y],
+			"scaffold": bool(row["scaffold"]), "kit_on_his": bool(row.get("kit_on_his", false)),
+			"from": String(row["from"]),
 		}
 	var points_out: Dictionary = {}
 	for id: StringName in points.keys():
@@ -364,9 +522,12 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 			"scaffold": bool(row["scaffold"])}
 	var props_out: Array = []
 	for prop: Dictionary in region.props:
-		props_out.append({"kind": String(prop["kind"]),
+		var out: Dictionary = {"kind": String(prop["kind"]),
 			"at": [(prop["at"] as Vector2i).x, (prop["at"] as Vector2i).y],
-			"size": [(prop["size"] as Vector2i).x, (prop["size"] as Vector2i).y]})
+			"size": [(prop["size"] as Vector2i).x, (prop["size"] as Vector2i).y]}
+		if prop.has("solid"):
+			out["solid"] = bool(prop["solid"])
+		props_out.append(out)
 	var trunk_out: Array = []
 	for id: StringName in trunk:
 		trunk_out.append(String(id))
@@ -397,8 +558,9 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 	}
 
 
-## The region in a baked file, with its props. Zones and the content's anchors are
-## `Region.load_baked()`'s job, because they need `Places`.
+## The region in a baked file: its grid, its places as sites and zones, its props.
+## The content's anchors — stalls, papers, fires — are `Region.load_baked()`'s job,
+## because they need `Places`.
 static func read(data: Dictionary) -> Region:
 	var w: int = int(data.get("width", 0))
 	var h: int = int(data.get("height", 0))
@@ -408,8 +570,16 @@ static func read(data: Dictionary) -> Region:
 		var row: PackedByteArray = BakeRules.decode_row(String(rows[y]) if y < rows.size() else "", w)
 		for x: int in w:
 			region.set_terrain(Vector2i(x, y), row[x] as Region.Terrain)
+	for id: String in (data.get("places", {}) as Dictionary).keys():
+		var row: Dictionary = (data["places"] as Dictionary)[id] as Dictionary
+		region.sites[StringName(id)] = _pair(row.get("centre", [0, 0]))
+		region.footprints[StringName(id)] = _pair(row.get("size", [1, 1]))
+	region.bake_zones()
 	for entry: Variant in (data.get("props", []) as Array):
 		var prop: Dictionary = entry as Dictionary
-		region.props.append({"kind": StringName(String(prop.get("kind", ""))),
-			"at": _pair(prop.get("at", [0, 0])), "size": _pair(prop.get("size", [1, 1]))})
+		var out: Dictionary = {"kind": StringName(String(prop.get("kind", ""))),
+			"at": _pair(prop.get("at", [0, 0])), "size": _pair(prop.get("size", [1, 1]))}
+		if prop.has("solid"):
+			out["solid"] = bool(prop["solid"])
+		region.props.append(out)
 	return region

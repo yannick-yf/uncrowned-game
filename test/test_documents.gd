@@ -85,7 +85,7 @@ func test_nothing_takes_one_off_you() -> void:
 	var carried: int = world.documents.size()
 
 	# Everything the world can do to you, done to you.
-	world.player_pos = Vector2(147.5, 173.0)
+	world.player_pos = at_a_stall()
 	sim.submit(&"steal"); sim.advance(3)
 	sim.submit(&"act"); sim.advance(3)
 	sim.advance_world_ticks(Game.TICKS_PER_IN_GAME_DAY * 5)
@@ -122,7 +122,7 @@ func test_a_document_is_read_out_once() -> void:
 	var world := sim.store(&"world") as WorldState
 	_take_all(sim)
 	for i: int in 3:
-		world.player_pos = Vector2(148.5, 173.0)
+		world.player_pos = in_town(&"harrowgate")
 		sim.submit(&"tell_town")
 		sim.advance(3)
 	assert_eq(EndRules.public_facts(sim.facts), 3,

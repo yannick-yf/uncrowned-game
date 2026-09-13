@@ -152,6 +152,16 @@ The numbers are here to be kept true, not to be admired: if the fast suite ever
 stops being the thing you run without thinking, that is the thing to fix.)
 A suite marked `const SLOW := true` is in the second group.
 
+**Two worlds, since M1 (2026-09-13).** `tools/run_tests.sh --baked --all` runs the same
+suite on the world baked from the 3D workshop (about **23 s**), and both have to be
+green before a commit that touches the map, the kit or a position. A test says where
+it stands in the world's terms — `at_a_stall()`, `in_town(&"harrowgate")`,
+`alone_on_the_road()`, `in_the_wood()`, all on `TestCase` — and never as a tile. A line
+marked **`DEBT`** in the run is the map's, not the code's: a claim the spec makes that
+the 3D map does not yet meet (`TestCase.debt`), printed so it is read and counted apart
+so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Never turn a failure
+into a debt to get green; a debt names something the brother has to move.
+
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
 

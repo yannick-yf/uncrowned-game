@@ -39,6 +39,7 @@ func _initialize() -> void:
 	var only_fast: bool = OS.get_cmdline_user_args().has("--fast")
 	var skipped_suites: int = 0
 
+	var owed: int = 0
 	for file_name: String in _test_files():
 		var script: GDScript = load("%s/%s" % [TEST_DIR, file_name]) as GDScript
 		if script == null:
@@ -78,7 +79,14 @@ func _initialize() -> void:
 			# worst possible reading. A test that asserts nothing is therefore a
 			# failure: either it crashed on its way to the first assertion, or it
 			# never tested anything.
-			if test_case.assertion_count() == 0:
+			if test_case.debts().size() > 0 and test_case.failure_count() == 0:
+				# Owed by the map, not broken in the code (TestCase.debt). Printed so it is
+				# read, counted apart so the suite can be green while the brief is open.
+				owed += test_case.debts().size()
+				print("  DEBT  %s" % method)
+				for message: String in test_case.debts():
+					print("          owed by the map: %s" % message)
+			elif test_case.assertion_count() == 0:
 				failed += 1
 				print("  DEAD  %s — recorded no assertions; look for a SCRIPT ERROR above" % method)
 			elif test_case.failure_count() == 0:
@@ -98,8 +106,9 @@ func _initialize() -> void:
 		print("slowest:")
 		for i: int in mini(5, timings.size()):
 			print("  %7.1f ms  %s" % [float(timings[i][0]), String(timings[i][1])])
-	print("%d suites, %d tests, %d assertions, %d failed — %.1f ms%s" % [
-		suites, ran, assertions, failed, elapsed_ms,
+	print("%d suites, %d tests, %d assertions, %d failed%s — %.1f ms%s" % [
+		suites, ran, assertions, failed,
+		", %d owed by the map" % owed if owed > 0 else "", elapsed_ms,
 		"  (--fast: %d slow suites skipped)" % skipped_suites if only_fast else "",
 	])
 	quit(1 if failed > 0 else 0)

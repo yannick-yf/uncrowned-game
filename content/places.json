@@ -13,6 +13,7 @@
   },
   "points": {
     "clearing": [261, 150],
+    "working_face": [238, 138],
     "bridge": [228, 177],
     "ford": [233, 188],
     "kell_fire": [175, 129],

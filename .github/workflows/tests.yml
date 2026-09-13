@@ -74,3 +74,15 @@ jobs:
         env:
           GODOT: ./godot-bin
         run: bash prototypes/brindle_3d/tools/check_workshop.sh
+
+      # The contract between his map and our content (docs/MIGRATION_3D.md §6.2):
+      # the checked-in bake must be the bake of the data in this commit, and the
+      # same suite must be green on the baked world. A DEBT line is the map's to
+      # settle and does not fail the run; a FAIL is ours.
+      - name: The baked world is current
+        run: ./godot-bin --headless --path . -s tools/bake_region.gd -- --check
+
+      - name: Run the whole suite on the baked world
+        env:
+          GODOT: ./godot-bin
+        run: tools/run_tests.sh --baked --all

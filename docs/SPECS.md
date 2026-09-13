@@ -3681,6 +3681,13 @@ somebody objects are in that file, not here. Combat remains outside it.
   his map: MAP_SPEC 8 of 10 (ratio 1.31, road 64.6 s, the river a barrier by test); the
   whole suite 85 of 424 failing, all landmarks and wood the scaffold kit (M1c) owes. Four
   roads of his cross water without a bridge; the bake prints where (MIGRATION_3D §5).
+- ✅ **M1c — scaffolds and the contract** (2026-09-13). The settlement stamps became a kit
+  (`Region.scaffold_place`) the bake stands on his terrain for every place he has not
+  built; the brief plants the Thornwood, the fields and the marsh; the road follows his
+  road tiles; the suites say where they stand in the world's terms and carry no tile;
+  a claim the map owes is a **debt**, printed and counted apart. **Both worlds green:**
+  424 tests, 0 failed on each, 1 owed by the map (the works in Brindle's first frame).
+  MAP_SPEC 10 of 10 on the baked world; road 69 s, wild 124 s, attuned 96 s there.
 
 ---
 

@@ -46,6 +46,16 @@ func _report(label: String, route: Array[Vector2i], attuned: bool) -> void:
 	var last: Vector2 = world.player_pos
 	var deadline: int = int(400.0 * float(Sim.STEPS_PER_REAL_SECOND))
 
+	# Brindle is not on the King's Road: it is reached by its own track, which on the
+	# baked world is his road north to Harrowgate. Find the line's first point on foot,
+	# and count that walk, because both ways start in Brindle.
+	var approach: Array[Vector2i] = []
+	if not route.is_empty():
+		for point: Vector2 in Navigation.waypoints(world.region(), world.player_tile(), route[0]):
+			approach.append(Vector2i(point.floor()))
+	approach.append_array(route)
+	route = approach
+
 	for point: Vector2i in route:
 		# The king stands at the end of both routes and is not what is being
 		# measured here.

@@ -9,8 +9,6 @@ extends TestCase
 
 const SLOW: bool = true
 
-const AT_A_STALL: Vector2 = Vector2(146.5, 172.0)
-const AT_THE_TRADER: Vector2 = Vector2(93.5, 60.0)
 const TRADER: StringName = &"trader@1"
 
 
@@ -42,7 +40,7 @@ func _days(sim: Sim, count: float) -> void:
 
 func _talk_to_trader(sim: Sim) -> WorldState:
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = AT_THE_TRADER
+	world.player_pos = beside_npc(TRADER)
 	sim.submit(&"talk", {"npc": String(TRADER)})
 	sim.advance(2)
 	return world
@@ -61,7 +59,7 @@ func test_anything_further_has_to_be_carried() -> void:
 	var sim: Sim = _road_sim()
 	var standing := sim.store(&"standing") as Standing
 	var road := sim.store(&"travellers") as Travellers
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	_days(sim, 1.5)
 
 	assert_true(road.deliveries > 0, "somebody walked it somewhere")
@@ -75,13 +73,13 @@ func test_the_thornwood_is_the_one_nobody_can_report_you_on() -> void:
 	# you walked. The same theft, the same day and a half, and the only difference is
 	# whether the player stood where anybody could see them.
 	var seen: Sim = _road_sim()
-	_steal_at(seen, AT_A_STALL)
+	_steal_at(seen, at_a_stall())
 	_days(seen, 1.5)
 
 	var unseen: Sim = _road_sim()
-	_steal_at(unseen, AT_A_STALL)
+	_steal_at(unseen, at_a_stall())
 	# Off into the trees, well clear of the road, and wait the same day and a half.
-	(unseen.store(&"world") as WorldState).player_pos = Vector2(178.5, 120.5)
+	(unseen.store(&"world") as WorldState).player_pos = in_the_wood()
 	_days(unseen, 1.5)
 
 	var watched: float = (seen.store(&"standing") as Standing).in_town(&"cairnwell")
@@ -94,7 +92,7 @@ func test_the_trader_will_not_sell_once_word_arrives() -> void:
 	# Cairnwell is a hundred and twenty-seven tiles out, further than a story goes
 	# on its own. Somebody has to have walked it there.
 	var sim: Sim = _road_sim()
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	_days(sim, 1.5)
 	var world: WorldState = _talk_to_trader(sim)
 

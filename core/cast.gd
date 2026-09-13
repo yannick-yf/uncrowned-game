@@ -117,8 +117,16 @@ static func load_from(path: String) -> Cast:
 ## against the overworld, because a feature anchor names a prop only a built region
 ## has. Somebody the file does not place stands at NOWHERE, and `test_anchors` names
 ## them rather than letting them stand at (0, 0) in the sea.
+##
+## **On ground, never in a wall** (M1c). An anchor is an offset from a place, and the
+## kit jitters its buildings by the tile they land on, so the same offset that is a
+## doorstep on one map is inside the barn on another. A person asked to stand in a
+## wall stands on the nearest open tile instead — the rule fires and papers already
+## follow — and the suites still check that everybody can be walked to.
 static func _tile_for(anchor: Dictionary) -> Vector2i:
-	return Region.build_overworld().resolve(anchor)
+	var region: Region = Region.build_overworld()
+	var at: Vector2i = region.resolve(anchor)
+	return region.open_near(at) if at != Region.NOWHERE else at
 
 
 ## Generic types, placed. Everyone of a trade shares one line set, so a second

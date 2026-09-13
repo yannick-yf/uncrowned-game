@@ -213,7 +213,7 @@ func test_the_watch_thickens_after_a_crime_it_heard_about() -> void:
 	var ticked := sim.store(&"worldtick") as WorldTick
 	var world := sim.store(&"world") as WorldState
 	var quiet: float = ticked.patrol_density
-	world.player_pos = Vector2(147.5, 173.0)
+	world.player_pos = at_a_stall()
 	sim.submit(&"steal")
 	sim.advance(4)
 	assert_true(ticked.patrol_density > quiet, "somebody reported it")
@@ -227,7 +227,7 @@ func test_the_watch_settles_again_when_nothing_happens() -> void:
 	var sim: Sim = _world()
 	var ticked := sim.store(&"worldtick") as WorldTick
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = Vector2(147.5, 173.0)
+	world.player_pos = at_a_stall()
 	sim.submit(&"steal")
 	sim.advance(4)
 	var roused: float = ticked.alertness_in(&"harrowgate")

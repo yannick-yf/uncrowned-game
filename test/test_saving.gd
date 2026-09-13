@@ -9,7 +9,6 @@ extends TestCase
 ## save is not a feature with its own bugs — it is the thing every replay test has
 ## been exercising since Phase 0.
 
-const AT_A_STALL: Vector2 = Vector2(146.5, 172.0)
 
 
 func before_each() -> void:
@@ -115,7 +114,7 @@ func test_nothing_is_saved_that_the_world_cannot_recompute() -> void:
 	# and storing them would replay each one twice.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = AT_A_STALL
+	world.player_pos = at_a_stall()
 	sim.submit(&"steal")
 	sim.advance(3)
 	assert_true(sim.events.size() > sim.events.external_rows().size(),
@@ -131,7 +130,7 @@ func test_dying_puts_you_back_at_the_fire() -> void:
 	assert_true(_rest_at_the_nearest_fire(sim), "sat down somewhere")
 	var fire: Vector2i = world.rested_at
 
-	world.player_pos = Vector2(200.5, 140.5)
+	world.player_pos = alone_on_the_road()
 	world.hurt(WorldState.MAX_HP, sim.step)
 	assert_eq(world.deaths, 1, "you died")
 	assert_eq(world.player_tile(), fire + Vector2i(0, 1),
@@ -145,6 +144,6 @@ func test_a_first_death_before_any_rest_is_not_a_dead_end() -> void:
 	# time, and the only ground left that could hold them.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = Vector2(200.5, 140.5)
+	world.player_pos = alone_on_the_road()
 	world.hurt(WorldState.MAX_HP, sim.step)
 	assert_eq(world.player_tile(), Region.CLEARING, "you wake where you first woke")

@@ -3,19 +3,30 @@
   "_places_order": "zone order (Region.ZONE_ORDER); the bake keeps it",
   "places": {
     "brindle": {"from": "brindle"},
-    "cinderworks": {"from": "village_acierie"},
+    "cinderworks": {"from": "village_acierie", "kit_footprint_xz": [48, 32], "_why": "his envelope, our kilns and sheds until he draws the works"},
     "harrowgate": {"centre_xz": [90, 35], "footprint_xz": [80, 56], "scaffold": true, "_why": "where his Brindle road meets his works road, east of the Kettle: the first town, the road passing its gate"},
-    "wide_acres": {"from": "village_fermier"},
+    "wide_acres": {"from": "village_fermier", "kit_footprint_xz": [48, 32], "_why": "his envelope, our barns and farmhouses until he draws them"},
     "muster": {"centre_xz": [-30, 10], "footprint_xz": [40, 28], "scaffold": true, "_why": "the west bank of the junction crossing, between the farms road and the city road: the crossroads §4 puts the camp on"},
-    "saltmarch": {"centre_xz": [-250, 230], "footprint_xz": [52, 36], "scaffold": true, "_why": "the south-west coast on the west bank, so the spur from the Muster never crosses the Kettle"},
-    "cairnwell": {"from": "ville_chateau"},
+    "saltmarch": {"centre_xz": [-236, 236], "footprint_xz": [52, 36], "scaffold": true, "_why": "the south-west coast on the west bank, so the spur from the Muster never crosses the Kettle; far enough from his cliffs that the whole kit stands on ground"},
+    "cairnwell": {"from": "ville_chateau", "kit_footprint_xz": [80, 56], "_why": "his envelope, our streets and counting house until he draws the city"},
     "blackcairn": {"centre_xz": [-160, -233], "footprint_xz": [48, 36], "scaffold": true, "_why": "the castle on the spur his relief raises north of the city (build_landscape.py: castle at -160, -233); §4 has the castle against the northern mountains with the city below"}
   },
+  "_kit": "A place marked scaffold gets the whole kit: ground, streets, landmarks, scenery. A place of his gets the kit at kit_footprint_xz only if his data stands no building in it; Brindle has his six ruins and gets nothing of ours.",
   "ignored_sites": ["village_scierie"],
+  "woods": [
+    {"id": "thornwood_east", "ellipse_xz": [215, 150], "radii_xz": [110, 120], "scaffold": true, "_why": "§4: the clearing is inside the wood and the road out of Brindle runs along its edge. His map has open grass here; until he plants the Thornwood the bake does, over open ground only"},
+    {"id": "works_wood", "ellipse_xz": [275, 40], "radii_xz": [100, 130], "scaffold": true, "_why": "§4: the works is a wound in a wood, and the face it is felling has to run into standing trees. Round the furnaces and the mine, over open ground only"},
+    {"id": "thornwood_belt", "belt_xz": [[175, 255], [-160, -233]], "half_m": 48, "scaffold": true, "_why": "wood across the shortcut from Brindle to the castle: wood behind the start line is scenery, wood on the shortcut is a decision (MAP_SPEC criterion 7)"}
+  ],
+  "grounds": [
+    {"terrain": "farmland", "place": "wide_acres", "radii_xz": [68, 48], "scaffold": true, "_why": "the fields around the farms, as the 2D map lays them"},
+    {"terrain": "marsh", "place": "saltmarch", "radii_xz": [64, 44], "scaffold": true, "_why": "the marsh the port is named for"}
+  ],
   "points": {
     "bridge": {"xz": [28, 18], "scaffold": true, "_why": "where his works road and his farms road cross the main river at the junction. His built bridge at (269, 62) crosses the works' tributary; it is stamped as a road, not as this point"},
     "ford": {"xz": [-22, 80], "scaffold": true, "_why": "a wade downstream of the bridge, on the main river"},
-    "clearing": {"xz": [175, 190], "scaffold": true, "_why": "in the Brindle wood, 65 m north of the ruins; one corridor leads south"},
+    "clearing": {"xz": [200, 190], "scaffold": true, "_why": "in the Brindle wood, 65 m north of the ruins and east of his Brindle road, so the ring closes; one corridor leads south"},
+    "working_face": {"xz": [290, 150], "scaffold": true, "_why": "the strip the works is felling now, pushed south-east into the works' wood along the flat and away from the fairies — the point being that they have not reached them"},
     "kell_fire": {"xz": [235, 215], "scaffold": true, "_why": "deep in the Brindle wood, east, where nobody goes"},
     "ferry": {"xz": [-145, 138], "scaffold": true, "_why": "beside the Saltmarch spur where the marsh begins; a fire stands by a road, never on it"},
     "road_long_stretch": {"xz": [150, 58], "scaffold": true, "_why": "beside the works road between Harrowgate and the furnaces"},
@@ -23,16 +34,20 @@
     "road_climb": {"xz": [-82, -66], "scaffold": true, "_why": "beside the city road, climbing"},
     "road_last_stop": {"xz": [-122, -158], "scaffold": true, "_why": "beside the road, the last stop before the city and the castle"}
   },
-  "trunk": ["cinderworks", "harrowgate", "bridge", "muster", "cairnwell", "blackcairn"],
+  "_trunk": "On his map the works are a spur east of Harrowgate, not the first town on the road: Brindle's own road reaches Harrowgate directly. Stated as his geography has it, so the road is measured once and not walked twice.",
+  "trunk": ["harrowgate", "bridge", "muster", "cairnwell", "blackcairn"],
   "spurs": {
+    "cinderworks": ["harrowgate", "cinderworks"],
     "wide_acres": ["muster", "wide_acres"],
     "saltmarch": ["muster", "saltmarch"]
   },
   "roads": [
     {"id": "farms_end", "points_xz": [[-110, 20], [-170, 40]], "scaffold": true, "_why": "his farms road stops 60 m short of the farming village's centre"},
+    {"id": "works_end", "points_xz": [[205, 65], [255, 65]], "scaffold": true, "_why": "his works road stops 50 m short of the steel village's centre; the King's Road has to reach the furnaces"},
+    {"id": "brindle_end", "points_xz": [[175, 225], [174, 237]], "scaffold": true, "_why": "his Brindle road stops 12 m short of his own path through the village; one tile of gap is a road that goes nowhere"},
     {"id": "city_and_castle", "points_xz": [[-90, -90], [-150, -180], [-160, -233]], "scaffold": true, "_why": "his city road stops at the city's edge; the King's Road ends at the castle gate"},
-    {"id": "spur_saltmarch", "points_xz": [[-30, 10], [-150, 130], [-250, 230]], "scaffold": true, "_why": "the spur off the junction to the port, west of the river all the way"},
-    {"id": "clearing_corridor", "points_xz": [[175, 200], [175, 225]], "scaffold": true, "_why": "the one way out of the clearing, south to Brindle's road; it starts at the clearing's edge so the fairies' fire is not on it"}
+    {"id": "spur_saltmarch", "points_xz": [[-30, 10], [-150, 130], [-236, 236]], "scaffold": true, "_why": "the spur off the junction to the port, west of the river all the way"},
+    {"id": "clearing_corridor", "points_xz": [[200, 204], [200, 232], [182, 246]], "scaffold": true, "_why": "the one way out of the clearing, south and then down to his path through Brindle; it starts at the clearing's edge so the fairies' fire is not on it"}
   ],
   "buildings": {
     "footprint_tiles": [2, 2],

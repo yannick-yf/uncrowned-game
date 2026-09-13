@@ -128,9 +128,10 @@ const CLEARING_RADIUS: int = 7
 ## seam in anything thinner.
 const THICKET_DEPTH: int = 5
 const PATH_HALF_WIDTH: int = 1
-## Where the corridor's walls stop. Below this the ruins and the furnaces are
-## already in frame, and a destination you can see guides better than a wall does.
-const PATH_WALLED_TO: int = 168
+## How far short of Brindle's edge the corridor's walls stop. Below that the ruins and
+## the furnaces are already in frame, and a destination you can see guides better than
+## a wall does. Seven: with Brindle at y 180 and eleven deep, the walls end at 168.
+const CORRIDOR_STOPS_SHORT: int = 7
 
 static var BRIDGE: Vector2i = Places.shared().point(&"bridge")
 static var FORD: Vector2i = Places.shared().point(&"ford")
@@ -140,6 +141,12 @@ var width: int = 0
 var height: int = 0
 var portals: Dictionary = {}
 var props: Array[Dictionary] = []
+## The places this region was built around — id -> centre — and their footprints.
+## Set by whoever builds the region: the procedural builder from the statics above,
+## the bake from the baked places. The kit and the zones read these and never a
+## static, so a region for one world can be built inside a process playing another.
+var sites: Dictionary = {}
+var footprints: Dictionary = {}
 var _tiles: PackedByteArray = PackedByteArray()
 
 
@@ -278,14 +285,18 @@ func zone_at(tile: Vector2i) -> StringName:
 	return ZONE_ORDER[index - 1] if index > 0 else &""
 
 
-func _bake_zones() -> void:
+## Paint the zone map from `sites` and `footprints`. Public, because the bake builds
+## a region for another world and has to be able to ask it which place a tile is in.
+func bake_zones() -> void:
 	_zone_map.resize(width * height)
 	_zone_map.fill(0)
-	var sizes: Dictionary = zone_footprints()
 	for i: int in ZONE_ORDER.size():
 		var id: StringName = ZONE_ORDER[i]
-		var site: Vector2i = zone_sites()[id] as Vector2i
-		var half: Vector2i = (sizes[id] as Vector2i) / 2 + Vector2i(ZONE_MARGIN, ZONE_MARGIN)
+		if not sites.has(id):
+			continue
+		var site: Vector2i = sites[id] as Vector2i
+		var size: Vector2i = footprints.get(id, Vector2i.ONE) as Vector2i
+		var half: Vector2i = size / 2 + Vector2i(ZONE_MARGIN, ZONE_MARGIN)
 		for x: int in range(site.x - half.x, site.x + half.x + 1):
 			for y: int in range(site.y - half.y, site.y + half.y + 1):
 				if in_bounds(Vector2i(x, y)):
@@ -371,9 +382,83 @@ static var _waypoint_cache: Dictionary = {}
 static func road_waypoints(spacing: int = 5) -> Array[Vector2i]:
 	if _waypoint_cache.has(spacing):
 		return _waypoint_cache[spacing] as Array[Vector2i]
-	var built: Array[Vector2i] = _build_waypoints(spacing)
+	var built: Array[Vector2i] = _road_line(spacing) if Places.baked() else _build_waypoints(spacing)
 	_waypoint_cache[spacing] = built
 	return built
+
+
+## On a baked world the King's Road is wherever the baked road runs, so the line
+## follows the road tiles from node to node: a walker steering along the straight legs
+## between places on the brother's map walks into the river. Where no road joins two
+## nodes the leg is the straight line, as it always was, and criterion 9 says so.
+static func _road_line(spacing: int) -> Array[Vector2i]:
+	var region: Region = build_overworld()
+	var route: Array[Vector2i] = road_route()
+	var out: Array[Vector2i] = []
+	for i: int in route.size() - 1:
+		var leg: Array[Vector2i] = region.along_road(route[i], route[i + 1])
+		if leg.is_empty():
+			leg = [route[i], route[i + 1]]
+		# Thinned as any path is: a waypoint is kept only while the straight line to
+		# it stays on the road, so a bend never sends a walker across the verge.
+		var thinned: Array[Vector2i] = Navigation.thin(region, leg, spacing)
+		for j: int in thinned.size() - 1:
+			out.append(thinned[j])
+	if not route.is_empty():
+		out.append(route[route.size() - 1])
+	return out
+
+
+## The road tiles from one point to another — breadth-first over the ground a road is
+## made of: the road itself, a ford, a town's paving, the camp, the castle yard. Each
+## end is first snapped to the nearest road tile. Empty if no road joins them.
+func along_road(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	var start: Vector2i = _nearest_road_tile(from)
+	var goal: Vector2i = _nearest_road_tile(to)
+	if not _is_road_ground(start) or not _is_road_ground(goal):
+		return []
+	var came_from: Dictionary = {start: start}
+	var queue: Array[Vector2i] = [start]
+	var head: int = 0
+	while head < queue.size():
+		var at: Vector2i = queue[head]
+		head += 1
+		if at == goal:
+			break
+		for step: Vector2i in Navigation.DIRECTIONS:
+			var next: Vector2i = at + step
+			if came_from.has(next) or not in_bounds(next) or not _is_road_ground(next):
+				continue
+			came_from[next] = at
+			queue.append(next)
+	if not came_from.has(goal):
+		return []
+	var path: Array[Vector2i] = [goal]
+	var back: Vector2i = goal
+	while back != start:
+		back = came_from[back] as Vector2i
+		path.append(back)
+	path.reverse()
+	return path
+
+
+func _is_road_ground(tile: Vector2i) -> bool:
+	match terrain_at(tile):
+		Terrain.ROAD, Terrain.FORD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE, Terrain.RUINS:
+			return true
+	return false
+
+
+func _nearest_road_tile(from: Vector2i) -> Vector2i:
+	if terrain_at(from) == Terrain.ROAD:
+		return from
+	for radius: int in range(1, 24):
+		for dx: int in range(-radius, radius + 1):
+			for dy: int in range(-radius, radius + 1):
+				var at: Vector2i = from + Vector2i(dx, dy)
+				if terrain_at(at) == Terrain.ROAD:
+					return at
+	return from
 
 
 static func _build_waypoints(spacing: int) -> Array[Vector2i]:
@@ -415,7 +500,15 @@ func brindle_to_blackcairn_tiles() -> float:
 func road_distance() -> float:
 	var route: Array[Vector2i] = [BRINDLE]
 	route.append_array(road_route())
-	return path_length(route)
+	if not Places.baked():
+		return path_length(route)
+	# On a baked world the road is measured along its tiles, because the straight legs
+	# between places are not where it runs.
+	var total: float = 0.0
+	for i: int in route.size() - 1:
+		var leg: Array[Vector2i] = along_road(route[i], route[i + 1])
+		total += path_length(leg) if not leg.is_empty() else Vector2(route[i]).distance_to(Vector2(route[i + 1]))
+	return total
 
 
 # ------------------------------------------------------------- construction ---
@@ -442,26 +535,27 @@ static func load_baked() -> Region:
 		push_error("no baked world at %s — run tools/bake_region.gd" % Places.BAKED_PATH)
 		return _build_overworld()
 	var region: Region = RegionBake.read(parsed as Dictionary)
-	region._bake_zones()
 	region._stamp_stalls()
 	return region
 
 
 static func _build_overworld() -> Region:
 	var region := Region.new()
+	region.sites = zone_sites()
+	region.footprints = zone_footprints()
 	# Zones first: they depend on nothing but the sites, and a feature anchor asked
 	# for while the world is still being laid out has to know which place a prop
 	# stands in.
-	region._bake_zones()
+	region.bake_zones()
 	region._stamp_bounds()
 	region._stamp_thornwood()
 	# The bite the works has taken out of the wood, before the clearing, so that the
 	# fairies' ground wins where the two nearly meet — which is the point: the wound
 	# stops just short of them, and the gap is what is left to lose.
-	region._stamp_wound()
+	region.scaffold_wound(CINDERWORKS, CLEARING, WORKING_FACE)
 	# Before the road, the river and the settlements, so that if any of this
 	# geometry is ever wrong they overwrite it rather than the other way round.
-	region._stamp_clearing()
+	region.scaffold_clearing(CLEARING, BRINDLE.y - BRINDLE_SIZE.y / 2 - CORRIDOR_STOPS_SHORT)
 	# And last of the wood: close it up, leaving the ways through.
 	region._stamp_deep_wood()
 	region._stamp_ellipse(WIDE_ACRES, Vector2i(34, 24), Terrain.FARMLAND)
@@ -469,9 +563,20 @@ static func _build_overworld() -> Region:
 	region._stamp_kettle()
 	region._stamp_road()
 	region._stamp_crossings()
-	region._stamp_settlements()
-	region._stamp_landmarks()
-	region._stamp_crowd()
+	# The kit, in three passes over the places rather than one pass per place, so
+	# every town's ground is laid before any wall stands and the props come out in
+	# the order the world was proved in. The bake runs the same three for one place
+	# at a time (`scaffold_place`).
+	for zone: StringName in ZONE_ORDER:
+		region.scaffold_ground(zone, zone_sites()[zone] as Vector2i,
+			zone_footprints()[zone] as Vector2i)
+	for zone: StringName in ZONE_ORDER:
+		region.scaffold_landmarks(zone, zone_sites()[zone] as Vector2i,
+			zone_footprints()[zone] as Vector2i)
+	for zone: StringName in SCENERY_AT.keys():
+		region.scaffold_scenery(zone, zone_sites()[zone] as Vector2i,
+			zone_footprints()[zone] as Vector2i)
+	region.scaffold_crowd(HARROWGATE)
 	region._stamp_stalls()
 	return region
 
@@ -511,7 +616,7 @@ const WOUND_RADIUS: int = 26
 ## And the face they are working now: a strip pushing north-west into the wood, so
 ## the clearing reads as a thing happening rather than a thing that happened. Aimed
 ## away from the fairies, because the point below is that they have not reached them.
-const WORKING_FACE: Vector2i = Vector2i(238, 138)
+static var WORKING_FACE: Vector2i = Places.shared().point(&"working_face")
 const WORKING_FACE_WIDTH: int = 7
 
 ## How much untouched wood is left between the wound and the fairies' ring.
@@ -525,22 +630,25 @@ const WORKING_FACE_WIDTH: int = 7
 const WOUND_KEEPS_CLEAR: int = 4
 
 
-func _stamp_wound() -> void:
+## The wound: the wood eaten around the works, and the face being worked toward the
+## clearing. Part of the kit, so the bake can stamp it on a map that has the works and
+## no wound. Only ever writes over standing wood.
+func scaffold_wound(works: Vector2i, clearing: Vector2i, face: Vector2i) -> void:
 	var spare: float = float(CLEARING_RADIUS + THICKET_DEPTH + WOUND_KEEPS_CLEAR)
-	for x: int in range(CINDERWORKS.x - WOUND_RADIUS, CINDERWORKS.x + WOUND_RADIUS + 1):
-		for y: int in range(CINDERWORKS.y - WOUND_RADIUS, CINDERWORKS.y + WOUND_RADIUS + 1):
+	for x: int in range(works.x - WOUND_RADIUS, works.x + WOUND_RADIUS + 1):
+		for y: int in range(works.y - WOUND_RADIUS, works.y + WOUND_RADIUS + 1):
 			var tile := Vector2i(x, y)
 			if terrain_at(tile) != Terrain.FOREST:
 				continue
-			if Vector2(tile).distance_to(Vector2(CLEARING)) <= spare:
+			if Vector2(tile).distance_to(Vector2(clearing)) <= spare:
 				continue
-			if Vector2(tile).distance_to(Vector2(CINDERWORKS)) <= float(WOUND_RADIUS):
+			if Vector2(tile).distance_to(Vector2(works)) <= float(WOUND_RADIUS):
 				set_terrain(tile, Terrain.CLEARED)
 	# Its own loop rather than `_stamp_line`, which would happily lay stumps over the
 	# works, the road and the town — it only refuses sea, mountain and water. Like
 	# `_stamp_wound` above, this touches nothing but standing wood.
-	var face_from := Vector2(CINDERWORKS)
-	var face_to := Vector2(WORKING_FACE)
+	var face_from := Vector2(works)
+	var face_to := Vector2(face)
 	var steps: int = int(face_from.distance_to(face_to))
 	for step: int in steps + 1:
 		var point: Vector2 = face_from.lerp(face_to, float(step) / float(maxi(steps, 1)))
@@ -555,14 +663,16 @@ func _stamp_wound() -> void:
 ##
 ## Only ever writes over `FOREST`, so the river, the road and every settlement are
 ## safe from it by construction rather than by getting the arithmetic right.
-func _stamp_clearing() -> void:
+## Part of the kit. `walled_to` is the row where the corridor's walls stop: the
+## procedural map derives it from Brindle's edge, the bake from the baked Brindle's.
+func scaffold_clearing(centre: Vector2i, walled_to: int) -> void:
 	var outer: int = CLEARING_RADIUS + THICKET_DEPTH
-	for x: int in range(CLEARING.x - outer, CLEARING.x + outer + 1):
-		for y: int in range(CLEARING.y - outer, CLEARING.y + outer + 1):
+	for x: int in range(centre.x - outer, centre.x + outer + 1):
+		for y: int in range(centre.y - outer, centre.y + outer + 1):
 			var tile := Vector2i(x, y)
 			if terrain_at(tile) != Terrain.FOREST:
 				continue
-			var away: float = Vector2(tile).distance_to(Vector2(CLEARING))
+			var away: float = Vector2(tile).distance_to(Vector2(centre))
 			if away <= float(CLEARING_RADIUS):
 				set_terrain(tile, Terrain.CLEARING)
 			elif away <= float(outer):
@@ -570,18 +680,18 @@ func _stamp_clearing() -> void:
 
 	# The corridor, cut back through the ring the loop above just laid down, and
 	# walled on both sides until Brindle comes into frame.
-	for y: int in range(CLEARING.y, PATH_WALLED_TO + 1):
-		for x: int in range(CLEARING.x - PATH_HALF_WIDTH - THICKET_DEPTH,
-				CLEARING.x + PATH_HALF_WIDTH + THICKET_DEPTH + 1):
+	for y: int in range(centre.y, walled_to + 1):
+		for x: int in range(centre.x - PATH_HALF_WIDTH - THICKET_DEPTH,
+				centre.x + PATH_HALF_WIDTH + THICKET_DEPTH + 1):
 			var tile := Vector2i(x, y)
 			var here: Terrain = terrain_at(tile)
 			if here != Terrain.FOREST and here != Terrain.THICKET and here != Terrain.CLEARING:
 				continue
 			# Inside the clearing nothing is cut: the corridor begins at its edge,
 			# or the open ground the player wakes on has a path stamped through it.
-			if Vector2(tile).distance_to(Vector2(CLEARING)) <= float(CLEARING_RADIUS):
+			if Vector2(tile).distance_to(Vector2(centre)) <= float(CLEARING_RADIUS):
 				continue
-			if absi(x - CLEARING.x) <= PATH_HALF_WIDTH:
+			if absi(x - centre.x) <= PATH_HALF_WIDTH:
 				set_terrain(tile, Terrain.FOREST)
 			else:
 				set_terrain(tile, Terrain.THICKET)
@@ -737,7 +847,7 @@ func _is_protected(tile: Vector2i) -> bool:
 	var here: Terrain = terrain_at(tile)
 	if here == Terrain.ROAD or here == Terrain.FORD:
 		return true
-	for site: Vector2i in zone_sites().values():
+	for site: Vector2i in sites.values():
 		if Vector2(tile).distance_to(Vector2(site)) <= 2.5:
 			return true
 	return false
@@ -887,7 +997,7 @@ func _place_documents() -> void:
 			# is nowhere would otherwise close Route C silently.
 			continue
 		if not is_passable(at):
-			at = _nearest_open(at)
+			at = open_near(at)
 		props.append({"kind": &"papers", "at": at, "size": Vector2i(1, 1),
 			"fact": row["fact"], "solid": false})
 
@@ -901,7 +1011,7 @@ func _place_documents() -> void:
 ## tile up and left of it — every campfire on the map sat at its constant minus (1, 1)
 ## for as long as the constants existed. Found by dumping the old and the new worlds
 ## tile for tile when the positions moved to data; fixed rather than reproduced.
-func _nearest_open(from: Vector2i) -> Vector2i:
+func open_near(from: Vector2i) -> Vector2i:
 	if is_passable(from):
 		return from
 	for radius: int in range(1, 12):
@@ -938,7 +1048,7 @@ func _place_campfires() -> void:
 		var at: Vector2i = resolve(anchor)
 		if at == NOWHERE:
 			continue
-		props.append({"kind": &"campfire", "at": _nearest_open(at),
+		props.append({"kind": &"campfire", "at": open_near(at),
 			"size": Vector2i(2, 2), "solid": false})
 
 
@@ -1070,9 +1180,9 @@ func _note_unresolved(out: Array[String], name: String, anchor: Dictionary) -> v
 		out.append("%s %s" % [name, Places.describe(anchor)])
 
 
-func _stamp_crowd() -> void:
+func scaffold_crowd(site: Vector2i) -> void:
 	for offset: Vector2i in CROWD_SPOTS:
-		var at: Vector2i = HARROWGATE + offset
+		var at: Vector2i = site + offset
 		if is_passable(at):
 			_place_scenery(&"townsfolk", at)
 
@@ -1143,85 +1253,100 @@ func _scatter_scenery(zone: StringName, site: Vector2i, size: Vector2i) -> void:
 		_place_scenery(kinds[i % kinds.size()] as StringName, at, Vector2i(2, 2))
 
 
-func _stamp_landmarks() -> void:
-	# Brindle: what is left of it, and what has grown back through it.
-	_place(&"ruin_house", BRINDLE + Vector2i(-6, -4), Vector2i(4, 5))
-	_place(&"ruin_house", BRINDLE + Vector2i(1, -1), Vector2i(4, 5))
-	_place(&"overgrowth", BRINDLE + Vector2i(-5, 2), Vector2i(4, 3))
+## **The kit** (MIGRATION_3D §6.2, M1c). Three passes make a place: its ground and
+## streets, its landmarks, what lies about in its streets. Public and parameterised
+## by centre and size, so the bake can stamp a scaffold for any place the 3D map has
+## not built yet, and the procedural map builds itself from the same three. **What is
+## here is the shape of a place; where a place is, is data.**
+func scaffold_place(zone: StringName, site: Vector2i, size: Vector2i) -> void:
+	scaffold_ground(zone, site, size)
+	scaffold_landmarks(zone, site, size)
+	scaffold_scenery(zone, site, size)
+	if zone == &"harrowgate":
+		scaffold_crowd(site)
 
-	# The Cinderworks: the furnaces the village was cleared for, on the river, and the
-	# wood they are burning stacked beside them.
-	for i: int in 3:
-		_place(&"kiln", CINDERWORKS + Vector2i(-9 + i * 5, -6), Vector2i(3, 4))
-	_place(&"kiln", CINDERWORKS + Vector2i(-9, 2), Vector2i(3, 4))
-	_stamp_blocks(CINDERWORKS, [
-		Vector2i(-4, 3), Vector2i(2, 3), Vector2i(2, -7),
-	], BUILDINGS_AT[&"cinderworks"] as Array)
 
-	# **Harrowgate is a town.** Twenty-eight buildings around a crossroads, a market
-	# square with an inn on it, and two gatehouses where the King's Road comes in —
-	# which is the thing a traveller sees first and the reason the place has a name
-	# that ends in "gate".
-	_stamp_blocks(HARROWGATE, [
-		Vector2i(-17, -11), Vector2i(-11, -11), Vector2i(-5, -11),
-		Vector2i(3, -11), Vector2i(9, -11), Vector2i(15, -11),
-		Vector2i(-17, -6), Vector2i(-11, -6), Vector2i(9, -6), Vector2i(15, -6),
-		Vector2i(-17, 4), Vector2i(-11, 4), Vector2i(-5, 4),
-		Vector2i(3, 4), Vector2i(9, 4), Vector2i(15, 4),
-		Vector2i(-17, 9), Vector2i(-11, 9), Vector2i(9, 9), Vector2i(15, 9),
-		Vector2i(-5, -16), Vector2i(3, -16), Vector2i(-11, -16), Vector2i(9, -16),
-		Vector2i(-5, 13), Vector2i(3, 13),
-	], BUILDINGS_AT[&"harrowgate"] as Array)
-	_place(&"inn", HARROWGATE + Vector2i(-9, -4), Vector2i(4, 3))
-	_place(&"gatehouse", HARROWGATE + Vector2i(-20, -4), Vector2i(3, 3))
-	_place(&"gatehouse", HARROWGATE + Vector2i(17, -4), Vector2i(3, 3))
+func scaffold_landmarks(zone: StringName, site: Vector2i, _size: Vector2i) -> void:
+	match zone:
+		&"brindle":
+			# What is left of it, and what has grown back through it.
+			_place(&"ruin_house", site + Vector2i(-6, -4), Vector2i(4, 5))
+			_place(&"ruin_house", site + Vector2i(1, -1), Vector2i(4, 5))
+			_place(&"overgrowth", site + Vector2i(-5, 2), Vector2i(4, 3))
+		&"cinderworks":
+			# The furnaces the village was cleared for, on the river, and the wood they
+			# are burning stacked beside them.
+			for i: int in 3:
+				_place(&"kiln", site + Vector2i(-9 + i * 5, -6), Vector2i(3, 4))
+			_place(&"kiln", site + Vector2i(-9, 2), Vector2i(3, 4))
+			_stamp_blocks(site, [
+				Vector2i(-4, 3), Vector2i(2, 3), Vector2i(2, -7),
+			], BUILDINGS_AT[&"cinderworks"] as Array)
+		&"harrowgate":
+			# **Harrowgate is a town.** Twenty-eight buildings around a crossroads, a
+			# market square with an inn on it, and two gatehouses where the King's Road
+			# comes in — which is the thing a traveller sees first and the reason the
+			# place has a name that ends in "gate".
+			_stamp_blocks(site, [
+				Vector2i(-17, -11), Vector2i(-11, -11), Vector2i(-5, -11),
+				Vector2i(3, -11), Vector2i(9, -11), Vector2i(15, -11),
+				Vector2i(-17, -6), Vector2i(-11, -6), Vector2i(9, -6), Vector2i(15, -6),
+				Vector2i(-17, 4), Vector2i(-11, 4), Vector2i(-5, 4),
+				Vector2i(3, 4), Vector2i(9, 4), Vector2i(15, 4),
+				Vector2i(-17, 9), Vector2i(-11, 9), Vector2i(9, 9), Vector2i(15, 9),
+				Vector2i(-5, -16), Vector2i(3, -16), Vector2i(-11, -16), Vector2i(9, -16),
+				Vector2i(-5, 13), Vector2i(3, 13),
+			], BUILDINGS_AT[&"harrowgate"] as Array)
+			_place(&"inn", site + Vector2i(-9, -4), Vector2i(4, 3))
+			_place(&"gatehouse", site + Vector2i(-20, -4), Vector2i(3, 3))
+			_place(&"gatehouse", site + Vector2i(17, -4), Vector2i(3, 3))
+		&"wide_acres":
+			# A farmhouse and a barn, four times over, in a sea of crops. The barns are
+			# the power base rather than the houses — §3's second pillar is what feeds
+			# the capital and the standing army.
+			_stamp_blocks(site, [
+				Vector2i(-9, -6), Vector2i(4, -6), Vector2i(-9, 3), Vector2i(4, 3),
+				Vector2i(-13, -1), Vector2i(-6, -1), Vector2i(1, -1), Vector2i(8, -1),
+			], BUILDINGS_AT[&"wide_acres"] as Array)
+		&"muster":
+			# Tents, in rows, because that is what a standing army looks like.
+			for row: int in 2:
+				for col: int in 3:
+					var kind: StringName = &"tent" if (row + col) % 2 == 0 else &"tent_b"
+					_place(kind, site + Vector2i(-9 + col * 6, -6 + row * 9), Vector2i(3, 3))
+		&"saltmarch":
+			# Boats, which is the whole point of a port, and stone behind them.
+			_place(&"boat", site + Vector2i(-12, -7), Vector2i(5, 2))
+			_place(&"boat", site + Vector2i(-12, 5), Vector2i(5, 2))
+			_stamp_blocks(site, [
+				Vector2i(3, -7), Vector2i(3, 4), Vector2i(-4, 5), Vector2i(-4, -6),
+				Vector2i(9, -1),
+			], BUILDINGS_AT[&"saltmarch"] as Array)
+		&"cairnwell":
+			# The capital, and the bank is the tallest thing in it — which is the point
+			# of §3's sixth power base and worth seeing from the road.
+			_place(&"counting_house", site + Vector2i(3, -11), Vector2i(4, 5))
+			_stamp_blocks(site, [
+				Vector2i(-17, -11), Vector2i(-11, -11), Vector2i(-5, -11), Vector2i(11, -11),
+				Vector2i(-17, -6), Vector2i(-11, -6), Vector2i(9, -6), Vector2i(15, -6),
+				Vector2i(-17, 4), Vector2i(-11, 4), Vector2i(-5, 4),
+				Vector2i(3, 4), Vector2i(9, 4), Vector2i(15, 4),
+				Vector2i(-17, 9), Vector2i(-11, 9), Vector2i(3, 9), Vector2i(9, 9),
+			], BUILDINGS_AT[&"cairnwell"] as Array)
+		&"blackcairn":
+			# The keep stands against the north wall with a tower hard against each side
+			# of it, so what a player sees on walking through the gate is one mass at the
+			# far end rather than four outbuildings around an empty yard. The other two
+			# towers hold the south corners, where the gate is.
+			_place(&"keep", site + Vector2i(-2, -8), Vector2i(4, 5))
+			_place(&"tower", site + Vector2i(-7, -7), Vector2i(3, 3))
+			_place(&"tower", site + Vector2i(4, -7), Vector2i(3, 3))
+			_place(&"tower", site + Vector2i(-10, 3), Vector2i(3, 3))
+			_place(&"tower", site + Vector2i(7, 3), Vector2i(3, 3))
 
-	# The Wide Acres: a farmhouse and a barn, four times over, in a sea of crops. The
-	# barns are the power base rather than the houses — §3's second pillar is what
-	# feeds the capital and the standing army.
-	_stamp_blocks(WIDE_ACRES, [
-		Vector2i(-9, -6), Vector2i(4, -6), Vector2i(-9, 3), Vector2i(4, 3),
-		Vector2i(-13, -1), Vector2i(-6, -1), Vector2i(1, -1), Vector2i(8, -1),
-	], BUILDINGS_AT[&"wide_acres"] as Array)
 
-	# The Muster: tents, in rows, because that is what a standing army looks like.
-	for row: int in 2:
-		for col: int in 3:
-			var kind: StringName = &"tent" if (row + col) % 2 == 0 else &"tent_b"
-			_place(kind, MUSTER + Vector2i(-9 + col * 6, -6 + row * 9), Vector2i(3, 3))
-
-	# Saltmarch: boats, which is the whole point of a port, and stone behind them.
-	_place(&"boat", SALTMARCH + Vector2i(-12, -7), Vector2i(5, 2))
-	_place(&"boat", SALTMARCH + Vector2i(-12, 5), Vector2i(5, 2))
-	_stamp_blocks(SALTMARCH, [
-		Vector2i(3, -7), Vector2i(3, 4), Vector2i(-4, 5), Vector2i(-4, -6),
-		Vector2i(9, -1),
-	], BUILDINGS_AT[&"saltmarch"] as Array)
-
-	# Cairnwell: the capital, and the bank is the tallest thing in it — which is the
-	# point of §3's sixth power base and worth seeing from the road.
-	_place(&"counting_house", CAIRNWELL + Vector2i(3, -11), Vector2i(4, 5))
-	_stamp_blocks(CAIRNWELL, [
-		Vector2i(-17, -11), Vector2i(-11, -11), Vector2i(-5, -11), Vector2i(11, -11),
-		Vector2i(-17, -6), Vector2i(-11, -6), Vector2i(9, -6), Vector2i(15, -6),
-		Vector2i(-17, 4), Vector2i(-11, 4), Vector2i(-5, 4),
-		Vector2i(3, 4), Vector2i(9, 4), Vector2i(15, 4),
-		Vector2i(-17, 9), Vector2i(-11, 9), Vector2i(3, 9), Vector2i(9, 9),
-	], BUILDINGS_AT[&"cairnwell"] as Array)
-
-	# Blackcairn. The keep stands against the north wall with a tower hard against
-	# each side of it, so what a player sees on walking through the gate is one mass
-	# at the far end rather than four outbuildings around an empty yard. The other two
-	# towers hold the south corners, where the gate is.
-	_place(&"keep", BLACKCAIRN + Vector2i(-2, -8), Vector2i(4, 5))
-	_place(&"tower", BLACKCAIRN + Vector2i(-7, -7), Vector2i(3, 3))
-	_place(&"tower", BLACKCAIRN + Vector2i(4, -7), Vector2i(3, 3))
-	_place(&"tower", BLACKCAIRN + Vector2i(-10, 3), Vector2i(3, 3))
-	_place(&"tower", BLACKCAIRN + Vector2i(7, 3), Vector2i(3, 3))
-
-	for zone: StringName in SCENERY_AT.keys():
-		_scatter_scenery(zone, zone_sites()[zone] as Vector2i,
-			zone_footprints()[zone] as Vector2i)
+func scaffold_scenery(zone: StringName, site: Vector2i, size: Vector2i) -> void:
+	_scatter_scenery(zone, site, size)
 
 
 ## **Ground and streets are two decisions, not one flag.**
@@ -1233,27 +1358,23 @@ func _stamp_landmarks() -> void:
 ##
 ## Written as two verbs, each settlement now says what it is made of. The Wide Acres
 ## take streets and no ground on purpose: it is a farm, and the fields are the point.
-func _stamp_settlements() -> void:
-	_lay_ground(BRINDLE, BRINDLE_SIZE, Terrain.RUINS)
-
-	_lay_ground(CINDERWORKS, CINDERWORKS_SIZE, Terrain.TOWN)
-	_lay_streets(CINDERWORKS, CINDERWORKS_SIZE)
-
-	_lay_ground(HARROWGATE, HARROWGATE_SIZE, Terrain.TOWN)
-	_lay_streets(HARROWGATE, HARROWGATE_SIZE)
-
-	_lay_streets(WIDE_ACRES, WIDE_ACRES_SIZE)
-
-	_lay_ground(MUSTER, MUSTER_SIZE, Terrain.CAMP)
-	_place(&"muster_rolls", MUSTER + Vector2i(6, -2), Vector2i(3, 3))
-
-	_lay_ground(SALTMARCH, SALTMARCH_SIZE, Terrain.TOWN)
-	_lay_streets(SALTMARCH, SALTMARCH_SIZE)
-
-	_lay_ground(CAIRNWELL, CAIRNWELL_SIZE, Terrain.TOWN)
-	_lay_streets(CAIRNWELL, CAIRNWELL_SIZE)
-
-	_stamp_castle()
+func scaffold_ground(zone: StringName, site: Vector2i, size: Vector2i) -> void:
+	match zone:
+		&"brindle":
+			_lay_ground(site, size, Terrain.RUINS)
+		&"cinderworks", &"harrowgate", &"saltmarch", &"cairnwell":
+			_lay_ground(site, size, Terrain.TOWN)
+			_lay_streets(site, size)
+		&"wide_acres":
+			_lay_streets(site, size)
+		&"muster":
+			_lay_ground(site, size, Terrain.CAMP)
+			# The rolls stand with the ground rather than with the landmarks — the one
+			# prop that does — because they always have, and the props' order is the
+			# order the world was proved in.
+			_place(&"muster_rolls", site + Vector2i(6, -2), Vector2i(3, 3))
+		&"blackcairn":
+			_stamp_castle(site, size)
 
 
 ## Blackcairn: a courtyard inside a wall, with one way in.
@@ -1272,27 +1393,27 @@ func _stamp_settlements() -> void:
 const CASTLE_GATE_WIDTH: int = 5
 
 
-func _stamp_castle() -> void:
-	var half: Vector2i = BLACKCAIRN_SIZE / 2
+func _stamp_castle(site: Vector2i, size: Vector2i) -> void:
+	var half: Vector2i = size / 2
 	# The courtyard, but the road keeps running through it to the keep door. A castle
 	# the road stops outside is a castle the road does not reach, and the phase 0 test
 	# that has asked "does the road get to the castle" since the first week said so.
-	for x: int in range(BLACKCAIRN.x - half.x, BLACKCAIRN.x + half.x + 1):
-		for y: int in range(BLACKCAIRN.y - half.y, BLACKCAIRN.y + half.y + 1):
+	for x: int in range(site.x - half.x, site.x + half.x + 1):
+		for y: int in range(site.y - half.y, site.y + half.y + 1):
 			var tile := Vector2i(x, y)
 			var here: Terrain = terrain_at(tile)
 			if here == Terrain.SEA or here == Terrain.MOUNTAIN or here == Terrain.ROAD:
 				continue
 			set_terrain(tile, Terrain.CASTLE)
-	for x: int in range(BLACKCAIRN.x - half.x, BLACKCAIRN.x + half.x + 1):
-		for y: int in range(BLACKCAIRN.y - half.y, BLACKCAIRN.y + half.y + 1):
-			var on_edge: bool = x == BLACKCAIRN.x - half.x or x == BLACKCAIRN.x + half.x \
-				or y == BLACKCAIRN.y - half.y or y == BLACKCAIRN.y + half.y
+	for x: int in range(site.x - half.x, site.x + half.x + 1):
+		for y: int in range(site.y - half.y, site.y + half.y + 1):
+			var on_edge: bool = x == site.x - half.x or x == site.x + half.x \
+				or y == site.y - half.y or y == site.y + half.y
 			if not on_edge:
 				continue
 			# The gate: a gap in the south wall, wide enough to be a gate rather
 			# than a crack, standing where the road comes up to it.
-			if y == BLACKCAIRN.y + half.y and absi(x - BLACKCAIRN.x) <= CASTLE_GATE_WIDTH / 2:
+			if y == site.y + half.y and absi(x - site.x) <= CASTLE_GATE_WIDTH / 2:
 				continue
 			# **A wall never closes the road.** The gate is wherever the King's Road
 			# actually arrives, rather than where I guessed it would — the first
@@ -1306,8 +1427,8 @@ func _stamp_castle() -> void:
 	# The gatehouse either side of the way in. The keep is placed with the rest of the
 	# castle's buildings in `_stamp_landmarks`, where everything else that stands in a
 	# settlement is placed.
-	_place(&"gatehouse", BLACKCAIRN + Vector2i(-half.x + 1, half.y - 4), Vector2i(3, 4))
-	_place(&"gatehouse", BLACKCAIRN + Vector2i(half.x - 3, half.y - 4), Vector2i(3, 4))
+	_place(&"gatehouse", site + Vector2i(-half.x + 1, half.y - 4), Vector2i(3, 4))
+	_place(&"gatehouse", site + Vector2i(half.x - 3, half.y - 4), Vector2i(3, 4))
 
 
 # ------------------------------------------------------------------ helpers ---

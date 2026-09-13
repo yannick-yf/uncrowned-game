@@ -17,7 +17,10 @@
 > `[DERIVED]` marks a value taken from the build that preceded it.
 >
 > **v3 (2026-09-13).** The map's target is now the 3D world in `prototypes/brindle_3d`,
-> baked into a 384 × 384 tile grid at 2 m per tile (`docs/MIGRATION_3D.md`). Every
+> baked into a 384 × 384 tile grid at 2 m per tile (`docs/MIGRATION_3D.md`). Measured
+> on that grid the same evening, with the kit standing in for the places he has not
+> built: **10 of 10** criteria pass — ratio 1.31, 65 s at 6 tiles/s, the river a
+> barrier by test, 175 tiles of wood on the shortcut. Every
 > criterion in §9 keeps its meaning and is measured against that grid; the tile
 > coordinates in this file describe the 2D map until the bake exists and are rewritten
 > when it does. §5's road ratio, §4's two crossings and §6's Thornwood rule are the
