@@ -96,6 +96,10 @@ var tree_count: int = 0
 ## His world, when vendored; the tiles under his trees, so ours are not planted there;
 ## how many of his buildings are his meshes rather than our sprites; the overlay.
 var _his: Node3D = null
+## His terrain node, once his world is adopted. Its heights are the ones his relief
+## stamps have shaped — Brindle's terrace, the pads under his houses — and the raw
+## arrays are not; a sprite footed on the raw height stands inside his terrace.
+var _his_terrain: Node3D = null
 var _his_canopy: Dictionary = {}
 var his_props_skipped: int = 0
 var overlay_chunks: int = 0
@@ -157,8 +161,34 @@ func _adopt_his_world() -> void:
 	# his terrain rebuilds, a frame later, so they are hidden then.
 	var terrain: Node = world.get_node_or_null("Terrain")
 	if terrain != null and terrain.has_signal("rebuilt"):
+		_his_terrain = terrain as Node3D
 		terrain.connect("rebuilt", _hide_his_guides)
+		# His terrain is built a frame after it enters the tree, with his relief
+		# stamps applied; everything footed before that stood on the raw heights.
+		terrain.connect("rebuilt", _refoot)
 	_read_his_canopy()
+
+
+## Stand everything static on his ground again, now that his ground is built.
+func _refoot() -> void:
+	var scrub: Node = get_node_or_null("Scrub")
+	if scrub != null:
+		remove_child(scrub)
+		scrub.free()
+	tree_count = 0
+	_build_trees()
+	for entry: Dictionary in _props:
+		_foot(entry["node"] as Sprite3D, _prop_foot(entry["prop"] as Dictionary))
+
+
+## Where a prop's sprite stands: footed on the bottom of its footprint, centred
+## across it; a townsperson on their own tile.
+func _prop_foot(prop: Dictionary) -> Vector2:
+	var at: Vector2i = prop["at"] as Vector2i
+	var size: Vector2i = prop.get("size", Vector2i(4, 3)) as Vector2i
+	if (prop["kind"] as StringName) == &"townsfolk":
+		return Vector2(at) + Vector2(0.5, 1.0)
+	return Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y))
 
 
 func _hide_his_guides() -> void:
@@ -548,7 +578,6 @@ func _build_props() -> void:
 		if kind == &"townsfolk":
 			folk += 1
 			sprite = _figure(_art.townsfolk_sheet(folk), Art.FACE_DOWN)
-			_foot(sprite, Vector2(at) + Vector2(0.5, 1.0))
 		else:
 			var entry: Array = _art.props.get(kind, []) as Array
 			if entry.is_empty():
@@ -557,7 +586,7 @@ func _build_props() -> void:
 			if atlas == null:
 				continue
 			sprite = _billboard(atlas, Rect2(entry[1] as Rect2i))
-			_foot(sprite, Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y)))
+		_foot(sprite, _prop_foot(prop))
 		sprite.name = "%s_%d_%d" % [kind, at.x, at.y]
 		stand.add_child(sprite)
 		_props.append({"prop": prop, "node": sprite, "index": folk if kind == &"townsfolk" else 0})
@@ -612,7 +641,6 @@ func _build_embers() -> void:
 			continue
 		var at: Vector2i = prop["at"] as Vector2i
 		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
-		var base: Vector3 = _feet_of(Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5))
 		var dots: Array[Sprite3D] = []
 		for i: int in count:
 			var dot: Sprite3D = _billboard(_soft_dot(), Rect2(0.0, 0.0, 16.0, 16.0))
@@ -621,7 +649,8 @@ func _build_embers() -> void:
 			dot.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
 			hearths.add_child(dot)
 			dots.append(dot)
-		_embers.append({"kind": kind, "base": base, "dots": dots})
+		_embers.append({"kind": kind, "at": Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5),
+			"dots": dots})
 
 
 # ------------------------------------------------------------------- sprites ---
@@ -659,8 +688,11 @@ func _feet_of(at_tiles: Vector2) -> Vector3:
 	return Vector3(metres.x, height_at(metres.x, metres.y) + FOOT_CLEARANCE, metres.y)
 
 
-## His ground's height at a point, bilinearly, as his `flat_ground.gd` samples it.
+## His ground's height at a point, bilinearly, as his `flat_ground.gd` samples it —
+## and from his terrain itself once it stands, because his relief stamps shape it.
 func height_at(x_m: float, z_m: float) -> float:
+	if _his_terrain != null and int(_his_terrain.get("chunk_count")) > 0:
+		return float(_his_terrain.call("height_at_world", x_m, z_m))
 	if _samples < 2:
 		return 0.0
 	var u: float = clampf((x_m - _origin_m.x) / _metres_per_tile, 0.0, float(_samples - 1))
@@ -727,7 +759,7 @@ func _sync_embers(frame: Dictionary) -> void:
 		var dots: Array[Sprite3D] = hearth["dots"] as Array[Sprite3D]
 		var lit: bool = (hearth["kind"] as StringName) != &"kiln" or not bool(free.get(&"cinderworks", false))
 		var colour: Color = Color(1.0, 0.62, 0.28) if (hearth["kind"] as StringName) == &"kiln" else Color(1.0, 0.74, 0.40)
-		var base: Vector3 = hearth["base"] as Vector3
+		var base: Vector3 = _feet_of(hearth["at"] as Vector2)
 		for i: int in dots.size():
 			var dot: Sprite3D = dots[i]
 			dot.visible = lit
@@ -772,7 +804,9 @@ func _sync_people(cast: Cast, world: WorldState) -> void:
 			sprite.name = "Person_%s" % npc.id
 			add_child(sprite)
 			_people[npc.id] = sprite
-			_foot(sprite, npc.centre())
+		# Footed every frame, not once: the ground under them is his and is built a
+		# frame after they are, and thirty-three sprites are nothing.
+		_foot(sprite, npc.centre())
 		sprite.visible = true
 	_fairy.visible = fairy_seen
 	for id: StringName in _people.keys():
