@@ -186,6 +186,11 @@ func _frame(eye: Vector2) -> Dictionary:
 		"shuttered": CastleRules.wealth(_ticked) == CastleRules.SHUTTERED,
 		"escort": _ticked.kings_escort(),
 		"extra_guards": CastleRules.extra_guards(CastleRules.instability(_mine, _sim.tick)),
+		# §8's immediate register: who would see the act in front of you, when there
+		# is one — the same rule `_draw_witnesses` applies to the 2D marks.
+		"witnesses": CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos)
+			if _can_steal() or _can_give_back() or _can_warn() else [],
+		"now": _real_seconds,
 	}
 
 

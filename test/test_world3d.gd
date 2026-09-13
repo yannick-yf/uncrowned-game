@@ -16,11 +16,13 @@ func test_the_window_stands_on_his_ground() -> void:
 	assert_false(landscape.is_empty(), "his landscape is at %s" % RegionBake.LANDSCAPE)
 	if landscape.is_empty():
 		return
-	var baked: Variant = JSON.parse_string(FileAccess.get_file_as_string(Places.BAKED_PATH))
-	assert_true(baked is Dictionary, "the baked world is there")
-	if not (baked is Dictionary):
+	assert_true(FileAccess.file_exists(Places.BAKED_PATH), "the baked world is there")
+	if not FileAccess.file_exists(Places.BAKED_PATH):
 		return
-	var region: Region = RegionBake.read(baked as Dictionary)
+	# Loaded as the game loads it — grid, props, and the content's fires, stalls and
+	# papers — so the window has fires to put embers over. In this process the anchors
+	# resolve against the 2D places, which is fine for a window that only has to stand.
+	var region: Region = Region.load_baked()
 	var sim: Sim = Game.build()
 	var window := World3d.new()
 	window.build(region, landscape, Art.new(), sim)
@@ -42,8 +44,13 @@ func test_the_window_stands_on_his_ground() -> void:
 	var before: String = world.fingerprint()
 	window.sync({
 		"player": Vector2(292.5, 287.5), "facing": Vector2i(0, 1), "camera": Vector2(292.5, 287.5),
-		"tents": 6, "crowd": 4, "free": {}, "shuttered": false, "escort": 10, "extra_guards": 0,
+		"tents": 6, "crowd": 4, "free": {&"cinderworks": true}, "shuttered": false, "escort": 10,
+		"extra_guards": 0, "witnesses": ["maddox", "bell"], "now": 3.2,
 	}, 1.0 / 60.0)
 	assert_true(window.people_count() >= 30, "the cast stands in the window: %d" % window.people_count())
+	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
+	assert_true(window.embers_lit() > 0, "the fires glow: %d embers" % window.embers_lit())
+	assert_eq(window.embers_lit(), window.ember_count() - window.kiln_embers(),
+		"and a freed Cinderworks is cold: its kilns' embers are out")
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()

@@ -63,6 +63,16 @@ var _guards: Array[Sprite3D] = []
 ## One entry per prop of the region: the prop itself and the sprite standing for it.
 var _props: Array[Dictionary] = []
 var _fairy: OmniLight3D = null
+var _fairy_glow: Sprite3D = null
+## The marks over the heads of whoever can see you, and the embers over fires and
+## kilns — the 2D window's immediate register and its particles, in the window.
+var _marks: Array[Sprite3D] = []
+var _embers: Array[Dictionary] = []
+var _dot: Texture2D = null
+## How far a sprite standing between the player and the lens fades, and the 2D rule
+## it copies: a building you are behind goes part transparent so walking behind the
+## counting house does not mean disappearing.
+const OCCLUDED_ALPHA: float = 0.45
 
 var chunk_count: int = 0
 var water_triangles: int = 0
@@ -93,6 +103,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 	_build_trees()
 	_build_props()
 	_build_fairy()
+	_build_embers()
 
 
 func _build_camera() -> void:
@@ -379,6 +390,9 @@ func _build_props() -> void:
 		_props.append({"prop": prop, "node": sprite, "index": folk if kind == &"townsfolk" else 0})
 
 
+## Light and movement, not a body — the 2D window's rule for her. A light on the
+## ground and a soft glow that breathes, dimmer and slower than anything else here,
+## because she is dying.
 func _build_fairy() -> void:
 	_fairy = OmniLight3D.new()
 	_fairy.name = "Fairy"
@@ -387,6 +401,54 @@ func _build_fairy() -> void:
 	_fairy.omni_range = 7.0
 	_fairy.visible = false
 	add_child(_fairy)
+	_fairy_glow = _billboard(_soft_dot(), Rect2(0.0, 0.0, 16.0, 16.0))
+	_fairy_glow.name = "FairyGlow"
+	_fairy_glow.pixel_size = PIXEL_METRES * 1.5
+	_fairy_glow.modulate = Color(0.80, 0.96, 0.82, 0.55)
+	_fairy_glow.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+	_fairy_glow.visible = false
+	_fairy.add_child(_fairy_glow)
+
+
+## A 16-pixel soft disc, made once: the one thing here the pack does not supply, and
+## §13 forbids borrowing it from another pack. Used for the fairy's glow, the marks
+## over witnesses' heads and the embers.
+func _soft_dot() -> Texture2D:
+	if _dot != null:
+		return _dot
+	var image := Image.create(16, 16, false, Image.FORMAT_RGBA8)
+	for y: int in 16:
+		for x: int in 16:
+			var away: float = Vector2(x + 0.5, y + 0.5).distance_to(Vector2(8.0, 8.0)) / 8.0
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(1.0 - away, 0.0, 1.0) ** 1.5))
+	_dot = ImageTexture.create_from_image(image)
+	return _dot
+
+
+## Embers over every kiln and every fire: a handful of dots each, on their own
+## periods, so the group never pulses together — which is the thing that reads as
+## fake. Whether a kiln glows is the frame's to say: a freed Cinderworks is cold.
+func _build_embers() -> void:
+	var hearths := Node3D.new()
+	hearths.name = "Embers"
+	add_child(hearths)
+	for prop: Dictionary in _region.props:
+		var kind: StringName = prop["kind"] as StringName
+		var count: int = 5 if kind == &"kiln" else (3 if kind == &"campfire" else 0)
+		if count == 0:
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+		var base: Vector3 = _feet_of(Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5))
+		var dots: Array[Sprite3D] = []
+		for i: int in count:
+			var dot: Sprite3D = _billboard(_soft_dot(), Rect2(0.0, 0.0, 16.0, 16.0))
+			dot.name = "Ember_%d_%d_%d" % [at.x, at.y, i]
+			dot.pixel_size = PIXEL_METRES * 0.25
+			dot.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+			hearths.add_child(dot)
+			dots.append(dot)
+		_embers.append({"kind": kind, "base": base, "dots": dots})
 
 
 # ------------------------------------------------------------------- sprites ---
@@ -457,7 +519,53 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_traffic(road, world)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
+	_sync_marks(cast, frame.get("witnesses", []) as Array)
+	_sync_embers(frame)
 	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2, delta)
+
+
+## Who can see you, marked over their heads while there is an act in front of you
+## that they would see you do — the 2D window's rule, with the same ids handed over.
+func _sync_marks(cast: Cast, witnesses: Array) -> void:
+	while _marks.size() < witnesses.size():
+		var mark: Sprite3D = _billboard(_soft_dot(), Rect2(0.0, 0.0, 16.0, 16.0))
+		mark.name = "Mark_%d" % _marks.size()
+		mark.pixel_size = PIXEL_METRES * 0.35
+		mark.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+		mark.modulate = Color(0.93, 0.88, 0.68, 0.95)
+		add_child(mark)
+		_marks.append(mark)
+	for i: int in _marks.size():
+		var mark: Sprite3D = _marks[i]
+		mark.visible = i < witnesses.size()
+		if not mark.visible:
+			continue
+		var npc: Npc = cast.get_npc(StringName(String(witnesses[i])))
+		if npc == null:
+			mark.visible = false
+			continue
+		mark.position = _feet_of(npc.centre()) + _lens_up * (16.0 * PIXEL_METRES + 0.5)
+
+
+func _sync_embers(frame: Dictionary) -> void:
+	var now: float = float(frame.get("now", 0.0))
+	var free: Dictionary = frame.get("free", {}) as Dictionary
+	for hearth: Dictionary in _embers:
+		var dots: Array[Sprite3D] = hearth["dots"] as Array[Sprite3D]
+		var lit: bool = (hearth["kind"] as StringName) != &"kiln" or not bool(free.get(&"cinderworks", false))
+		var colour: Color = Color(1.0, 0.62, 0.28) if (hearth["kind"] as StringName) == &"kiln" else Color(1.0, 0.74, 0.40)
+		var base: Vector3 = hearth["base"] as Vector3
+		for i: int in dots.size():
+			var dot: Sprite3D = dots[i]
+			dot.visible = lit
+			if not lit:
+				continue
+			var life: float = fposmod(now * (0.34 + float(i) * 0.07) + float(i) * 0.41, 1.0)
+			var rise: float = life * 2.2
+			var sway: float = sin((now + float(i) * 2.1) * 1.7) * (0.2 + life * 0.4)
+			dot.position = base + Vector3(sway, 0.3, 0.0) + _lens_up * rise
+			dot.modulate = Color(colour.r, colour.g, colour.b, 0.75 * (1.0 - life) * (1.0 - life))
+			dot.pixel_size = PIXEL_METRES * (0.2 + (1.0 - life) * 0.2)
 
 
 func _sync_player(frame: Dictionary) -> void:
@@ -479,7 +587,10 @@ func _sync_people(cast: Cast, world: WorldState) -> void:
 			# Light and movement, not a body (the 2D window's rule): a glow where she is.
 			fairy_seen = true
 			var feet: Vector3 = _feet_of(npc.centre())
-			_fairy.position = feet + Vector3.UP * (1.2 + 0.25 * sin(float(Time.get_ticks_msec()) * 0.0011))
+			var breath: float = float(Time.get_ticks_msec()) * 0.0011
+			_fairy.position = feet + Vector3.UP * (1.2 + 0.25 * sin(breath))
+			_fairy_glow.visible = true
+			_fairy_glow.pixel_size = PIXEL_METRES * (1.3 + 0.3 * sin(breath))
 			continue
 		present[npc.id] = true
 		var sprite: Sprite3D = _people.get(npc.id, null) as Sprite3D
@@ -556,6 +667,7 @@ func _sync_props(frame: Dictionary) -> void:
 	var crowd: int = int(frame.get("crowd", 0))
 	var free: Dictionary = frame.get("free", {}) as Dictionary
 	var shuttered: bool = bool(frame.get("shuttered", false))
+	var player: Vector2 = frame.get("player", Vector2.ZERO) as Vector2
 	var tent: int = 0
 	for entry: Dictionary in _props:
 		var prop: Dictionary = entry["prop"] as Dictionary
@@ -563,6 +675,18 @@ func _sync_props(frame: Dictionary) -> void:
 		var kind: StringName = prop["kind"] as StringName
 		var shown: bool = true
 		var tint: Color = Color.WHITE
+		# **Occlusion fade**, as the 2D window does it: a sprite whose picture stands
+		# between the player and the lens goes part transparent. Judged on the drawn
+		# sprite, in tiles — its foot south of the player within its own height, its
+		# width across them — because what hides the player is the part that leans.
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+		var foot := Vector2(float(at.x) + float(size.x) * 0.5, float(at.y + size.y))
+		var height_tiles: float = sprite.region_rect.size.y * PIXEL_METRES / _metres_per_tile
+		var width_tiles: float = sprite.region_rect.size.x * PIXEL_METRES / _metres_per_tile
+		if kind != &"townsfolk" and foot.y > player.y and foot.y - player.y < height_tiles \
+				and absf(foot.x - player.x) < width_tiles * 0.5:
+			tint.a = OCCLUDED_ALPHA
 		if kind == &"fence" and bool(free.get(&"wide_acres", false)):
 			shown = false
 		elif kind == &"tent" or kind == &"tent_b":
@@ -602,3 +726,35 @@ func people_count() -> int:
 		if (_people[id] as Sprite3D).visible:
 			shown += 1
 	return shown
+
+
+func marks_shown() -> int:
+	var shown: int = 0
+	for mark: Sprite3D in _marks:
+		if mark.visible:
+			shown += 1
+	return shown
+
+
+func ember_count() -> int:
+	var total: int = 0
+	for hearth: Dictionary in _embers:
+		total += (hearth["dots"] as Array[Sprite3D]).size()
+	return total
+
+
+func kiln_embers() -> int:
+	var total: int = 0
+	for hearth: Dictionary in _embers:
+		if (hearth["kind"] as StringName) == &"kiln":
+			total += (hearth["dots"] as Array[Sprite3D]).size()
+	return total
+
+
+func embers_lit() -> int:
+	var lit: int = 0
+	for hearth: Dictionary in _embers:
+		for dot: Sprite3D in (hearth["dots"] as Array[Sprite3D]):
+			if dot.visible:
+				lit += 1
+	return lit

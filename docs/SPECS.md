@@ -3694,6 +3694,11 @@ somebody objects are in that file, not here. Combat remains outside it.
   the bridge and is otherwise unchanged; the window writes nothing back. Nothing of his
   moved (decision 6, MIGRATION_3D §9). Photographed at the clearing, in Harrowgate, in
   his Brindle, at the castle gate, with the journal and the map over it.
+- ✅ **M3a — the window's own parity** (2026-09-13). What the 3D window shows that needs
+  none of his art: the marks over whoever can see you, embers over fires and kilns and
+  cold kilns for a freed works, the fairy's breathing glow, the occlusion fade, and every
+  free-state and castle reading the 2D window draws. His props, his carts and the 25
+  faces in his style are M3b and his.
 
 ---
 
