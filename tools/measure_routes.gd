@@ -5,12 +5,16 @@ extends SceneTree
 ##   godot --headless --path . -s tools/measure_routes.gd
 ##
 ## This is the instrument Phase 2 was built to be read by: the road against the
-## wild, in seconds and in blood. Run it after touching the map, the speed table
-## or the wildlife, and check the two columns still say different things.
+## wild. Since 2026-09-13 the wild has no teeth and the ground slows you again, so
+## the price of the wild is **time**, and the third row is the one trait that does
+## not pay all of it (§11, Attunement). Run it after touching the map or the speed
+## table, and check the rows still say different things: the road faster, the wild
+## unseen, the attuned wild somewhere between.
 
 func _initialize() -> void:
-	_report("the King's Road", Region.road_waypoints(), true)
+	_report("the King's Road", Region.road_waypoints(), false)
 	_report("the wild", _wild_line(), false)
+	_report("the wild, attuned", _wild_line(), true)
 	quit(0)
 
 
@@ -20,15 +24,18 @@ func _initialize() -> void:
 func _wild_line() -> Array[Vector2i]:
 	var region: Region = Region.build_overworld()
 	var out: Array[Vector2i] = []
-	for point: Vector2 in Navigation.waypoints(region, Region.BRINDLE, Region.BLACKCAIRN, 5):
+	for point: Vector2 in Navigation.waypoints(region, Region.BRINDLE, Region.BLACKCAIRN, 5, true):
 		out.append(Vector2i(point.floor()))
 	return out
 
 
-func _report(label: String, route: Array[Vector2i], stop_short: bool) -> void:
+func _report(label: String, route: Array[Vector2i], attuned: bool) -> void:
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	var wild := sim.store(&"wildlife") as Wildlife
+	if attuned:
+		var wanted: Dictionary = TraitRules.at_the_floor()
+		wanted[TraitRules.ATTUNEMENT] = TraitRules.SPEAKS_AT
+		(sim.store(&"traits") as Traits).choose(wanted)
 	# Both routes are Brindle to the castle by definition. The game starts the player
 	# in the fairies' clearing now, and since the deep wood closed, walking straight
 	# out of it is not a thing anybody can do — which is the point of the wood, and
@@ -42,10 +49,8 @@ func _report(label: String, route: Array[Vector2i], stop_short: bool) -> void:
 	for point: Vector2i in route:
 		# The king stands at the end of both routes and is not what is being
 		# measured here.
-		if stop_short and Vector2(point).distance_to(Vector2(Region.BLACKCAIRN)) <= 14.0:
+		if Vector2(point).distance_to(Vector2(Region.BLACKCAIRN)) <= 14.0:
 			break
-		# One attempt. Dying respawns you in Brindle, and without this the walk
-		# simply starts again and the numbers become a tally of several journeys.
 		if world.deaths > 0:
 			break
 		var target: Vector2 = Vector2(point) + Vector2(0.5, 0.5)
@@ -66,6 +71,6 @@ func _report(label: String, route: Array[Vector2i], stop_short: bool) -> void:
 	var seconds: float = float(sim.step) / float(Sim.STEPS_PER_REAL_SECOND)
 	var blood: int = start_hp - world.player_hp + world.deaths * WorldState.MAX_HP
 	var reached: String = "arrived" if world.deaths == 0 else "died on the way"
-	print("%-16s %6.1f tiles   %5.1f s   %2d health   %2d bites   %s" % [
-		label, travelled, seconds, blood, wild.bites_taken, reached,
+	print("%-18s %6.1f tiles   %5.1f s   %2d health   %s" % [
+		label, travelled, seconds, blood, reached,
 	])

@@ -14,7 +14,7 @@ const SLOW: bool = true
 
 
 ## Everything that moves a number an ending reads, and nothing that does not.
-## Through the full build this took ten seconds of wildlife and travellers walking
+## Through the full build this took ten seconds of travellers walking
 ## about while the treasury emptied.
 func _levers_only() -> Sim:
 	var sim := Sim.new()

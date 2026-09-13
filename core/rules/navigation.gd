@@ -14,13 +14,31 @@ const DIRECTIONS: Array[Vector2i] = [
 ]
 
 
+## What a step onto the king's ground costs against a step on ground nobody watches,
+## when a walk is asked to keep off the road. Ten: crossing a three-wide road where
+## you must is thirty, running a hundred tiles along it is a thousand, and a detour
+## of any plausible length beats the second and never the first.
+const WATCHED_COST: int = 10
+
+
 ## Tiles from `from` to `to` inclusive, or empty if there is no way through.
-static func path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+##
+## `off_road` is the wild line as §4 means it: the walk that spends the least time on
+## ground the crown watches (Region.is_watched). It cannot be "never" — the King's
+## Road runs from the south-east coast to the castle against the mountains and seals
+## the east, so every way to Blackcairn crosses it at least once — so watched tiles
+## are *dear* rather than forbidden, and the line crosses where it must and never runs
+## along. That is also what sends it over the ford: the bridge is the road's.
+static func path(region: Region, from: Vector2i, to: Vector2i, off_road: bool = false) -> Array[Vector2i]:
 	if region == null or not region.is_passable(to):
 		return []
 	if from == to:
 		return [from]
+	return _dearest_path(region, from, to) if off_road else _shortest_path(region, from, to)
 
+
+## Breadth-first: every step costs one.
+static func _shortest_path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 	var came_from: Dictionary = {from: from}
 	var queue: Array[Vector2i] = [from]
 	var head: int = 0
@@ -31,20 +49,61 @@ static func path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i
 			return _unwind(came_from, from, to)
 		for step: Vector2i in DIRECTIONS:
 			var next: Vector2i = tile + step
-			if came_from.has(next) or not region.is_passable(next):
+			if came_from.has(next) or not _can_step(region, tile, step):
 				continue
-			# **No cutting corners.** A diagonal step between two blocked tiles is a
-			# move a walker cannot make: movement slides each axis separately, so it
-			# tries x, fails, tries y, fails, and stands there. Breadth-first search
-			# was happy to squeeze through and every journey test failed the day the
-			# wood closed, with a path that existed and could not be walked.
-			if step.x != 0 and step.y != 0:
-				if not region.is_passable(Vector2i(tile.x + step.x, tile.y)) \
-						or not region.is_passable(Vector2i(tile.x, tile.y + step.y)):
-					continue
 			came_from[next] = tile
 			queue.append(next)
 	return []
+
+
+## Cheapest-first, with two prices: one for ground nobody watches, WATCHED_COST for
+## the king's. Integer costs, so the frontier is a row of buckets rather than a heap —
+## bucket c is finished before anything in c + 1 is looked at, and a tile pushed into
+## a later bucket at a higher price is skipped when its turn comes.
+static func _dearest_path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	var best: Dictionary = {from: 0}
+	var came_from: Dictionary = {from: from}
+	var buckets: Array[Array] = [[from]]
+	var cost: int = 0
+	while cost < buckets.size():
+		for tile: Vector2i in buckets[cost]:
+			if int(best[tile]) != cost:
+				continue
+			if tile == to:
+				return _unwind(came_from, from, to)
+			for step: Vector2i in DIRECTIONS:
+				var next: Vector2i = tile + step
+				if not _can_step(region, tile, step):
+					continue
+				var price: int = cost + (WATCHED_COST if region.is_watched(next) else 1)
+				if best.has(next) and int(best[next]) <= price:
+					continue
+				best[next] = price
+				came_from[next] = tile
+				while buckets.size() <= price:
+					buckets.append([])
+				buckets[price].append(next)
+		cost += 1
+	return []
+
+
+## Whether a walker can take this step: the tile is passable, and a diagonal does not
+## cut a corner.
+##
+## **No cutting corners.** A diagonal step between two blocked tiles is a move a
+## walker cannot make: movement slides each axis separately, so it tries x, fails,
+## tries y, fails, and stands there. Breadth-first search was happy to squeeze
+## through and every journey test failed the day the wood closed, with a path that
+## existed and could not be walked.
+static func _can_step(region: Region, tile: Vector2i, step: Vector2i) -> bool:
+	if not region.is_passable(tile + step):
+		return false
+	if step.x != 0 and step.y != 0:
+		if not region.is_passable(Vector2i(tile.x + step.x, tile.y)) \
+				or not region.is_passable(Vector2i(tile.x, tile.y + step.y)):
+			return false
+	return true
+
 
 
 static func _unwind(came_from: Dictionary, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
@@ -59,8 +118,10 @@ static func _unwind(came_from: Dictionary, from: Vector2i, to: Vector2i) -> Arra
 
 ## The same path thinned to steering targets: a walker re-aiming at every tile
 ## wastes events, and one every few tiles is what a hand on a keyboard does.
-static func waypoints(region: Region, from: Vector2i, to: Vector2i, spacing: int = 4) -> Array[Vector2]:
-	var tiles: Array[Vector2i] = path(region, from, to)
+static func waypoints(
+	region: Region, from: Vector2i, to: Vector2i, spacing: int = 4, off_road: bool = false,
+) -> Array[Vector2]:
+	var tiles: Array[Vector2i] = path(region, from, to, off_road)
 	if tiles.is_empty():
 		return []
 	# **Kept only while the straight line to them stays walkable.**

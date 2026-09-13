@@ -139,7 +139,8 @@ Described as areas with a purpose, not as decoration.
 |---|---|---|---|
 | Road, town streets, camp | see §5 | 1.00 | Fast, watched |
 | Ruins | Brindle | 0.90 | |
-| Open grass, farmland | the broad middle | 0.80 | |
+| Farmland | the estates | 0.80 | |
+| Open country | the broad middle | 0.65 *(was 0.80 — see note)* | Slow, unwatched |
 | Coast sand | south and west margins | 0.75 | |
 | **Thornwood** | **across the wild diagonal**, so the road bows around it | 0.55 | Slow, unwatched *(was: dangerous — see note)* |
 | Ford | the crossing | 0.50 | |
@@ -152,9 +153,10 @@ Described as areas with a purpose, not as decoration.
 > **Amended 2026-09-13 (v2).** "Dangerous" is struck: monsters are out of the whole map
 > (SPECS §4, §21). The wild is *slow and unwatched*; the road is *fast and watched*; the
 > only price of the wild is time, so the speed multipliers in this table are **on** in
-> v2 and the road ratio in §5 carries the whole of the road's case. Re-run
-> `tools/measure_routes.gd` with speeds on and the wood empty before trusting §5's
-> travel-time row.
+> v2 and the road ratio in §5 carries the whole of the road's case. **Measured
+> 2026-09-13** with speeds on: the road 57 s, the least-watched wild line 69 s (66 s
+> attuned), so open country is 0.65 rather than 0.80 — SPECS §4 has the reasoning and
+> the two instrument corrections that preceded the number.
 
 **Assertion:** the straight wild line from Brindle to Blackcairn passes through the
 Thornwood for at least `[DECIDE]` tiles.

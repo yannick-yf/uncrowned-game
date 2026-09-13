@@ -46,8 +46,6 @@
   "moment.took.none": "you take it. nobody looks up",
   "moment.took.one": "you take it. one person looks up",
   "moment.took.many": "you take it. {0} people look up",
-  "beast.one": "something is following you",
-  "beast.many": "{0} of them have seen you",
   "muster.queue": "the pay tent has a queue and no money in it",
   "muster.shut": "the pay tent is shut, and the ledgers are not in it",
   "muster.struck": "half the tents are down, and nobody is striking the rest",

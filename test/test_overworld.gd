@@ -75,15 +75,17 @@ func test_road_travel_matches_the_settled_target() -> void:
 		"§4 settles road travel at 45-90 s; this map walks it in %.1f s" % seconds)
 
 
-func test_the_ground_does_not_slow_you_down() -> void:
-	# Settled: everything walkable moves at the road's speed. A forest should be
-	# dangerous, not tiring.
-	assert_false(Region.TERRAIN_SLOWS_YOU)
-	for terrain: int in [Region.Terrain.ROAD, Region.Terrain.WILD, Region.Terrain.FOREST,
-			Region.Terrain.MARSH, Region.Terrain.FORD, Region.Terrain.SAND,
-			Region.Terrain.FARMLAND, Region.Terrain.RUINS]:
-		assert_true(absf(Region.speed_multiplier(terrain as Region.Terrain) - 1.0) < 0.001,
-			"terrain %d walks at road speed" % terrain)
+func test_the_ground_slows_you_down_again() -> void:
+	# Switched back on 2026-09-13 (§4): with the beasts gone, tiring is the price of
+	# the wild, and the tuned table is the one that was reasoned about.
+	assert_true(Region.TERRAIN_SLOWS_YOU)
+	assert_true(absf(Region.speed_multiplier(Region.Terrain.ROAD) - 1.0) < 0.001,
+		"the road is the 1.0 reference")
+	for terrain: int in [Region.Terrain.WILD, Region.Terrain.FOREST, Region.Terrain.MARSH,
+			Region.Terrain.FORD, Region.Terrain.SAND, Region.Terrain.FARMLAND, Region.Terrain.RUINS]:
+		assert_true(Region.speed_multiplier(terrain as Region.Terrain) < 1.0,
+			"terrain %d is slower than the road" % terrain)
+
 
 
 func test_the_tuned_speed_table_is_kept_and_still_orders_the_ground() -> void:
@@ -91,22 +93,23 @@ func test_the_tuned_speed_table_is_kept_and_still_orders_the_ground() -> void:
 	# the numbers are the ones that were reasoned about, not re-guessed.
 	assert_true(absf(Region.speed_table(Region.Terrain.ROAD) - 1.0) < 0.001,
 		"the road is the 1.0 reference, not a bonus")
-	assert_true(Region.speed_table(Region.Terrain.ROAD) > Region.speed_table(Region.Terrain.WILD))
+	assert_true(Region.speed_table(Region.Terrain.ROAD) > Region.speed_table(Region.Terrain.FARMLAND))
+	assert_true(Region.speed_table(Region.Terrain.FARMLAND) > Region.speed_table(Region.Terrain.WILD),
+		"a worked field has paths; heath does not (2026-09-13, measured)")
 	assert_true(Region.speed_table(Region.Terrain.WILD) > Region.speed_table(Region.Terrain.FOREST))
 	assert_true(Region.speed_table(Region.Terrain.FOREST) > Region.speed_table(Region.Terrain.MARSH))
 
 
-func test_the_road_costs_distance_and_the_wild_will_cost_something_else() -> void:
-	# With the ground no longer slowing anyone, the dog-leg *is* the price of the
-	# safe route: the road is the long way round, and nothing else separates them
-	# until the wild starts drawing blood.
-	var road_seconds: float = _region.road_distance() / MovementRules.TILES_PER_SECOND
-	var wild_seconds: float = _region.brindle_to_blackcairn_tiles() / MovementRules.TILES_PER_SECOND
+func test_the_road_is_the_long_way_and_the_wood_is_the_slow_way() -> void:
+	# The two halves of the choice, as geometry. The wild line is shorter, so the
+	# road's only case is speed; the wood is slower per tile, so the road can have
+	# one. Whether it actually wins is measured in test_journeys, not assumed here.
+	assert_true(_region.brindle_to_blackcairn_tiles() < _region.road_distance(),
+		"the wild line is the short one: %.0f against %.0f tiles" % [
+			_region.brindle_to_blackcairn_tiles(), _region.road_distance()])
+	assert_true(Region.speed_multiplier(Region.Terrain.FOREST) < Region.speed_multiplier(Region.Terrain.ROAD),
+		"and the wood is slower per tile than the road")
 
-	assert_true(wild_seconds < road_seconds,
-		"the wild is now the quick way: %.0f s against %.0f s" % [wild_seconds, road_seconds])
-	assert_true(road_seconds - wild_seconds > 10.0,
-		"and the detour is worth noticing: %.0f s" % (road_seconds - wild_seconds))
 
 
 func test_the_thornwood_lies_east_of_the_river_where_spec_4_puts_it() -> void:

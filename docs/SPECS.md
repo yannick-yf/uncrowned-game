@@ -785,7 +785,8 @@ for the interiors that genuinely need it.
 |---|---:|---:|
 | Road, town streets, camp, castle | 1.00 | 6.0 |
 | Ruins | 0.90 | 5.4 |
-| Open grass, farmland | 0.80 | 4.8 |
+| Farmland | 0.80 | 4.8 |
+| Open country — heath, hill tracks | **0.65** | 3.9 |
 | Coast sand | 0.75 | 4.5 |
 | Thornwood | 0.55 | 3.3 |
 | The ford (wading) | 0.50 | 3.0 |
@@ -794,6 +795,15 @@ for the interiors that genuinely need it.
 The road is the **1.00 reference rather than a bonus**: 6 tiles/sec is the speed
 that was tuned and approved, so every other surface is a penalty. Were the wild
 1.00 and the road faster, the approved feel would become the slow case.
+
+> **Open country was 0.80 and is 0.65** (Yannick, 2026-09-13, measured). The table was
+> reasoned about while speeds were off and never measured against the claim it exists
+> for. Measured with the beasts gone, the least-watched line from Brindle to the castle
+> is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a plain walker
+> by 2.4 s and *lost* to an attuned one. At 0.65 the road wins by 12 s and 9 s — a fifth
+> of the walk. Farmland keeps 0.80: fields have paths, and the Wide Acres is a place you
+> walk around in. Cleared ground and the clearing are not in the table and walk at 1.00
+> until it matters.
 
 > **Terrain speeds are currently off** (2026-09-11). Everything walkable moves at
 > the road's 6 tiles/sec: a forest should be dangerous, not tiring, and trudging
@@ -842,16 +852,31 @@ switched off or optional become load-bearing:
   of its case now, since a road that is neither faster nor unwatched is a road nobody
   takes — and the 1.30–1.50 band the test guards is guarding the choice itself.
 
-**Re-measure.** The table below is v1's, taken with beasts and without terrain speeds.
-`tools/measure_routes.gd` is to be run again with the speeds on and the wood empty,
-and the two rows must still say different things — the road faster, the wild unseen —
-or the map has stopped making its argument. By how much the road wins is what the
-measurement is for; it is not written here in advance.
+**Measured, 2026-09-13**, with the speeds on and the wood empty
+(`tools/measure_routes.gd`; two `SLOW` tests in `test_journeys.gd` hold the same three
+relationships). Brindle to the castle gate, stopping short of the man at the end:
 
-| Route (v1, superseded) | Distance | Time | Cost |
+| Route | Distance | Time | Cost |
 |---|---:|---:|---|
-| The King's Road | 342 tiles | 57 s | nothing |
-| The wild | 260 tiles | 43 s | 8 of 10 health |
+| The King's Road | 342 tiles | **57 s** | seen the whole way |
+| The wild — the least-watched line, over the ford | 269 tiles | **69 s** | 17 tiles of road, crossed where it must |
+| The wild, attuned (§11) | 268 tiles | **66 s** | the same, and the wood slows you less |
+
+Twelve seconds slower and unseen; nine for the forest build. That is the trade the map
+is for. The v1 figures — 57 s against 43 s and 8 of 10 health — measured a different
+game and are in §20.
+
+**The instrument was wrong twice, and both are worth keeping.** The "wild line" had
+always been `Navigation`'s shortest *walkable* path, and on this map that path is
+**42% King's Road** — 118 of 280 tiles, plus the Muster's camp and a town street — so
+v1 never measured the wild at all, and the first v2 measurement had the road winning by
+2 s against a route that was mostly road. Forbidding the road outright is not the
+repair: **no walk from Brindle reaches Blackcairn without crossing the King's Road**,
+because the road runs from the south-east coast to the castle against the mountains and
+seals the east. So the wild line is the *least-watched* path — a road tile costs ten
+wild tiles (`Navigation.WATCHED_COST`) — which crosses the road where it must, never
+runs along it, and takes the ford because the bridge is the road's. Crossing a road is
+a moment of being seen; walking one is a route.
 
 > **What v1 had, kept for the reasoning.** Three beasts, all slower than the player,
 > spawned on a ring just past sight and biased toward where you were going, keeping a
@@ -868,7 +893,7 @@ measurement is for; it is not written here in advance.
 The river runs from the northern mountains to the southern sea down the east of the
 map, dividing the eastern strip — Brindle, the Cinderworks, the near Thornwood —
 from everything else. **It is a real barrier:** dam both crossings and Blackcairn
-becomes unreachable from Brindle, which is a test rather than a claim.
+becomes unreachable from Brindle, which is a test rather than a claim. And the measured wild line crosses at the ford (above), as §4 always said it would.
 
 Both crossings are **bands, not tiles** (§19 Q28b), and both are sized to span the
 river's *slant* rather than its width — a crossing measured against the width alone
@@ -2651,7 +2676,10 @@ slow you** (Yannick, 2026-09-13, closing Q50). v1 had *the wild stops treating y
 prey* — fights you never have — and the beasts went with v2 (§4), so the price of the
 wild is now time, and an attuned character does not pay all of it: at Attunement 3 or
 more — the one threshold every tag uses — the Thornwood's speed penalty does not
-apply, or applies less. The figure is Phase A's to measure (§18), not to write here.
+apply, or applies less: **0.80 in the wood, a worked field's pace** (measured
+2026-09-13, `MovementRules.ATTUNED_WOOD_MULTIPLIER`). On the shipped map the shortcut
+holds 29 tiles of wood, so the trait buys about 3 s of a 69 s crossing — real, small,
+and it grows with the forest, which is the deferred map question (Q42/Q43).
 The precedent is still *Presence*, whose second use is ending fights without violence:
 a trait's second half is a cost you do not pay, not damage you deal. And it makes the
 two social traits the map's two sides: **Presence is the road build** (the Access
@@ -2846,7 +2874,7 @@ drawn from the number, never stored on a node.
 are furniture. If they read as fake it is a presentation problem, and the answer is to
 draw them as what they are — a cart, a pair at a distance, somebody leaving a gate —
 never to give them a face from the cast's thirty or a routine that makes them look
-like people with somewhere to be.
+like people with somewhere to be. **Built 2026-09-13**: a pack horse, from the pack's `Animal/Horse` side sheet, flipped for the direction of travel — and looked at with `tools/shot.sh` before it was called done.
 
 ### Approved asset pack (settled) — exactly one
 
@@ -3442,7 +3470,7 @@ proposal — Yannick's to change — and the reasoning for it is under the table
 
 | | Phase | What it builds | Proof |
 |---|---|---|---|
-| **A** | **The wild without teeth** | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on; `measure_routes` re-run; travellers drawn as traffic; Attunement's speed half (§4, §11, §13) | The two route rows still say different things — the road faster, the wild unseen — and a player with a reputation still takes the wood |
+| **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
 | **B** | **The second axis** | Hardship per town; the "builds it by" rows for every quantity, each with a face and a hardship push; the counterpart test extended to faces; §9's conditions (§8, §9) | Burn the stores and feed the works the forest in one run; the journal shows two towns worse off in two different ways, and a named person in each says so without naming you |
 | **C** | **Four places, two states** | Binary state per place; the decisive act with two outcomes at each landmark; the freeze window as a tick stamp; the band kept for the borders; the free-state ground; the entrance sign as a voice (§3, §8, §13, §15) | Free the Wide Acres, watch the band fail to take it back for two days, then restore it; a replay from the log lands on the same tick; the sign says something different each time |
 | **D** | **The crown as a play** | Rank from crown standing, falling as well as rising; the gate knowing your face as one of the three ways in; the crown's service list; the reworked opening — Halgrave audible in the first hour, the fairy checked (§5, §11) | §5's test: a playtester who wants to serve can name a first step unprompted. A loyal run reaches the throne reading and is shown hardship the morning after — and the same run can still turn |
@@ -3548,7 +3576,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q48 | ~~**Mother Crowe does not exist, and somebody else has her job.**~~ — answered 2026-09-12: **Route C rebuilds around Corvin Ash.** He is built, he is good, and the debt is already his in dialogue and in `bank:debts`. The church keeps the *venue* — it is a better church for being against magic (Q47) than it ever was for being a creditor. Crowe is cut, and §6's ★★ row and §7's redundancy prose both name her and must be rewritten before invariant 7's walk can run | §6, §7 | Closed 2026-09-12 |
 | Q49 | **Does the raising survive being said out loud?** The church is against magic, the player was raised by it, and Route C's climax happens in that church before its congregation. Whether the congregation can learn what the player is — and what happens if they do — is the most interesting consequence of Q47 and is unwritten | §5, §6 | Route C's cost |
 | Q34 | ~~**Bookkeeping.** The header's populated-sections list is stale; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared directories.~~ — swept 2026-09-13, at the end of v1: the header says v1 rather than draft, §20 gained the seventeen decisions that had been recorded only in a working log, §19 closed the questions the code had already answered, and the directories all exist and are full. **It came back three times**, which is the real finding: a document that is edited faster than it is re-read goes stale in the places nobody looks, and only a pass with a date on it fixes that. §17's "Settled" rows inside 🟡 sections are still there and are still the same complaint | header, §17, §20, repo | Closed; §17 outstanding |
-| Q50 | ~~**Attunement's combat half has nothing to point at.**~~ — answered 2026-09-13: **the wood does not slow you.** Time is the wild's price now, and an attuned character does not pay all of it, at Attunement 3 or more. The same shape as before — a cost you do not pay — pointed at the new price. The figure is Phase A's to measure (§18) | §11, §4 | Closed |
+| Q50 | ~~**Attunement's combat half has nothing to point at.**~~ — answered 2026-09-13: **the wood does not slow you.** Time is the wild's price now, and an attuned character does not pay all of it, at Attunement 3 or more. The same shape as before — a cost you do not pay — pointed at the new price. Measured: 0.80 in the wood, about 3 s on the shipped map's shortcut, more as the forest grows | §11, §4 | Closed |
 
 ---
 
@@ -3784,6 +3812,9 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **The pack and the palette are locked for v2; a v3 art pass replaces both**, and the validator is what makes that safe | Swapping art during the systems rewrite | An art swap during a rewrite makes every visual bug ambiguous between the two. The four rules — one pack, a locked palette, the validator, one kit per place — are the wall a new pack has to clear, and the validator says immediately what it does not cover. Licence checked before anything is drawn |
 | 2026-09-13 | **v2 is a content and coupling change** and does not touch the split, the log, the twelve as a set, the handprint, standing's three indexes, quests as predicates, determinism, the invariants or French-first | A snapshot save; renaming quantities; a new standing index; a quest store | Every one of those is load-bearing and finished, and every v2 change is expressible as rows, readings and words on it. The freeze window is a tick stamp so that a replay lands identically |
 | 2026-09-13 | **Attunement's second half is "the wood does not slow you"**, at 3 or more | Accepting one trait doing one thing; leaving it open until Phase A is measured | The beasts took its combat half with them. Time is the wild's price now, so the forest build not paying all of it is the same idea — a cost you do not pay, Presence's shape — pointed at the new price. Six traits keep their double duty (Q50) |
+| 2026-09-13 | **Open country walks at 0.65, not 0.80; farmland keeps 0.80** | 0.70 (the least change that passes); 0.60; keeping 0.80 and widening the Thornwood instead | Measured, with the beasts gone and speeds on: the least-watched line from Brindle to the castle is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a plain walker by 2.4 s and lost to an attuned one. At 0.65 it wins by 12 s and 9 s, a fifth of the walk. The table had been reasoned about while speeds were off and never measured against the claim it exists for. Widening the wood is Phase-7-scale map work and the forest's size is already Q42/Q43 |
+| 2026-09-13 | **The wild line is the least-watched path**, not the shortest walkable one: a road tile costs ten wild tiles | The shortest walkable path (v1's instrument); forbidding the road outright | The shortest walkable path from Brindle to the castle is 42% King's Road, so v1 never measured the wild. Forbidding the road finds no path at all: the road runs from the south-east coast to the castle and seals the east, so every way to Blackcairn crosses it once. Dear rather than forbidden crosses where it must, never runs along, and takes the ford — which is what §4 always said the wild did |
+| 2026-09-13 | **Travellers are drawn as a pack horse** from the approved pack's `Animal/Horse` side sheet | The crowd's sheets, as before; a cart (the pack has none); a pair of figures | A face is how furniture becomes a character by being looked at often enough, and the crowd's faces are shared with the cast on purpose. An animal on the road is traffic. Checked with a screenshot, not with the suite, because `--headless` never draws |
 
 ---
 

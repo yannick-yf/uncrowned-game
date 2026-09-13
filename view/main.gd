@@ -23,8 +23,6 @@ const FIGURE: float = 16.0
 ## Interpolating across a respawn or a zone change would streak the player over
 ## the whole map for a frame.
 const TELEPORT_TILES: float = 2.0
-## How near something hunting you has to be before the HUD mentions it.
-const CLOSE_ENOUGH_TO_FEAR: float = 7.0
 ## How long a thing that just happened stays on screen: two seconds, then the
 ## world stops mentioning it and never brings it up again.
 const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
@@ -49,7 +47,6 @@ var _deaths_seen: int = 0
 var _sim: Sim = null
 var _world: WorldState = null
 var _cast: Cast = null
-var _wild: Wildlife = null
 var _ticked: WorldTick = null
 var _standing: Standing = null
 var _road: Travellers = null
@@ -119,7 +116,6 @@ func _ready() -> void:
 		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
-	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
 	_standing = _sim.store(&"standing") as Standing
@@ -531,7 +527,6 @@ func _reload() -> void:
 	_sim = loaded
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
-	_wild = _sim.store(&"wildlife") as Wildlife
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
@@ -673,9 +668,6 @@ func _draw() -> void:
 		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
 
 	_draw_travellers(min_x, max_x, min_y, max_y)
-
-	for beast: Beast in _wild.beasts:
-		_draw_beast(beast)
 
 	if _world.current_zone == WorldState.OVERWORLD:
 		_draw_escort()
@@ -910,18 +902,6 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 		Rect2(source), Color(1.0, 1.0, 1.0, 0.45) if covers else Color.WHITE)
 
 
-func _draw_beast(beast: Beast) -> void:
-	var sheet: Texture2D = _art.beast_sheet_for(beast.kind)
-	if sheet == null:
-		return
-	var top_left: Vector2 = beast.pos * float(TILE) - Vector2(FIGURE, FIGURE) * 0.5
-	draw_texture_rect_region(
-		sheet,
-		Rect2(top_left.round(), Vector2(FIGURE, FIGURE)),
-		Art.tile_rect(Art.column_for(beast.facing), 0),
-	)
-
-
 ## The fairy, who is **light and movement and not a body**.
 ##
 ## There is no fairy in the asset pack, §13 forbids mixing packs, and a twinkling
@@ -992,20 +972,37 @@ func _draw_witnesses() -> void:
 ## They are simulated for the whole map whether or not you are looking, which is
 ## the point — a carrier who stops existing when you turn away cannot deliver
 ## anything. Only the drawing is culled.
+##
+## **Drawn as traffic, not as people** (2026-09-13, §13): a pack horse walking the
+## road, never a face from any sheet the cast or the crowd uses. The side sheet faces
+## left; a walker heading the other way is the same frame drawn with a negative width.
 func _draw_travellers(min_x: int, max_x: int, min_y: int, max_y: int) -> void:
 	if _road == null:
 		return
+	var sheet: Texture2D = _art.traffic_sheet()
+	if sheet == null:
+		return
+	var line: Array[Vector2i] = _world.region().road_waypoints()
+	var size := Vector2(Art.TRAFFIC_FRAME)
 	for walker: Traveller in _road.walkers:
 		var at: Vector2i = walker.tile()
 		if at.x < min_x or at.x > max_x or at.y < min_y or at.y > max_y:
 			continue
-		var sheet: Texture2D = _art.townsfolk_sheet(walker.id)
-		if sheet == null:
-			continue
-		var column: int = Art.column_for(Vector2i(walker.heading, 0))
-		var top_left: Vector2 = walker.pos * float(TILE) - Vector2(FIGURE, FIGURE) * 0.5
-		draw_texture_rect_region(
-			sheet, Rect2(top_left.round(), Vector2(FIGURE, FIGURE)), Art.tile_rect(column, 0))
+		# Which way it is actually going, read off the next waypoint rather than off
+		# the leg index, which says nothing about east or west.
+		var facing_right: bool = false
+		if not line.is_empty():
+			var target: int = clampi(walker.leg + walker.heading, 0, line.size() - 1)
+			facing_right = float(line[target].x) + 0.5 > walker.pos.x
+		# Two frames, alternated by where it stands, so a walking animal walks.
+		var frame: int = absi(int(floorf(walker.pos.x + walker.pos.y))) % 2
+		var src := Rect2(float(frame * Art.TRAFFIC_FRAME.x), 0.0, size.x, size.y)
+		var rect := Rect2((walker.pos * float(TILE) - size * 0.5).round(), size)
+		if facing_right:
+			rect.position.x += size.x
+			rect.size.x = -size.x
+		draw_texture_rect_region(sheet, rect, src)
+
 
 
 ## The escort, drawn because it has to be *seen* to drop. Ten bodies in two ranks
@@ -1143,15 +1140,6 @@ func _draw_hud() -> void:
 	var mood: String = _atmosphere()
 	if mood != "":
 		rows.append(mood)
-
-	# Only what can actually reach you. A wolf that has seen you from the treeline
-	# while you stand in a camp it cannot enter is not a warning, it is a lie.
-	var hunted: int = 0
-	for beast: Beast in _wild.beasts:
-		if beast.hunting and beast.pos.distance_to(_world.player_pos) <= CLOSE_ENOUGH_TO_FEAR:
-			hunted += 1
-	if hunted > 0:
-		rows.append(Text.of(&"beast.one") if hunted == 1 else Text.of(&"beast.many", [hunted]))
 
 	var npc: Npc = _nearby_npc()
 	if _can_rest():

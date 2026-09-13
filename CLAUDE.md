@@ -193,13 +193,15 @@ what it would cost in time and tokens and ask first.
 what is deliberately inert, and what v1 does not have. Read it before `SPECS.md`,
 which is 3,000 lines and answers a different question.
 
-**v2 is specified (2026-09-13) and nothing of it is built.** It lives in `SPECS.md` —
-everything dated 2026-09-13 and marked v2 — and the intent it was written from is
-`docs/history/V2_INTENT.md`. The roadmap is SPECS §18, Phases A–E, and **Phase A (the
-wild without teeth) is next**: beasts out, `TERRAIN_SLOWS_YOU` on, routes re-measured,
-travellers drawn as traffic, Attunement's speed half. v2 is a content and coupling
-change; SPECS §18 lists what it does not touch, and nothing structural moves without
-asking Yannick.
+**v2 is specified (2026-09-13) and being built, phase by phase.** It lives in
+`SPECS.md` — everything dated 2026-09-13 and marked v2 — and the intent it was written
+from is `docs/history/V2_INTENT.md`. The roadmap is SPECS §18, Phases A–E. **Phase A
+(the wild without teeth) is delivered**: beasts out, `TERRAIN_SLOWS_YOU` on with open
+country at 0.65, routes measured (road 57 s, wild 69 s, attuned 66 s), travellers drawn
+as traffic, Attunement's speed half. **Phase B (the second axis) is next**: hardship per
+town, the "builds it by" rows with a face each, the counterpart test extended to faces,
+§9's conditions. v2 is a content and coupling change; SPECS §18 lists what it does not
+touch, and nothing structural moves without asking Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that

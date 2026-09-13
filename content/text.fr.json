@@ -46,8 +46,6 @@
   "moment.took.none": "vous le prenez. personne ne lève les yeux",
   "moment.took.one": "vous le prenez. une personne lève les yeux",
   "moment.took.many": "vous le prenez. {0} personnes lèvent les yeux",
-  "beast.one": "quelque chose vous suit",
-  "beast.many": "{0} d'entre elles vous ont vu",
   "muster.queue": "la tente de paie a une file d'attente et pas un sou",
   "muster.shut": "la tente de paie est fermée, et les registres n'y sont plus",
   "muster.struck": "la moitié des tentes est à terre, et personne ne plie les autres",

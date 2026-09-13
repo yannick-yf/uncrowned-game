@@ -136,8 +136,8 @@ func tiles_to_blackcairn() -> float:
 ## Sim.advance() — it is a state transition, not a rule, and the verdict about
 ## *whether* you were hit belongs to the caller.
 ##
-## One path for the king and the beasts both, so that death, the respawn and the
-## grace window cannot drift apart between them.
+## One path for everything that can hurt you — the king today, a fight in Phase 4 —
+## so that death, the respawn and the grace window cannot drift apart between them.
 func hurt(amount: int, step: int) -> bool:
 	if step < invulnerable_until:
 		return false
