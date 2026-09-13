@@ -173,6 +173,10 @@
         {
           "when": "grain_is_dear_here",
           "text": "Le pain a doublé en un mois et personne ne me dit pourquoi. Vous, vous allez me le dire ?"
+        },
+        {
+          "when": "blackcairn_is_unstable",
+          "text": "On dit que la porte du château est fermée en plein jour. Je n'ai jamais vu ça."
         }
       ]
     },
@@ -345,6 +349,12 @@
           "causes": "i_got_the_convoys_moving",
           "costs": "goodwill",
           "reply": "Bon. Le grain part demain pour le camp et la capitale. Aux Grands Champs, ils en verront moins."
+        },
+        {
+          "intent": "ask_castle_stone",
+          "text": "Le château achète toujours ?",
+          "reply": "De la pierre et du grain, deux fois par semaine, par la route. Bon pour la route, bon pour moi.",
+          "requires_condition": "blackcairn_is_rich"
         }
       ]
     },
@@ -942,6 +952,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Peyre retourne à ses rayons et ne vous offre pas de chaise."
+        },
+        {
+          "when": "blackcairn_is_poor",
+          "text": "Le chantier du mur nord s'est arrêté. Pas de pierre ce mois-ci."
         }
       ],
       "options": [

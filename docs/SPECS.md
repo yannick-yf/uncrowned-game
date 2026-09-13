@@ -16,14 +16,14 @@
 > **Sections marked 🟡 were invented by Claude at Yannick's request** and need his
 > approval or rejection. Everything else came from him.
 
-**Status:** **v1 delivered, 2026-09-13; v2 specified in this document the same day**,
-from `docs/history/V2_INTENT.md`, moved there the same day once every passage below carried it.
-Everything dated 2026-09-13 and marked v2 is *specified, not built*: §18 has the
-roadmap. Five sections still carry 🟡 — they were invented by Claude, they were
-*built* anyway because v1 needed them, and they still want Yannick's yes or no. §3's
-power bases, §6's roster and §8's world tick were approved long ago.
+**Status:** **v1 and v2 delivered, 2026-09-13.** v2 was specified in this document
+from `docs/history/V2_INTENT.md` and built the same day, Phases A–E of §18; every
+passage dated 2026-09-13 says *built* where it is, and `docs/V2.md` says what the game
+is now. Five sections still carry 🟡 — they were invented by Claude, they were *built*
+anyway because v1 needed them, and they still want Yannick's yes or no. §3's power
+bases, §6's roster and §8's world tick were approved long ago.
 **Last updated:** 2026-09-13
-**Version:** 2.0 — specified, not built
+**Version:** 2.0 — delivered
 **Location:** this file, `uncrowned-game/docs/SPECS.md`, is the single source of
 truth on *what the game is*. For *what currently exists* — which is the question you
 have if you have just arrived — read `docs/V1.md` first; it is two pages. `CLAUDE.md`
@@ -639,6 +639,18 @@ and the window it counts for is §8's freeze window and no other.
 perceive is identical to no change: the castle's face for a player standing at it, and
 what people in the towns say about it for a player who is not. Neither reading is a
 number on the HUD (§15).
+
+**Built 2026-09-13 (Phase E).** `CastleRules`, pure and stored nowhere: wealth is the
+mean of the treasury, steel output and a grain-supply score, *building* from 85 and
+*shuttered* below 45 — so the castle starts building, which is the king's programme
+and true, and one large act against the treasury or the works takes it to *holding*.
+Instability counts `Allegiance.flips` inside the last freeze window, by either path:
+one is *uneasy*, two is a *crisis*, and the same two a window later are *calm* again.
+On the castle: extra guards on the south wall — two uneasy, four in a crisis — beside
+the escort, and the keep, towers and gate drawn dark when shuttered. In the towns:
+Maddox has heard the gate is shut in daylight, Peyre has seen the north wall stop,
+and Garrick can be asked what the castle is buying while it still is. Nothing about
+an ending reads either figure; a test holds that.
 
 > **On the word "capital".** §0 calls Cairnwell the capital and Blackcairn the castle,
 > and this document keeps to that: the two readings are **Blackcairn's**. Where v2's
@@ -2619,7 +2631,7 @@ decides what each means:
 | `<place>_is_free` | Any of the four, from anywhere | Maddox can mention that the Acres went to the smallholders, three days after they did |
 | `hardship_is_high_here` | The speaker's town (§8) | The loyal-and-hungry line, which is the whole of the Wide Acres. **Built 2026-09-13**: eight greetings, one face per place |
 | `crown_rank_is_at_least_N` | The player's crown standing, read as rank (§11) | Greeting, offers, assumptions, what is told — never a gate. **Built 2026-09-13**: Dray and Hesper at 3, Tovin at 1 |
-| `blackcairn_is_unstable` / `blackcairn_is_rich` | The castle's two readings (§4) | The second channel for both readings: what towns say about the castle |
+| `blackcairn_is_unstable` / `blackcairn_is_rich` / `blackcairn_is_poor` | The castle's two readings (§4) | The second channel for both readings: what towns say about the castle. **Built 2026-09-13**: Maddox and Peyre as greetings; Garrick's *rich* line is a question he answers, because the castle is rich from minute one and a greeting that never lifts would hide his disposition band |
 
 A conditional line outranks a standing one, as before, so each of these takes its slot
 the day it applies. None of them gates a fact: invariant 6's `costs: "free"` source
@@ -2969,6 +2981,10 @@ instability as banners down, more guards on the wall, the gate shut in daylight.
 is a handful of props toggled by a reading, on the same rule as the Muster's tents —
 drawn from the number, never stored on a node.
 
+**Built 2026-09-13**, as far as the pack allows: the wall guards are the escort's sprite
+posted on the rampart either side of the gate, and *shuttered* is the keep, the towers
+and the gate drawn dark. Scaffolding, new stone and banners wait on v3's art.
+
 **The Thornwood belt** is the cleared ring's radius, already drawn by
 `Terrain.CLEARED`. Widening it is a number, not new art.
 
@@ -3251,6 +3267,11 @@ never pushed:
   handprint.
 - **Blackcairn's two readings**, in words: what the walls look like, what the gate is
   doing.
+
+**Built 2026-09-13 (Phase E)**: the page is `journal.kingdom`, third of the journal's
+pages, read from `Journal.kingdom()` — the four places with who moved them and when,
+the towns whose people are worse or better off, and the castle's two readings — and
+a test holds that none of its words is a number.
 
 It still never scores. The vocabulary test that forbids "+22" and "reputation" covers
 this page too. It explains what the kingdom is and how much of it is yours; it never
@@ -3583,13 +3604,15 @@ Five phases, each with the proof that closes it, in the same rule as v1: **a pha
 done when its proof is playable, not when its code is written.** The order is a
 proposal — Yannick's to change — and the reasoning for it is under the table.
 
+**All five were delivered on 2026-09-13**, in the order below; the ✅ rows say what held.
+
 | | Phase | What it builds | Proof |
 |---|---|---|---|
 | **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
 | **B** ✅ | **The second axis** — delivered 2026-09-13 | Hardship per town, at 50, pushed only by deeds; the ten building acts as spoken deeds with a cost each; `hardship_effects` on every deed that moves the kingdom, walked by test; eight faces as greetings; `hardship_is_high_here`; the journal's worse-off rows (§8, §9, §15) | **Held:** burn the stores and feed the works the forest in one run — the Wide Acres and Brindle both past the line, Pell's and Wren's greetings changed without naming the player, two journal rows with two different causes. 36 suites, 378 tests |
 | **C** ✅ | **Four places, two states** — delivered 2026-09-13 | `PlaceRules`; the state in `Allegiance` with `decided_at`, `held_until` and `flips`; freeing by reading the place's thing there or exposing the fraud, holding by the four spoken acts that need the same thing; the freeze enforced by not offering; the band kept for the borders, which now start crown-held; the free-state ground; the sign as a HUD line; the journal's changed-hands rows (§3, §4, §8, §13, §15) | **Held:** the grants read to the tenants free the Acres; a town at 90 cannot take them back for two days and then does; Nessa will not enforce them while the place is held and will after; a paid camp cannot be exposed for two days and then can; the sign reads loyal, freed, restored in turn. 37 suites, 391 tests |
 | **D** ✅ | **The crown as a play** — delivered 2026-09-13 | Rank from crown standing through `FactionRules.rank_from`, falling as well as rising, `rose`/`fell` announced, the last rank at 90; the service tally gone; `crown_rank_is_at_least_N` and three greetings that read it; Halgrave's argument as his second, free question; the throne reading in `EndRules` and the journal (§3, §5, §9, §11) | **Held:** a clerk after informing, a chamberlain after four crown acts, an officer again after one furnace; a stranger is offered the argument with its figures; Deposed at the last rank reads *crowned*, as a nobody *vacancy*, and a chamberlain who empties the vault still ruins the reign. 38 suites, 403 tests |
-| **E** | **Blackcairn reads the kingdom** | Wealth and instability as derived readings, on the castle and in the towns' talk; the journal's kingdom page (§4, §15) | Four flips in one window and the same four over a season look different at the gate and sound different in Harrowgate |
+| **E** ✅ | **Blackcairn reads the kingdom** — delivered 2026-09-13 | `CastleRules`: wealth from treasury, steel and supply; instability from flips inside the freeze window, whoever caused them; the wall's extra guards and the dark keep; three townsfolk who speak of the castle; the journal's kingdom page (§4, §9, §13, §15) | **Held:** a building castle at the start, holding after one bad season, shuttered in a ruin; one flip uneasy, two a crisis, the same two a window later calm; Maddox and Peyre say so in both languages; the kingdom page carries no number. 39 suites, 412 tests |
 
 **Why this order.** A is a removal, and deleting before adding means every later
 measurement is taken against the map v2 will actually have. B before C because a
@@ -3602,8 +3625,10 @@ and the standing exception in CLAUDE.md stands with it. v2 does not open it; if 
 does, it is a sixth phase and goes after E, because the wild's question is "will I be
 seen" until a fight is something the player can do.
 
-**When this is done**, `docs/V1.md` gets a sibling that says what v2 is. The intent this
-was written from is already `docs/history/V2_INTENT.md`.
+**Done, 2026-09-13.** All five phases delivered in one day; `docs/V2.md` is the sibling
+that says what v2 is, and `docs/history/V2_INTENT.md` is what it was written from.
+What comes next is not in this document: §13 expects a v3 art pass, and combat is the
+oldest debt in the project.
 
 ---
 
@@ -3944,6 +3969,11 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **A rank greeting comes after personal regard and after hardship** | Rank first | A man who watched you steal does not wave you through however the court styles you, and a place that is worse off says so before it says anything about your title. The gate still opens: greetings are what rank changes, not doors |
 | 2026-09-13 | **The throne is read by the ending system when Deposed fires and kept as `reign_reading`** | Reading it in the journal each time; a stored flag set by an act | Taken once, from standing at the moment the reign ends — the same moment `reign_ended` is stamped — so a replay reads the same throne. The journal only phrases it, and shows the morning after in words |
 | 2026-09-13 | **Halgrave's argument is his second question and costs nothing** | A new NPC for the crown's case; a reply gated on goodwill | §5 wants one credible voice in the first hour who is not a fool; Halgrave already had the figures and the belief. Second, so the cap of three offers it to a stranger; free, because he is not ashamed of it, which is what makes him credible |
+| 2026-09-13 | **Wealth is the mean of treasury, steel and grain supply; building from 85, shuttered below 45** | Treasury alone; a stored prosperity figure | §4 names the three; the mean makes one bad season *holding* and a ruin *shuttered*. Building at the start is true — the king is building — and derived, so nothing new is stored |
+| 2026-09-13 | **Two flips inside one freeze window is a crisis; one is uneasy; both count whoever caused them** | A separate window; counting only the player's flips; a stored unrest figure | Recency is what makes it political: four towns in a week is a crisis and the same four over a season is policy, and the window is §8's, not a second one. To the men on the wall a flip is a flip, and a stamp that moved nothing is not one |
+| 2026-09-13 | **The castle's rich reading is a question Garrick answers, not a greeting** | A greeting, like the other two | The castle is rich from minute one, so a greeting on it never lifts and hides the speaker's disposition band — the coverage test caught it. Unstable and poor are false at the start and stay greetings |
+| 2026-09-13 | **The wall's extra guards are drawn from the reading and never fought; the escort stays the number the endings read** | Raising the escort in a crisis | The escort is derived from army strength and read by two endings; a crisis that added men to it would make Blackcairn's face an input to the ending, which §4 forbids. The wall looks fuller; the door is no harder |
+| 2026-09-13 | **The journal's kingdom page is the third page and carries no number** | Folding it into the second page; figures for hardship | The second page is the endings' readings and the kingdom is not one. Words for the places, the people and the castle, with whose doing beside each, is what §15 asked for and a test holds the digits out |
 
 ---
 

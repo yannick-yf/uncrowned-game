@@ -141,7 +141,9 @@ func _ready() -> void:
 	# above, and listed with it in CLAUDE.md.
 	var freed: String = OS.get_environment("UNCROWNED_FREE")
 	if OS.has_feature("debug") and freed != "" and _mine != null:
-		_mine.decide(StringName(freed), FactionRules.OPPOSITION, _sim.tick)
+		# Comma-separated, so two places freed at once photograph a crisis at the wall.
+		for zone: String in freed.split(","):
+			_mine.decide(StringName(zone.strip_edges()), FactionRules.OPPOSITION, _sim.tick)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 
@@ -914,6 +916,12 @@ func _draw_prop(prop: Dictionary, min_x: int, max_x: int, min_y: int, max_y: int
 	# creditor's rather than the crown's (§13's free variant).
 	if (prop["kind"] as StringName) == &"counting_house" and _is_free(&"cairnwell"):
 		tint = tint.darkened(0.4)
+	# And the castle's wealth reading (§4): shuttered works and an unfinished wall,
+	# drawn as the keep, the towers and the gate gone dark.
+	var kind: StringName = prop["kind"] as StringName
+	if (kind == &"keep" or kind == &"tower" or kind == &"gatehouse") \
+			and CastleRules.wealth(_ticked) == CastleRules.SHUTTERED:
+		tint = tint.darkened(0.35)
 	draw_texture_rect_region(
 		_art.atlas(entry[0] as StringName),
 		Rect2(dest.round(), Vector2(source.size)),
@@ -1031,6 +1039,14 @@ func _draw_escort() -> void:
 		var file: int = i % 5
 		var at: Vector2 = _world.king_pos + Vector2(float(file) - 2.0, 2.0 + float(rank) * 1.2)
 		_draw_actor(at, &"guard", Art.FACE_DOWN)
+	# §4's instability reading, on the wall: more guards than the escort accounts for,
+	# posted either side of the gate. Drawn from the reading, never stored, and never
+	# fought — the escort is the number the endings read; this is what the wall looks
+	# like from the road when places have been changing hands.
+	var unrest: StringName = CastleRules.instability(_mine, _sim.tick)
+	var posts: Array[Vector2] = [Vector2(-5.0, 9.0), Vector2(3.0, 9.0), Vector2(-8.0, 9.0), Vector2(11.0, 9.0)]
+	for i: int in CastleRules.extra_guards(unrest):
+		_draw_actor(_world.king_pos + posts[i], &"guard", Art.FACE_DOWN)
 
 
 # --------------------------------------------------------------------- hud ---
@@ -1263,6 +1279,7 @@ func _journal_pages() -> Array[Dictionary]:
 	var pages: Array[Dictionary] = [
 		{"name": &"journal.doings", "blocks": _page_doings()},
 		{"name": &"journal.holds", "blocks": _page_the_king()},
+		{"name": &"journal.kingdom", "blocks": _page_kingdom()},
 		{"name": &"journal.quests", "blocks": _page_quests()},
 		{"name": &"journal.side", "blocks": _page_you()},
 	]
@@ -1376,6 +1393,37 @@ func _page_the_king() -> Array[Array]:
 						else &"journal.throne.better", [_short_place(town)]))
 		blocks.append(block)
 	return blocks
+
+
+## §15's kingdom page (2026-09-13). The thesis says the ending is a reading of what
+## the kingdom became; this is where the player reads it before the end. Pulled, like
+## every page, and it never scores: words for the places, the people and the castle,
+## with whose doing it was beside each — never a number, never advice.
+func _page_kingdom() -> Array[Array]:
+	var places: Array[String] = [Text.of(&"journal.kingdom.places")]
+	var people: Array[String] = ["", Text.of(&"journal.kingdom.hardship")]
+	var castle: Array[String] = ["", Text.of(&"journal.kingdom.castle")]
+	for row: Dictionary in Journal.kingdom(_mine, _ticked, _sim.tick):
+		match row["kind"] as StringName:
+			&"place":
+				var who: String = ""
+				if int(row["tick"]) >= 0:
+					who = Text.of(&"journal.kingdom.by_you" if bool(row["by_player"])
+						else &"journal.kingdom.turned", [_clock(int(row["tick"]))])
+				places.append(Text.of(&"journal.kingdom.place", [
+					_short_place(row["town"] as StringName),
+					Text.of(&"journal.kingdom.free" if bool(row["free"]) else &"journal.kingdom.crown"),
+					who]))
+			&"hardship":
+				people.append(Text.of(&"journal.kingdom.worse" if bool(row["worse"])
+					else &"journal.kingdom.better", [_short_place(row["town"] as StringName)]))
+			&"castle":
+				castle.append(Text.of(StringName("journal.kingdom.wealth.%s" % row["wealth"])))
+				castle.append(Text.of(StringName("journal.kingdom.unrest.%s" % row["unrest"])))
+	if people.size() == 2:
+		people.append(Text.of(&"journal.kingdom.same"))
+	return [places, people, castle] as Array[Array]
+
 
 
 ## What you are looking for. A pure view over the fact base — nothing is stored, so

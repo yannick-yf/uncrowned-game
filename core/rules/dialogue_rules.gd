@@ -77,6 +77,14 @@ static func conditions(
 	for place: StringName in PlaceRules.PLACES:
 		out[StringName("%s_is_free" % place)] = allegiance != null \
 			and PlaceRules.is_free(allegiance.holder(place))
+	# Blackcairn's two readings (§4), for the second channel: what people in the towns
+	# say about the castle. Derived from the store, never kept.
+	var unrest: StringName = CastleRules.instability(allegiance, tick)
+	var wealth: StringName = CastleRules.wealth(ticked)
+	out[&"blackcairn_is_unstable"] = unrest == CastleRules.CRISIS
+	out[&"blackcairn_is_rich"] = wealth == CastleRules.BUILDING
+	out[&"blackcairn_is_poor"] = wealth == CastleRules.SHUTTERED
+
 	# Rank (§11): derived from crown standing, read here for greetings and offers, and
 	# gating nothing — the guard knowing your face is one of three ways in, never the
 	# only one, and a test holds that no fact sits behind a rank.

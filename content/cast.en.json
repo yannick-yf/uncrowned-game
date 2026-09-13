@@ -173,6 +173,10 @@
         {
           "when": "grain_is_dear_here",
           "text": "Bread's up again. Third time this month, and nobody can tell me why."
+        },
+        {
+          "when": "blackcairn_is_unstable",
+          "text": "They say the castle gate is shut in daylight. I have never seen that."
         }
       ]
     },
@@ -345,6 +349,12 @@
           "causes": "i_got_the_convoys_moving",
           "costs": "goodwill",
           "reply": "Fine. The grain leaves tomorrow for the camp and the capital. The Wide Acres will see less of it."
+        },
+        {
+          "intent": "ask_castle_stone",
+          "text": "Is the castle still buying?",
+          "reply": "Stone and grain, twice a week, up the road. Good for the road, good for me.",
+          "requires_condition": "blackcairn_is_rich"
         }
       ]
     },
@@ -942,6 +952,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Peyre goes back to his shelves and does not offer you a chair."
+        },
+        {
+          "when": "blackcairn_is_poor",
+          "text": "The works on the north wall stopped. No stone came this month."
         }
       ],
       "options": [

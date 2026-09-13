@@ -124,6 +124,36 @@ static func entries(events: EventLog, _facts: FactBase = null) -> Array[Dictiona
 	return rows
 
 
+## The kingdom's state, for §15's page of it: the four places and who moved them, the
+## towns whose people are worse or better off, and Blackcairn's two readings. Data,
+## never words — the window phrases it, and it never says what to do about any of it.
+static func kingdom(mine: Allegiance, ticked: WorldTick, tick: int) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	if mine == null or ticked == null:
+		return rows
+	for place: StringName in PlaceRules.PLACES:
+		var last: Dictionary = {}
+		for flip: Dictionary in mine.flips:
+			if flip.get("zone", &"") == place:
+				last = flip
+		rows.append({
+			"kind": &"place", "town": place,
+			"free": PlaceRules.is_free(mine.holder(place)),
+			"decided": mine.was_decided(place),
+			"tick": int(mine.decided_at.get(place, -1)) if mine.was_decided(place) else int(last.get("tick", -1)),
+			"by_player": bool(last.get("by_player", mine.was_decided(place))),
+		})
+	for town: StringName in Region.ZONE_ORDER:
+		var lot: float = ticked.hardship_in(town)
+		if absf(lot - WorldTick.NEUTRAL) < 0.5:
+			continue
+		rows.append({"kind": &"hardship", "town": town, "worse": lot > WorldTick.NEUTRAL})
+	rows.append({"kind": &"castle", "wealth": CastleRules.wealth(ticked),
+		"unrest": CastleRules.instability(mine, tick)})
+	return rows
+
+
+
 ## What you know, and who you had it from. §15's other half: progression here is
 ## knowledge, so this is where it is visible. `line` is a description authored in
 ## content and therefore already in the player's language.

@@ -73,7 +73,8 @@ view/      Godot nodes. Replaceable.
 tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
-docs/      SPECS.md — the source of truth. V1.md — what shipped, read this first.
+docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
+           V1.md — what shipped the morning before v2.
   history/   Finished working logs. Never authoritative; kept for the reasoning.
 ```
 
@@ -168,7 +169,7 @@ This exists because a night was spent shipping things that drew wrong without
 erroring — `--headless` never calls `_draw()`, so the test suite cannot see the
 screen at all, and "no script errors" says nothing about what is on it.
 
-**`UNCROWNED_FREE=zone`** (2026-09-13) frees one of the four places for the frame
+**`UNCROWNED_FREE=zone[,zone]`** (2026-09-13) frees one or more of the four places for the frame
 `shot.sh` takes, so the free-state ground and its sign can be looked at without playing
 to them. Same gate, same reason: `--headless` never draws, and a fence that fails to go
 missing is invisible to the suite.
@@ -194,27 +195,20 @@ what it would cost in time and tokens and ask first.
 
 ## Current phase
 
-**v1 is delivered (2026-09-13).** Phases 0, 1, 2, 3, 5, 6 and 7 are done. **Start at
-`docs/V1.md`** — it is two pages and it says what the game actually is, what is built,
-what is deliberately inert, and what v1 does not have. Read it before `SPECS.md`,
-which is 3,000 lines and answers a different question.
+**v1 was delivered on 2026-09-13, and v2 on the same day.** Phases 0–3 and 5–7 of v1,
+then v2's Phases A–E (SPECS §18). **Start at `docs/V2.md`** — two pages on what the
+game actually is now, what is built, what is deliberately inert, and what v2 does not
+have; `docs/V1.md` is the same for the morning before. Read them before `SPECS.md`,
+which is 4,000 lines and answers a different question.
 
-**v2 is specified (2026-09-13) and being built, phase by phase.** It lives in
-`SPECS.md` — everything dated 2026-09-13 and marked v2 — and the intent it was written
-from is `docs/history/V2_INTENT.md`. The roadmap is SPECS §18, Phases A–E. **Phase A
-(the wild without teeth) is delivered**: beasts out, `TERRAIN_SLOWS_YOU` on with open
-country at 0.65, routes measured (road 57 s, wild 69 s, attuned 66 s), travellers drawn
-as traffic, Attunement's speed half. **Phase B (the second axis) is delivered**: hardship
-per town, the ten building acts as spoken deeds with a cost each, the face rule walked by
-test, `hardship_is_high_here`. **Phase C (four places, two states) is delivered**: the
-binary state in `Allegiance`, freeing by reading a place's thing there, holding by four
-spoken acts, the two-day freeze enforced by not offering, the free-state ground, the sign
-as a HUD line. **Phase D (the crown as a play) is delivered**: rank from crown standing,
-falling as well as rising, the last rank at 90; Halgrave's argument; the throne reading.
-**Phase E (Blackcairn reads the kingdom) is next**: wealth and instability as derived
-readings, on the castle and in the towns' talk; the journal's kingdom page. v2 is a
-content and coupling change; SPECS §18 lists what it does not touch, and nothing
-structural moves without asking Yannick.
+**v2 is delivered (2026-09-13).** It lives in `SPECS.md` — everything dated 2026-09-13
+and marked *built* — and the intent it was written from is `docs/history/V2_INTENT.md`.
+A: beasts out, terrain speeds on, the wild measured. B: hardship and the second
+direction. C: four places, two states. D: rank from standing and the throne reading.
+E: Blackcairn's two readings and the journal's kingdom page. **What comes next is not
+decided**: SPECS §13 expects a v3 art pass (a new pack, through the validator), and
+combat is the oldest debt in the project. Nothing structural moves without asking
+Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that
