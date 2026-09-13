@@ -39,18 +39,25 @@ const OPENS: Dictionary = {CROWN: &"access", OPPOSITION: &"exposure"}
 
 ## What you are called, and what it took. Four each, and the last one is the point:
 ## the crown's last rank is the castle door, the opposition's is a hearing.
+##
+## **Read off standing since 2026-09-13** (§11): the faction's opinion of the player,
+## which moves both ways and clamps at ±100 — so the last rank sits at 90 rather than
+## v1's 110, which a tally could reach and a standing never could. Nothing stores a
+## rank; the title is what the court calls somebody at that standing, and it falls as
+## well as rises. A man who served the crown for a week and then burned its granary
+## is nobody's chamberlain.
 const RANKS: Dictionary = {
 	CROWN: [
 		{"key": &"rank.crown.0", "needs": 0.0},
 		{"key": &"rank.crown.1", "needs": 25.0},
 		{"key": &"rank.crown.2", "needs": 60.0},
-		{"key": &"rank.crown.3", "needs": 110.0},
+		{"key": &"rank.crown.3", "needs": 90.0},
 	],
 	OPPOSITION: [
 		{"key": &"rank.opposition.0", "needs": 0.0},
 		{"key": &"rank.opposition.1", "needs": 25.0},
 		{"key": &"rank.opposition.2", "needs": 60.0},
-		{"key": &"rank.opposition.3", "needs": 110.0},
+		{"key": &"rank.opposition.3", "needs": 90.0},
 	],
 }
 
@@ -75,63 +82,19 @@ static func rank_key(side: StringName, rank: int) -> StringName:
 	return (table[clampi(rank, 0, table.size() - 1)] as Dictionary)["key"] as StringName
 
 
-# ------------------------------------------------------------------- jobs ---
+# ---------------------------------------------------------------- service ---
 
-## What each side counts as work, and what it is worth.
-##
-## The opposition's list is the deed table it already had: everything that costs the
-## king something is service, which is why joining them needs no new acts. The
-## crown's is shorter and deliberately so — there was **nothing pro-crown in the
-## game** before this, and inventing ten new systems to fix that would have been the
-## wrong repair. Two acts: give back what you took, and tell them something you know.
-##
-## **Extended 2026-09-13** (§8's second direction): the crown's list is now the whole
-## "builds it by" column — every act that strengthens one of the four places is
-## service, and each costs somebody with a face, which is what stops it being free.
-const WORTH: Dictionary = {
-	CROWN: {
-		&"i_gave_it_back": 12.0,
-		&"i_informed_the_crown": 30.0,
-		&"i_enforced_the_grants": 24.0,
-		&"i_got_the_convoys_moving": 20.0,
-		&"i_delivered_labour": 22.0,
-		&"i_settled_the_wage": 18.0,
-		&"i_fed_it_the_forest": 20.0,
-		&"i_paid_the_muster": 26.0,
-		&"i_fed_the_muster": 18.0,
-		&"i_handed_over_the_deserters": 30.0,
-		&"i_restored_confidence": 24.0,
-		&"i_brought_the_creditors": 28.0,
-	},
-	OPPOSITION: {
-		&"i_wrecked_a_furnace": 26.0,
-		&"i_burned_the_stores": 22.0,
-		&"i_emptied_the_vault": 24.0,
-		&"i_destroyed_the_muster_rolls": 24.0,
-		&"i_made_it_public": 30.0,
-		&"i_turned_the_workers": 28.0,
-		&"i_organised_a_withholding": 26.0,
-		&"i_recruited_deserters": 22.0,
-		&"i_redirected_a_convoy": 20.0,
-		&"i_turned_the_lord": 32.0,
-		&"i_warned_the_town": 16.0,
-	},
-}
+## Service is standing (2026-09-13). v1 kept a separate tally, `WORTH`, that only ever
+## rose, so a man who served the crown for a week and then burned its granary stayed
+## its chamberlain. The deed table's faction effects are the whole of it now: every
+## act moves the crown and the dispossessed, in both directions, and rank reads the
+## result. The crown's service list is §8's "builds it by" column, each row a deed
+## with a face.
+static func rank_from(side: StringName, standing: Standing) -> int:
+	if standing == null or not READS_STANDING.has(side):
+		return 0
+	return rank_for(side, standing.with_faction(READS_STANDING[side] as StringName))
 
-## Telling the crown something you know. The one act joining them adds, and the mirror
-## of making a thing public: the same fact, spent the other way.
-const DEED_INFORM: StringName = &"i_informed_the_crown"
-
-
-static func worth_to(side: StringName, deed: StringName) -> float:
-	return float((WORTH.get(side, {}) as Dictionary).get(deed, 0.0))
-
-
-## Serving one side costs you with the other. Nobody is owed two loyalties.
-static func costs_the_other(side: StringName) -> StringName:
-	if side == CROWN:
-		return OPPOSITION
-	return CROWN if side == OPPOSITION else NEUTRAL
 
 
 # ---------------------------------------------------------------- the map ---

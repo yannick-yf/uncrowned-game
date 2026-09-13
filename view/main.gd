@@ -1363,6 +1363,17 @@ func _page_the_king() -> Array[Array]:
 			block.append(Text.of(&"journal.wood.gone" if _ticked.held_ground <= 0.0
 				else (&"journal.wood.lost" if _ticked.steel_output > 0.0
 					else &"journal.wood.saved")))
+		# §3's throne reading. If the throne is the player's, the ending shows one thing
+		# of what they do with it: the towns they changed, the morning after, in words.
+		if _world.reign_reading != &"":
+			block.append(Text.of(StringName("journal.throne.%s" % _world.reign_reading)))
+			if _world.reign_reading == EndRules.CROWNED:
+				for town: StringName in Region.ZONE_ORDER:
+					var lot: float = _ticked.hardship_in(town)
+					if absf(lot - WorldTick.NEUTRAL) < 0.5:
+						continue
+					block.append(Text.of(&"journal.throne.worse" if lot > WorldTick.NEUTRAL
+						else &"journal.throne.better", [_short_place(town)]))
 		blocks.append(block)
 	return blocks
 
@@ -1395,7 +1406,7 @@ func _page_you() -> Array[Array]:
 	var first: Array[String] = [Text.of(&"journal.side.none")]
 	if _mine.side != FactionRules.NEUTRAL:
 		first = [Text.of(&"journal.side.row",
-			[Text.of(_mine.rank_key()), int(round(_mine.served))])]
+			[Text.of(_mine.rank_key_with(_standing))])]
 	var ground: Array[String] = ["", Text.of(&"journal.ground")]
 	for zone: StringName in FactionRules.CONTESTED:
 		var held: StringName = _mine.holder(zone)

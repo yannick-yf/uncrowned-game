@@ -225,6 +225,10 @@
         {
           "when": "the_army_is_shrinking",
           "text": "If you've come about the grain levy, so has everyone. The answer is the same."
+        },
+        {
+          "when": "crown_rank_is_at_least_1",
+          "text": "Tovin stands up. The king has your name on his lists, and so do I."
         }
       ]
     },
@@ -408,6 +412,12 @@
           "intent": "ask_works",
           "text": "What is it you make here?",
           "reply": "Iron and steel. Rails, plates, tools, nails. Before the works, 1 child in 4 died here every winter. Now it is 1 in 40."
+        },
+        {
+          "intent": "ask_the_king",
+          "text": "Why does the king want more of this?",
+          "reply": "Before the works a man here died at 40, his children before him. Now there is a road, bread in winter, 1 child in 40 lost instead of 1 in 4. He wants that everywhere. So do I.",
+          "costs": "free"
         },
         {
           "intent": "ask_cost",
@@ -1019,6 +1029,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Hesper does not look up from the list she is marking."
+        },
+        {
+          "when": "crown_rank_is_at_least_3",
+          "text": "Hesper puts her pen down. For you, the papers are a formality."
         }
       ],
       "options": [
@@ -1142,6 +1156,10 @@
         {
           "when": "hardship_is_high_here",
           "text": "The guard has eaten cold for 2 days. Move along."
+        },
+        {
+          "when": "crown_rank_is_at_least_3",
+          "text": "Dray waves you through. The gate is yours; they know your face."
         }
       ],
       "options": [

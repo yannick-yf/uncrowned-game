@@ -33,6 +33,8 @@ var king_hp: int = 1000
 ## How the reign ended, or nothing. Set once — a reign ends the way a person dies.
 var reign_ended: StringName = &""
 var reign_ended_tick: int = -1
+## §3's throne reading, taken when the reign ends: crowned, a vacancy, or nothing.
+var reign_reading: StringName = &""
 ## Landmarks already acted on. A cold furnace is cold; there is no undoing and no
 ## refilling, which is what caps how far each quantity can be pushed by hand.
 var spent_sites: Dictionary = {}
@@ -165,8 +167,8 @@ func hurt(amount: int, step: int) -> bool:
 
 
 func fingerprint() -> String:
-	return "zone=%s pos=%.4f,%.4f dir=%d,%d hp=%d deaths=%d touches=%d reached=%s talk=%s fraud=%s thefts=%d end=%s" % [
+	return "zone=%s pos=%.4f,%.4f dir=%d,%d hp=%d deaths=%d touches=%d reached=%s talk=%s fraud=%s thefts=%d end=%s/%s" % [
 		String(current_zone), player_pos.x, player_pos.y, player_dir.x, player_dir.y,
 		player_hp, deaths, touches_taken, reached_blackcairn,
-		String(talking_to), pay_fraud_exposed, thefts, String(reign_ended),
+		String(talking_to), pay_fraud_exposed, thefts, String(reign_ended), String(reign_reading),
 	]

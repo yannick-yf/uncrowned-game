@@ -30,8 +30,9 @@ func test_the_default_is_joining_nobody_and_it_costs_nothing() -> void:
 	var sim: Sim = _world()
 	var mine := sim.store(&"allegiance") as Allegiance
 	assert_eq(mine.side, FactionRules.NEUTRAL, "the game starts you on nobody's side")
-	assert_eq(mine.served, 0.0, "owing nobody anything")
-	assert_false(mine.door_is_open(), "and with no door open that was not open anyway")
+	var standing := sim.store(&"standing") as Standing
+	assert_eq(mine.rank_with(standing), 0, "called nothing by anybody")
+	assert_false(mine.door_is_open(standing), "and with no door open that was not open anyway")
 
 
 func test_joining_is_a_thing_you_say_and_it_is_recorded() -> void:
@@ -40,7 +41,7 @@ func test_joining_is_a_thing_you_say_and_it_is_recorded() -> void:
 	sim.submit(&"join", {"side": "crown"})
 	sim.advance(2)
 	assert_eq(mine.side, FactionRules.CROWN, "you are a king's man")
-	assert_eq(mine.rank(), 0, "at the bottom of it")
+	assert_eq(mine.rank_with(sim.store(&"standing") as Standing), 0, "at the bottom of it")
 
 
 func test_the_acts_you_were_already_doing_are_the_work() -> void:
@@ -50,11 +51,12 @@ func test_the_acts_you_were_already_doing_are_the_work() -> void:
 	var mine := sim.store(&"allegiance") as Allegiance
 	sim.submit(&"join", {"side": "opposition"})
 	sim.advance(2)
+	var standing := sim.store(&"standing") as Standing
 	_did(sim, DeedRules.DEED_SABOTAGE)
-	assert_true(mine.served > 0.0, "putting a furnace out is work, to them")
+	assert_true(standing.with_faction(DeedRules.FACTION_DISPOSSESSED) > 0.0, "putting a furnace out is work, to them")
 	_did(sim, DeedRules.DEED_MAKE_PUBLIC)
 	_did(sim, DeedRules.DEED_TURN_WORKERS)
-	assert_true(mine.rank() > 0, "and enough of it is a rank: %d" % mine.rank())
+	assert_true(mine.rank_with(standing) > 0, "and enough of it is a rank: %d" % mine.rank_with(standing))
 
 
 func test_the_crown_has_one_act_of_its_own_and_it_costs_you_the_town() -> void:
@@ -68,32 +70,39 @@ func test_the_crown_has_one_act_of_its_own_and_it_costs_you_the_town() -> void:
 	sim.advance(2)
 	var town_was: float = standing.in_town(&"harrowgate")
 	_did(sim, DeedRules.DEED_INFORM)
-	assert_true(mine.served > 0.0, "the crown counts it")
 	assert_true(standing.in_town(&"harrowgate") < town_was, "and Harrowgate does not")
 	assert_true(standing.with_faction(DeedRules.FACTION_CROWN) > 0.0,
 		"the one row in the table that moves the crown up")
 
 
-func test_service_does_not_carry_across_when_you_change_sides() -> void:
-	# Otherwise a player banks work for one side and cashes it with the other, and
-	# joining both in turn is strictly better than choosing.
+func test_rank_falls_when_you_act_against_the_side_that_called_you_by_it() -> void:
+	# Rank is read off standing (2026-09-13), which moves both ways. v1 kept a tally
+	# that only rose, so a man who served the crown for a week and then burned its
+	# granary stayed its chamberlain — the rejected alternative, and the reason.
 	var sim: Sim = _world()
 	var mine := sim.store(&"allegiance") as Allegiance
-	sim.submit(&"join", {"side": "opposition"})
-	sim.advance(2)
-	_did(sim, DeedRules.DEED_SABOTAGE)
-	assert_true(mine.served > 0.0, "work done for the wood")
+	var standing := sim.store(&"standing") as Standing
 	sim.submit(&"join", {"side": "crown"})
 	sim.advance(2)
-	assert_eq(mine.served, 0.0, "is not work the crown owes you for")
+	_did(sim, DeedRules.DEED_INFORM)
+	assert_eq(mine.rank_with(standing), 1, "a king's clerk, for what you carried to him")
+	_did(sim, DeedRules.DEED_SABOTAGE)
+	assert_eq(mine.rank_with(standing), 0, "and nobody's clerk after you put his furnace out")
+	sim.submit(&"join", {"side": "opposition"})
+	sim.advance(2)
 	assert_eq(mine.turned, 1, "and the turning is remembered")
 
 
-func test_rank_is_read_off_service_rather_than_stored() -> void:
-	# One number to replay, and no way for the two to disagree.
+
+func test_rank_is_read_off_standing_rather_than_stored() -> void:
+	# One number to replay, and no way for the two to disagree. Standing clamps at
+	# ±100, so the last rank has to sit inside that or the door never opens.
 	assert_eq(FactionRules.rank_for(FactionRules.CROWN, 0.0), 0)
 	assert_eq(FactionRules.rank_for(FactionRules.CROWN, 26.0), 1)
-	assert_eq(FactionRules.rank_for(FactionRules.CROWN, 200.0), 3)
+	assert_eq(FactionRules.rank_for(FactionRules.CROWN, Standing.BEST), 3)
+	for side: StringName in FactionRules.SIDES:
+		var last: Dictionary = (FactionRules.RANKS[side] as Array).back()
+		assert_true(float(last["needs"]) <= Standing.BEST, "%s's last rank is reachable" % side)
 	assert_ne(FactionRules.rank_key(FactionRules.CROWN, 3),
 		FactionRules.rank_key(FactionRules.OPPOSITION, 3), "the two are called different things")
 
@@ -167,7 +176,7 @@ func test_no_rank_is_the_only_way_to_anything() -> void:
 	assert_eq(FactionRules.OPENS[FactionRules.CROWN], &"access")
 	assert_eq(FactionRules.OPENS[FactionRules.OPPOSITION], &"exposure")
 	var neutral := Allegiance.new()
-	assert_false(neutral.door_is_open(), "joining nobody opens no extra door")
+	assert_false(neutral.door_is_open(Standing.new()), "joining nobody opens no extra door")
 
 
 # ------------------------------------------------------------------ replay ---
@@ -201,12 +210,13 @@ func test_work_done_through_an_act_is_in_the_log_too() -> void:
 	world.player_pos = Vector2(Region.CINDERWORKS) + Vector2(0.5, 0.5)
 	sim.submit(&"act")
 	sim.advance(4)
-	if mine.served <= 0.0:
+	var standing := sim.store(&"standing") as Standing
+	if standing.with_faction(DeedRules.FACTION_DISPOSSESSED) <= 0.0:
 		assert_true(true, "nothing to wreck standing there, which is a map question")
 		return
 	var replayed: Sim = Game.replay(sim)
-	assert_eq((replayed.store(&"allegiance") as Allegiance).served, mine.served,
-		"the work replays because the act was an event")
+	assert_eq((replayed.store(&"standing") as Standing).fingerprint(), standing.fingerprint(),
+		"the standing rank reads from replays because the act was an event")
 
 
 # --------------------------------------------- joining is something you say ---

@@ -371,6 +371,12 @@ know. No new predicate, no new quantity, no sixth row in `EndRules.endings()`: t
 reading is taken *after* the predicate fires, from figures the journal's second page
 (§15) already shows.
 
+**Built 2026-09-13.** `EndRules.reading_for(ending, standing)` — Deposed at the
+crown's last rank is `crowned`, below it `vacancy`, every other ending nothing — taken
+by the ending system when the reign ends and kept as `WorldState.reign_reading`. The
+journal's second page says which, and for a crowned player lists every town whose
+hardship moved, in words: *worse off than when you came*, or *better*.
+
 **And it must show what they do with it.** If the player can take the throne, the
 ending shows one thing: the **hardship figures** (§8) in the towns they changed, the
 morning after. Not a verdict — a reading, in the towns' own words (§15), of what the
@@ -1054,6 +1060,14 @@ which is exactly the shape that makes him credible: the argument and the indefen
 ledger in one man, as §5 already gives to the king and to the church. He is not
 written as right. He is written as somebody a reasonable person could follow, in the
 first hour, before the case against him has been assembled.
+
+**Built 2026-09-13.** Halgrave's second question, offered to anybody and costing
+nothing: *Why does the king want more of this?* — a man here died at 40 and his
+children before him; now a road, bread in winter, 1 child in 40 lost instead of 1 in 4;
+he wants that everywhere, and so does Halgrave. The same figures as his first answer,
+which is what makes it an argument rather than a slogan. A test holds it among the
+first three things he offers a stranger, and another holds the fairy's forbidden list
+with *king*, *roi*, *Arthur*, *crown* and *couronne* on it.
 
 **The test.** After the tutorial — creation, the fairy, the walk out of the clearing —
 a player who wants to *serve* the crown can say what their first step would be,
@@ -1778,10 +1792,11 @@ only when you say so, and **everyone can see it** (§8's appearance register —
 context packet carries `SEES YOU AS`). A crown officer can be despised in Harrowgate
 and still get through the gate at Blackcairn.
 
-**Four ranks a side, read off service rather than stored**, so there is one number to
-replay and no way for the two to disagree. Service comes off the **deed table**: every
-act already in the game counts as work for the opposition without being authored
-twice, which is why joining them needed no new verbs at all.
+**Four ranks a side, read off standing rather than stored** (service, until
+2026-09-13 — see §11), so there is one number to replay and no way for the two to
+disagree. Every act in the deed table moves the crown and the dispossessed, so every
+act is service to one side and offence to the other without being authored twice; the
+crown's list is §8's "builds it by" column.
 
 **The crown needed exactly one new act.** Every one of the thirteen deeds cost the
 king something — fine while the player could only be against him, and untenable the
@@ -2603,7 +2618,7 @@ decides what each means:
 | `this_place_is_free` / `this_place_is_crown_held` | The place the speaker stands in (§8's state) | A worker at cold furnaces has a different answer from one at lit ones |
 | `<place>_is_free` | Any of the four, from anywhere | Maddox can mention that the Acres went to the smallholders, three days after they did |
 | `hardship_is_high_here` | The speaker's town (§8) | The loyal-and-hungry line, which is the whole of the Wide Acres. **Built 2026-09-13**: eight greetings, one face per place |
-| `crown_rank_is_at_least_N` | The player's crown standing, read as rank (§11) | Greeting, offers, assumptions, what is told — never a gate |
+| `crown_rank_is_at_least_N` | The player's crown standing, read as rank (§11) | Greeting, offers, assumptions, what is told — never a gate. **Built 2026-09-13**: Dray and Hesper at 3, Tovin at 1 |
 | `blackcairn_is_unstable` / `blackcairn_is_rich` | The castle's two readings (§4) | The second channel for both readings: what towns say about the castle |
 
 A conditional line outranks a standing one, as before, so each of these takes its slot
@@ -2793,11 +2808,12 @@ something.
 | 0 | 0 | Nobody. The everyday greeting; the gate turns you away; nothing assumed |
 | 1 | 25 | Known to the crown's people. Greeted as someone; offered what a stranger is not |
 | 2 | 60 | Trusted. What people will *tell* you changes — the crown's side of a thing, said openly |
-| 3 | 110 | **The castle door.** The guard knows your face and the gate opens without papers |
+| 3 | **90** | **The castle door.** The guard knows your face and the gate opens without papers |
 
-The thresholds are v1's and stay. The words are content — `rank.crown.0` to
-`rank.crown.3`, written French first — and "Baron" in this document is a placeholder,
-not a title.
+Three of the thresholds are v1's; the last was 110 and is **90** (2026-09-13, built):
+standing clamps at ±100, so a door at 110 would never have opened. The words are
+content — `rank.crown.0` to `rank.crown.3`, written French first — and "Baron" in
+this document is a placeholder, not a title.
 
 **What rank changes.** How you are greeted, what is offered, what is assumed, and what
 people will tell you — all of it through §9's existing machinery: the rank is a
@@ -2827,6 +2843,17 @@ fed to the works, the Muster paid and fed, deserters handed back, confidence res
 the creditors brought in. Each is a deed row with a face (§8), and each is worth
 standing with the crown as the opposition's acts are worth standing with the
 dispossessed. Worths are tuning and live in the table, not here.
+
+**Built 2026-09-13 (Phase D).** `FactionRules.rank_from(side, standing)` reads the
+side's faction standing — the crown's for the crown, the dispossessed's for the
+opposition — and `Allegiance` stores only the last rank it saw, so a change can be
+announced as `rose` or `fell`; the service tally and `WORTH` are gone, and the deed
+table's faction effects are the whole of service. Three greetings read the rank
+(`crown_rank_is_at_least_N`, §9): Dray and Hesper at the last rank, Tovin at the
+first — after personal regard, because a man who watched you steal does not wave you
+through however the court styles you. The gate itself stands open as v1 left it; the
+rank changes who says what at it, and a test holds that no fact and no deed sit
+behind a rank.
 
 **The opposition's ladder is unchanged.** Four ranks, same thresholds, and its last
 rank is still a room to read in rather than a door — the shape v1 gave it in §8.
@@ -3561,7 +3588,7 @@ proposal — Yannick's to change — and the reasoning for it is under the table
 | **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
 | **B** ✅ | **The second axis** — delivered 2026-09-13 | Hardship per town, at 50, pushed only by deeds; the ten building acts as spoken deeds with a cost each; `hardship_effects` on every deed that moves the kingdom, walked by test; eight faces as greetings; `hardship_is_high_here`; the journal's worse-off rows (§8, §9, §15) | **Held:** burn the stores and feed the works the forest in one run — the Wide Acres and Brindle both past the line, Pell's and Wren's greetings changed without naming the player, two journal rows with two different causes. 36 suites, 378 tests |
 | **C** ✅ | **Four places, two states** — delivered 2026-09-13 | `PlaceRules`; the state in `Allegiance` with `decided_at`, `held_until` and `flips`; freeing by reading the place's thing there or exposing the fraud, holding by the four spoken acts that need the same thing; the freeze enforced by not offering; the band kept for the borders, which now start crown-held; the free-state ground; the sign as a HUD line; the journal's changed-hands rows (§3, §4, §8, §13, §15) | **Held:** the grants read to the tenants free the Acres; a town at 90 cannot take them back for two days and then does; Nessa will not enforce them while the place is held and will after; a paid camp cannot be exposed for two days and then can; the sign reads loyal, freed, restored in turn. 37 suites, 391 tests |
-| **D** | **The crown as a play** | Rank from crown standing, falling as well as rising; the gate knowing your face as one of the three ways in; the crown's service list; the reworked opening — Halgrave audible in the first hour, the fairy checked (§5, §11) | §5's test: a playtester who wants to serve can name a first step unprompted. A loyal run reaches the throne reading and is shown hardship the morning after — and the same run can still turn |
+| **D** ✅ | **The crown as a play** — delivered 2026-09-13 | Rank from crown standing through `FactionRules.rank_from`, falling as well as rising, `rose`/`fell` announced, the last rank at 90; the service tally gone; `crown_rank_is_at_least_N` and three greetings that read it; Halgrave's argument as his second, free question; the throne reading in `EndRules` and the journal (§3, §5, §9, §11) | **Held:** a clerk after informing, a chamberlain after four crown acts, an officer again after one furnace; a stranger is offered the argument with its figures; Deposed at the last rank reads *crowned*, as a nobody *vacancy*, and a chamberlain who empties the vault still ruins the reign. 38 suites, 403 tests |
 | **E** | **Blackcairn reads the kingdom** | Wealth and instability as derived readings, on the castle and in the towns' talk; the journal's kingdom page (§4, §15) | Four flips in one window and the same four over a season look different at the gate and sound different in Harrowgate |
 
 **Why this order.** A is a removal, and deleting before adding means every later
@@ -3912,6 +3939,11 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **A decision that keeps a place where it was is a stamp, not a flip** | Ignoring it; counting it as a flip | Enforcing the grants on an Acres the crown already held is the player deciding it stays so: it freezes the place and the sign says *strengthened*, and it counts nothing toward instability, because to the men on the wall nothing moved |
 | 2026-09-13 | **A freed place has no watch** | Keeping the watchmen posted whoever holds the place | The crown's men left with the crown. It is also §4's free variant made mechanical — the granary door open and no watchman — and it costs one check in the act system |
 | 2026-09-13 | **The entrance sign is a HUD line while you stand in the place** | A sign prop at the gate; a line only on entering | The Muster's atmosphere lines already work this way and the pack has no sign sprite. It is the ambient register speaking, which is what §15 asked for; a prop can come with v3's art |
+| 2026-09-13 | **The crown's last rank is at 90, not 110** | Keeping 110; raising the standing clamp | Standing clamps at ±100 and rank is read off standing now, so a door at 110 never opens. Ninety keeps it dear — four crown acts, or three and informing — and inside the clamp. The other three thresholds are v1's |
+| 2026-09-13 | **The service tally and `WORTH` are removed; rank is `FactionRules.rank_from(side, standing)`** | Keeping both numbers; reading the tally | Two numbers for one idea disagree, and the tally only rose. The deed table's faction effects already move the crown and the dispossessed on every act, so service was being counted twice. The store keeps only the last rank it saw, to announce a change |
+| 2026-09-13 | **A rank greeting comes after personal regard and after hardship** | Rank first | A man who watched you steal does not wave you through however the court styles you, and a place that is worse off says so before it says anything about your title. The gate still opens: greetings are what rank changes, not doors |
+| 2026-09-13 | **The throne is read by the ending system when Deposed fires and kept as `reign_reading`** | Reading it in the journal each time; a stored flag set by an act | Taken once, from standing at the moment the reign ends — the same moment `reign_ended` is stamped — so a replay reads the same throne. The journal only phrases it, and shows the morning after in words |
+| 2026-09-13 | **Halgrave's argument is his second question and costs nothing** | A new NPC for the crown's case; a reply gated on goodwill | §5 wants one credible voice in the first hour who is not a fool; Halgrave already had the figures and the belief. Second, so the cap of three offers it to a stranger; free, because he is not ashamed of it, which is what makes him credible |
 
 ---
 

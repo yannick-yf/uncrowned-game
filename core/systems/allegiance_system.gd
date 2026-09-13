@@ -37,7 +37,7 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 			# payload catches every act instead of the two spelled here.
 			if event.data.has("about"):
 				var about: StringName = StringName(event.data.get("about", ""))
-				_serve(sim, mine, about)
+				_notice_rank(sim, mine)
 				# The same thing spent the crown's way, in the place, holds it.
 				var holds: StringName = PlaceRules.held_by(about)
 				if holds != &"" and StringName(event.data.get("town", "")) == holds:
@@ -45,8 +45,11 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 
 
 func _join(sim: Sim, mine: Allegiance, side: StringName) -> void:
+	var standing := sim.store(&"standing") as Standing
 	if mine.join(side):
 		sim.derive(&"joined", {"side": String(side), "turned": mine.turned})
+		# Called by your new rank at once; a rise is announced only from here on.
+		mine.last_rank = FactionRules.rank_from(side, standing)
 
 
 func _leave(sim: Sim, mine: Allegiance) -> void:
@@ -54,7 +57,6 @@ func _leave(sim: Sim, mine: Allegiance) -> void:
 		return
 	var was: StringName = mine.side
 	mine.side = FactionRules.NEUTRAL
-	mine.served = 0.0
 	mine.turned += 1
 	sim.derive(&"left", {"side": String(was)})
 
@@ -76,21 +78,23 @@ func _decide(sim: Sim, mine: Allegiance, zone: StringName, to: StringName) -> vo
 	})
 
 
-## What a deed was worth to whoever the player joined.
+## What the court calls you now, after what you just did.
 ##
-## Read from the deed rather than from a quest list, so **every act already in the
-## game counts as service without anything being authored twice**. It is also why
-## the opposition needed no new acts: the deed table was already entirely theirs.
-func _serve(sim: Sim, mine: Allegiance, deed: StringName) -> void:
-	if mine.side == FactionRules.NEUTRAL or deed == &"":
+## Rank is read off standing (§11, 2026-09-13), which the deed has already moved by
+## the time this hears of it — so there is nothing to add up, only a change to notice.
+## Rises and falls are both announced, because a rank that only ever rose is a ratchet
+## and a court that kept calling a man chamberlain after he burned its stores would be
+## storing something.
+func _notice_rank(sim: Sim, mine: Allegiance) -> void:
+	if mine.side == FactionRules.NEUTRAL:
 		return
-	var worth: float = FactionRules.worth_to(mine.side, deed)
-	if worth <= 0.0:
+	var now: int = FactionRules.rank_from(mine.side, sim.store(&"standing") as Standing)
+	if now == mine.last_rank:
 		return
-	var was: int = mine.rank()
-	mine.served += worth
-	if mine.rank() != was:
-		sim.derive(&"rose", {"side": String(mine.side), "rank": mine.rank()})
+	var was: int = mine.last_rank
+	mine.last_rank = now
+	sim.derive(&"rose" if now > was else &"fell", {"side": String(mine.side), "rank": now})
+
 
 
 ## The ground changing hands, once per world tick, by drift.

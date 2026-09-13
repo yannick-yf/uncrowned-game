@@ -225,6 +225,10 @@
         {
           "when": "the_army_is_shrinking",
           "text": "Il me manque des hommes sur mes listes et personne au camp ne veut me dire combien."
+        },
+        {
+          "when": "crown_rank_is_at_least_1",
+          "text": "Tovin se lève. Le roi a votre nom sur ses listes, et moi aussi."
         }
       ]
     },
@@ -408,6 +412,12 @@
           "intent": "ask_works",
           "text": "Qu'est-ce que vous fabriquez ici ?",
           "reply": "Du fer et de l'acier. Des rails, des plaques, des outils, des clous. Avant les forges, 1 enfant sur 4 mourait ici chaque hiver. Maintenant c'est 1 sur 40."
+        },
+        {
+          "intent": "ask_the_king",
+          "text": "Pourquoi le roi en veut-il encore plus ?",
+          "reply": "Avant les Forges, un homme mourait ici à 40 ans, ses enfants avant lui. Maintenant il y a une route, du pain l'hiver, 1 enfant sur 40 perdu au lieu de 1 sur 4. Il veut ça partout. Moi aussi.",
+          "costs": "free"
         },
         {
           "intent": "ask_cost",
@@ -1019,6 +1029,10 @@
         {
           "when": "they_think_ill_of_me",
           "text": "Hesper ne lève pas les yeux de la liste qu'elle annote."
+        },
+        {
+          "when": "crown_rank_is_at_least_3",
+          "text": "Hesper pose sa plume. Pour vous, les papiers sont une formalité."
         }
       ],
       "options": [
@@ -1142,6 +1156,10 @@
         {
           "when": "hardship_is_high_here",
           "text": "La garde mange froid depuis 2 jours. Passez votre chemin."
+        },
+        {
+          "when": "crown_rank_is_at_least_3",
+          "text": "Dray vous fait signe de passer. La porte est à vous, on connaît votre visage."
         }
       ],
       "options": [

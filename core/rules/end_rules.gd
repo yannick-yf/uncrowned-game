@@ -95,6 +95,22 @@ static func handprint_of(reading: StringName, ticked: WorldTick) -> float:
 const SENTIMENT_SOUR: float = 35.0
 
 
+## §3's throne reading (2026-09-13). Not a sixth ending: a reading taken *after*
+## Deposed fires, from two figures the journal already shows. The handprint is in the
+## predicate — Deposed cannot fire without it — so what is left to read is whether the
+## crown knows the one who hollowed the army. At its last rank, the vacancy is yours;
+## below it, you made a vacancy and somebody else filled it.
+const CROWNED: StringName = &"crowned"
+const VACANCY: StringName = &"vacancy"
+
+
+static func reading_for(ending: StringName, standing: Standing) -> StringName:
+	if ending != DEPOSED or standing == null:
+		return &""
+	var rank: int = FactionRules.rank_from(FactionRules.CROWN, standing)
+	return CROWNED if rank >= FactionRules.RANK_OPENS_THE_DOOR else VACANCY
+
+
 ## Which line names a reading on the page. The word belongs to the window; this
 ## says only which reading it is.
 static func label_key(reading: StringName) -> StringName:

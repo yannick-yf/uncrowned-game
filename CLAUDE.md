@@ -209,10 +209,12 @@ per town, the ten building acts as spoken deeds with a cost each, the face rule 
 test, `hardship_is_high_here`. **Phase C (four places, two states) is delivered**: the
 binary state in `Allegiance`, freeing by reading a place's thing there, holding by four
 spoken acts, the two-day freeze enforced by not offering, the free-state ground, the sign
-as a HUD line. **Phase D (the crown as a play) is next**: rank from crown standing, the
-crown's service list, the reworked opening, the throne reading. v2 is a content and
-coupling change; SPECS §18 lists what it does not touch, and nothing structural moves
-without asking Yannick.
+as a HUD line. **Phase D (the crown as a play) is delivered**: rank from crown standing,
+falling as well as rising, the last rank at 90; Halgrave's argument; the throne reading.
+**Phase E (Blackcairn reads the kingdom) is next**: wealth and instability as derived
+readings, on the castle and in the towns' talk; the journal's kingdom page. v2 is a
+content and coupling change; SPECS §18 lists what it does not touch, and nothing
+structural moves without asking Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that

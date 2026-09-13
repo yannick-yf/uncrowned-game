@@ -11,9 +11,10 @@ extends RefCounted
 ## despised in Harrowgate and still get through the gate at Blackcairn.
 
 var side: StringName = FactionRules.NEUTRAL
-## Work done for whoever you joined. Rank is read off it rather than stored, so
-## there is one number to replay and no way for the two to disagree.
-var served: float = 0.0
+## What the court last called you. Rank is *derived* — read off your side's standing
+## by FactionRules.rank_from, never stored — and this remembers only the last reading
+## so a change can be announced. Rebuilt by replay like everything else.
+var last_rank: int = 0
 ## How many times the player has changed their mind. Not a cost yet; it is here
 ## because a game that lets you switch sides silently is one where the choice is free.
 var turned: int = 0
@@ -46,23 +47,23 @@ func join(side: StringName) -> bool:
 	if self.side != FactionRules.NEUTRAL:
 		turned += 1
 	self.side = side
-	# Service does not carry across. What you did for the other side is not work they
-	# owe you for, and a player who could bank it would join both in turn.
-	served = 0.0
 	return true
 
 
-func rank() -> int:
-	return FactionRules.rank_for(side, served)
+func rank_with(standing: Standing) -> int:
+	return FactionRules.rank_from(side, standing)
 
 
-func rank_key() -> StringName:
-	return FactionRules.rank_key(side, rank())
+func rank_key_with(standing: Standing) -> StringName:
+	return FactionRules.rank_key(side, rank_with(standing))
 
 
-## Whether the player has risen far enough for their side's last door to open.
-func door_is_open() -> bool:
-	return side != FactionRules.NEUTRAL and rank() >= FactionRules.RANK_OPENS_THE_DOOR
+## Whether the player stands high enough for their side's last door to open. One of
+## the ways in, never the only one (invariant 4): at high standing the gate opens
+## because the guard knows your face; at low standing you climb the wall.
+func door_is_open(standing: Standing) -> bool:
+	return side != FactionRules.NEUTRAL and rank_with(standing) >= FactionRules.RANK_OPENS_THE_DOOR
+
 
 
 ## Whether a player's decision still holds here.
@@ -117,5 +118,5 @@ func fingerprint() -> String:
 	for zone: StringName in zones:
 		if decided_at.has(zone) or held_until.has(zone):
 			stamps.append("%s@%d<%d" % [zone, int(decided_at.get(zone, -1)), int(held_until.get(zone, 0))])
-	return "side=%s served=%.2f rank=%d turned=%d flips=%d | %s | %s" % [
-		side, served, rank(), turned, flips.size(), ";".join(held), ";".join(stamps)]
+	return "side=%s rank=%d turned=%d flips=%d | %s | %s" % [
+		side, last_rank, turned, flips.size(), ";".join(held), ";".join(stamps)]

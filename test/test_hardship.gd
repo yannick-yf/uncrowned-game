@@ -125,7 +125,6 @@ func test_the_crowns_acts_are_paid_for_by_the_people_his_project_ruined() -> voi
 		assert_true(float(factions.get(DeedRules.FACTION_DISPOSSESSED, 0.0)) < 0.0,
 			"%s costs the dispossessed nothing, so it is free" % deed)
 		assert_true(DeedRules.moves_the_kingdom(deed), "%s moves nothing" % deed)
-		assert_true(FactionRules.worth_to(FactionRules.CROWN, deed) > 0.0, "%s is worth no rank" % deed)
 
 
 func test_every_building_act_can_be_said_to_somebody() -> void:
