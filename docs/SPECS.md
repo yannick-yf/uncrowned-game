@@ -17,7 +17,7 @@
 > approval or rejection. Everything else came from him.
 
 **Status:** **v1 delivered, 2026-09-13; v2 specified in this document the same day**,
-from `docs/V2_INTENT.md`, which becomes history once every passage below carries it.
+from `docs/history/V2_INTENT.md`, moved there the same day once every passage below carried it.
 Everything dated 2026-09-13 and marked v2 is *specified, not built*: §18 has the
 roadmap. Five sections still carry 🟡 — they were invented by Claude, they were
 *built* anyway because v1 needed them, and they still want Yannick's yes or no. §3's
@@ -107,7 +107,7 @@ is deliberate — see §6.
 | **Hardship** | What an act costs the people who live in a place, held per town beside the twelve quantities. Up is worse. The second axis, which makes both directions cost something | §8 |
 | **Crown-held / free** | The two states a place can be in — never a third, never better than it started. Four places carry one; Blackcairn has one state and never flips | §8, §3, §4 |
 | **The decisive change** | One act per place, at its landmark, with the thing the place holds — the grants, the ledger, the rolls, the debts — whose outcome lands crown-held or free | §3 |
-| **The freeze window** | 2 in-game days = 2880 ticks = 12 real minutes. How long a state the player set holds against the sentiment band; also what "recently" means to Blackcairn | §8, §4 |
+| **The freeze window** | 2 in-game days = 2880 ticks = 12 real minutes. How long a state the player set holds against everything — the sentiment band and the opposite decisive act alike; also what "recently" means to Blackcairn | §8, §4 |
 | **The throne reading** | Deposed, with the player's handprint, at high crown standing: the player takes the throne. A reading of one ending, not a sixth | §3 |
 
 ---
@@ -813,6 +813,8 @@ that was tuned and approved, so every other surface is a penalty. Were the wild
 > not tiring" has no first half left, and tiring is the price the table was reasoned
 > for. `Region.TERRAIN_SLOWS_YOU` is the one word. "Distance against danger" goes back
 > to being what this section said first: **speed against witnesses**.
+> One exception, by trait: an attuned character is not slowed by the wood, or not as
+> much (§11, Q50).
 
 ### The wild is slow and unwatched (2026-09-13; was *dangerous*, settled 2026-09-11)
 
@@ -1765,14 +1767,20 @@ table.
 
 > **2 in-game days = 2 × 1440 = 2880 world ticks = 12 real minutes.**
 
-A state the player set holds for that long. **The hold binds the band, not the
-player**: during it the town's sentiment cannot move the place back, whatever it
-reads, and the player may still act — invariant 4 forbids a timer in front of a deed.
-After the hold both paths apply again. A place is **reversible**: a freed Wide Acres
-whose town swings above 70 goes back to the crown by drift, exactly as v1 would have
-moved it. The hold is what makes a decisive act decisive — without it a band at 70
-could undo a liberation on the next tick, and the player's largest act in a place
-would read as weather.
+A state the player set holds for that long, **against everything** (Yannick,
+2026-09-13): the town's sentiment cannot move the place back, whatever it reads, and
+the opposite decisive act is **refused** for the length of the hold — the way a roused
+watch refuses an act (above). That is world state refusing a deed, the same shape v1
+already has, not a progression gate: the place has just been decided and stays decided
+for two days, and everything else at the place still works — the other acts move the
+quantities and write hardship as before. As with the roused watch, the ambient shows
+the door shut and the journal says what shut it; the landmark never advertises an act
+it will refuse. After the hold both paths apply again. A place is **reversible**: a
+freed Wide Acres whose town swings above 70 goes back to the crown by drift, exactly as
+v1 would have moved it, and the player may restore it by hand. The hold is what makes a
+decisive act decisive — without it a band at 70 could undo a liberation on the next
+tick, or the player could flip a place twice in a minute, and the largest act in a
+place would read as a switch.
 
 The window is **a tick stamp in the event log** and nothing else — no timer, no node,
 no second clock — so a replay lands on the same tick in the same state.
@@ -2606,7 +2614,7 @@ ever wasted:
 | **Temper** | Accusation, threat, fury; the emotional register, not an ability | Higher damage, less control — a real trade-off |
 | **Hands** | Craft knowledge — how the works, the farms and the ledgers actually function | Speed, blocking, precision |
 | **Body** | Physical presence in a room | Health, stamina, carrying |
-| **Attunement** | The forest's register: you can read what is dying and who is doing it, and some people only speak to somebody who can | The wild does not treat you as prey — fights you never have, rather than damage you deal |
+| **Attunement** | The forest's register: you can read what is dying and who is doing it, and some people only speak to somebody who can | **The wood does not slow you** (2026-09-13): at 3 or more the Thornwood's speed penalty does not apply, or applies less — a cost you do not pay, rather than damage you deal |
 
 **Point-buy:** each trait starts at 1, with a pool of **10** to distribute; maximum
 **5** at creation (settled 2026-09-13, closing §19 Q6 and Q22).
@@ -2638,13 +2646,18 @@ one miracle and it happened to the player rather than being performed by them.
 Attunement is the ability to *notice* it: what the clearing is doing, what is in the
 wood, and what the people pushed into it will say to somebody who can tell.
 
-Its combat half is the same sensitivity pointed the other way: **the wild stops
-treating you as prey.** That is fights you never have, not damage you deal — the
-precedent is *Presence*, whose combat use is ending fights without violence. And it
-makes the two social traits the map's two sides: **Presence is the road build** (the
-Access route, papers, being seen and being let in) and **Attunement is the forest
-build** (unwatched, unprovoked, and able to hear the half of the region the king is
-clearing). §4's thesis, bought at character creation.
+Its second half is the same sensitivity pointed at the ground: **the wood does not
+slow you** (Yannick, 2026-09-13, closing Q50). v1 had *the wild stops treating you as
+prey* — fights you never have — and the beasts went with v2 (§4), so the price of the
+wild is now time, and an attuned character does not pay all of it: at Attunement 3 or
+more — the one threshold every tag uses — the Thornwood's speed penalty does not
+apply, or applies less. The figure is Phase A's to measure (§18), not to write here.
+The precedent is still *Presence*, whose second use is ending fights without violence:
+a trait's second half is a cost you do not pay, not damage you deal. And it makes the
+two social traits the map's two sides: **Presence is the road build** (the Access
+route, papers, being seen and being let in) and **Attunement is the forest build**
+(unwatched, unslowed, and able to hear the half of the region the king is clearing).
+§4's thesis, bought at character creation.
 
 > **Still open, and downstream of Q42/Q43**: *who* only speaks to somebody attuned.
 > The forest has no people in it yet, so the dialogue half of this trait currently
@@ -3429,7 +3442,7 @@ proposal — Yannick's to change — and the reasoning for it is under the table
 
 | | Phase | What it builds | Proof |
 |---|---|---|---|
-| **A** | **The wild without teeth** | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on; `measure_routes` re-run; travellers drawn as traffic (§4, §13) | The two route rows still say different things — the road faster, the wild unseen — and a player with a reputation still takes the wood |
+| **A** | **The wild without teeth** | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on; `measure_routes` re-run; travellers drawn as traffic; Attunement's speed half (§4, §11, §13) | The two route rows still say different things — the road faster, the wild unseen — and a player with a reputation still takes the wood |
 | **B** | **The second axis** | Hardship per town; the "builds it by" rows for every quantity, each with a face and a hardship push; the counterpart test extended to faces; §9's conditions (§8, §9) | Burn the stores and feed the works the forest in one run; the journal shows two towns worse off in two different ways, and a named person in each says so without naming you |
 | **C** | **Four places, two states** | Binary state per place; the decisive act with two outcomes at each landmark; the freeze window as a tick stamp; the band kept for the borders; the free-state ground; the entrance sign as a voice (§3, §8, §13, §15) | Free the Wide Acres, watch the band fail to take it back for two days, then restore it; a replay from the log lands on the same tick; the sign says something different each time |
 | **D** | **The crown as a play** | Rank from crown standing, falling as well as rising; the gate knowing your face as one of the three ways in; the crown's service list; the reworked opening — Halgrave audible in the first hour, the fairy checked (§5, §11) | §5's test: a playtester who wants to serve can name a first step unprompted. A loyal run reaches the throne reading and is shown hardship the morning after — and the same run can still turn |
@@ -3446,8 +3459,8 @@ and the standing exception in CLAUDE.md stands with it. v2 does not open it; if 
 does, it is a sixth phase and goes after E, because the wild's question is "will I be
 seen" until a fight is something the player can do.
 
-**When this is done**, `docs/V2_INTENT.md` moves to `docs/history/` and `docs/V1.md`
-gets a sibling that says what v2 is.
+**When this is done**, `docs/V1.md` gets a sibling that says what v2 is. The intent this
+was written from is already `docs/history/V2_INTENT.md`.
 
 ---
 
@@ -3535,7 +3548,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q48 | ~~**Mother Crowe does not exist, and somebody else has her job.**~~ — answered 2026-09-12: **Route C rebuilds around Corvin Ash.** He is built, he is good, and the debt is already his in dialogue and in `bank:debts`. The church keeps the *venue* — it is a better church for being against magic (Q47) than it ever was for being a creditor. Crowe is cut, and §6's ★★ row and §7's redundancy prose both name her and must be rewritten before invariant 7's walk can run | §6, §7 | Closed 2026-09-12 |
 | Q49 | **Does the raising survive being said out loud?** The church is against magic, the player was raised by it, and Route C's climax happens in that church before its congregation. Whether the congregation can learn what the player is — and what happens if they do — is the most interesting consequence of Q47 and is unwritten | §5, §6 | Route C's cost |
 | Q34 | ~~**Bookkeeping.** The header's populated-sections list is stale; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared directories.~~ — swept 2026-09-13, at the end of v1: the header says v1 rather than draft, §20 gained the seventeen decisions that had been recorded only in a working log, §19 closed the questions the code had already answered, and the directories all exist and are full. **It came back three times**, which is the real finding: a document that is edited faster than it is re-read goes stale in the places nobody looks, and only a pass with a date on it fixes that. §17's "Settled" rows inside 🟡 sections are still there and are still the same complaint | header, §17, §20, repo | Closed; §17 outstanding |
-| Q50 | **Attunement's combat half has nothing to point at.** §11 gives it *"the wild does not treat you as prey — fights you never have"*, and with the beasts out (§4, 2026-09-13) there is nothing in the wild to not be prey to. The dialogue half — who only speaks to somebody attuned — is already waiting on the forest's people (Q42/Q43). Either the trait gets a new second half or it becomes the one trait that does one thing; that is Yannick's call, not a drafting one | §11, §4 | Whether all six traits still do double duty |
+| Q50 | ~~**Attunement's combat half has nothing to point at.**~~ — answered 2026-09-13: **the wood does not slow you.** Time is the wild's price now, and an attuned character does not pay all of it, at Attunement 3 or more. The same shape as before — a cost you do not pay — pointed at the new price. The figure is Phase A's to measure (§18) | §11, §4 | Closed |
 
 ---
 
@@ -3756,7 +3769,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **Hardship is a per-town reading beside the twelve**, and the thirteenth-quantity refusal is amended to cover standing-shaped numbers only | Folding it into town sentiment; into the player's standing; one global figure; a genuine thirteenth quantity | Sentiment is what a town thinks of the crown and a town can be loyal and hungry; standing is what it thinks of *you*. The refusal was about numbers indexed by town, faction and person — a condition of a *place* is what grain price already is, and `held_ground` had already set the precedent |
 | 2026-09-13 | **Every quantity has a "builds it by" direction, as rows, and every act that moves the kingdom names who it costs — with a face** | Ten pro-crown systems; informing alone; "steel +20" with no cost | `push()` is signed and `credit_from()` carries the hand along a coupling, so the second direction is table rows. Without the face it is a scoreboard with two ends and the player picks an end; hardship is what makes both ends cost something and neither correct |
 | 2026-09-13 | **A place changes hands two ways, and both are kept**: the sentiment band (drift, no handprint, the two borders) and one decisive act per place (handprint, tick stamp) | Only the band; only the act; the band extended to all four | The band is v1's honest model of a border and the one way a place moves without the player (Pillar 4). The act is the only way a flip can carry a handprint, without which the throne reading never fires. A Cinderworks that went free on a bad week of bread would be a power base falling to weather |
-| 2026-09-13 | **The freeze window is 2 in-game days — 2880 ticks, 12 real minutes — one constant, a tick stamp in the log, binding the band and not the player** | A season; under a day; a timer; a hold that also blocks the player's reverse act | A season makes the first flip final and a place that cannot be restored is a ratchet; under a day the band could reverse a liberation before the player reached the next town. A stamp replays; a timer does not. Invariant 4 forbids a timer in front of the player's own deed |
+| 2026-09-13 | **The freeze window is 2 in-game days — 2880 ticks, 12 real minutes — one constant, a tick stamp in the log, and during it nothing moves the place: not the band, not the player** | A season; under a day; a timer; a hold that binds the band only and lets the player reverse at once | A season makes the first flip final and a place that cannot be restored is a ratchet; under a day the band could reverse a liberation before the player reached the next town. A stamp replays; a timer does not. Blocking the player too was Yannick's call: a place flipped twice in a minute is a switch, not a decision. It is the roused-watch shape — world state refusing an act, with the door shown shut — and not a progression gate, so it is no new exception |
 | 2026-09-13 | **Four places, deeply — not six thinly.** The Cinderworks, the Wide Acres, the Muster, the bank; Greyhold and Harrowgate deferred; **wood gets no town** | Six places each with two directions; a Thornwood zone for fuel | Four is what `SiteRules` already reaches and what can be written to depth. Felling the forest is a Cinderworks consequence — the works needs fuel — so the factory eating the forest becomes a mechanic for one belt of tile work instead of a zone |
 | 2026-09-13 | **One decisive change per place, with two outcomes** — a deed at the landmark with the thing the place holds, spent one way or the other | Two quests per place; a quest store; a menu at the landmark | Halves the writing and keeps invariant 5 literally true. The shape already exists twice: a fact told once to one audience, and making a thing public against informing on it. What decides the outcome is what the player brought, never a choice offered at the door |
 | 2026-09-13 | **Two states per place, crown-held or free, with a ceiling at the starting state**; the borders' neutral start is retired | A third state; a "held by the player" state; "better than the crown had it" | You restore or you liberate; the Wide Acres never becomes better than it has ever been. Neutral was v1's "a border is not a side", and a binary rule has no room for it — what makes the borders borders is that the band can still move them |
@@ -3770,6 +3783,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **Road travellers are kept**, never conversational, never named, drawn as traffic | Removing them with the beasts; making them people | They are how rumour physically travels; before them a story reached every town whichever way the player walked. Removing them removes rumour propagation, the point of the Thornwood and the reason the road ratio exists. If they read as fake it is a drawing problem |
 | 2026-09-13 | **The pack and the palette are locked for v2; a v3 art pass replaces both**, and the validator is what makes that safe | Swapping art during the systems rewrite | An art swap during a rewrite makes every visual bug ambiguous between the two. The four rules — one pack, a locked palette, the validator, one kit per place — are the wall a new pack has to clear, and the validator says immediately what it does not cover. Licence checked before anything is drawn |
 | 2026-09-13 | **v2 is a content and coupling change** and does not touch the split, the log, the twelve as a set, the handprint, standing's three indexes, quests as predicates, determinism, the invariants or French-first | A snapshot save; renaming quantities; a new standing index; a quest store | Every one of those is load-bearing and finished, and every v2 change is expressible as rows, readings and words on it. The freeze window is a tick stamp so that a replay lands identically |
+| 2026-09-13 | **Attunement's second half is "the wood does not slow you"**, at 3 or more | Accepting one trait doing one thing; leaving it open until Phase A is measured | The beasts took its combat half with them. Time is the wild's price now, so the forest build not paying all of it is the same idea — a cost you do not pay, Presence's shape — pointed at the new price. Six traits keep their double duty (Q50) |
 
 ---
 
@@ -3784,7 +3798,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Child characters | Out of scope permanently, by decision | Never |
 | Mother Sabine Crowe | Cut 2026-09-12. The spec made her the creditor the king fears; the built game gave that to Corvin Ash at the bank, and Ash is good. The church keeps Route C's venue | The church ever gets a leader |
 | **Absolution or Coercion** — Route C's choice of *how you get the room* | Went with Crowe. She was an accomplice who had to be either absolved into convening the reckoning or coerced into it, with a different enemy left standing at the end of each. A real choice, and Route C is dramatically poorer without it | A convener exists again. Not before: the deed that replaced her needs nobody's permission, and adding a gate to the one route no death can close would be spending its best property for drama |
-| **The beasts** — the bear, the spider, the bat | Cut 2026-09-13, from the whole map. A wild whose cost is blood asks "will I survive", which is a combat question; the map's question is "will I be seen". The three lessons they taught — danger ahead, safety by margin not tile, waiting must not make the route safe — are kept in §4 for whatever hunts there next. Cost noted: Attunement's combat half has nothing to point at (Q50) | Combat exists (Phase 4) and the wild is meant to draw blood again — through the combat screen, not on contact |
+| **The beasts** — the bear, the spider, the bat | Cut 2026-09-13, from the whole map. A wild whose cost is blood asks "will I survive", which is a combat question; the map's question is "will I be seen". The three lessons they taught — danger ahead, safety by margin not tile, waiting must not make the route safe — are kept in §4 for whatever hunts there next. Attunement's combat half went with them and was replaced (Q50: the wood does not slow you) | Combat exists (Phase 4) and the wild is meant to draw blood again — through the combat screen, not on contact |
 | **A Thornwood town for wood** | Wood gets no town of its own (2026-09-13). The Cinderworks needs fuel, so felling the forest is a Cinderworks consequence and one belt of tile work | The forest gets people (Q42/Q43) and needs a place for them to stand — which is a different reason from fuel |
 
 ---

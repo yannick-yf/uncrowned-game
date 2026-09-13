@@ -193,13 +193,18 @@ what it would cost in time and tokens and ask first.
 what is deliberately inert, and what v1 does not have. Read it before `SPECS.md`,
 which is 3,000 lines and answers a different question.
 
-**v2 is being specified separately.** Until that spec lands, treat `SPECS.md` as the
-description of a finished thing rather than a plan, and change nothing structural
-without asking Yannick.
+**v2 is specified (2026-09-13) and nothing of it is built.** It lives in `SPECS.md` —
+everything dated 2026-09-13 and marked v2 — and the intent it was written from is
+`docs/history/V2_INTENT.md`. The roadmap is SPECS §18, Phases A–E, and **Phase A (the
+wild without teeth) is next**: beasts out, `TERRAIN_SLOWS_YOU` on, routes re-measured,
+travellers drawn as traffic, Attunement's speed half. v2 is a content and coupling
+change; SPECS §18 lists what it does not touch, and nothing structural moves without
+asking Yannick.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that
-waits. It is the largest single thing v2 could pick up.
+waits. **It is out of v2 as well** (Yannick, 2026-09-13): §18's roadmap is A–E, and
+combat would be a phase after it, or v3.
 
 **There is no LLM in v1, decided 2026-09-12 and tested rather than argued.** Two
 local models, sixteen real packets, four prompt designs, on this machine. The
@@ -248,8 +253,8 @@ without asking.
 1. **No combat screen.** SPECS §10 rules that fights happen never in the overworld.
    Phase 0 breaches that and v1 still does: the king kills the player **on contact in
    the overworld, three touches**. The real side-on combat screen is Phase 4, which is
-   out of v1 — so this exception outlived the phase that created it and is now the
-   oldest debt in the project. Nothing may assume the combat screen's shape.
+   out of v1 and out of v2 — so this exception outlived the phase that created it and
+   is now the oldest debt in the project. Nothing may assume the combat screen's shape.
 
 **Retired, kept here so the history reads straight:**
 

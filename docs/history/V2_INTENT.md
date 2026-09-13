@@ -1,5 +1,9 @@
 # Uncrowned — v2 intent
 
+> **Historical since 2026-09-13.** `SPECS.md` carries all of this — every passage dated
+> 2026-09-13 and marked v2 — so this file is kept for the reasoning and is never
+> authoritative, like everything in `docs/history/`.
+
 > **What this is.** The settled design intent for v2, written 2026-09-13 before any
 > document was changed. It is the input to the spec rewrite, not a replacement for
 > `SPECS.md`. Once §§2–20 carry all of this, this file becomes history.
