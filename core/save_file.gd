@@ -9,7 +9,7 @@ extends RefCounted
 ## did and loading is replaying them. There is no snapshot of the world here and
 ## nothing that can drift out of step with it.
 ##
-## §19 Q5, settled 2026-09-12: **you save at a campfire and dying puts you back at
+## §19 row 5, settled 2026-09-12: **you save at a campfire and dying puts you back at
 ## the last one.** Phase 0's "respawn in Brindle keeping everything" is retired.
 ##
 ## A snapshot beside the log is the obvious optimisation when replaying a long run

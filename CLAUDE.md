@@ -73,7 +73,8 @@ view/      Godot nodes. Replaceable.
 tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
-docs/      SPECS.md — the source of truth.
+docs/      SPECS.md — the source of truth. V1.md — what shipped, read this first.
+  history/   Finished working logs. Never authoritative; kept for the reasoning.
 ```
 
 ## Commands
@@ -82,10 +83,37 @@ docs/      SPECS.md — the source of truth.
 godot --headless --path . --import          # once after cloning
 tools/run_tests.sh                          # the feedback loop — after every change
 tools/run_tests.sh --all                    # before committing
+tools/shot.sh /tmp/a.png play 150,174       # look at it — see "Development tools"
 godot --headless --path . -s tools/sim_runner.gd -- --ticks 5000
 godot --headless --path . -s tools/measure_routes.gd
 godot --headless --path . -s tools/validate_assets.gd -- --no-cache
 ```
+
+### Committing — read this before your first `git commit`
+
+**Every git command that writes runs with `GIT_CONFIG_GLOBAL=.git/overnight-gitconfig`.**
+
+```bash
+GIT_CONFIG_GLOBAL=.git/overnight-gitconfig git commit -F /tmp/message.txt
+```
+
+Yannick's `~/.gitconfig` is managed by GitKraken across **two accounts, one of them
+professional**, and it must not be edited or inherited. That file pins the personal
+identity, turns off signing, and touches nothing else. It is not optional and it is
+not a preference: committing without it either fails or writes the wrong author.
+
+Three habits that come from getting this wrong:
+
+- **Write the message to a file and use `-F`.** Passing it inline lets the shell eat
+  backticks and `$`; one commit message shipped with a word silently deleted.
+- **Never chain a destructive command to one that may not have succeeded.**
+  `git commit … && git reset --hard HEAD~1` destroyed a commit when the commit half
+  failed and the reset half did not. Run them separately and read the output.
+- **Never restore a file from a backup you took earlier without checking what is in
+  it.** `cp /tmp/region_new.gd core/region.gd` silently reverted an hour of work,
+  because the backup predated it. `git diff` first, or use `git show HEAD:path`.
+
+Yannick pushes; this repo does not. Commit locally and stop.
 
 **Run the suite through `tools/run_tests.sh`, never `test_runner.gd` directly.**
 The script is part of the check, not a convenience. A GDScript runtime error does
@@ -143,9 +171,9 @@ screen at all, and "no script errors" says nothing about what is on it.
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more
 of them and "walk about until you find him" is not a way to review a character.
 
-Both are gated on `OS.has_feature("debug")`, so they are absent from a release
-export. Anything else of this kind goes behind the same gate and gets listed here.
-A debug tool that is not written down is a debug tool that ships.
+**All four are gated on `OS.has_feature("debug")`**, so they are absent from a
+release export. Anything else of this kind goes behind the same gate and gets listed
+here. A debug tool that is not written down is a debug tool that ships.
 
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
 > so you cannot walk anywhere while time passes, which is the whole point.
@@ -160,11 +188,18 @@ what it would cost in time and tokens and ask first.
 
 ## Current phase
 
-**Phase 7 — art, audio and polish.** Phases 0, 1, 2, 3, 5 and 6 are delivered.
-Phase 4, combat, is **out of v1 or its very last step** (Yannick, 2026-09-12).
-Four of the five endings need no fighting; the fifth, killing him, is the one that
-waits. Plan for v1 shipping with four endings and treat combat as the thing that
-happens only if everything else is finished.
+**v1 is delivered (2026-09-13).** Phases 0, 1, 2, 3, 5, 6 and 7 are done. **Start at
+`docs/V1.md`** — it is two pages and it says what the game actually is, what is built,
+what is deliberately inert, and what v1 does not have. Read it before `SPECS.md`,
+which is 3,000 lines and answers a different question.
+
+**v2 is being specified separately.** Until that spec lands, treat `SPECS.md` as the
+description of a finished thing rather than a plan, and change nothing structural
+without asking Yannick.
+
+Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
+the five endings need no fighting, and the fifth — killing him — is the one that
+waits. It is the largest single thing v2 could pick up.
 
 **There is no LLM in v1, decided 2026-09-12 and tested rather than argued.** Two
 local models, sixteen real packets, four prompt designs, on this machine. The
@@ -191,19 +226,40 @@ SPECS §9 *Reactions* for the four rules, and `test/test_reactions.gd`.
 > whole-line generation, few-shot examples (which made it *worse*), and opener-only
 > generation.
 
-### Standing exceptions — deliberate, temporary, and only these three
+**What "new evidence" means, for v2** (noted 2026-09-13, because the ruling is about
+to be read by a different model). The evidence that settled this was *two local models
+on this machine*, and it is tempting to conclude that a larger or hosted model settles
+it the other way. It does not, and the reason is in the finding: **the failure was the
+door, not the writer.** `ProseRules` can check figures, names, register and formatting,
+and none of those catch a sentence that means the opposite of what it was given — the
+pass rate went *up* to 94% while the meaning went backwards 5 times in 6.
 
-Carried forward from Phase 0. They contradict SPECS on purpose, and each names the
-decision that replaces it. Numbers 1 and 2 are retired by Phase 4. Do not generalise from them, and do not add a
-fourth without asking.
+So the experiment that would reopen this is **"can anything catch an inverted line
+automatically"**, not "is this model better at writing". Until something answers that,
+a better model produces better prose with the same unverifiable failure mode, which is
+the worse of the two states because it looks fine.
+
+### Standing exceptions — deliberate, and now only one
+
+Carried forward from Phase 0. An exception contradicts SPECS on purpose and names the
+decision that will replace it. Do not generalise from it, and do not add a second
+without asking.
 
 1. **No combat screen.** SPECS §10 rules that fights happen never in the overworld.
-   Phase 0 breaches that: the king kills the player **on contact in the overworld,
-   three touches**. The real side-on combat screen is Phase 3+, and nothing in
-   Phase 0 may assume its shape.
-2. **No save system. Death respawns the player in Brindle with everything kept.**
-   There is no cost, no reload, no lost progress. The real death and save policy is
-   a later decision (SPECS §19) — Phase 0 must not encode one, and the respawn goes
-   through the event log like any other event.
-3. **Movement is 8-way**, which is a decision rather than a breach, recorded here
-   because Phase 0's whole measurement depends on it (SPECS §4).
+   Phase 0 breaches that and v1 still does: the king kills the player **on contact in
+   the overworld, three touches**. The real side-on combat screen is Phase 4, which is
+   out of v1 — so this exception outlived the phase that created it and is now the
+   oldest debt in the project. Nothing may assume the combat screen's shape.
+
+**Retired, kept here so the history reads straight:**
+
+- ~~*No save system. Death respawns the player in Brindle with everything kept.*~~
+  **Retired 2026-09-12**, when SPECS §19 row 5 settled it: you save by resting at a
+  campfire, and dying puts you back at the last one. The save is the event log and
+  nothing else, so loading is replaying — see `core/save_file.gd`. Since 2026-09-13 a
+  new run writes its save at character creation, because the file otherwise still held
+  the previous run and dying before the first rest reloaded somebody else's afternoon.
+- ~~*Movement is 8-way, recorded because Phase 0's measurement depends on it.*~~
+  **Retired 2026-09-13.** It was never a breach, and it is not provisional any more —
+  it is simply how the game moves (SPECS §4). Arrow keys were added beside WASD when
+  the menus arrived.
