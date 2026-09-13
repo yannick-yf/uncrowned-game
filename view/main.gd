@@ -1097,6 +1097,22 @@ func _draw_journal() -> void:
 		else:
 			lines.append(Text.of(&"journal.wood.holding", [int(wood.get("paces", 0))]))
 
+	# What you are looking for. A pure view over the fact base — nothing is stored,
+	# so there is nothing that can disagree with what you actually know.
+	lines.append("")
+	lines.append(Text.of(&"journal.quests"))
+	var open_quests: Array[Dictionary] = QuestRules.open_ones(_sim.facts)
+	var found: Array[Dictionary] = QuestRules.done_ones(_sim.facts)
+	if open_quests.is_empty() and found.is_empty():
+		lines.append(Text.of(&"journal.quests.none"))
+	for quest: Dictionary in open_quests:
+		var step: Array = QuestRules.progress(quest, _sim.facts)
+		lines.append(Text.of(&"journal.quests.row",
+			[Text.of(QuestRules.name_key(quest)), int(step[0]), int(step[1])]))
+		lines.append("     %s" % Text.of(QuestRules.note_key(quest)))
+	for quest: Dictionary in found:
+		lines.append(Text.of(&"journal.quests.done", [Text.of(QuestRules.name_key(quest))]))
+
 	# What you are, and what it has bought. Joining is worn (§8's appearance
 	# register), so the one screen that joins acts to consequences should say it.
 	lines.append("")

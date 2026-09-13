@@ -3,6 +3,32 @@
 > **Yannick reads this first.** It is both the plan and the record: what was built,
 > in what order, and every decision taken without him in the room.
 
+## NIGHT THREE — the five that make it a game
+
+Asked for, with full autonomy and no combat: **quests, character creation, a title
+screen, visual identity, audio.** Production grade, meaning the next change is cheap.
+
+**No assets downloaded.** Everything needed is already inside the approved pack, which
+also keeps §13's never-mix-packs rule intact: 94 character sprites (18 in use), 41
+music tracks, ambient wind/river/waves, and menu sounds. Downloading would have been
+allowed and was not needed.
+
+### The shape each one has to have
+
+| | Design constraint it must satisfy |
+|---|---|
+| **Quests** | Invariant 5: *reactions to fact patterns, not scripts. A quest that can only start one way is a bug.* So a quest is a **predicate over the fact base**, live when its pattern holds and done when another does — never a sequence of steps, and never owned by the person who mentions it |
+| **Character creation** | §11: a fixed pool across six traits, max 5 at creation. Attunement is now attunement to the forest (Q41), so it gates a register rather than a spell list |
+| **Title screen** | The save already exists and there is no way to choose it. New, continue, language, quit |
+| **Identity** | Harrowgate a town rather than a village; buildings that differ by place; the 25 named people not sharing 18 sprites |
+| **Audio** | Music per place, ambient by terrain, and the small sounds a menu needs |
+
+**Low maintenance means**: each of these is a **table** somewhere in `rules/` or `Art`,
+not a pile of conditionals. Adding a quest, a trait, a building or a track should be a
+row, and every one of them is checked by a test that fails when the row is wrong.
+
+---
+
 ## NIGHT TWO — after Yannick played it
 
 He played it and the verdict was *"far from v1 expected"*. The opening is good; the
