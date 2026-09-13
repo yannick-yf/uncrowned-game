@@ -5,8 +5,16 @@
 > must be either a stated constant or a **machine-checkable assertion**. Anything
 > that can only be judged by eye belongs in §11, not in the criteria.
 >
-> **Status:** draft. `[DECIDE]` marks a choice Yannick must make before an
-> autonomous run. `[DERIVED]` marks a value taken from the existing build.
+> **Status: delivered, 2026-09-13.** The map was built to this brief and all twelve
+> of §10's criteria pass — see `test_map.gd` and `tools/map_criteria.gd`. The
+> `[DECIDE]` markers below were answered by the build rather than by a conversation,
+> and the answers are constants in `core/region.gd` (`SEA_WEST`, `SEA_SOUTH`,
+> `MOUNTAIN_NORTH`, `MOUNTAIN_EAST`, `KETTLE`, `THICKET_DEPTH`), which is where to
+> read them. They are left in place because the brief is kept as written: this is a
+> record of what was asked for, not a description of what exists. For that, read
+> `docs/V1.md` and §4 of `SPECS.md`.
+>
+> `[DERIVED]` marks a value taken from the build that preceded it.
 
 ---
 

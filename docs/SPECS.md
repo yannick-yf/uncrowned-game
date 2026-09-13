@@ -10,12 +10,18 @@
 > **Sections marked 🟡 were invented by Claude at Yannick's request** and need his
 > approval or rejection. Everything else came from him.
 
-**Status:** draft. §3's power bases, §6's roster and §8's world tick are approved;
-sections still carrying 🟡 are Claude's and await Yannick's yes or no.
-**Last updated:** 2026-09-10
-**Version:** 0.7
+**Status:** **v1 delivered, 2026-09-13.** This document now describes a finished
+thing rather than a plan, and v2 is being specified separately. Five sections still
+carry 🟡 — they were invented by Claude, they were *built* anyway because v1 needed
+them, and they still want Yannick's yes or no about whether they should survive into
+v2. §3's power bases, §6's roster and §8's world tick were approved long ago.
+**Last updated:** 2026-09-13
+**Version:** 1.0
 **Location:** this file, `uncrowned-game/docs/SPECS.md`, is the single source of
-truth. `SPECS_wild_notes.md` holds the original raw notes for reference only.
+truth on *what the game is*. For *what currently exists* — which is the question you
+have if you have just arrived — read `docs/V1.md` first; it is two pages. `CLAUDE.md`
+wins on how we work. Finished working logs and the original raw notes are in
+`docs/history/` and are never authoritative.
 
 ---
 
@@ -1396,7 +1402,7 @@ on the sentiment of the town under them — on a band rather than a line, so a b
 cannot flicker. The player's choices show on the map, in the only two places where
 showing is honest.
 
-> **The disguise is proposed and not built**, by decision. See `docs/OVERNIGHT.md`:
+> **The disguise is proposed and not built**, by decision. See `docs/history/OVERNIGHT.md`:
 > worn rather than toggled, fools strangers and never the twenty-five named people,
 > broken by being seen acting, and gating nothing.
 
@@ -2727,13 +2733,21 @@ to keep. Re-running the whole experiment against a better small model later is o
 command, and the door got materially stricter for having been pointed at real
 generated text.
 
-**Phase 7 — the opening, the map, factions, polish and the look. 🟡 in progress**
-Commissioned art replacing the approved pack, audio, and the accessibility pass
-§16 defers.
+**Phase 7 — the opening, the map, factions, quests, character creation, the front of
+the game, identity and audio. Delivered 2026-09-13.**
 > **Proof:** Yannick wants to play it in front of someone else.
 
+Three nights, in three parts. **2026-09-12**: the opening, the map, factions, polish
+and the look — itemised below. **2026-09-13, after he played it**: the ocean bug, the
+Thornwood closed with ways through it, campfires and beasts given reasons, Blackcairn
+made a castle, a floor for every place, and the map screen. **2026-09-13, the five
+that make it a game**: quests, character creation, a title screen, identity, audio.
+
+Commissioned art replacing the approved pack and the accessibility pass §16 defers are
+**not** in v1 and were never started. Audio was, out of the approved pack — see §14.
+
 **Delivered 2026-09-12**, overnight, in five pieces — the running record, with every
-decision taken without him in the room, is `docs/OVERNIGHT.md`:
+decision taken without him in the room, is `docs/history/OVERNIGHT.md`:
 
 1. **The opening.** The player wakes in the fairies' clearing, one corridor leads out
    to the ruins with the furnaces in the same frame, the ground the fairies hold is a
@@ -2755,6 +2769,22 @@ finished.
 
 ---
 
+### v1 ends here
+
+Phase 7 was the last of it. **The roadmap above is complete apart from Phase 4**, and
+what comes next is a v2 specification written separately — so nothing in this section
+should be read as a plan any more. The two largest things it leaves on the table, in
+the order they would change the game most:
+
+1. **Combat**, and with it the fifth ending and the standing exception that has
+   outlived every phase since Phase 0.
+2. **The other two ways into Blackcairn** — the culvert and the cliff path §4
+   promises. Only the gate exists, which is why it stands open.
+
+`docs/V1.md` lists the rest of what v1 does not have, plainly and in one place.
+
+---
+
 ## 19. Open questions
 
 ### Register
@@ -2773,7 +2803,8 @@ finished.
 | 10 | Can facts be wrong? Rumours, lies, misinformation | 2026-09-10 | Yes — see Q25 |
 
 > Row 5 closed 2026-09-12. Phase 0's "respawn in Brindle keeping everything" is
-> retired by it. Row 6 is still open and its rationale was wrong — see Q22.
+> retired by it. Row 6 closed 2026-09-13 with Q22 — its original rationale was wrong,
+> and the correction is in Q22 rather than here.
 
 ### Decision queue — from the 2026-09-10 spec audit
 
@@ -2788,7 +2819,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q2 | **Define "a route is open" as a predicate**, per route, as a list of required facts and required performers. Exposure's "enough from at least four power bases" is the worst gap — "enough from one" is defined nowhere | §3, §7 | The reachability test |
 | Q3 | ~~**Who holds "how he fights"?**~~ — answered 2026-09-11: the Muster teaches it, Ryse primary and Odile second, because the king trained with his own guard. Still open, separately: §3's "requires knowing / having / being" mixes facts, traits, items and levels in one vocabulary, and redundancy can only apply to facts | §3, §6 | Partly closed |
 | Q4 | **Where does the authoritative fact list live** — §7's table or `content/facts` — and who fills it? | §7 | The fact base |
-| Q5 | **Quests.** No quest, fact pattern or quest count exists anywhere, though invariant 5 governs them and XP is granted for them | §9, §17 | Invariant 5 |
+| Q5 | ~~**Quests.** No quest, fact pattern or quest count exists anywhere.~~ — answered 2026-09-13: **eight quests, and a quest is a predicate over the fact base.** `core/rules/quest_rules.gd` and nothing else: no store, no system, no migration. A quest is two fact patterns — what you must know for it to be a question you could be asking, and what makes it answered — so the state *is* the fact base and a reloaded save has exactly the quests its facts imply. Invariant 5 falls out of the shape rather than being policed: because §7 requires every fact to have more than one source, every quest has more than one way in for free | §9, §17 | Closed |
 | Q6 | **Who witnesses a fight?** Combat now runs beside the sim, so nothing says how the witness set is derived — line-of-sight snapshot at transition, or something else — and whether that snapshot is an event | §8, §10 | Reputation, rumour |
 | Q7 | ~~**§10's "Violence is never mechanically punished" is false against §8**~~ — answered 2026-09-11: §10's wording was wrong, not §8's. It means **no karma meter and no progression gate** — patrols thickening after a witnessed crime is the *social* punishment §10 itself describes, made visible and escapable. §10 amended; patrol density and guard alertness now respond to any witnessed deed | §8, §10 | Closed |
 | Q8 | **World-tick persistence.** Are the twelve quantities event-sourced, snapshotted or stored? Invariant 3 routes all persistent state through the event log; SPECS never mentions the log | §8 | Save format |
@@ -2806,19 +2837,19 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q19 | **Four resolutions, three routes, no mapping.** Killed / spared / publicly broken / walked away from, against Force / Access / Exposure — an ending state machine nobody has sized | §5, §17 | Endings |
 | Q20 | **The escort schedule is not integral.** "Roughly one and a half fewer per power base damaged" removes 9 of 10 across six, leaving one guard, not "a bare handful" — and 1.5 is not a person | §3 | The difficulty curve |
 | Q21 | **What is a guard worth?** The king's 1000 HP never changes, so the power bases close "most of" the gap only if the escort carries most of the threat. The third column has no unit | §3, §10 | Combat balance |
-| Q22 | ~~**Trait pool and cap together.**~~ — answered 2026-09-13: **pool 10, cap 5.** The complaint was right — no pool size forces a count, only a cap does — and 10 is the number at which two specialisms cost 8 and three cost 12, so the third is out of reach. ~~12 does not force two specialisms.~~ 12 does not force two specialisms — it buys three at 5. No pool size forces a count; only a cap does | §11 | Character creation |
-| Q23 | **Can traits rise after creation?** Attunement gates whether some NPCs will speak at all, which is a creation-time gate. §11 says levelling raises "attributes", never defined against the six traits | §11 | Invariant 4 |
+| Q22 | ~~**Trait pool and cap together.** 12 does not force two specialisms — it buys three at 5. No pool size forces a count; only a cap does.~~ — answered 2026-09-13: **pool 10, cap 5.** The complaint was right, and 10 is the number at which two specialisms cost 8 and three cost 12, so the third is out of reach. Ten buys two at five with two spare, or one at five and two at three, or a flat spread — and each of those is a different person, which twelve was not | §11 | Closed |
+| Q23 | ~~**Can traits rise after creation?**~~ — answered 2026-09-13: **no.** The six are chosen once and do not move, which is what keeps a trait gate legal under invariant 4: nothing opens because you did the previous thing. What levelling raises is left to v2 and is not the six. The store therefore holds no history — `core/traits.gd` is six numbers and a flag | §11 | Closed |
 | Q24 | ~~**Is a document a fact, an item, or both** — and does it survive its holder's death?~~ — answered 2026-09-12: **both.** Reading it is knowledge, holding it is proof, and they are different things — the same distinction the game already had between knowing the pay fraud and being able to say it. **Documents lie in places, not in people**, so no death destroys one; and nothing takes one off you once it is in your hands. See §7 | §7 | Closed |
 | Q25 | **Can facts be wrong?** Rumours already ship in §8. Decides the fact-base type | §7, §8 | The fact base |
 | Q26 | ~~**The road's shape.**~~ — answered 2026-09-11: the prose wins, trunk through the Muster, Saltmarch on a spur, and the dog-leg is held to a 1.30–1.50 ratio by test. See §4 | §4 | Closed |
 | Q26old | **The road's shape.** The prose routes the King's Road through the Muster; the sketch routes it through Saltmarch & Greyhold and leaves the Muster a dead-end spur, and "the Muster, on the crossroads" has no crossroads. Since on-road means seen, this decides which power bases can be reached unwatched | §4 | The map |
 | Q27 | **Kell lives in a zone marked "cut first".** He is one of three sources of the player's own past. The optional zones are "Settled" scope in §17 and absent from §21's cut list | §4, §6, §17, §21 | The player's past |
 | Q28 | ~~**Zone or screen as the loadable unit.**~~ — answered 2026-09-11: **neither.** The overworld is one region and the towns are in it; a zone is an *interior*, entered when the scale or the rules change. Screen-by-screen transitions were considered and rejected: §13's target is *Echoes of Wisdom*, which scrolls, the map is 7.0 × 8.9 screens so it does not divide, and a diagonal road with 8-way movement crosses boundaries constantly. Orientation is the map screen's job (§15) | §4, §22 | Closed |
-| Q36 | **Health never comes back.** There is no healing, so the wild's cost ratchets: your second crossing is far more dangerous than your first, and dying in Brindle is the only reset. Fine while death is cheap; needs an answer when Phase 4 makes fights survivable | §10, §11 | Phase 4 |
+| Q36 | ~~**Health never comes back.**~~ — answered before v1 shipped: it does. `RecoverySystem` mends you slowly in the open and faster in a town, and never while something is biting you; resting at a campfire mends you fully and moves the world eight hours. The premise this was raised on is gone. What is *not* answered is the balance question underneath it — what a fight costs — and that waits on Phase 4 with the rest of combat | §10, §11 | Closed; balance waits on Phase 4 |
 | Q7b | ~~**Is the map the right size?**~~ — answered by playing rather than by arithmetic: a ~60-second empty walk was already too long, so the road-travel target came *down* to 45–90 seconds and the map keeps its 280×200. Length belongs in what is in the way, not in distance | §4 | Closed |
 | Q28b | **Gates must be bands, not tiles.** A walker covers 6 tiles a second, so a one-tile doorway can be stepped clean over — you walk through the wall of a town and nothing happens. Every transition needs to be at least two tiles deep in the direction of travel. Recorded because it will bite again for the culvert, the ford and the cliff path | §4 | A rule for every future transition |
 | Q28old | **Zone or screen as the loadable unit.** Invariant 3 says "zones unload"; zone boundaries are undefined, and §22's inspirations table is the only place that states how a zone is entered | §4, §22 | Streaming, invariant 3 |
-| Q29 | **The journal screen**, which §15 calls the most important in the game, is TBD — and no save/load screen is listed at all, while §1 commits to save-based play | §15 | The real progression UI |
+| Q29 | ~~**The journal screen is TBD, and no save/load screen is listed at all.**~~ — answered 2026-09-13: both are built. The journal is **six pages turned with left and right** — what you have done, what holds him up, what you are looking for, what you are, what you know, and a debug roll of who is where — and **every page is cut to the box rather than trusted to fit**, because a Label given more lines than it has room for draws the ones that fit and says nothing about the rest. Save and load are the title screen: New, Continue, and a confirmation before a run in progress is replaced | §15 | Closed |
 | Q30 | ~~**Asset validator inputs:** palette and approved pack list are still TBD.~~ — answered: Ninja Adventure (CC0), palette locked at 340 colours in `content/palette.txt`, validator in `tools/asset_validator.gd` | §13 | Closed |
 | Q31 | **§8's five consequences** are an empty list declared to be "the specification for the reactivity system", while §17 already marks the twelve quantities "Settled" | §8, §17 | Reactivity |
 | Q32 | **§12 economy is a bare TBD** while money is load-bearing in five places: a weakening lever, a fact-acquisition path, an Exposure failure mode, a leverage type, and five of the twelve tick quantities | §12 | Prices, bribery, the bank |
@@ -2837,7 +2868,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q47 | ~~**Which side is the church on?**~~ — answered 2026-09-12: **the church is against magic.** It is not the king's ally; it is a third power that agrees with him about exactly one thing. See §5 for what that buys | §5, §6 | Closed |
 | Q48 | ~~**Mother Crowe does not exist, and somebody else has her job.**~~ — answered 2026-09-12: **Route C rebuilds around Corvin Ash.** He is built, he is good, and the debt is already his in dialogue and in `bank:debts`. The church keeps the *venue* — it is a better church for being against magic (Q47) than it ever was for being a creditor. Crowe is cut, and §6's ★★ row and §7's redundancy prose both name her and must be rewritten before invariant 7's walk can run | §6, §7 | Closed 2026-09-12 |
 | Q49 | **Does the raising survive being said out loud?** The church is against magic, the player was raised by it, and Route C's climax happens in that church before its congregation. Whether the congregation can learn what the player is — and what happens if they do — is the most interesting consequence of Q47 and is unwritten | §5, §6 | Route C's cost |
-| Q34 | **Bookkeeping.** The header's populated-sections list is stale; §17 marks rows "Settled" that live in 🟡 unapproved sections; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared `core/ view/ tools/ test/` | header, §17, §20, repo | Nothing — but it misleads readers |
+| Q34 | ~~**Bookkeeping.** The header's populated-sections list is stale; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared directories.~~ — swept 2026-09-13, at the end of v1: the header says v1 rather than draft, §20 gained the seventeen decisions that had been recorded only in a working log, §19 closed the questions the code had already answered, and the directories all exist and are full. **It came back three times**, which is the real finding: a document that is edited faster than it is re-read goes stale in the places nobody looks, and only a pass with a date on it fixes that. §17's "Settled" rows inside 🟡 sections are still there and are still the same complaint | header, §17, §20, repo | Closed; §17 outstanding |
 
 ---
 
@@ -3037,6 +3068,23 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | **The forest's scope is deferred to Phase 7's map work** | Deciding it now | Yannick: the map is being changed and improved in Phase 7, and how much forest there is is a map question before it is a content question. The opening already guarantees the premise reaches the player regardless |
 | 2026-09-12 | **Route C has no performer**, and the spec is corrected to match the code rather than the code to match the spec | Building a convener; inventing a replacement for Crowe | `DEED_MAKE_PUBLIC` is reading a document aloud where people can hear, and it gates on nothing. Route C therefore cannot be closed by any death, which makes **Hesper the only route a death can shut** — deliberate, and stronger for being the only one. The cost is the cut Absolution/Coercion choice, recorded in §21 rather than quietly dropped |
 | 2026-09-12 | **Attunement is a register, not a spell list**, and its combat half is that the wild stops treating you as prey | Keeping combat magic; dropping the trait; giving it a damage type | There is no player magic — the one miracle happened *to* the player. Fights you never have is real double duty and has a precedent in Presence. It also makes the two social traits the map's two sides: Presence is the road build, Attunement the forest build, §4's thesis bought at character creation |
+| 2026-09-13 | **The Thornwood is closed wood with ways carved through it** | A lawn with trees drawn on it; a wall around it | A wood you cross in a straight line costs only teeth. Carved rather than blocked, so connectivity holds by construction instead of by luck |
+| 2026-09-13 | **Blackcairn is a wall with a gate**, not a town stamp in a pale colour | Four houses in a white rectangle | The gate is the whole reason Route B exists: Hesper's papers get you through a door, and a door you can walk round is not a door |
+| 2026-09-13 | **The map of Erileo ships, on `M`** | Debug only; no map at all | A game whose argument is the road against the forest should let you see the shape of the argument |
+| 2026-09-13 | **Looking at a screenshot is part of the check**, and `tools/shot.sh` exists to make it cheap | Trusting "no script errors over 300 frames" | `--headless` never calls `_draw()`. The ocean shipped covered in shoreline tiles, the granaries were statues for two nights, and every one of those was invisible to the suite and obvious in a picture |
+| 2026-09-13 | **No two settlements are built out of the same kit** — buildings, street scenery and floor all differ by place | One set of houses everywhere | Yannick, after playing: the capital and the market town were the same picture with a different name over it |
+| 2026-09-13 | **A settlement's ground is a ragged ellipse, never a rectangle**, and the fray may only eat natural ground | A rectangle stamp; fraying over anything | A straight edge is a town laid out with a ruler that nobody has walked on. Fraying over anything left a corner of thicket inside the Muster with a watchman posted in it |
+| 2026-09-13 | **Nobody in the cast shares a sprite** | Reusing eighteen sheets across twenty-nine roles | Three women in three towns were the same woman. For a game about walking up to twenty-five specific people, the name over their head cannot be the only thing telling them apart |
+| 2026-09-13 | **A quest is a predicate over the fact base** — no store, no system, no migration | A quest store with its own state; scripted steps | The state *is* the fact base, so a reloaded save has exactly the quests its facts imply, and invariant 5 falls out of the shape rather than being policed (Q5) |
+| 2026-09-13 | **Trait pool 10, cap 5, chosen once and never raised** | A pool of 12; traits that level with the character | Twelve buys three maxed traits and leaves three at the floor, which is a shopping list rather than a choice. Not raising them is what keeps a trait gate legal under invariant 4 (Q22, Q23) |
+| 2026-09-13 | **A trait tag gates a line at 3 or more, and invariant 6 counts a trait gate as a gate** | Display-only tags; putting facts behind traits | A character at the floor of all six must still be able to finish the game, so no fact sits behind a tag — each has a plain teacher as well |
+| 2026-09-13 | **The game has a front — title, character creation, pause — and `screens.gd` owns which screen is up** | Booting straight into the world, as it did | The save system existed and was unreachable: no way to say *new*, no way to say *continue*. Screens emit `chose(what, carrying)` and know nothing about each other |
+| 2026-09-13 | **One save slot; a new run asks before replacing it, then writes itself at creation** | Silently overwriting; writing only at the first campfire | The file otherwise still holds the previous run, so dying before the first rest drops you into somebody else's afternoon |
+| 2026-09-13 | **The game is set in the pack's own typeface** | Godot's fallback sans | §13's one-pack rule covers a typeface exactly as it covers a tileset, and the fallback sans was the clearest amateur mark left on the screen. A test now refuses any line using a glyph the face lacks |
+| 2026-09-13 | **The journal is paged, and every page is cut to the box** | One long scrolling list | A Label given more lines than it has room for draws the ones that fit and says nothing about the rest. It had been overflowing since the faction sections arrived and nobody could have known (Q29) |
+| 2026-09-13 | **§14 Audio: three tables — music by place, ambience by ground, cues by what happened** | A sound call at each site that makes one | `core/` says you are standing in Saltmarch and must never learn that Saltmarch sounds like water. A cue is named by the event, so no caller knows which file it is |
+| 2026-09-13 | **The score shares no track between the road and the forest** | One overworld theme | §4's thesis is that they are two worlds, and music is the one place that can say so without a caption. The ground the works has taken plays a lament |
+| 2026-09-13 | **The audio is committed to the repo**, and sound can be switched off from the title and the pause menu | Leaving it re-downloadable from itch.io, as the art rule had it | A clone without it is a silent game with three tests that pass only on the machine the files happen to be on, which is worse than having no tests |
 
 ---
 
