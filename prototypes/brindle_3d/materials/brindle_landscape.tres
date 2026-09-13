@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3]
+[ext_resource type="Shader" path="res://shaders/brindle_landscape.gdshader" id="1"]
+[ext_resource type="Texture2D" path="res://assets/brindle/ground_noise.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/brindle/painted_cliff.png" id="3"]
+[resource]
+resource_name = "Terrain Brindle - herbe pierre berges"
+shader = ExtResource("1")
+shader_parameter/ground_noise = ExtResource("2")
+shader_parameter/painted_rock = ExtResource("3")

@@ -1,0 +1,153 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rock.tres" id="1_l537v"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_00.res" id="2_wtqqt"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_plaster.tres" id="3_eu5k7"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_01.res" id="4_bdfbe"]
+[ext_resource type="PrismMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_02.res" id="5_t5cnq"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="6_vjk5c"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_03.res" id="7_gwikr"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_04.res" id="8_6gip0"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_dark.tres" id="9_5bshh"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_05.res" id="10_4p6i8"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_iron.tres" id="11_r17e0"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_06.res" id="12_jocvn"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rope.tres" id="13_o4br0"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_07.res" id="14_5luae"]
+[ext_resource type="Material" path="res://prototype_3d/materials/window.tres" id="15_yjw7q"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_08.res" id="16_cwalm"]
+[ext_resource type="Material" path="res://prototype_3d/materials/library_shutters.tres" id="17_qokr4"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_09.res" id="18_ffegx"]
+[ext_resource type="Material" path="res://prototype_3d/materials/library_roof_rust.tres" id="19_v3gde"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_10.res" id="20_a56en"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_roof.tres" id="21_nwlls"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_11.res" id="22_k7jmm"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_12.res" id="23_5cnpe"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_13.res" id="24_0ehuc"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_14.res" id="25_gabkm"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_fisher_15.res" id="26_hijeo"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3vlpm"]
+size = Vector3(4.85, 0.3, 4.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sk5kc"]
+size = Vector3(4.5, 2.3, 3.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rg85m"]
+size = Vector3(2.2, 1.75, 0.65)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_uu0ve"]
+height = 0.9095
+radius = 0.3315
+
+[node name="CottageFisher" type="Node3D" unique_id=853850586]
+metadata/asset_id = "cottage_fisher"
+metadata/family = "houses"
+metadata/label = "Maison du pêcheur"
+metadata/habitat = "Village ; porte décorative, sans intérieur"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Foundation" type="MeshInstance3D" parent="." unique_id=413035163]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = ExtResource("1_l537v")
+mesh = ExtResource("2_wtqqt")
+
+[node name="Body" type="StaticBody3D" parent="Foundation" unique_id=1523835363]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Foundation/Body" unique_id=1521892031]
+shape = SubResource("BoxShape3D_3vlpm")
+
+[node name="Walls" type="MeshInstance3D" parent="." unique_id=1248637707]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+material_override = ExtResource("3_eu5k7")
+mesh = ExtResource("4_bdfbe")
+
+[node name="Body" type="StaticBody3D" parent="Walls" unique_id=948961133]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Body" unique_id=284548095]
+shape = SubResource("BoxShape3D_sk5kc")
+
+[node name="Gables" type="MeshInstance3D" parent="." unique_id=1097080742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 0)
+material_override = ExtResource("3_eu5k7")
+mesh = ExtResource("5_t5cnq")
+
+[node name="RearAnnex" type="StaticBody3D" parent="." unique_id=1558101510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.875, -2.2)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RearAnnex" unique_id=846173556]
+shape = SubResource("BoxShape3D_rg85m")
+
+[node name="Architecture_wood" type="MeshInstance3D" parent="." unique_id=1863928937]
+material_override = ExtResource("6_vjk5c")
+mesh = ExtResource("7_gwikr")
+
+[node name="Architecture_rock" type="MeshInstance3D" parent="." unique_id=1472621432]
+material_override = ExtResource("1_l537v")
+mesh = ExtResource("8_6gip0")
+
+[node name="Architecture_dark" type="MeshInstance3D" parent="." unique_id=1206979078]
+material_override = ExtResource("9_5bshh")
+mesh = ExtResource("10_4p6i8")
+
+[node name="Architecture_iron" type="MeshInstance3D" parent="." unique_id=948640784]
+material_override = ExtResource("11_r17e0")
+mesh = ExtResource("12_jocvn")
+
+[node name="Architecture_rope" type="MeshInstance3D" parent="." unique_id=1577559750]
+material_override = ExtResource("13_o4br0")
+mesh = ExtResource("14_5luae")
+
+[node name="Architecture_window" type="MeshInstance3D" parent="." unique_id=707726478]
+material_override = ExtResource("15_yjw7q")
+mesh = ExtResource("16_cwalm")
+
+[node name="Architecture_shutters" type="MeshInstance3D" parent="." unique_id=432295083]
+material_override = ExtResource("17_qokr4")
+mesh = ExtResource("18_ffegx")
+
+[node name="Architecture_roof_rust" type="MeshInstance3D" parent="." unique_id=278492723]
+material_override = ExtResource("19_v3gde")
+mesh = ExtResource("20_a56en")
+
+[node name="Architecture_roof" type="MeshInstance3D" parent="." unique_id=1672378375]
+material_override = ExtResource("21_nwlls")
+mesh = ExtResource("22_k7jmm")
+
+[node name="Lantern_13" type="Node3D" parent="." unique_id=1404684962]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.79, 2, 2.25)
+
+[node name="Detail_window" type="MeshInstance3D" parent="Lantern_13" unique_id=1145291226]
+material_override = ExtResource("15_yjw7q")
+mesh = ExtResource("23_5cnpe")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Lantern_13" unique_id=738073353]
+material_override = ExtResource("11_r17e0")
+mesh = ExtResource("24_0ehuc")
+
+[node name="WarmLight" type="OmniLight3D" parent="Lantern_13" unique_id=1616463432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.3)
+light_color = Color(1, 0.7137255, 0.30980393, 1)
+light_energy = 1.7
+omni_range = 3.0
+
+[node name="Barrel_14" type="Node3D" parent="." unique_id=554372816]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 0, 0.7)
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Barrel_14" unique_id=122871]
+material_override = ExtResource("6_vjk5c")
+mesh = ExtResource("25_gabkm")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Barrel_14" unique_id=1139491918]
+material_override = ExtResource("11_r17e0")
+mesh = ExtResource("26_hijeo")
+
+[node name="Body" type="StaticBody3D" parent="Barrel_14" unique_id=106872199]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45475, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barrel_14/Body" unique_id=874844581]
+shape = SubResource("CylinderShape3D_uu0ve")

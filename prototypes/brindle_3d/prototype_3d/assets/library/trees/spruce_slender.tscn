@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_613uk"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/spruce_slender_00.res" id="2_au1uu"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_leaves.tres" id="3_bcjbg"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/spruce_slender_01.res" id="4_4f1y6"]
+[ext_resource type="Material" path="res://prototype_3d/materials/fir_bough.tres" id="5_od1wa"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/trees/meshes/spruce_slender_02.res" id="6_cvl13"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6lr34"]
+height = 2.8
+radius = 0.29
+
+[node name="SpruceSlender" type="Node3D" unique_id=2039377457]
+metadata/asset_id = "spruce_slender"
+metadata/family = "trees"
+metadata/label = "Épicéa élancé"
+metadata/habitat = "Cœur de forêt"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="TrunkBody" type="StaticBody3D" parent="." unique_id=1227771128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrunkBody" unique_id=127586941]
+shape = SubResource("CylinderShape3D_6lr34")
+
+[node name="Bark_wood" type="MeshInstance3D" parent="." unique_id=933898314]
+material_override = ExtResource("1_613uk")
+mesh = ExtResource("2_au1uu")
+
+[node name="NeedleVolumes" type="MeshInstance3D" parent="." unique_id=1026930084]
+material_override = ExtResource("3_bcjbg")
+mesh = ExtResource("4_4f1y6")
+
+[node name="PaintedNeedles" type="MeshInstance3D" parent="." unique_id=2128668170]
+material_override = ExtResource("5_od1wa")
+cast_shadow = 0
+mesh = ExtResource("6_cvl13")

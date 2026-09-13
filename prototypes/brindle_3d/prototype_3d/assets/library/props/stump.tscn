@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_l5vut"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/stump_00.res" id="2_sifia"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rope.tres" id="3_cp83d"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/stump_01.res" id="4_tvct4"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ee0of"]
+height = 0.66
+radius = 0.48
+
+[node name="Stump" type="Node3D" unique_id=745015022]
+metadata/asset_id = "stump"
+metadata/family = "props"
+metadata/label = "Souche coupée"
+metadata/habitat = "Lisière, bois mort"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="TrunkBody" type="StaticBody3D" parent="." unique_id=337474817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrunkBody" unique_id=1089088838]
+shape = SubResource("CylinderShape3D_ee0of")
+
+[node name="Geometry_wood" type="MeshInstance3D" parent="." unique_id=1525824638]
+material_override = ExtResource("1_l5vut")
+mesh = ExtResource("2_sifia")
+
+[node name="Geometry_rope" type="MeshInstance3D" parent="." unique_id=1023440681]
+material_override = ExtResource("3_cp83d")
+mesh = ExtResource("4_tvct4")

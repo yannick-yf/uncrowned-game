@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/traveler_sprite.gdshader" id="1_shader"]
+[ext_resource type="Texture2D" path="res://prototype_3d/assets/traveler_walk_v2.png" id="2_sheet"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/sprite_sheet = ExtResource("2_sheet")

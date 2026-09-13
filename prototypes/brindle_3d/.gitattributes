@@ -1,0 +1,2 @@
+# Raw float32 terrain arrays must never undergo text normalization.
+*.f32 binary

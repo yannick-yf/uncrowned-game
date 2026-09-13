@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_plants.tres" id="1_dhs11"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/plants/meshes/fern_fan_00.res" id="2_dcwt6"]
+
+[node name="FernFan" type="Node3D" unique_id=1878163115]
+metadata/asset_id = "fern_fan"
+metadata/family = "plants"
+metadata/label = "Fougère étalée"
+metadata/habitat = "Sous-bois humide, pied des rochers"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Geometry_plants" type="MeshInstance3D" parent="." unique_id=1186067201]
+material_override = ExtResource("1_dhs11")
+mesh = ExtResource("2_dcwt6")

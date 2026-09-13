@@ -1,0 +1,101 @@
+{
+  "scorch_mask": "res://assets/landscape/brindle_scorch_mask.png",
+  "smoke_houses": [
+    "MaisonDuChemin",
+    "MaisonBasse"
+  ],
+  "source_assets_preserved": true,
+  "state": "incendie_recent",
+  "variants": [
+    {
+      "batch_meshes": 15,
+      "building": "MaisonDuHaut",
+      "chimney_height_m": 0.62,
+      "damage": "Pignon arrière ébréché encore debout, toiture tombée à droite, façade éventrée.",
+      "depth_m": 3.8,
+      "fire_damage": true,
+      "intact_asset": "res://prototype_3d/assets/library/houses/cottage_village.tscn",
+      "residual_smoke": false,
+      "roof_pattern": "gable",
+      "rubble_count": 42,
+      "ruined_asset": "res://assets/brindle_ruins/maison_du_haut.tscn",
+      "seed": 2101,
+      "width_m": 4.3
+    },
+    {
+      "batch_meshes": 11,
+      "building": "MaisonDuChemin",
+      "chimney_height_m": 0.38,
+      "damage": "Maison presque rasée, soubassements très bas, amas central de poutres et cendres fumantes.",
+      "depth_m": 3.8,
+      "fire_damage": true,
+      "intact_asset": "res://prototype_3d/assets/library/houses/cottage_village.tscn",
+      "residual_smoke": true,
+      "roof_pattern": "razed",
+      "rubble_count": 82,
+      "ruined_asset": "res://assets/brindle_ruins/maison_du_chemin.tscn",
+      "seed": 2102,
+      "width_m": 4.3
+    },
+    {
+      "batch_meshes": 18,
+      "building": "MaisonDesBouleaux",
+      "chimney_height_m": 1.48,
+      "damage": "Angle en L préservé, large morceau du versant gauche du toit sur ses chevrons, moitié droite ouverte.",
+      "depth_m": 3.8,
+      "fire_damage": true,
+      "intact_asset": "res://prototype_3d/assets/library/houses/cottage_village.tscn",
+      "residual_smoke": false,
+      "roof_pattern": "shelter",
+      "rubble_count": 34,
+      "ruined_asset": "res://assets/brindle_ruins/maison_des_bouleaux.tscn",
+      "seed": 2103,
+      "width_m": 4.3
+    },
+    {
+      "batch_meshes": 19,
+      "building": "MaisonBasse",
+      "chimney_height_m": 0.85,
+      "damage": "Façade avec une fenêtre vide et un linteau brûlé ; arrière et appentis écroulés vers le jardin.",
+      "depth_m": 3.8,
+      "fire_damage": true,
+      "intact_asset": "res://prototype_3d/assets/library/houses/cottage_fisher.tscn",
+      "residual_smoke": true,
+      "roof_pattern": "rear",
+      "rubble_count": 53,
+      "ruined_asset": "res://assets/brindle_ruins/maison_basse.tscn",
+      "seed": 2104,
+      "width_m": 4.5
+    },
+    {
+      "batch_meshes": 13,
+      "building": "MaisonDuSud",
+      "chimney_height_m": 3.35,
+      "damage": "Cheminée haute isolée, murs au ras des fondations, grand pan de mur couché et tuiles dispersées.",
+      "depth_m": 3.8,
+      "fire_damage": true,
+      "intact_asset": "res://prototype_3d/assets/library/houses/cottage_fisher.tscn",
+      "residual_smoke": false,
+      "roof_pattern": "chimney",
+      "rubble_count": 39,
+      "ruined_asset": "res://assets/brindle_ruins/maison_du_sud.tscn",
+      "seed": 2105,
+      "width_m": 4.5
+    },
+    {
+      "batch_meshes": 16,
+      "building": "Grange",
+      "chimney_height_m": 0.0,
+      "damage": "Grange ouverte : portique arrière et ossature calcinée, bardage arraché, couverture affaissée sur un côté.",
+      "depth_m": 3.6,
+      "fire_damage": true,
+      "intact_asset": "res://prototype_3d/assets/library/houses/storehouse.tscn",
+      "residual_smoke": false,
+      "roof_pattern": "frame",
+      "rubble_count": 36,
+      "ruined_asset": "res://assets/brindle_ruins/grange.tscn",
+      "seed": 2106,
+      "width_m": 6.0
+    }
+  ]
+}

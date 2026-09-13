@@ -1,0 +1,4 @@
+.godot/
+__pycache__/
+*.log
+verification-output/

@@ -1,0 +1,37 @@
+{
+  "status": "disposition_confirmee_brindle_recompose_v3",
+  "confirmed_on": "2026-09-13",
+  "map_size_m": [768, 768],
+  "origin": "centre",
+  "north": "-Z",
+  "coordinate_format": "X, Z in metres; water profiles add proposed Y as third value",
+  "sites": [
+    {"id": "ville_chateau", "label": "Ville et château", "center_xz": [-150, -180], "footprint_xz": [200, 180], "proposed_ground_height_m": [55, 75], "reason": "Ville au bord d'un affluent, château sur un éperon dominant la vallée."},
+    {"id": "village_fermier", "label": "Village fermier", "center_xz": [-170, 40], "footprint_xz": [120, 100], "proposed_ground_height_m": [25, 35], "reason": "Plaine agricole près de l'eau ; bâtiments sur une terrasse, champs plus bas."},
+    {"id": "village_scierie", "label": "Village scierie", "center_xz": [235, -125], "footprint_xz": [90, 90], "proposed_ground_height_m": [45, 65], "reason": "Lisière de la forêt, près du lac et d'une route vers l'aciérie."},
+    {"id": "village_acierie", "label": "Village aciérie", "center_xz": [255, 65], "footprint_xz": [100, 100], "proposed_ground_height_m": [35, 55], "reason": "Vallée au pied du massif minier proposé, avec eau et accès au bois ou charbon de bois."},
+    {"id": "brindle", "label": "Brindle", "center_xz": [175, 255], "footprint_xz": [70, 60], "proposed_ground_height_m": [20, 30], "reason": "Village de départ au sud-est, sur une terrasse entre lisière et côte."}
+  ],
+  "lake": {"center_xz": [120, -140], "extent_xz": [130, 90], "proposed_water_height_m": 40, "outlet_xz": [100, -97]},
+  "watercourses": [
+    {"id": "source_nord_est", "flows_to": "lake", "profile_xzy": [[290,-285,130],[245,-240,90],[200,-205,62],[162,-167,40]]},
+    {"id": "affluent_ville", "flows_to": "lake", "profile_xzy": [[-150,-315,105],[-135,-285,90],[-100,-250,75],[-80,-210,60],[-30,-180,48],[70,-155,40]]},
+    {"id": "riviere_principale", "flows_to": "sea", "profile_xzy": [[100,-97,40],[70,-35,34],[5,45,27],[-40,100,23],[-110,140,19],[-160,205,10],[-205,265,4],[-215,315,0],[-225,350,0]]},
+    {"id": "affluent_acierie", "flows_to": "riviere_principale", "profile_xzy": [[335,-10,105],[300,0,70],[290,30,43],[220,130,29],[120,175,21],[40,215,17],[-50,230,13],[-160,205,10]]}
+  ],
+  "roads": [
+    {"id":"ville_acierie", "points_xz":[[-90,-90],[-45,-40],[30,20],[90,35],[205,65]]},
+    {"id":"fermes", "points_xz":[[-110,20],[-45,20],[30,20]]},
+    {"id":"scierie_acierie", "points_xz":[[235,-80],[245,-30],[255,15]]},
+    {"id":"brindle", "points_xz":[[90,35],[130,100],[150,150],[175,225]]}
+  ],
+  "notes": [
+    "Disposition confirmée par Yannick et son frère. Relief, eau, première implantation de Brindle et forêts construits ; mine et pont ajoutés près de l'aciérie. Les autres villages restent à construire.",
+    "Les cours d'eau traversant une enveloppe de village devront être réservés dans son plan local ; les bâtiments seront placés sur les berges adaptées.",
+    "L'affluent de l'aciérie rejoint la rivière principale après le secteur agricole et ne se jette pas dans le lac.",
+    "Le terrain suit ces profils descendants. assets/landscape/landscape.json contient les courbes interpolées, les raccords aux berges et les hauteurs réelles des centres de sites.",
+    "Les emprises incluent des circulations et espaces libres ; elles ne sont pas des blocs de bâtiments pleins.",
+    "Les chemins et franchissements restent à mesurer dans une maquette jouable.",
+    "Aucun PNJ, dialogue, élément d'histoire ou position de personnage n'est défini ici."
+  ]
+}

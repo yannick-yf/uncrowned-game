@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="1_dx8ck"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/barrel_closed_00.res" id="2_q4n4x"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_iron.tres" id="3_54rtx"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/props/meshes/barrel_closed_01.res" id="4_ddhqa"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4xy8s"]
+height = 1.07
+radius = 0.39
+
+[node name="BarrelClosed" type="Node3D" unique_id=614280721]
+metadata/asset_id = "barrel_closed"
+metadata/family = "props"
+metadata/label = "Tonneau fermé"
+metadata/habitat = "Village et ponton"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Barrel_00" type="Node3D" parent="." unique_id=72990526]
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Barrel_00" unique_id=1281956926]
+material_override = ExtResource("1_dx8ck")
+mesh = ExtResource("2_q4n4x")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Barrel_00" unique_id=951976569]
+material_override = ExtResource("3_54rtx")
+mesh = ExtResource("4_ddhqa")
+
+[node name="Body" type="StaticBody3D" parent="Barrel_00" unique_id=1212875685]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.535, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barrel_00/Body" unique_id=1558142906]
+shape = SubResource("CylinderShape3D_4xy8s")

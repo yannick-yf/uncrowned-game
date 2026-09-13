@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/painted_surface.gdshader" id="1_slcjs"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_slcjs")
+shader_parameter/tint = Color(1, 1, 1, 1)
+shader_parameter/surface_kind = 4
+shader_parameter/texture_strength = 0.16
+shader_parameter/moss_amount = 0.0
+shader_parameter/wind_strength = 0.035
+shader_parameter/vertex_srgb = true
+shader_parameter/use_painted_texture = false
+shader_parameter/painted_scale = 0.25
+shader_parameter/painted_strength = 0.9
+shader_parameter/facet_softness = 0.0

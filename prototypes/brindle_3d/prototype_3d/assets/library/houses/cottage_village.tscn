@@ -1,0 +1,198 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rock.tres" id="1_fyxcl"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_00.res" id="2_ms62i"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_plaster.tres" id="3_4m2r5"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_01.res" id="4_uth2r"]
+[ext_resource type="PrismMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_02.res" id="5_5vkj3"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_03.res" id="6_6374b"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="7_6qy7w"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_04.res" id="8_sfh2j"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_dark.tres" id="9_wi4mi"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_05.res" id="10_b4t4q"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_iron.tres" id="11_xrfv4"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_06.res" id="12_0fmvm"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rope.tres" id="13_5j8p0"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_07.res" id="14_eqxnx"]
+[ext_resource type="Material" path="res://prototype_3d/materials/window.tres" id="15_87nio"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_08.res" id="16_nd1f8"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_roof.tres" id="17_8e3m4"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_roof_v2.res" id="18_fv86f"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_10.res" id="19_obe5x"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_11.res" id="20_gjurm"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_12.res" id="21_lyufx"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_13.res" id="22_amgh8"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_14.res" id="23_q3578"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_15.res" id="24_x0sw2"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_16.res" id="25_40p8v"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_17.res" id="26_fp62v"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_18.res" id="27_rkaty"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/cottage_village_19.res" id="28_c1fqg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uvq3t"]
+size = Vector3(4.7, 0.35, 4.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23yba"]
+size = Vector3(4.3, 2.65, 3.8)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_dmx2u"]
+height = 0.8346
+radius = 0.3042
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_w8g8q"]
+height = 0.963
+radius = 0.351
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8ww2t"]
+size = Vector3(0.75, 0.7, 0.72)
+
+[node name="CottageVillage" type="Node3D" unique_id=1544465717]
+metadata/asset_id = "cottage_village"
+metadata/family = "houses"
+metadata/label = "Maison du village"
+metadata/habitat = "Centre du village ; porte décorative, sans intérieur"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Cottage" type="Node3D" parent="." unique_id=2020046500]
+
+[node name="Foundation" type="MeshInstance3D" parent="Cottage" unique_id=737855338]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, 0)
+material_override = ExtResource("1_fyxcl")
+mesh = ExtResource("2_ms62i")
+
+[node name="Body" type="StaticBody3D" parent="Cottage/Foundation" unique_id=900283084]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cottage/Foundation/Body" unique_id=1835357703]
+shape = SubResource("BoxShape3D_uvq3t")
+
+[node name="Walls" type="MeshInstance3D" parent="Cottage" unique_id=2136371363]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0)
+material_override = ExtResource("3_4m2r5")
+mesh = ExtResource("4_uth2r")
+
+[node name="Body" type="StaticBody3D" parent="Cottage/Walls" unique_id=1276736584]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cottage/Walls/Body" unique_id=1676411020]
+shape = SubResource("BoxShape3D_23yba")
+
+[node name="Gable" type="MeshInstance3D" parent="Cottage" unique_id=872627371]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.86, 0)
+material_override = ExtResource("3_4m2r5")
+mesh = ExtResource("5_5vkj3")
+
+[node name="Architecture_rock" type="MeshInstance3D" parent="Cottage" unique_id=695734161]
+material_override = ExtResource("1_fyxcl")
+mesh = ExtResource("6_6374b")
+
+[node name="Architecture_wood" type="MeshInstance3D" parent="Cottage" unique_id=52732204]
+material_override = ExtResource("7_6qy7w")
+mesh = ExtResource("8_sfh2j")
+
+[node name="Architecture_dark" type="MeshInstance3D" parent="Cottage" unique_id=954377322]
+material_override = ExtResource("9_wi4mi")
+mesh = ExtResource("10_b4t4q")
+
+[node name="Architecture_iron" type="MeshInstance3D" parent="Cottage" unique_id=699458411]
+material_override = ExtResource("11_xrfv4")
+mesh = ExtResource("12_0fmvm")
+
+[node name="Architecture_rope" type="MeshInstance3D" parent="Cottage" unique_id=1114867986]
+material_override = ExtResource("13_5j8p0")
+mesh = ExtResource("14_eqxnx")
+
+[node name="Architecture_window" type="MeshInstance3D" parent="Cottage" unique_id=1027239872]
+material_override = ExtResource("15_87nio")
+mesh = ExtResource("16_nd1f8")
+
+[node name="Architecture_roof" type="MeshInstance3D" parent="Cottage" unique_id=2004889903]
+material_override = ExtResource("17_8e3m4")
+mesh = ExtResource("18_fv86f")
+
+[node name="Lantern_10" type="Node3D" parent="Cottage" unique_id=720493159]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 2.12, 2.25)
+
+[node name="Detail_window" type="MeshInstance3D" parent="Cottage/Lantern_10" unique_id=503089536]
+material_override = ExtResource("15_87nio")
+mesh = ExtResource("19_obe5x")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Cottage/Lantern_10" unique_id=648273991]
+material_override = ExtResource("11_xrfv4")
+mesh = ExtResource("20_gjurm")
+
+[node name="WarmLight" type="OmniLight3D" parent="Cottage/Lantern_10" unique_id=1957907928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.3)
+light_color = Color(1, 0.7137255, 0.30980393, 1)
+light_energy = 1.7
+omni_range = 3.0
+
+[node name="Lantern_11" type="Node3D" parent="Cottage" unique_id=904974836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 2.12, 2.25)
+
+[node name="Detail_window" type="MeshInstance3D" parent="Cottage/Lantern_11" unique_id=1048757281]
+material_override = ExtResource("15_87nio")
+mesh = ExtResource("21_lyufx")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Cottage/Lantern_11" unique_id=354979770]
+material_override = ExtResource("11_xrfv4")
+mesh = ExtResource("22_amgh8")
+
+[node name="WarmLight" type="OmniLight3D" parent="Cottage/Lantern_11" unique_id=1880399109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.3)
+light_color = Color(1, 0.7137255, 0.30980393, 1)
+light_energy = 1.7
+omni_range = 3.0
+
+[node name="Barrel_12" type="Node3D" parent="Cottage" unique_id=215294864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.86, 0, 0.9)
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Cottage/Barrel_12" unique_id=209498358]
+material_override = ExtResource("7_6qy7w")
+mesh = ExtResource("23_q3578")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Cottage/Barrel_12" unique_id=2004189806]
+material_override = ExtResource("11_xrfv4")
+mesh = ExtResource("24_x0sw2")
+
+[node name="Body" type="StaticBody3D" parent="Cottage/Barrel_12" unique_id=2107938926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4173, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cottage/Barrel_12/Body" unique_id=187313867]
+shape = SubResource("CylinderShape3D_dmx2u")
+
+[node name="Barrel_13" type="Node3D" parent="Cottage" unique_id=297956524]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85, 0, -0.2)
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Cottage/Barrel_13" unique_id=1889156556]
+material_override = ExtResource("7_6qy7w")
+mesh = ExtResource("25_40p8v")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Cottage/Barrel_13" unique_id=1839098788]
+material_override = ExtResource("11_xrfv4")
+mesh = ExtResource("26_fp62v")
+
+[node name="Body" type="StaticBody3D" parent="Cottage/Barrel_13" unique_id=1263527028]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4815, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cottage/Barrel_13/Body" unique_id=1766076301]
+shape = SubResource("CylinderShape3D_w8g8q")
+
+[node name="Crate_14" type="Node3D" parent="Cottage" unique_id=615791909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.95, 0.35, 1)
+
+[node name="Box" type="MeshInstance3D" parent="Cottage/Crate_14" unique_id=1345422325]
+material_override = ExtResource("7_6qy7w")
+mesh = ExtResource("27_rkaty")
+
+[node name="Body" type="StaticBody3D" parent="Cottage/Crate_14/Box" unique_id=383408358]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cottage/Crate_14/Box/Body" unique_id=1859556138]
+shape = SubResource("BoxShape3D_8ww2t")
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Cottage/Crate_14" unique_id=228896271]
+material_override = ExtResource("7_6qy7w")
+mesh = ExtResource("28_c1fqg")

@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/needle_cards.gdshader" id="1_wjq5n"]
+[ext_resource type="Texture2D" path="res://prototype_3d/assets/fir_bough.png" id="2_lm8hx"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_wjq5n")
+shader_parameter/needle_texture = ExtResource("2_lm8hx")
+shader_parameter/wind_strength = 0.035

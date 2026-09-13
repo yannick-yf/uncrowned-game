@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/playtest_player.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://prototype_3d/assets/traveler_walk_frames.tres" id="2"]
+[ext_resource type="Material" path="res://prototype_3d/materials/traveler_sprite.tres" id="3"]
+[ext_resource type="Script" path="res://prototype_3d/scripts/sprite_billboard.gd" id="4"]
+[ext_resource type="Script" path="res://prototype_3d/scripts/player_walk_animation.gd" id="5"]
+
+[sub_resource type="CapsuleShape3D" id="Capsule"]
+radius = 0.28
+height = 1.3
+
+[sub_resource type="StandardMaterial3D" id="ShadowMaterial"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.1, 0.13, 0.1, 0.28)
+
+[sub_resource type="CylinderMesh" id="ShadowMesh"]
+top_radius = 0.36
+bottom_radius = 0.36
+height = 0.008
+radial_segments = 16
+rings = 1
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+floor_constant_speed = true
+floor_snap_length = 0.6
+script = ExtResource("1")
+camera_path = NodePath("../../PlayerCamera")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.65, 0)
+shape = SubResource("Capsule")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+process_priority = 1
+material_override = ExtResource("3")
+cast_shadow = 0
+pixel_size = 0.0077832513
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+sprite_frames = ExtResource("2")
+animation = &"idle_down"
+script = ExtResource("4")
+
+[node name="WalkAnimation" type="Node" parent="."]
+script = ExtResource("5")
+
+[node name="FootShadow" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.04, 0)
+material_override = SubResource("ShadowMaterial")
+cast_shadow = 0
+mesh = SubResource("ShadowMesh")

@@ -1,0 +1,128 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rock.tres" id="1_6hn0u"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_00.res" id="2_g333n"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="3_yiih3"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_01.res" id="4_iwksw"]
+[ext_resource type="PrismMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_02.res" id="5_j0vee"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_03.res" id="6_4fdv2"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_04.res" id="7_csy5w"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_dark.tres" id="8_lapdw"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_05.res" id="9_odib7"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_iron.tres" id="10_kxxcx"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_06.res" id="11_pg5a7"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_rope.tres" id="12_4dtpy"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_07.res" id="13_aalju"]
+[ext_resource type="Material" path="res://prototype_3d/materials/window.tres" id="14_8w0hw"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_08.res" id="15_bqusl"]
+[ext_resource type="Material" path="res://prototype_3d/materials/library_roof_rust.tres" id="16_77sf8"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_09.res" id="17_aceqi"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_10.res" id="18_j6jpu"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_11.res" id="19_o3wom"]
+[ext_resource type="BoxMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_12.res" id="20_3fjee"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/houses/meshes/storehouse_13.res" id="21_sq6gw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xchlb"]
+size = Vector3(6.35, 0.3, 3.95)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2pb7d"]
+size = Vector3(6, 2.3, 3.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dl033"]
+size = Vector3(0.75, 0.7, 0.72)
+
+[node name="Storehouse" type="Node3D" unique_id=882287070]
+metadata/asset_id = "storehouse"
+metadata/family = "houses"
+metadata/label = "Grange de stockage"
+metadata/habitat = "Village ; porte décorative, sans intérieur"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Foundation" type="MeshInstance3D" parent="." unique_id=1520472183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = ExtResource("1_6hn0u")
+mesh = ExtResource("2_g333n")
+
+[node name="Body" type="StaticBody3D" parent="Foundation" unique_id=2027282851]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Foundation/Body" unique_id=681670185]
+shape = SubResource("BoxShape3D_xchlb")
+
+[node name="Walls" type="MeshInstance3D" parent="." unique_id=46515474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+material_override = ExtResource("3_yiih3")
+mesh = ExtResource("4_iwksw")
+
+[node name="Body" type="StaticBody3D" parent="Walls" unique_id=2098729673]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Body" unique_id=2039021610]
+shape = SubResource("BoxShape3D_2pb7d")
+
+[node name="Gables" type="MeshInstance3D" parent="." unique_id=1422302510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.425, 0)
+material_override = ExtResource("3_yiih3")
+mesh = ExtResource("5_j0vee")
+
+[node name="Architecture_wood" type="MeshInstance3D" parent="." unique_id=159766959]
+material_override = ExtResource("3_yiih3")
+mesh = ExtResource("6_4fdv2")
+
+[node name="Architecture_rock" type="MeshInstance3D" parent="." unique_id=2008963780]
+material_override = ExtResource("1_6hn0u")
+mesh = ExtResource("7_csy5w")
+
+[node name="Architecture_dark" type="MeshInstance3D" parent="." unique_id=1250682473]
+material_override = ExtResource("8_lapdw")
+mesh = ExtResource("9_odib7")
+
+[node name="Architecture_iron" type="MeshInstance3D" parent="." unique_id=76948642]
+material_override = ExtResource("10_kxxcx")
+mesh = ExtResource("11_pg5a7")
+
+[node name="Architecture_rope" type="MeshInstance3D" parent="." unique_id=1698495367]
+material_override = ExtResource("12_4dtpy")
+mesh = ExtResource("13_aalju")
+
+[node name="Architecture_window" type="MeshInstance3D" parent="." unique_id=856910594]
+material_override = ExtResource("14_8w0hw")
+mesh = ExtResource("15_bqusl")
+
+[node name="Architecture_roof_rust" type="MeshInstance3D" parent="." unique_id=1931215067]
+material_override = ExtResource("16_77sf8")
+mesh = ExtResource("17_aceqi")
+
+[node name="Lantern_10" type="Node3D" parent="." unique_id=1366675140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 2, 2.15)
+
+[node name="Detail_window" type="MeshInstance3D" parent="Lantern_10" unique_id=781290073]
+material_override = ExtResource("14_8w0hw")
+mesh = ExtResource("18_j6jpu")
+
+[node name="Detail_iron" type="MeshInstance3D" parent="Lantern_10" unique_id=920750725]
+material_override = ExtResource("10_kxxcx")
+mesh = ExtResource("19_o3wom")
+
+[node name="WarmLight" type="OmniLight3D" parent="Lantern_10" unique_id=1265308619]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.3)
+light_color = Color(1, 0.7137255, 0.30980393, 1)
+light_energy = 1.7
+omni_range = 3.0
+
+[node name="Crate_11" type="Node3D" parent="." unique_id=217832309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.55, 0.35, 1)
+
+[node name="Box" type="MeshInstance3D" parent="Crate_11" unique_id=289382848]
+material_override = ExtResource("3_yiih3")
+mesh = ExtResource("20_3fjee")
+
+[node name="Body" type="StaticBody3D" parent="Crate_11/Box" unique_id=635086021]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Crate_11/Box/Body" unique_id=1136391639]
+shape = SubResource("BoxShape3D_dl033")
+
+[node name="Detail_wood" type="MeshInstance3D" parent="Crate_11" unique_id=2120671010]
+material_override = ExtResource("3_yiih3")
+mesh = ExtResource("21_sq6gw")

@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_plants.tres" id="1_mbsrq"]
+[ext_resource type="ArrayMesh" path="res://prototype_3d/assets/library/plants/meshes/flowers_daisy_00.res" id="2_isq3h"]
+
+[node name="FlowersDaisy" type="Node3D" unique_id=1763842247]
+metadata/asset_id = "flowers_daisy"
+metadata/family = "plants"
+metadata/label = "Marguerites"
+metadata/habitat = "Prairie ; planter par petites taches d'une même espèce"
+metadata/placement = "Pivot au sol, façade vers +Z"
+
+[node name="Geometry_plants" type="MeshInstance3D" parent="." unique_id=1169681509]
+material_override = ExtResource("1_mbsrq")
+mesh = ExtResource("2_isq3h")

@@ -1,0 +1,21 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/village_ground.gdshader" id="1_6a728"]
+[ext_resource type="Texture2D" path="res://prototype_3d/assets/ground_noise.tres" id="2_je3nu"]
+
+[ext_resource type="Texture2D" path="res://prototype_3d/assets/painted_earth_v1.png" id="PaintedEarth"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_6a728")
+shader_parameter/grass_dark = Color(0.20, 0.29, 0.15, 1)
+shader_parameter/grass_light = Color(0.36, 0.43, 0.21, 1)
+shader_parameter/dirt_color = Color(0.58, 0.47, 0.31, 1)
+shader_parameter/sand_color = Color(0.73, 0.65, 0.47, 1)
+shader_parameter/path_width = 1.0
+shader_parameter/ground_noise = ExtResource("2_je3nu")
+shader_parameter/use_painted_ground = true
+shader_parameter/painted_earth = ExtResource("PaintedEarth")
+shader_parameter/painted_strength = 0.70
+shader_parameter/painted_scale = 0.3333
+shader_parameter/edge_softness = 0.80

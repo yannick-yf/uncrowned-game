@@ -1,0 +1,71 @@
+{
+  "source_project": "Brindle test project (nouveau-projet-de-jeu)",
+  "source_scene": "prototype_3d/brindle_3d_test.tscn",
+  "source_files": [
+    {
+      "file": "prototype_3d/assets/traveler_walk_v2.png",
+      "sha256": "d45c9c9469c348378253487355ef89df6402387794f89e8da77c0cfc00a121eb"
+    },
+    {
+      "file": "prototype_3d/assets/traveler_walk_v2.png.import",
+      "sha256": "7029612495e5c9ee6c9a36472fb7b0988cf1308731ad80f4ae386d79ddeffced"
+    },
+    {
+      "file": "prototype_3d/assets/traveler_walk_frames.tres",
+      "sha256": "540fbca4e0a648421b53bfe8aac3f615e61dda2e6cbb7bc8d1d8db90408f1de6"
+    },
+    {
+      "file": "prototype_3d/materials/traveler_sprite.tres",
+      "sha256": "3fd6ef6e2df7bbf0cb47d39e79697fd8ccc4e584778e385359a3d530ab5f335f"
+    },
+    {
+      "file": "prototype_3d/shaders/traveler_sprite.gdshader",
+      "sha256": "ab8b16989b511baf4d11d6652cd943ef46b3320f3287a9ccd69d59159c18b4be"
+    },
+    {
+      "file": "prototype_3d/shaders/traveler_sprite.gdshader.uid",
+      "sha256": "5b10a8604def586a6981cbd26ff4725e5fd0f96641940ad70a45adfc9922941e"
+    },
+    {
+      "file": "prototype_3d/scripts/player_controller.gd",
+      "sha256": "24df0a53f95064875ce34b2ec6809473bc466a5aa10f08821cfcdd94ec734620"
+    },
+    {
+      "file": "prototype_3d/scripts/player_controller.gd.uid",
+      "sha256": "9c5ce4cc3826d2c3fee0e1da1cb6471ff77be445ad6dce403fee545f766aae15"
+    },
+    {
+      "file": "prototype_3d/scripts/player_walk_animation.gd",
+      "sha256": "6d4aa7800638e1bc5daa3b761beaa3ef929bca479f752919cefcbb7622df636a"
+    },
+    {
+      "file": "prototype_3d/scripts/player_walk_animation.gd.uid",
+      "sha256": "e6654cbd1b08cbffb8c54f76e7e779df7f5b58c8881df70e772c350e13ca734e"
+    },
+    {
+      "file": "prototype_3d/scripts/sprite_billboard.gd",
+      "sha256": "e155e7cf87bc15205220c980a7986af3352507bf903d266a7dee402ea52baa2d"
+    },
+    {
+      "file": "prototype_3d/scripts/sprite_billboard.gd.uid",
+      "sha256": "012ea0a1619efdbc1b3dd36bfba507447b420869990e83ada53abf76181f0872"
+    },
+    {
+      "file": "prototype_3d/scripts/follow_camera.gd",
+      "sha256": "bacb36e354fb280b8acc7a4e8a2507c7532755f6d68a2afb1b6995083f4f4e2d"
+    },
+    {
+      "file": "prototype_3d/scripts/follow_camera.gd.uid",
+      "sha256": "a96ca272ecd4050edb4a4dd3bbd7f011185d3e2eb442d9846b4e8ff7c469d2c8"
+    }
+  ],
+  "sheet": "traveler_walk_v2.png",
+  "animation": "4 directions, 8 walking frames and 1 idle pose per direction",
+  "spawn_xz": [
+    181,
+    252
+  ],
+  "pixel_size_m": 0.0077832513,
+  "walk_speed_m_s": 5,
+  "note": "Imported original artwork, frame slicing and animation scripts. Map-specific integration is in scripts/playtest_*.gd."
+}

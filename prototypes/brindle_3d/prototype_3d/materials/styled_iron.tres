@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/painted_surface.gdshader" id="1_ypngx"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ypngx")
+shader_parameter/tint = Color(0.2784314, 0.2901961, 0.2627451, 1)
+shader_parameter/surface_kind = 1
+shader_parameter/texture_strength = 0.33
+shader_parameter/moss_amount = 0.0
+shader_parameter/wind_strength = 0.0
+shader_parameter/vertex_srgb = false
+shader_parameter/use_painted_texture = false
+shader_parameter/painted_scale = 0.25
+shader_parameter/painted_strength = 0.9

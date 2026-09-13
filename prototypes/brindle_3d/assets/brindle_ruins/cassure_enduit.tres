@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://prototype_3d/shaders/painted_surface.gdshader" id="1_5t4y6"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_5t4y6")
+shader_parameter/tint = Color(0.65882355, 0.60784316, 0.5019608, 1)
+shader_parameter/surface_kind = 3
+shader_parameter/texture_strength = 0.42
+shader_parameter/moss_amount = 0.0
+shader_parameter/wind_strength = 0.0
+shader_parameter/vertex_srgb = false
+shader_parameter/use_painted_texture = false
+shader_parameter/painted_scale = 0.25
+shader_parameter/painted_strength = 0.9
+shader_parameter/facet_softness = null
