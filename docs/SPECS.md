@@ -3688,6 +3688,12 @@ somebody objects are in that file, not here. Combat remains outside it.
   a claim the map owes is a **debt**, printed and counted apart. **Both worlds green:**
   424 tests, 0 failed on each, 1 owed by the map (the works in Brindle's first frame).
   MAP_SPEC 10 of 10 on the baked world; road 69 s, wild 124 s, attuned 96 s there.
+- ✅ **M2a — our window over his data** (2026-09-13). `view/world3d.gd`: his heights, water
+  and paint as meshes coloured by the baked terrain; the pixel figures, props and trees
+  stood up as billboards; his camera in numbers; the fairy as light. The play screen is
+  the bridge and is otherwise unchanged; the window writes nothing back. Nothing of his
+  moved (decision 6, MIGRATION_3D §9). Photographed at the clearing, in Harrowgate, in
+  his Brindle, at the castle gate, with the journal and the map over it.
 
 ---
 
@@ -4038,6 +4044,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **The journal's kingdom page is the third page and carries no number** | Folding it into the second page; figures for hardship | The second page is the endings' readings and the kingdom is not one. Words for the places, the people and the castle, with whose doing beside each, is what §15 asked for and a test holds the digits out |
 | 2026-09-13 | **The game's world moves onto the Brindle 3D workshop: a stylised 3D landscape walked by 2D characters.** The simulation keeps its grid; the 3D data is baked into a `Region`; a 3D window reads the sim and never moves the player | Staying top-down and commissioning a pixel pack (the v2 §13 plan); adopting the workshop as-is with its physics character; a hybrid where the sim reads metres | Yannick's decision, on the workshop's renders. The architecture was built for exactly this — `core/` never imports `view/`, the view is replaceable — so the cost is a bake and a window, not a rewrite. Adopting the physics controller would put the player's position outside `Sim.advance()` and end determinism and the save; reading metres in the sim would rewrite every rule and test for no gain. The plan is `docs/MIGRATION_3D.md` |
 | 2026-09-13 | **Walking speed follows the workshop, and the simulation's speed becomes derived from metres per second and metres per tile** | Keeping 6 tiles/s (12 m/s at 2 m per tile); shrinking the world to keep 45 s | Yannick's call. A 1.3 m sprite covering 12 m/s reads as running, and the world is his to size. The road target is re-measured against the baked grid rather than defended; Pillar 1 holds at two minutes |
+| 2026-09-13 | **His 3D project comes into ours as data first: the window is built from his files, his scenes follow at M2b** | Moving his 263 files under the root now; vendoring a rewritten copy now | Yannick's call (MIGRATION_3D §9, decision 6). The map will be his for months and his branch is in flight: a move rewrites his `res://` paths and conflicts with everything he has open, a copy is 28 MB twice. His heights, water and paint are files the window can read where they are, and the pixel figures stood up on that ground are the transition §13 already accepted. His meshes and shaders wait for the step that copies and rewrites, which can be re-run each time he delivers |
 | 2026-09-13 | **Positions are anchors, never coordinates; scaffolds fill what the map has not built; the contract is tested by name** | Hand-placing content on the 3D map; waiting for the map to finish; a coordinate table per map version | The map will take time and moves as it grows. Content that names *what it stands next to* survives every move; a placeholder per missing place keeps every system and test working from the first bake; and a test that fails naming the missing anchor turns a broken merge into a sentence. This is the whole answer to working in parallel (MIGRATION_3D §6.2) |
 
 ---

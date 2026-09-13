@@ -24,6 +24,11 @@ extends RefCounted
 ## `in_bounds`, `zone_at`, `props`, `sites`, `footprints`, `bake_zones` and the
 ## `scaffold_*` kit — so the two classes stay separable.
 
+## Where his data lives, and its four landscape files. One place for the path, because
+## the bake and the 3D window read the same files and must never disagree about them.
+const WORKSHOP: String = "res://prototypes/brindle_3d/"
+const LANDSCAPE: String = WORKSHOP + "assets/landscape/"
+
 ## How far a scaffold site may be nudged onto dry ground before the bake gives up.
 const NUDGE_RADIUS: int = 12
 ## The ford band, in tiles either side of the point; a river here is 6–9 tiles wide.
@@ -53,6 +58,24 @@ var spurs: Dictionary = {}
 ## Where a road was laid over water: {"road": String, "at": Vector2i, "metres": Vector2}
 var crossings: Array[Dictionary] = []
 var report: Array[String] = []
+
+
+# ----------------------------------------------------------------- his files ---
+
+## His landscape as the bake and the 3D window read it: the descriptor, and three
+## arrays of little-endian float32, row-major z then x, paint interleaved in three
+## channels — exactly as his `flat_ground.gd` reads them. Empty when the workshop is
+## not there, so a clone without it fails a step rather than a frame.
+static func read_landscape() -> Dictionary:
+	if not FileAccess.file_exists(LANDSCAPE + "landscape.json"):
+		return {}
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(LANDSCAPE + "landscape.json"))
+	return {
+		"meta": meta if meta is Dictionary else {},
+		"heights": FileAccess.get_file_as_bytes(LANDSCAPE + "height.f32").to_float32_array(),
+		"waters": FileAccess.get_file_as_bytes(LANDSCAPE + "water_level.f32").to_float32_array(),
+		"paint": FileAccess.get_file_as_bytes(LANDSCAPE + "terrain_paint.f32").to_float32_array(),
+	}
 
 
 # ------------------------------------------------------------------- baking ---

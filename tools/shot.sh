@@ -7,6 +7,10 @@
 #   tools/shot.sh out.png play 241,150        the world, standing at a tile
 #   UNCROWNED_FREE=wide_acres tools/shot.sh out.png play 90,151
 #                                             the same, with one place freed
+#   UNCROWNED_WORLD=baked tools/shot.sh out.png play 292,290
+#                                             the baked world, seen in 3D (M2)
+#   UNCROWNED_WORLD=baked UNCROWNED_VIEW=2d tools/shot.sh out.png map
+#                                             the baked world, flat
 #
 # The check that "zero script errors" is not. Looking at the output is cheap, and
 # every bug the first two nights shipped would have been caught by one of these.

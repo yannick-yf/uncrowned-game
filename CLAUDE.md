@@ -108,6 +108,10 @@ UNCROWNED_WORLD=baked tools/shot.sh /tmp/m.png map          # any tool, on the b
 
 `UNCROWNED_WORLD=baked` is a **world selector, not a debug tool**: it is read once by
 `Places` and decides which world the whole process plays on. A process is one world.
+The baked world is seen **in 3D** (`view/world3d.gd`, M2a); `UNCROWNED_VIEW=2d` keeps it
+flat, which is what the map screen and a look at the bake itself want. The 3D window
+reads his landscape files from `prototypes/brindle_3d/` at run time, so it needs the
+workshop beside it; a clone without it says so and shows the world flat.
 
 ### Committing — read this before your first `git commit`
 

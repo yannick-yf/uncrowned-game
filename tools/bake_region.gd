@@ -13,7 +13,7 @@ extends SceneTree
 ## `--check` is for CI: a merged map change that nobody re-baked is a red build,
 ## not a surprise in play.
 
-const WORKSHOP: String = "res://prototypes/brindle_3d/"
+const WORKSHOP: String = RegionBake.WORKSHOP
 const BRIEF: String = "res://content/bake_brief.json"
 const OUT: String = "res://content/region.json"
 
@@ -84,11 +84,12 @@ func _initialize() -> void:
 
 
 func _bake() -> RegionBake:
+	var landscape: Dictionary = RegionBake.read_landscape()
 	return RegionBake.bake(
-		_json(WORKSHOP + "assets/landscape/landscape.json") as Dictionary,
-		_floats(WORKSHOP + "assets/landscape/height.f32"),
-		_floats(WORKSHOP + "assets/landscape/water_level.f32"),
-		_floats(WORKSHOP + "assets/landscape/terrain_paint.f32"),
+		landscape.get("meta", {}) as Dictionary,
+		landscape.get("heights", PackedFloat32Array()) as PackedFloat32Array,
+		landscape.get("waters", PackedFloat32Array()) as PackedFloat32Array,
+		landscape.get("paint", PackedFloat32Array()) as PackedFloat32Array,
 		_json(WORKSHOP + "planning/geographie-v1.json") as Dictionary,
 		_json(WORKSHOP + "planning/brindle-sectors-v1.json") as Dictionary,
 		_json(WORKSHOP + "planning/forest-placements-v1.json") as Array,
@@ -98,9 +99,3 @@ func _bake() -> RegionBake:
 
 func _json(path: String) -> Variant:
 	return JSON.parse_string(FileAccess.get_file_as_string(path))
-
-
-## His arrays: little-endian float32, row-major z then x — exactly as his
-## `flat_ground.gd` reads them.
-func _floats(path: String) -> PackedFloat32Array:
-	return FileAccess.get_file_as_bytes(path).to_float32_array()
