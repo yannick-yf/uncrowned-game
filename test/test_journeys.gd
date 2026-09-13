@@ -257,6 +257,8 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 
 
 func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
+	# Somebody who notices things, because the chain goes through Ossa's Wits line.
+	_say(&"create_character", {"wits": 4})
 	assert_eq(_ticked.kings_escort(), 10, "before: ten guards stand between me and the king")
 
 	assert_true(_walk_to(Region.HARROWGATE, 180.0), "walked the road to Harrowgate")
@@ -299,6 +301,10 @@ func test_the_world_moves_while_the_player_does_nothing() -> void:
 
 
 func test_the_whole_chain_replays_identically_from_its_log() -> void:
+	# Through Ossa's Wits line again, so this needs the same person the chain test
+	# makes. Creation is an ordinary event, so it replays with everything else —
+	# which is half of what this test is checking.
+	_say(&"create_character", {"wits": 4})
 	assert_true(_walk_to(Region.HARROWGATE, 180.0))
 	var ossa: Npc = _cast.get_npc(&"ossa")
 	assert_true(_walk_to(ossa.tile, 60.0))

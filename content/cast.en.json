@@ -321,11 +321,11 @@
           "intent": "ask_ford",
           "text": "Is the bridge the only way over the river?",
           "reply": "No. There is a ford downstream, half a day away. The water is low in a dry week and nobody watches who crosses there.",
-          "teaches": "kettle:ford"
+          "teaches": "kettle:ford",
+          "costs": "free"
         },
         {
           "intent": "ask_muster",
-          "tag": "Wits",
           "text": "You supply the army camp?",
           "reply": "I used to. Now they order less and pay me late. Somebody up there is keeping the difference.",
           "teaches": "muster:pay_fraud",
@@ -361,7 +361,6 @@
         },
         {
           "intent": "ask_watched",
-          "tag": "Wits",
           "text": "You must know where nobody is looking.",
           "reply": "That is the only thing I sell. Go to Saltmarch, on the north side. There is a market stall there with nobody watching it, week after week.",
           "teaches": "wide_acres:unwatched_stall",

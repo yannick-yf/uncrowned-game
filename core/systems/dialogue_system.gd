@@ -52,7 +52,8 @@ func _open(
 	world.speaker_name = npc.display_name
 	world.last_intent = &""
 	world.current_line = _opening(cast, npc, conditions, regard)
-	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
+	world.options = DialogueRules.available(npc, sim.facts, conditions, regard,
+		sim.store(&"traits") as Traits)
 	world.player_dir = Vector2i.ZERO
 	sim.facts.add_source(StringName("met:%s" % npc.id), &"witnessed")
 
@@ -97,10 +98,13 @@ func _choose(
 	# spoken regardless — so an unoffered line was read aloud and taught nothing,
 	# which looks exactly like a fact that failed to register. The keyboard cannot
 	# reach one; a tool or a test can, and did.
-	if not DialogueRules.available(npc, sim.facts, conditions, regard).has(option):
+	var offered: Array[DialogueOption] = DialogueRules.available(
+		npc, sim.facts, conditions, regard, sim.store(&"traits") as Traits)
+	if not offered.has(option):
 		return
-	# The verdict is the rules layer's, and it is issued before the line is read.
-	var learned: StringName = DialogueRules.verdict(npc, intent, sim.facts, conditions, regard)
+	# The verdict is the rules layer's, and it is issued before the line is read —
+	# against the same list that just approved it, not a second one computed here.
+	var learned: StringName = DialogueRules.verdict(option, offered)
 	if learned != &"":
 		sim.facts.add_source(learned, npc.id)
 	# And he has now answered it. Recorded as a fact like everything else, so it
@@ -131,7 +135,8 @@ func _choose(
 	world.said_before.append("%s -> %s" % [option.text, spoken])
 	world.current_line = spoken
 	world.last_intent = intent
-	world.options = DialogueRules.available(npc, sim.facts, conditions, regard)
+	world.options = DialogueRules.available(npc, sim.facts, conditions, regard,
+		sim.store(&"traits") as Traits)
 
 
 func _close(world: WorldState) -> void:

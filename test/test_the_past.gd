@@ -66,7 +66,15 @@ func test_a_man_in_a_wood_has_a_fire_you_can_see() -> void:
 func test_you_are_told_where_kell_is_before_you_can_find_him() -> void:
 	var sim: Sim = _world()
 	assert_false(sim.facts.has(&"thornwood:kell"), "you do not start knowing")
-	_say(sim, &"ask_deserter") if _talk(sim, &"maddox").has("ask_deserter") else _hunt(sim)
+	# Written as a statement rather than a conditional *expression* over two void
+	# calls, which is what it was. It only ever took the `_hunt` branch before traits
+	# existed, because Maddox's three slots were full of tagged lines; the moment
+	# those were gated and `ask_deserter` came to the front, the other branch was
+	# exercised for the first time and did not work.
+	if _talk(sim, &"maddox").has("ask_deserter"):
+		_say(sim, &"ask_deserter")
+	else:
+		_hunt(sim)
 	assert_true(sim.facts.has(&"thornwood:kell"), "and somebody tells you")
 
 

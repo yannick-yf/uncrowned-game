@@ -207,5 +207,17 @@
   "quest.another_way_across": "Another way across",
   "quest.another_way_across.note": "The bridge is watched. The carter knows the river.",
   "quest.the_wood_is_going": "The wood is going",
-  "quest.the_wood_is_going.note": "The furnaces eat the wood. Stop the furnaces and it stops going."
+  "quest.the_wood_is_going.note": "The furnaces eat the wood. Stop the furnaces and it stops going.",
+  "trait.wits.note": "You notice what other people let past: a figure that does not add up, a line said too quickly.",
+  "trait.presence.note": "People listen. Doors open because you are standing in front of them.",
+  "trait.temper.note": "You say it to their face. That shuts some doors and opens others.",
+  "trait.hands.note": "You know how furnaces, fields and ledgers actually work.",
+  "trait.body.note": "You take up room, and you can take a hit.",
+  "trait.attunement.note": "You hear the wood. What is dying in it, and what is killing it.",
+  "creation.title": "WHO ARE YOU?",
+  "creation.pool": "Points left: {0}",
+  "creation.help": "Arrows to choose  ·  Enter to begin",
+  "creation.overspent": "Too many points spent.",
+  "creation.out_of_range": "Between 1 and 5.",
+  "creation.begin": "Begin"
 }

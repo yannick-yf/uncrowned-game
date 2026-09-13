@@ -246,6 +246,12 @@ func test_every_fact_keeps_one_source_nothing_can_gate_shut() -> void:
 				if option.forbids_condition != &"" or option.requires_condition != &"" \
 						or option.asks_for_goodwill():
 					continue
+				# A trait gate is a gate. A character created at the floor of every
+				# trait has to be able to finish the game (invariant 7), so no fact
+				# may sit behind one — the line can *lean* on Wits, but somebody
+				# somewhere has to be able to say it without.
+				if option.needs_trait() != &"":
+					continue
 				if option.requires != &"" and not reachable_from_them.has(option.requires):
 					continue
 				reachable_from_them[option.teaches] = true
@@ -324,6 +330,10 @@ func test_an_intent_the_npc_does_not_have_does_nothing() -> void:
 
 
 func test_ossa_teaches_the_pay_fraud_and_garrick_confirms_it() -> void:
+	# Ossa's line leans on Wits, and §11's `tag` gates now that traits exist — so
+	# this asks somebody who would notice. Garrick tells anybody, which is what keeps
+	# the fact out from behind the gate (invariant 6).
+	_say(&"create_character", {"wits": 4})
 	_stand_by(&"ossa")
 	_say(&"talk", {"npc": "ossa"})
 	assert_false(_sim.facts.has(ArmyRules.FACT_PAY_FRAUD))

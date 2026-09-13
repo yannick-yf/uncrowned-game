@@ -2143,9 +2143,25 @@ ever wasted:
 | **Body** | Physical presence in a room | Health, stamina, carrying |
 | **Attunement** | The forest's register: you can read what is dying and who is doing it, and some people only speak to somebody who can | The wild does not treat you as prey — fights you never have, rather than damage you deal |
 
-**Point-buy:** each trait starts at 1, with a pool to distribute; maximum 5 at
-creation.
-> TBD: the pool size. 12 is a reasonable start — it forces two real specialisms.
+**Point-buy:** each trait starts at 1, with a pool of **10** to distribute; maximum
+**5** at creation (settled 2026-09-13, closing §19 Q6 and Q22).
+
+> Q22's complaint was right: **no pool size forces a count, only a cap does.** At 4
+> points to take a trait from 1 to 5, twelve buys *three* maxed traits and leaves
+> three at the floor, which is a shopping list rather than a choice. Ten buys two at
+> 5 with two spare, or one at 5 and two at 3, or a flat spread of mediocrity — and
+> each of those is a different person to play.
+
+**`tag` gates now.** It was always meant to be the visibly trait-gated marker Fallout
+uses and was display-only because traits did not exist. A line leans on a trait at
+**3 or more** — one threshold for all six, because six numbers would be six things
+nobody had reasoned about, and 3 means "you put points here".
+
+> **This is not the progression check invariant 4 forbids.** Traits are chosen once
+> and never rise (§19 Q23), so nothing opens because you did the previous thing; it
+> is the same kind of gate as being unwelcome in a town. What keeps it legal is
+> invariant 6 — **redundancy counts a trait gate as a gate**, so no fact can sit
+> behind one, and a character made at the floor of all six can still finish the game.
 
 **Why this list.** *Temper* is a disposition rather than an ability, which is what
 makes it interesting: it opens doors that *Presence* closes, and vice versa.
@@ -2678,7 +2694,7 @@ finished.
 | 3 | ~~Route C's venue~~ — answered: **the church**, the largest room the crown cannot buy. Not a court, because the king owns the courts. Originally *"before Mother Crowe's congregation"*; she is cut and the church is a room rather than a door (2026-09-12) | 2026-09-10 | Closed |
 | 4 | The levelling curve: target endgame HP and damage scaling | 2026-09-10 | Yes — combat |
 | 5 | ~~What happens when the player dies?~~ — answered 2026-09-12: **you wake where you last slept, as you were when you slept.** Saving happens at beds and camps, not anywhere; the save is the event log, with a snapshot written alongside it so loading need not replay the whole run | 2026-09-10 | Closed |
-| 6 | Trait point pool size (12?) | 2026-09-10 | |
+| 6 | ~~Trait point pool size (12?)~~ — **10, with a cap of 5** (2026-09-13). See §11 and Q22 | 2026-09-10 | Closed |
 | 7 | **Closed 2026-09-11, see Q7b.** ~~Is the 9×9 screen grid the right scale?~~ — answered: 7×9 screens, ~280×200 tiles, ~4 tiles/sec. Phase 0 now measures the *pace* of the walk; the 4–6 min road-travel target is timed later | 2026-09-10 | Closed |
 | 8 | The five consequences that specify the reactivity system (§8) | 2026-09-10 | |
 | 9 | ~~Approved asset packs~~ — answered: Ninja Adventure Asset Pack, CC0 1.0, one pack only (§13) | 2026-09-10 | Closed |
@@ -2718,7 +2734,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q19 | **Four resolutions, three routes, no mapping.** Killed / spared / publicly broken / walked away from, against Force / Access / Exposure — an ending state machine nobody has sized | §5, §17 | Endings |
 | Q20 | **The escort schedule is not integral.** "Roughly one and a half fewer per power base damaged" removes 9 of 10 across six, leaving one guard, not "a bare handful" — and 1.5 is not a person | §3 | The difficulty curve |
 | Q21 | **What is a guard worth?** The king's 1000 HP never changes, so the power bases close "most of" the gap only if the escort carries most of the threat. The third column has no unit | §3, §10 | Combat balance |
-| Q22 | **Trait pool and cap together.** 12 does not force two specialisms — it buys three at 5. No pool size forces a count; only a cap does | §11 | Character creation |
+| Q22 | ~~**Trait pool and cap together.**~~ — answered 2026-09-13: **pool 10, cap 5.** The complaint was right — no pool size forces a count, only a cap does — and 10 is the number at which two specialisms cost 8 and three cost 12, so the third is out of reach. ~~12 does not force two specialisms.~~ 12 does not force two specialisms — it buys three at 5. No pool size forces a count; only a cap does | §11 | Character creation |
 | Q23 | **Can traits rise after creation?** Attunement gates whether some NPCs will speak at all, which is a creation-time gate. §11 says levelling raises "attributes", never defined against the six traits | §11 | Invariant 4 |
 | Q24 | ~~**Is a document a fact, an item, or both** — and does it survive its holder's death?~~ — answered 2026-09-12: **both.** Reading it is knowledge, holding it is proof, and they are different things — the same distinction the game already had between knowing the pay fraud and being able to say it. **Documents lie in places, not in people**, so no death destroys one; and nothing takes one off you once it is in your hands. See §7 | §7 | Closed |
 | Q25 | **Can facts be wrong?** Rumours already ship in §8. Decides the fact-base type | §7, §8 | The fact base |

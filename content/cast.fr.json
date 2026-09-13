@@ -321,11 +321,11 @@
           "intent": "ask_ford",
           "text": "Le pont est-il le seul passage sur la rivière ?",
           "reply": "Non. Il y a un gué en aval, à une demi-journée. L'eau est basse en semaine sèche et personne ne surveille qui traverse là.",
-          "teaches": "kettle:ford"
+          "teaches": "kettle:ford",
+          "costs": "free"
         },
         {
           "intent": "ask_muster",
-          "tag": "Wits",
           "text": "Vous ravitaillez le camp de l'armée ?",
           "reply": "Avant, oui. Maintenant ils commandent moins et me paient en retard. Quelqu'un là-haut garde la différence.",
           "teaches": "muster:pay_fraud",
@@ -361,7 +361,6 @@
         },
         {
           "intent": "ask_watched",
-          "tag": "Wits",
           "text": "Vous devez savoir où personne ne regarde.",
           "reply": "C'est la seule chose que je vends. Allez à Saltmarch, côté nord. Il y a un étal de marché que personne ne surveille, semaine après semaine.",
           "teaches": "wide_acres:unwatched_stall",

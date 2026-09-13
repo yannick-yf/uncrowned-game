@@ -207,5 +207,17 @@
   "quest.another_way_across": "Un autre passage",
   "quest.another_way_across.note": "Le pont est surveillé. Le charretier connaît la rivière.",
   "quest.the_wood_is_going": "Le bois qui s'en va",
-  "quest.the_wood_is_going.note": "Les fours mangent le bois. Arrêtez les fours et le bois s'arrête de partir."
+  "quest.the_wood_is_going.note": "Les fours mangent le bois. Arrêtez les fours et le bois s'arrête de partir.",
+  "trait.wits.note": "Vous remarquez ce que les autres laissent passer : un chiffre qui ne tombe pas juste, une phrase répétée trop vite.",
+  "trait.presence.note": "On vous écoute. Des portes s'ouvrent parce que vous êtes devant elles.",
+  "trait.temper.note": "Vous dites les choses en face. Ça ferme des portes et ça en ouvre d'autres.",
+  "trait.hands.note": "Vous savez comment marchent les fours, les champs et les registres.",
+  "trait.body.note": "Vous prenez de la place dans une pièce, et vous encaissez.",
+  "trait.attunement.note": "Vous entendez le bois. Ce qui y meurt, et qui le tue.",
+  "creation.title": "QUI ÊTES-VOUS ?",
+  "creation.pool": "Points restants : {0}",
+  "creation.help": "Flèches pour choisir  ·  Entrée pour commencer",
+  "creation.overspent": "Trop de points dépensés.",
+  "creation.out_of_range": "Entre 1 et 5.",
+  "creation.begin": "Commencer"
 }

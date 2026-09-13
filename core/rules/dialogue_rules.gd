@@ -66,6 +66,7 @@ static func available(
 	facts: FactBase,
 	world_conditions: Dictionary = {},
 	regard: float = 0.0,
+	traits: Traits = null,
 ) -> Array[DialogueOption]:
 	var out: Array[DialogueOption] = []
 	if npc == null:
@@ -89,6 +90,17 @@ static func available(
 		if not option.repeatable and facts.has(option.spent_by(npc.id)):
 			continue
 		if option.hides_after != &"" and facts.has(option.hides_after):
+			continue
+		# A line that leans on a trait is a line this character may not have in them.
+		# §11's `tag` finally means something: it is the Fallout marker, and it gates.
+		#
+		# **This is not the progression check invariant 4 forbids.** Traits are chosen
+		# once and never rise (§19 Q23), so nothing here opens because you did the
+		# previous thing — it is the same kind of gate as being unwelcome in a town.
+		# What keeps it legal is invariant 6: redundancy counts a trait-gated option
+		# as gated, so no fact can end up behind one.
+		if traits != null and option.needs_trait() != &"" \
+				and not traits.speaks_with(option.needs_trait()):
 			continue
 		if option.forbids_condition != &"":
 			if bool(world_conditions.get(option.forbids_condition, false)):
@@ -127,16 +139,17 @@ static func find(npc: Npc, intent: StringName) -> DialogueOption:
 ## learned, or an empty name for "nothing mechanical, just words". An intent the
 ## rules layer does not recognise does nothing at all — which is the whole point
 ## of intents being a closed set.
-static func verdict(
-	npc: Npc,
-	intent: StringName,
-	facts: FactBase,
-	world_conditions: Dictionary = {},
-	regard: float = 0.0,
-) -> StringName:
-	var option: DialogueOption = find(npc, intent)
-	if option == null:
-		return &""
-	if not available(npc, facts, world_conditions, regard).has(option):
+## What saying this teaches, given what was actually on offer.
+##
+## **Takes the offered list rather than recomputing it** (2026-09-13). It used to call
+## `available()` again with its own arguments, which meant two answers to "is this
+## line on offer" that could disagree — and the moment `available()` learned about
+## traits and this call did not, they did. The line was read aloud and taught nothing,
+## which looks exactly like a fact failing to register and took an hour to find.
+##
+## One list, computed once by the caller, passed in. A parameter that has to be
+## remembered in two places is a bug waiting for the next parameter.
+static func verdict(option: DialogueOption, offered: Array[DialogueOption]) -> StringName:
+	if option == null or not offered.has(option):
 		return &""
 	return option.teaches
