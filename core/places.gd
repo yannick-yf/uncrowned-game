@@ -21,10 +21,25 @@ extends RefCounted
 
 const PATH: String = "res://content/places.json"
 
+## **The one flag** (MIGRATION_3D §6, M1b). `UNCROWNED_WORLD=baked` in the environment
+## and the whole process plays on the world baked from the 3D workshop: this class
+## overlays the baked file's places and points on the content's anchors, and
+## `Region.build_overworld()` loads the baked grid instead of stamping the procedural
+## one. Read once, here, because `Region` initialises its sites from this class and
+## the two must never disagree about which world they are in. A process is one world;
+## switching means restarting.
+const WORLD_ENV: String = "UNCROWNED_WORLD"
+const BAKED: String = "baked"
+const BAKED_PATH: String = "res://content/region.json"
+
 ## The same sentinel as `Region.NOWHERE`, spelled here on purpose: `Region` initialises
 ## its sites from this class while it is loading, and this class must not reach back
 ## into `Region` while that happens. A test asserts the two are equal.
 const NOWHERE: Vector2i = Vector2i(-1, -1)
+
+## Whether this process plays on the baked world.
+static func baked() -> bool:
+	return OS.get_environment(WORLD_ENV) == BAKED
 
 ## Place id -> {"centre": Vector2i, "size": Vector2i}, in the file's order.
 var _places: Dictionary = {}
@@ -35,6 +50,12 @@ var _strangers: Array[Dictionary] = []
 var _campfires: Array[Dictionary] = []
 var _stalls: Array[Dictionary] = []
 var _documents: Dictionary = {}
+## Which places are placeholders the bake stamped because the map has not built them.
+var _scaffold: Dictionary = {}
+## The King's Road as a sequence of place and point ids, and the spurs off it —
+## from the baked file; the procedural map keeps its own in `Region.road_route()`.
+var _trunk: Array[StringName] = []
+var _spurs: Dictionary = {}
 
 static var _shared: Places = null
 
@@ -42,7 +63,45 @@ static var _shared: Places = null
 static func shared() -> Places:
 	if _shared == null:
 		_shared = load_from(PATH)
+		if baked():
+			_shared.overlay_world(BAKED_PATH)
 	return _shared
+
+
+## Take the places, points and road order from a baked world file, keeping every
+## anchor the content wrote. A place the file lacks is dropped: the anchors that
+## stand in it then resolve nowhere, and `test_anchors` names them.
+func overlay_world(path: String) -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary):
+		return
+	var world: Dictionary = parsed as Dictionary
+	_places.clear()
+	_order.clear()
+	_scaffold.clear()
+	for id: String in (world.get("places", {}) as Dictionary).keys():
+		var row: Dictionary = (world["places"] as Dictionary)[id] as Dictionary
+		_places[StringName(id)] = {
+			"centre": _pair(row.get("centre", [0, 0])),
+			"size": _pair(row.get("size", [1, 1])),
+		}
+		_order.append(StringName(id))
+		if bool(row.get("scaffold", false)):
+			_scaffold[StringName(id)] = true
+	_points.clear()
+	for id: String in (world.get("points", {}) as Dictionary).keys():
+		var row: Variant = (world["points"] as Dictionary)[id]
+		_points[StringName(id)] = _pair((row as Dictionary).get("at", [0, 0])) \
+			if row is Dictionary else _pair(row)
+	_trunk.clear()
+	for id: Variant in (world.get("trunk", []) as Array):
+		_trunk.append(StringName(String(id)))
+	_spurs.clear()
+	for id: String in (world.get("spurs", {}) as Dictionary).keys():
+		var legs: Array[StringName] = []
+		for leg: Variant in ((world["spurs"] as Dictionary)[id] as Array):
+			legs.append(StringName(String(leg)))
+		_spurs[StringName(id)] = legs
 
 
 static func load_from(path: String) -> Places:
@@ -134,6 +193,30 @@ func has_point(id: StringName) -> bool:
 
 func point(id: StringName) -> Vector2i:
 	return _points.get(id, NOWHERE) as Vector2i
+
+
+## A placeholder the bake stamped, not a place the map has built.
+func is_scaffold(id: StringName) -> bool:
+	return _scaffold.has(id)
+
+
+## The King's Road as ids, in order, when a baked world states it; empty otherwise.
+func trunk() -> Array[StringName]:
+	return _trunk.duplicate()
+
+
+func spur(id: StringName) -> Array[StringName]:
+	var legs: Array[StringName] = []
+	for leg: StringName in (_spurs.get(id, []) as Array):
+		legs.append(leg)
+	return legs
+
+
+## A place's centre or a point, by id — the two things a road runs between.
+func node(id: StringName) -> Vector2i:
+	if has_place(id):
+		return centre(id)
+	return point(id)
 
 
 # ---------------------------------------------------------------- content ---

@@ -9,6 +9,8 @@
 #
 #   tools/run_tests.sh          the fast suite — run it after every change
 #   tools/run_tests.sh --all    everything, including the map walks and the pack
+#   tools/run_tests.sh --baked  the same suite on the world baked from the 3D
+#                               workshop (content/region.json); combine with --all
 #
 set -uo pipefail
 
@@ -29,7 +31,12 @@ fi
 # is an unbound-variable error. The runner ignores anything but --fast.
 MODE="--fast"
 LABEL="fast suite"
-if [[ "${1:-}" == "--all" ]]; then MODE="--everything"; LABEL="whole suite"; fi
+for arg in "$@"; do
+  case "$arg" in
+    --all) MODE="--everything"; LABEL="whole suite" ;;
+    --baked) export UNCROWNED_WORLD=baked; LABEL="$LABEL, baked world" ;;
+  esac
+done
 
 OUT=$("$GODOT" --headless --path . -s tools/test_runner.gd -- "$MODE" 2>&1)
 CODE=$?

@@ -185,6 +185,23 @@ And the constraints MAP_SPEC already states, which are tests and not wishes:
 The brother owns this list. Our side supplies the tests that hold it — MAP_SPEC's
 twelve criteria run against the baked region, unchanged in meaning.
 
+**What the first bake measured (2026-09-13, M1b)** — the brief's first concrete asks,
+in his coordinates:
+
+- **Four roads cross water with nothing modelled.** His works road and his farms road
+  both cross the main river *at the junction* (25, 15 m) and (17, 23 m) — 25 and 10
+  tiles of river under the road; his Brindle road crosses the works' tributary at
+  (151, 161 m), 13 tiles; his built bridge crosses the same tributary at (267, 65 m).
+  The bake lays road over all four so the world connects, and the junction crossing is
+  where the brief puts the King's Road's bridge. The river is the Kettle: **the one
+  crossing the spec guards is the junction's**, and it wants a bridge in his hand.
+- **The wild line crosses 6 tiles of wood.** His forest is Brindle's and the north-east
+  belt; nothing lies on the shortcut between Brindle and the castle. §4 needs the
+  Thornwood *across* it; until he plants one the scaffold (M1c) stamps it.
+- **Passing already:** every place reachable from the clearing, the border closed, the
+  road ratio 1.31, 64.6 s at 6 tiles/s on his 388-tile road, and damming the junction
+  and the ford cuts the castle off — the river is a barrier on his map too.
+
 ---
 
 ## 6. The plan, phase by phase
@@ -196,7 +213,7 @@ are indicative; the contract is the coordinate rule (§4) and the data files (§
 | | Phase | Owner | What it builds | Proof |
 |---|---|---|---|---|
 | **M0** | **Decide and brief** | both | This document; §13's direction changed in SPECS; the map brief (§5) handed over; the decisions taken and the defaults recorded (§9) | Yannick and the brother have each read this and agreed the contract |
-| **M1** | **Bake** | ours | In three slices. **M1a — anchors, delivered 2026-09-13**: `content/places.json` holds the eight sites and footprints, the clearing and the crossings, and an anchor for every person (25 + 8 strangers), fire (16), stall (5) and paper (5); `Places` loads it, `Region.resolve()` turns an anchor into a tile, `Region.BRINDLE` and its kin read the file, the cast sheets carry no coordinate, and `test_anchors` fails by name on one that resolves nowhere. The old and the new worlds were dumped tile for tile: every person, stall and paper is where it was; thirteen campfires moved one tile onto the tile their reason names, because `_nearest_open` had never tested the tile it was given (fixed, not reproduced). 40 suites, 418 tests green. **M1b — the bake**: `tools/bake_region.gd` reads his `assets/landscape/*` and `planning/*.json`, writes `content/region.json` — 384 × 384 terrain kinds (paint → wild / farmland / sand; water → water; slope over a threshold → mountain; building footprints → wall; his paths → road; sites → zones), roads, crossings, props by kind. `Region.load()` beside the procedural builder, chosen by one flag. **M1c — scaffolds and the contract**: the kit stamps every place he has not built; the bake report; `measure_routes` on the baked grid | All suites green on the baked region — with his map extended to eight places, or, until it is, with the missing settlements procedurally stamped onto his terrain as a scaffold. MAP_SPEC's twelve criteria pass. `measure_routes` reports the three rows |
+| **M1** | **Bake** | ours | In three slices. **M1a — anchors, delivered 2026-09-13**: `content/places.json` holds the eight sites and footprints, the clearing and the crossings, and an anchor for every person (25 + 8 strangers), fire (16), stall (5) and paper (5); `Places` loads it, `Region.resolve()` turns an anchor into a tile, `Region.BRINDLE` and its kin read the file, the cast sheets carry no coordinate, and `test_anchors` fails by name on one that resolves nowhere. The old and the new worlds were dumped tile for tile: every person, stall and paper is where it was; thirteen campfires moved one tile onto the tile their reason names, because `_nearest_open` had never tested the tile it was given (fixed, not reproduced). 40 suites, 418 tests green. **M1b — the bake, delivered 2026-09-13**: `tools/bake_region.gd` reads his landscape arrays, geography, sectors and forest placements plus `content/bake_brief.json` — our proposals, in his metres, for what his data lacks, every one marked scaffold with its reason — and writes `content/region.json`: 384 × 384 terrain kinds as row runs (43 KB), his six ruins as props, the eight places, every point the content stands at, the trunk order, the inputs' hashes. `BakeRules` says how his ground becomes our terrain; `RegionBake` builds it; `Region.load_baked()` reads it and adds the same zones and anchors the 2D map gets. **One flag**: `UNCROWNED_WORLD=baked` selects the world for a whole process; `tools/run_tests.sh --baked`; the bake bakes twice and refuses to write if the two differ; `--check` fails CI on a stale file. Measured on the first bake: MAP_SPEC 8 of 10 — ratio 1.31, road 64.6 s at 6 tiles/s, dam-both cuts the castle off, every place reachable from the clearing; failing: the wild line crosses 6 tiles of wood (his wood is Brindle's only), and two of the road's straight-line waypoints stand in water. The whole suite on the baked world: 424 tests, **85 fail** — every one a landmark, a street, a post or a wood the scaffold kit has not stamped yet, which is M1c's list. The bake also found four places his roads cross water without a bridge and printed them (§5). **M1c — scaffolds and the contract**: the kit stamps every place he has not built; the bake report; road waypoints that follow the baked road; `measure_routes` on the baked grid; the suite green on both worlds | All suites green on the baked region — with his map extended to eight places, or, until it is, with the missing settlements procedurally stamped onto his terrain as a scaffold. MAP_SPEC's twelve criteria pass. `measure_routes` reports the three rows |
 | **M2** | **A 3D window** | ours + his camera | `view3d/`: his `map_plate.tscn` as the world, one `SimBridge` node that owns the `Sim` as `main.gd` does, submits `move_intent` from input, and every frame places a billboard for the player and each NPC at `tile → metres` with `height_at_world`. His `follow_camera` targets the player's marker. HUD, dialogue box, journal, title and creation reused as they are. `screens.gd` opens the 3D play scene behind a project setting; `shot.sh` gets `--3d` | Wake in the clearing, walk to Brindle and up the road in 3D, driven by the sim; talk to Wren; the journal opens; the same log replays to the same frame; the 2D view still runs |
 | **M3** | **Parity** | his art, our wiring | Props by kind from his library (kilns, granary, counting house, muster rolls, tents, boats, keep, towers, gates); the free-state variants (§13) as real scenes rather than skipped fences; the castle's two faces; travellers as carts; the sign as a prop at each gate; particles; the fairy as light. **The 25 faces**: a 2D sprite family in his style for the cast and the strangers — the one asset every conversation stands in front of | The v2 screenshot set reproduced in 3D: the Acres held and freed, the freed Muster, the castle in a crisis, a traveller on the road, Halgrave at the works |
 | **M4** | **Cut over** | ours | The 3D window becomes `play`; the 2D view survives as the map screen (`M`) and the debug tools; display settings, CLAUDE.md's tool list, `shot.sh`; §13 rewritten with the new validator (§8); MAP_SPEC updated to the new coordinates; `docs/V3.md` | `tools/run_tests.sh --all` green; the four development tools work; a fresh clone runs `--import` and plays; Yannick wants to play it in front of someone else |
@@ -242,10 +259,11 @@ every anchor from the brother's sector data — his building ids and their `kind
 routes, his sites — and the same content file serves the 2D map and the 3D world alike.
 
 **2. The bake is a build step with one input and one output.** `tools/bake_region.gd`
-reads his files (§6.1) and writes `content/region.json`; `Region.load()` reads that and
-nothing else. Run it whenever his data changes; check the output in, so a clone plays
-without his tools. It is deterministic — same data, same grid — which is what keeps a
-save replaying.
+reads his files (§6.1) and `content/bake_brief.json`, and writes `content/region.json`;
+`Region.load_baked()` reads that and nothing else. Run it whenever his data changes;
+check the output in, so a clone plays without his tools. It is deterministic — it bakes
+twice and refuses to write if the two differ — which is what keeps a save replaying,
+and `-- --check` fails a build whose file is stale. *Built, M1b.*
 
 **3. Scaffolds fill what he has not built yet.** For every place and anchor the map does
 not provide, the bake stamps a placeholder on *his* terrain — our procedural settlement

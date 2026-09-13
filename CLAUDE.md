@@ -80,6 +80,8 @@ tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
            places.json — where everything stands, as anchors. No .gd carries a position.
+           bake_brief.json — what we propose on the 3D map where his data is silent.
+           region.json — the baked world. Never edited: re-run tools/bake_region.gd.
 docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
            MIGRATION_3D.md — how the world moves onto the 3D workshop, and who does what.
            V1.md — what shipped the morning before v2.
@@ -98,7 +100,14 @@ tools/shot.sh /tmp/a.png play 150,174       # look at it — see "Development to
 godot --headless --path . -s tools/sim_runner.gd -- --ticks 5000
 godot --headless --path . -s tools/measure_routes.gd
 godot --headless --path . -s tools/validate_assets.gd -- --no-cache
+godot --headless --path . -s tools/bake_region.gd          # his data + the brief -> content/region.json
+godot --headless --path . -s tools/bake_region.gd -- --check   # is the checked-in bake stale? (CI)
+tools/run_tests.sh --baked --all                            # the same suite on the baked world
+UNCROWNED_WORLD=baked tools/shot.sh /tmp/m.png map          # any tool, on the baked world
 ```
+
+`UNCROWNED_WORLD=baked` is a **world selector, not a debug tool**: it is read once by
+`Places` and decides which world the whole process plays on. A process is one world.
 
 ### Committing — read this before your first `git commit`
 

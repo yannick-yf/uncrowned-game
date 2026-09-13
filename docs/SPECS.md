@@ -3675,6 +3675,12 @@ somebody objects are in that file, not here. Combat remains outside it.
   carry no coordinate; `test_anchors` names what resolves nowhere. Checked tile for tile
   against the old world: nobody moved, and thirteen campfires moved one tile onto the
   tile their reason names — `_nearest_open` had never tested the tile it was given.
+- ✅ **M1b — the bake** (2026-09-13). `tools/bake_region.gd` turns the workshop's data and
+  `content/bake_brief.json` into `content/region.json`, deterministically; `Region.load_baked()`
+  reads it; `UNCROWNED_WORLD=baked` selects the world for a process. First measurement on
+  his map: MAP_SPEC 8 of 10 (ratio 1.31, road 64.6 s, the river a barrier by test); the
+  whole suite 85 of 424 failing, all landmarks and wood the scaffold kit (M1c) owes. Four
+  roads of his cross water without a bridge; the bake prints where (MIGRATION_3D §5).
 
 ---
 

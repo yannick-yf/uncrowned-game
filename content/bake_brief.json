@@ -1,0 +1,45 @@
+{
+  "_note": "What our side proposes on the brother's map where his data is silent (MIGRATION_3D §5, §6 M1b). Everything here is in HIS coordinates: metres, origin at the centre, north = -Z. The bake reads his files first and this second; an entry marked scaffold is a placeholder that disappears the day his data names the same thing. Nothing here is a decision about the map — it is what lets every system and test run on his terrain today, and the bake's report says exactly what is still a proposal.",
+  "_places_order": "zone order (Region.ZONE_ORDER); the bake keeps it",
+  "places": {
+    "brindle": {"from": "brindle"},
+    "cinderworks": {"from": "village_acierie"},
+    "harrowgate": {"centre_xz": [90, 35], "footprint_xz": [80, 56], "scaffold": true, "_why": "where his Brindle road meets his works road, east of the Kettle: the first town, the road passing its gate"},
+    "wide_acres": {"from": "village_fermier"},
+    "muster": {"centre_xz": [-30, 10], "footprint_xz": [40, 28], "scaffold": true, "_why": "the west bank of the junction crossing, between the farms road and the city road: the crossroads §4 puts the camp on"},
+    "saltmarch": {"centre_xz": [-250, 230], "footprint_xz": [52, 36], "scaffold": true, "_why": "the south-west coast on the west bank, so the spur from the Muster never crosses the Kettle"},
+    "cairnwell": {"from": "ville_chateau"},
+    "blackcairn": {"centre_xz": [-160, -233], "footprint_xz": [48, 36], "scaffold": true, "_why": "the castle on the spur his relief raises north of the city (build_landscape.py: castle at -160, -233); §4 has the castle against the northern mountains with the city below"}
+  },
+  "ignored_sites": ["village_scierie"],
+  "points": {
+    "bridge": {"xz": [28, 18], "scaffold": true, "_why": "where his works road and his farms road cross the main river at the junction. His built bridge at (269, 62) crosses the works' tributary; it is stamped as a road, not as this point"},
+    "ford": {"xz": [-22, 80], "scaffold": true, "_why": "a wade downstream of the bridge, on the main river"},
+    "clearing": {"xz": [175, 190], "scaffold": true, "_why": "in the Brindle wood, 65 m north of the ruins; one corridor leads south"},
+    "kell_fire": {"xz": [235, 215], "scaffold": true, "_why": "deep in the Brindle wood, east, where nobody goes"},
+    "ferry": {"xz": [-145, 138], "scaffold": true, "_why": "beside the Saltmarch spur where the marsh begins; a fire stands by a road, never on it"},
+    "road_long_stretch": {"xz": [150, 58], "scaffold": true, "_why": "beside the works road between Harrowgate and the furnaces"},
+    "road_muster_junction": {"xz": [-5, 32], "scaffold": true, "_why": "beside the junction, outside the camp"},
+    "road_climb": {"xz": [-82, -66], "scaffold": true, "_why": "beside the city road, climbing"},
+    "road_last_stop": {"xz": [-122, -158], "scaffold": true, "_why": "beside the road, the last stop before the city and the castle"}
+  },
+  "trunk": ["cinderworks", "harrowgate", "bridge", "muster", "cairnwell", "blackcairn"],
+  "spurs": {
+    "wide_acres": ["muster", "wide_acres"],
+    "saltmarch": ["muster", "saltmarch"]
+  },
+  "roads": [
+    {"id": "farms_end", "points_xz": [[-110, 20], [-170, 40]], "scaffold": true, "_why": "his farms road stops 60 m short of the farming village's centre"},
+    {"id": "city_and_castle", "points_xz": [[-90, -90], [-150, -180], [-160, -233]], "scaffold": true, "_why": "his city road stops at the city's edge; the King's Road ends at the castle gate"},
+    {"id": "spur_saltmarch", "points_xz": [[-30, 10], [-150, 130], [-250, 230]], "scaffold": true, "_why": "the spur off the junction to the port, west of the river all the way"},
+    {"id": "clearing_corridor", "points_xz": [[175, 200], [175, 225]], "scaffold": true, "_why": "the one way out of the clearing, south to Brindle's road; it starts at the clearing's edge so the fairies' fire is not on it"}
+  ],
+  "buildings": {
+    "footprint_tiles": [2, 2],
+    "kind_for_asset": {
+      "houses/cottage_village": "ruin_house",
+      "houses/cottage_fisher": "ruin_house",
+      "houses/storehouse": "ruin_house"
+    }
+  }
+}

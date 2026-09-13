@@ -344,6 +344,15 @@ static func zone_sites() -> Dictionary:
 ## topology, and §4's own roster calls the Muster "on the crossroads" — which a
 ## dead-end spur is not.
 static func road_route() -> Array[Vector2i]:
+	# A baked world states its own order, because the brother's geography is not the
+	# 2D map's: there the farms hang off the junction and the river lies between the
+	# junction and the city. The ids come from `content/bake_brief.json`.
+	var stated: Array[StringName] = Places.shared().trunk()
+	if not stated.is_empty():
+		var out: Array[Vector2i] = []
+		for id: StringName in stated:
+			out.append(Places.shared().node(id))
+		return out
 	return [CINDERWORKS, BRIDGE, HARROWGATE, WIDE_ACRES, MUSTER, CAIRNWELL, BLACKCAIRN]
 
 
@@ -381,6 +390,12 @@ static func _build_waypoints(spacing: int) -> Array[Vector2i]:
 
 
 static func saltmarch_spur() -> Array[Vector2i]:
+	var stated: Array[StringName] = Places.shared().spur(&"saltmarch")
+	if not stated.is_empty():
+		var out: Array[Vector2i] = []
+		for id: StringName in stated:
+			out.append(Places.shared().node(id))
+		return out
 	return [MUSTER, SALTMARCH]
 
 
@@ -411,9 +426,24 @@ static var _overworld: Region = null
 static func build_overworld(fresh: bool = false) -> Region:
 	if not fresh and _overworld != null:
 		return _overworld
-	var region: Region = _build_overworld()
+	var region: Region = load_baked() if Places.baked() else _build_overworld()
 	if not fresh:
 		_overworld = region
+	return region
+
+
+## The world baked from the 3D workshop (MIGRATION_3D §6, M1b): the grid and his
+## buildings from `content/region.json`, then the same zones and the same content
+## anchors — stalls, papers, fires — the procedural map gets, resolved against the
+## baked places. `tools/bake_region.gd` writes the file; nothing here reads his data.
+static func load_baked() -> Region:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(Places.BAKED_PATH))
+	if not (parsed is Dictionary):
+		push_error("no baked world at %s — run tools/bake_region.gd" % Places.BAKED_PATH)
+		return _build_overworld()
+	var region: Region = RegionBake.read(parsed as Dictionary)
+	region._bake_zones()
+	region._stamp_stalls()
 	return region
 
 
