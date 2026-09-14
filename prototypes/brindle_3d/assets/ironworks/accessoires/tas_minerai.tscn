@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/ore.tres" id="1_0as4j"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tas_minerai_HeapCore_ore.res" id="2_ecllq"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tas_minerai_LooseMaterial_ore.res" id="3_35bgs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3e3oa"]
+size = Vector3(1.75, 0.585, 1.4)
+
+[node name="TasMinerai" type="Node3D" unique_id=212906664]
+metadata/asset_id = "tas_minerai"
+metadata/family = "accessoires"
+metadata/label = "Minerai brut"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+
+[node name="PileCollision" type="StaticBody3D" parent="." unique_id=204664819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@667" type="CollisionShape3D" parent="PileCollision" unique_id=433270432]
+shape = SubResource("BoxShape3D_3e3oa")
+
+[node name="HeapCoreOre" type="MeshInstance3D" parent="." unique_id=1645902592]
+material_override = ExtResource("1_0as4j")
+mesh = ExtResource("2_ecllq")
+
+[node name="LooseMaterialOre" type="MeshInstance3D" parent="." unique_id=995862293]
+material_override = ExtResource("1_0as4j")
+mesh = ExtResource("3_35bgs")

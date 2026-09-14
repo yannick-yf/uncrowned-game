@@ -1,0 +1,172 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/effects/fumee_ruine.tscn" id="1_ecq01"]
+[ext_resource type="Shader" path="res://shaders/ruin_smoke.gdshader" id="2_7foke"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/clay.tres" id="3_0do0y"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_FurnaceShell_clay.res" id="4_ir6jx"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/soot.tres" id="5_vs8al"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_BlackenedThroat_soot.res" id="6_gviv8"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/charcoal.tres" id="7_g2rwq"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_DarkInterior_charcoal.res" id="8_wsrn4"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_InnerLining_soot.res" id="9_oxnla"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_MouthJamb_soot.res" id="10_cjch7"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_MouthLintel_soot.res" id="11_reaqg"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/slag.tres" id="12_o3ice"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_SlagApron_slag.res" id="13_2fwmo"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_FurnaceFloor_charcoal.res" id="14_vf6b2"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_InnerBack_soot.res" id="15_vxon5"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/embers.tres" id="16_ifkk4"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_FurnaceBed_embers.res" id="17_s6rpv"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_Tuyere_clay.res" id="18_7x5nw"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="19_3qub2"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_BellowsBoards_wood.res" id="20_hwkjn"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/leather.tres" id="21_g5dhd"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_LeatherPleats_leather.res" id="22_yc1tn"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_BellowsLegs_wood.res" id="23_y0y21"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_BellowsHandle_wood.res" id="24_ffktk"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/bas_fourneau_actif_BellowsNozzle_clay.res" id="25_praj1"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tl3px"]
+height = 1.8
+radius = 0.7704
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flhvi"]
+render_priority = 0
+shader = ExtResource("2_7foke")
+shader_parameter/smoke_color = null
+
+[sub_resource type="QuadMesh" id="QuadMesh_t6j8c"]
+material = SubResource("ShaderMaterial_flhvi")
+size = Vector2(1.5, 1.5)
+
+[sub_resource type="Curve" id="Curve_ccd6v"]
+_data = [Vector2(0, 0.27), 0.0, 0.0, 0, 0, Vector2(0.35, 0.68), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_82mce"]
+offsets = PackedFloat32Array(0, 0.12, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.27, 1, 1, 1, 0.15, 1, 1, 1, 0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sbeok"]
+size = Vector3(0.85, 0.94, 1.7)
+
+[node name="BasFourneauActif" type="Node3D" unique_id=984685199]
+metadata/asset_id = "bas_fourneau_actif"
+metadata/family = "production"
+metadata/label = "Bas fourneau en activité"
+metadata/purpose = "Même four avec braises et fumée légère ; la loupe reste un métal solide."
+metadata/placement = "Version allumée, effet décoratif réglable sous FumeeFourneau."
+
+[node name="FurnaceCollision" type="StaticBody3D" parent="." unique_id=1711994510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@4" type="CollisionShape3D" parent="FurnaceCollision" unique_id=950589268]
+shape = SubResource("CylinderShape3D_tl3px")
+
+[node name="ChargingPoint" type="Marker3D" parent="." unique_id=909359631]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+
+[node name="ExtractionSide" type="Marker3D" parent="." unique_id=725801096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.92)
+
+[node name="FumeeFourneau" type="CPUParticles3D" parent="." unique_id=881395570 instance=ExtResource("1_ecq01")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 1.84, 0)
+cast_shadow = 0
+amount = 22
+lifetime = 4.4
+preprocess = 5.0
+randomness = 0.4
+lifetime_randomness = 0.2
+mesh = SubResource("QuadMesh_t6j8c")
+emission_shape = 1
+emission_sphere_radius = 0.17
+direction = Vector3(0, 1, 0)
+spread = 9.0
+gravity = Vector3(0.025, 0.075, -0.008)
+initial_velocity_min = 0.28
+initial_velocity_max = 0.42
+scale_amount_min = 0.65
+scale_amount_max = 0.93
+scale_amount_curve = SubResource("Curve_ccd6v")
+color_ramp = SubResource("Gradient_82mce")
+
+[node name="ForgeGlow" type="OmniLight3D" parent="." unique_id=13074708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 0.6552)
+light_color = Color(1, 0.35, 0.075, 1)
+light_energy = 0.6
+omni_range = 2.4
+
+[node name="BellowsAirOutlet" type="Marker3D" parent="." unique_id=330641984]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39999998, 0.49, 5.3327895e-08)
+
+[node name="BellowsCollision" type="StaticBody3D" parent="." unique_id=1679862091]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.62, 0.47, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@5" type="CollisionShape3D" parent="BellowsCollision" unique_id=26150217]
+shape = SubResource("BoxShape3D_sbeok")
+
+[node name="FurnaceShellClay" type="MeshInstance3D" parent="." unique_id=1845652859]
+material_override = ExtResource("3_0do0y")
+mesh = ExtResource("4_ir6jx")
+
+[node name="BlackenedThroatSoot" type="MeshInstance3D" parent="." unique_id=2104494101]
+material_override = ExtResource("5_vs8al")
+mesh = ExtResource("6_gviv8")
+
+[node name="DarkInteriorCharcoal" type="MeshInstance3D" parent="." unique_id=1513860999]
+material_override = ExtResource("7_g2rwq")
+mesh = ExtResource("8_wsrn4")
+
+[node name="InnerLiningSoot" type="MeshInstance3D" parent="." unique_id=1025554726]
+material_override = ExtResource("5_vs8al")
+mesh = ExtResource("9_oxnla")
+
+[node name="MouthJambSoot" type="MeshInstance3D" parent="." unique_id=1742799670]
+material_override = ExtResource("5_vs8al")
+mesh = ExtResource("10_cjch7")
+
+[node name="MouthLintelSoot" type="MeshInstance3D" parent="." unique_id=1811905493]
+material_override = ExtResource("5_vs8al")
+mesh = ExtResource("11_reaqg")
+
+[node name="SlagApronSlag" type="MeshInstance3D" parent="." unique_id=1447219529]
+material_override = ExtResource("12_o3ice")
+mesh = ExtResource("13_2fwmo")
+
+[node name="FurnaceFloorCharcoal" type="MeshInstance3D" parent="." unique_id=1271452837]
+material_override = ExtResource("7_g2rwq")
+mesh = ExtResource("14_vf6b2")
+
+[node name="InnerBackSoot" type="MeshInstance3D" parent="." unique_id=1244573234]
+material_override = ExtResource("5_vs8al")
+mesh = ExtResource("15_vxon5")
+
+[node name="FurnaceBedEmbers" type="MeshInstance3D" parent="." unique_id=296789686]
+material_override = ExtResource("16_ifkk4")
+mesh = ExtResource("17_s6rpv")
+
+[node name="TuyereClay" type="MeshInstance3D" parent="." unique_id=42925980]
+material_override = ExtResource("3_0do0y")
+mesh = ExtResource("18_7x5nw")
+
+[node name="BellowsBoardsWood" type="MeshInstance3D" parent="." unique_id=343628735]
+material_override = ExtResource("19_3qub2")
+mesh = ExtResource("20_hwkjn")
+
+[node name="LeatherPleatsLeather" type="MeshInstance3D" parent="." unique_id=824447562]
+material_override = ExtResource("21_g5dhd")
+mesh = ExtResource("22_yc1tn")
+
+[node name="BellowsLegsWood" type="MeshInstance3D" parent="." unique_id=1718350157]
+material_override = ExtResource("19_3qub2")
+mesh = ExtResource("23_y0y21")
+
+[node name="BellowsHandleWood" type="MeshInstance3D" parent="." unique_id=1615599793]
+material_override = ExtResource("19_3qub2")
+mesh = ExtResource("24_ffktk")
+
+[node name="BellowsNozzleClay" type="MeshInstance3D" parent="." unique_id=1544716454]
+material_override = ExtResource("3_0do0y")
+mesh = ExtResource("25_praj1")

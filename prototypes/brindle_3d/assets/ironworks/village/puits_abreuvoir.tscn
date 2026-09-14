@@ -1,0 +1,141 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_s6w5b"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellSide_stone.res" id="2_gd528"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellEnds_stone.res" id="3_ysqwi"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark.tres" id="4_f816l"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellDarkWater_dark.res" id="5_no255"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark_wood.tres" id="6_xlrve"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellWinchPosts_dark_wood.res" id="7_rbbsw"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="8_rba3e"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellDrum_wood.res" id="9_oaavq"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="10_ekemt"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellCrank_iron.res" id="11_dkfmn"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellCrankHandle_wood.res" id="12_bcvxn"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/rope.tres" id="13_earro"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_WellRope_rope.res" id="14_r5mvl"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_TroughBase_stone.res" id="15_rb4nx"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_TroughSides_stone.res" id="16_hprw5"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/water.tres" id="17_js7ac"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_StillWater_water.res" id="18_0r2xw"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_TroughFeet_stone.res" id="19_qxbi3"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_Bucket_wood.res" id="20_b7vd5"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_BucketInterior_dark.res" id="21_dmns5"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/puits_abreuvoir_BucketRim_iron.res" id="22_d1gyo"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dqls7"]
+size = Vector3(0.25, 0.9, 1.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_88qyi"]
+size = Vector3(0.25, 0.9, 1.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sfaqu"]
+size = Vector3(1.35, 0.9, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hn7r8"]
+size = Vector3(1.35, 0.9, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_46s7u"]
+size = Vector3(1.65, 0.14, 0.78)
+
+[node name="PuitsAbreuvoir" type="Node3D" unique_id=356810705]
+metadata/asset_id = "puits_abreuvoir"
+metadata/family = "village"
+metadata/label = "Puits maçonné et treuil"
+metadata/purpose = "Margelle carrée en pierre sombre, treuil manuel et auge massive."
+metadata/placement = "Point d’eau du quartier de vie ; éviter les déchets métallurgiques."
+
+[node name="WellSideCollision" type="StaticBody3D" parent="." unique_id=574088458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 0.45, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@660" type="CollisionShape3D" parent="WellSideCollision" unique_id=471122400]
+shape = SubResource("BoxShape3D_dqls7")
+
+[node name="@StaticBody3D@661" type="StaticBody3D" parent="." unique_id=1679426013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.45, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@662" type="CollisionShape3D" parent="@StaticBody3D@661" unique_id=1717991210]
+shape = SubResource("BoxShape3D_88qyi")
+
+[node name="WellEndsCollision" type="StaticBody3D" parent="." unique_id=1957610551]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.45, -0.73)
+collision_mask = 0
+
+[node name="@CollisionShape3D@663" type="CollisionShape3D" parent="WellEndsCollision" unique_id=483323710]
+shape = SubResource("BoxShape3D_sfaqu")
+
+[node name="@StaticBody3D@664" type="StaticBody3D" parent="." unique_id=1547789652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.45, 0.73)
+collision_mask = 0
+
+[node name="@CollisionShape3D@665" type="CollisionShape3D" parent="@StaticBody3D@664" unique_id=2080830199]
+shape = SubResource("BoxShape3D_hn7r8")
+
+[node name="TroughBaseCollision" type="StaticBody3D" parent="." unique_id=75579305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.45, 0.14, 0.3)
+collision_mask = 0
+
+[node name="@CollisionShape3D@666" type="CollisionShape3D" parent="TroughBaseCollision" unique_id=264172453]
+shape = SubResource("BoxShape3D_46s7u")
+
+[node name="WellSideStone" type="MeshInstance3D" parent="." unique_id=44416868]
+material_override = ExtResource("1_s6w5b")
+mesh = ExtResource("2_gd528")
+
+[node name="WellEndsStone" type="MeshInstance3D" parent="." unique_id=1186239204]
+material_override = ExtResource("1_s6w5b")
+mesh = ExtResource("3_ysqwi")
+
+[node name="WellDarkWaterDark" type="MeshInstance3D" parent="." unique_id=2072995338]
+material_override = ExtResource("4_f816l")
+mesh = ExtResource("5_no255")
+
+[node name="WellWinchPostsDarkWood" type="MeshInstance3D" parent="." unique_id=541022118]
+material_override = ExtResource("6_xlrve")
+mesh = ExtResource("7_rbbsw")
+
+[node name="WellDrumWood" type="MeshInstance3D" parent="." unique_id=1065600881]
+material_override = ExtResource("8_rba3e")
+mesh = ExtResource("9_oaavq")
+
+[node name="WellCrankIron" type="MeshInstance3D" parent="." unique_id=1729573454]
+material_override = ExtResource("10_ekemt")
+mesh = ExtResource("11_dkfmn")
+
+[node name="WellCrankHandleWood" type="MeshInstance3D" parent="." unique_id=963998278]
+material_override = ExtResource("8_rba3e")
+mesh = ExtResource("12_bcvxn")
+
+[node name="WellRopeRope" type="MeshInstance3D" parent="." unique_id=205225644]
+material_override = ExtResource("13_earro")
+mesh = ExtResource("14_r5mvl")
+
+[node name="TroughBaseStone" type="MeshInstance3D" parent="." unique_id=1736744467]
+material_override = ExtResource("1_s6w5b")
+mesh = ExtResource("15_rb4nx")
+
+[node name="TroughSidesStone" type="MeshInstance3D" parent="." unique_id=1396194834]
+material_override = ExtResource("1_s6w5b")
+mesh = ExtResource("16_hprw5")
+
+[node name="StillWaterWater" type="MeshInstance3D" parent="." unique_id=951902944]
+material_override = ExtResource("17_js7ac")
+mesh = ExtResource("18_0r2xw")
+
+[node name="TroughFeetStone" type="MeshInstance3D" parent="." unique_id=2145608594]
+material_override = ExtResource("1_s6w5b")
+mesh = ExtResource("19_qxbi3")
+
+[node name="BucketWood" type="MeshInstance3D" parent="." unique_id=532978376]
+material_override = ExtResource("8_rba3e")
+mesh = ExtResource("20_b7vd5")
+
+[node name="BucketInteriorDark" type="MeshInstance3D" parent="." unique_id=109929012]
+material_override = ExtResource("4_f816l")
+mesh = ExtResource("21_dmns5")
+
+[node name="BucketRimIron" type="MeshInstance3D" parent="." unique_id=1164826872]
+material_override = ExtResource("10_ekemt")
+mesh = ExtResource("22_d1gyo")

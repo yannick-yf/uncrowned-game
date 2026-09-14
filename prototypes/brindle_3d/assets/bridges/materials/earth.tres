@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/bridge_surface.gdshader" id="1_rq540"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_rq540")
+shader_parameter/tint = Color(0.3254902, 0.29411766, 0.22745098, 1)
+shader_parameter/surface_kind = 1
+shader_parameter/roughness = 0.95
+shader_parameter/metalness = 0.0
+shader_parameter/variation = 0.14

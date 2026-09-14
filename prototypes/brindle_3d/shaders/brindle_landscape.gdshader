@@ -18,6 +18,9 @@ uniform bool scorch_enabled = false;
 uniform sampler2D scorch_mask : filter_linear, repeat_disable;
 uniform vec4 charred_soil : source_color = vec4(.15,.128,.098,1.);
 uniform vec4 ground_ash : source_color = vec4(.35,.335,.305,1.);
+uniform bool ironworks_mask_enabled = false;
+uniform sampler2D ironworks_ground_mask : filter_linear, repeat_disable;
+uniform vec4 ironworks_bounds = vec4(182.,-13.,104.,108.);
 varying vec3 world;
 varying vec3 world_normal;
 float noise(vec2 p) { return texture(ground_noise,p*0.021).r; }
@@ -69,6 +72,17 @@ void fragment() {
         vec3 burned=mix(charred_soil.rgb,ground_ash.rgb,fire.g*.7);
         burned*=.83+grain*.34;
         col=mix(dried,burned,smoothstep(.03,.88,fire.r)*inside);
+    }
+    if (ironworks_mask_enabled) {
+        vec2 uv=(world.xz-ironworks_bounds.xy)/ironworks_bounds.zw;
+        vec3 use_mask=texture(ironworks_ground_mask,clamp(uv,vec2(0),vec2(1))).rgb;
+        float inside=step(0.,uv.x)*step(0.,uv.y)*step(uv.x,1.)*step(uv.y,1.);
+        float worn=smoothstep(.09,.85,use_mask.r-(noise(p*3.)-.5)*.21)*inside;
+        vec3 earth=mix(vec3(.072,.052,.032),vec3(.155,.118,.080),noise(p*.8));
+        vec3 grit=mix(vec3(.065,.07,.07),vec3(.17,.165,.14),grain);
+        earth=mix(earth,grit,use_mask.b*.65);
+        earth=mix(earth,vec3(.022,.023,.021)*(.80+grain*.40),use_mask.g*.84);
+        col=mix(col,earth,worn);
     }
     ALBEDO=col;
     ROUGHNESS=.96;

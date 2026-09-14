@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/bridge_surface.gdshader" id="1_plkfl"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_plkfl")
+shader_parameter/tint = Color(0.1882353, 0.21960784, 0.23529412, 1)
+shader_parameter/surface_kind = 3
+shader_parameter/roughness = 0.7
+shader_parameter/metalness = 0.6
+shader_parameter/variation = 0.14

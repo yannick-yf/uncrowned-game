@@ -27,7 +27,8 @@ void fragment() {
     col*=.90+pattern*.23;
     float lines=sin(a.y*8.+noise(a*3.)*5.+sin(b.x*3.));
     float sparkle=smoothstep(.94,1.,lines)*smoothstep(.65,.88,noise(b*2.4))*.09;
-    float edge=(1.-smoothstep(.0,.10,COLOR.r))*(.15+noise(a*2.)*.28);
+    // Quiet river margins have occasional broken foam, not a continuous pale rim.
+    float edge=(1.-smoothstep(.0,.045,COLOR.r))*smoothstep(.55,.83,noise(a*.8))*.19;
     ALBEDO=mix(col,foam_color.rgb,max(edge,sparkle));
     ROUGHNESS=.34;
     SPECULAR=.5;

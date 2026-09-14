@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_ponns"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/loupe_fer_brute_BloomSlab_stone.res" id="2_ucaib"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="3_s7jdi"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/loupe_fer_brute_BloomCore_metal.res" id="4_dwign"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/loupe_fer_brute_RawBloom_metal.res" id="5_2kqu4"]
+
+[node name="LoupeFerBrute" type="Node3D" unique_id=931241773]
+metadata/asset_id = "loupe_fer_brute"
+metadata/family = "accessoires"
+metadata/label = "Loupe brute sur dalle"
+metadata/purpose = "Masse spongieuse de fer avant consolidation, différente d’un lingot coulé."
+metadata/placement = "Entre extraction au fourneau et martelage."
+
+[node name="BloomSlabStone" type="MeshInstance3D" parent="." unique_id=737134456]
+material_override = ExtResource("1_ponns")
+mesh = ExtResource("2_ucaib")
+
+[node name="BloomCoreMetal" type="MeshInstance3D" parent="." unique_id=154731536]
+material_override = ExtResource("3_s7jdi")
+mesh = ExtResource("4_dwign")
+
+[node name="RawBloomMetal" type="MeshInstance3D" parent="." unique_id=1988267428]
+material_override = ExtResource("3_s7jdi")
+mesh = ExtResource("5_2kqu4")

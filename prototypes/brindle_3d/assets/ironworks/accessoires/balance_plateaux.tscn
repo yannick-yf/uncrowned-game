@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="1_2xnp8"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/balance_plateaux_ScalesBase_metal.res" id="2_70234"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="3_2nai1"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/balance_plateaux_ScalesStand_iron.res" id="4_adcdy"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/balance_plateaux_ScalesArm_iron.res" id="5_n3sft"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/balance_plateaux_PanChains_iron.res" id="6_183qg"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/balance_plateaux_WeighingPans_metal.res" id="7_xk88b"]
+
+[node name="BalancePlateaux" type="Node3D" unique_id=845648269]
+metadata/asset_id = "balance_plateaux"
+metadata/family = "accessoires"
+metadata/label = "Balance à plateaux"
+metadata/purpose = "Balance de comptoir à deux plateaux suspendus."
+metadata/placement = "À poser sur un comptoir ; pivot à la base."
+
+[node name="ScalesBaseMetal" type="MeshInstance3D" parent="." unique_id=1195492675]
+material_override = ExtResource("1_2xnp8")
+mesh = ExtResource("2_70234")
+
+[node name="ScalesStandIron" type="MeshInstance3D" parent="." unique_id=1139217334]
+material_override = ExtResource("3_2nai1")
+mesh = ExtResource("4_adcdy")
+
+[node name="ScalesArmIron" type="MeshInstance3D" parent="." unique_id=1341558096]
+material_override = ExtResource("3_2nai1")
+mesh = ExtResource("5_n3sft")
+
+[node name="PanChainsIron" type="MeshInstance3D" parent="." unique_id=2131944912]
+material_override = ExtResource("3_2nai1")
+mesh = ExtResource("6_183qg")
+
+[node name="WeighingPansMetal" type="MeshInstance3D" parent="." unique_id=1799521050]
+material_override = ExtResource("1_2xnp8")
+mesh = ExtResource("7_xk88b")

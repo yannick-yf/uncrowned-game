@@ -1,6 +1,8 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3]
+[gd_resource type="ShaderMaterial" load_steps=4 format=3]
 [ext_resource type="Shader" path="res://shaders/brindle_path.gdshader" id="1"]
 [ext_resource type="Texture2D" path="res://assets/brindle/ground_noise.tres" id="2"]
+[ext_resource type="Texture2D" path="res://assets/landscape/ironworks_ground_mask.png" id="3"]
 [resource]
 shader = ExtResource("1")
 shader_parameter/ground_noise = ExtResource("2")
+shader_parameter/ironworks_ground_mask = ExtResource("3")

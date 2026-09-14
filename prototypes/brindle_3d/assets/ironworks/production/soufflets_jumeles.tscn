@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_mb8un"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/soufflets_jumeles_BellowsBoards_wood.res" id="2_qjgdk"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/leather.tres" id="3_dx1wj"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/soufflets_jumeles_LeatherPleats_leather.res" id="4_jt64x"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/soufflets_jumeles_BellowsLegs_wood.res" id="5_hjaxr"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/soufflets_jumeles_BellowsHandle_wood.res" id="6_5v2v2"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/clay.tres" id="7_lrmlv"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/soufflets_jumeles_BellowsNozzle_clay.res" id="8_1mo4t"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rqiny"]
+size = Vector3(0.85, 0.94, 1.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ia7dg"]
+size = Vector3(0.85, 0.94, 1.7)
+
+[node name="SouffletsJumeles" type="Node3D" unique_id=401423600]
+metadata/asset_id = "soufflets_jumeles"
+metadata/family = "production"
+metadata/label = "Soufflets jumelés"
+metadata/purpose = "Deux soufflets manuels pour un apport d’air alterné."
+metadata/placement = "Orienter les buses vers la tuyère du four ou du foyer."
+
+[node name="BellowsCollision" type="StaticBody3D" parent="." unique_id=878666111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.53, 0.47, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@14" type="CollisionShape3D" parent="BellowsCollision" unique_id=2020580627]
+shape = SubResource("BoxShape3D_rqiny")
+
+[node name="@StaticBody3D@15" type="StaticBody3D" parent="." unique_id=1005410611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53, 0.47, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@16" type="CollisionShape3D" parent="@StaticBody3D@15" unique_id=205954301]
+shape = SubResource("BoxShape3D_ia7dg")
+
+[node name="BellowsBoardsWood" type="MeshInstance3D" parent="." unique_id=1971327060]
+material_override = ExtResource("1_mb8un")
+mesh = ExtResource("2_qjgdk")
+
+[node name="LeatherPleatsLeather" type="MeshInstance3D" parent="." unique_id=1800359585]
+material_override = ExtResource("3_dx1wj")
+mesh = ExtResource("4_jt64x")
+
+[node name="BellowsLegsWood" type="MeshInstance3D" parent="." unique_id=28296287]
+material_override = ExtResource("1_mb8un")
+mesh = ExtResource("5_hjaxr")
+
+[node name="BellowsHandleWood" type="MeshInstance3D" parent="." unique_id=2108207552]
+material_override = ExtResource("1_mb8un")
+mesh = ExtResource("6_5v2v2")
+
+[node name="BellowsNozzleClay" type="MeshInstance3D" parent="." unique_id=1417900419]
+material_override = ExtResource("7_lrmlv")
+mesh = ExtResource("8_1mo4t")

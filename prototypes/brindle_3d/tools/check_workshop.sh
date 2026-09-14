@@ -17,6 +17,30 @@ if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG"; th
   exit 1
 fi
 
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_river_crossings.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'RIVER_INTEGRATION PASS' "$LOG"; then
+  echo "FAILED: river and bridge verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_ironworks_town.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'IRONWORKS_TOWN_CHECK PASS' "$LOG"; then
+  echo "FAILED: ironworks settlement verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_ironworks_coherence.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'IRONWORKS_COHERENCE PASS' "$LOG"; then
+  echo "FAILED: ironworks asset coherence verification"
+  exit 1
+fi
+
 "$GODOT" --headless --path "$WORKSHOP" --script res://tools/verify_workshop.gd >"$LOG" 2>&1
 CODE=$?
 cat "$LOG"

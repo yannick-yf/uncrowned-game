@@ -5,6 +5,7 @@ const MIN_ZOOM: float = 12.0
 var tilt_degrees: float = 55.0
 var azimuth_degrees: float = 0.0
 var _overview: bool = true
+var _bridge_index: int = -1
 
 var focus: Vector3 = Vector3.ZERO
 var _maximum_zoom: float = 420.0
@@ -19,7 +20,7 @@ func _ready() -> void:
 
 
 func _on_ground_rebuilt() -> void:
-	_dimensions.text = "UNCROWNED  /  ATELIER DE CARTE\n%.0f × %.0f m  ·  Brindle, forêts et mine" % [
+	_dimensions.text = "UNCROWNED  /  ATELIER DE CARTE\n%.0f × %.0f m  ·  Rivières et cinq ponts" % [
 		float(_ground.get("width_m")), float(_ground.get("depth_m"))]
 	frame_all()
 
@@ -89,7 +90,9 @@ func _update_transform() -> void:
 	if not _overview:
 		focus.y = maxf(float(_ground.call("height_at_world", focus.x, focus.z)), float(_ground.call("water_at_world", focus.x, focus.z))) + 7.0
 	rotation_degrees = Vector3(-tilt_degrees, azimuth_degrees, 0.0)
-	position = focus + basis.z * maxf(100.0, size * 1.65)
+	# Bring close inspections near their subject; a fixed 100 m retreat can place
+	# unrelated upstream terrain and water between the camera and a small workshop.
+	position = focus + basis.z * maxf(30.0, size * 1.65)
 	far = maxf(1200.0, size * 4.0)
 
 
@@ -105,6 +108,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			set_view(Vector2(175,255),90,49,-12)
 		elif event.keycode == KEY_M:
 			set_view(Vector2(308,80),62,27,-70)
+		elif event.keycode == KEY_I:
+			set_view(Vector2(235,37),112,49,-25)
+		elif event.keycode == KEY_P:
+			var bridges: Node3D=get_node_or_null("../Decor/Franchissements/Ponts")
+			if bridges!=null and bridges.get_child_count()>0:
+				_bridge_index=wrapi(_bridge_index+1,0,bridges.get_child_count())
+				var bridge: Node3D=bridges.get_child(_bridge_index)
+				set_view(Vector2(bridge.position.x,bridge.position.z),maxf(42,float(bridge.get_meta("length_m",20))*2.8),38,rad_to_deg(bridge.rotation.y)+55)
 	elif event is InputEventMouseButton and event.pressed:
 		_overview = false
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:

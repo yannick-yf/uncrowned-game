@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/ironworks_surface.gdshader" id="1_jev3h"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_jev3h")
+shader_parameter/tint = Color(0.14509805, 0.15294118, 0.16078432, 1)
+shader_parameter/surface_kind = 1
+shader_parameter/roughness = 0.94
+shader_parameter/metalness = 0.0
+shader_parameter/variation = 0.14

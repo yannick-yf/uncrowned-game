@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/charcoal.tres" id="1_55yvx"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tas_charbon_HeapCore_charcoal.res" id="2_hgiem"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tas_charbon_LooseMaterial_charcoal.res" id="3_2apc4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1foa8"]
+size = Vector3(1.75, 0.585, 1.4)
+
+[node name="TasCharbon" type="Node3D" unique_id=1125711995]
+metadata/asset_id = "tas_charbon"
+metadata/family = "accessoires"
+metadata/label = "Charbon de bois"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+
+[node name="PileCollision" type="StaticBody3D" parent="." unique_id=1653882033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@454" type="CollisionShape3D" parent="PileCollision" unique_id=1873308413]
+shape = SubResource("BoxShape3D_1foa8")
+
+[node name="HeapCoreCharcoal" type="MeshInstance3D" parent="." unique_id=882009042]
+material_override = ExtResource("1_55yvx")
+mesh = ExtResource("2_hgiem")
+
+[node name="LooseMaterialCharcoal" type="MeshInstance3D" parent="." unique_id=1551518609]
+material_override = ExtResource("1_55yvx")
+mesh = ExtResource("3_2apc4")

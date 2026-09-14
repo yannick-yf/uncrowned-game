@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_me874"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/cloture_2m_Posts_wood.res" id="2_1fmgs"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/cloture_2m_Rails_wood.res" id="3_s8hg3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k74bp"]
+size = Vector3(0.13, 1.15, 0.13)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lyeln"]
+size = Vector3(0.13, 1.15, 0.13)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g6iu2"]
+size = Vector3(0.11, 2, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v6l5n"]
+size = Vector3(0.11, 2, 0.11)
+
+[node name="Cloture2m" type="Node3D" unique_id=1601784736]
+metadata/asset_id = "cloture_2m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique · 2 m"
+metadata/purpose = "Barrière de bois pour limites de cour et petites enclos."
+metadata/placement = "Extrémités à X = ±1 m, hauteur environ 1,1 m."
+
+[node name="PostsCollision" type="StaticBody3D" parent="." unique_id=2095517646]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1, 0.575, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@700" type="CollisionShape3D" parent="PostsCollision" unique_id=2137206797]
+shape = SubResource("BoxShape3D_k74bp")
+
+[node name="@StaticBody3D@701" type="StaticBody3D" parent="." unique_id=274735642]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1, 0.575, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@702" type="CollisionShape3D" parent="@StaticBody3D@701" unique_id=1604378735]
+shape = SubResource("BoxShape3D_lyeln")
+
+[node name="RailsCollision" type="StaticBody3D" parent="." unique_id=1618198386]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0, 0.38, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@703" type="CollisionShape3D" parent="RailsCollision" unique_id=2080845111]
+shape = SubResource("BoxShape3D_g6iu2")
+
+[node name="@StaticBody3D@704" type="StaticBody3D" parent="." unique_id=545474804]
+transform = Transform3D(4.371139e-08, 1, -8.742278e-08, 1, -4.371139e-08, 0, -3.821371e-15, -8.742278e-08, -1, 0, 0.86, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@705" type="CollisionShape3D" parent="@StaticBody3D@704" unique_id=589873558]
+shape = SubResource("BoxShape3D_v6l5n")
+
+[node name="ConnectLeft" type="Marker3D" parent="." unique_id=80397956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="ConnectRight" type="Marker3D" parent="." unique_id=1960134545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="PostsWood" type="MeshInstance3D" parent="." unique_id=566391665]
+material_override = ExtResource("1_me874")
+mesh = ExtResource("2_1fmgs")
+
+[node name="RailsWood" type="MeshInstance3D" parent="." unique_id=1646655698]
+material_override = ExtResource("1_me874")
+mesh = ExtResource("3_s8hg3")

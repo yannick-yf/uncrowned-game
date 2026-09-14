@@ -1,0 +1,1411 @@
+{
+  "assets": [
+    {
+      "bounds_center_m": [
+        0.986635863780975,
+        0.905000030994415,
+        0.391500055789948
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "bas_fourneau_argile",
+      "label": "Bas fourneau en argile",
+      "placement": "Aire minérale ouverte, accès devant et sur le côté du soufflet.",
+      "purpose": "Réduction du minerai au charbon ; gorge de chargement et bouche d’extraction.",
+      "scene": "res://assets/ironworks/production/bas_fourneau_argile.tscn",
+      "size_m": [
+        3.56,
+        1.81,
+        2.37
+      ],
+      "triangles": 1608
+    },
+    {
+      "bounds_center_m": [
+        0.986635863780975,
+        0.905000030994415,
+        0.391500055789948
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "bas_fourneau_actif",
+      "label": "Bas fourneau en activité",
+      "placement": "Version allumée, effet décoratif réglable sous FumeeFourneau.",
+      "purpose": "Même four avec braises et fumée légère ; la loupe reste un métal solide.",
+      "scene": "res://assets/ironworks/production/bas_fourneau_actif.tscn",
+      "size_m": [
+        3.56,
+        1.81,
+        2.37
+      ],
+      "triangles": 1608
+    },
+    {
+      "bounds_center_m": [
+        1.00963580608368,
+        1.06499993801117,
+        0.384500026702881
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "bas_fourneau_pierre",
+      "label": "Bas fourneau chemisé de pierre",
+      "placement": "Garder une cour de travail devant la bouche.",
+      "purpose": "Four trapu à parement de pierre et tuyère, variante d’atelier.",
+      "scene": "res://assets/ironworks/production/bas_fourneau_pierre.tscn",
+      "size_m": [
+        3.91,
+        2.13,
+        2.66
+      ],
+      "triangles": 3280
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.36060643196106,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 3,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "grillage_minerai",
+      "label": "Foyer de grillage du minerai",
+      "placement": "Zone de préparation extérieure, distincte du charbon stocké.",
+      "purpose": "Préparation du minerai sur un lit de bois avant concassage.",
+      "scene": "res://assets/ironworks/production/grillage_minerai.tscn",
+      "size_m": [
+        2.6,
+        0.72,
+        2.5
+      ],
+      "triangles": 3924
+    },
+    {
+      "bounds_center_m": [
+        0.669999957084656,
+        0.420000016689301,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "concassage_minerai",
+      "label": "Poste de concassage et tamisage",
+      "placement": "Entre l’aire de tri et les fourneaux.",
+      "purpose": "Dalle, masses, tamis incliné et paniers pour préparer le minerai.",
+      "scene": "res://assets/ironworks/production/concassage_minerai.tscn",
+      "size_m": [
+        3.14,
+        0.84,
+        1.49
+      ],
+      "triangles": 1776
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.531085848808289,
+        -0.0486199855804443
+      ],
+      "collision_shapes": 2.0,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "soufflets_jumeles",
+      "label": "Soufflets jumelés",
+      "placement": "Orienter les buses vers la tuyère du four ou du foyer.",
+      "purpose": "Deux soufflets manuels pour un apport d’air alterné.",
+      "scene": "res://assets/ironworks/production/soufflets_jumeles.tscn",
+      "size_m": [
+        1.92,
+        1.06,
+        2.39
+      ],
+      "triangles": 280.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.55761122703552,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 19,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "forge_affinage",
+      "label": "Halle de martelage de la loupe",
+      "placement": "Proche des fourneaux, accès large pour manipuler les loupes chaudes.",
+      "purpose": "Halle basse sur piles de pierre avec foyer, enclume, outils et cuve.",
+      "scene": "res://assets/ironworks/production/forge_affinage.tscn",
+      "size_m": [
+        6.33,
+        5.12,
+        4.95
+      ],
+      "triangles": 9860
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.31500005722046,
+        0.103857040405273
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 16,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "atelier_outilleur",
+      "label": "Atelier du taillandier",
+      "placement": "Façade sur la rue de travail ; cour devant l’auvent.",
+      "purpose": "Bâtiment de finition : outils, ferrures et entretien du matériel de la mine.",
+      "scene": "res://assets/ironworks/production/atelier_outilleur.tscn",
+      "size_m": [
+        5.83,
+        4.75,
+        5.84
+      ],
+      "triangles": 20912
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.658992469310761,
+        0.0
+      ],
+      "collision_shapes": 1.0,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "meule_charbonniere",
+      "label": "Meule de charbonnier",
+      "placement": "À l’écart des logements, sur un sol nu, près des réserves de bois.",
+      "purpose": "Empilement de bois couvert de terre pour produire le charbon de bois.",
+      "scene": "res://assets/ironworks/production/meule_charbonniere.tscn",
+      "size_m": [
+        3.55,
+        1.32,
+        3.59
+      ],
+      "triangles": 432.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.27320647239685,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 17,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "halle_tri_minerai",
+      "label": "Halle de tri du minerai",
+      "placement": "À l’arrivée de la mine, avant grillage et concassage.",
+      "purpose": "Trois casiers couverts pour séparer minerai brut, préparé et gangue.",
+      "scene": "res://assets/ironworks/stockage/halle_tri_minerai.tscn",
+      "size_m": [
+        7.72,
+        4.72,
+        4.15
+      ],
+      "triangles": 13980
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.27993249893188,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 16,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "depot_charbon",
+      "label": "Réserve de charbon au sec",
+      "placement": "Cour de production ; réserver une séparation avec les foyers ouverts.",
+      "purpose": "Hangar ventilé avec deux casiers de charbon et sacs sous toiture.",
+      "scene": "res://assets/ironworks/stockage/depot_charbon.tscn",
+      "size_m": [
+        5.93,
+        4.69,
+        4.45
+      ],
+      "triangles": 11192
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.55542540550232,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 16,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "depot_barres",
+      "label": "Dépôt de barres de fer",
+      "placement": "Entre la forge de finition et l’aire des charrettes.",
+      "purpose": "Halle avec râteliers et lots de barres prêts à être chargés.",
+      "scene": "res://assets/ironworks/stockage/depot_barres.tscn",
+      "size_m": [
+        6.22,
+        5.11,
+        5.15
+      ],
+      "triangles": 7400
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.84449100494385,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 14,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "hangar_charrettes",
+      "label": "Hangar à charrettes",
+      "placement": "Connexion à la route de la mine ; conserver une voie traversante.",
+      "purpose": "Grand abri traversant pour chargement, entretien et rangement.",
+      "scene": "res://assets/ironworks/stockage/hangar_charrettes.tscn",
+      "size_m": [
+        7.33,
+        5.71,
+        5.75
+      ],
+      "triangles": 5352
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.96000003814697,
+        -0.0336368083953857
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 20,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "bureau_pesee",
+      "label": "Bureau de pesée et des stocks",
+      "placement": "À l’entrée de la cour industrielle.",
+      "purpose": "Comptoir couvert, balance et réserve fermée pour compter les livraisons.",
+      "scene": "res://assets/ironworks/stockage/bureau_pesee.tscn",
+      "size_m": [
+        4.58,
+        4.04,
+        4.96
+      ],
+      "triangles": 15740
+    },
+    {
+      "bounds_center_m": [
+        0.0306270122528076,
+        2.12040734291077,
+        -1.11005759239197
+      ],
+      "collision_shapes": 22.0,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "entree_mine_roche",
+      "label": "Entrée de mine dans la roche",
+      "placement": "À encastrer dans le flanc de montagne ; fond fermé, intérieur de mine à construire séparément.",
+      "purpose": "Bouche de galerie boisée avec trois cadres de soutènement et un court tunnel sombre.",
+      "scene": "res://assets/ironworks/stockage/entree_mine_roche.tscn",
+      "size_m": [
+        7.47,
+        4.3,
+        3.9
+      ],
+      "triangles": 868.0
+    },
+    {
+      "bounds_center_m": [
+        0.662500143051147,
+        1.45000004768372,
+        0.297500014305115
+      ],
+      "collision_shapes": 4.0,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "portique_treuil_mine",
+      "label": "Portique et treuil de mine",
+      "placement": "Devant une entrée de mine existante ; le centre reste libre.",
+      "purpose": "Cadre en bois, tambour manuel, corde et palan pour les charges.",
+      "scene": "res://assets/ironworks/stockage/portique_treuil_mine.tscn",
+      "size_m": [
+        5.18,
+        2.9,
+        0.94
+      ],
+      "triangles": 460.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.817113757133484,
+        1.03885018825531
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "charrette_ore",
+      "label": "Charrette de minerai",
+      "placement": "Chemins entre mine, ateliers et dépôt ; timons vers +Z.",
+      "purpose": "Transport à roues en bois, sans rail, avec chargement adapté.",
+      "scene": "res://assets/ironworks/stockage/charrette_ore.tscn",
+      "size_m": [
+        2.0,
+        1.65,
+        4.03
+      ],
+      "triangles": 4080
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.757179379463196,
+        1.03885018825531
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "charrette_bars",
+      "label": "Charrette de barres",
+      "placement": "Chemins entre mine, ateliers et dépôt ; timons vers +Z.",
+      "purpose": "Transport à roues en bois, sans rail, avec chargement adapté.",
+      "scene": "res://assets/ironworks/stockage/charrette_bars.tscn",
+      "size_m": [
+        2.0,
+        1.53,
+        4.03
+      ],
+      "triangles": 1388
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.97385728359222,
+        0.0
+      ],
+      "building_design": "transverse_gabled_sorting_hall",
+      "building_kind": "industrial",
+      "collision_shapes": 13,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "tri_minerai_a_pignon",
+      "label": "Halle de tri à pignon",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Open transverse gable with three low sorting bays.",
+      "scene": "res://assets/ironworks/stockage/tri_minerai_a_pignon.tscn",
+      "size_m": [
+        7.03,
+        4.15,
+        4.33
+      ],
+      "triangles": 11588
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.90273928642273,
+        0.0
+      ],
+      "building_design": "hipped_ventilated_charcoal_hall",
+      "building_kind": "industrial",
+      "collision_shapes": 12,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "charbon_halle_a_croupes",
+      "label": "Halle à charbon à croupes",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Hipped canopy and low ventilated charcoal bays.",
+      "scene": "res://assets/ironworks/stockage/charbon_halle_a_croupes.tscn",
+      "size_m": [
+        6.33,
+        4.01,
+        4.63
+      ],
+      "triangles": 7864
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.44500017166138,
+        0.0325000286102295
+      ],
+      "building_design": "gabled_open_finishing_forge",
+      "building_kind": "industrial",
+      "collision_shapes": 15,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "forge_de_finition_a_pignon",
+      "label": "Forge de finition à pignon",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Gabled finishing forge with an exposed truss and open work face.",
+      "scene": "res://assets/ironworks/production/forge_de_finition_a_pignon.tscn",
+      "size_m": [
+        6.48,
+        4.89,
+        5.3
+      ],
+      "triangles": 8452
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.01999998092651,
+        0.0525000095367432
+      ],
+      "building_design": "narrow_deep_gabled_bar_store",
+      "building_kind": "industrial",
+      "collision_shapes": 12,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "reserve_barres_longue",
+      "label": "Réserve de barres en longueur",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Narrow deep gabled warehouse with two long storage racks.",
+      "scene": "res://assets/ironworks/stockage/reserve_barres_longue.tscn",
+      "size_m": [
+        5.03,
+        4.04,
+        6.14
+      ],
+      "triangles": 5860
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.03791546821594,
+        0.0
+      ],
+      "building_design": "hipped_two_stall_stable_fodder_room",
+      "building_kind": "service",
+      "collision_shapes": 22,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "remise_des_betes_de_trait",
+      "label": "Remise des bêtes de trait",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Hipped stable with two stalls and a closed fodder room.",
+      "scene": "res://assets/ironworks/village/remise_des_betes_de_trait.tscn",
+      "size_m": [
+        6.58,
+        4.08,
+        4.63
+      ],
+      "triangles": 7616
+    },
+    {
+      "bounds_center_m": [
+        0.0075000524520874,
+        1.38499999046326,
+        0.112451553344727
+      ],
+      "building_design": "double_compartment_latrine",
+      "building_kind": "service",
+      "collision_shapes": 6,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "latrines_a_deux_places",
+      "label": "Latrines à deux places",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Two small compartments under a transverse gable.",
+      "scene": "res://assets/ironworks/village/latrines_a_deux_places.tscn",
+      "size_m": [
+        3.2,
+        2.77,
+        2.37
+      ],
+      "triangles": 3926
+    },
+    {
+      "bounds_center_m": [
+        -0.545482158660889,
+        2.24500012397766,
+        0.287500143051147
+      ],
+      "building_design": "stone_gable_with_side_store",
+      "building_kind": "house",
+      "collision_shapes": 14,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "logis_porte_basse",
+      "label": "Logis de la porte basse",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Deep stone gable with a recessed side store.",
+      "scene": "res://assets/ironworks/village/logis_porte_basse.tscn",
+      "size_m": [
+        4.94,
+        4.49,
+        5.81
+      ],
+      "triangles": 19014
+    },
+    {
+      "bounds_center_m": [
+        -0.230629920959473,
+        2.14499998092651,
+        -0.198750019073486
+      ],
+      "building_design": "hipped_house_and_lower_entry_wing",
+      "building_kind": "house",
+      "collision_shapes": 12,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_aux_deux_volumes",
+      "label": "Maison aux deux volumes",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Hipped main roof and a stepped entrance wing.",
+      "scene": "res://assets/ironworks/village/maison_aux_deux_volumes.tscn",
+      "size_m": [
+        5.71,
+        4.29,
+        4.18
+      ],
+      "triangles": 16520
+    },
+    {
+      "bounds_center_m": [
+        0.0224997997283936,
+        2.08500003814697,
+        0.275684833526611
+      ],
+      "building_design": "long_low_dual_entry_barrack",
+      "building_kind": "barrack",
+      "collision_shapes": 6,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "baraquement_des_equipes",
+      "label": "Baraquement des équipes",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Low timber barrack with two entrances and end chimneys.",
+      "scene": "res://assets/ironworks/village/baraquement_des_equipes.tscn",
+      "size_m": [
+        6.97,
+        4.17,
+        4.69
+      ],
+      "triangles": 11602
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.64499998092651,
+        0.441547155380249
+      ],
+      "building_design": "tall_half_timber_hipped_corner",
+      "building_kind": "house",
+      "collision_shapes": 6,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "logis_a_colombages",
+      "label": "Logis d’angle à colombages",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Tall half-timber lodging under a hipped roof.",
+      "scene": "res://assets/ironworks/village/logis_a_colombages.tscn",
+      "size_m": [
+        3.83,
+        5.29,
+        5.21
+      ],
+      "triangles": 8704
+    },
+    {
+      "bounds_center_m": [
+        0.0437307357788086,
+        2.12000012397766,
+        -0.0837500095367432
+      ],
+      "building_design": "staggered_gable_and_lean_barrack",
+      "building_kind": "barrack",
+      "collision_shapes": 15,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "baraque_jumelee_de_la_cour",
+      "label": "Baraque décalée de la cour",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Staggered timber rooms with two different roof heights.",
+      "scene": "res://assets/ironworks/village/baraque_jumelee_de_la_cour.tscn",
+      "size_m": [
+        5.93,
+        4.24,
+        4.66
+      ],
+      "triangles": 11434
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.28500008583069,
+        0.0866727828979492
+      ],
+      "building_design": "broad_hip_with_projecting_bay",
+      "building_kind": "house",
+      "collision_shapes": 11,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_du_virage",
+      "label": "Maison du virage",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Broad stone house with a projecting timber bay.",
+      "scene": "res://assets/ironworks/village/maison_du_virage.tscn",
+      "size_m": [
+        4.58,
+        4.57,
+        4.85
+      ],
+      "triangles": 16204
+    },
+    {
+      "bounds_center_m": [
+        -0.0109751224517822,
+        2.72000002861023,
+        0.0662498474121094
+      ],
+      "building_design": "narrow_two_storey_external_stack",
+      "building_kind": "house",
+      "collision_shapes": 3,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_haute_de_la_venelle",
+      "label": "Maison haute de la venelle",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Narrow two-storey masonry house with an external chimney.",
+      "scene": "res://assets/ironworks/village/maison_haute_de_la_venelle.tscn",
+      "size_m": [
+        4.4,
+        5.44,
+        4.46
+      ],
+      "triangles": 20178
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.34500002861023,
+        0.349369764328003
+      ],
+      "building_design": "long_hipped_three_entry_porch_barrack",
+      "building_kind": "barrack",
+      "collision_shapes": 10,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "baraquement_de_la_grande_cour",
+      "label": "Baraquement de la grande cour",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Long communal lodging with a continuous covered entrance porch.",
+      "scene": "res://assets/ironworks/village/baraquement_de_la_grande_cour.tscn",
+      "size_m": [
+        8.48,
+        4.69,
+        5.93
+      ],
+      "triangles": 12444
+    },
+    {
+      "bounds_center_m": [
+        -0.367499828338623,
+        2.98271822929382,
+        0.357096195220947
+      ],
+      "building_design": "two_storey_gallery_left_stair_barrack",
+      "building_kind": "barrack",
+      "collision_shapes": 15,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "baraquement_a_galerie",
+      "label": "Baraquement à galerie",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Stone lower floor and timber upper floor with a left-hand stair.",
+      "scene": "res://assets/ironworks/village/baraquement_a_galerie.tscn",
+      "size_m": [
+        8.27,
+        6.07,
+        5.54
+      ],
+      "triangles": 15006
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.62000012397766,
+        0.0723109245300293
+      ],
+      "building_design": "l_shaped_house_with_raised_front_room",
+      "building_kind": "house",
+      "collision_shapes": 8,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "logis_du_contremaitre_en_l",
+      "label": "Logis du contremaître en L",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "L-shaped masonry residence with a taller front room.",
+      "scene": "res://assets/ironworks/village/logis_du_contremaitre_en_l.tscn",
+      "size_m": [
+        5.18,
+        5.24,
+        5.72
+      ],
+      "triangles": 22272
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.14499998092651,
+        -0.121705055236816
+      ],
+      "building_design": "wide_cross_gable_with_rear_store",
+      "building_kind": "house",
+      "collision_shapes": 11,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_des_charretiers",
+      "label": "Maison basse des charretiers",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Wide low gable with a small rear storage projection.",
+      "scene": "res://assets/ironworks/village/maison_des_charretiers.tscn",
+      "size_m": [
+        5.13,
+        4.29,
+        5.28
+      ],
+      "triangles": 17778
+    },
+    {
+      "bounds_center_m": [
+        -0.279999971389771,
+        2.14499998092651,
+        0.524165153503418
+      ],
+      "building_design": "offset_ridge_with_sheltered_bench",
+      "building_kind": "house",
+      "collision_shapes": 6,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_au_toit_decale",
+      "label": "Maison au toit décalé",
+      "placement": "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation.",
+      "purpose": "Asymmetric gable with a short sheltered bench.",
+      "scene": "res://assets/ironworks/village/maison_au_toit_decale.tscn",
+      "size_m": [
+        4.92,
+        4.29,
+        4.8
+      ],
+      "triangles": 7922
+    },
+    {
+      "bounds_center_m": [
+        0.234999895095825,
+        2.2960000038147,
+        0.178857088088989
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 18,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "cuisine_commune",
+      "label": "Cuisine commune et four à pain",
+      "placement": "Côté logements, à proximité d’une réserve d’eau propre.",
+      "purpose": "Salle commune, auvent de repas, four maçonné et réserve de tonneaux.",
+      "scene": "res://assets/ironworks/village/cuisine_commune.tscn",
+      "size_m": [
+        7.83,
+        4.71,
+        6.09
+      ],
+      "triangles": 22652
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.209801197052,
+        0.811356902122498
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 13,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "grenier_vivres",
+      "label": "Grenier à vivres sur plots",
+      "placement": "Cour sèche près de la cuisine, distincte des stocks miniers.",
+      "purpose": "Réserve surélevée pour céréales et provisions de la communauté.",
+      "scene": "res://assets/ironworks/village/grenier_vivres.tscn",
+      "size_m": [
+        4.4,
+        4.47,
+        5.17
+      ],
+      "triangles": 3812
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.43448495864868,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 19,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "remise_ecurie",
+      "label": "Remise et écurie",
+      "placement": "À la sortie du quartier logistique ; animaux à ajouter séparément.",
+      "purpose": "Abri ouvert avec mangeoires, séparations de stalles et réserve de foin.",
+      "scene": "res://assets/ironworks/village/remise_ecurie.tscn",
+      "size_m": [
+        6.72,
+        4.87,
+        4.75
+      ],
+      "triangles": 8380
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.49668395519257,
+        0.0607680082321167
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 8,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "latrines_bois",
+      "label": "Latrines en bois",
+      "placement": "À l’écart du puits et des cuisines ; position à définir avec le terrain.",
+      "purpose": "Petit édicule ventilé, posé sur une base de pierre.",
+      "scene": "res://assets/ironworks/village/latrines_bois.tscn",
+      "size_m": [
+        2.1,
+        2.99,
+        2.42
+      ],
+      "triangles": 1580
+    },
+    {
+      "bounds_center_m": [
+        0.482500076293945,
+        0.930000007152557,
+        0.342499971389771
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 5,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "puits_abreuvoir",
+      "label": "Puits maçonné et treuil",
+      "placement": "Point d’eau du quartier de vie ; éviter les déchets métallurgiques.",
+      "purpose": "Margelle carrée en pierre sombre, treuil manuel et auge massive.",
+      "scene": "res://assets/ironworks/village/puits_abreuvoir.tscn",
+      "size_m": [
+        3.72,
+        1.86,
+        2.39
+      ],
+      "triangles": 912
+    },
+    {
+      "bounds_center_m": [
+        0.0529613494873047,
+        0.482878386974335,
+        -0.00508403778076172
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tas_minerai",
+      "label": "Minerai brut",
+      "placement": "Minerai près du tri, charbon au sec, scories en aire de rebut séparée.",
+      "purpose": "Tas distinct par matière et couleur, modulable par répétition et rotation.",
+      "scene": "res://assets/ironworks/accessoires/tas_minerai.tscn",
+      "size_m": [
+        2.51,
+        1.14,
+        2.14
+      ],
+      "triangles": 5220
+    },
+    {
+      "bounds_center_m": [
+        0.00136733055114746,
+        0.495839953422546,
+        0.0254812240600586
+      ],
+      "collision_shapes": 1.0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tas_charbon",
+      "label": "Charbon de bois",
+      "placement": "Minerai près du tri, charbon au sec, scories en aire de rebut séparée.",
+      "purpose": "Tas distinct par matière et couleur, modulable par répétition et rotation.",
+      "scene": "res://assets/ironworks/accessoires/tas_charbon.tscn",
+      "size_m": [
+        2.63,
+        1.12,
+        2.14
+      ],
+      "triangles": 5220.0
+    },
+    {
+      "bounds_center_m": [
+        0.0194469690322876,
+        0.475792229175568,
+        0.0600950717926025
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tas_scories",
+      "label": "Scories refroidies",
+      "placement": "Minerai près du tri, charbon au sec, scories en aire de rebut séparée.",
+      "purpose": "Tas distinct par matière et couleur, modulable par répétition et rotation.",
+      "scene": "res://assets/ironworks/accessoires/tas_scories.tscn",
+      "size_m": [
+        2.56,
+        1.12,
+        2.13
+      ],
+      "triangles": 5220
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.19068905711174,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "loupe_fer_brute",
+      "label": "Loupe brute sur dalle",
+      "placement": "Entre extraction au fourneau et martelage.",
+      "purpose": "Masse spongieuse de fer avant consolidation, différente d’un lingot coulé.",
+      "scene": "res://assets/ironworks/accessoires/loupe_fer_brute.tscn",
+      "size_m": [
+        0.85,
+        0.38,
+        0.75
+      ],
+      "triangles": 996
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.292750000953674,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "barres_fer_liees",
+      "label": "Lot de barres de fer",
+      "placement": "Dépôts, quais de chargement et ateliers de finition.",
+      "purpose": "Barres forgées regroupées sur traverses de bois.",
+      "scene": "res://assets/ironworks/accessoires/barres_fer_liees.tscn",
+      "size_m": [
+        1.05,
+        0.59,
+        2.4
+      ],
+      "triangles": 348
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.352978050708771,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "bacs_minerai",
+      "label": "Bac à minerai",
+      "placement": "À combiner dans les zones de tri et les dépôts.",
+      "purpose": "Casier ouvert avec renforts et chargement de minerai.",
+      "scene": "res://assets/ironworks/accessoires/bacs_minerai.tscn",
+      "size_m": [
+        1.77,
+        0.89,
+        1.42
+      ],
+      "triangles": 2276
+    },
+    {
+      "bounds_center_m": [
+        -0.0949999690055847,
+        0.582499980926514,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "billot_enclume",
+      "label": "Enclume sur billot",
+      "placement": "Prévoir la place du forgeron sur les côtés.",
+      "purpose": "Enclume à corne, talon, trou carré et petit marteau.",
+      "scene": "res://assets/ironworks/accessoires/billot_enclume.tscn",
+      "size_m": [
+        1.17,
+        1.16,
+        0.64
+      ],
+      "triangles": 356
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.594999969005585,
+        0.0999999940395355
+      ],
+      "collision_shapes": 1.0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "etabli_outils",
+      "label": "Établi et outils de forge",
+      "placement": "Sous un auvent de finition ou dans une remise.",
+      "purpose": "Table de travail renforcée avec outils et étau.",
+      "scene": "res://assets/ironworks/accessoires/etabli_outils.tscn",
+      "size_m": [
+        1.65,
+        1.19,
+        0.94
+      ],
+      "triangles": 192.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.305000007152557,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "cuve_trempe",
+      "label": "Cuve d’eau de forge",
+      "placement": "Près du foyer ; indépendante du puits domestique.",
+      "purpose": "Auge maçonnée pour refroidissement et travail de forge.",
+      "scene": "res://assets/ironworks/accessoires/cuve_trempe.tscn",
+      "size_m": [
+        1.48,
+        0.61,
+        0.97
+      ],
+      "triangles": 320
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.772298395633698,
+        0.0776871293783188
+      ],
+      "collision_shapes": 1.0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "outils_mine",
+      "label": "Râtelier d’outils de mine",
+      "placement": "Mine, remise d’entretien et cour de préparation.",
+      "purpose": "Pioches, pelles et rangement à la hauteur du personnage.",
+      "scene": "res://assets/ironworks/accessoires/outils_mine.tscn",
+      "size_m": [
+        1.78,
+        1.54,
+        0.32
+      ],
+      "triangles": 204.0
+    },
+    {
+      "bounds_center_m": [
+        -0.00999999046325684,
+        0.424999982118607,
+        -0.0409538745880127
+      ],
+      "collision_shapes": 0.0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "sacs_reserve",
+      "label": "Sacs de réserve",
+      "placement": "À utiliser sous abri pour vivres ou approvisionnements secs.",
+      "purpose": "Trois sacs en toile serrés au col par une corde.",
+      "scene": "res://assets/ironworks/accessoires/sacs_reserve.tscn",
+      "size_m": [
+        1.07,
+        0.9,
+        0.98
+      ],
+      "triangles": 924.0
+    },
+    {
+      "bounds_center_m": [
+        0.0800000429153442,
+        0.375000059604645,
+        0.00824999809265137
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "buches_rangees",
+      "label": "Réserve de bûches",
+      "placement": "Charbonnière, cuisine, four à pain et préparation du minerai.",
+      "purpose": "Bois coupé avec extrémités claires et écorce sombre.",
+      "scene": "res://assets/ironworks/accessoires/buches_rangees.tscn",
+      "size_m": [
+        1.93,
+        0.72,
+        2.02
+      ],
+      "triangles": 2592
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.41122978925705,
+        0.0
+      ],
+      "collision_shapes": 0.0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "balance_plateaux",
+      "label": "Balance à plateaux",
+      "placement": "À poser sur un comptoir ; pivot à la base.",
+      "purpose": "Balance de comptoir à deux plateaux suspendus.",
+      "scene": "res://assets/ironworks/accessoires/balance_plateaux.tscn",
+      "size_m": [
+        1.4,
+        0.82,
+        0.48
+      ],
+      "triangles": 228.0
+    },
+    {
+      "bounds_center_m": [
+        0.114999949932098,
+        0.668912410736084,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "meule_manivelle",
+      "label": "Meule d’affûtage à manivelle",
+      "placement": "Atelier d’entretien des outils, à l’abri.",
+      "purpose": "Roue abrasive montée sur un bâti en bois avec axe et manivelle.",
+      "scene": "res://assets/ironworks/accessoires/meule_manivelle.tscn",
+      "size_m": [
+        1.57,
+        1.36,
+        0.98
+      ],
+      "triangles": 228
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.305000007152557,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tuyeres_argile",
+      "label": "Tuyères et argile de réparation",
+      "placement": "Réserve technique pour entretenir les bas fourneaux.",
+      "purpose": "Tuyères de rechange et argile rangées sur une table basse.",
+      "scene": "res://assets/ironworks/accessoires/tuyeres_argile.tscn",
+      "size_m": [
+        1.25,
+        0.61,
+        0.8
+      ],
+      "triangles": 548
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 12,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "soubassement_2m",
+      "label": "Mur bas en pierre · 2 m",
+      "placement": "Extrémités à X = ±1 m ; dupliquer pour prolonger.",
+      "purpose": "Module de soubassement et de séparation de cour.",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "triangles": 528
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 4,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "cloture_2m",
+      "label": "Clôture rustique · 2 m",
+      "placement": "Extrémités à X = ±1 m, hauteur environ 1,1 m.",
+      "purpose": "Barrière de bois pour limites de cour et petites enclos.",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "triangles": 48
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.75,
+        0.584751904010773
+      ],
+      "collision_shapes": 6.0,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "portail_cour",
+      "label": "Portail de cour ouvert",
+      "placement": "Passage central de 2,6 m pour charrettes et piétons.",
+      "purpose": "Deux battants ouverts avec ferrures et poteaux.",
+      "scene": "res://assets/ironworks/modules/portail_cour.tscn",
+      "size_m": [
+        3.26,
+        1.5,
+        1.37
+      ],
+      "triangles": 96.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.375307589769363,
+        0.920920133590698
+      ],
+      "collision_shapes": 6.0,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "quai_chargement",
+      "label": "Quai de chargement",
+      "placement": "Raccord de cour ou devant un dépôt ; rampe vers +Z.",
+      "purpose": "Plateforme de bois avec rampe praticable et pieds en pierre.",
+      "scene": "res://assets/ironworks/modules/quai_chargement.tscn",
+      "size_m": [
+        3.6,
+        0.77,
+        4.24
+      ],
+      "triangles": 296.0
+    },
+    {
+      "bounds_center_m": [
+        -0.0649999976158142,
+        1.22500002384186,
+        0.00999999791383743
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "enseigne_forge",
+      "label": "Enseigne de la forge",
+      "placement": "À l’entrée d’une cour ou d’un atelier, façade vers +Z.",
+      "purpose": "Potence en bois et emblème d’enclume en fer forgé.",
+      "scene": "res://assets/ironworks/modules/enseigne_forge.tscn",
+      "size_m": [
+        1.57,
+        2.45,
+        0.17
+      ],
+      "triangles": 108
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.119999997317791,
+        0.0
+      ],
+      "collision_shapes": 1.0,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "rigole_pierre_2m",
+      "label": "Rigole en pierre · 2 m",
+      "placement": "Module vide à poser suivant une pente ; ne remplace pas le réseau de rivières.",
+      "purpose": "Petit canal ouvert pour aménager les cours et évacuer l’eau.",
+      "scene": "res://assets/ironworks/modules/rigole_pierre_2m.tscn",
+      "size_m": [
+        0.72,
+        0.24,
+        2.0
+      ],
+      "triangles": 132.0
+    }
+  ],
+  "front": "+Z",
+  "origin": "ground center",
+  "style": "Mining settlement: dark coursed stone, slate, heavy timber and black iron; charcoal-fired bloomeries",
+  "units": "meters",
+  "version": 4
+}

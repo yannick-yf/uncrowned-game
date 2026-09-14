@@ -1,0 +1,96 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_h7mcc"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_CartBed_wood.res" id="2_8s8jq"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_CartSides_wood.res" id="3_bruok"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_Shaft_wood.res" id="4_cwt77"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_CartCorner_wood.res" id="5_qcjvi"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_CartEnd_wood.res" id="6_a054b"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_ParkingProp_wood.res" id="7_fbosu"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="8_q462o"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_Axle_iron.res" id="9_o61n6"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark_wood.tres" id="10_clbap"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_WheelRim_dark_wood.res" id="11_3njf1"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_IronTire_iron.res" id="12_ydiwm"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_WheelSpokes_wood.res" id="13_8w7mt"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_WheelHub_wood.res" id="14_slvln"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_Dunnage_wood.res" id="15_y3mgp"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="16_4fwav"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_ForgedBars_metal.res" id="17_pgeua"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/charrette_bars_BundleStraps_iron.res" id="18_q33qw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t6ufs"]
+size = Vector3(1.25, 0.13, 1.85)
+
+[node name="CharretteBars" type="Node3D" unique_id=675608699]
+metadata/asset_id = "charrette_bars"
+metadata/family = "stockage"
+metadata/label = "Charrette de barres"
+metadata/purpose = "Transport à roues en bois, sans rail, avec chargement adapté."
+metadata/placement = "Chemins entre mine, ateliers et dépôt ; timons vers +Z."
+
+[node name="CartBedCollision" type="StaticBody3D" parent="." unique_id=1139300175]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@259" type="CollisionShape3D" parent="CartBedCollision" unique_id=1135857082]
+shape = SubResource("BoxShape3D_t6ufs")
+
+[node name="Hitch" type="Marker3D" parent="." unique_id=310842062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 3)
+
+[node name="CartBedWood" type="MeshInstance3D" parent="." unique_id=802202556]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("2_8s8jq")
+
+[node name="CartSidesWood" type="MeshInstance3D" parent="." unique_id=901102014]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("3_bruok")
+
+[node name="ShaftWood" type="MeshInstance3D" parent="." unique_id=131665483]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("4_cwt77")
+
+[node name="CartCornerWood" type="MeshInstance3D" parent="." unique_id=977606227]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("5_qcjvi")
+
+[node name="CartEndWood" type="MeshInstance3D" parent="." unique_id=1058183482]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("6_a054b")
+
+[node name="ParkingPropWood" type="MeshInstance3D" parent="." unique_id=1521195535]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("7_fbosu")
+
+[node name="AxleIron" type="MeshInstance3D" parent="." unique_id=2051888101]
+material_override = ExtResource("8_q462o")
+mesh = ExtResource("9_o61n6")
+
+[node name="WheelRimDarkWood" type="MeshInstance3D" parent="." unique_id=1629662620]
+material_override = ExtResource("10_clbap")
+mesh = ExtResource("11_3njf1")
+
+[node name="IronTireIron" type="MeshInstance3D" parent="." unique_id=1111811180]
+material_override = ExtResource("8_q462o")
+mesh = ExtResource("12_ydiwm")
+
+[node name="WheelSpokesWood" type="MeshInstance3D" parent="." unique_id=1409111162]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("13_8w7mt")
+
+[node name="WheelHubWood" type="MeshInstance3D" parent="." unique_id=327117175]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("14_slvln")
+
+[node name="DunnageWood" type="MeshInstance3D" parent="." unique_id=829778276]
+material_override = ExtResource("1_h7mcc")
+mesh = ExtResource("15_y3mgp")
+
+[node name="ForgedBarsMetal" type="MeshInstance3D" parent="." unique_id=1508651761]
+material_override = ExtResource("16_4fwav")
+mesh = ExtResource("17_pgeua")
+
+[node name="BundleStrapsIron" type="MeshInstance3D" parent="." unique_id=1115490406]
+material_override = ExtResource("8_q462o")
+mesh = ExtResource("18_q33qw")

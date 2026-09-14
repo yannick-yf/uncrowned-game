@@ -1,0 +1,269 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/rock.tres" id="1_60hcs"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_MineRock_rock.res" id="2_e26ab"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_RockPiers_rock.res" id="3_rr4du"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_Scree_rock.res" id="4_m1ivx"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="5_tyhu0"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_TunnelPosts_wood.res" id="6_k0mjo"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_TunnelBraces_wood.res" id="7_cu0yq"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_TunnelHeader_wood.res" id="8_kbb83"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark.tres" id="9_tasxx"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_TunnelShadow_dark.res" id="10_0d6m7"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/slag.tres" id="11_x30b2"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/entree_mine_roche_TunnelFloor_slag.res" id="12_4wsvx"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gvlyu"]
+points = PackedVector3Array(1.58, 1.4, 0.08, 1.5026693, 1.909878, 0.08, 3.1977468, 2.3401825, -0.08707708, 3.5096412, 1.4, 0.05557008, 1.58, 1.4, -2.9, 1.5026693, 1.909878, -2.9, 3.1977468, 2.3401825, -2.9, 3.5096412, 1.4, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3gc6q"]
+points = PackedVector3Array(1.5026693, 1.909878, 0.08, 1.2782469, 2.3698456, 0.08, 2.550552, 2.9293902, 0.054870263, 3.1977468, 2.3401825, -0.08707708, 1.5026693, 1.909878, -2.9, 1.2782469, 2.3698456, -2.9, 2.550552, 2.9293902, -2.9, 3.1977468, 2.3401825, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_4cwrr"]
+points = PackedVector3Array(1.2782469, 2.3698456, 0.08, 0.9287007, 2.734878, 0.08, 1.956788, 3.6981187, 0.012632236, 2.550552, 2.9293902, 0.054870263, 1.2782469, 2.3698456, -2.9, 0.9287007, 2.734878, -2.9, 1.956788, 3.6981187, -2.9, 2.550552, 2.9293902, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hpa14"]
+points = PackedVector3Array(0.9287007, 2.734878, 0.08, 0.48824686, 2.9692433, 0.08, 1.0289226, 4.272775, -0.09417061, 1.956788, 3.6981187, 0.012632236, 0.9287007, 2.734878, -2.9, 0.48824686, 2.9692433, -2.9, 1.0289226, 4.272775, -2.9, 1.956788, 3.6981187, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_13o31"]
+points = PackedVector3Array(0.48824686, 2.9692433, 0.08, 9.67439e-17, 3.05, 0.08, 2.0439722e-16, 4.2659025, 0.03282325, 1.0289226, 4.272775, -0.09417061, 0.48824686, 2.9692433, -2.9, 9.67439e-17, 3.05, -2.9, 2.0439722e-16, 4.2659025, -2.9, 1.0289226, 4.272775, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_iivnb"]
+points = PackedVector3Array(9.67439e-17, 3.05, 0.08, -0.48824686, 2.9692433, 0.08, -0.974589, 3.990468, -0.19971529, 2.0439722e-16, 4.2659025, 0.03282325, 9.67439e-17, 3.05, -2.9, -0.48824686, 2.9692433, -2.9, -0.974589, 3.990468, -2.9, 2.0439722e-16, 4.2659025, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_evodv"]
+points = PackedVector3Array(-0.48824686, 2.9692433, 0.08, -0.9287007, 2.734878, 0.08, -1.8665355, 3.5467865, 0.11613621, -0.974589, 3.990468, -0.19971529, -0.48824686, 2.9692433, -2.9, -0.9287007, 2.734878, -2.9, -1.8665355, 3.5467865, -2.9, -0.974589, 3.990468, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_hpvfc"]
+points = PackedVector3Array(-0.9287007, 2.734878, 0.08, -1.2782469, 2.3698456, 0.08, -2.618672, 2.9902313, 0.052210823, -1.8665355, 3.5467865, 0.11613621, -0.9287007, 2.734878, -2.9, -1.2782469, 2.3698456, -2.9, -2.618672, 2.9902313, -2.9, -1.8665355, 3.5467865, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_afer4"]
+points = PackedVector3Array(-1.2782469, 2.3698456, 0.08, -1.5026693, 1.909878, 0.08, -3.2806344, 2.2119763, -0.19624518, -2.618672, 2.9902313, 0.052210823, -1.2782469, 2.3698456, -2.9, -1.5026693, 1.909878, -2.9, -3.2806344, 2.2119763, -2.9, -2.618672, 2.9902313, -2.9)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_4gnse"]
+points = PackedVector3Array(-1.5026693, 1.909878, 0.08, -1.58, 1.4, 0.08, -3.1883645, 1.4, -0.10772062, -3.2806344, 2.2119763, -0.19624518, -1.5026693, 1.909878, -2.9, -1.58, 1.4, -2.9, -3.1883645, 1.4, -2.9, -3.2806344, 2.2119763, -2.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2oahm"]
+size = Vector3(1.7, 1.4, 3.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x1qam"]
+size = Vector3(1.7, 1.4, 3.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iwmeq"]
+size = Vector3(0.23, 2.48, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hrcpa"]
+size = Vector3(0.23, 2.48, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t5uvw"]
+size = Vector3(2.98, 0.25, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0jpfh"]
+size = Vector3(0.23, 2.48, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sceq4"]
+size = Vector3(0.23, 2.48, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_73q6d"]
+size = Vector3(2.98, 0.25, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xg3w6"]
+size = Vector3(0.23, 2.48, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j34xv"]
+size = Vector3(0.23, 2.48, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p5aa0"]
+size = Vector3(2.98, 0.25, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xs2fu"]
+size = Vector3(3.2, 3.05, 0.12)
+
+[node name="EntreeMineRoche" type="Node3D" unique_id=1712960886]
+metadata/asset_id = "entree_mine_roche"
+metadata/family = "stockage"
+metadata/label = "Entrée de mine dans la roche"
+metadata/purpose = "Bouche de galerie boisée avec trois cadres de soutènement et un court tunnel sombre."
+metadata/placement = "À encastrer dans le flanc de montagne ; fond fermé, intérieur de mine à construire séparément."
+
+[node name="ArchRockCollision" type="StaticBody3D" parent="." unique_id=938451070]
+collision_mask = 0
+
+[node name="@CollisionShape3D@205" type="CollisionShape3D" parent="ArchRockCollision" unique_id=1529776267]
+shape = SubResource("ConvexPolygonShape3D_gvlyu")
+
+[node name="@StaticBody3D@206" type="StaticBody3D" parent="." unique_id=1906113137]
+collision_mask = 0
+
+[node name="@CollisionShape3D@207" type="CollisionShape3D" parent="@StaticBody3D@206" unique_id=186918169]
+shape = SubResource("ConvexPolygonShape3D_3gc6q")
+
+[node name="@StaticBody3D@208" type="StaticBody3D" parent="." unique_id=2036548105]
+collision_mask = 0
+
+[node name="@CollisionShape3D@209" type="CollisionShape3D" parent="@StaticBody3D@208" unique_id=1667401546]
+shape = SubResource("ConvexPolygonShape3D_4cwrr")
+
+[node name="@StaticBody3D@210" type="StaticBody3D" parent="." unique_id=1534176276]
+collision_mask = 0
+
+[node name="@CollisionShape3D@211" type="CollisionShape3D" parent="@StaticBody3D@210" unique_id=1135787903]
+shape = SubResource("ConvexPolygonShape3D_hpa14")
+
+[node name="@StaticBody3D@212" type="StaticBody3D" parent="." unique_id=711646733]
+collision_mask = 0
+
+[node name="@CollisionShape3D@213" type="CollisionShape3D" parent="@StaticBody3D@212" unique_id=1341838909]
+shape = SubResource("ConvexPolygonShape3D_13o31")
+
+[node name="@StaticBody3D@214" type="StaticBody3D" parent="." unique_id=1124814376]
+collision_mask = 0
+
+[node name="@CollisionShape3D@215" type="CollisionShape3D" parent="@StaticBody3D@214" unique_id=1254466581]
+shape = SubResource("ConvexPolygonShape3D_iivnb")
+
+[node name="@StaticBody3D@216" type="StaticBody3D" parent="." unique_id=911101130]
+collision_mask = 0
+
+[node name="@CollisionShape3D@217" type="CollisionShape3D" parent="@StaticBody3D@216" unique_id=1060375085]
+shape = SubResource("ConvexPolygonShape3D_evodv")
+
+[node name="@StaticBody3D@218" type="StaticBody3D" parent="." unique_id=1231492091]
+collision_mask = 0
+
+[node name="@CollisionShape3D@219" type="CollisionShape3D" parent="@StaticBody3D@218" unique_id=1481529855]
+shape = SubResource("ConvexPolygonShape3D_hpvfc")
+
+[node name="@StaticBody3D@220" type="StaticBody3D" parent="." unique_id=700780427]
+collision_mask = 0
+
+[node name="@CollisionShape3D@221" type="CollisionShape3D" parent="@StaticBody3D@220" unique_id=1778311137]
+shape = SubResource("ConvexPolygonShape3D_afer4")
+
+[node name="@StaticBody3D@222" type="StaticBody3D" parent="." unique_id=1951864395]
+collision_mask = 0
+
+[node name="@CollisionShape3D@223" type="CollisionShape3D" parent="@StaticBody3D@222" unique_id=73425695]
+shape = SubResource("ConvexPolygonShape3D_4gnse")
+
+[node name="RockPiersCollision" type="StaticBody3D" parent="." unique_id=1097060861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43, 0.7, -1.42)
+collision_mask = 0
+
+[node name="@CollisionShape3D@224" type="CollisionShape3D" parent="RockPiersCollision" unique_id=1101243193]
+shape = SubResource("BoxShape3D_2oahm")
+
+[node name="@StaticBody3D@225" type="StaticBody3D" parent="." unique_id=692652723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.43, 0.7, -1.42)
+collision_mask = 0
+
+[node name="@CollisionShape3D@226" type="CollisionShape3D" parent="@StaticBody3D@225" unique_id=688252769]
+shape = SubResource("BoxShape3D_x1qam")
+
+[node name="TunnelPostsCollision" type="StaticBody3D" parent="." unique_id=208387022]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.31, 1.24, 0.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@227" type="CollisionShape3D" parent="TunnelPostsCollision" unique_id=1891821827]
+shape = SubResource("BoxShape3D_iwmeq")
+
+[node name="@StaticBody3D@228" type="StaticBody3D" parent="." unique_id=629795774]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.31, 1.24, 0.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@229" type="CollisionShape3D" parent="@StaticBody3D@228" unique_id=670901281]
+shape = SubResource("BoxShape3D_hrcpa")
+
+[node name="TunnelHeaderCollision" type="StaticBody3D" parent="." unique_id=1163276582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.53, 0.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@230" type="CollisionShape3D" parent="TunnelHeaderCollision" unique_id=1041347995]
+shape = SubResource("BoxShape3D_t5uvw")
+
+[node name="@StaticBody3D@231" type="StaticBody3D" parent="." unique_id=585998244]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.31, 1.24, -1.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@232" type="CollisionShape3D" parent="@StaticBody3D@231" unique_id=8843529]
+shape = SubResource("BoxShape3D_0jpfh")
+
+[node name="@StaticBody3D@233" type="StaticBody3D" parent="." unique_id=1735147375]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.31, 1.24, -1.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@234" type="CollisionShape3D" parent="@StaticBody3D@233" unique_id=1454507574]
+shape = SubResource("BoxShape3D_sceq4")
+
+[node name="@StaticBody3D@235" type="StaticBody3D" parent="." unique_id=928105658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.53, -1.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@236" type="CollisionShape3D" parent="@StaticBody3D@235" unique_id=891540205]
+shape = SubResource("BoxShape3D_73q6d")
+
+[node name="@StaticBody3D@237" type="StaticBody3D" parent="." unique_id=492872884]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.31, 1.24, -2.6)
+collision_mask = 0
+
+[node name="@CollisionShape3D@238" type="CollisionShape3D" parent="@StaticBody3D@237" unique_id=1586940142]
+shape = SubResource("BoxShape3D_xg3w6")
+
+[node name="@StaticBody3D@239" type="StaticBody3D" parent="." unique_id=110525357]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.31, 1.24, -2.6)
+collision_mask = 0
+
+[node name="@CollisionShape3D@240" type="CollisionShape3D" parent="@StaticBody3D@239" unique_id=2140045672]
+shape = SubResource("BoxShape3D_j34xv")
+
+[node name="@StaticBody3D@241" type="StaticBody3D" parent="." unique_id=1927784094]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.53, -2.6)
+collision_mask = 0
+
+[node name="@CollisionShape3D@242" type="CollisionShape3D" parent="@StaticBody3D@241" unique_id=1262971359]
+shape = SubResource("BoxShape3D_p5aa0")
+
+[node name="TunnelShadowCollision" type="StaticBody3D" parent="." unique_id=357807091]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.525, -3)
+collision_mask = 0
+
+[node name="@CollisionShape3D@243" type="CollisionShape3D" parent="TunnelShadowCollision" unique_id=1857760445]
+shape = SubResource("BoxShape3D_xs2fu")
+
+[node name="Approach" type="Marker3D" parent="." unique_id=1497522730]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.2)
+
+[node name="TunnelEnd" type="Marker3D" parent="." unique_id=733239736]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5)
+
+[node name="MineRockRock" type="MeshInstance3D" parent="." unique_id=2014719437]
+material_override = ExtResource("1_60hcs")
+mesh = ExtResource("2_e26ab")
+
+[node name="RockPiersRock" type="MeshInstance3D" parent="." unique_id=360978261]
+material_override = ExtResource("1_60hcs")
+mesh = ExtResource("3_rr4du")
+
+[node name="ScreeRock" type="MeshInstance3D" parent="." unique_id=849258821]
+material_override = ExtResource("1_60hcs")
+mesh = ExtResource("4_m1ivx")
+
+[node name="TunnelPostsWood" type="MeshInstance3D" parent="." unique_id=1169827486]
+material_override = ExtResource("5_tyhu0")
+mesh = ExtResource("6_k0mjo")
+
+[node name="TunnelBracesWood" type="MeshInstance3D" parent="." unique_id=1139266554]
+material_override = ExtResource("5_tyhu0")
+mesh = ExtResource("7_cu0yq")
+
+[node name="TunnelHeaderWood" type="MeshInstance3D" parent="." unique_id=456596142]
+material_override = ExtResource("5_tyhu0")
+mesh = ExtResource("8_kbb83")
+
+[node name="TunnelShadowDark" type="MeshInstance3D" parent="." unique_id=1542023812]
+material_override = ExtResource("9_tasxx")
+mesh = ExtResource("10_0d6m7")
+
+[node name="TunnelFloorSlag" type="MeshInstance3D" parent="." unique_id=1480157997]
+material_override = ExtResource("11_x30b2")
+mesh = ExtResource("12_4wsvx")

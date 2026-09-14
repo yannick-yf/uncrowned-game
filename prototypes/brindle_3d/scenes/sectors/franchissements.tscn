@@ -1,0 +1,283 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/bridges/pierre/pont_pierre_20m.tscn" id="1_msr2a"]
+[ext_resource type="PackedScene" path="res://assets/bridges/bois/pont_charretier_bois_12m.tscn" id="2_f3vbs"]
+[ext_resource type="PackedScene" path="res://assets/bridges/pierre/pont_pierre_14m.tscn" id="3_5bcaq"]
+[ext_resource type="PackedScene" path="res://assets/bridges/bois/passerelle_bois_8m.tscn" id="4_okre1"]
+[ext_resource type="Material" path="res://assets/bridges/materials/stone.tres" id="5_uw3nw"]
+[ext_resource type="Material" path="res://materials/brindle_path.tres" id="6_10h1v"]
+[ext_resource type="Script" path="res://scripts/ground_path.gd" id="7_8ikgb"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_msr2a"]
+size = Vector3(4.7, 0.7046761, 1.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f3vbs"]
+size = Vector3(4.7, 0.7046761, 1.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5bcaq"]
+size = Vector3(4.7, 0.69926244, 1.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_okre1"]
+size = Vector3(4.7, 0.69926244, 1.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uw3nw"]
+size = Vector3(0.48, 0.21275264, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_10h1v"]
+size = Vector3(0.48, 0.21275264, 0.48)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ikgb"]
+size = Vector3(0.48, 0.12502718, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6qusr"]
+size = Vector3(0.48, 0.12502718, 0.48)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6w3ru"]
+size = Vector3(0.48, 0.17792346, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5k7ni"]
+size = Vector3(0.48, 0.17792346, 0.48)
+
+[sub_resource type="BoxMesh" id="BoxMesh_inskf"]
+size = Vector3(0.48, 0.08286223, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rp7wn"]
+size = Vector3(0.48, 0.08286223, 0.48)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nbnvy"]
+size = Vector3(4.3, 0.99167544, 1.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ytw8d"]
+size = Vector3(4.3, 0.99167544, 1.1)
+
+[node name="Franchissements" type="Node3D" unique_id=203806708]
+
+[node name="Ponts" type="Node3D" parent="." unique_id=1220247709]
+
+[node name="PontRouteRoyale" type="Node3D" parent="Ponts" unique_id=957031643 instance=ExtResource("1_msr2a")]
+transform = Transform3D(0.669682, 0, 0.74264795, 0, 1, 0, -0.74264795, 0, 0.669682, 30, 38.1, 20)
+metadata/asset_id = "pont_pierre_20m"
+metadata/family = "pierre"
+metadata/label = "Pont de la grande route"
+metadata/purpose = "Maçonnerie grise, voûtes ouvertes et chaussée légèrement bombée. Piles à avant-becs pour marquer le sens du courant."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 20.0
+metadata/clear_width_m = 3.8
+
+[node name="PontScierie" type="Node3D" parent="Ponts" unique_id=27828781 instance=ExtResource("2_f3vbs")]
+transform = Transform3D(0.47438458, 0, 0.8803177, 0, 1, 0, -0.8803177, 0, 0.47438458, 90, 40.95, -69)
+metadata/asset_id = "pont_charretier_bois_12m"
+metadata/family = "bois"
+metadata/label = "Pont de la route du lac"
+metadata/purpose = "Tablier de madriers, ferrures et chevalets contreventés. Passage large pour les charrettes de minerai ou de bois."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 12.0
+metadata/clear_width_m = 3.4
+
+[node name="PontMine" type="Node3D" parent="Ponts" unique_id=1551392969 instance=ExtResource("3_5bcaq")]
+transform = Transform3D(0.5051275, 0, 0.86304474, 0, 1, 0, -0.86304474, 0, 0.5051275, 275, 43.75, 62)
+metadata/asset_id = "pont_pierre_14m"
+metadata/family = "pierre"
+metadata/label = "Pont des minerais"
+metadata/purpose = "Maçonnerie grise, voûtes ouvertes et chaussée légèrement bombée. Piles à avant-becs pour marquer le sens du courant."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 14.0
+metadata/clear_width_m = 3.4
+
+[node name="PontBrindle" type="Node3D" parent="Ponts" unique_id=216436815 instance=ExtResource("2_f3vbs")]
+transform = Transform3D(0.9177899, 0, 0.39706638, 0, 1, 0, -0.39706638, 0, 0.9177899, 150, 32.4, 164)
+metadata/asset_id = "pont_charretier_bois_12m"
+metadata/family = "bois"
+metadata/label = "Pont de la sortie de Brindle"
+metadata/purpose = "Tablier de madriers, ferrures et chevalets contreventés. Passage large pour les charrettes de minerai ou de bois."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 12.0
+metadata/clear_width_m = 3.4
+
+[node name="PasserelleLisiere" type="Node3D" parent="Ponts" unique_id=462267859 instance=ExtResource("4_okre1")]
+transform = Transform3D(0.7568377, 0, 0.65360284, 0, 1, 0, -0.65360284, 0, 0.7568377, 220, 34.75, 130)
+metadata/asset_id = "passerelle_bois_8m"
+metadata/family = "bois"
+metadata/label = "Passerelle de la lisière"
+metadata/purpose = "Tablier de madriers, ferrures et chevalets contreventés. Traversée piétonne pour sentiers et petits affluents."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 8.0
+metadata/clear_width_m = 1.8
+
+[node name="Fondations_PontRouteRoyale" type="Node3D" parent="." unique_id=1234123525]
+transform = Transform3D(0.669682, 0, 0.74264795, 0, 1, 0, -0.74264795, 0, 0.669682, 30, 38.1, 20)
+
+[node name="Appui_02" type="StaticBody3D" parent="Fondations_PontRouteRoyale" unique_id=742437010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.632338, -3.16667)
+collision_mask = 0
+
+[node name="@MeshInstance3D@2" type="MeshInstance3D" parent="Fondations_PontRouteRoyale/Appui_02" unique_id=91251566]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_msr2a")
+
+[node name="@CollisionShape3D@3" type="CollisionShape3D" parent="Fondations_PontRouteRoyale/Appui_02" unique_id=1994396406]
+shape = SubResource("BoxShape3D_f3vbs")
+
+[node name="Appui_03" type="StaticBody3D" parent="Fondations_PontRouteRoyale" unique_id=1183146700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.6296313, 3.16667)
+collision_mask = 0
+
+[node name="@MeshInstance3D@4" type="MeshInstance3D" parent="Fondations_PontRouteRoyale/Appui_03" unique_id=213419277]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_5bcaq")
+
+[node name="@CollisionShape3D@5" type="CollisionShape3D" parent="Fondations_PontRouteRoyale/Appui_03" unique_id=566035829]
+shape = SubResource("BoxShape3D_okre1")
+
+[node name="Fondations_PontScierie" type="Node3D" parent="." unique_id=158018554]
+transform = Transform3D(0.47438458, 0, 0.8803177, 0, 1, 0, -0.8803177, 0, 0.47438458, 90, 40.95, -69)
+
+[node name="Appui_02" type="StaticBody3D" parent="Fondations_PontScierie" unique_id=15877157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.576, -3.3863764, -2)
+collision_mask = 0
+
+[node name="@MeshInstance3D@6" type="MeshInstance3D" parent="Fondations_PontScierie/Appui_02" unique_id=306961956]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_uw3nw")
+
+[node name="@CollisionShape3D@7" type="CollisionShape3D" parent="Fondations_PontScierie/Appui_02" unique_id=1127203925]
+shape = SubResource("BoxShape3D_10h1v")
+
+[node name="Appui_03" type="StaticBody3D" parent="Fondations_PontScierie" unique_id=2050124764]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.576, -3.3425136, -2)
+collision_mask = 0
+
+[node name="@MeshInstance3D@8" type="MeshInstance3D" parent="Fondations_PontScierie/Appui_03" unique_id=370897724]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_8ikgb")
+
+[node name="@CollisionShape3D@9" type="CollisionShape3D" parent="Fondations_PontScierie/Appui_03" unique_id=1925028169]
+shape = SubResource("BoxShape3D_6qusr")
+
+[node name="Appui_04" type="StaticBody3D" parent="Fondations_PontScierie" unique_id=1356091268]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.576, -3.3689616, 2)
+collision_mask = 0
+
+[node name="@MeshInstance3D@10" type="MeshInstance3D" parent="Fondations_PontScierie/Appui_04" unique_id=834499986]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_6w3ru")
+
+[node name="@CollisionShape3D@11" type="CollisionShape3D" parent="Fondations_PontScierie/Appui_04" unique_id=851768759]
+shape = SubResource("BoxShape3D_5k7ni")
+
+[node name="Appui_05" type="StaticBody3D" parent="Fondations_PontScierie" unique_id=1270990963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.576, -3.3214312, 2)
+collision_mask = 0
+
+[node name="@MeshInstance3D@12" type="MeshInstance3D" parent="Fondations_PontScierie/Appui_05" unique_id=1052102]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_inskf")
+
+[node name="@CollisionShape3D@13" type="CollisionShape3D" parent="Fondations_PontScierie/Appui_05" unique_id=1346376013]
+shape = SubResource("BoxShape3D_rp7wn")
+
+[node name="Fondations_PontMine" type="Node3D" parent="." unique_id=2106789578]
+transform = Transform3D(0.5051275, 0, 0.86304474, 0, 1, 0, -0.86304474, 0, 0.5051275, 275, 43.75, 62)
+
+[node name="Appui_02" type="StaticBody3D" parent="Fondations_PontMine" unique_id=1155859184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.7758377, 0)
+collision_mask = 0
+
+[node name="@MeshInstance3D@14" type="MeshInstance3D" parent="Fondations_PontMine/Appui_02" unique_id=366005803]
+material_override = ExtResource("5_uw3nw")
+mesh = SubResource("BoxMesh_nbnvy")
+
+[node name="@CollisionShape3D@15" type="CollisionShape3D" parent="Fondations_PontMine/Appui_02" unique_id=963496036]
+shape = SubResource("BoxShape3D_ytw8d")
+
+[node name="Fondations_PontBrindle" type="Node3D" parent="." unique_id=2082178265]
+transform = Transform3D(0.9177899, 0, 0.39706638, 0, 1, 0, -0.39706638, 0, 0.9177899, 150, 32.4, 164)
+
+[node name="Fondations_PasserelleLisiere" type="Node3D" parent="." unique_id=470677337]
+transform = Transform3D(0.7568377, 0, 0.65360284, 0, 1, 0, -0.65360284, 0, 0.7568377, 220, 34.75, 130)
+
+[node name="Chemins" type="Node3D" parent="." unique_id=1144349237]
+
+[node name="VilleGrandeRoute" type="MeshInstance3D" parent="Chemins" unique_id=1227626782]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(-90, -90, -72, -65, -53, -43, -23, -17, 3, -5, 15.147, 6.6064, 22.5735, 13.3032)
+width_m = 4.0
+
+[node name="FermesGrandeRoute" type="MeshInstance3D" parent="Chemins" unique_id=216264993]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(-170, 40, -125, 44, -77, 40, -46, 27, -10, 9, 3, -5)
+width_m = 3.5
+
+[node name="GrandeRouteAcierie" type="MeshInstance3D" parent="Chemins" unique_id=917465232]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(37.4265, 26.6968, 44.853, 33.3936, 65, 43, 90, 35, 129, 42, 180, 50, 224, 66, 255, 65)
+width_m = 4.0
+
+[node name="RouteBrindleNord" type="MeshInstance3D" parent="Chemins" unique_id=1070549200]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(90, 35, 115, 77, 126, 103, 137, 125, 142.8528, 147.4798, 147.6176, 158.4933)
+width_m = 3.2
+
+[node name="RouteBrindleSud" type="MeshInstance3D" parent="Chemins" unique_id=469194780]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(152.3824, 169.5067, 156.3531, 178.6846, 152, 194, 147, 205)
+width_m = 3.05
+
+[node name="VilleRouteDuLac" type="MeshInstance3D" parent="Chemins" unique_id=1392739931]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(-90, -90, -70, -115, -43, -104, -7, -100, 30, -97, 58, -85, 75.9149, -76.5902, 84.7181, -71.8463)
+width_m = 3.5
+
+[node name="LacScierie" type="MeshInstance3D" parent="Chemins" unique_id=783111678]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(95.2819, -66.1537, 104.0851, -61.4098, 132, -64, 159, -70, 185, -87, 205, -108, 235, -125)
+width_m = 3.5
+
+[node name="ScierieAcierie" type="MeshInstance3D" parent="Chemins" unique_id=1515569701]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(235, -125, 241, -90, 243, -51, 244, -12, 250, 20, 255, 65)
+width_m = 3.5
+
+[node name="AcierieMineOuest" type="MeshInstance3D" parent="Chemins" unique_id=787557834]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(255, 65, 257, 53, 262.0543, 54.4231, 268.9587, 58.4641)
+width_m = 3.4
+
+[node name="AcierieMineEst" type="MeshInstance3D" parent="Chemins" unique_id=1708118930]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(281.0413, 65.5359, 287.9457, 69.5769, 295, 74, 300, 80, 306, 80)
+width_m = 3.4
+
+[node name="LisiereNord" type="MeshInstance3D" parent="Chemins" unique_id=525172325]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(217.3856, 126.9726, 212.1568, 120.9179, 220, 101, 238, 85, 255, 65)
+width_m = 1.65
+
+[node name="LisiereSud" type="MeshInstance3D" parent="Chemins" unique_id=375861842]
+material_override = ExtResource("6_10h1v")
+cast_shadow = 0
+script = ExtResource("7_8ikgb")
+points = PackedVector2Array(222.6144, 133.0274, 227.8432, 139.0821, 240, 154, 245, 178, 236, 207)
+width_m = 1.65

@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_7aw6x"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/barres_fer_liees_Dunnage_wood.res" id="2_hca0v"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="3_yer5q"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/barres_fer_liees_ForgedBars_metal.res" id="4_76ydp"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="5_ttr7q"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/barres_fer_liees_BundleStraps_iron.res" id="6_5da1r"]
+
+[node name="BarresFerLiees" type="Node3D" unique_id=728047661]
+metadata/asset_id = "barres_fer_liees"
+metadata/family = "accessoires"
+metadata/label = "Lot de barres de fer"
+metadata/purpose = "Barres forgées regroupées sur traverses de bois."
+metadata/placement = "Dépôts, quais de chargement et ateliers de finition."
+
+[node name="DunnageWood" type="MeshInstance3D" parent="." unique_id=1970375240]
+material_override = ExtResource("1_7aw6x")
+mesh = ExtResource("2_hca0v")
+
+[node name="ForgedBarsMetal" type="MeshInstance3D" parent="." unique_id=1738346487]
+material_override = ExtResource("3_yer5q")
+mesh = ExtResource("4_76ydp")
+
+[node name="BundleStrapsIron" type="MeshInstance3D" parent="." unique_id=1604583518]
+material_override = ExtResource("5_ttr7q")
+mesh = ExtResource("6_5da1r")

@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/ironworks_embers.gdshader" id="1_ja5f2"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ja5f2")
+shader_parameter/coal_color = null
+shader_parameter/glow_strength = null

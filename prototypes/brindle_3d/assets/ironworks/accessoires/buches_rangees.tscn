@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark_wood.tres" id="1_svotr"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/buches_rangees_CordwoodBark_dark_wood.res" id="2_pxx68"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="3_y03q1"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/buches_rangees_CutEnds_wood.res" id="4_jr2w2"]
+
+[node name="BuchesRangees" type="Node3D" unique_id=1028878438]
+metadata/asset_id = "buches_rangees"
+metadata/family = "accessoires"
+metadata/label = "Réserve de bûches"
+metadata/purpose = "Bois coupé avec extrémités claires et écorce sombre."
+metadata/placement = "Charbonnière, cuisine, four à pain et préparation du minerai."
+
+[node name="CordwoodBarkDarkWood" type="MeshInstance3D" parent="." unique_id=205768263]
+material_override = ExtResource("1_svotr")
+mesh = ExtResource("2_pxx68")
+
+[node name="CutEndsWood" type="MeshInstance3D" parent="." unique_id=797912502]
+material_override = ExtResource("3_y03q1")
+mesh = ExtResource("4_jr2w2")

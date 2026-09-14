@@ -1,0 +1,890 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ironworks_catalog.gd" id="1_aidq5"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/bas_fourneau_argile.tscn" id="2_oldrt"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/bas_fourneau_actif.tscn" id="3_by7c3"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/bas_fourneau_pierre.tscn" id="4_8glxk"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/grillage_minerai.tscn" id="5_odphu"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/concassage_minerai.tscn" id="6_t8cim"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/soufflets_jumeles.tscn" id="7_tv77s"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/forge_affinage.tscn" id="8_o5yd6"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/atelier_outilleur.tscn" id="9_myl4e"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/meule_charbonniere.tscn" id="10_iotxc"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/halle_tri_minerai.tscn" id="11_trl2i"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/depot_charbon.tscn" id="12_dj2kd"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/depot_barres.tscn" id="13_sagcj"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/hangar_charrettes.tscn" id="14_h0qni"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/bureau_pesee.tscn" id="15_buve6"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/entree_mine_roche.tscn" id="16_j56tb"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/portique_treuil_mine.tscn" id="17_payjp"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/charrette_ore.tscn" id="18_5r2hn"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/charrette_bars.tscn" id="19_a2mct"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/tri_minerai_a_pignon.tscn" id="20_jftee"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/charbon_halle_a_croupes.tscn" id="21_ntgpt"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/production/forge_de_finition_a_pignon.tscn" id="22_glr2n"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/stockage/reserve_barres_longue.tscn" id="23_sx0rf"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/remise_des_betes_de_trait.tscn" id="24_s8gd8"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/latrines_a_deux_places.tscn" id="25_yyj27"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/logis_porte_basse.tscn" id="26_u5ntg"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/maison_aux_deux_volumes.tscn" id="27_pu8t2"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/baraquement_des_equipes.tscn" id="28_m00y7"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/logis_a_colombages.tscn" id="29_stwj5"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/baraque_jumelee_de_la_cour.tscn" id="30_onbyx"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/maison_du_virage.tscn" id="31_pwtl7"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/maison_haute_de_la_venelle.tscn" id="32_istdf"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/baraquement_de_la_grande_cour.tscn" id="33_cx0ul"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/baraquement_a_galerie.tscn" id="34_fkamx"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/logis_du_contremaitre_en_l.tscn" id="35_dutn7"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/maison_des_charretiers.tscn" id="36_stnh3"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/maison_au_toit_decale.tscn" id="37_xqx0a"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/cuisine_commune.tscn" id="38_eexck"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/grenier_vivres.tscn" id="39_jekdb"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/remise_ecurie.tscn" id="40_mwaxm"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/latrines_bois.tscn" id="41_ic2hu"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/village/puits_abreuvoir.tscn" id="42_7256g"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/tas_minerai.tscn" id="43_lpyqp"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/tas_charbon.tscn" id="44_lcee4"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/tas_scories.tscn" id="45_wv7la"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/loupe_fer_brute.tscn" id="46_j1boh"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/barres_fer_liees.tscn" id="47_2gowa"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/bacs_minerai.tscn" id="48_cplp8"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/billot_enclume.tscn" id="49_nldph"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/etabli_outils.tscn" id="50_o2i1a"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/cuve_trempe.tscn" id="51_o3a6v"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/outils_mine.tscn" id="52_3ub2v"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/sacs_reserve.tscn" id="53_akieq"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/buches_rangees.tscn" id="54_q0v1v"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/balance_plateaux.tscn" id="55_i74kw"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/meule_manivelle.tscn" id="56_fhg72"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/accessoires/tuyeres_argile.tscn" id="57_iu8x6"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/modules/soubassement_2m.tscn" id="58_86slr"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/modules/cloture_2m.tscn" id="59_lfhoj"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/modules/portail_cour.tscn" id="60_q3t2d"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/modules/quai_chargement.tscn" id="61_dlvew"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/modules/enseigne_forge.tscn" id="62_08b8n"]
+[ext_resource type="PackedScene" path="res://assets/ironworks/modules/rigole_pierre_2m.tscn" id="63_kbgnf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y73s4"]
+albedo_color = Color(0.4, 0.4117647, 0.3882353, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_jyf80"]
+size = Vector2(260, 220)
+
+[sub_resource type="Environment" id="Environment_7ang0"]
+background_mode = 1
+background_color = Color(0.6627451, 0.7137255, 0.67058825, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6313726, 0.69411767, 0.7294118, 1)
+ambient_light_energy = 0.52
+tonemap_mode = 2
+ssao_enabled = true
+ssao_radius = 1.4
+ssao_intensity = 1.3
+
+[node name="CatalogueAcierie" type="Node3D" unique_id=1481184143]
+script = ExtResource("1_aidq5")
+
+[node name="Assets" type="Node3D" parent="." unique_id=1445942704]
+
+[node name="BasFourneauArgile" type="Node3D" parent="Assets" unique_id=1043068319 instance=ExtResource("2_oldrt")]
+metadata/asset_id = "bas_fourneau_argile"
+metadata/family = "production"
+metadata/label = "Bas fourneau en argile"
+metadata/purpose = "Réduction du minerai au charbon ; gorge de chargement et bouche d’extraction."
+metadata/placement = "Aire minérale ouverte, accès devant et sur le côté du soufflet."
+metadata/catalog_index = 0
+
+[node name="BasFourneauActif" type="Node3D" parent="Assets" unique_id=984685199 instance=ExtResource("3_by7c3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0)
+metadata/asset_id = "bas_fourneau_actif"
+metadata/family = "production"
+metadata/label = "Bas fourneau en activité"
+metadata/purpose = "Même four avec braises et fumée légère ; la loupe reste un métal solide."
+metadata/placement = "Version allumée, effet décoratif réglable sous FumeeFourneau."
+metadata/catalog_index = 1
+
+[node name="BasFourneauPierre" type="Node3D" parent="Assets" unique_id=1293637162 instance=ExtResource("4_8glxk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 0)
+metadata/asset_id = "bas_fourneau_pierre"
+metadata/family = "production"
+metadata/label = "Bas fourneau chemisé de pierre"
+metadata/purpose = "Four trapu à parement de pierre et tuyère, variante d’atelier."
+metadata/placement = "Garder une cour de travail devant la bouche."
+metadata/catalog_index = 2
+
+[node name="GrillageMinerai" type="Node3D" parent="Assets" unique_id=1981148035 instance=ExtResource("5_odphu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 0)
+metadata/asset_id = "grillage_minerai"
+metadata/family = "production"
+metadata/label = "Foyer de grillage du minerai"
+metadata/purpose = "Préparation du minerai sur un lit de bois avant concassage."
+metadata/placement = "Zone de préparation extérieure, distincte du charbon stocké."
+metadata/catalog_index = 3
+
+[node name="ConcassageMinerai" type="Node3D" parent="Assets" unique_id=846283463 instance=ExtResource("6_t8cim")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 0)
+metadata/asset_id = "concassage_minerai"
+metadata/family = "production"
+metadata/label = "Poste de concassage et tamisage"
+metadata/purpose = "Dalle, masses, tamis incliné et paniers pour préparer le minerai."
+metadata/placement = "Entre l’aire de tri et les fourneaux."
+metadata/catalog_index = 4
+
+[node name="SouffletsJumeles" type="Node3D" parent="Assets" unique_id=401423600 instance=ExtResource("7_tv77s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 0)
+metadata/asset_id = "soufflets_jumeles"
+metadata/family = "production"
+metadata/label = "Soufflets jumelés"
+metadata/purpose = "Deux soufflets manuels pour un apport d’air alterné."
+metadata/placement = "Orienter les buses vers la tuyère du four ou du foyer."
+metadata/catalog_index = 5
+
+[node name="ForgeAffinage" type="Node3D" parent="Assets" unique_id=1997852030 instance=ExtResource("8_o5yd6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 0)
+metadata/asset_id = "forge_affinage"
+metadata/family = "production"
+metadata/label = "Halle de martelage de la loupe"
+metadata/purpose = "Halle basse sur piles de pierre avec foyer, enclume, outils et cuve."
+metadata/placement = "Proche des fourneaux, accès large pour manipuler les loupes chaudes."
+metadata/catalog_index = 6
+
+[node name="AtelierOutilleur" type="Node3D" parent="Assets" unique_id=1402484311 instance=ExtResource("9_myl4e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 0)
+metadata/asset_id = "atelier_outilleur"
+metadata/family = "production"
+metadata/label = "Atelier du taillandier"
+metadata/purpose = "Bâtiment de finition : outils, ferrures et entretien du matériel de la mine."
+metadata/placement = "Façade sur la rue de travail ; cour devant l’auvent."
+metadata/catalog_index = 7
+
+[node name="MeuleCharbonniere" type="Node3D" parent="Assets" unique_id=184482047 instance=ExtResource("10_iotxc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
+metadata/asset_id = "meule_charbonniere"
+metadata/family = "production"
+metadata/label = "Meule de charbonnier"
+metadata/purpose = "Empilement de bois couvert de terre pour produire le charbon de bois."
+metadata/placement = "À l’écart des logements, sur un sol nu, près des réserves de bois."
+metadata/catalog_index = 8
+
+[node name="HalleTriMinerai" type="Node3D" parent="Assets" unique_id=1848186940 instance=ExtResource("11_trl2i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 14)
+metadata/asset_id = "halle_tri_minerai"
+metadata/family = "stockage"
+metadata/label = "Halle de tri du minerai"
+metadata/purpose = "Trois casiers couverts pour séparer minerai brut, préparé et gangue."
+metadata/placement = "À l’arrivée de la mine, avant grillage et concassage."
+metadata/catalog_index = 9
+
+[node name="DepotCharbon" type="Node3D" parent="Assets" unique_id=775646550 instance=ExtResource("12_dj2kd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 14)
+metadata/asset_id = "depot_charbon"
+metadata/family = "stockage"
+metadata/label = "Réserve de charbon au sec"
+metadata/purpose = "Hangar ventilé avec deux casiers de charbon et sacs sous toiture."
+metadata/placement = "Cour de production ; réserver une séparation avec les foyers ouverts."
+metadata/catalog_index = 10
+
+[node name="DepotBarres" type="Node3D" parent="Assets" unique_id=1686894260 instance=ExtResource("13_sagcj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 14)
+metadata/asset_id = "depot_barres"
+metadata/family = "stockage"
+metadata/label = "Dépôt de barres de fer"
+metadata/purpose = "Halle avec râteliers et lots de barres prêts à être chargés."
+metadata/placement = "Entre la forge de finition et l’aire des charrettes."
+metadata/catalog_index = 11
+
+[node name="HangarCharrettes" type="Node3D" parent="Assets" unique_id=710365971 instance=ExtResource("14_h0qni")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 14)
+metadata/asset_id = "hangar_charrettes"
+metadata/family = "stockage"
+metadata/label = "Hangar à charrettes"
+metadata/purpose = "Grand abri traversant pour chargement, entretien et rangement."
+metadata/placement = "Connexion à la route de la mine ; conserver une voie traversante."
+metadata/catalog_index = 12
+
+[node name="BureauPesee" type="Node3D" parent="Assets" unique_id=17813035 instance=ExtResource("15_buve6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 14)
+metadata/asset_id = "bureau_pesee"
+metadata/family = "stockage"
+metadata/label = "Bureau de pesée et des stocks"
+metadata/purpose = "Comptoir couvert, balance et réserve fermée pour compter les livraisons."
+metadata/placement = "À l’entrée de la cour industrielle."
+metadata/catalog_index = 13
+
+[node name="EntreeMineRoche" type="Node3D" parent="Assets" unique_id=1712960886 instance=ExtResource("16_j56tb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 14)
+metadata/asset_id = "entree_mine_roche"
+metadata/family = "stockage"
+metadata/label = "Entrée de mine dans la roche"
+metadata/purpose = "Bouche de galerie boisée avec trois cadres de soutènement et un court tunnel sombre."
+metadata/placement = "À encastrer dans le flanc de montagne ; fond fermé, intérieur de mine à construire séparément."
+metadata/catalog_index = 14
+
+[node name="PortiqueTreuilMine" type="Node3D" parent="Assets" unique_id=1622665867 instance=ExtResource("17_payjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 14)
+metadata/asset_id = "portique_treuil_mine"
+metadata/family = "stockage"
+metadata/label = "Portique et treuil de mine"
+metadata/purpose = "Cadre en bois, tambour manuel, corde et palan pour les charges."
+metadata/placement = "Devant une entrée de mine existante ; le centre reste libre."
+metadata/catalog_index = 15
+
+[node name="CharretteOre" type="Node3D" parent="Assets" unique_id=1683538048 instance=ExtResource("18_5r2hn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 28)
+metadata/asset_id = "charrette_ore"
+metadata/family = "stockage"
+metadata/label = "Charrette de minerai"
+metadata/purpose = "Transport à roues en bois, sans rail, avec chargement adapté."
+metadata/placement = "Chemins entre mine, ateliers et dépôt ; timons vers +Z."
+metadata/catalog_index = 16
+
+[node name="CharretteBars" type="Node3D" parent="Assets" unique_id=675608699 instance=ExtResource("19_a2mct")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 28)
+metadata/asset_id = "charrette_bars"
+metadata/family = "stockage"
+metadata/label = "Charrette de barres"
+metadata/purpose = "Transport à roues en bois, sans rail, avec chargement adapté."
+metadata/placement = "Chemins entre mine, ateliers et dépôt ; timons vers +Z."
+metadata/catalog_index = 17
+
+[node name="TriMineraiAPignon" type="Node3D" parent="Assets" unique_id=189241903 instance=ExtResource("20_jftee")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 28)
+metadata/asset_id = "tri_minerai_a_pignon"
+metadata/family = "stockage"
+metadata/label = "Halle de tri à pignon"
+metadata/purpose = "Open transverse gable with three low sorting bays."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "transverse_gabled_sorting_hall"
+metadata/building_kind = "industrial"
+metadata/catalog_index = 18
+
+[node name="CharbonHalleACroupes" type="Node3D" parent="Assets" unique_id=124753647 instance=ExtResource("21_ntgpt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 28)
+metadata/asset_id = "charbon_halle_a_croupes"
+metadata/family = "stockage"
+metadata/label = "Halle à charbon à croupes"
+metadata/purpose = "Hipped canopy and low ventilated charcoal bays."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "hipped_ventilated_charcoal_hall"
+metadata/building_kind = "industrial"
+metadata/catalog_index = 19
+
+[node name="ForgeDeFinitionAPignon" type="Node3D" parent="Assets" unique_id=1138479444 instance=ExtResource("22_glr2n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 28)
+metadata/asset_id = "forge_de_finition_a_pignon"
+metadata/family = "production"
+metadata/label = "Forge de finition à pignon"
+metadata/purpose = "Gabled finishing forge with an exposed truss and open work face."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "gabled_open_finishing_forge"
+metadata/building_kind = "industrial"
+metadata/catalog_index = 20
+
+[node name="ReserveBarresLongue" type="Node3D" parent="Assets" unique_id=1405715570 instance=ExtResource("23_sx0rf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 28)
+metadata/asset_id = "reserve_barres_longue"
+metadata/family = "stockage"
+metadata/label = "Réserve de barres en longueur"
+metadata/purpose = "Narrow deep gabled warehouse with two long storage racks."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "narrow_deep_gabled_bar_store"
+metadata/building_kind = "industrial"
+metadata/catalog_index = 21
+
+[node name="RemiseDesBetesDeTrait" type="Node3D" parent="Assets" unique_id=578694604 instance=ExtResource("24_s8gd8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 28)
+metadata/asset_id = "remise_des_betes_de_trait"
+metadata/family = "village"
+metadata/label = "Remise des bêtes de trait"
+metadata/purpose = "Hipped stable with two stalls and a closed fodder room."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "hipped_two_stall_stable_fodder_room"
+metadata/building_kind = "service"
+metadata/catalog_index = 22
+
+[node name="LatrinesADeuxPlaces" type="Node3D" parent="Assets" unique_id=356163826 instance=ExtResource("25_yyj27")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 28)
+metadata/asset_id = "latrines_a_deux_places"
+metadata/family = "village"
+metadata/label = "Latrines à deux places"
+metadata/purpose = "Two small compartments under a transverse gable."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "double_compartment_latrine"
+metadata/building_kind = "service"
+metadata/catalog_index = 23
+
+[node name="LogisPorteBasse" type="Node3D" parent="Assets" unique_id=651690836 instance=ExtResource("26_u5ntg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 42)
+metadata/asset_id = "logis_porte_basse"
+metadata/family = "village"
+metadata/label = "Logis de la porte basse"
+metadata/purpose = "Deep stone gable with a recessed side store."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "stone_gable_with_side_store"
+metadata/building_kind = "house"
+metadata/catalog_index = 24
+
+[node name="MaisonAuxDeuxVolumes" type="Node3D" parent="Assets" unique_id=2094185946 instance=ExtResource("27_pu8t2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 42)
+metadata/asset_id = "maison_aux_deux_volumes"
+metadata/family = "village"
+metadata/label = "Maison aux deux volumes"
+metadata/purpose = "Hipped main roof and a stepped entrance wing."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "hipped_house_and_lower_entry_wing"
+metadata/building_kind = "house"
+metadata/catalog_index = 25
+
+[node name="BaraquementDesEquipes" type="Node3D" parent="Assets" unique_id=1619907778 instance=ExtResource("28_m00y7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 42)
+metadata/asset_id = "baraquement_des_equipes"
+metadata/family = "village"
+metadata/label = "Baraquement des équipes"
+metadata/purpose = "Low timber barrack with two entrances and end chimneys."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "long_low_dual_entry_barrack"
+metadata/building_kind = "barrack"
+metadata/catalog_index = 26
+
+[node name="LogisAColombages" type="Node3D" parent="Assets" unique_id=1237921931 instance=ExtResource("29_stwj5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 42)
+metadata/asset_id = "logis_a_colombages"
+metadata/family = "village"
+metadata/label = "Logis d’angle à colombages"
+metadata/purpose = "Tall half-timber lodging under a hipped roof."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "tall_half_timber_hipped_corner"
+metadata/building_kind = "house"
+metadata/catalog_index = 27
+
+[node name="BaraqueJumeleeDeLaCour" type="Node3D" parent="Assets" unique_id=920628596 instance=ExtResource("30_onbyx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 42)
+metadata/asset_id = "baraque_jumelee_de_la_cour"
+metadata/family = "village"
+metadata/label = "Baraque décalée de la cour"
+metadata/purpose = "Staggered timber rooms with two different roof heights."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "staggered_gable_and_lean_barrack"
+metadata/building_kind = "barrack"
+metadata/catalog_index = 28
+
+[node name="MaisonDuVirage" type="Node3D" parent="Assets" unique_id=551393794 instance=ExtResource("31_pwtl7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 42)
+metadata/asset_id = "maison_du_virage"
+metadata/family = "village"
+metadata/label = "Maison du virage"
+metadata/purpose = "Broad stone house with a projecting timber bay."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "broad_hip_with_projecting_bay"
+metadata/building_kind = "house"
+metadata/catalog_index = 29
+
+[node name="MaisonHauteDeLaVenelle" type="Node3D" parent="Assets" unique_id=1874394021 instance=ExtResource("32_istdf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 42)
+metadata/asset_id = "maison_haute_de_la_venelle"
+metadata/family = "village"
+metadata/label = "Maison haute de la venelle"
+metadata/purpose = "Narrow two-storey masonry house with an external chimney."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "narrow_two_storey_external_stack"
+metadata/building_kind = "house"
+metadata/catalog_index = 30
+
+[node name="BaraquementDeLaGrandeCour" type="Node3D" parent="Assets" unique_id=1283312119 instance=ExtResource("33_cx0ul")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 42)
+metadata/asset_id = "baraquement_de_la_grande_cour"
+metadata/family = "village"
+metadata/label = "Baraquement de la grande cour"
+metadata/purpose = "Long communal lodging with a continuous covered entrance porch."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "long_hipped_three_entry_porch_barrack"
+metadata/building_kind = "barrack"
+metadata/catalog_index = 31
+
+[node name="BaraquementAGalerie" type="Node3D" parent="Assets" unique_id=1083457528 instance=ExtResource("34_fkamx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 56)
+metadata/asset_id = "baraquement_a_galerie"
+metadata/family = "village"
+metadata/label = "Baraquement à galerie"
+metadata/purpose = "Stone lower floor and timber upper floor with a left-hand stair."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "two_storey_gallery_left_stair_barrack"
+metadata/building_kind = "barrack"
+metadata/catalog_index = 32
+
+[node name="LogisDuContremaitreEnL" type="Node3D" parent="Assets" unique_id=1623881508 instance=ExtResource("35_dutn7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 56)
+metadata/asset_id = "logis_du_contremaitre_en_l"
+metadata/family = "village"
+metadata/label = "Logis du contremaître en L"
+metadata/purpose = "L-shaped masonry residence with a taller front room."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "l_shaped_house_with_raised_front_room"
+metadata/building_kind = "house"
+metadata/catalog_index = 33
+
+[node name="MaisonDesCharretiers" type="Node3D" parent="Assets" unique_id=806979858 instance=ExtResource("36_stnh3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 56)
+metadata/asset_id = "maison_des_charretiers"
+metadata/family = "village"
+metadata/label = "Maison basse des charretiers"
+metadata/purpose = "Wide low gable with a small rear storage projection."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "wide_cross_gable_with_rear_store"
+metadata/building_kind = "house"
+metadata/catalog_index = 34
+
+[node name="MaisonAuToitDecale" type="Node3D" parent="Assets" unique_id=1222318933 instance=ExtResource("37_xqx0a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 56)
+metadata/asset_id = "maison_au_toit_decale"
+metadata/family = "village"
+metadata/label = "Maison au toit décalé"
+metadata/purpose = "Asymmetric gable with a short sheltered bench."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "offset_ridge_with_sheltered_bench"
+metadata/building_kind = "house"
+metadata/catalog_index = 35
+
+[node name="CuisineCommune" type="Node3D" parent="Assets" unique_id=1158113869 instance=ExtResource("38_eexck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 56)
+metadata/asset_id = "cuisine_commune"
+metadata/family = "village"
+metadata/label = "Cuisine commune et four à pain"
+metadata/purpose = "Salle commune, auvent de repas, four maçonné et réserve de tonneaux."
+metadata/placement = "Côté logements, à proximité d’une réserve d’eau propre."
+metadata/catalog_index = 36
+
+[node name="GrenierVivres" type="Node3D" parent="Assets" unique_id=1852280977 instance=ExtResource("39_jekdb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 56)
+metadata/asset_id = "grenier_vivres"
+metadata/family = "village"
+metadata/label = "Grenier à vivres sur plots"
+metadata/purpose = "Réserve surélevée pour céréales et provisions de la communauté."
+metadata/placement = "Cour sèche près de la cuisine, distincte des stocks miniers."
+metadata/catalog_index = 37
+
+[node name="RemiseEcurie" type="Node3D" parent="Assets" unique_id=1129797349 instance=ExtResource("40_mwaxm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 56)
+metadata/asset_id = "remise_ecurie"
+metadata/family = "village"
+metadata/label = "Remise et écurie"
+metadata/purpose = "Abri ouvert avec mangeoires, séparations de stalles et réserve de foin."
+metadata/placement = "À la sortie du quartier logistique ; animaux à ajouter séparément."
+metadata/catalog_index = 38
+
+[node name="LatrinesBois" type="Node3D" parent="Assets" unique_id=1598853903 instance=ExtResource("41_ic2hu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 56)
+metadata/asset_id = "latrines_bois"
+metadata/family = "village"
+metadata/label = "Latrines en bois"
+metadata/purpose = "Petit édicule ventilé, posé sur une base de pierre."
+metadata/placement = "À l’écart du puits et des cuisines ; position à définir avec le terrain."
+metadata/catalog_index = 39
+
+[node name="PuitsAbreuvoir" type="Node3D" parent="Assets" unique_id=356810705 instance=ExtResource("42_7256g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 70)
+metadata/asset_id = "puits_abreuvoir"
+metadata/family = "village"
+metadata/label = "Puits maçonné et treuil"
+metadata/purpose = "Margelle carrée en pierre sombre, treuil manuel et auge massive."
+metadata/placement = "Point d’eau du quartier de vie ; éviter les déchets métallurgiques."
+metadata/catalog_index = 40
+
+[node name="TasMinerai" type="Node3D" parent="Assets" unique_id=212906664 instance=ExtResource("43_lpyqp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 70)
+metadata/asset_id = "tas_minerai"
+metadata/family = "accessoires"
+metadata/label = "Minerai brut"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+metadata/catalog_index = 41
+
+[node name="TasCharbon" type="Node3D" parent="Assets" unique_id=1125711995 instance=ExtResource("44_lcee4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 70)
+metadata/asset_id = "tas_charbon"
+metadata/family = "accessoires"
+metadata/label = "Charbon de bois"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+metadata/catalog_index = 42
+
+[node name="TasScories" type="Node3D" parent="Assets" unique_id=466510136 instance=ExtResource("45_wv7la")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 70)
+metadata/asset_id = "tas_scories"
+metadata/family = "accessoires"
+metadata/label = "Scories refroidies"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+metadata/catalog_index = 43
+
+[node name="LoupeFerBrute" type="Node3D" parent="Assets" unique_id=931241773 instance=ExtResource("46_j1boh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 70)
+metadata/asset_id = "loupe_fer_brute"
+metadata/family = "accessoires"
+metadata/label = "Loupe brute sur dalle"
+metadata/purpose = "Masse spongieuse de fer avant consolidation, différente d’un lingot coulé."
+metadata/placement = "Entre extraction au fourneau et martelage."
+metadata/catalog_index = 44
+
+[node name="BarresFerLiees" type="Node3D" parent="Assets" unique_id=728047661 instance=ExtResource("47_2gowa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 70)
+metadata/asset_id = "barres_fer_liees"
+metadata/family = "accessoires"
+metadata/label = "Lot de barres de fer"
+metadata/purpose = "Barres forgées regroupées sur traverses de bois."
+metadata/placement = "Dépôts, quais de chargement et ateliers de finition."
+metadata/catalog_index = 45
+
+[node name="BacsMinerai" type="Node3D" parent="Assets" unique_id=205931129 instance=ExtResource("48_cplp8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 70)
+metadata/asset_id = "bacs_minerai"
+metadata/family = "accessoires"
+metadata/label = "Bac à minerai"
+metadata/purpose = "Casier ouvert avec renforts et chargement de minerai."
+metadata/placement = "À combiner dans les zones de tri et les dépôts."
+metadata/catalog_index = 46
+
+[node name="BillotEnclume" type="Node3D" parent="Assets" unique_id=1954638099 instance=ExtResource("49_nldph")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 70)
+metadata/asset_id = "billot_enclume"
+metadata/family = "accessoires"
+metadata/label = "Enclume sur billot"
+metadata/purpose = "Enclume à corne, talon, trou carré et petit marteau."
+metadata/placement = "Prévoir la place du forgeron sur les côtés."
+metadata/catalog_index = 47
+
+[node name="EtabliOutils" type="Node3D" parent="Assets" unique_id=1435778009 instance=ExtResource("50_o2i1a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 84)
+metadata/asset_id = "etabli_outils"
+metadata/family = "accessoires"
+metadata/label = "Établi et outils de forge"
+metadata/purpose = "Table de travail renforcée avec outils et étau."
+metadata/placement = "Sous un auvent de finition ou dans une remise."
+metadata/catalog_index = 48
+
+[node name="CuveTrempe" type="Node3D" parent="Assets" unique_id=225207466 instance=ExtResource("51_o3a6v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 84)
+metadata/asset_id = "cuve_trempe"
+metadata/family = "accessoires"
+metadata/label = "Cuve d’eau de forge"
+metadata/purpose = "Auge maçonnée pour refroidissement et travail de forge."
+metadata/placement = "Près du foyer ; indépendante du puits domestique."
+metadata/catalog_index = 49
+
+[node name="OutilsMine" type="Node3D" parent="Assets" unique_id=1267490335 instance=ExtResource("52_3ub2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 84)
+metadata/asset_id = "outils_mine"
+metadata/family = "accessoires"
+metadata/label = "Râtelier d’outils de mine"
+metadata/purpose = "Pioches, pelles et rangement à la hauteur du personnage."
+metadata/placement = "Mine, remise d’entretien et cour de préparation."
+metadata/catalog_index = 50
+
+[node name="SacsReserve" type="Node3D" parent="Assets" unique_id=1954752362 instance=ExtResource("53_akieq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 84)
+metadata/asset_id = "sacs_reserve"
+metadata/family = "accessoires"
+metadata/label = "Sacs de réserve"
+metadata/purpose = "Trois sacs en toile serrés au col par une corde."
+metadata/placement = "À utiliser sous abri pour vivres ou approvisionnements secs."
+metadata/catalog_index = 51
+
+[node name="BuchesRangees" type="Node3D" parent="Assets" unique_id=1028878438 instance=ExtResource("54_q0v1v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 84)
+metadata/asset_id = "buches_rangees"
+metadata/family = "accessoires"
+metadata/label = "Réserve de bûches"
+metadata/purpose = "Bois coupé avec extrémités claires et écorce sombre."
+metadata/placement = "Charbonnière, cuisine, four à pain et préparation du minerai."
+metadata/catalog_index = 52
+
+[node name="BalancePlateaux" type="Node3D" parent="Assets" unique_id=845648269 instance=ExtResource("55_i74kw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 84)
+metadata/asset_id = "balance_plateaux"
+metadata/family = "accessoires"
+metadata/label = "Balance à plateaux"
+metadata/purpose = "Balance de comptoir à deux plateaux suspendus."
+metadata/placement = "À poser sur un comptoir ; pivot à la base."
+metadata/catalog_index = 53
+
+[node name="MeuleManivelle" type="Node3D" parent="Assets" unique_id=2136450164 instance=ExtResource("56_fhg72")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 84)
+metadata/asset_id = "meule_manivelle"
+metadata/family = "accessoires"
+metadata/label = "Meule d’affûtage à manivelle"
+metadata/purpose = "Roue abrasive montée sur un bâti en bois avec axe et manivelle."
+metadata/placement = "Atelier d’entretien des outils, à l’abri."
+metadata/catalog_index = 54
+
+[node name="TuyeresArgile" type="Node3D" parent="Assets" unique_id=1610574935 instance=ExtResource("57_iu8x6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 84)
+metadata/asset_id = "tuyeres_argile"
+metadata/family = "accessoires"
+metadata/label = "Tuyères et argile de réparation"
+metadata/purpose = "Tuyères de rechange et argile rangées sur une table basse."
+metadata/placement = "Réserve technique pour entretenir les bas fourneaux."
+metadata/catalog_index = 55
+
+[node name="Soubassement2m" type="Node3D" parent="Assets" unique_id=727308754 instance=ExtResource("58_86slr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 98)
+metadata/asset_id = "soubassement_2m"
+metadata/family = "modules"
+metadata/label = "Mur bas en pierre · 2 m"
+metadata/purpose = "Module de soubassement et de séparation de cour."
+metadata/placement = "Extrémités à X = ±1 m ; dupliquer pour prolonger."
+metadata/catalog_index = 56
+
+[node name="Cloture2m" type="Node3D" parent="Assets" unique_id=1601784736 instance=ExtResource("59_lfhoj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 98)
+metadata/asset_id = "cloture_2m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique · 2 m"
+metadata/purpose = "Barrière de bois pour limites de cour et petites enclos."
+metadata/placement = "Extrémités à X = ±1 m, hauteur environ 1,1 m."
+metadata/catalog_index = 57
+
+[node name="PortailCour" type="Node3D" parent="Assets" unique_id=306592623 instance=ExtResource("60_q3t2d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 98)
+metadata/asset_id = "portail_cour"
+metadata/family = "modules"
+metadata/label = "Portail de cour ouvert"
+metadata/purpose = "Deux battants ouverts avec ferrures et poteaux."
+metadata/placement = "Passage central de 2,6 m pour charrettes et piétons."
+metadata/catalog_index = 58
+
+[node name="QuaiChargement" type="Node3D" parent="Assets" unique_id=644338996 instance=ExtResource("61_dlvew")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 98)
+metadata/asset_id = "quai_chargement"
+metadata/family = "modules"
+metadata/label = "Quai de chargement"
+metadata/purpose = "Plateforme de bois avec rampe praticable et pieds en pierre."
+metadata/placement = "Raccord de cour ou devant un dépôt ; rampe vers +Z."
+metadata/catalog_index = 59
+
+[node name="EnseigneForge" type="Node3D" parent="Assets" unique_id=1654372763 instance=ExtResource("62_08b8n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 98)
+metadata/asset_id = "enseigne_forge"
+metadata/family = "modules"
+metadata/label = "Enseigne de la forge"
+metadata/purpose = "Potence en bois et emblème d’enclume en fer forgé."
+metadata/placement = "À l’entrée d’une cour ou d’un atelier, façade vers +Z."
+metadata/catalog_index = 60
+
+[node name="RigolePierre2m" type="Node3D" parent="Assets" unique_id=496888059 instance=ExtResource("63_kbgnf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 98)
+metadata/asset_id = "rigole_pierre_2m"
+metadata/family = "modules"
+metadata/label = "Rigole en pierre · 2 m"
+metadata/purpose = "Petit canal ouvert pour aménager les cours et évacuer l’eau."
+metadata/placement = "Module vide à poser suivant une pente ; ne remplace pas le réseau de rivières."
+metadata/catalog_index = 61
+
+[node name="Demonstration" type="Node3D" parent="." unique_id=335474974]
+
+[node name="EntreeMineRoche" type="Node3D" parent="Demonstration" unique_id=1499134489 instance=ExtResource("16_j56tb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -20)
+metadata/asset_id = "entree_mine_roche"
+metadata/family = "stockage"
+metadata/label = "Entrée de mine dans la roche"
+metadata/purpose = "Bouche de galerie boisée avec trois cadres de soutènement et un court tunnel sombre."
+metadata/placement = "À encastrer dans le flanc de montagne ; fond fermé, intérieur de mine à construire séparément."
+
+[node name="PortiqueTreuilMine" type="Node3D" parent="Demonstration" unique_id=344701466 instance=ExtResource("17_payjp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -15.7)
+metadata/asset_id = "portique_treuil_mine"
+metadata/family = "stockage"
+metadata/label = "Portique et treuil de mine"
+metadata/purpose = "Cadre en bois, tambour manuel, corde et palan pour les charges."
+metadata/placement = "Devant une entrée de mine existante ; le centre reste libre."
+
+[node name="BasFourneauArgile" type="Node3D" parent="Demonstration" unique_id=1405981664 instance=ExtResource("2_oldrt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -6)
+metadata/asset_id = "bas_fourneau_argile"
+metadata/family = "production"
+metadata/label = "Bas fourneau en argile"
+metadata/purpose = "Réduction du minerai au charbon ; gorge de chargement et bouche d’extraction."
+metadata/placement = "Aire minérale ouverte, accès devant et sur le côté du soufflet."
+
+[node name="BasFourneauActif" type="Node3D" parent="Demonstration" unique_id=1666337725 instance=ExtResource("3_by7c3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+metadata/asset_id = "bas_fourneau_actif"
+metadata/family = "production"
+metadata/label = "Bas fourneau en activité"
+metadata/purpose = "Même four avec braises et fumée légère ; la loupe reste un métal solide."
+metadata/placement = "Version allumée, effet décoratif réglable sous FumeeFourneau."
+
+[node name="BasFourneauPierre" type="Node3D" parent="Demonstration" unique_id=85500986 instance=ExtResource("4_8glxk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -6)
+metadata/asset_id = "bas_fourneau_pierre"
+metadata/family = "production"
+metadata/label = "Bas fourneau chemisé de pierre"
+metadata/purpose = "Four trapu à parement de pierre et tuyère, variante d’atelier."
+metadata/placement = "Garder une cour de travail devant la bouche."
+
+[node name="GrillageMinerai" type="Node3D" parent="Demonstration" unique_id=226177316 instance=ExtResource("5_odphu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -10)
+metadata/asset_id = "grillage_minerai"
+metadata/family = "production"
+metadata/label = "Foyer de grillage du minerai"
+metadata/purpose = "Préparation du minerai sur un lit de bois avant concassage."
+metadata/placement = "Zone de préparation extérieure, distincte du charbon stocké."
+
+[node name="ConcassageMinerai" type="Node3D" parent="Demonstration" unique_id=1735457484 instance=ExtResource("6_t8cim")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -5)
+metadata/asset_id = "concassage_minerai"
+metadata/family = "production"
+metadata/label = "Poste de concassage et tamisage"
+metadata/purpose = "Dalle, masses, tamis incliné et paniers pour préparer le minerai."
+metadata/placement = "Entre l’aire de tri et les fourneaux."
+
+[node name="HalleTriMinerai" type="Node3D" parent="Demonstration" unique_id=907673237 instance=ExtResource("11_trl2i")]
+transform = Transform3D(0.9838437, 0, -0.17902958, 0, 1, 0, 0.17902958, 0, 0.9838437, 14, 0, -9)
+metadata/asset_id = "halle_tri_minerai"
+metadata/family = "stockage"
+metadata/label = "Halle de tri du minerai"
+metadata/purpose = "Trois casiers couverts pour séparer minerai brut, préparé et gangue."
+metadata/placement = "À l’arrivée de la mine, avant grillage et concassage."
+
+[node name="DepotCharbon" type="Node3D" parent="Demonstration" unique_id=997386393 instance=ExtResource("12_dj2kd")]
+transform = Transform3D(0.99280864, 0, 0.119712204, 0, 1, 0, -0.119712204, 0, 0.99280864, -11, 0, -8)
+metadata/asset_id = "depot_charbon"
+metadata/family = "stockage"
+metadata/label = "Réserve de charbon au sec"
+metadata/purpose = "Hangar ventilé avec deux casiers de charbon et sacs sous toiture."
+metadata/placement = "Cour de production ; réserver une séparation avec les foyers ouverts."
+
+[node name="ForgeAffinage" type="Node3D" parent="Demonstration" unique_id=1912283363 instance=ExtResource("8_o5yd6")]
+transform = Transform3D(0.99280864, 0, 0.119712204, 0, 1, 0, -0.119712204, 0, 0.99280864, -6, 0, 3)
+metadata/asset_id = "forge_affinage"
+metadata/family = "production"
+metadata/label = "Halle de martelage de la loupe"
+metadata/purpose = "Halle basse sur piles de pierre avec foyer, enclume, outils et cuve."
+metadata/placement = "Proche des fourneaux, accès large pour manipuler les loupes chaudes."
+
+[node name="AtelierOutilleur" type="Node3D" parent="Demonstration" unique_id=1762815788 instance=ExtResource("9_myl4e")]
+transform = Transform3D(0.9838437, 0, 0.17902958, 0, 1, 0, -0.17902958, 0, 0.9838437, -14, 0, 5)
+metadata/asset_id = "atelier_outilleur"
+metadata/family = "production"
+metadata/label = "Atelier du taillandier"
+metadata/purpose = "Bâtiment de finition : outils, ferrures et entretien du matériel de la mine."
+metadata/placement = "Façade sur la rue de travail ; cour devant l’auvent."
+
+[node name="DepotBarres" type="Node3D" parent="Demonstration" unique_id=41930568 instance=ExtResource("13_sagcj")]
+transform = Transform3D(0.9950042, 0, -0.09983342, 0, 1, 0, 0.09983342, 0, 0.9950042, 11, 0, 4)
+metadata/asset_id = "depot_barres"
+metadata/family = "stockage"
+metadata/label = "Dépôt de barres de fer"
+metadata/purpose = "Halle avec râteliers et lots de barres prêts à être chargés."
+metadata/placement = "Entre la forge de finition et l’aire des charrettes."
+
+[node name="CharretteOre" type="Node3D" parent="Demonstration" unique_id=1890869247 instance=ExtResource("18_5r2hn")]
+transform = Transform3D(0.7648422, 0, 0.64421767, 0, 1, 0, -0.64421767, 0, 0.7648422, 16, 0, -0.5)
+metadata/asset_id = "charrette_ore"
+metadata/family = "stockage"
+metadata/label = "Charrette de minerai"
+metadata/purpose = "Transport à roues en bois, sans rail, avec chargement adapté."
+metadata/placement = "Chemins entre mine, ateliers et dépôt ; timons vers +Z."
+
+[node name="TasScories" type="Node3D" parent="Demonstration" unique_id=990993348 instance=ExtResource("45_wv7la")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -12)
+metadata/asset_id = "tas_scories"
+metadata/family = "accessoires"
+metadata/label = "Scories refroidies"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+
+[node name="MeuleCharbonniere" type="Node3D" parent="Demonstration" unique_id=1983136263 instance=ExtResource("10_iotxc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, -10)
+metadata/asset_id = "meule_charbonniere"
+metadata/family = "production"
+metadata/label = "Meule de charbonnier"
+metadata/purpose = "Empilement de bois couvert de terre pour produire le charbon de bois."
+metadata/placement = "À l’écart des logements, sur un sol nu, près des réserves de bois."
+
+[node name="LogisPorteBasse" type="Node3D" parent="Demonstration" unique_id=2017472159 instance=ExtResource("26_u5ntg")]
+transform = Transform3D(0.9838437, 0, 0.17902958, 0, 1, 0, -0.17902958, 0, 0.9838437, -8, 0, 15)
+metadata/asset_id = "logis_porte_basse"
+metadata/family = "village"
+metadata/label = "Logis de la porte basse"
+metadata/purpose = "Deep stone gable with a recessed side store."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "stone_gable_with_side_store"
+metadata/building_kind = "house"
+
+[node name="MaisonAuxDeuxVolumes" type="Node3D" parent="Demonstration" unique_id=1128264992 instance=ExtResource("27_pu8t2")]
+transform = Transform3D(0.9887711, 0, -0.14943814, 0, 1, 0, 0.14943814, 0, 0.9887711, 0, 0, 17)
+metadata/asset_id = "maison_aux_deux_volumes"
+metadata/family = "village"
+metadata/label = "Maison aux deux volumes"
+metadata/purpose = "Hipped main roof and a stepped entrance wing."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "hipped_house_and_lower_entry_wing"
+metadata/building_kind = "house"
+
+[node name="CuisineCommune" type="Node3D" parent="Demonstration" unique_id=1267968641 instance=ExtResource("38_eexck")]
+transform = Transform3D(0.99280864, 0, -0.119712204, 0, 1, 0, 0.119712204, 0, 0.99280864, 9, 0, 16)
+metadata/asset_id = "cuisine_commune"
+metadata/family = "village"
+metadata/label = "Cuisine commune et four à pain"
+metadata/purpose = "Salle commune, auvent de repas, four maçonné et réserve de tonneaux."
+metadata/placement = "Côté logements, à proximité d’une réserve d’eau propre."
+
+[node name="PuitsAbreuvoir" type="Node3D" parent="Demonstration" unique_id=1832963722 instance=ExtResource("42_7256g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 8)
+metadata/asset_id = "puits_abreuvoir"
+metadata/family = "village"
+metadata/label = "Puits maçonné et treuil"
+metadata/purpose = "Margelle carrée en pierre sombre, treuil manuel et auge massive."
+metadata/placement = "Point d’eau du quartier de vie ; éviter les déchets métallurgiques."
+
+[node name="EnseigneForge" type="Node3D" parent="Demonstration" unique_id=628670225 instance=ExtResource("62_08b8n")]
+transform = Transform3D(0.99875027, 0, -0.04997917, 0, 1, 0, 0.04997917, 0, 0.99875027, -2, 0, 1)
+metadata/asset_id = "enseigne_forge"
+metadata/family = "modules"
+metadata/label = "Enseigne de la forge"
+metadata/purpose = "Potence en bois et emblème d’enclume en fer forgé."
+metadata/placement = "À l’entrée d’une cour ou d’un atelier, façade vers +Z."
+
+[node name="BarresFerLiees" type="Node3D" parent="Demonstration" unique_id=2105661837 instance=ExtResource("47_2gowa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+metadata/asset_id = "barres_fer_liees"
+metadata/family = "accessoires"
+metadata/label = "Lot de barres de fer"
+metadata/purpose = "Barres forgées regroupées sur traverses de bois."
+metadata/placement = "Dépôts, quais de chargement et ateliers de finition."
+
+[node name="QuaiChargement" type="Node3D" parent="Demonstration" unique_id=951253994 instance=ExtResource("61_dlvew")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, 8)
+metadata/asset_id = "quai_chargement"
+metadata/family = "modules"
+metadata/label = "Quai de chargement"
+metadata/purpose = "Plateforme de bois avec rampe praticable et pieds en pierre."
+metadata/placement = "Raccord de cour ou devant un dépôt ; rampe vers +Z."
+
+[node name="BuchesRangees" type="Node3D" parent="Demonstration" unique_id=917802503 instance=ExtResource("54_q0v1v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, -3)
+metadata/asset_id = "buches_rangees"
+metadata/family = "accessoires"
+metadata/label = "Réserve de bûches"
+metadata/purpose = "Bois coupé avec extrémités claires et écorce sombre."
+metadata/placement = "Charbonnière, cuisine, four à pain et préparation du minerai."
+
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1960937956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, -0.07, 25)
+material_override = SubResource("StandardMaterial3D_y73s4")
+mesh = SubResource("PlaneMesh_jyf80")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=834695365]
+transform = Transform3D(0.81915206, 0.45198438, -0.35312894, 0, 0.6156615, 0.7880107, 0.57357645, -0.6455006, 0.5043204, 0, 0, 0)
+light_color = Color(1, 0.97, 0.91, 1)
+light_energy = 1.25
+shadow_enabled = true
+directional_shadow_max_distance = 250.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1383859731]
+environment = SubResource("Environment_7ang0")
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1946140410]
+projection = 1
+current = true
+far = 450.0

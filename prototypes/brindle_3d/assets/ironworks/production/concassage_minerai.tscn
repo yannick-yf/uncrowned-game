@@ -1,0 +1,89 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_uu4cf"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_CrushingSlab_stone.res" id="2_5b05x"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/ore.tres" id="3_yltpv"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_HeapCore_ore.res" id="4_5kxeg"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_LooseMaterial_ore.res" id="5_aduy6"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="6_sifpd"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SledgeHandle_wood.res" id="7_47msa"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="8_m7v4j"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SledgeHead_metal.res" id="9_eil1p"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/rope.tres" id="10_2woys"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SieveWeave_rope.res" id="11_kflgf"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SieveWeaveCross_rope.res" id="12_qs2vi"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SieveFrame_wood.res" id="13_rdbor"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SieveEndFrame_wood.res" id="14_8mt28"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SieveLeg_wood.res" id="15_mm5fw"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/concassage_minerai_SieveStretcher_wood.res" id="16_lixaf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eihwl"]
+size = Vector3(1.8, 0.25, 1.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ikhid"]
+size = Vector3(0.48999998, 0.156, 0.48999998)
+
+[node name="ConcassageMinerai" type="Node3D" unique_id=846283463]
+metadata/asset_id = "concassage_minerai"
+metadata/family = "production"
+metadata/label = "Poste de concassage et tamisage"
+metadata/purpose = "Dalle, masses, tamis incliné et paniers pour préparer le minerai."
+metadata/placement = "Entre l’aire de tri et les fourneaux."
+
+[node name="CrushingSlabCollision" type="StaticBody3D" parent="." unique_id=1803256326]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@12" type="CollisionShape3D" parent="CrushingSlabCollision" unique_id=1923436512]
+shape = SubResource("BoxShape3D_eihwl")
+
+[node name="PileCollision" type="StaticBody3D" parent="." unique_id=1281596531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.31199998, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@13" type="CollisionShape3D" parent="PileCollision" unique_id=1835309475]
+shape = SubResource("BoxShape3D_ikhid")
+
+[node name="CrushingSlabStone" type="MeshInstance3D" parent="." unique_id=1651571811]
+material_override = ExtResource("1_uu4cf")
+mesh = ExtResource("2_5b05x")
+
+[node name="HeapCoreOre" type="MeshInstance3D" parent="." unique_id=1034677783]
+material_override = ExtResource("3_yltpv")
+mesh = ExtResource("4_5kxeg")
+
+[node name="LooseMaterialOre" type="MeshInstance3D" parent="." unique_id=1239390672]
+material_override = ExtResource("3_yltpv")
+mesh = ExtResource("5_aduy6")
+
+[node name="SledgeHandleWood" type="MeshInstance3D" parent="." unique_id=448162303]
+material_override = ExtResource("6_sifpd")
+mesh = ExtResource("7_47msa")
+
+[node name="SledgeHeadMetal" type="MeshInstance3D" parent="." unique_id=710438603]
+material_override = ExtResource("8_m7v4j")
+mesh = ExtResource("9_eil1p")
+
+[node name="SieveWeaveRope" type="MeshInstance3D" parent="." unique_id=649905735]
+material_override = ExtResource("10_2woys")
+mesh = ExtResource("11_kflgf")
+
+[node name="SieveWeaveCrossRope" type="MeshInstance3D" parent="." unique_id=142477428]
+material_override = ExtResource("10_2woys")
+mesh = ExtResource("12_qs2vi")
+
+[node name="SieveFrameWood" type="MeshInstance3D" parent="." unique_id=1301152305]
+material_override = ExtResource("6_sifpd")
+mesh = ExtResource("13_rdbor")
+
+[node name="SieveEndFrameWood" type="MeshInstance3D" parent="." unique_id=906928662]
+material_override = ExtResource("6_sifpd")
+mesh = ExtResource("14_8mt28")
+
+[node name="SieveLegWood" type="MeshInstance3D" parent="." unique_id=703896962]
+material_override = ExtResource("6_sifpd")
+mesh = ExtResource("15_mm5fw")
+
+[node name="SieveStretcherWood" type="MeshInstance3D" parent="." unique_id=1061852881]
+material_override = ExtResource("6_sifpd")
+mesh = ExtResource("16_lixaf")

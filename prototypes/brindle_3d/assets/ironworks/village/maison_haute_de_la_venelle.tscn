@@ -1,0 +1,170 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_gmes6"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_Foundation_stone.res" id="2_kq302"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/mortar.tres" id="3_6bcfg"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_SolidWalls_mortar.res" id="4_tkya6"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_RubbleMasonry_stone.res" id="5_0v86x"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_ClosedGable_stone.res" id="6_45rql"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark_wood.tres" id="7_ojgby"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_RoofDeck_dark_wood.res" id="8_cg103"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/roof.tres" id="9_mfitb"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_SlateCourses_roof.res" id="10_4q3yt"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_StoneVerge_stone.res" id="11_su46y"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_StoneRidgeCaps_stone.res" id="12_gljkf"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark.tres" id="13_7734s"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_DoorRecess_dark.res" id="14_a01nb"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="15_2ruk6"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_DoorPlanks_wood.res" id="16_o66uc"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="17_0uv75"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_DoorHinges_iron.res" id="18_ugrhb"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_DoorPull_iron.res" id="19_6til0"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_WindowRecess_dark.res" id="20_2xw4s"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_StoneWindowJamb_stone.res" id="21_glwqn"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_StoneWindowLintel_stone.res" id="22_lwfyr"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_IronWindowBars_iron.res" id="23_84h37"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_WindowCrossbar_iron.res" id="24_edwem"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_ChimneyCore_mortar.res" id="25_g3t67"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_ChimneyFace_stone.res" id="26_7bbee"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_ChimneyCoping_stone.res" id="27_ercqx"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_ChimneyBlackOpening_dark.res" id="28_la5rc"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_BarrelStaves_wood.res" id="29_daobj"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/maison_haute_de_la_venelle_BarrelBands_iron.res" id="30_qn86t"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_axr48"]
+size = Vector3(3.27, 0.22, 4.02)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bogtw"]
+size = Vector3(3.05, 3.74, 3.8)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2grr3"]
+height = 0.765
+radius = 0.306
+
+[node name="MaisonHauteDeLaVenelle" type="Node3D" unique_id=1874394021]
+metadata/asset_id = "maison_haute_de_la_venelle"
+metadata/family = "village"
+metadata/label = "Maison haute de la venelle"
+metadata/purpose = "Narrow two-storey masonry house with an external chimney."
+metadata/placement = "Bâtiment unique de l’aciérie ; conserver son accès et sa fondation."
+metadata/building_design = "narrow_two_storey_external_stack"
+metadata/building_kind = "house"
+
+[node name="FoundationCollision" type="StaticBody3D" parent="." unique_id=1465958292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@489" type="CollisionShape3D" parent="FoundationCollision" unique_id=1910203564]
+shape = SubResource("BoxShape3D_axr48")
+
+[node name="SolidWallsCollision" type="StaticBody3D" parent="." unique_id=514540714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.09, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@490" type="CollisionShape3D" parent="SolidWallsCollision" unique_id=1149980684]
+shape = SubResource("BoxShape3D_bogtw")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=626114095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.17, 3.08)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=151754459]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.17, 2.28)
+
+[node name="BarrelCollision" type="StaticBody3D" parent="." unique_id=1691971292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 0.3825, -0.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@491" type="CollisionShape3D" parent="BarrelCollision" unique_id=1010733334]
+shape = SubResource("CylinderShape3D_2grr3")
+
+[node name="FoundationStone" type="MeshInstance3D" parent="." unique_id=911561258]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("2_kq302")
+
+[node name="SolidWallsMortar" type="MeshInstance3D" parent="." unique_id=1476075014]
+material_override = ExtResource("3_6bcfg")
+mesh = ExtResource("4_tkya6")
+
+[node name="RubbleMasonryStone" type="MeshInstance3D" parent="." unique_id=207019588]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("5_0v86x")
+
+[node name="ClosedGableStone" type="MeshInstance3D" parent="." unique_id=1369911197]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("6_45rql")
+
+[node name="RoofDeckDarkWood" type="MeshInstance3D" parent="." unique_id=784009714]
+material_override = ExtResource("7_ojgby")
+mesh = ExtResource("8_cg103")
+
+[node name="SlateCoursesRoof" type="MeshInstance3D" parent="." unique_id=222869424]
+material_override = ExtResource("9_mfitb")
+mesh = ExtResource("10_4q3yt")
+
+[node name="StoneVergeStone" type="MeshInstance3D" parent="." unique_id=1409846265]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("11_su46y")
+
+[node name="StoneRidgeCapsStone" type="MeshInstance3D" parent="." unique_id=580810059]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("12_gljkf")
+
+[node name="DoorRecessDark" type="MeshInstance3D" parent="." unique_id=1961526496]
+material_override = ExtResource("13_7734s")
+mesh = ExtResource("14_a01nb")
+
+[node name="DoorPlanksWood" type="MeshInstance3D" parent="." unique_id=1604932754]
+material_override = ExtResource("15_2ruk6")
+mesh = ExtResource("16_o66uc")
+
+[node name="DoorHingesIron" type="MeshInstance3D" parent="." unique_id=527686653]
+material_override = ExtResource("17_0uv75")
+mesh = ExtResource("18_ugrhb")
+
+[node name="DoorPullIron" type="MeshInstance3D" parent="." unique_id=1650103093]
+material_override = ExtResource("17_0uv75")
+mesh = ExtResource("19_6til0")
+
+[node name="WindowRecessDark" type="MeshInstance3D" parent="." unique_id=637866931]
+material_override = ExtResource("13_7734s")
+mesh = ExtResource("20_2xw4s")
+
+[node name="StoneWindowJambStone" type="MeshInstance3D" parent="." unique_id=1577265901]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("21_glwqn")
+
+[node name="StoneWindowLintelStone" type="MeshInstance3D" parent="." unique_id=916073136]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("22_lwfyr")
+
+[node name="IronWindowBarsIron" type="MeshInstance3D" parent="." unique_id=957178935]
+material_override = ExtResource("17_0uv75")
+mesh = ExtResource("23_84h37")
+
+[node name="WindowCrossbarIron" type="MeshInstance3D" parent="." unique_id=1786189417]
+material_override = ExtResource("17_0uv75")
+mesh = ExtResource("24_edwem")
+
+[node name="ChimneyCoreMortar" type="MeshInstance3D" parent="." unique_id=1015810242]
+material_override = ExtResource("3_6bcfg")
+mesh = ExtResource("25_g3t67")
+
+[node name="ChimneyFaceStone" type="MeshInstance3D" parent="." unique_id=408988975]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("26_7bbee")
+
+[node name="ChimneyCopingStone" type="MeshInstance3D" parent="." unique_id=1561334855]
+material_override = ExtResource("1_gmes6")
+mesh = ExtResource("27_ercqx")
+
+[node name="ChimneyBlackOpeningDark" type="MeshInstance3D" parent="." unique_id=1932496930]
+material_override = ExtResource("13_7734s")
+mesh = ExtResource("28_la5rc")
+
+[node name="BarrelStavesWood" type="MeshInstance3D" parent="." unique_id=2000041333]
+material_override = ExtResource("15_2ruk6")
+mesh = ExtResource("29_daobj")
+
+[node name="BarrelBandsIron" type="MeshInstance3D" parent="." unique_id=217736386]
+material_override = ExtResource("17_0uv75")
+mesh = ExtResource("30_qn86t")
