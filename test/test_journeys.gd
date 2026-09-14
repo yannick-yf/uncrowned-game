@@ -35,6 +35,13 @@ func _say(type: StringName, data: Dictionary = {}) -> void:
 	_sim.advance(1)
 
 
+## A time budget written for the 2D map's six tiles a second, at this world's pace:
+## the same walk on the baked world takes 2.4 times as long, and the budget says so
+## rather than failing on the pace Yannick chose (decision 1).
+func _at_pace(seconds_at_six: float) -> float:
+	return seconds_at_six * MovementRules.TILES_PER_SECOND / MovementRules.tiles_per_second()
+
+
 ## Walk to a tile by an actual path, not by pressing into whatever is in the way.
 func _walk_to(target: Vector2i, max_seconds: float) -> bool:
 	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
@@ -137,12 +144,15 @@ func test_landmarks_never_close_the_road() -> void:
 func test_the_kettle_actually_divides_the_map() -> void:
 	# If the river is not a barrier then the bridge and the ford are decoration.
 	# Fill both crossings in and the castle must become unreachable.
+	# A square round each crossing rather than one rectangle spanning both: the 2D
+	# map's ford lies just downstream of its bridge, the baked world's does not.
 	var dammed := Region.build_overworld(true)
-	for x: int in range(Region.BRIDGE.x - 12, Region.BRIDGE.x + 12):
-		for y: int in range(Region.BRIDGE.y - 4, Region.FORD.y + 6):
-			var here: Region.Terrain = dammed.terrain_at(Vector2i(x, y))
-			if here == Region.Terrain.ROAD or here == Region.Terrain.FORD:
-				dammed.set_terrain(Vector2i(x, y), Region.Terrain.WATER)
+	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+		for x: int in range(crossing.x - 12, crossing.x + 13):
+			for y: int in range(crossing.y - 12, crossing.y + 13):
+				var here: Region.Terrain = dammed.terrain_at(Vector2i(x, y))
+				if here == Region.Terrain.ROAD or here == Region.Terrain.FORD:
+					dammed.set_terrain(Vector2i(x, y), Region.Terrain.WATER)
 	assert_false(_reachable_from(dammed, Region.BRINDLE).has(Region.BLACKCAIRN),
 		"with both crossings dammed, the east bank is cut off — so the river is real")
 
@@ -163,7 +173,11 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 	for point: Vector2i in Region.road_waypoints():
 		if Vector2(point).distance_to(Vector2(Region.BLACKCAIRN)) > 14.0:
 			route.append(point)
-	assert_true(_follow(route, 200.0), "walked the King's Road to the capital")
+	# Brindle is not on the King's Road; it is reached by its own track. Find the road
+	# first — on the 2D map that is the track to the works, on the baked world his
+	# road north to Harrowgate — and then keep to it.
+	assert_true(_walk_to(route[0], _at_pace(90.0)), "found the road from Brindle")
+	assert_true(_follow(route, _at_pace(200.0)), "walked the King's Road to the capital")
 	assert_eq(_blood_price(hp, deaths), 0, "the long way round is the safe way round")
 
 
@@ -184,6 +198,10 @@ func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
 
 	assert_eq(road_blood, 0, "the road drew blood")
 	assert_eq(wild_blood, 0, "the wild drew blood, and nothing lives in it now")
+	if not Region.TERRAIN_SLOWS_YOU:
+		off("terrain speeds are off for now (Yannick, 2026-09-14): road %.0f s, wild %.0f s, and the wild's price in time is not claimed"
+			% [road_seconds, wild_seconds])
+		return
 	assert_true(road_seconds < wild_seconds,
 		"road %.0f s, wild %.0f s: the wild is faster and unwatched, so the road has no case"
 			% [road_seconds, wild_seconds])
@@ -195,6 +213,9 @@ func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
 ## anybody else, and still slower than the road — or the forest build gets the wild
 ## for free and the choice stops being a choice for exactly the player it is about.
 func test_an_attuned_walker_crosses_the_wood_faster_but_not_as_fast_as_the_road() -> void:
+	if not Region.TERRAIN_SLOWS_YOU:
+		off("terrain speeds are off for now (Yannick, 2026-09-14): the wood costs nobody time, attuned or not")
+		return
 	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
 
 	_sim = Game.build()
@@ -216,7 +237,7 @@ func test_an_attuned_walker_crosses_the_wood_faster_but_not_as_fast_as_the_road(
 
 
 func test_a_walk_through_the_wood_replays_from_the_log() -> void:
-	assert_true(_walk_to(Vector2i(180, 120), 200.0), "walked into the wood")
+	assert_true(_walk_to(Vector2i(in_the_wood()), 200.0), "walked into the wood")
 	var replayed: Sim = Game.replay(_sim)
 	assert_eq((replayed.store(&"world") as WorldState).fingerprint(), _world.fingerprint(),
 		"the same walk rebuilds the same position, to the step")
@@ -233,7 +254,12 @@ func _seconds_to_cross(line: Array[Vector2i]) -> float:
 			break
 		route.append(point)
 	var started: int = _sim.step
-	assert_true(_follow(route, 400.0), "crossed within the budget")
+	# From Brindle to the line's first point on foot, and that walk is part of the
+	# measurement: both ways start in Brindle, and the road's first point is wherever
+	# the road is.
+	if not route.is_empty():
+		assert_true(_walk_to(route[0], _at_pace(90.0)), "reached the start of the line")
+	assert_true(_follow(route, _at_pace(400.0)), "crossed within the budget")
 	return float(_sim.step - started) / float(Sim.STEPS_PER_REAL_SECOND)
 
 
@@ -251,7 +277,7 @@ func _wild_line() -> Array[Vector2i]:
 
 func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 	for node: Vector2i in Region.road_route():
-		assert_true(_walk_to(node, 120.0), "walked the road to %s" % node)
+		assert_true(_walk_to(node, _at_pace(120.0)), "walked the road to %s" % node)
 	assert_eq(_world.deaths, 0, "and arrived alive, because the road is safe")
 	_walk_into(_world.king_pos, 4.0)
 
@@ -271,7 +297,7 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 	# The architectural proof for stage 3. Reputation and rumour are stores like
 	# any other: nothing about them is remembered outside the log, so the same
 	# walk and the same keypress rebuild the same opinion of you in every town.
-	assert_true(_walk_to(Vector2i(146, 172), 200.0), "walked to the Harrowgate market")
+	assert_true(_walk_to(Vector2i(at_a_stall()), 200.0), "walked to the Harrowgate market")
 	_sim.submit(&"steal")
 	_sim.advance(2)
 
@@ -306,17 +332,17 @@ func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
 	_say(&"create_character", {"wits": 4})
 	assert_eq(_ticked.kings_escort(), 10, "before: ten guards stand between me and the king")
 
-	assert_true(_walk_to(Region.HARROWGATE, 180.0), "walked the road to Harrowgate")
+	assert_true(_walk_to(Region.HARROWGATE, _at_pace(180.0)), "walked the road to Harrowgate")
 	assert_eq(_world.region().zone_at(_world.player_tile()), &"harrowgate", "and into the town")
 
 	var ossa: Npc = _cast.get_npc(&"ossa")
-	assert_true(_walk_to(ossa.tile, 60.0), "crossed the town to Ossa")
+	assert_true(_walk_to(ossa.tile, _at_pace(60.0)), "crossed the town to Ossa")
 	_say(&"talk", {"npc": "ossa"})
 	_say(&"choose_intent", {"intent": "ask_why"})
 	assert_true(_sim.facts.has(ArmyRules.FACT_PAY_FRAUD), "learned why they are deserting")
 	_say(&"end_talk")
 
-	assert_true(_walk_to(Region.MUSTER, 300.0), "followed the road to the camp")
+	assert_true(_walk_to(Region.MUSTER, _at_pace(300.0)), "followed the road to the camp")
 	assert_true(_world.region().is_in_muster(_world.player_tile()), "standing in the camp")
 	_say(&"expose_fraud")
 
@@ -350,13 +376,13 @@ func test_the_whole_chain_replays_identically_from_its_log() -> void:
 	# makes. Creation is an ordinary event, so it replays with everything else —
 	# which is half of what this test is checking.
 	_say(&"create_character", {"wits": 4})
-	assert_true(_walk_to(Region.HARROWGATE, 180.0))
+	assert_true(_walk_to(Region.HARROWGATE, _at_pace(180.0)))
 	var ossa: Npc = _cast.get_npc(&"ossa")
-	assert_true(_walk_to(ossa.tile, 60.0))
+	assert_true(_walk_to(ossa.tile, _at_pace(60.0)))
 	_say(&"talk", {"npc": "ossa"})
 	_say(&"choose_intent", {"intent": "ask_why"})
 	_say(&"end_talk")
-	assert_true(_walk_to(Region.MUSTER, 300.0))
+	assert_true(_walk_to(Region.MUSTER, _at_pace(300.0)))
 	_say(&"expose_fraud")
 	assert_true(_ticked.kings_escort() < 10, "the run did what it was supposed to")
 

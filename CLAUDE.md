@@ -51,6 +51,17 @@ rendering layer replaceable. Everything below protects it.
 
 ## Art rule
 
+**Amended 2026-09-13 (v3), sharpened 2026-09-14.** The pack rule below describes the 2D
+map, which is no longer the game. In the 3D world the rule is stricter than "one
+family": **nothing of the 2D pack appears, ever** — no pixel figure, tree, house, stall
+or path, not even as a placeholder (Yannick, on seeing them). The assets are the
+brother's: his library, his traveller for every person until he draws the cast, and a
+plain block in his rock paint where he has not drawn a thing yet. What he has not made
+is *visibly missing*, and the bake's report and the suite's DEBT lines say what. His
+library carries a provenance-and-licence manifest and `test_workshop_provenance` refuses
+a file without one. Mixing artists is the mark of an amateur game in meshes exactly as
+in pixels. (The HUD's font is the pack's, and an open question.)
+
 Free assets may be used, but only from the packs approved in `docs/SPECS.md` §13.
 **Never mix packs from different artists** — palettes, pixel densities and light
 angles do not reconcile, and mixing them is the clearest mark of an amateur game.
@@ -73,9 +84,17 @@ view/      Godot nodes. Replaceable.
 tools/     Headless entry points: sim_runner.gd, test_runner.gd.
 test/      Each file extends TestCase; methods named test_*.
 content/   Cast sheets, facts, baked dialogue. Version controlled.
+           places.json — where everything stands, as anchors. No .gd carries a position.
+           bake_brief.json — what we propose on the 3D map where his data is silent.
+           region.json — the baked world. Never edited: re-run tools/bake_region.gd.
 docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
+           MIGRATION_3D.md — how the world moves onto the 3D workshop, and who does what.
            V1.md — what shipped the morning before v2.
   history/   Finished working logs. Never authoritative; kept for the reasoning.
+prototypes/  The Brindle 3D workshop: a separate Godot project, kept out of the game's
+           import by `.gdignore`. His; open its own `project.godot`. Never edited by us.
+view3d/workshop/  A generated copy of his project with its paths repointed, so his
+           scenes load in ours (tools/vendor_workshop.sh). Never committed, never edited.
 ```
 
 ## Commands
@@ -88,7 +107,32 @@ tools/shot.sh /tmp/a.png play 150,174       # look at it — see "Development to
 godot --headless --path . -s tools/sim_runner.gd -- --ticks 5000
 godot --headless --path . -s tools/measure_routes.gd
 godot --headless --path . -s tools/validate_assets.gd -- --no-cache
+tools/vendor_workshop.sh                                    # after cloning, and after each delivery of his:
+                                                            # his scenes into view3d/workshop/, then import
+godot --headless --path . -s tools/bake_region.gd          # his data + the brief -> content/region.json
+godot --headless --path . -s tools/bake_region.gd -- --check   # is the checked-in bake stale? (CI)
+tools/run_tests.sh --procedural --all                       # the same suite on the 2D map v1/v2 were built on
+UNCROWNED_WORLD=procedural tools/shot.sh /tmp/m.png map     # any tool, on the 2D map
+UNCROWNED_VIEW=2d tools/shot.sh /tmp/m.png play 292,290     # the baked world, flat
 ```
+
+**The world is the one baked from the 3D workshop** (M4 cut-over, 2026-09-14), seen in
+3D (`view/world3d.gd`). `UNCROWNED_WORLD=procedural` is a **world selector, not a debug
+tool**: read once by `Places`, it puts the whole process on the 2D map v1 and v2 were
+built on — kept for its tests and its history. A process is one world. `UNCROWNED_VIEW=2d`
+keeps the baked world flat, which is what a look at the bake itself wants. The 3D window
+reads his landscape files from `prototypes/brindle_3d/` and his scenes from the
+generated `view3d/workshop/`; a clone without the copy says so and shows the bake's own
+ground.
+
+**What stops you must be seen (2026-09-14).** On the baked world the simulation may
+refuse a tile only where the player can see why: his water, his rock at
+`BakeRules.ROCK_IMPASSABLE` (0.85) and above, his meshes, or a plain block of ours. The
+kit's thicket ring round the clearing is left as open wood until he plants it (a DEBT),
+a footprint shrinks to the piece his library stands for it (`kit_library` in the brief),
+and the castle's ramparts stand as blocks. `test_bake` fails on any wall tile the window
+does not draw. Do not fix an invisible wall by drawing something of ours — that is the
+art rule the other way round; open it, report it in the bake, and name the debt.
 
 ### Committing — read this before your first `git commit`
 
@@ -132,6 +176,23 @@ and 4.7 s and 18 s when v1 shipped; v2's place tests each build a full world.
 The numbers are here to be kept true, not to be admired: if the fast suite ever
 stops being the thing you run without thinking, that is the thing to fix.)
 A suite marked `const SLOW := true` is in the second group.
+
+**Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
+`run_tests.sh` runs on the baked world (about **8 s** fast, **24 s** all);
+`tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
+**20 s**), and both have to be green before a commit that touches the map, the kit, a
+position or the pace. A test says where it stands in the world's terms —
+`at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
+`TestCase` — and never as a tile; a time budget written for six tiles a second is
+scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
+the run is the map's or the brief's, not the code's: a claim the spec makes that the
+baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Three stand
+today: the works far from Brindle, §4's 45–90 s road band at his pace, and the
+clearing's ring of wood. Never turn a failure into a debt to get green; a debt names
+something a person has to settle. A line marked **`OFF`** is the third kind
+(`TestCase.off`): a claim that holds only while one of the testing switches below is
+on, printed so the switch is not forgotten and counted apart so the claim is not lost.
 
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
@@ -185,6 +246,31 @@ here. A debug tool that is not written down is a debug tool that ships.
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
 > so you cannot walk anywhere while time passes, which is the whole point.
 
+## Testing switches — not debug tools, and on in every build for now
+
+The 2D game's layers come off one by one while the 3D world is tested (Yannick,
+2026-09-14, MIGRATION_3D §9 decision 8). Each is one word, kept in the code beside what
+it switches and listed here so none is forgotten when the game is shown to anybody. A
+test that claims something only true while a switch is on says `OFF` in the run
+(`TestCase.off`) instead of failing or quietly passing. Never delete the layer: it is
+v2's tested work and the spec still argues for it; what a switch decides is what the
+game does *now*.
+
+**`Screens.QUICK_START` (2026-09-14).** The game opens straight into a fresh run with
+every trait at the floor: no title menu, no character creation. Yannick asked for it
+because both slowed every test launch. The two screens still exist, route and are
+tested; the constant is one word to flip when the game is shown to anybody. The
+screenshot harness names the screen it wants and is unaffected.
+
+**`Region.TERRAIN_SLOWS_YOU = false` (2026-09-14).** The ground does not slow the
+walker: every terrain walks at the world's pace. Yannick found open country at 0.65 of
+2.5 tiles a second a crawl, and useless for now. §4's speed table stands and is tested
+as a table; the four tests that measure the wild's price in time say `OFF`.
+
+**`Sound.MUSIC = false` (2026-09-14).** No music. The ambience loops and the menu cues
+still play; the tracks are the 2D pack's. The tables stand and `test_assets` still
+checks the files exist.
+
 ## Effort discipline
 
 Do not spawn subagents or parallel workflows unless I explicitly ask, or unless
@@ -205,10 +291,26 @@ which is 4,000 lines and answers a different question.
 and marked *built* — and the intent it was written from is `docs/history/V2_INTENT.md`.
 A: beasts out, terrain speeds on, the wild measured. B: hardship and the second
 direction. C: four places, two states. D: rank from standing and the throne reading.
-E: Blackcairn's two readings and the journal's kingdom page. **What comes next is not
-decided**: SPECS §13 expects a v3 art pass (a new pack, through the validator), and
-combat is the oldest debt in the project. Nothing structural moves without asking
-Yannick.
+E: Blackcairn's two readings and the journal's kingdom page.
+
+**v3: the game plays on the world baked from the Brindle 3D workshop** (decided
+2026-09-13; M1–M2, M3a and the M4 cut-over delivered by 2026-09-14). The workshop in
+`prototypes/brindle_3d/` is Yannick's brother's — a stylised 3D landscape walked by 2D
+characters. **Start at `docs/V3.md`**, then `docs/MIGRATION_3D.md`, which is the plan and
+the record of each phase; read it before touching anything the map or the view depends
+on. The map and the graphics are the brother's; the systems, the content and the bridge
+are ours, and the bridge is the one architectural rule below applied once more: the
+simulation keeps its grid, the 3D data is *baked* into a `Region` (`content/region.json`),
+and a 3D window (`view/world3d.gd`) reads the sim and never moves the player. What waits
+on him: his props and the 25 faces in his style (M3b) and the map's own fill (M5). Combat is still the oldest debt in the project. Nothing structural moves
+without asking Yannick. **One discipline, in force since M1a (2026-09-13):** anything
+positional — a person, a paper, a fire, a stall, a site — is an *anchor* in
+`content/places.json` (a place or point plus an offset, or a feature standing in a
+place) and never a tile constant in a `.gd`. `Region.resolve()` turns an anchor into a
+tile and `test_anchors` fails **by name** on one that resolves nowhere. The offsets
+inside `_stamp_landmarks` are the exception on purpose: they are the shape of a
+scaffold settlement, not where content stands. The map is about to move, and content
+that names what it stands next to survives the move.
 
 Phase 4, combat, is **out of v1** (Yannick, 2026-09-12) and shipped that way: four of
 the five endings need no fighting, and the fifth — killing him — is the one that

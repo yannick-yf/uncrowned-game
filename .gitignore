@@ -20,6 +20,12 @@ mono_crash.*.json
 .DS_Store
 **/.DS_Store
 
+# The Brindle 3D workshop's scenes, copied into this project with their paths
+# repointed by tools/vendor_workshop.gd (MIGRATION_3D §6, M2b). Generated from
+# prototypes/brindle_3d/, which is the committed original; run the tool after
+# cloning and after each delivery of his. Never edited here, never committed.
+view3d/workshop/
+
 # The approved asset pack (SPECS §13): what the game uses is committed.
 #
 # The PNGs are only 4 MB and they *define* the locked palette in

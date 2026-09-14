@@ -124,34 +124,71 @@ static func waypoints(
 	var tiles: Array[Vector2i] = path(region, from, to, off_road)
 	if tiles.is_empty():
 		return []
-	# **Kept only while the straight line to them stays walkable.**
-	#
-	# This used to take every fourth tile, which is fine in a field and wrong in a
-	# wood: a walker steers straight at the next waypoint, and four tiles of straight
-	# line across a bend in a three-tile corridor goes through the trees. Every
-	# journey test failed the day the Thornwood closed, and the paths were all fine —
-	# it was the shortcuts between the samples that were not.
-	#
-	# `spacing` is now a *maximum* rather than a stride, so the list stays short in
-	# the open and gets as dense as it needs to be in the tight parts.
-	var out: Array[Vector2] = [Vector2(tiles[0]) + Vector2(0.5, 0.5)]
+	var out: Array[Vector2] = []
+	for tile: Vector2i in thin(region, tiles, spacing):
+		out.append(Vector2(tile) + Vector2(0.5, 0.5))
+	return out
+
+
+## A path thinned to steering targets, **kept only while the straight line to them
+## stays walkable.**
+##
+## This used to take every fourth tile, which is fine in a field and wrong in a
+## wood: a walker steers straight at the next waypoint, and four tiles of straight
+## line across a bend in a three-tile corridor goes through the trees. Every
+## journey test failed the day the Thornwood closed, and the paths were all fine —
+## it was the shortcuts between the samples that were not.
+##
+## `spacing` is a *maximum* rather than a stride, so the list stays short in the open
+## and gets as dense as it needs to be in the tight parts. Public and on tiles, so the
+## King's Road's line on a baked world — which bends, where the 2D map's legs did not —
+## is thinned by the same rule (`Region._road_line`).
+static func thin(region: Region, tiles: Array[Vector2i], spacing: int) -> Array[Vector2i]:
+	if tiles.is_empty():
+		return []
+	var out: Array[Vector2i] = [tiles[0]]
 	var anchor: int = 0
 	for i: int in range(1, tiles.size()):
-		if i - anchor < spacing and _walkable_line(region, tiles[anchor], tiles[i]):
+		if i - anchor < spacing and _walkable_from_around(region, tiles[anchor], tiles[i]):
 			continue
 		anchor = i - 1 if i - 1 > anchor else i
-		out.append(Vector2(tiles[anchor]) + Vector2(0.5, 0.5))
-	out.append(Vector2(tiles[tiles.size() - 1]) + Vector2(0.5, 0.5))
+		out.append(tiles[anchor])
+	out.append(tiles[tiles.size() - 1])
 	return out
+
+
+## Whether the straight line to `to` stays on ground from `anchor` **and from every
+## tile round it** (M1c). A walker counts as arrived within a tile of a waypoint and
+## steers on from wherever that left them, so the line that has to be clear is not
+## the one from the anchor's centre but the one from any tile they may be standing
+## on. On the 2D map's open ground the two rarely differed; on the baked world a
+## river two tiles off the line had walkers pressing into it for ever.
+static func _walkable_from_around(region: Region, anchor: Vector2i, to: Vector2i) -> bool:
+	for dx: int in [-1, 0, 1]:
+		for dy: int in [-1, 0, 1]:
+			var from: Vector2i = anchor + Vector2i(dx, dy)
+			if region.is_passable(from) and not _walkable_line(region, from, to):
+				return false
+	return true
 
 
 ## Whether a walker steering straight from one tile to another stays on ground.
 static func _walkable_line(region: Region, from: Vector2i, to: Vector2i) -> bool:
 	var steps: int = maxi(absi(to.x - from.x), absi(to.y - from.y))
+	var previous: Vector2i = from
 	for step: int in steps + 1:
 		var at: Vector2 = Vector2(from).lerp(Vector2(to), float(step) / float(maxi(steps, 1)))
 		# Floored, not rounded: this has to ask about the same tile the walker will
 		# actually occupy, and `MovementRules.tile_of` floors.
-		if not region.is_passable(Vector2i(floori(at.x), floori(at.y))):
+		var tile := Vector2i(floori(at.x), floori(at.y))
+		if not region.is_passable(tile):
 			return false
+		# **And no squeezing between two corners** (M1c). The mover slides one axis at a
+		# time, so a diagonal between two blocked tiles is a step it cannot make — the
+		# rule the search already keeps (`_can_step`) and this check did not, which on
+		# the baked world's noisier ground left walkers pressing into a corner for ever.
+		var delta: Vector2i = tile - previous
+		if delta.x != 0 and delta.y != 0 and not _can_step(region, previous, delta):
+			return false
+		previous = tile
 	return true

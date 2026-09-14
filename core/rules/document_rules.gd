@@ -28,19 +28,16 @@ const SIGNED_ORDERS: StringName = &"muster:signed_orders"
 
 
 ## The fact a document carries, the break it answers, and the place it sits.
-## Offsets are from the zone's centre; the region puts a prop on each.
+## *Where* in that place is an anchor in `content/places.json`, keyed by the fact;
+## the region puts a prop on each (M1a). A rule knows which place holds the proof
+## and never a tile.
 static func all() -> Array[Dictionary]:
 	return [
-		{"fact": LAND_GRANTS, "breaks": &"the_aggregate",
-			"zone": &"wide_acres", "at": Vector2i(6, -6)},
-		{"fact": TIERED_LAW, "breaks": &"the_tiered_law",
-			"zone": &"cairnwell", "at": Vector2i(-8, 6)},
-		{"fact": WORKS_LEDGER, "breaks": &"the_wealth_went_up",
-			"zone": &"cinderworks", "at": Vector2i(-4, 7)},
-		{"fact": DEBTS, "breaks": &"it_was_borrowed",
-			"zone": &"cairnwell", "at": Vector2i(7, -9)},
-		{"fact": SIGNED_ORDERS, "breaks": &"your_village",
-			"zone": &"muster", "at": Vector2i(-7, 4)},
+		{"fact": LAND_GRANTS, "breaks": &"the_aggregate", "zone": &"wide_acres"},
+		{"fact": TIERED_LAW, "breaks": &"the_tiered_law", "zone": &"cairnwell"},
+		{"fact": WORKS_LEDGER, "breaks": &"the_wealth_went_up", "zone": &"cinderworks"},
+		{"fact": DEBTS, "breaks": &"it_was_borrowed", "zone": &"cairnwell"},
+		{"fact": SIGNED_ORDERS, "breaks": &"your_village", "zone": &"muster"},
 	]
 
 

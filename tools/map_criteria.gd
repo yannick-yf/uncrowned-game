@@ -97,8 +97,9 @@ func _init() -> void:
 	var direct: float = region.brindle_to_blackcairn_tiles()
 	var ratio: float = road / maxf(direct, 1.0)
 	_ok(5, "road ratio >= 1.30", ratio >= 1.30, "%.2f  (%.0f road / %.0f direct)" % [ratio, road, direct])
-	var seconds: float = road / 6.0
-	_ok(6, "road travel 45-90 s", seconds >= 45.0 and seconds <= 90.0, "%.1f s" % seconds)
+	var seconds: float = road / MovementRules.tiles_per_second()
+	_ok(6, "road travel 45-90 s", seconds >= 45.0 and seconds <= 90.0,
+		"%.1f s at %.1f tiles/s" % [seconds, MovementRules.tiles_per_second()])
 
 	# 7 — the wild line has to actually cross the wood.
 	var crossed: int = 0

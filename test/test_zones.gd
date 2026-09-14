@@ -41,9 +41,13 @@ func before_each() -> void:
 	_sim.add_system(ZoneSystem.new())
 
 
+## `seconds` is written for the 2D map's six tiles a second; these rooms are about
+## doorways, not pace, so the walk is stretched to cover the same ground on a world
+## that walks slower (decision 1: the baked world walks at the workshop's pace).
 func _walk(dir: Vector2i, seconds: float) -> void:
 	_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
-	_sim.advance(int(seconds * float(Sim.STEPS_PER_REAL_SECOND)))
+	var at_pace: float = seconds * MovementRules.TILES_PER_SECOND / MovementRules.tiles_per_second()
+	_sim.advance(int(at_pace * float(Sim.STEPS_PER_REAL_SECOND)))
 
 
 func test_stepping_on_a_portal_moves_you_to_the_other_zone() -> void:

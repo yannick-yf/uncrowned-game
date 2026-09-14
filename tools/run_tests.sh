@@ -7,9 +7,14 @@
 # no assertions, but it cannot see its own stderr, so a test that crashes *after*
 # an assertion would still report "ok". This script is what closes that.
 #
-#   tools/run_tests.sh          the fast suite — run it after every change
-#   tools/run_tests.sh --all    everything, including the map walks and the pack
+#   tools/run_tests.sh              the fast suite — run it after every change
+#   tools/run_tests.sh --all        everything, including the map walks and the pack
+#   tools/run_tests.sh --procedural the same suite on the 2D map v1 and v2 were built
+#                                   on, which is not the game any more (M4, 2026-09-13)
+#                                   but keeps its tests; combine with --all
 #
+# The world baked from the 3D workshop is the default since the cut-over. --baked is
+# accepted and means nothing, so an old habit does not fail.
 set -uo pipefail
 
 GODOT="${GODOT:-}"
@@ -29,7 +34,13 @@ fi
 # is an unbound-variable error. The runner ignores anything but --fast.
 MODE="--fast"
 LABEL="fast suite"
-if [[ "${1:-}" == "--all" ]]; then MODE="--everything"; LABEL="whole suite"; fi
+for arg in "$@"; do
+  case "$arg" in
+    --all) MODE="--everything"; LABEL="whole suite" ;;
+    --procedural) export UNCROWNED_WORLD=procedural; LABEL="$LABEL, the 2D map" ;;
+    --baked) export UNCROWNED_WORLD=baked ;;
+  esac
+done
 
 OUT=$("$GODOT" --headless --path . -s tools/test_runner.gd -- "$MODE" 2>&1)
 CODE=$?

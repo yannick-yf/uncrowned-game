@@ -6,12 +6,22 @@ extends RefCounted
 ## answers, and a test can check the answer without a Sim.
 
 ## 6 tiles a second, or 96 px/sec on a 16 px grid — a shade brisker than A Link to
-## the Past's walk, which is the reference §13 names.
+## the Past's walk, which is the reference §13 names. **The 2D map's figure.** On a
+## baked world the pace is the world's own (`tiles_per_second()` below), derived by the
+## bake from the workshop's metres a second — decision 1, 2026-09-13: walking follows
+## the workshop, 2.5 tiles a second at 5 m/s over 2 m tiles.
 ##
 ## Expressed per *second* rather than per step, so the simulation's step rate can
 ## change without the player's speed changing with it. That separation is the
 ## whole point of the two clocks.
 const TILES_PER_SECOND: float = 6.0
+
+
+## How fast a walker crosses *this* world. Read from the world's data, so the same
+## rule walks the 2D map at six and the baked world at his pace, and a test that
+## measures a walk measures it in the world it runs on.
+static func tiles_per_second() -> float:
+	return Places.shared().tiles_per_second()
 
 ## What the wood costs somebody who was raised in it.
 ##
@@ -25,7 +35,7 @@ const ATTUNED_WOOD_MULTIPLIER: float = 0.80
 
 
 static func tiles_per_step() -> float:
-	return TILES_PER_SECOND / float(Sim.STEPS_PER_REAL_SECOND)
+	return tiles_per_second() / float(Sim.STEPS_PER_REAL_SECOND)
 
 
 ## How much of a step the ground under you allows. The one place the trait touches

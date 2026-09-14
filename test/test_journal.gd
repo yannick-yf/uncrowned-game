@@ -10,7 +10,6 @@ extends TestCase
 ## Everything here is read from the event log and nothing else, which is what the
 ## external/derived split was paid for.
 
-const AT_A_STALL: Vector2 = Vector2(147.5, 173.0)
 
 
 ## Lean: the journal is read from events, and travellers and movement cost steps
@@ -34,7 +33,7 @@ func _run() -> Sim:
 
 func _steal_and_wait(sim: Sim, days: float) -> void:
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = AT_A_STALL
+	world.player_pos = at_a_stall()
 	sim.submit(&"steal")
 	sim.advance(3)
 	sim.advance_world_ticks(int(float(Game.TICKS_PER_IN_GAME_DAY) * days))
@@ -111,7 +110,7 @@ func test_spending_the_telling_is_written_down() -> void:
 	# a bug, and the journal is the only screen allowed to explain.
 	var sim: Sim = _run()
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = Vector2(148.5, 173.0)
+	world.player_pos = in_town(&"harrowgate")
 	sim.submit(&"tell_town")
 	sim.advance(3)
 
@@ -130,7 +129,7 @@ func test_the_camp_stops_advertising_what_you_can_no_longer_do() -> void:
 	var world := sim.store(&"world") as WorldState
 	assert_eq(world.fraud_told_to, &"", "nothing told yet — the pay tent has a queue")
 
-	world.player_pos = Vector2(148.5, 173.0)
+	world.player_pos = in_town(&"harrowgate")
 	sim.submit(&"tell_town")
 	sim.advance(3)
 	assert_eq(world.fraud_told_to, &"harrowgate", "told, and not at the camp")
