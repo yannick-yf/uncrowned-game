@@ -8,23 +8,26 @@ No new mesh copies or additional external art packs are required.
 
 ## Spatial organization
 
-- The existing mine feeds the two sorting halls immediately north of its bridge.
-  Ore heaps, crushing slabs and roasting beds share this receiving court.
-- Six charcoal bloomeries occupy a mineral working yard, with two lit furnaces.
-  Two covered hammering/finishing forges stand opposite, across the retained cart
-  road. The intended product here is a solid iron bloom, not poured molten steel.
-- Two charcoal stores sit beside the northern sawmill approach, separate from the
-  hot working yard. The loop allows supplies to arrive without using residential
-  lanes. There is no charcoal-burning mound among houses.
-- Finished bars go to two stores beside the southern shipping court. The weighing
-  office, tool workshop, wagon shelter and stables face the main regional road.
-- The northwest district has seven individually designed houses, four different
-  workers' barracks and an L-shaped foreman's residence. Curved lanes converge on the well and common kitchen. The
-  granary, household wood stacks, small yards and five existing birches make the
-  service/residential side visually distinct from the hot yard.
-- Latrines sit at the outer western and southern edges, away from the well. Cold
-  slag is held behind low stone curbs on the southern industrial side; the river
-  channel and the footpath to the southern crossing remain open.
+- A single north-south main lane now leads from the regional road to the common
+  well. A broad, irregular worker loop branches from it, leaving a readable green
+  centre and small front yards instead of a web of crossing paths.
+- The west side is the residential neighbourhood: twelve homes and barracks are
+  arranged in three loose rows around the well, kitchen and granary. The foreman's
+  house marks the eastern edge, while the two latrines stay outside the living
+  cluster. Five birches sit on the edges of the lanes rather than between doors.
+- Stables, wagon shelter and the southern stores form a separate service court at
+  the foot of the residential lane. Finished bars leave this court directly for
+  the regional road without passing through the homes.
+- The east side is divided into three working yards: charcoal and timber at the
+  north, six bloomeries and the two forges in an open central hot yard, then the
+  mine receiving and ore sorting court beside the river. Each yard has one clear
+  approach and enough open ground for carts and workers.
+- The existing mine feeds the two sorting halls. Ore heaps, crushing slabs and
+  roasting beds remain together in the receiving court; the river channel and the
+  footpath to the southern crossing remain open.
+- Two cold slag piles share an open graded pad at the far south, away from the
+  working lanes. The intended process is still a medieval bloomery producing
+  solid iron blooms, not poured molten steel.
 
 Existing regional connections, the mine excavation, the five bridges and Brindle
 are retained. This scene contains graphics and physical access only; it defines
@@ -73,10 +76,10 @@ interior set: closed houses remain solid exterior scenery.
 
 ## Asset coherence pass — 14 September 2026
 
-The composition now uses 60 outside props and 27 buildings. Redundant outdoor
+The composition now uses 47 outside props and 27 buildings. Redundant outdoor
 stocks and a duplicate workbench were removed. Spare tuyères and the grindstone
 are fully under existing roofs; `sheltered_by` records their host in the manifest.
-Cold slag occupies a graded, retained yard. Latrines and the southern stable were
+Cold slag occupies a graded, open yard. Latrines and the southern stable were
 repositioned or graded to seat their feet without creating a lip on the main road.
 
 The shared asset scenes were corrected at source: closed timber roof infill,
@@ -94,10 +97,10 @@ Run it with Godot's `--headless --path . --script` options, then run the town re
 to refresh bounds and access positions. A full kit rebuild remains available by
 omitting `--used-only`. These are offline tools, never runtime dependencies.
 
-`verify_ironworks_coherence.gd`, included in `check_workshop.sh`, adds 117 checks:
+`verify_ironworks_coherence.gd`, included in `check_workshop.sh`, adds 104 checks:
 mesh contact points for every placed kit instance, actual player access to the
 primary and annex doors, the gallery barrack stair and upper door, forge air supply
-connections, and roof coverage over dry equipment. It supplements the 192 town
+connections, and roof coverage over dry equipment. It supplements the 177 town
 checks and 84 river/bridge checks; `verify_ironworks.gd` validates all 62 kit scenes.
 
 

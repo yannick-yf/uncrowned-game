@@ -72,44 +72,44 @@ metadata/layout_source = "res://planning/ironworks-town.json"
 [node name="Chemins" type="Node3D" parent="."]
 
 [node name="MaisonEntreeNord" parent="Habitations" instance=ExtResource("asset_33")]
-position = Vector3(197, 43.0, 6)
-rotation = Vector3(0, 0.17453292519943295, 0)
+position = Vector3(195, 43.0, 10)
+rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonPignon" parent="Habitations" instance=ExtResource("asset_36")]
-position = Vector3(208, 43.6, 2)
-rotation = Vector3(0, 0.13962634015954636, 0)
+position = Vector3(207, 43.6, 5)
+rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonHaute" parent="Habitations" instance=ExtResource("asset_5")]
-position = Vector3(220, 44.0, -2)
-rotation = Vector3(0, 0.3490658503988659, 0)
+position = Vector3(221, 44.0, 4)
+rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonArdoise" parent="Habitations" instance=ExtResource("asset_31")]
-position = Vector3(231, 43.8, 2)
-rotation = Vector3(0, -0.8726646259971648, 0)
+position = Vector3(234, 43.8, 9)
+rotation = Vector3(0, -1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonCourInterieure" parent="Habitations" instance=ExtResource("asset_2")]
-position = Vector3(218, 43.2, 18)
+position = Vector3(201, 43.2, 23)
 rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonVirage" parent="Habitations" instance=ExtResource("asset_38")]
-position = Vector3(200, 42.8, 32)
-rotation = Vector3(0, 1.5707963267948966, 0)
+position = Vector3(215, 42.8, 22)
+rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonVenelle" parent="Habitations" instance=ExtResource("asset_39")]
-position = Vector3(211, 43.1, 33)
-rotation = Vector3(0, 1.5707963267948966, 0)
+position = Vector3(232, 43.1, 23)
+rotation = Vector3(0, -1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
@@ -126,50 +126,50 @@ metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonContremaitre" parent="Habitations" instance=ExtResource("asset_32")]
-position = Vector3(239, 43.2, 14)
-rotation = Vector3(0, -1.5707963267948966, 0)
+position = Vector3(239, 43.2, 28)
+rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonOuest" parent="Habitations" instance=ExtResource("asset_37")]
-position = Vector3(192, 42.8, 37)
-rotation = Vector3(0, 0.8726646259971648, 0)
+position = Vector3(195, 42.8, 44)
+rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="MaisonJardin" parent="Habitations" instance=ExtResource("asset_35")]
-position = Vector3(198, 42.8, 47)
-rotation = Vector3(0, 0.5235987755982988, 0)
+position = Vector3(211, 42.8, 47)
+rotation = Vector3(0, 3.141592653589793, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="CuisineCommune" parent="Services" instance=ExtResource("asset_18")]
-position = Vector3(218, 43.0, 44)
-rotation = Vector3(0, 1.4835298641951802, 0)
+position = Vector3(220, 43.0, 54)
+rotation = Vector3(0, 3.141592653589793, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="GrenierCommun" parent="Services" instance=ExtResource("asset_25")]
-position = Vector3(212, 42.9, 54)
-rotation = Vector3(0, 0.0, 0)
+position = Vector3(230, 42.9, 55)
+rotation = Vector3(0, 3.141592653589793, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="EcurieEntree" parent="Services" instance=ExtResource("asset_43")]
-position = Vector3(199, 41.2, 71)
+position = Vector3(214, 42.0, 79)
 rotation = Vector3(0, 0.5235987755982988, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="RelaisCharrettes" parent="Services" instance=ExtResource("asset_28")]
-position = Vector3(216, 42.2, 78)
-rotation = Vector3(0, 3.141592653589793, 0)
+position = Vector3(204, 42.0, 74)
+rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="RemiseSud" parent="Services" instance=ExtResource("asset_42")]
-position = Vector3(205, 41.8, 83)
-rotation = Vector3(0, 1.3089969389957472, 0)
+position = Vector3(222, 42.0, 82)
+rotation = Vector3(0, 3.141592653589793, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
@@ -228,25 +228,25 @@ metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="ForgeFinition" parent="Production" instance=ExtResource("asset_24")]
-position = Vector3(244, 43.1, 47)
+position = Vector3(244, 43.1, 48)
 rotation = Vector3(0, 1.4835298641951802, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = true
 
 [node name="PuitsDuBourg" parent="Services" instance=ExtResource("asset_41")]
-position = Vector3(222, 43.1, 37)
+position = Vector3(220, 43.1, 34)
 rotation = Vector3(0, 0.2617993877991494, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="LatrinesSud" parent="Services" instance=ExtResource("asset_29")]
-position = Vector3(196, 43.1, 86)
+position = Vector3(199, 43.1, 86)
 rotation = Vector3(0, 3.0543261909900767, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="LatrinesOuest" parent="Services" instance=ExtResource("asset_30")]
-position = Vector3(191, 43.1, 46)
+position = Vector3(191, 43.1, 43)
 rotation = Vector3(0, -0.08726646259971647, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
@@ -342,19 +342,19 @@ metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CuveOuvriere" parent="Production" instance=ExtResource("asset_19")]
-position = Vector3(246.7, 43.1, 42)
+position = Vector3(246, 43.1, 43)
 rotation = Vector3(0, -0.7853981633974483, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="LoupeChaude" parent="Production" instance=ExtResource("asset_34")]
-position = Vector3(255, 43.1, 35)
+position = Vector3(257, 43.1, 47)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="EnclumeCour" parent="Production" instance=ExtResource("asset_10")]
-position = Vector3(255, 43.1, 34)
+position = Vector3(257, 43.1, 46)
 rotation = Vector3(0, 0.4363323129985824, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
@@ -366,13 +366,13 @@ metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="ReserveBoisNord" parent="Production" instance=ExtResource("asset_11")]
-position = Vector3(263, 43.1, 3)
+position = Vector3(262, 43.1, -2)
 rotation = Vector3(0, 0.3490658503988659, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="BoisCuisine" parent="Services" instance=ExtResource("asset_11")]
-position = Vector3(213, 43.1, 44)
+position = Vector3(223, 43.1, 55)
 rotation = Vector3(0, 1.4835298641951802, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
@@ -384,14 +384,8 @@ metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="EnseigneAtelier" parent="Production" instance=ExtResource("asset_22")]
-position = Vector3(238, 43.1, 60)
+position = Vector3(247, 43.1, 62)
 rotation = Vector3(0, 0.17453292519943295, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesFroidesUn" parent="Dechets" instance=ExtResource("asset_47")]
-position = Vector3(228, 43.1, 85)
-rotation = Vector3(0, -0.2617993877991494, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
@@ -402,7 +396,7 @@ metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="ScoriesFroidesTrois" parent="Dechets" instance=ExtResource("asset_47")]
-position = Vector3(230, 43.1, 87)
+position = Vector3(234, 43.1, 85)
 rotation = Vector3(0, 0.8726646259971648, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
@@ -461,134 +455,62 @@ rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
-[node name="ScoriesContainment_00" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(225, 43.1, 83)
-rotation = Vector3(0, 1.5707963267948966, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_01" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(225, 43.1, 85)
-rotation = Vector3(0, 1.5707963267948966, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_02" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(225, 43.1, 87)
-rotation = Vector3(0, 1.5707963267948966, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_03" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(227, 43.1, 89)
-rotation = Vector3(0, 0.0, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_04" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(229, 43.1, 89)
-rotation = Vector3(0, 0.0, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_05" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(231, 43.1, 89)
-rotation = Vector3(0, 0.0, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_06" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(233, 43.1, 89)
-rotation = Vector3(0, 0.0, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="ScoriesContainment_07" parent="Abords" instance=ExtResource("asset_45")]
-position = Vector3(235, 43.1, 86)
-rotation = Vector3(0, 1.5707963267948966, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
 [node name="JardinHaute_00" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(218, 43.1, -7)
+position = Vector3(190, 43.1, -2)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="JardinHaute_01" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(220, 43.1, -7)
+position = Vector3(193, 43.1, -2)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="JardinHaute_02" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(222, 43.1, -7)
+position = Vector3(196, 43.1, -2)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="JardinHaute_03" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(216, 43.1, -5)
+position = Vector3(190, 43.1, 0)
 rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CourPignon_00" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(206, 43.1, -3)
+position = Vector3(201, 43.1, 0)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CourPignon_01" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(208, 43.1, -3)
+position = Vector3(204, 43.1, 0)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CourPignon_02" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(211, 43.1, -1)
+position = Vector3(201, 43.1, 3)
 rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CourOuest_00" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(194, 43.1, 46)
+position = Vector3(194, 43.1, 42)
 rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CourOuest_01" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(194, 43.1, 48)
+position = Vector3(194, 43.1, 44)
 rotation = Vector3(0, 1.5707963267948966, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
 
 [node name="CourOuest_02" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(197, 43.1, 51)
-rotation = Vector3(0, 0.0, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="EnclosEcurie_00" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(196, 43.1, 75)
-rotation = Vector3(0, 1.5707963267948966, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="EnclosEcurie_01" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(196, 43.1, 77)
-rotation = Vector3(0, 1.5707963267948966, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="EnclosEcurie_02" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(198, 43.1, 77)
-rotation = Vector3(0, 0.0, 0)
-metadata/ground_offset = -0.025
-metadata/town_building = false
-
-[node name="EnclosEcurie_03" parent="Abords" instance=ExtResource("asset_16")]
-position = Vector3(200, 43.1, 77)
+position = Vector3(197, 43.1, 47)
 rotation = Vector3(0, 0.0, 0)
 metadata/ground_offset = -0.025
 metadata/town_building = false
@@ -596,323 +518,232 @@ metadata/town_building = false
 [node name="RueDuBourg" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(224.0, 66.0, 225.0, 60.0, 225.0, 52.0, 228.0, 45.0, 227.0, 36.0, 224.0, 28.0, 225.0, 19.0, 223.0, 11.0)
-width_m = 3.5
+points = PackedVector2Array(224.0, 66.0, 226.0, 58.0, 226.0, 50.0, 226.0, 42.0, 226.0, 34.0, 226.0, 26.0, 226.0, 18.0, 226.0, 10.0)
+width_m = 3.0
 surface_offset_m = 0.0600
 
-[node name="BoucleOuvriere" type="MeshInstance3D" parent="Chemins"]
+[node name="CheminDesServices" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(224.0, 28.0, 216.0, 26.0, 207.0, 26.0, 196.0, 24.0, 192.0, 17.0, 199.0, 11.0, 211.0, 10.0, 223.0, 11.0)
+points = PackedVector2Array(224.0, 66.0, 217.0, 68.0, 210.0, 68.0, 203.0, 68.0, 198.0, 72.0)
 width_m = 2.8
 surface_offset_m = 0.0608
-
-[node name="VenelleCuisine" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(207.0, 26.0, 205.0, 33.0, 208.0, 40.0, 214.0, 48.0, 225.0, 52.0)
-width_m = 2.6
-surface_offset_m = 0.0616
-
-[node name="CourOuest" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(205.0, 33.0, 205.0, 39.0, 200.0, 39.0, 197.0, 40.0)
-width_m = 2.2
-surface_offset_m = 0.0624
-
-[node name="CourDuJardin" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(205.0, 39.0, 206.0, 45.0, 205.0, 51.0, 201.0, 53.0, 208.0, 56.0, 214.0, 62.0)
-width_m = 2.2
-surface_offset_m = 0.0632
-
-[node name="CourDesFourneaux" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(253.0, 48.0, 258.0, 43.0, 261.0, 38.0, 260.0, 29.0, 255.0, 23.0, 250.0, 20.0)
-width_m = 3.5
-surface_offset_m = 0.0640
-
-[node name="CourDuMinerai" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(257.0, 53.0, 260.0, 49.0, 262.0, 43.0, 265.0, 37.0, 269.0, 36.0, 272.0, 35.0)
-width_m = 3.4
-surface_offset_m = 0.0648
-
-[node name="CourCharbon" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(250.0, 20.0, 248.0, 10.0, 249.0, -3.0, 261.0, -3.0, 272.0, 1.0, 275.0, 13.0, 271.0, 22.0, 260.0, 29.0)
-width_m = 3.5
-surface_offset_m = 0.0656
-
-[node name="ExpeditionSud" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(224.0, 66.0, 228.0, 70.0, 229.0, 71.0, 232.0, 71.0, 238.0, 70.0, 247.0, 66.0)
-width_m = 3.8
-surface_offset_m = 0.0664
-
-[node name="RelaisEntree" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(207.0, 60.0, 211.0, 67.0, 214.0, 71.0, 216.0, 71.0, 228.0, 70.0)
-width_m = 3.8
-surface_offset_m = 0.0672
-
-[node name="Remises" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(211.0, 67.0, 207.0, 73.0, 210.0, 78.0, 210.0, 84.0)
-width_m = 2.9
-surface_offset_m = 0.0680
-
-[node name="ComptoirForges" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(241.0, 65.0, 247.0, 61.0, 248.0, 53.0, 249.0, 46.0, 250.0, 39.0, 250.0, 31.0)
-width_m = 2.8
-surface_offset_m = 0.0688
-
-[node name="PlaceCommune" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(225.0, 52.0, 233.0, 48.0, 238.0, 43.0, 237.0, 37.0, 237.0, 34.0)
-width_m = 3.0
-surface_offset_m = 0.0696
-
-[node name="MaisonsHautes" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(223.0, 11.0, 228.0, 8.0, 233.0, 8.0, 235.0, 9.0)
-width_m = 2.3
-surface_offset_m = 0.0704
-
-[node name="AccesContremaitre" type="MeshInstance3D" parent="Chemins"]
-script = ExtResource("path")
-material_override = ExtResource("path_material")
-points = PackedVector2Array(225.0, 19.0, 232.0, 18.0, 234.0, 15.0)
-width_m = 2.2
-surface_offset_m = 0.0712
 
 [node name="Acces_MaisonEntreeNord" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(199.0, 11.0, 197.65952648171648, 12.159044148235557, 197.3816893974494, 10.583351743416024)
+points = PackedVector2Array(203.58, 10.42, 201.18, 10.42, 199.58, 10.42)
 width_m = 2.0
-surface_offset_m = 0.0720
+surface_offset_m = 0.0616
 
 [node name="Acces_MaisonPignon" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(211.0, 10.0, 210.27601226916178, 7.057459159560761, 210.05333530762567, 5.473030249574248)
+points = PackedVector2Array(208.55, 12.725, 208.55, 10.325, 208.55, 8.725)
 width_m = 2.0
-surface_offset_m = 0.0728
+surface_offset_m = 0.0624
 
 [node name="Acces_MaisonHaute" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(223.0, 11.0, 220.47506108041435, 3.924830543557812, 219.92782885109327, 2.4213223503003585)
+points = PackedVector2Array(219.42, 12.129999999999999, 219.42, 9.729999999999999, 219.42, 8.129999999999999)
 width_m = 2.0
-surface_offset_m = 0.0736
+surface_offset_m = 0.0632
 
 [node name="Acces_MaisonArdoise" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(228.0, 8.0, 226.74568325617508, 5.8830933600945885, 227.97135436516544, 4.854633184596126)
+points = PackedVector2Array(225.845, 9.24, 228.245, 9.24, 229.845, 9.24)
 width_m = 2.0
-surface_offset_m = 0.0744
+surface_offset_m = 0.0640
 
 [node name="Acces_MaisonCourInterieure" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(225.0, 19.0, 223.68, 19.23, 222.08, 19.23)
+points = PackedVector2Array(209.08, 24.23, 206.68, 24.23, 205.08, 24.23)
 width_m = 2.0
-surface_offset_m = 0.0752
+surface_offset_m = 0.0648
 
 [node name="Acces_MaisonVirage" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(205.0, 33.0, 205.43, 32.78, 203.83, 32.78)
+points = PackedVector2Array(214.22, 29.83, 214.22, 27.43, 214.22, 25.83)
 width_m = 2.0
-surface_offset_m = 0.0760
+surface_offset_m = 0.0656
 
 [node name="Acces_MaisonVenelle" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(217.0, 35.0, 216.73, 33.43, 215.13, 33.43)
+points = PackedVector2Array(223.87, 22.57, 226.27, 22.57, 227.87, 22.57)
 width_m = 2.0
-surface_offset_m = 0.0768
+surface_offset_m = 0.0664
 
 [node name="Acces_DortoirNord" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(207.0, 26.0, 206.0, 24.705000000000002, 206.0, 23.105)
+points = PackedVector2Array(206.0, 27.105, 206.0, 24.705000000000002, 206.0, 23.105)
 width_m = 2.0
-surface_offset_m = 0.0776
+surface_offset_m = 0.0672
 
 [node name="Acces_DortoirPlace" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(227.0, 29.0, 228.17000000000002, 29.3, 229.77, 29.3)
+points = PackedVector2Array(225.77, 29.3, 228.17000000000002, 29.3, 229.77, 29.3)
 width_m = 2.0
-surface_offset_m = 0.0784
+surface_offset_m = 0.0680
 
 [node name="Acces_MaisonContremaitre" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(234.0, 15.0, 233.52, 15.24, 235.12, 15.24)
+points = PackedVector2Array(246.88, 26.76, 244.48, 26.76, 242.88, 26.76)
 width_m = 2.0
-surface_offset_m = 0.0792
+surface_offset_m = 0.0688
 
 [node name="Acces_MaisonOuest" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(197.0, 40.0, 196.67988173834428, 39.98699379227874, 195.45421062935392, 38.95853361678027)
+points = PackedVector2Array(202.905, 43.28, 200.505, 43.28, 198.905, 43.28)
 width_m = 2.0
-surface_offset_m = 0.0800
+surface_offset_m = 0.0696
 
 [node name="Acces_MaisonJardin" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(201.0, 53.0, 201.25479473419497, 51.47746984783333, 200.45479473419496, 50.09182920177823)
+points = PackedVector2Array(210.42, 39.095, 210.42, 41.495, 210.42, 43.095)
 width_m = 2.0
-surface_offset_m = 0.0808
+surface_offset_m = 0.0704
 
 [node name="Acces_CuisineCommune" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(228.0, 45.0, 223.166520399646, 44.953921883616125, 221.5726088826992, 44.81447269521987)
+points = PackedVector2Array(220.5, 46.37, 220.5, 48.769999999999996, 220.5, 50.37)
 width_m = 2.8
-surface_offset_m = 0.0816
+surface_offset_m = 0.0712
 
 [node name="Acces_GrenierCommun" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(214.0, 62.0, 212.0, 59.6299998, 212.0, 58.0299998)
+points = PackedVector2Array(230.0, 46.9700002, 230.0, 49.3700002, 230.0, 50.9700002)
 width_m = 2.8
-surface_offset_m = 0.0824
+surface_offset_m = 0.0720
 
 [node name="Acces_EcurieEntree" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(207.0, 73.0, 201.875, 75.97964607176053, 201.075, 74.59400542570542)
+points = PackedVector2Array(218.075, 86.05810704084317, 216.875, 83.97964607176053, 216.075, 82.59400542570542)
 width_m = 2.8
-surface_offset_m = 0.0832
+surface_offset_m = 0.0728
 
 [node name="Acces_RelaisCharrettes" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(216.0, 71.0, 216.0, 71.75, 216.0, 73.35)
+points = PackedVector2Array(204.0, 82.65, 204.0, 80.25, 204.0, 78.65)
 width_m = 2.8
-surface_offset_m = 0.0840
+surface_offset_m = 0.0736
 
 [node name="Acces_RemiseSud" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(210.0, 84.0, 210.5299253555049, 84.48173903321194, 208.9844440334424, 84.0676285610479)
+points = PackedVector2Array(222.0, 73.875, 222.0, 76.275, 222.0, 77.875)
 width_m = 2.8
-surface_offset_m = 0.0848
+surface_offset_m = 0.0744
 
 [node name="Acces_BureauPesee" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(241.0, 65.0, 241.40788887605902, 60.66219118706937, 241.26843968766278, 59.06827967012258)
+points = PackedVector2Array(241.61706265865342, 63.05305846248956, 241.40788887605902, 60.66219118706937, 241.26843968766278, 59.06827967012258)
 width_m = 2.8
-surface_offset_m = 0.0856
+surface_offset_m = 0.0752
 
 [node name="Acces_AtelierOutillage" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(231.0, 65.0, 230.30691795721887, 60.93153498233302, 230.52959491875498, 59.347106072346506)
+points = PackedVector2Array(229.97290251491472, 63.30817834731279, 230.30691795721887, 60.93153498233302, 230.52959491875498, 59.347106072346506)
 width_m = 2.8
-surface_offset_m = 0.0864
+surface_offset_m = 0.0760
 
 [node name="Acces_HalleExpedition" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(232.0, 71.0, 232.51857666934856, 71.07264154635412, 232.37912748095232, 72.66655306330091)
+points = PackedVector2Array(232.72775045194297, 68.68177427093393, 232.51857666934856, 71.07264154635412, 232.37912748095232, 72.66655306330091)
 width_m = 2.8
-surface_offset_m = 0.0872
+surface_offset_m = 0.0768
 
 [node name="Acces_ReserveBarres" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(224.0, 66.0, 220.0, 62.4, 220.0, 60.8)
+points = PackedVector2Array(220.0, 64.8, 220.0, 62.4, 220.0, 60.8)
 width_m = 2.8
-surface_offset_m = 0.0880
+surface_offset_m = 0.0776
 
 [node name="Acces_TriArriveeMine" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(262.0, 43.0, 262.04999999999995, 44.5, 263.65, 44.5)
+points = PackedVector2Array(259.65, 44.5, 262.04999999999995, 44.5, 263.65, 44.5)
 width_m = 2.8
-surface_offset_m = 0.0888
+surface_offset_m = 0.0784
 
 [node name="Acces_TriReserveMinerai" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(269.0, 36.0, 268.42499999999995, 28.0, 270.025, 28.0)
+points = PackedVector2Array(266.025, 28.0, 268.42499999999995, 28.0, 270.025, 28.0)
 width_m = 2.8
-surface_offset_m = 0.0896
+surface_offset_m = 0.0792
 
 [node name="Acces_CharbonRouteScierie" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(257.0, -3.0, 256.0, -1.6, 256.0, 0.0)
+points = PackedVector2Array(256.0, -4.0, 256.0, -1.6, 256.0, 0.0)
 width_m = 2.8
-surface_offset_m = 0.0904
+surface_offset_m = 0.0800
 
 [node name="Acces_CharbonReserve" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(275.0, 13.0, 273.725, 9.0, 272.125, 9.0)
+points = PackedVector2Array(276.125, 9.0, 273.725, 9.0, 272.125, 9.0)
 width_m = 2.8
-surface_offset_m = 0.0912
+surface_offset_m = 0.0808
 
 [node name="Acces_HalleMartelage" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(250.0, 39.0, 247.85, 36.0, 246.25, 36.0)
+points = PackedVector2Array(250.25, 36.0, 247.85, 36.0, 246.25, 36.0)
 width_m = 2.8
-surface_offset_m = 0.0920
+surface_offset_m = 0.0816
 
 [node name="Acces_ForgeFinition" type="MeshInstance3D" parent="Chemins"]
 script = ExtResource("path")
 material_override = ExtResource("path_material")
-points = PackedVector2Array(249.0, 46.0, 249.97716818855048, 47.52293445648595, 248.38325667160368, 47.38348526808969)
+points = PackedVector2Array(252.36803546397067, 48.732108239080326, 249.97716818855048, 48.52293445648595, 248.38325667160368, 48.38348526808969)
 width_m = 2.8
-surface_offset_m = 0.0928
+surface_offset_m = 0.0824
 
 [node name="Bouleau_0" parent="Abords" instance=ExtResource("birch")]
-position = Vector3(214,43,4)
+position = Vector3(191,43,8)
 rotation_degrees = Vector3(0,25,0)
 scale = Vector3(0.53,0.53,0.53)
 metadata/ground_offset = -0.05
 
 [node name="Bouleau_1" parent="Abords" instance=ExtResource("birch")]
-position = Vector3(216,43,37)
+position = Vector3(205,43,42)
 rotation_degrees = Vector3(0,150,0)
 scale = Vector3(0.46,0.46,0.46)
 metadata/ground_offset = -0.05
 
 [node name="Bouleau_2" parent="Abords" instance=ExtResource("birch")]
-position = Vector3(228,43,22)
+position = Vector3(221,43,44)
 rotation_degrees = Vector3(0,65,0)
 scale = Vector3(0.5,0.5,0.5)
 metadata/ground_offset = -0.05
 
 [node name="Bouleau_3" parent="Abords" instance=ExtResource("birch")]
-position = Vector3(202,43,-5)
+position = Vector3(239,43,13)
 rotation_degrees = Vector3(0,20,0)
 scale = Vector3(0.65,0.65,0.65)
 metadata/ground_offset = -0.05
 
 [node name="Bouleau_4" parent="Abords" instance=ExtResource("birch")]
-position = Vector3(187,43,23)
+position = Vector3(187,43,38)
 rotation_degrees = Vector3(0,65,0)
 scale = Vector3(0.72,0.72,0.72)
 metadata/ground_offset = -0.05
