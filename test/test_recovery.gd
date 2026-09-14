@@ -24,7 +24,7 @@ func test_nothing_mends_while_you_are_still_being_hurt() -> void:
 
 
 func test_health_comes_back_slowly_in_the_open() -> void:
-	_world.player_pos = Vector2(200.5, 140.5)
+	_world.player_pos = alone_on_the_road()
 	_world.player_tile_last = _world.player_tile()
 	_world.player_hp = 5
 	_world.last_hurt_step = _sim.step

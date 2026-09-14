@@ -38,6 +38,19 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	return sim
 
 
+## A fresh run with a character: the world built and `create_character` submitted with
+## these trait levels, as the creation screen does when Begin is pressed. One place, so
+## the quick start for testing and the real screen make the same first event.
+static func begin_run(levels: Dictionary, p_seed: int = Sim.DEFAULT_SEED) -> Sim:
+	var sim: Sim = build(p_seed)
+	var data: Dictionary = {}
+	for what: StringName in TraitRules.ALL:
+		data[String(what)] = int(levels.get(what, TraitRules.FLOOR))
+	sim.submit(&"create_character", data)
+	sim.advance(1)
+	return sim
+
+
 static func build_world() -> WorldState:
 	var overworld: Region = Region.build_overworld()
 	var world := WorldState.new()

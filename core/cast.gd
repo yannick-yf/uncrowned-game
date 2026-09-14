@@ -79,8 +79,7 @@ static func load_from(path: String) -> Cast:
 		npc.display_name = String(row.get("name", key))
 		npc.role = String(row.get("role", ""))
 		npc.zone = StringName(row.get("zone", ""))
-		var at: Array = row.get("tile", [0, 0]) as Array
-		npc.tile = Vector2i(int(at[0]), int(at[1]))
+		npc.tile = _tile_for(Places.shared().cast_anchor(npc.id))
 		npc.greeting = String(row.get("greeting", ""))
 		for band: String in (row.get("reactions", {}) as Dictionary).keys():
 			npc.reactions[StringName(band)] = String(
@@ -114,15 +113,34 @@ static func load_from(path: String) -> Cast:
 	return cast
 
 
+## Where somebody stands, from their anchor in `content/places.json` (M1a). Resolved
+## against the overworld, because a feature anchor names a prop only a built region
+## has. Somebody the file does not place stands at NOWHERE, and `test_anchors` names
+## them rather than letting them stand at (0, 0) in the sea.
+##
+## **On ground, never in a wall** (M1c). An anchor is an offset from a place, and the
+## kit jitters its buildings by the tile they land on, so the same offset that is a
+## doorstep on one map is inside the barn on another. A person asked to stand in a
+## wall stands on the nearest open tile instead — the rule fires and papers already
+## follow — and the suites still check that everybody can be walked to.
+static func _tile_for(anchor: Dictionary) -> Vector2i:
+	var region: Region = Region.build_overworld()
+	var at: Vector2i = region.resolve(anchor)
+	return region.open_near(at) if at != Region.NOWHERE else at
+
+
 ## Generic types, placed. Everyone of a trade shares one line set, so a second
 ## trader anywhere costs a placement and not a sheet — which is what keeps §6's
 ## twenty-five from quietly becoming thirty.
+##
+## The sheet holds the *types* — the lines, in the player's language. The
+## *placements* are anchors in `content/places.json`, because where a watchman stands
+## is not something that changes with the language, and it was written twice.
 func _load_strangers(section: Dictionary) -> void:
 	var types: Dictionary = section.get("types", {}) as Dictionary
 	var placed: Dictionary = {}
-	for entry: Variant in (section.get("placements", []) as Array):
-		var spot: Dictionary = entry as Dictionary
-		var kind: StringName = StringName(spot.get("kind", ""))
+	for spot: Dictionary in Places.shared().strangers():
+		var kind: StringName = spot.get("kind", &"") as StringName
 		if not types.has(String(kind)):
 			continue
 		var row: Dictionary = types[String(kind)] as Dictionary
@@ -133,9 +151,8 @@ func _load_strangers(section: Dictionary) -> void:
 		npc.generic = true
 		npc.display_name = String(row.get("name", "A stranger"))
 		npc.role = String(row.get("role", ""))
-		npc.zone = StringName(spot.get("zone", ""))
-		var at: Array = spot.get("tile", [0, 0]) as Array
-		npc.tile = Vector2i(int(at[0]), int(at[1]))
+		npc.zone = spot.get("zone", WorldState.OVERWORLD) as StringName
+		npc.tile = _tile_for(spot)
 		npc.greeting = String(row.get("greeting", ""))
 		for alt_entry: Variant in (row.get("alt_greetings", []) as Array):
 			var alt: Dictionary = alt_entry as Dictionary

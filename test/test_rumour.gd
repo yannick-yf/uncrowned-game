@@ -13,10 +13,6 @@ extends TestCase
 ## — the trader says word came up the road, and never says it was you.
 
 
-## Standing at the counter of the first stall in the Harrowgate market.
-const AT_A_STALL: Vector2 = Vector2(146.5, 172.0)
-## Beside the Cairnwell trader, a hundred and twenty-six tiles away.
-const AT_THE_TRADER: Vector2 = Vector2(93.5, 60.0)
 
 const TRADER: StringName = &"trader@1"
 
@@ -63,7 +59,7 @@ func _days(sim: Sim, count: float) -> void:
 
 func test_there_is_something_to_steal_from() -> void:
 	var region: Region = Region.build_overworld()
-	assert_ne(region.nearest_stall(Vector2i(AT_A_STALL), CrimeRules.STALL_REACH), Region.NOWHERE,
+	assert_ne(region.nearest_stall(Vector2i(at_a_stall()), CrimeRules.STALL_REACH), Region.NOWHERE,
 		"a stall is within reach of the market")
 	assert_eq(region.nearest_stall(Region.BRINDLE, CrimeRules.STALL_REACH), Region.NOWHERE,
 		"and Brindle, being a ruin, has no market at all")
@@ -78,7 +74,7 @@ func test_a_theft_nobody_sees_did_not_happen() -> void:
 	var standing := sim.store(&"standing") as Standing
 	var rumours := sim.store(&"rumours") as Rumours
 
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(world.thefts, 1, "the theft happened — the fact is yours either way")
 	assert_eq(rumours.told, 0, "but there is no story, because there is nobody to tell it")
 	assert_eq(standing.in_town(&"harrowgate"), Standing.NEUTRAL,
@@ -91,10 +87,10 @@ func test_maddox_sees_it_and_harrowgate_turns() -> void:
 	var standing := sim.store(&"standing") as Standing
 	var rumours := sim.store(&"rumours") as Rumours
 
-	var seen: PackedStringArray = CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, AT_A_STALL)
+	var seen: PackedStringArray = CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, at_a_stall())
 	assert_true(seen.has("maddox"), "Maddox is standing two tiles away, %s" % str(seen))
 
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(rumours.told, 1, "one theft, one story")
 	assert_true(StandingRules.is_unwelcome(standing.in_town(&"harrowgate")),
 		"Harrowgate knows already: %.1f" % standing.in_town(&"harrowgate"))
@@ -105,7 +101,7 @@ func test_the_theft_moves_only_the_town_that_saw_it() -> void:
 	# against you the instant Maddox looked up, and nothing about that is legible.
 	var sim: Sim = _crime_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(standing.in_town(&"cairnwell"), Standing.NEUTRAL,
 		"Cairnwell is a hundred and twenty-six tiles away and has heard nothing")
 	assert_eq(standing.in_town(&"saltmarch"), Standing.NEUTRAL, "nor has Saltmarch")
@@ -115,7 +111,7 @@ func test_every_door_that_shuts_opens_another() -> void:
 	# §8's hard rule. A change with no counterpart is a morality meter.
 	var sim: Sim = _crime_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_true(standing.with_faction(DeedRules.FACTION_TOWNS) < 0.0,
 		"the towns think less of you")
 	assert_true(standing.with_faction(DeedRules.FACTION_UNDERWORLD) > 0.0,
@@ -128,7 +124,7 @@ func test_the_act_is_reported_at_the_moment_it_happens() -> void:
 	var sim: Sim = _crime_sim()
 	var world := sim.store(&"world") as WorldState
 	assert_eq(world.last_theft_step, -1, "nothing has happened yet")
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_true(world.last_theft_step >= 0, "and now something has")
 	assert_true(world.last_theft_seen > 0, "with somebody watching: %d" % world.last_theft_seen)
 
@@ -139,9 +135,9 @@ func test_a_stall_you_just_robbed_has_nothing_left_on_it() -> void:
 	var sim: Sim = _crime_sim()
 	var world := sim.store(&"world") as WorldState
 	var rumours := sim.store(&"rumours") as Rumours
-	_steal_at(sim, AT_A_STALL)
-	_steal_at(sim, AT_A_STALL)
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
+	_steal_at(sim, at_a_stall())
+	_steal_at(sim, at_a_stall())
 	assert_eq(world.thefts, 1, "one theft, however many times you pressed it")
 	assert_eq(rumours.told, 1, "and one story")
 
@@ -149,9 +145,9 @@ func test_a_stall_you_just_robbed_has_nothing_left_on_it() -> void:
 func test_the_stall_is_restocked_eventually() -> void:
 	var sim: Sim = _crime_sim()
 	var world := sim.store(&"world") as WorldState
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	sim.advance_world_ticks(CrimeRules.STALL_RESTOCK_TICKS + 1)
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(world.thefts, 2, "come back later and there is something on it again")
 
 
@@ -163,7 +159,7 @@ func test_a_story_spreads_as_far_as_the_next_town_and_stops() -> void:
 	# player walked, and the road cost nothing.
 	var sim: Sim = _crime_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 
 	var arrived_on: int = 0
 	for day: int in range(1, 6):
@@ -183,7 +179,7 @@ func test_a_story_spreads_as_far_as_the_next_town_and_stops() -> void:
 func test_a_story_moves_a_town_once_and_not_every_tick() -> void:
 	var sim: Sim = _crime_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	var after_the_crime: float = standing.in_town(&"harrowgate")
 	_days(sim, 4.0)
 	assert_eq(standing.in_town(&"harrowgate"), after_the_crime,
@@ -193,7 +189,7 @@ func test_a_story_moves_a_town_once_and_not_every_tick() -> void:
 func test_a_story_stops_being_worth_repeating() -> void:
 	var sim: Sim = _crime_sim()
 	var rumours := sim.store(&"rumours") as Rumours
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(rumours.live.size(), 1, "one story in the air")
 	_days(sim, CrimeRules.RUMOUR_RANGE / CrimeRules.RUMOUR_TILES_PER_DAY + 1.0)
 	assert_eq(rumours.live.size(), 0, "and eventually it is old news")
@@ -203,7 +199,7 @@ func test_a_story_stops_being_worth_repeating() -> void:
 
 func _talk_to_trader(sim: Sim) -> WorldState:
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = AT_THE_TRADER
+	world.player_pos = beside_npc(&"trader@1")
 	sim.submit(&"talk", {"npc": String(TRADER)})
 	sim.advance(2)
 	return world
@@ -234,7 +230,7 @@ func test_the_refusal_is_local_to_where_word_has_got() -> void:
 	# No carriers in this sim, so the story reaches a neighbour and stops, which is
 	# the sharpest version of "reputation has an address".
 	var sim: Sim = _crime_sim()
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	_days(sim, 3.0)
 	var world := sim.store(&"world") as WorldState
 	var ticked := sim.store(&"worldtick") as WorldTick
@@ -243,7 +239,7 @@ func test_the_refusal_is_local_to_where_word_has_got() -> void:
 	world.player_pos = Vector2(Region.MUSTER) + Vector2(0.5, 0.5)
 	assert_true(bool(DialogueRules.conditions(world, ticked, standing)[&"i_am_unwelcome_here"]),
 		"unwelcome at the camp, seventy tiles off")
-	world.player_pos = AT_THE_TRADER
+	world.player_pos = beside_npc(&"trader@1")
 	assert_false(bool(DialogueRules.conditions(world, ticked, standing)[&"i_am_unwelcome_here"]),
 		"but not in Cairnwell, which nobody has walked to with it")
 
@@ -267,7 +263,7 @@ func test_a_traveller_can_never_be_a_source() -> void:
 	assert_eq(road.walkers.size(), TravelRules.ON_THE_ROAD, "the road is in use")
 
 	# The Saltmarch stall, which no member of the cast stands near.
-	_steal_at(sim, Vector2(34.5, 149.0))
+	_steal_at(sim, at_a_stall(&"saltmarch"))
 	assert_eq(world.thefts, 1, "the theft happened")
 	assert_eq(rumours.told, 0, "and started nothing, however many people were on the road")
 
@@ -278,7 +274,7 @@ func test_a_traveller_never_acquires_an_opinion() -> void:
 	# table is how a system acquires rows nobody can account for.
 	var sim: Sim = _road_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	_days(sim, 1.0)
 	for who: StringName in standing.by_person.keys():
 		assert_false(String(who).begins_with("traveller"),
@@ -359,7 +355,7 @@ func test_the_word_and_the_refusal_can_never_disagree() -> void:
 func test_one_witnessed_theft_reads_as_unwelcome() -> void:
 	var sim: Sim = _crime_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(StandingRules.word_for(standing.in_town(&"harrowgate")), &"unwelcome",
 		"the first theft is legible the first time")
 
@@ -371,7 +367,7 @@ func test_the_word_travels_with_the_story_and_not_with_you() -> void:
 	# line of explanation.
 	var sim: Sim = _crime_sim()
 	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, AT_A_STALL)
+	_steal_at(sim, at_a_stall())
 	assert_eq(StandingRules.word_for(standing.in_town(&"harrowgate")), &"unwelcome")
 	assert_eq(StandingRules.word_for(standing.in_town(&"muster")), &"unknown",
 		"walk into the camp today and nobody there has heard")

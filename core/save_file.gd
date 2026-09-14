@@ -19,8 +19,19 @@ const PATH: String = "user://save.json"
 const VERSION: int = 1
 
 
+## Whether there is a save **for this world**. A run is its event log, and a log
+## replayed on another world walks into walls, so a save from the 2D map is no save
+## at all once the game plays on the baked world (M4, 2026-09-13). One written before
+## worlds had names is the 2D map's.
 static func exists() -> bool:
-	return FileAccess.file_exists(PATH)
+	if not FileAccess.file_exists(PATH):
+		return false
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	if not (parsed is Dictionary):
+		return false
+	var save: Dictionary = parsed as Dictionary
+	return int(save.get("version", 0)) == VERSION \
+		and String(save.get("world", Places.PROCEDURAL)) == Places.world_id()
 
 
 ## Write what happened. Only external events — a system's answers are recomputed,
@@ -31,6 +42,7 @@ static func write(sim: Sim) -> bool:
 		return false
 	file.store_string(JSON.stringify({
 		"version": VERSION,
+		"world": Places.world_id(),
 		"seed": sim.rng_seed,
 		"step": sim.step,
 		"events": sim.events.external_rows(),

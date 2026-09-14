@@ -81,7 +81,7 @@ func test_the_bloodless_route_finishes_the_game() -> void:
 	assert_eq(world.documents.size(), DocumentRules.all().size(), "the evidence is in hand")
 
 	for i: int in DocumentRules.all().size():
-		world.player_pos = Vector2(148.5, 173.0)
+		world.player_pos = in_town(&"harrowgate")
 		sim.submit(&"tell_town")
 		sim.advance(3)
 		sim.advance_world_ticks(90)

@@ -80,7 +80,7 @@ func test_the_packet_changes_when_the_world_does() -> void:
 	var before: String = _packet(sim, &"maddox")
 
 	var world := sim.store(&"world") as WorldState
-	world.player_pos = Vector2(146.5, 172.0)
+	world.player_pos = at_a_stall()
 	sim.submit(&"steal")
 	sim.advance(4)
 	assert_ne(_packet(sim, &"maddox"), before, "he watched you do it and the packet says so")

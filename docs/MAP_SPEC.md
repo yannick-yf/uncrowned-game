@@ -15,6 +15,16 @@
 > `docs/V1.md` and §4 of `SPECS.md`.
 >
 > `[DERIVED]` marks a value taken from the build that preceded it.
+>
+> **v3 (2026-09-13).** The map's target is now the 3D world in `prototypes/brindle_3d`,
+> baked into a 384 × 384 tile grid at 2 m per tile (`docs/MIGRATION_3D.md`). Measured
+> on that grid the same evening, with the kit standing in for the places he has not
+> built: **10 of 10** criteria pass — ratio 1.31, 65 s at 6 tiles/s, the river a
+> barrier by test, 175 tiles of wood on the shortcut. Every
+> criterion in §9 keeps its meaning and is measured against that grid; the tile
+> coordinates in this file describe the 2D map until the bake exists and are rewritten
+> when it does. §5's road ratio, §4's two crossings and §6's Thornwood rule are the
+> parts of the brief the 3D world does not yet meet.
 
 ---
 
@@ -202,7 +212,7 @@ An autonomous run is finished when all of these pass:
 | 3 | Both crossings reach dry land on both sides |
 | 4 | Damming both crossings makes Blackcairn unreachable |
 | 5 | Road ratio ≥ 1.3 |
-| 6 | Road travel Brindle → Blackcairn is 45–90 s at 6 tiles/sec |
+| 6 | Road travel Brindle → Blackcairn is 45–90 s at 6 tiles/sec — *on the 2D map. On the baked 3D grid the speed follows the workshop (Q51) and this band is re-measured and renegotiated with the map, not defended* |
 | 7 | The straight wild line crosses the Thornwood for ≥ N tiles |
 | 8 | Every zone has ≥ 1 landmark footprint in `core/` |
 | 9 | No footprint on road, crossing, or within 2.5 tiles of a zone centre |

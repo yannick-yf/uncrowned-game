@@ -79,6 +79,14 @@ var _sounded_line: String = ""
 ## The region, painted once into an image, because 56,000 `draw_rect` calls a frame
 ## is not a map screen, it is a slideshow.
 var _map_image: Texture2D = null
+## **The 3D window** (MIGRATION_3D §6, M2a), or null on the 2D map. The baked world is
+## seen in three dimensions — his ground, the pixel figures stood up on it — and this
+## node reads the same stores this screen does and places things. Everything else
+## here — the clock, the input, the HUD, the dialogue, the journal, the map, the
+## pause — is unchanged and shared: this screen is the bridge between the simulation
+## and whichever window is open. `UNCROWNED_VIEW=2d` keeps the flat view on the baked
+## world, for the map and for looking at the bake itself.
+var _three_d: World3d = null
 @onready var _hud: CanvasLayer = $HUD
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
@@ -146,6 +154,44 @@ func _ready() -> void:
 			_mine.decide(StringName(zone.strip_edges()), FactionRules.OPPOSITION, _sim.tick)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
+	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
+		var landscape: Dictionary = RegionBake.read_landscape()
+		if landscape.is_empty():
+			push_error("the baked world is on but his landscape is not at %s; showing it flat" % RegionBake.LANDSCAPE)
+		else:
+			_three_d = World3d.new()
+			_three_d.name = "World3d"
+			add_child(_three_d)
+			_three_d.build(_world.region(), landscape, _art, _sim)
+
+
+## What the 3D window needs to place things this frame, read from the same stores this
+## screen draws from. Built here so the rules the 2D drawing applies — tents from
+## army strength, the crowd from the deserters, the free-state kits, the castle's
+## reading — are applied once, by one reader.
+func _frame(eye: Vector2) -> Dictionary:
+	var tents: int = _tents_standing()
+	if _is_free(&"muster"):
+		tents = maxi(1, tents / 2)
+	return {
+		"player": _draw_position(),
+		"facing": _world.player_facing,
+		"camera": eye,
+		"tents": tents,
+		"crowd": _crowd_size(),
+		"free": {
+			&"wide_acres": _is_free(&"wide_acres"), &"cairnwell": _is_free(&"cairnwell"),
+			&"cinderworks": _is_free(&"cinderworks"), &"muster": _is_free(&"muster"),
+		},
+		"shuttered": CastleRules.wealth(_ticked) == CastleRules.SHUTTERED,
+		"escort": _ticked.kings_escort(),
+		"extra_guards": CastleRules.extra_guards(CastleRules.instability(_mine, _sim.tick)),
+		# §8's immediate register: who would see the act in front of you, when there
+		# is one — the same rule `_draw_witnesses` applies to the 2D marks.
+		"witnesses": CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos)
+			if _can_steal() or _can_give_back() or _can_warn() else [],
+		"now": _real_seconds,
+	}
 
 
 ## **M — the map of Erileo.**
@@ -234,7 +280,14 @@ func _process(delta: float) -> void:
 	_prompt.visible = not _journal_open
 	# Placed even while paused, so the first frame of a run that opens paused is not
 	# a view of the top-left corner of the map.
-	position = (get_viewport_rect().size * 0.5 - _camera_at(delta) * float(TILE)).round()
+	var eye: Vector2 = _camera_at(delta)
+	if _three_d != null:
+		# The 3D lens does the following; this canvas stays put, so the overlays
+		# drawn at `-position` — the map, the pause — land on the screen.
+		position = Vector2.ZERO
+		_three_d.sync(_frame(eye), delta)
+	else:
+		position = (get_viewport_rect().size * 0.5 - eye * float(TILE)).round()
 	queue_redraw()
 
 
@@ -616,6 +669,13 @@ func _draw_position() -> Vector2:
 
 func _draw() -> void:
 	if _world == null:
+		return
+	if _three_d != null:
+		# The world is the 3D window's; this canvas draws only what lies over it.
+		if _map_open:
+			_draw_map()
+		if _paused != null:
+			_draw_paused()
 		return
 	var region: Region = _world.region()
 	var centre: Vector2 = _draw_position()

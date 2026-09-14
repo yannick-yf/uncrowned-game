@@ -29,6 +29,15 @@ truth on *what the game is*. For *what currently exists* — which is the questi
 have if you have just arrived — read `docs/V1.md` first; it is two pages. `CLAUDE.md`
 wins on how we work. Finished working logs and the original raw notes are in
 `docs/history/` and are never authoritative.
+**v3: the game plays on the world baked from the Brindle 3D workshop** (decided
+2026-09-13, the cut-over on 2026-09-14) — a stylised 3D landscape walked by 2D
+characters, `prototypes/brindle_3d/`, the brother's. `docs/MIGRATION_3D.md` is the plan
+and the record of what each phase delivered; `docs/V3.md` says what the game is now.
+The 2D map v1 and v2 were built on is reached with `UNCROWNED_WORLD=procedural`. §13's
+art direction below is amended accordingly; nothing about what the game *is* changes.
+Two claims below are **debts** the baked world does not yet meet and the suite prints
+by name: the furnaces in Brindle's first frame (§4) and the 45–90 s road band (§4) at
+the workshop's walking pace.
 
 ---
 
@@ -448,6 +457,15 @@ and put it in front of him where it cannot be denied.
 > east, a region crossable in a couple of minutes on a straight line. Names are
 > placeholders — change freely.
 
+> **v3 (2026-09-13).** The map's *target* is now the 3D world in `prototypes/brindle_3d`:
+> 768 × 768 m, a heightmap at 2 m, water, forests, Brindle in ruins, built by Yannick's
+> brother. Everything this section says about **what the map contains** — eight places,
+> the road's dog-leg and its ratio, the bridge and the ford, the Thornwood across the
+> shortcut, the works in Brindle's first frame — stays true and becomes the brief for
+> that world; `docs/MIGRATION_3D.md` §5 lists what it still lacks. The simulation keeps
+> its tile grid: the 3D data is **baked** into a `Region` (2 m per tile, 384 × 384) and
+> the tile figures below are read against that grid once it exists.
+
 ### Bounds and scale
 
 One region, bounded on all four sides so the playable area needs no invisible walls:
@@ -840,7 +858,16 @@ that was tuned and approved, so every other surface is a penalty. Were the wild
 > walk around in. Cleared ground and the clearing are not in the table and walk at 1.00
 > until it matters.
 
-> **Terrain speeds are currently off** (2026-09-11). Everything walkable moves at
+> **Terrain speeds are off again, for now** (Yannick, 2026-09-14, walking his brother's
+> map): *the player is slow off the path — that is useless, remove it.* At the baked
+> world's 2.5 tiles a second, open country at 0.65 was a crawl, and the 2D game's layers
+> come off one by one while the 3D world is tested (MIGRATION_3D §9, decision 8).
+> `Region.TERRAIN_SLOWS_YOU` is `false`; the table stands; the four tests that claim the
+> wild's price in time say `OFF` in the run rather than pretending to hold. §4's argument
+> — speed against witnesses — is suspended, not withdrawn: the wild is unwatched and, for
+> now, no slower.
+
+> **Terrain speeds were first switched off** (2026-09-11). Everything walkable moves at
 > the road's 6 tiles/sec: a forest should be dangerous, not tiring, and trudging
 > was making the interesting route the annoying one. The table above is kept rather
 > than deleted — `Region.TERRAIN_SLOWS_YOU` turns it back on in one word, with the
@@ -2896,12 +2923,27 @@ Everything else: TBD.
 
 ## 13. Art direction
 
-**Target look:** *The Legend of Zelda: Echoes of Wisdom*.
+**Target look (v3, decided 2026-09-13):** a **stylised 3D landscape walked by 2D
+characters** — the Brindle 3D workshop in `prototypes/brindle_3d/` is the reference:
+painterly terrain built from height and water data, individually collapsed ruins,
+forests as instanced meshes, a billboarded sprite on winding paths, an orthographic
+camera tilted at about 48°. The map and the graphics are the brother's; the bridge to
+the simulation is ours; `docs/MIGRATION_3D.md` is the plan, phases M0–M5.
 
-**Starting point:** *A Link to the Past* — top-down, grid-based, readable.
+> **What this retires, kept as history.** v1 and v2 targeted *The Legend of Zelda:
+> Echoes of Wisdom* from *A Link to the Past*: top-down, grid-based, one approved pixel
+> pack and a 340-colour palette enforced by a validator. That was right for a game that
+> had to be pleasant before it was pretty, and every rule below that says *pack* or
+> *palette* describes the 2D window, which survives until the cut-over (M4) as the play
+> screen and after it as the map screen and the debug tools' home. **The rule under the
+> rules survives the change**: one asset family, so nothing looks borrowed, held by a
+> machine — the palette check becomes a provenance-and-licence manifest the validator
+> refuses to ship without (MIGRATION_3D §8). Mixing artists stays the mark of an amateur
+> game whether the artists work in pixels or in meshes.
 
-**Camera:** top-down in the overworld; side-on for the combat screen. Two visual
-registers, deliberately.
+**Camera:** orthographic, tilted, following the player, in the 3D world; the combat
+screen, when it exists, is still its own register (§10). The 2D top-down camera is the
+map screen's.
 
 **Polish is a version-1 requirement, not a version-3 one.** The first playable
 version has to be pleasant enough that Yannick wants to play it.
@@ -3163,7 +3205,7 @@ is audible immediately even to people who could not say why.
 
 | | |
 |---|---|
-| **Music** | one track for where you are. `MUSIC_AT` by zone, `MUSIC_ON` by terrain when you are in none, and the travelling track for everywhere else |
+| **Music** | **off for now** (Yannick, 2026-09-14; `Sound.MUSIC`, one word) — one track for where you are. `MUSIC_AT` by zone, `MUSIC_ON` by terrain when you are in none, and the travelling track for everywhere else |
 | **Ambience** | one loop under it, by terrain: wind in the wood, water at the river and the marsh, waves at the coast. A town is silent underneath, because a town has the music |
 | **Cues** | one-shots named by *what happened* — `cue(&"refused")`, `cue(&"seen")` — so a caller never learns which file that is |
 
@@ -3630,6 +3672,66 @@ that says what v2 is, and `docs/history/V2_INTENT.md` is what it was written fro
 What comes next is not in this document: §13 expects a v3 art pass, and combat is the
 oldest debt in the project.
 
+### v3 — the 3D world (decided 2026-09-13, planned in `docs/MIGRATION_3D.md`)
+
+Six phases, M0–M5: decide and brief; **bake** the workshop's terrain, water, paint and
+placements into a `Region` so every rule and every test keeps working on a grid; a
+**3D window** that owns the `Sim` as `main.gd` does, submits intents and places
+billboards where the simulation says; **parity** with the v2 screenshot set, including a
+2D sprite family for the cast; **cut-over**, with the 2D view kept as the map screen;
+**fill** — the five places the world still lacks or only sketches. The proofs, the data
+contract, the decisions taken on 2026-09-13 and the two defaults that stand until
+somebody objects are in that file, not here. Combat remains outside it.
+
+- ✅ **M1a — anchors** (2026-09-13). Where everything stands is data: `content/places.json`
+  holds the eight sites, the clearing, the crossings and an anchor for every person,
+  fire, stall and paper; `Region.resolve()` turns an anchor into a tile; the cast sheets
+  carry no coordinate; `test_anchors` names what resolves nowhere. Checked tile for tile
+  against the old world: nobody moved, and thirteen campfires moved one tile onto the
+  tile their reason names — `_nearest_open` had never tested the tile it was given.
+- ✅ **M1b — the bake** (2026-09-13). `tools/bake_region.gd` turns the workshop's data and
+  `content/bake_brief.json` into `content/region.json`, deterministically; `Region.load_baked()`
+  reads it; `UNCROWNED_WORLD=baked` selects the world for a process. First measurement on
+  his map: MAP_SPEC 8 of 10 (ratio 1.31, road 64.6 s, the river a barrier by test); the
+  whole suite 85 of 424 failing, all landmarks and wood the scaffold kit (M1c) owes. Four
+  roads of his cross water without a bridge; the bake prints where (MIGRATION_3D §5).
+- ✅ **M1c — scaffolds and the contract** (2026-09-13). The settlement stamps became a kit
+  (`Region.scaffold_place`) the bake stands on his terrain for every place he has not
+  built; the brief plants the Thornwood, the fields and the marsh; the road follows his
+  road tiles; the suites say where they stand in the world's terms and carry no tile;
+  a claim the map owes is a **debt**, printed and counted apart. **Both worlds green:**
+  424 tests, 0 failed on each, 1 owed by the map (the works in Brindle's first frame).
+  MAP_SPEC 10 of 10 on the baked world; road 69 s, wild 124 s, attuned 96 s there.
+- ✅ **M2a — our window over his data** (2026-09-13). `view/world3d.gd`: his heights, water
+  and paint as meshes coloured by the baked terrain (the fallback for a clone without his
+  scenes); his camera in numbers; the fairy as light. *The pixel figures, props and trees
+  it first stood up as billboards were taken out on 2026-09-14 — see §20.* The play screen is
+  the bridge and is otherwise unchanged; the window writes nothing back. Nothing of his
+  moved (decision 6, MIGRATION_3D §9). Photographed at the clearing, in Harrowgate, in
+  his Brindle, at the castle gate, with the journal and the map over it.
+- ✅ **M2b — his scenes in our window** (2026-09-13). `tools/vendor_workshop.gd` copies his
+  project's folders into `view3d/workshop/` with their `res://` paths repointed —
+  generated, never committed, run after each delivery and by CI. The window adopts his map
+  plate (terrain, water, relief, Brindle, forests, mine, sun) and lays the simulation's
+  ground over it as a part-transparent skin; the brief's wood grows everywhere but under
+  his trees; his buildings are his meshes. His project untouched.
+- ✅ **M3a — the window's own parity** (2026-09-13). What the 3D window shows that needs
+  none of his art: the marks over whoever can see you, embers over fires and kilns and
+  cold kilns for a freed works, the fairy's breathing glow, the occlusion fade, and every
+  free-state and castle reading the 2D window draws. His props, his carts and the 25
+  faces in his style are M3b and his.
+- ✅ **M4 — cut-over** (2026-09-14). The baked world is the game; the 2D map is
+  `UNCROWNED_WORLD=procedural`, kept for its tests. Walking follows the workshop: 2.5
+  tiles a second on the baked world, six on the 2D map, read from the world's data. A
+  save remembers its world. Measured at his pace: the King's Road 167 s, the wild 297 s,
+  the attuned wild 229 s — the road is still the fast way. §4's 45–90 s band becomes the
+  second debt. `docs/V3.md` written.
+- ◐ **M3b — his art**, begun (2026-09-14). The kit's houses, barns, wells, barrels and fences
+  stand as pieces of his library where it has the piece (`World3d.HIS_KIT`); every file
+  of his library is checked against his provenance manifest by name. The rest of M3b —
+  kilns, tents, boats, the keep, the stalls, the carts, the free-state scenes and the 25
+  faces — is his to draw.
+
 ---
 
 ## 19. Open questions
@@ -3717,6 +3819,9 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | Q49 | **Does the raising survive being said out loud?** The church is against magic, the player was raised by it, and Route C's climax happens in that church before its congregation. Whether the congregation can learn what the player is — and what happens if they do — is the most interesting consequence of Q47 and is unwritten | §5, §6 | Route C's cost |
 | Q34 | ~~**Bookkeeping.** The header's populated-sections list is stale; §20 omits decisions taken in the body; the repo carries an empty tracked `test.py` and none of the declared directories.~~ — swept 2026-09-13, at the end of v1: the header says v1 rather than draft, §20 gained the seventeen decisions that had been recorded only in a working log, §19 closed the questions the code had already answered, and the directories all exist and are full. **It came back three times**, which is the real finding: a document that is edited faster than it is re-read goes stale in the places nobody looks, and only a pass with a date on it fixes that. §17's "Settled" rows inside 🟡 sections are still there and are still the same complaint | header, §17, §20, repo | Closed; §17 outstanding |
 | Q50 | ~~**Attunement's combat half has nothing to point at.**~~ — answered 2026-09-13: **the wood does not slow you.** Time is the wild's price now, and an attuned character does not pay all of it, at Attunement 3 or more. The same shape as before — a cost you do not pay — pointed at the new price. Measured: 0.80 in the wood, about 3 s on the shipped map's shortcut, more as the forest grows | §11, §4 | Closed |
+| Q51 | ~~**Metres per tile and walking speed on the 3D world.**~~ — answered 2026-09-13: **walking follows the workshop.** 2 m per tile; the simulation's speed is derived from his metres per second (2.5 tiles/s at today's 5 m/s), and §4's 45–90 s target is re-measured against the baked grid and renegotiated with the map rather than defended (MIGRATION_3D §4) | §4, §13 | Closed |
+| Q52 | **The works beside Brindle**, still open; ~~the sawmill village~~ — **goes** (Yannick, 2026-09-13): §3, wood gets no town of its own. The works' adjacency to Brindle is the brother's call with Yannick; until the map settles it the bake scaffolds the works beside Brindle, because the first frame is not negotiable (MIGRATION_3D §5, §9) | §4, §3 | The map brief (M0) |
+| Q53 | **The character sprite family** — decided 2026-09-14: **no pixel figure in the 3D world.** Every person is the brother's traveller sprite until he draws the 25 faces and the strangers in his style, and twenty-five people with one face is the debt he settles, not a pack of pixel faces from the 2D game (MIGRATION_3D §9, decision 4 revised) | §13, §6 | The faces, his |
 
 ---
 
@@ -3974,6 +4079,13 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **The castle's rich reading is a question Garrick answers, not a greeting** | A greeting, like the other two | The castle is rich from minute one, so a greeting on it never lifts and hides the speaker's disposition band — the coverage test caught it. Unstable and poor are false at the start and stay greetings |
 | 2026-09-13 | **The wall's extra guards are drawn from the reading and never fought; the escort stays the number the endings read** | Raising the escort in a crisis | The escort is derived from army strength and read by two endings; a crisis that added men to it would make Blackcairn's face an input to the ending, which §4 forbids. The wall looks fuller; the door is no harder |
 | 2026-09-13 | **The journal's kingdom page is the third page and carries no number** | Folding it into the second page; figures for hardship | The second page is the endings' readings and the kingdom is not one. Words for the places, the people and the castle, with whose doing beside each, is what §15 asked for and a test holds the digits out |
+| 2026-09-13 | **The game's world moves onto the Brindle 3D workshop: a stylised 3D landscape walked by 2D characters.** The simulation keeps its grid; the 3D data is baked into a `Region`; a 3D window reads the sim and never moves the player | Staying top-down and commissioning a pixel pack (the v2 §13 plan); adopting the workshop as-is with its physics character; a hybrid where the sim reads metres | Yannick's decision, on the workshop's renders. The architecture was built for exactly this — `core/` never imports `view/`, the view is replaceable — so the cost is a bake and a window, not a rewrite. Adopting the physics controller would put the player's position outside `Sim.advance()` and end determinism and the save; reading metres in the sim would rewrite every rule and test for no gain. The plan is `docs/MIGRATION_3D.md` |
+| 2026-09-13 | **Walking speed follows the workshop, and the simulation's speed becomes derived from metres per second and metres per tile** | Keeping 6 tiles/s (12 m/s at 2 m per tile); shrinking the world to keep 45 s | Yannick's call. A 1.3 m sprite covering 12 m/s reads as running, and the world is his to size. The road target is re-measured against the baked grid rather than defended; Pillar 1 holds at two minutes |
+| 2026-09-13 | **His 3D project comes into ours as data first: the window is built from his files, his scenes follow at M2b** | Moving his 263 files under the root now; vendoring a rewritten copy now | Yannick's call (MIGRATION_3D §9, decision 6). The map will be his for months and his branch is in flight: a move rewrites his `res://` paths and conflicts with everything he has open, a copy is 28 MB twice. His heights, water and paint are files the window can read where they are, and the pixel figures stood up on that ground are the transition §13 already accepted. His meshes and shaders wait for the step that copies and rewrites, which can be re-run each time he delivers |
+| 2026-09-14 | **Nothing of the 2D pack appears in the 3D world — not even as a placeholder.** Every person is the brother's traveller sprite until he draws the cast; what his library lacks is a plain block in his rock paint; the woods and roads the simulation has and he has not are not drawn | The day-old default: the pixel figures riding his ground as a listed transition, with pixel trees, stalls and fires where his library had nothing | Yannick, on launching the game and seeing 2D assets on his brother's map: *the assets and the graphics are my brother's; nothing of ours is kept.* A placeholder that looks like art is art nobody chose; a grey block the size of a kiln is visibly a gap, and the gap is the brother's list (MIGRATION_3D §9, decision 4 revised) |
+| 2026-09-14 | **What stops you must be seen.** On the baked world the simulation refuses a tile only where the player can see why: his water, his rock at 0.85 of the paint and above, his meshes, or a plain block of ours. Rock at a half is walkable again (6,169 tiles), the kit's thicket ring round the clearing is left open and owed as a DEBT until he plants it, a footprint shrinks to the piece his library stands for it, the castle's ramparts stand as blocks; and the lens zooms with his camera's numbers (14–48 m, two at a time) | Keeping the 2D map's passability and drawing a ring of trees and hedges of ours to show it; keeping rock at a half | Yannick walked into walls nobody could see, on ground his brother's own character climbs, and asked whether something was broken. Nothing was: four 2D-era rules stopped him with things the 3D window does not draw. Drawing them ourselves is decision 4 reversed; opening them and naming the debt keeps the ring his to plant (MIGRATION_3D §9, decision 7) |
+| 2026-09-14 | **The 2D game's layers come off while the 3D world is tested — first the wild's price in time and the music.** `Region.TERRAIN_SLOWS_YOU` and `Sound.MUSIC` are `false`; the speed table and the track tables stand; a test that claims what a switch turns off says `OFF` in the run (`TestCase.off`), counted apart like a debt | Deleting the speed table and `view/sound.gd`; keeping speeds on and retuning the table for 2.5 tiles a second | Yannick, walking his brother's map: *the player is slow off the path — that is useless, remove it; remove the music as well, for now.* At his pace the wild was a crawl, and the score is the 2D pack's. A switch is one word each way and the run says what is off; a deletion is a rewrite later and a suite that quietly stops claiming anything |
+| 2026-09-13 | **Positions are anchors, never coordinates; scaffolds fill what the map has not built; the contract is tested by name** | Hand-placing content on the 3D map; waiting for the map to finish; a coordinate table per map version | The map will take time and moves as it grows. Content that names *what it stands next to* survives every move; a placeholder per missing place keeps every system and test working from the first bake; and a test that fails naming the missing anchor turns a broken merge into a sentence. This is the whole answer to working in parallel (MIGRATION_3D §6.2) |
 
 ---
 

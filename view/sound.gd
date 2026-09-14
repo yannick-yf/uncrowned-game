@@ -26,6 +26,12 @@ extends Node
 
 const PACK: String = "res://assets/NinjaAdventure/Ninja Adventure - Asset Pack/Audio"
 
+## **Music is off for now (Yannick, 2026-09-14):** *remove the music as well.* The tracks
+## are the 2D pack's, and the 2D game's layers come off one by one while his brother's
+## world is tested (MIGRATION_3D §9, decision 8). The tables below stand, the ambience
+## and the cues still play, and one word turns the score back on.
+const MUSIC: bool = false
+
 ## Where you are, and what it sounds like.
 ##
 ## The pack's titles do half the work: there is a track called *Clearing* and a track
@@ -246,7 +252,7 @@ static func now_playing() -> String:
 
 
 func _start(track: String) -> void:
-	if track == _playing or track.is_empty():
+	if not MUSIC or track == _playing or track.is_empty():
 		return
 	var now: float = float(Time.get_ticks_msec()) * 0.001
 	# A place is not allowed to be left before it has been arrived in. Without this,

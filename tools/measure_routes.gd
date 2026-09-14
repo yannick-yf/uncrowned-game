@@ -15,6 +15,8 @@ func _initialize() -> void:
 	_report("the King's Road", Region.road_waypoints(), false)
 	_report("the wild", _wild_line(), false)
 	_report("the wild, attuned", _wild_line(), true)
+	if not Region.TERRAIN_SLOWS_YOU:
+		print("(terrain speeds are off — Region.TERRAIN_SLOWS_YOU, 2026-09-14 — so the wild costs the time of its length and no more)")
 	quit(0)
 
 
@@ -45,6 +47,16 @@ func _report(label: String, route: Array[Vector2i], attuned: bool) -> void:
 	var travelled: float = 0.0
 	var last: Vector2 = world.player_pos
 	var deadline: int = int(400.0 * float(Sim.STEPS_PER_REAL_SECOND))
+
+	# Brindle is not on the King's Road: it is reached by its own track, which on the
+	# baked world is his road north to Harrowgate. Find the line's first point on foot,
+	# and count that walk, because both ways start in Brindle.
+	var approach: Array[Vector2i] = []
+	if not route.is_empty():
+		for point: Vector2 in Navigation.waypoints(world.region(), world.player_tile(), route[0]):
+			approach.append(Vector2i(point.floor()))
+	approach.append_array(route)
+	route = approach
 
 	for point: Vector2i in route:
 		# The king stands at the end of both routes and is not what is being
