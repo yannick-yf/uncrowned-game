@@ -101,12 +101,7 @@ func _spend(by: int) -> void:
 ## dying before the first rest would reload that one — a player would start a new
 ## game, walk into the wood, die, and find themselves in somebody else's afternoon.
 func _begin() -> void:
-	var sim: Sim = Game.build()
-	var data: Dictionary = {}
-	for what: StringName in TraitRules.ALL:
-		data[String(what)] = int(_levels[what])
-	sim.submit(&"create_character", data)
-	sim.advance(1)
+	var sim: Sim = Game.begin_run(_levels)
 	SaveFile.write(sim)
 	chose.emit(&"play", sim)
 

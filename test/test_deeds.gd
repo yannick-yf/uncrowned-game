@@ -11,17 +11,6 @@ extends TestCase
 ## a deed, the people near enough to witness it, a story that may travel, and
 ## standing that moves as it arrives.
 
-const AT_A_STALL: Vector2 = Vector2(146.5, 172.0)
-## In the Harrowgate market with Maddox and Bell in earshot, which is what a
-## warning needs and a theft does not.
-const IN_HARROWGATE: Vector2 = Vector2(148.5, 173.0)
-## Inside Harrowgate's bounds, in the empty north-east corner of it, with every
-## one of the five more than nine tiles away. Verified rather than assumed: the
-## first version of this constant sat on the open road, where there is no town
-## either, so the test passed without ever exercising the rule it was named for.
-const EMPTY_CORNER_OF_HARROWGATE: Vector2 = Vector2(168.5, 160.5)
-## Open road between towns — no town, and nobody.
-const ALONE_ON_THE_ROAD: Vector2 = Vector2(200.5, 168.5)
 
 
 func _deed_sim(cast: Cast = Cast.shared()) -> Sim:
@@ -93,32 +82,32 @@ func test_you_cannot_tell_an_empty_street_anything() -> void:
 	var world := sim.store(&"world") as WorldState
 	var standing := sim.store(&"standing") as Standing
 	var cast := sim.store(&"cast") as Cast
-	assert_true(world.region().zone_at(Vector2i(EMPTY_CORNER_OF_HARROWGATE)) == &"harrowgate",
+	assert_true(world.region().zone_at(Vector2i(empty_corner_of(&"harrowgate"))) == &"harrowgate",
 		"the spot is inside the town, so only the audience rule can refuse it")
 	assert_eq(CrimeRules.witnesses_to(
-		cast, WorldState.OVERWORLD, EMPTY_CORNER_OF_HARROWGATE).size(), 0,
+		cast, WorldState.OVERWORLD, empty_corner_of(&"harrowgate")).size(), 0,
 		"and there is nobody standing in it")
 
-	_act(sim, EMPTY_CORNER_OF_HARROWGATE, &"tell_town")
+	_act(sim, empty_corner_of(&"harrowgate"), &"tell_town")
 	assert_eq(world.fraud_told_to, &"", "nothing was told, so nothing was spent")
 	assert_eq(standing.in_town(&"harrowgate"), Standing.NEUTRAL, "and nobody's opinion moved")
 
 	# The control: the same act, the same town, six tiles away where Maddox is.
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_eq(world.fraud_told_to, &"harrowgate", "with an audience, it lands")
 
 
 func test_the_countryside_is_not_a_town() -> void:
 	var sim: Sim = _deed_sim()
 	var world := sim.store(&"world") as WorldState
-	_act(sim, ALONE_ON_THE_ROAD, &"tell_town")
+	_act(sim, alone_on_the_road(), &"tell_town")
 	assert_eq(world.fraud_told_to, &"", "there is nobody on the King's Road to tell")
 
 
 func test_warning_harrowgate_makes_you_welcome_there() -> void:
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_eq(StandingRules.word_for(standing.in_town(&"harrowgate")), &"welcome",
 		"the band Q38 said was unreachable: %.1f" % standing.in_town(&"harrowgate"))
 
@@ -126,7 +115,7 @@ func test_warning_harrowgate_makes_you_welcome_there() -> void:
 func test_warning_a_town_is_sedition_somewhere_else() -> void:
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_true(standing.with_faction(DeedRules.FACTION_TOWNS) > 0.0,
 		"the towns are glad to have been told")
 	assert_true(standing.with_faction(DeedRules.FACTION_CROWN) < 0.0,
@@ -136,7 +125,7 @@ func test_warning_a_town_is_sedition_somewhere_else() -> void:
 func test_the_army_keeps_its_men() -> void:
 	var sim: Sim = _deed_sim()
 	var ticked := sim.store(&"worldtick") as WorldTick
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	_days(sim, 5.0)
 	assert_eq(ticked.army_strength, 100.0,
 		"you spent the fraud on the town, so the Muster never heard it")
@@ -145,7 +134,7 @@ func test_the_army_keeps_its_men() -> void:
 func test_word_of_the_warning_travels_like_any_other_story() -> void:
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_eq(standing.in_town(&"muster"), Standing.NEUTRAL, "the camp has not heard yet")
 	_days(sim, 3.0)
 	assert_true(standing.in_town(&"muster") > 0.0,
@@ -158,7 +147,7 @@ func test_the_fraud_can_be_told_once() -> void:
 	var sim: Sim = _deed_sim()
 	var world := sim.store(&"world") as WorldState
 	var ticked := sim.store(&"worldtick") as WorldTick
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_eq(world.fraud_told_to, &"harrowgate", "spent, and on the town")
 
 	# Walk to the camp and try to spend it again.
@@ -174,7 +163,7 @@ func test_exposing_at_the_muster_spends_it_too() -> void:
 	_act(sim, Vector2(Region.MUSTER) + Vector2(0.5, 0.5), &"expose_fraud")
 	assert_true(world.pay_fraud_exposed, "the men heard it")
 
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_eq(world.fraud_told_to, &"muster", "and there is no town left to warn")
 	assert_eq(standing.in_town(&"harrowgate"), Standing.NEUTRAL, "so Harrowgate owes you nothing")
 
@@ -184,7 +173,7 @@ func test_the_knowing_is_never_spent_only_the_telling() -> void:
 	# Invariants 6 and 7 are claims about reaching a fact, so nothing here may
 	# remove one.
 	var sim: Sim = _deed_sim()
-	_act(sim, IN_HARROWGATE, &"tell_town")
+	_act(sim, in_town(&"harrowgate"), &"tell_town")
 	assert_true(sim.facts.has(ArmyRules.FACT_PAY_FRAUD),
 		"the fact stays in the fact base forever")
 
@@ -221,12 +210,12 @@ func test_a_witness_thinks_worse_of_you_than_the_neighbours_who_heard() -> void:
 	var sim: Sim = _deed_sim()
 	var cast := sim.store(&"cast") as Cast
 	var standing := sim.store(&"standing") as Standing
-	assert_true(CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, AT_A_STALL).has("maddox"),
+	assert_true(CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, at_a_stall()).has("maddox"),
 		"Maddox saw it")
-	assert_false(CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, AT_A_STALL).has("ossa"),
+	assert_false(CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, at_a_stall()).has("ossa"),
 		"and Ossa, ten tiles off, did not")
 
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	assert_true(standing.with_person(&"maddox") < standing.with_person(&"ossa"),
 		"seeing it is worse than hearing it: maddox %.1f, ossa %.1f"
 			% [standing.with_person(&"maddox"), standing.with_person(&"ossa")])
@@ -239,7 +228,7 @@ func test_nobody_is_counted_against_you_twice_for_one_deed() -> void:
 	# and the town's hit for the same theft.
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	assert_eq(standing.with_person(&"maddox"), DeedRules.witness_effect(DeedRules.DEED_THEFT),
 		"exactly what one pair of eyes is worth, and not that plus the hearsay")
 
@@ -252,7 +241,7 @@ func test_ossa_stops_telling_you_things() -> void:
 	assert_true(before.has("ask_why"), "she will tell a stranger why the men run")
 	assert_true(before.has("ask_kell"), "and hint at the one she remembers")
 
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	var after: Array[String] = _talk_to(sim, &"ossa")
 	assert_false(after.has("ask_why"), "not any more")
 	assert_false(after.has("ask_kell"), "nor that")
@@ -263,7 +252,7 @@ func test_what_ossa_knows_is_still_reachable() -> void:
 	# Invariant 7, at the level of a conversation rather than a death. Closing a
 	# source is the design working; closing the last one is a bug.
 	var sim: Sim = _deed_sim()
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	var garrick: Array[String] = _talk_to(sim, &"garrick")
 	assert_true(garrick.has("ask_muster"),
 		"Garrick teaches the same fact and nothing gates him")
@@ -272,9 +261,9 @@ func test_what_ossa_knows_is_still_reachable() -> void:
 func test_giving_it_back_in_front_of_them_is_forgiven() -> void:
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	var after_the_theft: float = standing.with_person(&"maddox")
-	_act(sim, AT_A_STALL, &"give_back")
+	_act(sim, at_a_stall(), &"give_back")
 	assert_true(standing.with_person(&"maddox") > after_the_theft,
 		"Maddox watched you put it back")
 	assert_false(StandingRules.is_unwelcome(standing.with_person(&"maddox")),
@@ -286,8 +275,8 @@ func test_giving_it_back_in_front_of_them_is_forgiven() -> void:
 func test_you_can_only_put_it_back_where_you_took_it() -> void:
 	var sim: Sim = _deed_sim()
 	var world := sim.store(&"world") as WorldState
-	assert_false(world.can_give_back(Vector2i(146, 171)), "you are carrying nothing")
-	_act(sim, AT_A_STALL, &"steal")
+	assert_false(world.can_give_back(Vector2i(at_a_stall())), "you are carrying nothing")
+	_act(sim, at_a_stall(), &"steal")
 	assert_eq(world.carrying_stolen, 1, "and now you are carrying something")
 	assert_true(world.can_give_back(world.stolen_from), "the stall you took it from")
 	assert_false(world.can_give_back(Region.HARROWGATE + Vector2i(4, -3)),
@@ -298,9 +287,9 @@ func test_giving_it_back_repairs_the_place() -> void:
 	var sim: Sim = _deed_sim()
 	var world := sim.store(&"world") as WorldState
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	var after_the_theft: float = standing.in_town(&"harrowgate")
-	_act(sim, AT_A_STALL, &"give_back")
+	_act(sim, at_a_stall(), &"give_back")
 
 	assert_eq(world.carrying_stolen, 0, "your hands are empty")
 	assert_true(standing.in_town(&"harrowgate") > after_the_theft,
@@ -312,8 +301,8 @@ func test_giving_it_back_repairs_the_place() -> void:
 func test_giving_it_back_costs_more_than_taking_it_gained() -> void:
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, AT_A_STALL, &"steal")
-	_act(sim, AT_A_STALL, &"give_back")
+	_act(sim, at_a_stall(), &"steal")
+	_act(sim, at_a_stall(), &"give_back")
 	assert_true(standing.with_faction(DeedRules.FACTION_UNDERWORLD) < 0.0,
 		"a thief who gives things back is no use to anybody: %.1f"
 			% standing.with_faction(DeedRules.FACTION_UNDERWORLD))
@@ -324,18 +313,29 @@ func test_giving_it_back_cannot_catch_the_story() -> void:
 	# already walking toward the next town keeps walking.
 	var sim: Sim = _deed_sim()
 	var standing := sim.store(&"standing") as Standing
-	_act(sim, AT_A_STALL, &"steal")
-	_act(sim, AT_A_STALL, &"give_back")
+	_act(sim, at_a_stall(), &"steal")
+	_act(sim, at_a_stall(), &"give_back")
 	_days(sim, 3.0)
-	assert_true(StandingRules.is_unwelcome(standing.in_town(&"wide_acres")),
-		"the next town heard that you stole and will never hear that you gave it back")
+	# The next town is the nearest other one on the map — the Wide Acres on the 2D map,
+	# the camp on the baked world — because a story walks to whoever is closest.
+	var next_town: StringName = &""
+	var nearest: float = 1.0e9
+	for zone: StringName in Region.ZONE_ORDER:
+		if zone == &"harrowgate" or zone == &"brindle":
+			continue
+		var away: float = Vector2(Region.zone_sites()[zone] as Vector2i).distance_to(Vector2(Region.HARROWGATE))
+		if away < nearest:
+			nearest = away
+			next_town = zone
+	assert_true(StandingRules.is_unwelcome(standing.in_town(next_town)),
+		"the next town, %s, heard that you stole and will never hear that you gave it back" % next_town)
 
 
 func test_the_stall_has_something_on_it_again() -> void:
 	var sim: Sim = _deed_sim()
 	var world := sim.store(&"world") as WorldState
-	_act(sim, AT_A_STALL, &"steal")
+	_act(sim, at_a_stall(), &"steal")
 	var stall: Vector2i = world.stolen_from
 	assert_true(world.stall_is_bare(stall, sim.tick), "you took what was on it")
-	_act(sim, AT_A_STALL, &"give_back")
+	_act(sim, at_a_stall(), &"give_back")
 	assert_false(world.stall_is_bare(stall, sim.tick), "and put it back on the counter")

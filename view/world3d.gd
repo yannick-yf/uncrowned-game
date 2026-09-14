@@ -1,0 +1,958 @@
+class_name World3d
+extends Node3D
+
+## The 3D window over the baked world (MIGRATION_3D §6, M2–M3).
+##
+## A **window, not a world**: it reads the simulation and places things. The ground,
+## the water, the woods, the ruins and every building his library holds are **his** —
+## the workshop's scenes, loaded from the generated copy under `view3d/workshop/`.
+## **Nothing of the 2D game's art appears here** (Yannick, 2026-09-14): where his
+## library has no piece yet, a plain block of the footprint's size stands in his rock
+## paint, visibly provisional; every person is his own traveller sprite until he draws
+## the cast; the brief's woods and the simulation's roads are not drawn at all — they
+## are his to plant and to lay, and the bake's report names them. Without the copy the
+## window builds the bake's ground itself, coloured by terrain and by nothing else.
+##
+## Nothing here moves anybody: the player's position arrives from `main.gd` every
+## frame, already interpolated, and goes nowhere but into a transform.
+##
+## Coordinates are BakeRules' contract: his metres, origin at the centre, north at
+## -Z; a tile's centre is `origin + (tile + 0.5) * 2 m`, and a height comes from his
+## terrain once it stands, or from his grid bilinearly before that.
+
+## His camera, in numbers: orthographic, tilted, following. The numbers are the
+## workshop's `follow_camera` as the Brindle scene sets it.
+const TILT_DEGREES: float = 48.0
+const AZIMUTH_DEGREES: float = 0.0
+const CAMERA_SIZE: float = 24.0
+const CAMERA_DISTANCE: float = 45.0
+## The same easing as the 2D camera, so the two windows feel alike.
+const CAMERA_CATCHES_UP: float = 7.0
+## A billboard's feet, just off the ground so they never z-fight with it.
+const FOOT_CLEARANCE: float = 0.04
+## Terrain is built in chunks of this many cells a side (the fallback ground only).
+const CHUNK_CELLS: int = 48
+## A film of water thinner than this is a wet bank, not water.
+const WATER_SHOWS_FROM: float = 0.02
+## The escort's ranks in front of the gate, as the 2D window draws them.
+const ESCORT_FILES: int = 5
+
+## His world, once the workshop has been vendored (`tools/vendor_workshop.sh`): the
+## map plate — his terrain and water with their shaders, the relief stamps, his
+## Brindle, his forests, the mine and the bridge, his sun and sky — minus his map
+## camera and its labels. Nothing of his is edited: it is a copy with its paths
+## repointed.
+const HIS_MAP: String = "res://view3d/workshop/scenes/map_plate.tscn"
+const HIS_LIBRARY: String = "res://view3d/workshop/prototype_3d/assets/library/"
+## His traveller: the one person he has drawn, and so, until the cast is drawn in his
+## style, everyone — the player, the twenty-five, the strangers, the crowd, the guards,
+## the traffic. His frames, his material, his pixel size (a 197-pixel frame stands
+## 1.53 m), his billboard trick. §13's *nobody shares a face* is a debt he settles.
+const HIS_FRAMES: String = "res://view3d/workshop/prototype_3d/assets/traveler_walk_frames.tres"
+const HIS_FIGURE_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/traveler_sprite.tres"
+const HIS_FIGURE_PIXEL_SIZE: float = 0.0077832513
+const FIGURE_HEIGHT_M: float = 1.55
+## His walk cycle turns over every three metres, as his `player_walk_animation` does.
+const WALK_CYCLE_M: float = 3.0
+## A placeholder block wears his rock paint, so even what is not drawn is in his hand.
+const HIS_BLOCK_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/styled_rock.tres"
+
+## Our kit, drawn with his library where a kind fits: a cottage for a house, the
+## storehouse for a barn, his well, his barrels, his fence. The table is the brief's
+## `kit_library` — the bake opens the walls round such a piece to the piece's own size
+## from the same table, so the two never disagree — and he can change a match in a line.
+const BRIEF: String = "res://content/bake_brief.json"
+## Walls the simulation has and his map does not show yet — the castle's ramparts —
+## stand as blocks this tall, so a wall you cannot pass is a wall you can see.
+const WALL_HEIGHT_M: float = 3.0
+## The lens zooms as his camera does: size in metres, two at a time, between his limits.
+const ZOOM_MIN: float = 14.0
+const ZOOM_MAX: float = 48.0
+const ZOOM_STEP: float = 2.0
+## Small things are turned a quarter at a time by their tile, so a row of barrels is
+## not a row of identical barrels; buildings keep his facing.
+const TURNED_BY_TILE: Array[StringName] = [&"barrels", &"crates", &"logs", &"overgrowth"]
+## How tall a placeholder block is, by kind, in metres. What his library lacks stands
+## as a block of its footprint and roughly its height, until he draws it.
+const BLOCK_HEIGHT: Dictionary = {
+	&"kiln": 3.0, &"tent": 2.4, &"tent_b": 2.4, &"boat": 1.2, &"counting_house": 6.0,
+	&"keep": 10.0, &"tower": 8.0, &"gatehouse": 5.0, &"muster_rolls": 1.5, &"stall": 1.2,
+	&"campfire": 0.5, &"papers": 0.3, &"ruin_house": 2.5, &"produce": 0.8, &"oven": 1.6,
+}
+const BLOCK_HEIGHT_DEFAULT: float = 3.5
+
+var _region: Region = null
+var _sim: Sim = null
+var _art: Art = null
+var _heights: PackedFloat32Array = PackedFloat32Array()
+var _waters: PackedFloat32Array = PackedFloat32Array()
+var _paint: PackedFloat32Array = PackedFloat32Array()
+var _samples: int = 0
+var _origin_m: Vector2 = Vector2.ZERO
+var _metres_per_tile: float = BakeRules.METRES_PER_TILE
+
+var _camera: Camera3D = null
+## The camera's own up, in world space. Fixed, because the camera's tilt and azimuth
+## are; billboards are lifted along it so their feet stay on the ground however the
+## sprite leans toward the lens — the workshop's `sprite_billboard.gd` trick.
+var _lens_up: Vector3 = Vector3.UP
+var _lens_offset: Vector3 = Vector3.UP
+var _focus: Vector3 = Vector3.ZERO
+var _focus_placed: bool = false
+
+## His world, when vendored; his terrain node, whose heights his relief stamps have
+## shaped; his frames and materials, when the copy has them.
+var _his: Node3D = null
+var _his_terrain: Node3D = null
+var _his_pieces: Dictionary = {}
+var _kit_library: Dictionary = {}
+var _frames: SpriteFrames = null
+var _figure_material: Material = null
+var _block_material: Material = null
+var _zoom: float = CAMERA_SIZE
+
+var _player: Node3D = null
+var _player_last: Vector3 = Vector3.ZERO
+var _player_placed: bool = false
+var _walk_phase: float = 0.0
+var _people: Dictionary = {}
+var _traffic: Dictionary = {}
+var _guards: Array[Node3D] = []
+## One entry per prop of the region: the prop, the node standing for it, and how far
+## above its feet the node's origin sits.
+var _props: Array[Dictionary] = []
+var _fairy: OmniLight3D = null
+var _fairy_glow: Sprite3D = null
+## The marks over the heads of whoever can see you, and the embers over fires and
+## kilns — the 2D window's immediate register and its particles, in the window. Drawn
+## with one soft disc made here, because the pack's art is not allowed in and his has
+## no such thing yet.
+var _marks: Array[Sprite3D] = []
+var _embers: Array[Dictionary] = []
+var _dot: Texture2D = null
+
+var chunk_count: int = 0
+var water_triangles: int = 0
+var his_props_skipped: int = 0
+var his_kit_count: int = 0
+var block_count: int = 0
+var wall_count: int = 0
+
+
+# ------------------------------------------------------------------ building ---
+
+## Everything that does not move: his world (or the bake's ground), the props, the
+## lights and the camera. `landscape` is `RegionBake.read_landscape()`.
+func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
+	_region = region
+	_art = art
+	_sim = sim
+	var meta: Dictionary = landscape.get("meta", {}) as Dictionary
+	_samples = int(meta.get("grid_size", 0))
+	var extent: float = float(meta.get("extent_m", 0.0))
+	_heights = landscape.get("heights", PackedFloat32Array()) as PackedFloat32Array
+	_waters = landscape.get("waters", PackedFloat32Array()) as PackedFloat32Array
+	_paint = landscape.get("paint", PackedFloat32Array()) as PackedFloat32Array
+	if _samples >= 2 and extent > 0.0:
+		_metres_per_tile = extent / float(_samples - 1)
+		_origin_m = Vector2(-extent * 0.5, -extent * 0.5)
+	_build_camera()
+	_load_his_materials()
+	_adopt_his_world()
+	if _his == null:
+		_build_light()
+		_build_ground()
+		_build_water()
+	_build_props()
+	_build_walls()
+	_build_fairy()
+	_build_embers()
+
+
+## Zoom, as his camera zooms: the same actions, the same limits, the same step.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"zoom_in"):
+		_zoom = clampf(_zoom - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX)
+	elif event.is_action_pressed(&"zoom_out"):
+		_zoom = clampf(_zoom + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX)
+
+
+func _build_camera() -> void:
+	var tilt: float = deg_to_rad(TILT_DEGREES)
+	var azimuth: float = deg_to_rad(AZIMUTH_DEGREES)
+	_lens_offset = Vector3(sin(azimuth) * cos(tilt), sin(tilt), cos(azimuth) * cos(tilt))
+	var forward: Vector3 = -_lens_offset
+	_lens_up = (Vector3.UP - forward * Vector3.UP.dot(forward)).normalized()
+	_camera = Camera3D.new()
+	_camera.name = "Lens"
+	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	_camera.size = CAMERA_SIZE
+	_camera.near = 0.5
+	_camera.far = 400.0
+	_camera.current = true
+	add_child(_camera)
+
+
+## His frames for the figures and his paint for the blocks, when the copy has them;
+## and the brief's table of which kinds his library stands for.
+func _load_his_materials() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(BRIEF))
+	if parsed is Dictionary:
+		_kit_library = (parsed as Dictionary).get("kit_library", {}) as Dictionary
+	if ResourceLoader.exists(HIS_FRAMES):
+		_frames = load(HIS_FRAMES) as SpriteFrames
+	if ResourceLoader.exists(HIS_FIGURE_MATERIAL):
+		_figure_material = load(HIS_FIGURE_MATERIAL) as Material
+	if ResourceLoader.exists(HIS_BLOCK_MATERIAL):
+		_block_material = load(HIS_BLOCK_MATERIAL) as Material
+
+
+## His map plate as the world, with his lights and sky, minus his map camera and its
+## labels. The copy under `view3d/workshop/` is his tree with its paths repointed.
+func _adopt_his_world() -> void:
+	if not ResourceLoader.exists(HIS_MAP):
+		push_warning("his scenes are not vendored at %s — showing the bake's ground; run tools/vendor_workshop.sh" % HIS_MAP)
+		return
+	var scene: PackedScene = load(HIS_MAP) as PackedScene
+	if scene == null:
+		return
+	var world: Node3D = scene.instantiate() as Node3D
+	if world == null:
+		return
+	for extra_name: String in ["MapCamera", "MapInfo"]:
+		var extra: Node = world.get_node_or_null(extra_name)
+		if extra != null:
+			world.remove_child(extra)
+			extra.free()
+	world.name = "HisWorld"
+	add_child(world)
+	_his = world
+	# His site labels are editor guides — a forty-eight-point "Brindle" over the
+	# ruins — and his playtest hides them the moment play starts. They are built when
+	# his terrain rebuilds, a frame later, so they are hidden then; and everything
+	# footed before that stood on the raw heights, so it is footed again.
+	var terrain: Node = world.get_node_or_null("Terrain")
+	if terrain != null and terrain.has_signal("rebuilt"):
+		_his_terrain = terrain as Node3D
+		terrain.connect("rebuilt", _hide_his_guides)
+		terrain.connect("rebuilt", _refoot)
+
+
+func _hide_his_guides() -> void:
+	if _his == null:
+		return
+	for path: String in ["Terrain/Landscape/SiteGuides", "Decor/MineAcierie/RepereMine"]:
+		var guide: Node3D = _his.get_node_or_null(path) as Node3D
+		if guide != null:
+			guide.visible = false
+
+
+## Stand everything static on his ground again, now that his ground is built.
+func _refoot() -> void:
+	for entry: Dictionary in _props:
+		_stand(entry)
+
+
+func _build_light() -> void:
+	var sun := DirectionalLight3D.new()
+	sun.name = "Sun"
+	sun.light_energy = 1.1
+	sun.light_color = Color(1.0, 0.96, 0.88)
+	sun.shadow_enabled = false
+	sun.transform = Transform3D(Basis.looking_at(Vector3(-0.5, -1.0, -0.35).normalized(), Vector3.UP), Vector3.ZERO)
+	add_child(sun)
+	var environment := Environment.new()
+	environment.background_mode = Environment.BG_COLOR
+	environment.background_color = Color(0.62, 0.72, 0.80)
+	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	environment.ambient_light_color = Color(0.72, 0.76, 0.80)
+	environment.ambient_light_energy = 0.9
+	var world_environment := WorldEnvironment.new()
+	world_environment.name = "Air"
+	world_environment.environment = environment
+	add_child(world_environment)
+
+
+## The fallback ground, for a clone without his scenes: his heights as chunks of
+## triangles, coloured by the *baked* terrain kind — the map screen's colours, no
+## texture — shaded by his slope paint so a bank reads as a bank.
+func _build_ground() -> void:
+	if _samples < 2:
+		return
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var ground := Node3D.new()
+	ground.name = "Ground"
+	add_child(ground)
+	for z0: int in range(0, _samples - 1, CHUNK_CELLS):
+		for x0: int in range(0, _samples - 1, CHUNK_CELLS):
+			_build_chunk(ground, material, x0, z0, mini(x0 + CHUNK_CELLS, _samples - 1),
+				mini(z0 + CHUNK_CELLS, _samples - 1))
+
+
+func _build_chunk(parent: Node3D, material: Material, x0: int, z0: int, x1: int, z1: int) -> void:
+	var columns: int = x1 - x0 + 1
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var colours := PackedColorArray()
+	var indices := PackedInt32Array()
+	for z: int in range(z0, z1 + 1):
+		for x: int in range(x0, x1 + 1):
+			vertices.append(_sample_point(x, z))
+			var along_x: Vector3 = _sample_point(mini(x + 1, _samples - 1), z) - _sample_point(maxi(0, x - 1), z)
+			var along_z: Vector3 = _sample_point(x, mini(z + 1, _samples - 1)) - _sample_point(x, maxi(0, z - 1))
+			normals.append(along_z.cross(along_x).normalized())
+			colours.append(_ground_colour(x, z))
+	for z: int in range(z1 - z0):
+		for x: int in range(x1 - x0):
+			var a: int = z * columns + x
+			var b: int = a + 1
+			var c: int = a + columns
+			var d: int = c + 1
+			indices.append_array(PackedInt32Array([a, c, b, b, c, d]))
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_COLOR] = colours
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	mesh.surface_set_material(0, material)
+	var surface := MeshInstance3D.new()
+	surface.name = "Chunk_%d_%d" % [x0, z0]
+	surface.mesh = mesh
+	parent.add_child(surface)
+	chunk_count += 1
+
+
+func _sample_point(x: int, z: int) -> Vector3:
+	return Vector3(_origin_m.x + float(x) * _metres_per_tile, _heights[z * _samples + x],
+		_origin_m.y + float(z) * _metres_per_tile)
+
+
+func _ground_colour(x: int, z: int) -> Color:
+	var tile := Vector2i(mini(x, _region.width - 1), mini(z, _region.height - 1))
+	var kind: Region.Terrain = _region.terrain_at(tile)
+	var colour: Color = _art.colour_for(kind)
+	var p: int = (z * _samples + x) * 3
+	var rock: float = _paint[p] if p < _paint.size() else 0.0
+	var sand: float = _paint[p + 1] if p + 1 < _paint.size() else 0.0
+	if kind == Region.Terrain.WILD or kind == Region.Terrain.MOUNTAIN or kind == Region.Terrain.SAND:
+		colour = colour.lerp(Color(0.46, 0.45, 0.44), rock * 0.7)
+		colour = colour.lerp(Color(0.72, 0.66, 0.48), sand * 0.6)
+	if kind == Region.Terrain.WATER or kind == Region.Terrain.SEA:
+		colour = colour.darkened(0.35)
+	return colour
+
+
+## The fallback water: a second surface at his water level, wherever it stands above
+## the ground.
+func _build_water() -> void:
+	if _samples < 2 or _waters.size() != _heights.size():
+		return
+	var vertices := PackedVector3Array()
+	var colours := PackedColorArray()
+	var sea: Color = _art.colour_for(Region.Terrain.SEA)
+	var river: Color = _art.colour_for(Region.Terrain.WATER)
+	for z: int in _samples - 1:
+		for x: int in _samples - 1:
+			var i: int = z * _samples + x
+			var depth: float = maxf(maxf(_waters[i] - _heights[i], _waters[i + 1] - _heights[i + 1]),
+				maxf(_waters[i + _samples] - _heights[i + _samples], _waters[i + _samples + 1] - _heights[i + _samples + 1]))
+			if depth <= WATER_SHOWS_FROM:
+				continue
+			var colour: Color = sea if _waters[i] <= BakeRules.SEA_LEVEL_BAND else river
+			colour.a = 0.72
+			var a: Vector3 = _water_point(x, z)
+			var b: Vector3 = _water_point(x + 1, z)
+			var c: Vector3 = _water_point(x, z + 1)
+			var d: Vector3 = _water_point(x + 1, z + 1)
+			for point: Vector3 in [a, c, b, b, c, d]:
+				vertices.append(point)
+				colours.append(colour)
+	if vertices.is_empty():
+		return
+	var normals := PackedVector3Array()
+	normals.resize(vertices.size())
+	normals.fill(Vector3.UP)
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_COLOR] = colours
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.roughness = 0.2
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mesh.surface_set_material(0, material)
+	var water := MeshInstance3D.new()
+	water.name = "Water"
+	water.mesh = mesh
+	add_child(water)
+	water_triangles = vertices.size() / 3
+
+
+func _water_point(x: int, z: int) -> Vector3:
+	return Vector3(_origin_m.x + float(x) * _metres_per_tile, _waters[z * _samples + x],
+		_origin_m.y + float(z) * _metres_per_tile)
+
+
+# -------------------------------------------------------------------- props ---
+
+## Every prop the region records: a piece of his library where it has one, a block
+## in his rock paint where it does not, a figure of his for the crowd. A building his
+## own data stands is his mesh already and gets nothing. Which ones show is decided
+## each frame (`sync`): tents by the army, fences by who holds the Acres, the crowd
+## by how many left the Muster.
+func _build_props() -> void:
+	var stand := Node3D.new()
+	stand.name = "Props"
+	add_child(stand)
+	for prop: Dictionary in _region.props:
+		var kind: StringName = prop["kind"] as StringName
+		var at: Vector2i = prop["at"] as Vector2i
+		if _his != null and bool(prop.get("his", false)):
+			his_props_skipped += 1
+			continue
+		var entry: Dictionary = {"prop": prop, "node": null, "lift": 0.0, "figure": false}
+		if kind == &"townsfolk":
+			entry["node"] = _figure()
+			entry["figure"] = true
+		elif _his != null and _kit_library.has(String(kind)):
+			var piece: Node3D = _his_piece(kind)
+			if piece != null:
+				if TURNED_BY_TILE.has(kind):
+					piece.rotation.y = float(Art.scatter_hash(at.x, at.y) % 4) * TAU / 4.0
+				entry["node"] = piece
+				his_kit_count += 1
+		if entry["node"] == null:
+			var height: float = float(BLOCK_HEIGHT.get(kind, BLOCK_HEIGHT_DEFAULT))
+			entry["node"] = _block(prop, height)
+			entry["lift"] = height * 0.5
+			block_count += 1
+		var node: Node3D = entry["node"] as Node3D
+		node.name = "%s_%d_%d" % [kind, at.x, at.y]
+		stand.add_child(node)
+		_stand(entry)
+		_props.append(entry)
+
+
+## Put a prop's node where it belongs: a figure footed on its tile, anything else on
+## the middle of its footprint, lifted by half its height if it is a block.
+func _stand(entry: Dictionary) -> void:
+	var prop: Dictionary = entry["prop"] as Dictionary
+	var node: Node3D = entry["node"] as Node3D
+	if bool(entry["figure"]):
+		_foot_figure(node, Vector2(prop["at"] as Vector2i) + Vector2(0.5, 1.0))
+	else:
+		node.position = _feet_of(_prop_centre(prop)) + Vector3.UP * float(entry["lift"])
+
+
+## One of his library pieces for a kind, or null when the copy lacks it.
+func _his_piece(kind: StringName) -> Node3D:
+	if not _his_pieces.has(kind):
+		var path: String = HIS_LIBRARY + String(_kit_library.get(String(kind), ""))
+		_his_pieces[kind] = load(path) as PackedScene if ResourceLoader.exists(path) else null
+	var scene: PackedScene = _his_pieces[kind] as PackedScene
+	return scene.instantiate() as Node3D if scene != null else null
+
+
+## A block of the footprint's size and the kind's height, in his rock paint — what
+## stands for a thing he has not drawn, and reads as exactly that.
+func _block(prop: Dictionary, height: float) -> MeshInstance3D:
+	var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+	var box := BoxMesh.new()
+	box.size = Vector3(float(size.x) * _metres_per_tile * 0.9, height, float(size.y) * _metres_per_tile * 0.9)
+	var block := MeshInstance3D.new()
+	block.mesh = box
+	block.material_override = _block_material if _block_material != null else _plain_grey()
+	return block
+
+
+func _plain_grey() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(0.55, 0.56, 0.58)
+	material.roughness = 1.0
+	return material
+
+
+## Walls the simulation has and nothing of his shows: the castle's ramparts. A block
+## a tile square and a wall high on each, in his rock paint, so what stops you is
+## seen — Yannick walked into the invisible kind (2026-09-14). His own walls are his
+## meshes; the kit's building footprints are covered by the pieces and blocks above.
+func _build_walls() -> void:
+	var walls := Node3D.new()
+	walls.name = "Walls"
+	add_child(walls)
+	var box := BoxMesh.new()
+	box.size = Vector3(_metres_per_tile * 0.98, WALL_HEIGHT_M, _metres_per_tile * 0.98)
+	var material: Material = _block_material if _block_material != null else _plain_grey()
+	for y: int in _region.height:
+		for x: int in _region.width:
+			if _region.terrain_at(Vector2i(x, y)) != Region.Terrain.RAMPART:
+				continue
+			var wall := MeshInstance3D.new()
+			wall.name = "Wall_%d_%d" % [x, y]
+			wall.mesh = box
+			wall.material_override = material
+			wall.position = _feet_of(Vector2(x, y) + Vector2(0.5, 0.5)) + Vector3.UP * WALL_HEIGHT_M * 0.5
+			walls.add_child(wall)
+			wall_count += 1
+
+
+## The middle of a prop's footprint, in tiles — where a mesh stands.
+func _prop_centre(prop: Dictionary) -> Vector2:
+	var at: Vector2i = prop["at"] as Vector2i
+	var size: Vector2i = prop.get("size", Vector2i(4, 3)) as Vector2i
+	return Vector2(at) + Vector2(size) * 0.5
+
+
+# ------------------------------------------------------------------ figures ---
+
+## A person: his traveller, standing, facing the lens — the one figure he has drawn.
+## Without his frames (a clone without the copy), a plain capsule in his rock paint.
+func _figure() -> Node3D:
+	if _frames == null:
+		var capsule := CapsuleMesh.new()
+		capsule.radius = 0.3
+		capsule.height = FIGURE_HEIGHT_M
+		var body := MeshInstance3D.new()
+		body.mesh = capsule
+		body.material_override = _block_material if _block_material != null else _plain_grey()
+		return body
+	var sprite := AnimatedSprite3D.new()
+	sprite.sprite_frames = _frames
+	sprite.animation = &"idle_down"
+	sprite.pixel_size = HIS_FIGURE_PIXEL_SIZE
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	if _figure_material != null:
+		sprite.material_override = _figure_material
+	sprite.pause()
+	return sprite
+
+
+## Which of his four facings a direction is, with the 2D window's precedence.
+static func _facing_name(facing: Vector2i) -> String:
+	if facing.y < 0:
+		return "up"
+	if facing.x < 0:
+		return "left"
+	if facing.x > 0:
+		return "right"
+	return "down"
+
+
+## Show a figure standing still, facing this way.
+func _idle(node: Node3D, facing: Vector2i) -> void:
+	var sprite: AnimatedSprite3D = node as AnimatedSprite3D
+	if sprite == null:
+		return
+	var wanted := StringName("idle_" + _facing_name(facing))
+	if sprite.sprite_frames.has_animation(wanted) and sprite.animation != wanted:
+		sprite.animation = wanted
+	sprite.pause()
+	sprite.set_frame_and_progress(0, 0.0)
+
+
+## Show a figure walking this way, `phase` turns of his cycle along.
+func _walk(node: Node3D, facing: Vector2i, phase: float) -> void:
+	var sprite: AnimatedSprite3D = node as AnimatedSprite3D
+	if sprite == null:
+		return
+	var wanted := StringName("walk_" + _facing_name(facing))
+	if not sprite.sprite_frames.has_animation(wanted):
+		_idle(node, facing)
+		return
+	if sprite.animation != wanted:
+		sprite.animation = wanted
+	sprite.pause()
+	var count: int = sprite.sprite_frames.get_frame_count(wanted)
+	var along: float = fposmod(phase, 1.0) * float(count)
+	sprite.set_frame_and_progress(floori(along) % maxi(count, 1), fposmod(along, 1.0))
+
+
+## Put a figure's feet on the ground at a tile position (fractional tiles). His
+## sprite is lifted along the lens's up by half its frame so it stands; a capsule by
+## half its height.
+func _foot_figure(node: Node3D, at_tiles: Vector2) -> void:
+	var sprite: AnimatedSprite3D = node as AnimatedSprite3D
+	if sprite == null:
+		node.position = _feet_of(at_tiles) + Vector3.UP * FIGURE_HEIGHT_M * 0.5
+		return
+	var texture: Texture2D = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	var height_px: float = float(texture.get_height()) if texture != null else FIGURE_HEIGHT_M / HIS_FIGURE_PIXEL_SIZE
+	node.position = _feet_of(at_tiles) + _lens_up * (height_px * sprite.pixel_size * 0.5)
+
+
+# --------------------------------------------------------------------- glows ---
+
+## Light and movement, not a body — the 2D window's rule for her. A light on the
+## ground and a soft glow that breathes, dimmer and slower than anything else here,
+## because she is dying.
+func _build_fairy() -> void:
+	_fairy = OmniLight3D.new()
+	_fairy.name = "Fairy"
+	_fairy.light_color = Color(0.78, 0.94, 0.80)
+	_fairy.light_energy = 2.0
+	_fairy.omni_range = 7.0
+	_fairy.visible = false
+	add_child(_fairy)
+	_fairy_glow = _dot_sprite()
+	_fairy_glow.name = "FairyGlow"
+	_fairy_glow.pixel_size = 0.15
+	_fairy_glow.modulate = Color(0.80, 0.96, 0.82, 0.55)
+	_fairy_glow.visible = false
+	_fairy.add_child(_fairy_glow)
+
+
+## A 16-pixel soft disc, made once: no art of ours may stand in his world, and his
+## has no such thing yet. Used for the fairy's glow, the marks over witnesses' heads
+## and the embers.
+func _soft_dot() -> Texture2D:
+	if _dot != null:
+		return _dot
+	var image := Image.create(16, 16, false, Image.FORMAT_RGBA8)
+	for y: int in 16:
+		for x: int in 16:
+			var away: float = Vector2(x + 0.5, y + 0.5).distance_to(Vector2(8.0, 8.0)) / 8.0
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(1.0 - away, 0.0, 1.0) ** 1.5))
+	_dot = ImageTexture.create_from_image(image)
+	return _dot
+
+
+func _dot_sprite() -> Sprite3D:
+	var sprite := Sprite3D.new()
+	sprite.texture = _soft_dot()
+	sprite.pixel_size = 0.03
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.shaded = false
+	sprite.double_sided = true
+	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	return sprite
+
+
+## Embers over every kiln and every fire: a handful of dots each, on their own
+## periods, so the group never pulses together — which is the thing that reads as
+## fake. Whether a kiln glows is the frame's to say: a freed Cinderworks is cold.
+func _build_embers() -> void:
+	var hearths := Node3D.new()
+	hearths.name = "Embers"
+	add_child(hearths)
+	for prop: Dictionary in _region.props:
+		var kind: StringName = prop["kind"] as StringName
+		var count: int = 5 if kind == &"kiln" else (3 if kind == &"campfire" else 0)
+		if count == 0:
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+		var dots: Array[Sprite3D] = []
+		for i: int in count:
+			var dot: Sprite3D = _dot_sprite()
+			dot.name = "Ember_%d_%d_%d" % [at.x, at.y, i]
+			dot.pixel_size = 0.025
+			hearths.add_child(dot)
+			dots.append(dot)
+		_embers.append({"kind": kind, "at": Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5),
+			"dots": dots})
+
+
+# ------------------------------------------------------------------- ground ---
+
+## A tile position (fractional tiles) as a point on his ground.
+func _feet_of(at_tiles: Vector2) -> Vector3:
+	var metres: Vector2 = _origin_m + at_tiles * _metres_per_tile
+	return Vector3(metres.x, height_at(metres.x, metres.y) + FOOT_CLEARANCE, metres.y)
+
+
+## His ground's height at a point, bilinearly, as his `flat_ground.gd` samples it —
+## and from his terrain itself once it stands, because his relief stamps shape it.
+func height_at(x_m: float, z_m: float) -> float:
+	if _his_terrain != null and int(_his_terrain.get("chunk_count")) > 0:
+		return float(_his_terrain.call("height_at_world", x_m, z_m))
+	if _samples < 2:
+		return 0.0
+	var u: float = clampf((x_m - _origin_m.x) / _metres_per_tile, 0.0, float(_samples - 1))
+	var v: float = clampf((z_m - _origin_m.y) / _metres_per_tile, 0.0, float(_samples - 1))
+	var x0: int = floori(u)
+	var z0: int = floori(v)
+	var x1: int = mini(x0 + 1, _samples - 1)
+	var z1: int = mini(z0 + 1, _samples - 1)
+	var top: float = lerpf(_heights[z0 * _samples + x0], _heights[z0 * _samples + x1], u - float(x0))
+	var bottom: float = lerpf(_heights[z1 * _samples + x0], _heights[z1 * _samples + x1], u - float(x0))
+	return lerpf(top, bottom, v - float(z0))
+
+
+# --------------------------------------------------------------------- frame ---
+
+## Everything that moves, once a frame, from what the simulation says. `frame` is
+## built by `main.gd`: the player's interpolated tile position and facing, where the
+## camera wants to look, how many tents stand, how big the crowd is, which places are
+## free, whether the castle is shuttered, the escort at the gate, who can see you, and
+## the clock. Nothing here writes back.
+func sync(frame: Dictionary, delta: float) -> void:
+	if _region == null or _sim == null:
+		return
+	var world := _sim.store(&"world") as WorldState
+	var cast := _sim.store(&"cast") as Cast
+	var road := _sim.store(&"travellers") as Travellers
+	_sync_player(frame)
+	_sync_people(cast, world)
+	_sync_traffic(road, world)
+	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
+	_sync_props(frame)
+	_sync_marks(cast, frame.get("witnesses", []) as Array)
+	_sync_embers(frame)
+	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2, delta)
+
+
+## The player: his traveller, walking when the simulation moves them — the cycle
+## driven by the distance actually covered, as his own controller drives it — and
+## standing when it does not.
+func _sync_player(frame: Dictionary) -> void:
+	if _player == null:
+		_player = _figure()
+		_player.name = "Player"
+		add_child(_player)
+	var facing: Vector2i = frame.get("facing", Vector2i(0, 1)) as Vector2i
+	var at: Vector2 = frame.get("player", Vector2.ZERO) as Vector2
+	var feet: Vector3 = _feet_of(at)
+	var moved: float = Vector2(feet.x, feet.z).distance_to(Vector2(_player_last.x, _player_last.z)) if _player_placed else 0.0
+	_player_last = feet
+	_player_placed = true
+	if moved > 0.002:
+		_walk_phase = fposmod(_walk_phase + moved / WALK_CYCLE_M, 1.0)
+		_walk(_player, facing, _walk_phase)
+	else:
+		_idle(_player, facing)
+	_foot_figure(_player, at)
+
+
+func _sync_people(cast: Cast, world: WorldState) -> void:
+	var present: Dictionary = {}
+	var fairy_seen: bool = false
+	for npc: Npc in cast.in_zone(world.current_zone):
+		if OpeningRules.is_gone(npc.id, _sim.facts):
+			continue
+		if npc.id == OpeningRules.FAIRY:
+			# Light and movement, not a body (the 2D window's rule): a glow where she is.
+			fairy_seen = true
+			var feet: Vector3 = _feet_of(npc.centre())
+			var breath: float = float(Time.get_ticks_msec()) * 0.0011
+			_fairy.position = feet + Vector3.UP * (1.2 + 0.25 * sin(breath))
+			_fairy_glow.visible = true
+			_fairy_glow.pixel_size = 0.13 + 0.03 * sin(breath)
+			continue
+		present[npc.id] = true
+		var figure: Node3D = _people.get(npc.id, null) as Node3D
+		if figure == null:
+			figure = _figure()
+			figure.name = "Person_%s" % npc.id
+			add_child(figure)
+			_people[npc.id] = figure
+			_idle(figure, Vector2i(0, 1))
+		# Footed every frame, not once: the ground under them is his and is built a
+		# frame after they are, and thirty-three figures are nothing.
+		_foot_figure(figure, npc.centre())
+		figure.visible = true
+	_fairy.visible = fairy_seen
+	for id: StringName in _people.keys():
+		if not present.has(id):
+			(_people[id] as Node3D).visible = false
+
+
+## Traffic: his traveller walking the road, the cycle read off where they stand.
+func _sync_traffic(road: Travellers, world: WorldState) -> void:
+	if road == null:
+		return
+	var line: Array[Vector2i] = world.region().road_waypoints()
+	var seen: Dictionary = {}
+	for walker: Traveller in road.walkers:
+		seen[walker.id] = true
+		var figure: Node3D = _traffic.get(walker.id, null) as Node3D
+		if figure == null:
+			figure = _figure()
+			figure.name = "Traffic_%d" % walker.id
+			add_child(figure)
+			_traffic[walker.id] = figure
+		var facing := Vector2i(-1, 0)
+		if not line.is_empty():
+			var target: int = clampi(walker.leg + walker.heading, 0, line.size() - 1)
+			var to: Vector2 = Vector2(line[target]) + Vector2(0.5, 0.5) - walker.pos
+			if absf(to.y) > absf(to.x):
+				facing = Vector2i(0, 1 if to.y > 0.0 else -1)
+			else:
+				facing = Vector2i(1 if to.x > 0.0 else -1, 0)
+		_walk(figure, facing, fposmod((walker.pos.x + walker.pos.y) * _metres_per_tile / WALK_CYCLE_M, 1.0))
+		_foot_figure(figure, walker.pos + Vector2(0.0, 0.5))
+		figure.visible = true
+	for id: int in _traffic.keys():
+		(_traffic[id] as Node3D).visible = seen.has(id)
+
+
+## The escort in two ranks before the gate, and the wall's extra guards, drawn as
+## the 2D window draws them and from the same numbers.
+func _sync_guards(world: WorldState, escort: int, extra: int) -> void:
+	var posts: Array[Vector2] = [Vector2(-5.0, 9.0), Vector2(3.0, 9.0), Vector2(-8.0, 9.0), Vector2(11.0, 9.0)]
+	var wanted: int = escort + mini(extra, posts.size())
+	while _guards.size() < wanted:
+		var guard: Node3D = _figure()
+		guard.name = "Guard_%d" % _guards.size()
+		add_child(guard)
+		_idle(guard, Vector2i(0, 1))
+		_guards.append(guard)
+	for i: int in _guards.size():
+		var guard: Node3D = _guards[i]
+		guard.visible = i < wanted and world.current_zone == WorldState.OVERWORLD
+		if not guard.visible:
+			continue
+		if i < escort:
+			var rank: int = i / ESCORT_FILES
+			var file: int = i % ESCORT_FILES
+			_foot_figure(guard, world.king_pos + Vector2(float(file) - 2.0, 2.0 + float(rank) * 1.2))
+		else:
+			_foot_figure(guard, world.king_pos + posts[i - escort])
+
+
+## What stands and what has gone: the visible half of §8's consequences, as the 2D
+## window shows them. A piece of his or a block cannot be tinted; it shows or it does
+## not, and the darkened readings wait for his scenes of the two states.
+func _sync_props(frame: Dictionary) -> void:
+	var tents_standing: int = int(frame.get("tents", 0))
+	var crowd: int = int(frame.get("crowd", 0))
+	var free: Dictionary = frame.get("free", {}) as Dictionary
+	var tent: int = 0
+	var folk: int = 0
+	for entry: Dictionary in _props:
+		var prop: Dictionary = entry["prop"] as Dictionary
+		var node: Node3D = entry["node"] as Node3D
+		var kind: StringName = prop["kind"] as StringName
+		var shown: bool = true
+		if kind == &"fence" and bool(free.get(&"wide_acres", false)):
+			shown = false
+		elif kind == &"tent" or kind == &"tent_b":
+			tent += 1
+			shown = tent <= tents_standing
+		elif kind == &"townsfolk":
+			folk += 1
+			shown = folk <= crowd
+		node.visible = shown
+
+
+## Who can see you, marked over their heads while there is an act in front of you
+## that they would see you do — the 2D window's rule, with the same ids handed over.
+func _sync_marks(cast: Cast, witnesses: Array) -> void:
+	while _marks.size() < witnesses.size():
+		var mark: Sprite3D = _dot_sprite()
+		mark.name = "Mark_%d" % _marks.size()
+		mark.pixel_size = 0.035
+		mark.modulate = Color(0.93, 0.88, 0.68, 0.95)
+		add_child(mark)
+		_marks.append(mark)
+	for i: int in _marks.size():
+		var mark: Sprite3D = _marks[i]
+		mark.visible = i < witnesses.size()
+		if not mark.visible:
+			continue
+		var npc: Npc = cast.get_npc(StringName(String(witnesses[i])))
+		if npc == null:
+			mark.visible = false
+			continue
+		mark.position = _feet_of(npc.centre()) + _lens_up * (FIGURE_HEIGHT_M + 0.4)
+
+
+func _sync_embers(frame: Dictionary) -> void:
+	var now: float = float(frame.get("now", 0.0))
+	var free: Dictionary = frame.get("free", {}) as Dictionary
+	for hearth: Dictionary in _embers:
+		var dots: Array[Sprite3D] = hearth["dots"] as Array[Sprite3D]
+		var lit: bool = (hearth["kind"] as StringName) != &"kiln" or not bool(free.get(&"cinderworks", false))
+		var colour: Color = Color(1.0, 0.62, 0.28) if (hearth["kind"] as StringName) == &"kiln" else Color(1.0, 0.74, 0.40)
+		var base: Vector3 = _feet_of(hearth["at"] as Vector2)
+		var lift: float = float(BLOCK_HEIGHT.get(hearth["kind"] as StringName, 0.5))
+		for i: int in dots.size():
+			var dot: Sprite3D = dots[i]
+			dot.visible = lit
+			if not lit:
+				continue
+			var life: float = fposmod(now * (0.34 + float(i) * 0.07) + float(i) * 0.41, 1.0)
+			var rise: float = life * 2.2
+			var sway: float = sin((now + float(i) * 2.1) * 1.7) * (0.2 + life * 0.4)
+			dot.position = base + Vector3(sway, lift, 0.0) + _lens_up * rise
+			dot.modulate = Color(colour.r, colour.g, colour.b, 0.75 * (1.0 - life) * (1.0 - life))
+			dot.pixel_size = 0.02 + (1.0 - life) * 0.02
+
+
+## The lens follows the same eased point the 2D camera does, handed over in tiles.
+func _sync_camera(eye_tiles: Vector2, delta: float) -> void:
+	var want: Vector3 = _feet_of(eye_tiles)
+	if not _focus_placed or _focus.distance_to(want) > 12.0:
+		_focus = want
+		_focus_placed = true
+	else:
+		_focus = _focus.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
+	_camera.size = lerpf(_camera.size, _zoom, 1.0 - exp(-10.0 * delta))
+	_camera.transform = Transform3D(Basis.looking_at(-_lens_offset, Vector3.UP),
+		_focus + _lens_offset * CAMERA_DISTANCE)
+
+
+# ------------------------------------------------------------------ counting ---
+
+func his_present() -> bool:
+	return _his != null
+
+
+func figures_are_his() -> bool:
+	return _frames != null
+
+
+func prop_count() -> int:
+	return _props.size()
+
+
+func people_count() -> int:
+	var shown: int = 0
+	for id: StringName in _people.keys():
+		if (_people[id] as Node3D).visible:
+			shown += 1
+	return shown
+
+
+func marks_shown() -> int:
+	var shown: int = 0
+	for mark: Sprite3D in _marks:
+		if mark.visible:
+			shown += 1
+	return shown
+
+
+func ember_count() -> int:
+	var total: int = 0
+	for hearth: Dictionary in _embers:
+		total += (hearth["dots"] as Array[Sprite3D]).size()
+	return total
+
+
+func kiln_embers() -> int:
+	var total: int = 0
+	for hearth: Dictionary in _embers:
+		if (hearth["kind"] as StringName) == &"kiln":
+			total += (hearth["dots"] as Array[Sprite3D]).size()
+	return total
+
+
+func embers_lit() -> int:
+	var lit: int = 0
+	for hearth: Dictionary in _embers:
+		for dot: Sprite3D in (hearth["dots"] as Array[Sprite3D]):
+			if dot.visible:
+				lit += 1
+	return lit
