@@ -19,7 +19,11 @@ const WATER_DEPTH: float = 0.05
 ## river are already sea, which is what an estuary is.
 const SEA_LEVEL_BAND: float = 0.5
 ## His rock paint is slope and altitude together; at this much of it nobody walks.
-const ROCK_IMPASSABLE: float = 0.5
+## **0.85, not 0.5** (2026-09-14): at a half his river banks and road cuttings were
+## mountain, and Yannick walked into walls nobody could see on ground his own
+## character climbs. Now only the steepest flanks and the high ranges stop a walker —
+## the border the map closes itself with — and a bank is a bank.
+const ROCK_IMPASSABLE: float = 0.85
 ## His sand paint: the beach and the seabed's edge.
 const SAND_MIN: float = 0.5
 

@@ -44,6 +44,8 @@ func test_the_window_stands_on_his_ground() -> void:
 	# Nothing of the 2D game's art stands here (Yannick, 2026-09-14): what his library
 	# lacks is a plain block, and a block is what the kilns, the stalls and the fires are.
 	assert_true(window.block_count > 0, "what he has not drawn stands as a block: %d" % window.block_count)
+	assert_true(window.wall_count > 50,
+		"the castle's ramparts stand as blocks you can see: %d" % window.wall_count)
 	assert_true(window.prop_count() >= 100, "every prop stands as something: %d" % window.prop_count())
 
 	# His Brindle centre is at 24.95 m in his descriptor; the window agrees with him.

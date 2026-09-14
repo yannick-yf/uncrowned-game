@@ -51,6 +51,16 @@
     {"id": "spur_saltmarch", "points_xz": [[-30, 10], [-150, 130], [-236, 236]], "scaffold": true, "_why": "the spur off the junction to the port, west of the river all the way"},
     {"id": "clearing_corridor", "points_xz": [[200, 204], [200, 232], [182, 246]], "scaffold": true, "_why": "the one way out of the clearing, south and then down to his path through Brindle; it starts at the clearing's edge so the fairies' fire is not on it"}
   ],
+  "_kit_library": "Which of our kit's kinds stand as a piece of his library, and which piece. The window draws from this table and the bake opens the walls around such a piece to the piece's own size. A kind not here stands as a plain block until he draws it. Paths are under prototype_3d/assets/library/.",
+  "kit_library": {
+    "house_0": "houses/cottage_village.tscn", "house_1": "houses/cottage_village.tscn",
+    "house_2": "houses/cottage_village.tscn", "shop": "houses/cottage_village.tscn",
+    "inn": "houses/cottage_village.tscn", "stone_house": "houses/cottage_fisher.tscn",
+    "granary": "houses/storehouse.tscn", "workshop": "houses/storehouse.tscn",
+    "well": "props/well.tscn", "barrels": "props/barrel_closed.tscn",
+    "crates": "props/crate_single.tscn", "logs": "props/woodpile.tscn",
+    "fence": "modules/fence_2m.tscn", "overgrowth": "plants/shrub_hazel.tscn"
+  },
   "buildings": {
     "footprint_tiles": [2, 2],
     "kind_for_asset": {

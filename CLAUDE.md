@@ -125,6 +125,15 @@ reads his landscape files from `prototypes/brindle_3d/` and his scenes from the
 generated `view3d/workshop/`; a clone without the copy says so and shows the bake's own
 ground.
 
+**What stops you must be seen (2026-09-14).** On the baked world the simulation may
+refuse a tile only where the player can see why: his water, his rock at
+`BakeRules.ROCK_IMPASSABLE` (0.85) and above, his meshes, or a plain block of ours. The
+kit's thicket ring round the clearing is left as open wood until he plants it (a DEBT),
+a footprint shrinks to the piece his library stands for it (`kit_library` in the brief),
+and the castle's ramparts stand as blocks. `test_bake` fails on any wall tile the window
+does not draw. Do not fix an invisible wall by drawing something of ours — that is the
+art rule the other way round; open it, report it in the bake, and name the debt.
+
 ### Committing — read this before your first `git commit`
 
 **Every git command that writes runs with `GIT_CONFIG_GLOBAL=.git/overnight-gitconfig`.**

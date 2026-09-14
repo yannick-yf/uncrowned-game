@@ -221,6 +221,33 @@ in his coordinates:
   spec claims about the map is true on his, with the kit standing in for what he has
   not built.
 
+**What the first walk found (2026-09-14, Yannick, on his brother's map)** — invisible
+walls, and no zoom. Nothing of the simulation was broken; four rules from the 2D map
+stopped the player with things the 3D window does not draw, and on his map *a wall you
+cannot see is a bug*:
+
+- **His rock paint at a half was a mountain.** Every river bank and every road cutting
+  was impassable on ground his own character climbs. `BakeRules.ROCK_IMPASSABLE` is
+  0.85 now — the steepest flanks and the high ranges still close the map, and 6,169
+  tiles of bank are walkable again. Where he wants a bank to stop a walker, the paint
+  is his.
+- **The kit's ring of thicket round the clearing** — §4's *one corridor out* — stood on
+  open grass with nothing to show it. The bake leaves it open wood (277 tiles) and says
+  so; the ring's two tests record a DEBT. **His to plant**: a ring of wood five tiles
+  deep round the clearing at (200, 190 m), open to the south, and the corridor test
+  closes itself.
+- **The kit's footprints were twice his cottages.** A 4 × 3-tile footprint (8 × 6 m)
+  under a 4.3 m cottage left a strip of wall round every house. The brief's
+  `kit_library` says which kinds stand as his pieces; the bake opens the outer ring of
+  those footprints (404 tiles), and the window draws from the same table.
+- **The castle's ramparts** were the one wall the simulation keeps that he has not
+  drawn; the window stands a block in his rock paint on each rampart tile until his
+  walls exist. **His to draw**: Blackcairn's curtain wall and its gatehouse, on the spur.
+
+And the camera: zoom did not exist in our window. It does now, with his
+`follow_camera`'s numbers — 14 to 48 m, two at a time, on `=`/`-`, the keypad and the
+wheel.
+
 ---
 
 ## 6. The plan, phase by phase
@@ -326,6 +353,37 @@ alignment, the French of every line, quests, faction and rank, lore, the cast's
 backgrounds, the endings, fighting. All of it lives in `core/`, `core/rules/` and
 `content/`; none of it touches the view; after M1 none of it touches a coordinate.
 
+**How the two of you work together, day to day (Yannick's question, 2026-09-14).**
+
+*His delivery.* He works in `prototypes/brindle_3d/` — his own Godot project, his
+branch, his tools — and merges to `main` when a piece is done: a place, a bridge, the
+ring round the clearing, a face. He never needs to open our code. The contract he keeps
+is his data's names: site ids, building ids and their `kind`, the route lists.
+
+*Our ingestion, the same afternoon.* Three commands and a look. `tools/vendor_workshop.sh`
+brings his scenes into the generated copy; `godot --headless --path . -s
+tools/bake_region.gd` turns his data and the brief into `content/region.json`;
+`tools/run_tests.sh --all` runs everything on it. The bake's report says what is still
+scaffolded and what his map owes — crossings, cuttings, roads stopping short — and the
+suite's DEBT lines say which claims of the spec his map does not yet hold. The two lists
+together are **the shared to-do**, and `content/bake_brief.json` is our half of it:
+every proposal marked `scaffold: true` is a thing that disappears the day his data names
+it. Then a screenshot or a walk, because the suite cannot see the screen.
+
+*Our lanes, in parallel.* Everything on Yannick's list lives in `core/`, `core/rules/`
+and `content/` — the creation engine, the spec revision, the French of every line,
+quests and factions, lore, the cast's backgrounds, the endings, fighting — and none of
+it carries a coordinate or touches the view. A person is placed by an anchor
+(`content/places.json`), never by a tile, so his moving a place moves everyone in it.
+When the narrative has to bend to his map — the works far from Brindle, the road longer
+than §4's band — the bend is a spec-review decision recorded in SPECS §20, not a number
+changed in a test.
+
+*One rule both sides keep (2026-09-14).* On his map the simulation may stop the player
+only with something the player can see: his water and his rock, his meshes, or a plain
+block of ours where his library has nothing. A wall nobody sees is a bug, and the bake's
+test says so (`test_every_wall_on_his_map_is_something_you_can_see`).
+
 ## 7. Risks, and what answers them
 
 | Risk | Why it is real | Answer |
@@ -339,6 +397,7 @@ backgrounds, the endings, fighting. All of it lives in `core/`, `core/rules/` an
 | **Tests welded to coordinates** | About 70 tile literals across 15 suites, and every cast tile | M1 moves positions to data and names the hot spots (`test_deeds`'s stall, `test_zones`'s portals, the journeys' waypoints); most suites call the Region API, which does not change |
 | **Two Godot projects** | `prototypes/.gdignore` keeps them apart today | Right until M2; at M2 the sector scenes and library move under the root project and the `.gdignore` goes |
 | **Replay across maps** | A v2 save's move intents walk a different world | Expected; a map change invalidates saves, as §4's map changes always have |
+| **Invisible walls** | Passability written for the 2D map — rock at a half, the kit's thicket ring, footprints sized to sprites — stops the player on ground his map shows as open; found on Yannick's first walk (2026-09-14) | Rock at 0.85; the ring left open as a DEBT until he plants it; footprints shrink to his piece; the ramparts stand as blocks; `test_bake` fails on any wall tile the window does not draw |
 
 ---
 
@@ -399,6 +458,14 @@ a machine that refuses the borrowed thing. Rewritten for the 3D world:
    M2b starts, not before. Rejected for now: moving his 263 files into the root (it
    rewrites his paths and conflicts with his branch) and vendoring a copy today (28 MB
    twice, two copies to keep in step).
+7. **What stops you must be seen (Yannick, 2026-09-14, on walking his map).** The
+   simulation keeps its grid and its passability, but on his map it may refuse a tile
+   only where the player can see why: his water, his rock at 0.85 of the paint and
+   above, his meshes, or a block of ours. The kit's thicket ring is opened until he
+   plants it and recorded as a DEBT; the kit's footprints shrink to his piece; the
+   ramparts stand as blocks. Rejected: drawing a ring of trees or a hedge of ours to make
+   the wall visible — that is decision 4 the other way round, and the ring is his to
+   plant. And the lens zooms with his camera's numbers, not a figure of ours.
 
 ## 10. Where this leaves the documents
 

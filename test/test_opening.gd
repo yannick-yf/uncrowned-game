@@ -76,6 +76,11 @@ func test_the_clearing_is_ringed_by_wood_you_cannot_walk_into() -> void:
 	for y: int in range(Region.CLEARING.y - outer, Region.CLEARING.y - Region.CLEARING_RADIUS):
 		if not region.is_passable(Vector2i(Region.CLEARING.x, y)):
 			solid += 1
+	if Places.baked() and solid < Region.THICKET_DEPTH - 1:
+		# On his map nothing of ours is drawn, so a ring nobody sees is a wall in the
+		# face (Yannick, 2026-09-14): the bake leaves it open wood until he plants it.
+		debt("the clearing's ring of thicket is his to plant; the bake leaves it open wood (%d tiles solid)" % solid)
+		return
 	assert_true(solid >= Region.THICKET_DEPTH - 1,
 		"the ring north of the clearing is %d tiles deep" % solid)
 
@@ -89,6 +94,11 @@ func test_one_corridor_leads_out_and_only_one() -> void:
 	assert_true(open.has(Region.BRINDLE), "with the corridor open you can walk to Brindle")
 
 	var sealed: Dictionary = _reachable(region, Region.CLEARING, _corridor_mouth())
+	if Places.baked() and sealed.has(Region.BRINDLE):
+		# The pocket closes only once his ring stands; until then the clearing is open
+		# ground among his trees, on purpose (see the ring test above).
+		debt("the corridor is the only way out once his ring of wood stands; on the baked world the clearing is open")
+		return
 	assert_false(sealed.has(Region.BRINDLE), "with it dammed you cannot")
 	assert_true(sealed.size() < 400,
 		"and what is left is a pocket, not the map: %d tiles" % sealed.size())

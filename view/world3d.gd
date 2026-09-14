@@ -58,17 +58,17 @@ const WALK_CYCLE_M: float = 3.0
 const HIS_BLOCK_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/styled_rock.tres"
 
 ## Our kit, drawn with his library where a kind fits: a cottage for a house, the
-## storehouse for a barn, his well, his barrels, his fence. One table, so he can change
-## a match in a line; paths are under the vendored copy's library.
-const HIS_KIT: Dictionary = {
-	&"house_0": "houses/cottage_village.tscn", &"house_1": "houses/cottage_village.tscn",
-	&"house_2": "houses/cottage_village.tscn", &"shop": "houses/cottage_village.tscn",
-	&"inn": "houses/cottage_village.tscn", &"stone_house": "houses/cottage_fisher.tscn",
-	&"granary": "houses/storehouse.tscn", &"workshop": "houses/storehouse.tscn",
-	&"well": "props/well.tscn", &"barrels": "props/barrel_closed.tscn",
-	&"crates": "props/crate_single.tscn", &"logs": "props/woodpile.tscn",
-	&"fence": "modules/fence_2m.tscn", &"overgrowth": "plants/shrub_hazel.tscn",
-}
+## storehouse for a barn, his well, his barrels, his fence. The table is the brief's
+## `kit_library` — the bake opens the walls round such a piece to the piece's own size
+## from the same table, so the two never disagree — and he can change a match in a line.
+const BRIEF: String = "res://content/bake_brief.json"
+## Walls the simulation has and his map does not show yet — the castle's ramparts —
+## stand as blocks this tall, so a wall you cannot pass is a wall you can see.
+const WALL_HEIGHT_M: float = 3.0
+## The lens zooms as his camera does: size in metres, two at a time, between his limits.
+const ZOOM_MIN: float = 14.0
+const ZOOM_MAX: float = 48.0
+const ZOOM_STEP: float = 2.0
 ## Small things are turned a quarter at a time by their tile, so a row of barrels is
 ## not a row of identical barrels; buildings keep his facing.
 const TURNED_BY_TILE: Array[StringName] = [&"barrels", &"crates", &"logs", &"overgrowth"]
@@ -105,9 +105,11 @@ var _focus_placed: bool = false
 var _his: Node3D = null
 var _his_terrain: Node3D = null
 var _his_pieces: Dictionary = {}
+var _kit_library: Dictionary = {}
 var _frames: SpriteFrames = null
 var _figure_material: Material = null
 var _block_material: Material = null
+var _zoom: float = CAMERA_SIZE
 
 var _player: Node3D = null
 var _player_last: Vector3 = Vector3.ZERO
@@ -134,6 +136,7 @@ var water_triangles: int = 0
 var his_props_skipped: int = 0
 var his_kit_count: int = 0
 var block_count: int = 0
+var wall_count: int = 0
 
 
 # ------------------------------------------------------------------ building ---
@@ -161,8 +164,17 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_build_ground()
 		_build_water()
 	_build_props()
+	_build_walls()
 	_build_fairy()
 	_build_embers()
+
+
+## Zoom, as his camera zooms: the same actions, the same limits, the same step.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"zoom_in"):
+		_zoom = clampf(_zoom - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX)
+	elif event.is_action_pressed(&"zoom_out"):
+		_zoom = clampf(_zoom + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX)
 
 
 func _build_camera() -> void:
@@ -181,8 +193,12 @@ func _build_camera() -> void:
 	add_child(_camera)
 
 
-## His frames for the figures and his paint for the blocks, when the copy has them.
+## His frames for the figures and his paint for the blocks, when the copy has them;
+## and the brief's table of which kinds his library stands for.
 func _load_his_materials() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(BRIEF))
+	if parsed is Dictionary:
+		_kit_library = (parsed as Dictionary).get("kit_library", {}) as Dictionary
 	if ResourceLoader.exists(HIS_FRAMES):
 		_frames = load(HIS_FRAMES) as SpriteFrames
 	if ResourceLoader.exists(HIS_FIGURE_MATERIAL):
@@ -408,7 +424,7 @@ func _build_props() -> void:
 		if kind == &"townsfolk":
 			entry["node"] = _figure()
 			entry["figure"] = true
-		elif _his != null and HIS_KIT.has(kind):
+		elif _his != null and _kit_library.has(String(kind)):
 			var piece: Node3D = _his_piece(kind)
 			if piece != null:
 				if TURNED_BY_TILE.has(kind):
@@ -441,7 +457,7 @@ func _stand(entry: Dictionary) -> void:
 ## One of his library pieces for a kind, or null when the copy lacks it.
 func _his_piece(kind: StringName) -> Node3D:
 	if not _his_pieces.has(kind):
-		var path: String = HIS_LIBRARY + String(HIS_KIT[kind])
+		var path: String = HIS_LIBRARY + String(_kit_library.get(String(kind), ""))
 		_his_pieces[kind] = load(path) as PackedScene if ResourceLoader.exists(path) else null
 	var scene: PackedScene = _his_pieces[kind] as PackedScene
 	return scene.instantiate() as Node3D if scene != null else null
@@ -464,6 +480,30 @@ func _plain_grey() -> StandardMaterial3D:
 	material.albedo_color = Color(0.55, 0.56, 0.58)
 	material.roughness = 1.0
 	return material
+
+
+## Walls the simulation has and nothing of his shows: the castle's ramparts. A block
+## a tile square and a wall high on each, in his rock paint, so what stops you is
+## seen — Yannick walked into the invisible kind (2026-09-14). His own walls are his
+## meshes; the kit's building footprints are covered by the pieces and blocks above.
+func _build_walls() -> void:
+	var walls := Node3D.new()
+	walls.name = "Walls"
+	add_child(walls)
+	var box := BoxMesh.new()
+	box.size = Vector3(_metres_per_tile * 0.98, WALL_HEIGHT_M, _metres_per_tile * 0.98)
+	var material: Material = _block_material if _block_material != null else _plain_grey()
+	for y: int in _region.height:
+		for x: int in _region.width:
+			if _region.terrain_at(Vector2i(x, y)) != Region.Terrain.RAMPART:
+				continue
+			var wall := MeshInstance3D.new()
+			wall.name = "Wall_%d_%d" % [x, y]
+			wall.mesh = box
+			wall.material_override = material
+			wall.position = _feet_of(Vector2(x, y) + Vector2(0.5, 0.5)) + Vector3.UP * WALL_HEIGHT_M * 0.5
+			walls.add_child(wall)
+			wall_count += 1
 
 
 ## The middle of a prop's footprint, in tiles — where a mesh stands.
@@ -859,6 +899,7 @@ func _sync_camera(eye_tiles: Vector2, delta: float) -> void:
 		_focus_placed = true
 	else:
 		_focus = _focus.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
+	_camera.size = lerpf(_camera.size, _zoom, 1.0 - exp(-10.0 * delta))
 	_camera.transform = Transform3D(Basis.looking_at(-_lens_offset, Vector3.UP),
 		_focus + _lens_offset * CAMERA_DISTANCE)
 

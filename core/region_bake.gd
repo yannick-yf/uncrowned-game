@@ -122,6 +122,7 @@ static func bake(
 	out._ford()
 	out._buildings(sectors, brief)
 	out._kit(brief)
+	out._thin_footprints(brief)
 	out._border()
 	out._summarise()
 	return out
@@ -310,7 +311,21 @@ func _wound_and_clearing() -> void:
 		var brindle: Dictionary = places[&"brindle"] as Dictionary
 		var walled_to: int = (brindle["centre"] as Vector2i).y - (brindle["size"] as Vector2i).y / 2 \
 			- Region.CORRIDOR_STOPS_SHORT
-		region.scaffold_clearing((points[&"clearing"] as Dictionary)["at"] as Vector2i, walled_to)
+		var clearing: Vector2i = (points[&"clearing"] as Dictionary)["at"] as Vector2i
+		region.scaffold_clearing(clearing, walled_to)
+		# The ring of thicket the kit closes the clearing with cannot be seen on his map —
+		# nothing of ours is drawn there — and a wall nobody sees is a wall in the face
+		# (Yannick, 2026-09-14). It stands as open wood until he plants the ring himself;
+		# the corridor's tests say so as a debt.
+		var reach: int = Region.CLEARING_RADIUS + Region.THICKET_DEPTH + 2
+		var opened: int = 0
+		for x: int in range(clearing.x - reach, clearing.x + reach + 1):
+			for y: int in range(clearing.y - reach, walled_to + 2):
+				var tile := Vector2i(x, y)
+				if region.in_bounds(tile) and region.terrain_at(tile) == Region.Terrain.THICKET:
+					region.set_terrain(tile, Region.Terrain.FOREST)
+					opened += 1
+		report.append("clearing: %d tiles of thicket left as open wood, nothing standing there to be seen" % opened)
 
 
 ## His roads, his village paths, his bridge, then the brief's roads.
@@ -440,6 +455,44 @@ func _kit(_brief: Dictionary) -> void:
 			report.append("kit   %-12s his site, nothing built in it yet: our kit at %s" % [id, kit])
 		else:
 			report.append("kit   %-12s his: %d of his buildings stand in it, nothing of ours" % [id, _his_props_in(id)])
+
+
+## Under a piece of his library the walls are the piece's, not the footprint's. The
+## kit's footprints are the 2D sprites' sizes — twice his cottages in metres — and the
+## strip between his wall and ours was a wall nobody could see (Yannick, 2026-09-14).
+## The outer ring of every such footprint is opened again; the centre stays solid,
+## because a house is still a house. Which kinds have a piece is the brief's
+## `kit_library`, the same table the window draws from.
+func _thin_footprints(brief: Dictionary) -> void:
+	var library: Dictionary = brief.get("kit_library", {}) as Dictionary
+	var opened: int = 0
+	for prop: Dictionary in region.props:
+		if bool(prop.get("his", false)) or not library.has(String(prop["kind"])):
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+		if size.x < 3 and size.y < 3:
+			continue
+		var ground: Region.Terrain = _ground_beside(at, size)
+		for dx: int in size.x:
+			for dy: int in size.y:
+				var inner_x: bool = size.x < 3 or (dx >= 1 and dx < size.x - 1)
+				var inner_y: bool = size.y < 3 or (dy >= 1 and dy < size.y - 1)
+				if inner_x and inner_y:
+					continue
+				var tile: Vector2i = at + Vector2i(dx, dy)
+				if region.in_bounds(tile) and region.terrain_at(tile) == Region.Terrain.WALL:
+					region.set_terrain(tile, ground)
+					opened += 1
+	report.append("footprints: %d wall tiles opened around pieces of his library" % opened)
+
+
+## What the ground is next to a footprint — the street it stands on, usually.
+func _ground_beside(at: Vector2i, size: Vector2i) -> Region.Terrain:
+	for tile: Vector2i in [at + Vector2i(-1, 0), at + Vector2i(size.x, 0), at + Vector2i(0, -1), at + Vector2i(0, size.y)]:
+		if region.in_bounds(tile) and region.is_passable(tile):
+			return region.terrain_at(tile)
+	return Region.Terrain.TOWN
 
 
 func _his_props_in(zone: StringName) -> int:

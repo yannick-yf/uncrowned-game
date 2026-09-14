@@ -19,10 +19,11 @@ func test_water_over_ground_is_water_and_the_sea_is_the_sea() -> void:
 
 
 func test_rock_is_mountain_and_sand_is_sand() -> void:
-	assert_eq(BakeRules.terrain_for(120.0, 0.0, 0.9, 0.0), Region.Terrain.MOUNTAIN, "his rock paint")
-	assert_eq(BakeRules.terrain_for(120.0, 0.0, 0.49, 0.0), Region.Terrain.WILD, "just under the rule is walkable")
+	assert_eq(BakeRules.terrain_for(120.0, 0.0, 0.9, 0.0), Region.Terrain.MOUNTAIN, "his rock paint, at its steepest")
+	assert_eq(BakeRules.terrain_for(120.0, 0.0, 0.6, 0.0), Region.Terrain.WILD,
+		"a steep bank is walkable — his character climbs it, and a wall nobody sees is a bug")
 	assert_eq(BakeRules.terrain_for(2.0, 0.0, 0.0, 0.8), Region.Terrain.SAND, "the beach")
-	assert_eq(BakeRules.terrain_for(2.0, 0.0, 0.6, 0.8), Region.Terrain.MOUNTAIN, "a cliff over the beach is rock first")
+	assert_eq(BakeRules.terrain_for(2.0, 0.0, 0.9, 0.8), Region.Terrain.MOUNTAIN, "a cliff over the beach is rock first")
 	assert_eq(BakeRules.terrain_for(30.0, 0.0, 0.0, 0.0), Region.Terrain.WILD, "grass")
 
 
@@ -87,6 +88,37 @@ func test_the_baked_file_is_a_closed_world_of_the_stated_size() -> void:
 		if (prop["kind"] as StringName) == &"ruin_house":
 			ruins += 1
 	assert_eq(ruins, 6, "his six ruins stand as props")
+
+
+## On his map nothing of ours is drawn, so every tile the simulation refuses has to be
+## something the player can see: his water and his rock, his meshes, or a block of ours
+## standing on a prop. The kit's ring of thicket was the wall nobody saw (Yannick,
+## 2026-09-14), and a footprint wider than his cottage was another.
+func test_every_wall_on_his_map_is_something_you_can_see() -> void:
+	var data: Dictionary = _baked()
+	if data.is_empty():
+		assert_true(false, "content/region.json exists — run tools/bake_region.gd")
+		return
+	var region: Region = RegionBake.read(data)
+	var covered: Dictionary = {}
+	for prop: Dictionary in region.props:
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+		for dx: int in size.x:
+			for dy: int in size.y:
+				covered[at + Vector2i(dx, dy)] = true
+	var thicket: int = 0
+	var bare_walls: int = 0
+	for y: int in region.height:
+		for x: int in region.width:
+			var tile := Vector2i(x, y)
+			var terrain: Region.Terrain = region.terrain_at(tile)
+			if terrain == Region.Terrain.THICKET:
+				thicket += 1
+			elif terrain == Region.Terrain.WALL and not covered.has(tile):
+				bare_walls += 1
+	assert_eq(thicket, 0, "no thicket: the ring is his to plant, and until then the wood is open")
+	assert_eq(bare_walls, 0, "every wall tile stands under a prop the window draws: %d do not" % bare_walls)
 
 
 func test_the_baked_world_has_every_place_and_point_the_content_stands_in() -> void:
