@@ -10,6 +10,7 @@ extends RefCounted
 var _failures: PackedStringArray = PackedStringArray()
 var _assertions: int = 0
 var _debts: PackedStringArray = PackedStringArray()
+var _offs: PackedStringArray = PackedStringArray()
 
 
 func before_each() -> void:
@@ -48,6 +49,20 @@ func debt(message: String) -> void:
 
 func debts() -> PackedStringArray:
 	return _debts
+
+
+## Something a **testing switch** has turned off, not something the code got wrong
+## (CLAUDE.md, *Testing switches*). While the 3D world is tested the 2D game's layers
+## come off one by one — the wild's price in time, the music — each behind one word,
+## and a test that claims what a switch turns off records this rather than failing or
+## quietly passing. The runner prints it as `OFF` and counts it apart, so the switch is
+## not forgotten and the claim is not lost.
+func off(message: String) -> void:
+	_offs.append(message)
+
+
+func offs() -> PackedStringArray:
+	return _offs
 
 
 func assert_true(condition: bool, message: String = "") -> void:

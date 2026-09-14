@@ -117,6 +117,9 @@ func test_the_wood_does_not_slow_an_attuned_walker_as_much() -> void:
 	assert_true(traits.choose(forest_build))
 	assert_false(traits.is_attuned(), "2 is not")
 
+	if not Region.TERRAIN_SLOWS_YOU:
+		off("terrain speeds are off for now (2026-09-14): the wood costs nobody time, attuned or not")
+		return
 	var plain: float = MovementRules.multiplier_for(Region.Terrain.FOREST, false)
 	var attuned: float = MovementRules.multiplier_for(Region.Terrain.FOREST, true)
 	assert_true(attuned > plain, "the wood costs them less: %.2f against %.2f" % [attuned, plain])

@@ -86,10 +86,17 @@ func test_road_travel_matches_the_settled_target() -> void:
 		"§4 settles road travel at 45-90 s; this map walks it in %.1f s" % seconds)
 
 
-func test_the_ground_slows_you_down_again() -> void:
-	# Switched back on 2026-09-13 (§4): with the beasts gone, tiring is the price of
-	# the wild, and the tuned table is the one that was reasoned about.
-	assert_true(Region.TERRAIN_SLOWS_YOU)
+func test_the_ground_slows_you_or_not_as_the_switch_says() -> void:
+	# Switched on 2026-09-13 (§4): with the beasts gone, tiring is the price of the
+	# wild. Off again 2026-09-14 (Yannick, on his brother's map): at his pace the wild
+	# was a crawl, and the 2D game's layers come off while the 3D world is tested.
+	# Either way, the rule agrees with the switch.
+	if not Region.TERRAIN_SLOWS_YOU:
+		for terrain: int in Region.Terrain.values():
+			assert_true(absf(Region.speed_multiplier(terrain as Region.Terrain) - 1.0) < 0.001,
+				"with the switch off every ground walks at the world's pace: %d" % terrain)
+		off("terrain speeds are off for now (Yannick, 2026-09-14): the wild costs no time")
+		return
 	assert_true(absf(Region.speed_multiplier(Region.Terrain.ROAD) - 1.0) < 0.001,
 		"the road is the 1.0 reference")
 	for terrain: int in [Region.Terrain.WILD, Region.Terrain.FOREST, Region.Terrain.MARSH,
@@ -118,8 +125,8 @@ func test_the_road_is_the_long_way_and_the_wood_is_the_slow_way() -> void:
 	assert_true(_region.brindle_to_blackcairn_tiles() < _region.road_distance(),
 		"the wild line is the short one: %.0f against %.0f tiles" % [
 			_region.brindle_to_blackcairn_tiles(), _region.road_distance()])
-	assert_true(Region.speed_multiplier(Region.Terrain.FOREST) < Region.speed_multiplier(Region.Terrain.ROAD),
-		"and the wood is slower per tile than the road")
+	assert_true(Region.speed_table(Region.Terrain.FOREST) < Region.speed_table(Region.Terrain.ROAD),
+		"and the wood is slower per tile than the road, in the table the switch turns on")
 
 
 

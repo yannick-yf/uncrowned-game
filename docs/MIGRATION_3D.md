@@ -466,6 +466,15 @@ a machine that refuses the borrowed thing. Rewritten for the 3D world:
    ramparts stand as blocks. Rejected: drawing a ring of trees or a hedge of ours to make
    the wall visible — that is decision 4 the other way round, and the ring is his to
    plant. And the lens zooms with his camera's numbers, not a figure of ours.
+8. **The 2D game's layers come off while the 3D world is tested (Yannick, 2026-09-14,
+   after a second walk).** *A lot of what the 2D version implemented needs to be removed
+   for now* — first the wild's price in time (`Region.TERRAIN_SLOWS_YOU`) and the music
+   (`Sound.MUSIC`), more as he plays. Each is a switch, one word each way, kept beside
+   what it switches and listed in CLAUDE.md under *Testing switches*; a test that claims
+   what a switch turns off says `OFF` in the run (`TestCase.off`) rather than failing or
+   going quiet. Rejected: deleting the systems — they are v2's tested work and the spec
+   still argues for them; what is decided is what the game does *now*, on his map, at
+   his pace.
 
 ## 10. Where this leaves the documents
 

@@ -15,6 +15,8 @@ func _initialize() -> void:
 	_report("the King's Road", Region.road_waypoints(), false)
 	_report("the wild", _wild_line(), false)
 	_report("the wild, attuned", _wild_line(), true)
+	if not Region.TERRAIN_SLOWS_YOU:
+		print("(terrain speeds are off — Region.TERRAIN_SLOWS_YOU, 2026-09-14 — so the wild costs the time of its length and no more)")
 	quit(0)
 
 

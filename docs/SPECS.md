@@ -858,7 +858,16 @@ that was tuned and approved, so every other surface is a penalty. Were the wild
 > walk around in. Cleared ground and the clearing are not in the table and walk at 1.00
 > until it matters.
 
-> **Terrain speeds are currently off** (2026-09-11). Everything walkable moves at
+> **Terrain speeds are off again, for now** (Yannick, 2026-09-14, walking his brother's
+> map): *the player is slow off the path — that is useless, remove it.* At the baked
+> world's 2.5 tiles a second, open country at 0.65 was a crawl, and the 2D game's layers
+> come off one by one while the 3D world is tested (MIGRATION_3D §9, decision 8).
+> `Region.TERRAIN_SLOWS_YOU` is `false`; the table stands; the four tests that claim the
+> wild's price in time say `OFF` in the run rather than pretending to hold. §4's argument
+> — speed against witnesses — is suspended, not withdrawn: the wild is unwatched and, for
+> now, no slower.
+
+> **Terrain speeds were first switched off** (2026-09-11). Everything walkable moves at
 > the road's 6 tiles/sec: a forest should be dangerous, not tiring, and trudging
 > was making the interesting route the annoying one. The table above is kept rather
 > than deleted — `Region.TERRAIN_SLOWS_YOU` turns it back on in one word, with the
@@ -3196,7 +3205,7 @@ is audible immediately even to people who could not say why.
 
 | | |
 |---|---|
-| **Music** | one track for where you are. `MUSIC_AT` by zone, `MUSIC_ON` by terrain when you are in none, and the travelling track for everywhere else |
+| **Music** | **off for now** (Yannick, 2026-09-14; `Sound.MUSIC`, one word) — one track for where you are. `MUSIC_AT` by zone, `MUSIC_ON` by terrain when you are in none, and the travelling track for everywhere else |
 | **Ambience** | one loop under it, by terrain: wind in the wood, water at the river and the marsh, waves at the coast. A town is silent underneath, because a town has the music |
 | **Cues** | one-shots named by *what happened* — `cue(&"refused")`, `cue(&"seen")` — so a caller never learns which file that is |
 
@@ -4075,6 +4084,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **His 3D project comes into ours as data first: the window is built from his files, his scenes follow at M2b** | Moving his 263 files under the root now; vendoring a rewritten copy now | Yannick's call (MIGRATION_3D §9, decision 6). The map will be his for months and his branch is in flight: a move rewrites his `res://` paths and conflicts with everything he has open, a copy is 28 MB twice. His heights, water and paint are files the window can read where they are, and the pixel figures stood up on that ground are the transition §13 already accepted. His meshes and shaders wait for the step that copies and rewrites, which can be re-run each time he delivers |
 | 2026-09-14 | **Nothing of the 2D pack appears in the 3D world — not even as a placeholder.** Every person is the brother's traveller sprite until he draws the cast; what his library lacks is a plain block in his rock paint; the woods and roads the simulation has and he has not are not drawn | The day-old default: the pixel figures riding his ground as a listed transition, with pixel trees, stalls and fires where his library had nothing | Yannick, on launching the game and seeing 2D assets on his brother's map: *the assets and the graphics are my brother's; nothing of ours is kept.* A placeholder that looks like art is art nobody chose; a grey block the size of a kiln is visibly a gap, and the gap is the brother's list (MIGRATION_3D §9, decision 4 revised) |
 | 2026-09-14 | **What stops you must be seen.** On the baked world the simulation refuses a tile only where the player can see why: his water, his rock at 0.85 of the paint and above, his meshes, or a plain block of ours. Rock at a half is walkable again (6,169 tiles), the kit's thicket ring round the clearing is left open and owed as a DEBT until he plants it, a footprint shrinks to the piece his library stands for it, the castle's ramparts stand as blocks; and the lens zooms with his camera's numbers (14–48 m, two at a time) | Keeping the 2D map's passability and drawing a ring of trees and hedges of ours to show it; keeping rock at a half | Yannick walked into walls nobody could see, on ground his brother's own character climbs, and asked whether something was broken. Nothing was: four 2D-era rules stopped him with things the 3D window does not draw. Drawing them ourselves is decision 4 reversed; opening them and naming the debt keeps the ring his to plant (MIGRATION_3D §9, decision 7) |
+| 2026-09-14 | **The 2D game's layers come off while the 3D world is tested — first the wild's price in time and the music.** `Region.TERRAIN_SLOWS_YOU` and `Sound.MUSIC` are `false`; the speed table and the track tables stand; a test that claims what a switch turns off says `OFF` in the run (`TestCase.off`), counted apart like a debt | Deleting the speed table and `view/sound.gd`; keeping speeds on and retuning the table for 2.5 tiles a second | Yannick, walking his brother's map: *the player is slow off the path — that is useless, remove it; remove the music as well, for now.* At his pace the wild was a crawl, and the score is the 2D pack's. A switch is one word each way and the run says what is off; a deletion is a rewrite later and a suite that quietly stops claiming anything |
 | 2026-09-13 | **Positions are anchors, never coordinates; scaffolds fill what the map has not built; the contract is tested by name** | Hand-placing content on the 3D map; waiting for the map to finish; a coordinate table per map version | The map will take time and moves as it grows. Content that names *what it stands next to* survives every move; a placeholder per missing place keeps every system and test working from the first bake; and a test that fails naming the missing anchor turns a broken merge into a sentence. This is the whole answer to working in parallel (MIGRATION_3D §6.2) |
 
 ---

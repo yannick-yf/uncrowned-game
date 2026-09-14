@@ -205,7 +205,14 @@ func is_watched(tile: Vector2i) -> bool:
 ##
 ## One exception, by trait: an attuned walker is not slowed by the wood as much
 ## (MovementRules.ATTUNED_WOOD_MULTIPLIER, §11).
-const TERRAIN_SLOWS_YOU: bool = true
+##
+## **Off again, for now (Yannick, 2026-09-14, walking his brother's map):** *the player
+## is slow off the path — that is useless, remove it.* At his pace (2.5 tiles a second)
+## open country at 0.65 was a crawl, and the 2D game's layers come off one by one while
+## the 3D world is tested (MIGRATION_3D §9, decision 8). The table stands, the switch is
+## one word, and the tests that claim the wild's price say `OFF` in the run rather than
+## pretending to hold (TestCase.off).
+const TERRAIN_SLOWS_YOU: bool = false
 
 
 static func speed_multiplier(terrain: Terrain) -> float:

@@ -198,6 +198,10 @@ func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
 
 	assert_eq(road_blood, 0, "the road drew blood")
 	assert_eq(wild_blood, 0, "the wild drew blood, and nothing lives in it now")
+	if not Region.TERRAIN_SLOWS_YOU:
+		off("terrain speeds are off for now (Yannick, 2026-09-14): road %.0f s, wild %.0f s, and the wild's price in time is not claimed"
+			% [road_seconds, wild_seconds])
+		return
 	assert_true(road_seconds < wild_seconds,
 		"road %.0f s, wild %.0f s: the wild is faster and unwatched, so the road has no case"
 			% [road_seconds, wild_seconds])
@@ -209,6 +213,9 @@ func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
 ## anybody else, and still slower than the road — or the forest build gets the wild
 ## for free and the choice stops being a choice for exactly the player it is about.
 func test_an_attuned_walker_crosses_the_wood_faster_but_not_as_fast_as_the_road() -> void:
+	if not Region.TERRAIN_SLOWS_YOU:
+		off("terrain speeds are off for now (Yannick, 2026-09-14): the wood costs nobody time, attuned or not")
+		return
 	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
 
 	_sim = Game.build()

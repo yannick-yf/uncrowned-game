@@ -40,6 +40,7 @@ func _initialize() -> void:
 	var skipped_suites: int = 0
 
 	var owed: int = 0
+	var switched_off: int = 0
 	for file_name: String in _test_files():
 		var script: GDScript = load("%s/%s" % [TEST_DIR, file_name]) as GDScript
 		if script == null:
@@ -86,6 +87,13 @@ func _initialize() -> void:
 				print("  DEBT  %s" % method)
 				for message: String in test_case.debts():
 					print("          owed by the map: %s" % message)
+			elif test_case.offs().size() > 0 and test_case.failure_count() == 0:
+				# Turned off by a testing switch, on purpose (TestCase.off). Printed so the
+				# switch is not forgotten, counted apart so the claim is not lost.
+				switched_off += test_case.offs().size()
+				print("  OFF   %s" % method)
+				for message: String in test_case.offs():
+					print("          switched off: %s" % message)
 			elif test_case.assertion_count() == 0:
 				failed += 1
 				print("  DEAD  %s — recorded no assertions; look for a SCRIPT ERROR above" % method)
@@ -106,9 +114,10 @@ func _initialize() -> void:
 		print("slowest:")
 		for i: int in mini(5, timings.size()):
 			print("  %7.1f ms  %s" % [float(timings[i][0]), String(timings[i][1])])
-	print("%d suites, %d tests, %d assertions, %d failed%s — %.1f ms%s" % [
+	print("%d suites, %d tests, %d assertions, %d failed%s%s — %.1f ms%s" % [
 		suites, ran, assertions, failed,
-		", %d owed by the map" % owed if owed > 0 else "", elapsed_ms,
+		", %d owed by the map" % owed if owed > 0 else "",
+		", %d switched off" % switched_off if switched_off > 0 else "", elapsed_ms,
 		"  (--fast: %d slow suites skipped)" % skipped_suites if only_fast else "",
 	])
 	quit(1 if failed > 0 else 0)

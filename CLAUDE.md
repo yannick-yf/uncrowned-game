@@ -187,9 +187,12 @@ position or the pace. A test says where it stands in the world's terms —
 scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
 the run is the map's or the brief's, not the code's: a claim the spec makes that the
 baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
-apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Two stand
-today: the works far from Brindle, and §4's 45–90 s road band at his pace. Never turn
-a failure into a debt to get green; a debt names something a person has to settle.
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Three stand
+today: the works far from Brindle, §4's 45–90 s road band at his pace, and the
+clearing's ring of wood. Never turn a failure into a debt to get green; a debt names
+something a person has to settle. A line marked **`OFF`** is the third kind
+(`TestCase.off`): a claim that holds only while one of the testing switches below is
+on, printed so the switch is not forgotten and counted apart so the claim is not lost.
 
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
@@ -243,13 +246,30 @@ here. A debug tool that is not written down is a debug tool that ships.
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
 > so you cannot walk anywhere while time passes, which is the whole point.
 
-## Testing switch — not a debug tool, and on in every build for now
+## Testing switches — not debug tools, and on in every build for now
+
+The 2D game's layers come off one by one while the 3D world is tested (Yannick,
+2026-09-14, MIGRATION_3D §9 decision 8). Each is one word, kept in the code beside what
+it switches and listed here so none is forgotten when the game is shown to anybody. A
+test that claims something only true while a switch is on says `OFF` in the run
+(`TestCase.off`) instead of failing or quietly passing. Never delete the layer: it is
+v2's tested work and the spec still argues for it; what a switch decides is what the
+game does *now*.
 
 **`Screens.QUICK_START` (2026-09-14).** The game opens straight into a fresh run with
 every trait at the floor: no title menu, no character creation. Yannick asked for it
 because both slowed every test launch. The two screens still exist, route and are
 tested; the constant is one word to flip when the game is shown to anybody. The
 screenshot harness names the screen it wants and is unaffected.
+
+**`Region.TERRAIN_SLOWS_YOU = false` (2026-09-14).** The ground does not slow the
+walker: every terrain walks at the world's pace. Yannick found open country at 0.65 of
+2.5 tiles a second a crawl, and useless for now. §4's speed table stands and is tested
+as a table; the four tests that measure the wild's price in time say `OFF`.
+
+**`Sound.MUSIC = false` (2026-09-14).** No music. The ambience loops and the menu cues
+still play; the tracks are the 2D pack's. The tables stand and `test_assets` still
+checks the files exist.
 
 ## Effort discipline
 
