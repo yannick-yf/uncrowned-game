@@ -21,15 +21,17 @@ extends RefCounted
 
 const PATH: String = "res://content/places.json"
 
-## **The one flag** (MIGRATION_3D §6, M1b). `UNCROWNED_WORLD=baked` in the environment
-## and the whole process plays on the world baked from the 3D workshop: this class
-## overlays the baked file's places and points on the content's anchors, and
-## `Region.build_overworld()` loads the baked grid instead of stamping the procedural
-## one. Read once, here, because `Region` initialises its sites from this class and
-## the two must never disagree about which world they are in. A process is one world;
+## **The one flag** (MIGRATION_3D §6, M1b; flipped at M4, 2026-09-13). The world baked
+## from the 3D workshop is the game: this class overlays the baked file's places and
+## points on the content's anchors, and `Region.build_overworld()` loads the baked grid.
+## `UNCROWNED_WORLD=procedural` in the environment plays the 2D map v1 and v2 were
+## built on instead — kept for its tests and its history, never the default again.
+## Read once, here, because `Region` initialises its sites from this class and the two
+## must never disagree about which world they are in. A process is one world;
 ## switching means restarting.
 const WORLD_ENV: String = "UNCROWNED_WORLD"
 const BAKED: String = "baked"
+const PROCEDURAL: String = "procedural"
 const BAKED_PATH: String = "res://content/region.json"
 
 ## The same sentinel as `Region.NOWHERE`, spelled here on purpose: `Region` initialises
@@ -37,9 +39,16 @@ const BAKED_PATH: String = "res://content/region.json"
 ## into `Region` while that happens. A test asserts the two are equal.
 const NOWHERE: Vector2i = Vector2i(-1, -1)
 
-## Whether this process plays on the baked world.
+## Whether this process plays on the baked world — which it does unless asked for
+## the procedural map by name.
 static func baked() -> bool:
-	return OS.get_environment(WORLD_ENV) == BAKED
+	return OS.get_environment(WORLD_ENV) != PROCEDURAL
+
+
+## The world this process plays on, by name, for a save file to remember: a run's
+## event log replayed on another world walks into walls.
+static func world_id() -> String:
+	return BAKED if baked() else PROCEDURAL
 
 ## Place id -> {"centre": Vector2i, "size": Vector2i}, in the file's order.
 var _places: Dictionary = {}
@@ -56,6 +65,9 @@ var _scaffold: Dictionary = {}
 ## from the baked file; the procedural map keeps its own in `Region.road_route()`.
 var _trunk: Array[StringName] = []
 var _spurs: Dictionary = {}
+## How fast a walker crosses this world, in tiles a second. The 2D map's figure until a
+## baked world states its own (decision 1: walking follows the workshop).
+var _tiles_per_second: float = MovementRules.TILES_PER_SECOND
 
 static var _shared: Places = null
 
@@ -93,6 +105,9 @@ func overlay_world(path: String) -> void:
 		var row: Variant = (world["points"] as Dictionary)[id]
 		_points[StringName(id)] = _pair((row as Dictionary).get("at", [0, 0])) \
 			if row is Dictionary else _pair(row)
+	var pace: float = float(world.get("tiles_per_second", 0.0))
+	if pace > 0.0:
+		_tiles_per_second = pace
 	_trunk.clear()
 	for id: Variant in (world.get("trunk", []) as Array):
 		_trunk.append(StringName(String(id)))
@@ -210,6 +225,11 @@ func spur(id: StringName) -> Array[StringName]:
 	for leg: StringName in (_spurs.get(id, []) as Array):
 		legs.append(leg)
 	return legs
+
+
+## How fast a walker crosses this world, in tiles a second.
+func tiles_per_second() -> float:
+	return _tiles_per_second
 
 
 ## A place's centre or a point, by id — the two things a road runs between.

@@ -67,12 +67,20 @@ jobs:
       - name: Import assets
         run: ./godot-bin --headless --path . --import
 
+      # The game's world: the one baked from the 3D workshop (M4, 2026-09-13).
       - name: Run the whole suite
         env:
           GODOT: ./godot-bin
         run: |
           chmod +x tools/run_tests.sh
           tools/run_tests.sh --all
+
+      # And the 2D map v1 and v2 were built on, which keeps its tests: the kit's
+      # shape and the thesis are proved there tile for tile.
+      - name: Run the whole suite on the 2D map
+        env:
+          GODOT: ./godot-bin
+        run: tools/run_tests.sh --procedural --all
 
       # The art workshop has its own project.godot and resource root. The
       # production importer ignores prototypes/, so it needs a separate check.
@@ -87,8 +95,3 @@ jobs:
       # settle and does not fail the run; a FAIL is ours.
       - name: The baked world is current
         run: ./godot-bin --headless --path . -s tools/bake_region.gd -- --check
-
-      - name: Run the whole suite on the baked world
-        env:
-          GODOT: ./godot-bin
-        run: tools/run_tests.sh --baked --all

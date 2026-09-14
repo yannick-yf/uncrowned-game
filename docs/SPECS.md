@@ -29,10 +29,15 @@ truth on *what the game is*. For *what currently exists* — which is the questi
 have if you have just arrived — read `docs/V1.md` first; it is two pages. `CLAUDE.md`
 wins on how we work. Finished working logs and the original raw notes are in
 `docs/history/` and are never authoritative.
-**v3 is decided and being planned (2026-09-13, evening):** the game's world moves onto
-the Brindle 3D workshop (`prototypes/brindle_3d/`) — a stylised 3D landscape walked by
-2D characters — and `docs/MIGRATION_3D.md` is the plan. §13's art direction below is
-amended accordingly; nothing about what the game *is* changes.
+**v3: the game plays on the world baked from the Brindle 3D workshop** (decided
+2026-09-13, the cut-over on 2026-09-14) — a stylised 3D landscape walked by 2D
+characters, `prototypes/brindle_3d/`, the brother's. `docs/MIGRATION_3D.md` is the plan
+and the record of what each phase delivered; `docs/V3.md` says what the game is now.
+The 2D map v1 and v2 were built on is reached with `UNCROWNED_WORLD=procedural`. §13's
+art direction below is amended accordingly; nothing about what the game *is* changes.
+Two claims below are **debts** the baked world does not yet meet and the suite prints
+by name: the furnaces in Brindle's first frame (§4) and the 45–90 s road band (§4) at
+the workshop's walking pace.
 
 ---
 
@@ -3705,6 +3710,12 @@ somebody objects are in that file, not here. Combat remains outside it.
   cold kilns for a freed works, the fairy's breathing glow, the occlusion fade, and every
   free-state and castle reading the 2D window draws. His props, his carts and the 25
   faces in his style are M3b and his.
+- ✅ **M4 — cut-over** (2026-09-14). The baked world is the game; the 2D map is
+  `UNCROWNED_WORLD=procedural`, kept for its tests. Walking follows the workshop: 2.5
+  tiles a second on the baked world, six on the 2D map, read from the world's data. A
+  save remembers its world. Measured at his pace: the King's Road 167 s, the wild 297 s,
+  the attuned wild 229 s — the road is still the fast way. §4's 45–90 s band becomes the
+  second debt. `docs/V3.md` written.
 
 ---
 

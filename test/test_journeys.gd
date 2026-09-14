@@ -35,6 +35,13 @@ func _say(type: StringName, data: Dictionary = {}) -> void:
 	_sim.advance(1)
 
 
+## A time budget written for the 2D map's six tiles a second, at this world's pace:
+## the same walk on the baked world takes 2.4 times as long, and the budget says so
+## rather than failing on the pace Yannick chose (decision 1).
+func _at_pace(seconds_at_six: float) -> float:
+	return seconds_at_six * MovementRules.TILES_PER_SECOND / MovementRules.tiles_per_second()
+
+
 ## Walk to a tile by an actual path, not by pressing into whatever is in the way.
 func _walk_to(target: Vector2i, max_seconds: float) -> bool:
 	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
@@ -169,8 +176,8 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 	# Brindle is not on the King's Road; it is reached by its own track. Find the road
 	# first — on the 2D map that is the track to the works, on the baked world his
 	# road north to Harrowgate — and then keep to it.
-	assert_true(_walk_to(route[0], 90.0), "found the road from Brindle")
-	assert_true(_follow(route, 200.0), "walked the King's Road to the capital")
+	assert_true(_walk_to(route[0], _at_pace(90.0)), "found the road from Brindle")
+	assert_true(_follow(route, _at_pace(200.0)), "walked the King's Road to the capital")
 	assert_eq(_blood_price(hp, deaths), 0, "the long way round is the safe way round")
 
 
@@ -244,8 +251,8 @@ func _seconds_to_cross(line: Array[Vector2i]) -> float:
 	# measurement: both ways start in Brindle, and the road's first point is wherever
 	# the road is.
 	if not route.is_empty():
-		assert_true(_walk_to(route[0], 90.0), "reached the start of the line")
-	assert_true(_follow(route, 400.0), "crossed within the budget")
+		assert_true(_walk_to(route[0], _at_pace(90.0)), "reached the start of the line")
+	assert_true(_follow(route, _at_pace(400.0)), "crossed within the budget")
 	return float(_sim.step - started) / float(Sim.STEPS_PER_REAL_SECOND)
 
 
@@ -263,7 +270,7 @@ func _wild_line() -> Array[Vector2i]:
 
 func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 	for node: Vector2i in Region.road_route():
-		assert_true(_walk_to(node, 120.0), "walked the road to %s" % node)
+		assert_true(_walk_to(node, _at_pace(120.0)), "walked the road to %s" % node)
 	assert_eq(_world.deaths, 0, "and arrived alive, because the road is safe")
 	_walk_into(_world.king_pos, 4.0)
 
@@ -318,17 +325,17 @@ func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
 	_say(&"create_character", {"wits": 4})
 	assert_eq(_ticked.kings_escort(), 10, "before: ten guards stand between me and the king")
 
-	assert_true(_walk_to(Region.HARROWGATE, 180.0), "walked the road to Harrowgate")
+	assert_true(_walk_to(Region.HARROWGATE, _at_pace(180.0)), "walked the road to Harrowgate")
 	assert_eq(_world.region().zone_at(_world.player_tile()), &"harrowgate", "and into the town")
 
 	var ossa: Npc = _cast.get_npc(&"ossa")
-	assert_true(_walk_to(ossa.tile, 60.0), "crossed the town to Ossa")
+	assert_true(_walk_to(ossa.tile, _at_pace(60.0)), "crossed the town to Ossa")
 	_say(&"talk", {"npc": "ossa"})
 	_say(&"choose_intent", {"intent": "ask_why"})
 	assert_true(_sim.facts.has(ArmyRules.FACT_PAY_FRAUD), "learned why they are deserting")
 	_say(&"end_talk")
 
-	assert_true(_walk_to(Region.MUSTER, 300.0), "followed the road to the camp")
+	assert_true(_walk_to(Region.MUSTER, _at_pace(300.0)), "followed the road to the camp")
 	assert_true(_world.region().is_in_muster(_world.player_tile()), "standing in the camp")
 	_say(&"expose_fraud")
 
@@ -362,13 +369,13 @@ func test_the_whole_chain_replays_identically_from_its_log() -> void:
 	# makes. Creation is an ordinary event, so it replays with everything else —
 	# which is half of what this test is checking.
 	_say(&"create_character", {"wits": 4})
-	assert_true(_walk_to(Region.HARROWGATE, 180.0))
+	assert_true(_walk_to(Region.HARROWGATE, _at_pace(180.0)))
 	var ossa: Npc = _cast.get_npc(&"ossa")
-	assert_true(_walk_to(ossa.tile, 60.0))
+	assert_true(_walk_to(ossa.tile, _at_pace(60.0)))
 	_say(&"talk", {"npc": "ossa"})
 	_say(&"choose_intent", {"intent": "ask_why"})
 	_say(&"end_talk")
-	assert_true(_walk_to(Region.MUSTER, 300.0))
+	assert_true(_walk_to(Region.MUSTER, _at_pace(300.0)))
 	_say(&"expose_fraud")
 	assert_true(_ticked.kings_escort() < 10, "the run did what it was supposed to")
 

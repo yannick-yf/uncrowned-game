@@ -8,11 +8,12 @@
     "planning/geographie-v1.json": "b66820216d0f44a816307e5fb41d7b881029ebbd81b80ce214d4d566a4e3793f",
     "planning/brindle-sectors-v1.json": "aab0a14d460a11d10c2efc953b17ac6e488056f7c910d4ac0ffd85d991d0a308",
     "planning/forest-placements-v1.json": "f2d7a54deef9dc95220a0b9480ef8f1c1023392130e9359c0d46db0d62560293",
-    "content/bake_brief.json": "6269375877640c80207fd07e5d2ccc773399542d3d930b397b0d939c4195f878"
+    "content/bake_brief.json": "49ba6d5bf61e55bc166c1a0b4f86095a0632358199ea07bdf33c001e0668a29c"
   },
   "width": 384,
   "height": 384,
   "metres_per_tile": 2.0,
+  "tiles_per_second": 2.5,
   "origin_m": [
     -384.0,
     -384.0

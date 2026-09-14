@@ -34,6 +34,8 @@
     "road_climb": {"xz": [-82, -66], "scaffold": true, "_why": "beside the city road, climbing"},
     "road_last_stop": {"xz": [-122, -158], "scaffold": true, "_why": "beside the road, the last stop before the city and the castle"}
   },
+  "walking_m_per_s": 5.0,
+  "_walking": "Yannick, 2026-09-13, decision 1: walking follows the workshop. His character controller walks at 5 m/s; the bake turns that into the simulation's tiles per second on this world (2.5 at 2 m a tile). The 2D map keeps its 6.",
   "_trunk": "On his map the works are a spur east of Harrowgate, not the first town on the road: Brindle's own road reaches Harrowgate directly. Stated as his geography has it, so the road is measured once and not walked twice.",
   "trunk": ["harrowgate", "bridge", "muster", "cairnwell", "blackcairn"],
   "spurs": {

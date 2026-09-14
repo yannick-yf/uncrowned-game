@@ -55,6 +55,9 @@ var place_order: Array[StringName] = []
 var points: Dictionary = {}
 var trunk: Array[StringName] = []
 var spurs: Dictionary = {}
+## How fast a walker crosses this world, in tiles a second: his metres a second over
+## the metres a tile (decision 1). The 2D map keeps `MovementRules.TILES_PER_SECOND`.
+var tiles_per_second: float = 0.0
 ## Where a road was laid over water: {"road": String, "at": Vector2i, "metres": Vector2}
 var crossings: Array[Dictionary] = []
 var report: Array[String] = []
@@ -103,6 +106,10 @@ static func bake(
 	out.metres_per_tile = extent / float(samples - 1)
 	out.origin_m = Vector2(-extent * 0.5, -extent * 0.5)
 	out.region = Region.new(out.width, out.height)
+	var walking: float = float(brief.get("walking_m_per_s", 0.0))
+	out.tiles_per_second = walking / out.metres_per_tile if walking > 0.0 else MovementRules.TILES_PER_SECOND
+	out.report.append("walking: %.1f m/s, %.2f tiles a second on this world" % [
+		walking if walking > 0.0 else out.tiles_per_second * out.metres_per_tile, out.tiles_per_second])
 
 	out._ground(samples, heights, waters, paint)
 	out._places(geography, brief)
@@ -576,6 +583,7 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		"source": source,
 		"width": width, "height": height,
 		"metres_per_tile": metres_per_tile,
+		"tiles_per_second": tiles_per_second,
 		"origin_m": [origin_m.x, origin_m.y],
 		"places": places_out,
 		"points": points_out,

@@ -106,16 +106,19 @@ tools/vendor_workshop.sh                                    # after cloning, and
                                                             # his scenes into view3d/workshop/, then import
 godot --headless --path . -s tools/bake_region.gd          # his data + the brief -> content/region.json
 godot --headless --path . -s tools/bake_region.gd -- --check   # is the checked-in bake stale? (CI)
-tools/run_tests.sh --baked --all                            # the same suite on the baked world
-UNCROWNED_WORLD=baked tools/shot.sh /tmp/m.png map          # any tool, on the baked world
+tools/run_tests.sh --procedural --all                       # the same suite on the 2D map v1/v2 were built on
+UNCROWNED_WORLD=procedural tools/shot.sh /tmp/m.png map     # any tool, on the 2D map
+UNCROWNED_VIEW=2d tools/shot.sh /tmp/m.png play 292,290     # the baked world, flat
 ```
 
-`UNCROWNED_WORLD=baked` is a **world selector, not a debug tool**: it is read once by
-`Places` and decides which world the whole process plays on. A process is one world.
-The baked world is seen **in 3D** (`view/world3d.gd`, M2a); `UNCROWNED_VIEW=2d` keeps it
-flat, which is what the map screen and a look at the bake itself want. The 3D window
-reads his landscape files from `prototypes/brindle_3d/` at run time, so it needs the
-workshop beside it; a clone without it says so and shows the world flat.
+**The world is the one baked from the 3D workshop** (M4 cut-over, 2026-09-14), seen in
+3D (`view/world3d.gd`). `UNCROWNED_WORLD=procedural` is a **world selector, not a debug
+tool**: read once by `Places`, it puts the whole process on the 2D map v1 and v2 were
+built on — kept for its tests and its history. A process is one world. `UNCROWNED_VIEW=2d`
+keeps the baked world flat, which is what a look at the bake itself wants. The 3D window
+reads his landscape files from `prototypes/brindle_3d/` and his scenes from the
+generated `view3d/workshop/`; a clone without the copy says so and shows the bake's own
+ground.
 
 ### Committing — read this before your first `git commit`
 
@@ -160,15 +163,19 @@ The numbers are here to be kept true, not to be admired: if the fast suite ever
 stops being the thing you run without thinking, that is the thing to fix.)
 A suite marked `const SLOW := true` is in the second group.
 
-**Two worlds, since M1 (2026-09-13).** `tools/run_tests.sh --baked --all` runs the same
-suite on the world baked from the 3D workshop (about **23 s**), and both have to be
-green before a commit that touches the map, the kit or a position. A test says where
-it stands in the world's terms — `at_a_stall()`, `in_town(&"harrowgate")`,
-`alone_on_the_road()`, `in_the_wood()`, all on `TestCase` — and never as a tile. A line
-marked **`DEBT`** in the run is the map's, not the code's: a claim the spec makes that
-the 3D map does not yet meet (`TestCase.debt`), printed so it is read and counted apart
-so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Never turn a failure
-into a debt to get green; a debt names something the brother has to move.
+**Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
+`run_tests.sh` runs on the baked world (about **8 s** fast, **24 s** all);
+`tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
+**20 s**), and both have to be green before a commit that touches the map, the kit, a
+position or the pace. A test says where it stands in the world's terms —
+`at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
+`TestCase` — and never as a tile; a time budget written for six tiles a second is
+scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
+the run is the map's or the brief's, not the code's: a claim the spec makes that the
+baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Two stand
+today: the works far from Brindle, and §4's 45–90 s road band at his pace. Never turn
+a failure into a debt to get green; a debt names something a person has to settle.
 
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
@@ -244,14 +251,16 @@ A: beasts out, terrain speeds on, the wild measured. B: hardship and the second
 direction. C: four places, two states. D: rank from standing and the throne reading.
 E: Blackcairn's two readings and the journal's kingdom page.
 
-**v3 is decided and being planned (2026-09-13, evening).** The world moves onto the
-Brindle 3D workshop in `prototypes/brindle_3d/` — Yannick's brother's, a stylised 3D
-landscape walked by 2D characters. **The plan is `docs/MIGRATION_3D.md`**; read it
-before touching anything the map or the view depends on. The map and the graphics are
-the brother's; the systems, the content and the bridge are ours, and the bridge is the
-one architectural rule below applied once more: the simulation keeps its grid, the 3D
-data is *baked* into a `Region`, and a 3D window reads the sim and never moves the
-player. Combat is still the oldest debt in the project. Nothing structural moves
+**v3: the game plays on the world baked from the Brindle 3D workshop** (decided
+2026-09-13; M1–M2, M3a and the M4 cut-over delivered by 2026-09-14). The workshop in
+`prototypes/brindle_3d/` is Yannick's brother's — a stylised 3D landscape walked by 2D
+characters. **Start at `docs/V3.md`**, then `docs/MIGRATION_3D.md`, which is the plan and
+the record of each phase; read it before touching anything the map or the view depends
+on. The map and the graphics are the brother's; the systems, the content and the bridge
+are ours, and the bridge is the one architectural rule below applied once more: the
+simulation keeps its grid, the 3D data is *baked* into a `Region` (`content/region.json`),
+and a 3D window (`view/world3d.gd`) reads the sim and never moves the player. What waits
+on him: his props and the 25 faces in his style (M3b) and the map's own fill (M5). Combat is still the oldest debt in the project. Nothing structural moves
 without asking Yannick. **One discipline, in force since M1a (2026-09-13):** anything
 positional — a person, a paper, a fire, a stall, a site — is an *anchor* in
 `content/places.json` (a place or point plus an offset, or a feature standing in a
