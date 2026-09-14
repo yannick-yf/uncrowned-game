@@ -24,7 +24,7 @@
   ],
   "points": {
     "bridge": {"xz": [28, 18], "scaffold": true, "_why": "where his works road and his farms road cross the main river at the junction. His built bridge at (269, 62) crosses the works' tributary; it is stamped as a road, not as this point"},
-    "ford": {"xz": [-22, 80], "scaffold": true, "_why": "a wade downstream of the bridge, on the main river"},
+    "ford": {"xz": [5, 61], "scaffold": true, "_why": "a wade 45 m downstream of his King's Road bridge, where his main river runs straight and seven tiles wide (rivers v4, 2026-09-14). The point follows his river, never the other way round: at (-22, 80) on his old course the band covered half the new one"},
     "clearing": {"xz": [200, 190], "scaffold": true, "_why": "in the Brindle wood, 65 m north of the ruins and east of his Brindle road, so the ring closes; one corridor leads south"},
     "working_face": {"xz": [290, 150], "scaffold": true, "_why": "the strip the works is felling now, pushed south-east into the works' wood along the flat and away from the fairies — the point being that they have not reached them"},
     "kell_fire": {"xz": [235, 215], "scaffold": true, "_why": "deep in the Brindle wood, east, where nobody goes"},
