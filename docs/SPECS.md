@@ -3716,6 +3716,11 @@ somebody objects are in that file, not here. Combat remains outside it.
   save remembers its world. Measured at his pace: the King's Road 167 s, the wild 297 s,
   the attuned wild 229 s — the road is still the fast way. §4's 45–90 s band becomes the
   second debt. `docs/V3.md` written.
+- ◐ **M3b — his art**, begun (2026-09-14). The kit's houses, barns, wells, barrels and fences
+  stand as pieces of his library where it has the piece (`World3d.HIS_KIT`); every file
+  of his library is checked against his provenance manifest by name. The rest of M3b —
+  kilns, tents, boats, the keep, the stalls, the carts, the free-state scenes and the 25
+  faces — is his to draw.
 
 ---
 

@@ -52,6 +52,24 @@ const OVERLAY_KINDS: Array[int] = [
 ]
 ## The overlay sits this far above his ground, so the two never fight for a pixel.
 const OVERLAY_LIFT: float = 0.06
+## Our kit, drawn with his library where a kind fits (M3b, the part that needs no new
+## art of his): a cottage for a house, the storehouse for a barn, his well, his barrels,
+## his fence. Kinds not here — kilns, tents, boats, the keep, the stalls, the fires —
+## stay pixel sprites until he draws them. One table, so he can change a match in a
+## line; paths are under the vendored copy's library.
+const HIS_LIBRARY: String = "res://view3d/workshop/prototype_3d/assets/library/"
+const HIS_KIT: Dictionary = {
+	&"house_0": "houses/cottage_village.tscn", &"house_1": "houses/cottage_village.tscn",
+	&"house_2": "houses/cottage_village.tscn", &"shop": "houses/cottage_village.tscn",
+	&"inn": "houses/cottage_village.tscn", &"stone_house": "houses/cottage_fisher.tscn",
+	&"granary": "houses/storehouse.tscn", &"workshop": "houses/storehouse.tscn",
+	&"well": "props/well.tscn", &"barrels": "props/barrel_closed.tscn",
+	&"crates": "props/crate_single.tscn", &"logs": "props/woodpile.tscn",
+	&"fence": "modules/fence_2m.tscn", &"overgrowth": "plants/shrub_hazel.tscn",
+}
+## Small things are turned a quarter at a time by their tile, so a row of barrels is
+## not a row of identical barrels; buildings keep his facing.
+const TURNED_BY_TILE: Array[StringName] = [&"barrels", &"crates", &"logs", &"overgrowth"]
 
 var _region: Region = null
 var _sim: Sim = null
@@ -101,7 +119,9 @@ var _his: Node3D = null
 ## arrays are not; a sprite footed on the raw height stands inside his terrace.
 var _his_terrain: Node3D = null
 var _his_canopy: Dictionary = {}
+var _his_pieces: Dictionary = {}
 var his_props_skipped: int = 0
+var his_kit_count: int = 0
 var overlay_chunks: int = 0
 
 
@@ -178,7 +198,27 @@ func _refoot() -> void:
 	tree_count = 0
 	_build_trees()
 	for entry: Dictionary in _props:
-		_foot(entry["node"] as Sprite3D, _prop_foot(entry["prop"] as Dictionary))
+		var node: Node3D = entry["node"] as Node3D
+		if node is Sprite3D:
+			_foot(node as Sprite3D, _prop_foot(entry["prop"] as Dictionary))
+		else:
+			node.position = _feet_of(_prop_centre(entry["prop"] as Dictionary))
+
+
+## One of his library pieces for a kind, or null when the copy lacks it.
+func _his_piece(kind: StringName) -> Node3D:
+	if not _his_pieces.has(kind):
+		var path: String = HIS_LIBRARY + String(HIS_KIT[kind])
+		_his_pieces[kind] = load(path) as PackedScene if ResourceLoader.exists(path) else null
+	var scene: PackedScene = _his_pieces[kind] as PackedScene
+	return scene.instantiate() as Node3D if scene != null else null
+
+
+## The middle of a prop's footprint, in tiles — where a mesh of his stands.
+func _prop_centre(prop: Dictionary) -> Vector2:
+	var at: Vector2i = prop["at"] as Vector2i
+	var size: Vector2i = prop.get("size", Vector2i(4, 3)) as Vector2i
+	return Vector2(at) + Vector2(size) * 0.5
 
 
 ## Where a prop's sprite stands: footed on the bottom of its footprint, centred
@@ -574,6 +614,18 @@ func _build_props() -> void:
 		if _his != null and bool(prop.get("his", false)):
 			his_props_skipped += 1
 			continue
+		# Our kit in his hand, where his library has the piece.
+		if _his != null and HIS_KIT.has(kind):
+			var piece: Node3D = _his_piece(kind)
+			if piece != null:
+				piece.name = "%s_%d_%d" % [kind, at.x, at.y]
+				piece.position = _feet_of(_prop_centre(prop))
+				if TURNED_BY_TILE.has(kind):
+					piece.rotation.y = float(Art.scatter_hash(at.x, at.y) % 4) * TAU / 4.0
+				stand.add_child(piece)
+				_props.append({"prop": prop, "node": piece, "index": 0})
+				his_kit_count += 1
+				continue
 		var sprite: Sprite3D = null
 		if kind == &"townsfolk":
 			folk += 1
@@ -878,7 +930,9 @@ func _sync_props(frame: Dictionary) -> void:
 	var tent: int = 0
 	for entry: Dictionary in _props:
 		var prop: Dictionary = entry["prop"] as Dictionary
-		var sprite: Sprite3D = entry["node"] as Sprite3D
+		var node: Node3D = entry["node"] as Node3D
+		# A piece of his library stands and hides like a mesh; a sprite leans and fades.
+		var sprite: Sprite3D = node as Sprite3D
 		var kind: StringName = prop["kind"] as StringName
 		var shown: bool = true
 		var tint: Color = Color.WHITE
@@ -886,14 +940,15 @@ func _sync_props(frame: Dictionary) -> void:
 		# between the player and the lens goes part transparent. Judged on the drawn
 		# sprite, in tiles — its foot south of the player within its own height, its
 		# width across them — because what hides the player is the part that leans.
-		var at: Vector2i = prop["at"] as Vector2i
-		var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
-		var foot := Vector2(float(at.x) + float(size.x) * 0.5, float(at.y + size.y))
-		var height_tiles: float = sprite.region_rect.size.y * PIXEL_METRES / _metres_per_tile
-		var width_tiles: float = sprite.region_rect.size.x * PIXEL_METRES / _metres_per_tile
-		if kind != &"townsfolk" and foot.y > player.y and foot.y - player.y < height_tiles \
-				and absf(foot.x - player.x) < width_tiles * 0.5:
-			tint.a = OCCLUDED_ALPHA
+		if sprite != null:
+			var at: Vector2i = prop["at"] as Vector2i
+			var size: Vector2i = prop.get("size", Vector2i(1, 1)) as Vector2i
+			var foot := Vector2(float(at.x) + float(size.x) * 0.5, float(at.y + size.y))
+			var height_tiles: float = sprite.region_rect.size.y * PIXEL_METRES / _metres_per_tile
+			var width_tiles: float = sprite.region_rect.size.x * PIXEL_METRES / _metres_per_tile
+			if kind != &"townsfolk" and foot.y > player.y and foot.y - player.y < height_tiles \
+					and absf(foot.x - player.x) < width_tiles * 0.5:
+				tint.a = OCCLUDED_ALPHA
 		if kind == &"fence" and bool(free.get(&"wide_acres", false)):
 			shown = false
 		elif kind == &"tent" or kind == &"tent_b":
@@ -905,8 +960,9 @@ func _sync_props(frame: Dictionary) -> void:
 			tint = tint.darkened(0.4)
 		if (kind == &"keep" or kind == &"tower" or kind == &"gatehouse") and shuttered:
 			tint = tint.darkened(0.35)
-		sprite.visible = shown
-		sprite.modulate = tint
+		node.visible = shown
+		if sprite != null:
+			sprite.modulate = tint
 
 
 ## The lens follows the same eased point the 2D camera does, handed over in tiles.

@@ -20,8 +20,8 @@ func test_the_window_stands_on_his_ground() -> void:
 	if not FileAccess.file_exists(Places.BAKED_PATH):
 		return
 	# Loaded as the game loads it — grid, props, and the content's fires, stalls and
-	# papers — so the window has fires to put embers over. In this process the anchors
-	# resolve against the 2D places, which is fine for a window that only has to stand.
+	# papers — so the window has fires to put embers over. The anchors resolve against
+	# whichever world this process plays, which is fine for a window that has to stand.
 	var region: Region = Region.load_baked()
 	var sim: Sim = Game.build()
 	var window := World3d.new()
@@ -37,6 +37,8 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(window.overlay_chunks > 0,
 			"the bake's roads and towns lie over his ground: %d overlay chunks" % window.overlay_chunks)
 		assert_eq(window.his_props_skipped, 6, "his six ruins are his meshes, not our sprites")
+		assert_true(window.his_kit_count > 20,
+			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
 	else:
 		assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
 		assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)
