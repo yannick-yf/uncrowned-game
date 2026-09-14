@@ -51,11 +51,16 @@ rendering layer replaceable. Everything below protects it.
 
 ## Art rule
 
-**Amended 2026-09-13 (v3).** The pack rule above describes the 2D window, which stays
-the play screen until the migration's cut-over. In the 3D world the same rule reads:
-one asset family — the workshop's library and what the brother adds in the same hand —
-with a provenance-and-licence manifest the validator refuses to ship without. Mixing
-artists is the mark of an amateur game in meshes exactly as in pixels.
+**Amended 2026-09-13 (v3), sharpened 2026-09-14.** The pack rule below describes the 2D
+map, which is no longer the game. In the 3D world the rule is stricter than "one
+family": **nothing of the 2D pack appears, ever** — no pixel figure, tree, house, stall
+or path, not even as a placeholder (Yannick, on seeing them). The assets are the
+brother's: his library, his traveller for every person until he draws the cast, and a
+plain block in his rock paint where he has not drawn a thing yet. What he has not made
+is *visibly missing*, and the bake's report and the suite's DEBT lines say what. His
+library carries a provenance-and-licence manifest and `test_workshop_provenance` refuses
+a file without one. Mixing artists is the mark of an amateur game in meshes exactly as
+in pixels. (The HUD's font is the pack's, and an open question.)
 
 Free assets may be used, but only from the packs approved in `docs/SPECS.md` §13.
 **Never mix packs from different artists** — palettes, pixel densities and light

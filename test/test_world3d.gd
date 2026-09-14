@@ -34,16 +34,17 @@ func test_the_window_stands_on_his_ground() -> void:
 		"his scenes stand in the window — run tools/vendor_workshop.sh if %s is missing" % World3d.HIS_MAP)
 	if window.his_present():
 		assert_eq(window.chunk_count, 0, "the bake's ground is not built under his")
-		assert_true(window.overlay_chunks > 0,
-			"the bake's roads and towns lie over his ground: %d overlay chunks" % window.overlay_chunks)
 		assert_eq(window.his_props_skipped, 6, "his six ruins are his meshes, not our sprites")
 		assert_true(window.his_kit_count > 20,
 			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
+		assert_true(window.figures_are_his(), "every person is his traveller, not a pack sprite")
 	else:
 		assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
 		assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)
-	assert_true(window.tree_count > 1000, "the wood stands: %d billboards" % window.tree_count)
-	assert_true(window.prop_count() >= 100, "every prop has a sprite: %d" % window.prop_count())
+	# Nothing of the 2D game's art stands here (Yannick, 2026-09-14): what his library
+	# lacks is a plain block, and a block is what the kilns, the stalls and the fires are.
+	assert_true(window.block_count > 0, "what he has not drawn stands as a block: %d" % window.block_count)
+	assert_true(window.prop_count() >= 100, "every prop stands as something: %d" % window.prop_count())
 
 	# His Brindle centre is at 24.95 m in his descriptor; the window agrees with him.
 	var brindle: float = window.height_at(175.0, 255.0)

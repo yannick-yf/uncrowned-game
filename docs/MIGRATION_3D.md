@@ -332,7 +332,7 @@ backgrounds, the endings, fighting. All of it lives in `core/`, `core/rules/` an
 |---|---|---|
 | **The place count** | Three of eight places are envelopes or missing; the works is not in sight of Brindle; a sawmill town contradicts §3 | §5 is the brief; M1's scaffold stamps the missing places procedurally on his terrain so systems work while he builds them |
 | **Walking speed** | 5 m/s on a 768 m map is 108 s from Brindle to the castle, against a 45–90 s road target | Decided: the speed is his and the target is re-measured against the baked grid, then renegotiated with the map (§4). Pillar 1 holds at two minutes |
-| **Character art** | One traveller sprite exists; the cast is 25 faces plus strangers, and §13's *nobody shares a face* holds | M3's largest art task, and his. The transition shows the pixel figures on his ground and **breaks §13's one rule on purpose**, for one reason: 25 distinct faces are what the cast review and the journal need, and one sprite recoloured per role would not give them. The bake report lists it as *transition* until the last face is redrawn, and M3 does not close while it is listed |
+| **Character art** | One traveller sprite exists; the cast is 25 faces plus strangers, and §13's *nobody shares a face* holds | M3's largest art task, and his. Until the faces exist everyone is his traveller — one family, his hand, and twenty-five people with one face, which the cast review and the journal will feel. That is the debt, and it is his; not a pack of pixel faces from the 2D game, which stood in for one day and were taken out on sight (Yannick, 2026-09-14) |
 | **Provenance and licence** | His meshes and textures come from *the Brindle test project*, hashes recorded, no third-party licence claimed | Establish the source before M3; §8's validator will refuse a file without provenance |
 | **Performance and platform** | 576 chunks, 900 trees, Forward+ at 1440 × 900; his renders are Windows/D3D12, ours is a Mac | M2's proof includes running on both machines; the workshop's draw-distance and shadow tuning is his, on his terrain |
 | **The 2D view's 1,640 lines** | Everything drawn from tiles has to be redrawn | Most is `_draw_*` and is replaced wholesale; the HUD, dialogue and journal are Controls and move over untouched; the map screen keeps the 2D drawing as its purpose |
@@ -372,11 +372,21 @@ a machine that refuses the borrowed thing. Rewritten for the 3D world:
    otherwise, because the first frame is not negotiable.
 3. **The sawmill village goes.** Decided. If any of it survives it is the works' fuel
    yard.
-4. **The character sprites — a default, not a decision.** During the migration the
-   existing pixel figures are shown in the 3D world and the mismatch is accepted and
-   listed in the bake report as *transition*; the target is every person drawn in the
-   workshop's own style, by the brother or by someone he chooses. Nothing is asked of
-   Yannick here until there is something to look at.
+4. **The character sprites — decided 2026-09-14, on seeing it: nothing of the 2D
+   game's art in the 3D world.** The default that stood for a day — the pixel figures
+   riding his ground as a listed transition — was rejected by Yannick the moment he
+   launched the game: *the assets and the graphics are my brother's; the 2D map's trees,
+   houses, paths and people are not to be kept in any form.* In the window now: every
+   person is **his traveller sprite**, the one figure he has drawn — the player, the
+   twenty-five, the strangers, the crowd, the guards, the traffic — until he draws the
+   cast, and §13's *nobody shares a face* is his debt to settle; what his library lacks
+   (kilns, tents, boats, stalls, fires, papers, the counting house, the keep, the
+   towers, the gatehouses, the muster rolls) stands as a **plain block** of the
+   footprint's size and roughly its height, in his rock paint, visibly provisional; the
+   brief's woods and the simulation's roads and town ground are **not drawn at all** —
+   his to plant and to lay, and the bake's report names them. The one asset of the 2D
+   pack left on screen is the HUD's font, which is an open question and not a world
+   graphic.
 5. **The 2D view — a default, not a decision.** It is not deleted at cut-over; it
    becomes the map screen on `M`, which is what a flat top-down picture of the region is
    for, and the debug tools' home. Nobody chooses between two ways to play.
