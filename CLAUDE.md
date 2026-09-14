@@ -234,6 +234,14 @@ here. A debug tool that is not written down is a debug tool that ships.
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
 > so you cannot walk anywhere while time passes, which is the whole point.
 
+## Testing switch — not a debug tool, and on in every build for now
+
+**`Screens.QUICK_START` (2026-09-14).** The game opens straight into a fresh run with
+every trait at the floor: no title menu, no character creation. Yannick asked for it
+because both slowed every test launch. The two screens still exist, route and are
+tested; the constant is one word to flip when the game is shown to anybody. The
+screenshot harness names the screen it wants and is unaffected.
+
 ## Effort discipline
 
 Do not spawn subagents or parallel workflows unless I explicitly ask, or unless

@@ -17,6 +17,15 @@ const TITLE: PackedScene = preload("res://view/title.tscn")
 const CREATION: PackedScene = preload("res://view/creation.tscn")
 const PLAY: PackedScene = preload("res://view/main.tscn")
 
+## **Quick start, for testing** (Yannick, 2026-09-14). The title menu and the character
+## creation are skipped: the game opens straight into a fresh run with every trait at
+## the floor, as if Begin had been pressed with nothing chosen — and the fresh run is
+## saved, as Begin saves it, so dying still puts you back at a fire. Both screens still
+## exist, still route, and are still tested; set this to false to get them back. Not a
+## debug tool in CLAUDE.md's sense: it is on in every build until Yannick says otherwise.
+## The screenshot harness is unaffected — it names the screen it wants.
+const QUICK_START: bool = true
+
 var _current: Node = null
 var _shot_frames: int = 0
 
@@ -26,16 +35,23 @@ func _ready() -> void:
 	# is the one thing in the game that is never replaced, which is what makes it the
 	# right place to hang something that must outlive every screen.
 	Sound.install(self)
-	_go(_first_screen(), null)
+	var first: StringName = _first_screen()
+	var carrying: Variant = null
+	if first == &"play" and QUICK_START and OS.get_environment("UNCROWNED_SHOT").is_empty():
+		var run: Sim = Game.begin_run(TraitRules.at_the_floor())
+		SaveFile.write(run)
+		carrying = run
+	_go(first, carrying)
 
 
 ## Where the game opens. The title, unless a debug build is being driven by the
 ## screenshot harness — which wants a picture of a screen, not of a menu in front of
 ## one. `UNCROWNED_SCREEN` names the screen; with only `UNCROWNED_SHOT` set it means
-## the world, which is what every existing invocation of the harness expects.
+## the world, which is what every existing invocation of the harness expects. And,
+## while `QUICK_START` is on, the world straight away.
 func _first_screen() -> StringName:
 	if not OS.has_feature("debug"):
-		return &"title"
+		return &"play" if QUICK_START else &"title"
 	match OS.get_environment("UNCROWNED_SCREEN"):
 		"title":
 			return &"title"
@@ -47,6 +63,8 @@ func _first_screen() -> StringName:
 		"play", "pause", "journal", "map":
 			return &"play"
 	if not OS.get_environment("UNCROWNED_SHOT").is_empty():
+		return &"play"
+	if QUICK_START:
 		return &"play"
 	return &"title"
 
