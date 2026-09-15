@@ -199,6 +199,12 @@ One tick is one in-game minute and the overworld runs 4 ticks per real second, s
 
 ## How to work here
 
+**Codex onboarding (2026-09-15).** Root `AGENTS.md` is Codex's automatically loaded
+entry point. It requires this agreement in full, then `docs/V3.md`, then
+`docs/MIGRATION_3D.md` §6.2 and §9, and only the task's needed SPECS section. This
+agreement remains shared and binding; `AGENTS.md` records Codex's lanes and the files
+reserved for Claude's map ingestion, so the two agents do not edit the same work.
+
 Write the test first. Run the suite after every meaningful change — it takes
 milliseconds and it is the only thing that tells you whether something broke.
 
