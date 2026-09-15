@@ -1,15 +1,15 @@
 {
-  "version": 3,
+  "version": 4,
   "seed": 914,
-  "description": "Medieval bloomery settlement, graphics workshop only; human-scale district layout.",
+  "description": "Medieval bloomery settlement, graphics workshop only; ordered factory grid with separate work courts.",
   "focus_xz": [
-    230,
-    38
+    250,
+    40
   ],
   "bounds_xz": [
     185,
     -10,
-    100,
+    110,
     104
   ],
   "buildings": [
@@ -18,10 +18,10 @@
       "asset": "logis_porte_basse",
       "scene": "res://assets/ironworks/village/logis_porte_basse.tscn",
       "xz": [
-        195,
-        10
+        196,
+        8
       ],
-      "altitude": 43.0,
+      "altitude": 43.6,
       "yaw": 90,
       "group": "Habitations",
       "size_m": [
@@ -37,21 +37,21 @@
       "building_design": "stone_gable_with_side_store",
       "building_kind": "house",
       "entrance_xz": [
-        199.58,
-        10.42
+        200.58,
+        8.42
       ],
       "approach_xz": [
         [
-          203.58,
-          10.42
+          204.58,
+          8.42
         ],
         [
-          201.18,
-          10.42
+          202.18,
+          8.42
         ],
         [
-          199.58,
-          10.42
+          200.58,
+          8.42
         ]
       ]
     },
@@ -60,11 +60,11 @@
       "asset": "maison_aux_deux_volumes",
       "scene": "res://assets/ironworks/village/maison_aux_deux_volumes.tscn",
       "xz": [
-        207,
-        5
+        211,
+        8
       ],
       "altitude": 43.6,
-      "yaw": 0,
+      "yaw": 90,
       "group": "Habitations",
       "size_m": [
         5.71,
@@ -79,21 +79,21 @@
       "building_design": "hipped_house_and_lower_entry_wing",
       "building_kind": "house",
       "entrance_xz": [
-        208.55,
-        8.725
+        214.725,
+        6.45
       ],
       "approach_xz": [
         [
-          208.55,
-          12.725
+          218.725,
+          6.45
         ],
         [
-          208.55,
-          10.325
+          216.325,
+          6.45
         ],
         [
-          208.55,
-          8.725
+          214.725,
+          6.45
         ]
       ]
     },
@@ -102,11 +102,11 @@
       "asset": "baraquement_des_equipes",
       "scene": "res://assets/ironworks/village/baraquement_des_equipes.tscn",
       "xz": [
-        221,
-        4
+        226,
+        8
       ],
-      "altitude": 44.0,
-      "yaw": 0,
+      "altitude": 43.9,
+      "yaw": -90,
       "group": "Habitations",
       "size_m": [
         6.97,
@@ -121,21 +121,21 @@
       "building_design": "long_low_dual_entry_barrack",
       "building_kind": "barrack",
       "entrance_xz": [
-        219.42,
-        8.129999999999999
+        221.87,
+        6.42
       ],
       "approach_xz": [
         [
-          219.42,
-          12.129999999999999
+          217.87,
+          6.42
         ],
         [
-          219.42,
-          9.729999999999999
+          220.27,
+          6.42
         ],
         [
-          219.42,
-          8.129999999999999
+          221.87,
+          6.42
         ]
       ]
     },
@@ -144,8 +144,8 @@
       "asset": "logis_a_colombages",
       "scene": "res://assets/ironworks/village/logis_a_colombages.tscn",
       "xz": [
-        234,
-        9
+        241,
+        8
       ],
       "altitude": 43.8,
       "yaw": -90,
@@ -163,21 +163,21 @@
       "building_design": "tall_half_timber_hipped_corner",
       "building_kind": "house",
       "entrance_xz": [
-        229.845,
-        9.24
+        236.845,
+        8.24
       ],
       "approach_xz": [
         [
-          225.845,
-          9.24
+          232.845,
+          8.24
         ],
         [
-          228.245,
-          9.24
+          235.245,
+          8.24
         ],
         [
-          229.845,
-          9.24
+          236.845,
+          8.24
         ]
       ]
     },
@@ -186,8 +186,8 @@
       "asset": "baraque_jumelee_de_la_cour",
       "scene": "res://assets/ironworks/village/baraque_jumelee_de_la_cour.tscn",
       "xz": [
-        201,
-        23
+        196,
+        24
       ],
       "altitude": 43.2,
       "yaw": 90,
@@ -205,21 +205,21 @@
       "building_design": "staggered_gable_and_lean_barrack",
       "building_kind": "barrack",
       "entrance_xz": [
-        205.08,
-        24.23
+        200.08,
+        25.23
       ],
       "approach_xz": [
         [
-          209.08,
-          24.23
+          204.08,
+          25.23
         ],
         [
-          206.68,
-          24.23
+          201.68,
+          25.23
         ],
         [
-          205.08,
-          24.23
+          200.08,
+          25.23
         ]
       ]
     },
@@ -228,11 +228,11 @@
       "asset": "maison_du_virage",
       "scene": "res://assets/ironworks/village/maison_du_virage.tscn",
       "xz": [
-        215,
-        22
+        211,
+        24
       ],
-      "altitude": 42.8,
-      "yaw": 0,
+      "altitude": 43.1,
+      "yaw": 90,
       "group": "Habitations",
       "size_m": [
         4.58,
@@ -247,21 +247,21 @@
       "building_design": "broad_hip_with_projecting_bay",
       "building_kind": "house",
       "entrance_xz": [
-        214.22,
-        25.83
+        214.83,
+        24.78
       ],
       "approach_xz": [
         [
-          214.22,
-          29.83
+          218.83,
+          24.78
         ],
         [
-          214.22,
-          27.43
+          216.43,
+          24.78
         ],
         [
-          214.22,
-          25.83
+          214.83,
+          24.78
         ]
       ]
     },
@@ -270,10 +270,10 @@
       "asset": "maison_haute_de_la_venelle",
       "scene": "res://assets/ironworks/village/maison_haute_de_la_venelle.tscn",
       "xz": [
-        232,
-        23
+        226,
+        24
       ],
-      "altitude": 43.1,
+      "altitude": 43.2,
       "yaw": -90,
       "group": "Habitations",
       "size_m": [
@@ -289,21 +289,21 @@
       "building_design": "narrow_two_storey_external_stack",
       "building_kind": "house",
       "entrance_xz": [
-        227.87,
-        22.57
+        221.87,
+        23.57
       ],
       "approach_xz": [
         [
-          223.87,
-          22.57
+          217.87,
+          23.57
         ],
         [
-          226.27,
-          22.57
+          220.27,
+          23.57
         ],
         [
-          227.87,
-          22.57
+          221.87,
+          23.57
         ]
       ]
     },
@@ -312,11 +312,11 @@
       "asset": "baraquement_de_la_grande_cour",
       "scene": "res://assets/ironworks/village/baraquement_de_la_grande_cour.tscn",
       "xz": [
-        206,
-        19
+        241,
+        24
       ],
       "altitude": 43.2,
-      "yaw": 0,
+      "yaw": -90,
       "group": "Habitations",
       "size_m": [
         8.48,
@@ -331,105 +331,21 @@
       "building_design": "long_hipped_three_entry_porch_barrack",
       "building_kind": "barrack",
       "entrance_xz": [
-        206.0,
-        23.105
+        236.895,
+        24.0
       ],
       "approach_xz": [
         [
-          206.0,
-          27.105
+          232.895,
+          24.0
         ],
         [
-          206.0,
-          24.705000000000002
+          235.29500000000002,
+          24.0
         ],
         [
-          206.0,
-          23.105
-        ]
-      ]
-    },
-    {
-      "id": "DortoirPlace",
-      "asset": "baraquement_a_galerie",
-      "scene": "res://assets/ironworks/village/baraquement_a_galerie.tscn",
-      "xz": [
-        234,
-        29
-      ],
-      "altitude": 43.1,
-      "yaw": -90,
-      "group": "Habitations",
-      "size_m": [
-        8.27,
-        6.07,
-        5.54
-      ],
-      "bounds_center_m": [
-        -0.367499828338623,
-        2.98271822929382,
-        0.357096195220947
-      ],
-      "building_design": "two_storey_gallery_left_stair_barrack",
-      "building_kind": "barrack",
-      "entrance_xz": [
-        229.77,
-        29.3
-      ],
-      "approach_xz": [
-        [
-          225.77,
-          29.3
-        ],
-        [
-          228.17000000000002,
-          29.3
-        ],
-        [
-          229.77,
-          29.3
-        ]
-      ]
-    },
-    {
-      "id": "MaisonContremaitre",
-      "asset": "logis_du_contremaitre_en_l",
-      "scene": "res://assets/ironworks/village/logis_du_contremaitre_en_l.tscn",
-      "xz": [
-        239,
-        28
-      ],
-      "altitude": 43.2,
-      "yaw": 90,
-      "group": "Habitations",
-      "size_m": [
-        5.18,
-        5.24,
-        5.72
-      ],
-      "bounds_center_m": [
-        0.0,
-        2.62000012397766,
-        0.0723109245300293
-      ],
-      "building_design": "l_shaped_house_with_raised_front_room",
-      "building_kind": "house",
-      "entrance_xz": [
-        242.88,
-        26.76
-      ],
-      "approach_xz": [
-        [
-          246.88,
-          26.76
-        ],
-        [
-          244.48,
-          26.76
-        ],
-        [
-          242.88,
-          26.76
+          236.895,
+          24.0
         ]
       ]
     },
@@ -438,8 +354,8 @@
       "asset": "maison_des_charretiers",
       "scene": "res://assets/ironworks/village/maison_des_charretiers.tscn",
       "xz": [
-        195,
-        44
+        196,
+        40
       ],
       "altitude": 42.8,
       "yaw": 90,
@@ -457,21 +373,21 @@
       "building_design": "wide_cross_gable_with_rear_store",
       "building_kind": "house",
       "entrance_xz": [
-        198.905,
-        43.28
+        199.905,
+        39.28
       ],
       "approach_xz": [
         [
-          202.905,
-          43.28
+          203.905,
+          39.28
         ],
         [
-          200.505,
-          43.28
+          201.505,
+          39.28
         ],
         [
-          198.905,
-          43.28
+          199.905,
+          39.28
         ]
       ]
     },
@@ -481,10 +397,10 @@
       "scene": "res://assets/ironworks/village/maison_au_toit_decale.tscn",
       "xz": [
         211,
-        47
+        40
       ],
       "altitude": 42.8,
-      "yaw": 180,
+      "yaw": 90,
       "group": "Habitations",
       "size_m": [
         4.92,
@@ -499,21 +415,105 @@
       "building_design": "offset_ridge_with_sheltered_bench",
       "building_kind": "house",
       "entrance_xz": [
-        210.42,
-        43.095
+        214.905,
+        39.42
       ],
       "approach_xz": [
         [
-          210.42,
-          39.095
+          218.905,
+          39.42
         ],
         [
-          210.42,
-          41.495
+          216.505,
+          39.42
         ],
         [
-          210.42,
-          43.095
+          214.905,
+          39.42
+        ]
+      ]
+    },
+    {
+      "id": "DortoirPlace",
+      "asset": "baraquement_a_galerie",
+      "scene": "res://assets/ironworks/village/baraquement_a_galerie.tscn",
+      "xz": [
+        226,
+        40
+      ],
+      "altitude": 42.9,
+      "yaw": -90,
+      "group": "Habitations",
+      "size_m": [
+        8.27,
+        6.07,
+        5.54
+      ],
+      "bounds_center_m": [
+        -0.367499828338623,
+        2.98271822929382,
+        0.357096195220947
+      ],
+      "building_design": "two_storey_gallery_left_stair_barrack",
+      "building_kind": "barrack",
+      "entrance_xz": [
+        221.77,
+        40.3
+      ],
+      "approach_xz": [
+        [
+          217.77,
+          40.3
+        ],
+        [
+          220.17000000000002,
+          40.3
+        ],
+        [
+          221.77,
+          40.3
+        ]
+      ]
+    },
+    {
+      "id": "MaisonContremaitre",
+      "asset": "logis_du_contremaitre_en_l",
+      "scene": "res://assets/ironworks/village/logis_du_contremaitre_en_l.tscn",
+      "xz": [
+        241,
+        40
+      ],
+      "altitude": 43.0,
+      "yaw": -90,
+      "group": "Habitations",
+      "size_m": [
+        5.18,
+        5.24,
+        5.72
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.62000012397766,
+        0.0723109245300293
+      ],
+      "building_design": "l_shaped_house_with_raised_front_room",
+      "building_kind": "house",
+      "entrance_xz": [
+        237.12,
+        41.24
+      ],
+      "approach_xz": [
+        [
+          233.12,
+          41.24
+        ],
+        [
+          235.52,
+          41.24
+        ],
+        [
+          237.12,
+          41.24
         ]
       ]
     },
@@ -522,7 +522,7 @@
       "asset": "cuisine_commune",
       "scene": "res://assets/ironworks/village/cuisine_commune.tscn",
       "xz": [
-        220,
+        226,
         54
       ],
       "altitude": 43.0,
@@ -541,20 +541,20 @@
       "building_design": "",
       "building_kind": "",
       "entrance_xz": [
-        220.5,
+        226.5,
         50.37
       ],
       "approach_xz": [
         [
-          220.5,
+          226.5,
           46.37
         ],
         [
-          220.5,
+          226.5,
           48.769999999999996
         ],
         [
-          220.5,
+          226.5,
           50.37
         ]
       ]
@@ -564,7 +564,7 @@
       "asset": "grenier_vivres",
       "scene": "res://assets/ironworks/village/grenier_vivres.tscn",
       "xz": [
-        230,
+        232,
         55
       ],
       "altitude": 42.9,
@@ -583,20 +583,20 @@
       "building_design": "",
       "building_kind": "",
       "entrance_xz": [
-        230.0,
+        232.0,
         50.9700002
       ],
       "approach_xz": [
         [
-          230.0,
+          232.0,
           46.9700002
         ],
         [
-          230.0,
+          232.0,
           49.3700002
         ],
         [
-          230.0,
+          232.0,
           50.9700002
         ]
       ]
@@ -985,7 +985,7 @@
       "scene": "res://assets/ironworks/stockage/depot_charbon.tscn",
       "xz": [
         256,
-        4
+        10
       ],
       "altitude": 44.0,
       "yaw": 180,
@@ -1004,20 +1004,20 @@
       "building_kind": "",
       "entrance_xz": [
         256.0,
-        0.0
+        6.0
       ],
       "approach_xz": [
         [
           256.0,
-          -4.0
+          2.0
         ],
         [
           256.0,
-          -1.6
+          4.4
         ],
         [
           256.0,
-          0.0
+          6.0
         ]
       ]
     },
@@ -1027,7 +1027,7 @@
       "scene": "res://assets/ironworks/stockage/charbon_halle_a_croupes.tscn",
       "xz": [
         268,
-        9
+        10
       ],
       "altitude": 44.0,
       "yaw": 90,
@@ -1046,20 +1046,20 @@
       "building_kind": "industrial",
       "entrance_xz": [
         272.125,
-        9.0
+        10.0
       ],
       "approach_xz": [
         [
           276.125,
-          9.0
+          10.0
         ],
         [
           273.725,
-          9.0
+          10.0
         ],
         [
           272.125,
-          9.0
+          10.0
         ]
       ]
     },
@@ -1154,8 +1154,8 @@
       "asset": "puits_abreuvoir",
       "scene": "res://assets/ironworks/village/puits_abreuvoir.tscn",
       "xz": [
-        220,
-        34
+        224,
+        30
       ],
       "altitude": 43.1,
       "yaw": 15,
@@ -1234,11 +1234,11 @@
       "asset": "bas_fourneau_actif",
       "scene": "res://assets/ironworks/production/bas_fourneau_actif.tscn",
       "xz": [
-        258,
-        33
+        257,
+        22
       ],
       "altitude": 43.1,
-      "yaw": -85,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         3.56,
@@ -1258,11 +1258,11 @@
       "asset": "bas_fourneau_pierre",
       "scene": "res://assets/ironworks/production/bas_fourneau_pierre.tscn",
       "xz": [
-        264,
-        23
+        265,
+        22
       ],
       "altitude": 43.1,
-      "yaw": 170,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         3.91,
@@ -1282,11 +1282,11 @@
       "asset": "bas_fourneau_argile",
       "scene": "res://assets/ironworks/production/bas_fourneau_argile.tscn",
       "xz": [
-        259,
-        21
+        273,
+        22
       ],
       "altitude": 43.1,
-      "yaw": -95,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         3.56,
@@ -1306,11 +1306,11 @@
       "asset": "bas_fourneau_actif",
       "scene": "res://assets/ironworks/production/bas_fourneau_actif.tscn",
       "xz": [
-        266,
-        18
+        257,
+        36
       ],
       "altitude": 43.1,
-      "yaw": 160,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         3.56,
@@ -1330,11 +1330,11 @@
       "asset": "bas_fourneau_pierre",
       "scene": "res://assets/ironworks/production/bas_fourneau_pierre.tscn",
       "xz": [
-        256,
-        39
+        265,
+        36
       ],
       "altitude": 43.1,
-      "yaw": -115,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         3.91,
@@ -1354,11 +1354,11 @@
       "asset": "bas_fourneau_argile",
       "scene": "res://assets/ironworks/production/bas_fourneau_argile.tscn",
       "xz": [
-        265,
-        33
+        273,
+        36
       ],
       "altitude": 43.1,
-      "yaw": -15,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         3.56,
@@ -1378,11 +1378,11 @@
       "asset": "grillage_minerai",
       "scene": "res://assets/ironworks/production/grillage_minerai.tscn",
       "xz": [
-        270,
-        39
+        240,
+        22
       ],
       "altitude": 43.1,
-      "yaw": -20,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         2.6,
@@ -1402,11 +1402,11 @@
       "asset": "grillage_minerai",
       "scene": "res://assets/ironworks/production/grillage_minerai.tscn",
       "xz": [
-        275,
-        37
+        240,
+        29
       ],
       "altitude": 43.1,
-      "yaw": 10,
+      "yaw": 0,
       "group": "Production",
       "size_m": [
         2.6,
@@ -1692,7 +1692,7 @@
       "scene": "res://assets/ironworks/accessoires/buches_rangees.tscn",
       "xz": [
         262,
-        -2
+        2
       ],
       "altitude": 43.1,
       "yaw": 20,
@@ -2048,102 +2048,6 @@
       "building_kind": ""
     },
     {
-      "id": "JardinHaute_00",
-      "asset": "cloture_2m",
-      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
-      "xz": [
-        190,
-        -2
-      ],
-      "altitude": 43.1,
-      "yaw": 0,
-      "group": "Abords",
-      "size_m": [
-        2.13,
-        1.15,
-        0.13
-      ],
-      "bounds_center_m": [
-        0.0,
-        0.574999988079071,
-        0.0
-      ],
-      "building_design": "",
-      "building_kind": ""
-    },
-    {
-      "id": "JardinHaute_01",
-      "asset": "cloture_2m",
-      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
-      "xz": [
-        193,
-        -2
-      ],
-      "altitude": 43.1,
-      "yaw": 0,
-      "group": "Abords",
-      "size_m": [
-        2.13,
-        1.15,
-        0.13
-      ],
-      "bounds_center_m": [
-        0.0,
-        0.574999988079071,
-        0.0
-      ],
-      "building_design": "",
-      "building_kind": ""
-    },
-    {
-      "id": "JardinHaute_02",
-      "asset": "cloture_2m",
-      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
-      "xz": [
-        196,
-        -2
-      ],
-      "altitude": 43.1,
-      "yaw": 0,
-      "group": "Abords",
-      "size_m": [
-        2.13,
-        1.15,
-        0.13
-      ],
-      "bounds_center_m": [
-        0.0,
-        0.574999988079071,
-        0.0
-      ],
-      "building_design": "",
-      "building_kind": ""
-    },
-    {
-      "id": "JardinHaute_03",
-      "asset": "cloture_2m",
-      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
-      "xz": [
-        190,
-        0
-      ],
-      "altitude": 43.1,
-      "yaw": 90,
-      "group": "Abords",
-      "size_m": [
-        2.13,
-        1.15,
-        0.13
-      ],
-      "bounds_center_m": [
-        0.0,
-        0.574999988079071,
-        0.0
-      ],
-      "building_design": "",
-      "building_kind": ""
-    },
-    {
       "id": "CourPignon_00",
       "asset": "cloture_2m",
       "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
@@ -2290,40 +2194,142 @@
   ],
   "paths": [
     {
-      "id": "RueDuBourg",
+      "id": "RueHabitations",
       "width_m": 3.0,
       "points_xz": [
         [
-          224,
-          66
+          218,
+          2
         ],
         [
-          226,
-          58
+          218,
+          10
         ],
         [
-          226,
-          50
-        ],
-        [
-          226,
-          42
-        ],
-        [
-          226,
-          34
-        ],
-        [
-          226,
-          26
-        ],
-        [
-          226,
+          218,
           18
         ],
         [
-          226,
-          10
+          218,
+          26
+        ],
+        [
+          218,
+          34
+        ],
+        [
+          218,
+          42
+        ],
+        [
+          218,
+          50
+        ]
+      ]
+    },
+    {
+      "id": "TraverseStockage",
+      "width_m": 3.0,
+      "points_xz": [
+        [
+          236,
+          17
+        ],
+        [
+          248,
+          17
+        ],
+        [
+          260,
+          17
+        ],
+        [
+          274,
+          17
+        ]
+      ]
+    },
+    {
+      "id": "TraverseFourneaux",
+      "width_m": 3.4,
+      "points_xz": [
+        [
+          248,
+          32
+        ],
+        [
+          256,
+          32
+        ],
+        [
+          266,
+          32
+        ],
+        [
+          268,
+          32
+        ]
+      ]
+    },
+    {
+      "id": "TraverseFinition",
+      "width_m": 3.2,
+      "points_xz": [
+        [
+          248,
+          56
+        ],
+        [
+          256,
+          56
+        ],
+        [
+          260,
+          56
+        ]
+      ]
+    },
+    {
+      "id": "RueLogistique",
+      "width_m": 3.4,
+      "points_xz": [
+        [
+          218,
+          66
+        ],
+        [
+          230,
+          66
+        ],
+        [
+          242,
+          66
+        ],
+        [
+          250,
+          66
+        ]
+      ]
+    },
+    {
+      "id": "TraverseExpedition",
+      "width_m": 3.2,
+      "points_xz": [
+        [
+          218,
+          68
+        ],
+        [
+          230,
+          68
+        ],
+        [
+          242,
+          68
+        ],
+        [
+          250,
+          68
         ]
       ]
     },
@@ -2346,10 +2352,6 @@
         [
           203,
           68
-        ],
-        [
-          198,
-          72
         ]
       ]
     },
@@ -2358,16 +2360,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          203.58,
-          10.42
+          204.58,
+          8.42
         ],
         [
-          201.18,
-          10.42
+          202.18,
+          8.42
         ],
         [
-          199.58,
-          10.42
+          200.58,
+          8.42
         ]
       ]
     },
@@ -2376,16 +2378,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          208.55,
-          12.725
+          218.725,
+          6.45
         ],
         [
-          208.55,
-          10.325
+          216.325,
+          6.45
         ],
         [
-          208.55,
-          8.725
+          214.725,
+          6.45
         ]
       ]
     },
@@ -2394,16 +2396,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          219.42,
-          12.129999999999999
+          217.87,
+          6.42
         ],
         [
-          219.42,
-          9.729999999999999
+          220.27,
+          6.42
         ],
         [
-          219.42,
-          8.129999999999999
+          221.87,
+          6.42
         ]
       ]
     },
@@ -2412,16 +2414,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          225.845,
-          9.24
+          232.845,
+          8.24
         ],
         [
-          228.245,
-          9.24
+          235.245,
+          8.24
         ],
         [
-          229.845,
-          9.24
+          236.845,
+          8.24
         ]
       ]
     },
@@ -2430,16 +2432,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          209.08,
-          24.23
+          204.08,
+          25.23
         ],
         [
-          206.68,
-          24.23
+          201.68,
+          25.23
         ],
         [
-          205.08,
-          24.23
+          200.08,
+          25.23
         ]
       ]
     },
@@ -2448,16 +2450,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          214.22,
-          29.83
+          218.83,
+          24.78
         ],
         [
-          214.22,
-          27.43
+          216.43,
+          24.78
         ],
         [
-          214.22,
-          25.83
+          214.83,
+          24.78
         ]
       ]
     },
@@ -2466,16 +2468,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          223.87,
-          22.57
+          217.87,
+          23.57
         ],
         [
-          226.27,
-          22.57
+          220.27,
+          23.57
         ],
         [
-          227.87,
-          22.57
+          221.87,
+          23.57
         ]
       ]
     },
@@ -2484,52 +2486,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          206.0,
-          27.105
+          232.895,
+          24.0
         ],
         [
-          206.0,
-          24.705000000000002
+          235.29500000000002,
+          24.0
         ],
         [
-          206.0,
-          23.105
-        ]
-      ]
-    },
-    {
-      "id": "Acces_DortoirPlace",
-      "width_m": 2.0,
-      "points_xz": [
-        [
-          225.77,
-          29.3
-        ],
-        [
-          228.17000000000002,
-          29.3
-        ],
-        [
-          229.77,
-          29.3
-        ]
-      ]
-    },
-    {
-      "id": "Acces_MaisonContremaitre",
-      "width_m": 2.0,
-      "points_xz": [
-        [
-          246.88,
-          26.76
-        ],
-        [
-          244.48,
-          26.76
-        ],
-        [
-          242.88,
-          26.76
+          236.895,
+          24.0
         ]
       ]
     },
@@ -2538,16 +2504,16 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          202.905,
-          43.28
+          203.905,
+          39.28
         ],
         [
-          200.505,
-          43.28
+          201.505,
+          39.28
         ],
         [
-          198.905,
-          43.28
+          199.905,
+          39.28
         ]
       ]
     },
@@ -2556,16 +2522,52 @@
       "width_m": 2.0,
       "points_xz": [
         [
-          210.42,
-          39.095
+          218.905,
+          39.42
         ],
         [
-          210.42,
-          41.495
+          216.505,
+          39.42
         ],
         [
-          210.42,
-          43.095
+          214.905,
+          39.42
+        ]
+      ]
+    },
+    {
+      "id": "Acces_DortoirPlace",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          217.77,
+          40.3
+        ],
+        [
+          220.17000000000002,
+          40.3
+        ],
+        [
+          221.77,
+          40.3
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonContremaitre",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          233.12,
+          41.24
+        ],
+        [
+          235.52,
+          41.24
+        ],
+        [
+          237.12,
+          41.24
         ]
       ]
     },
@@ -2574,15 +2576,15 @@
       "width_m": 2.8,
       "points_xz": [
         [
-          220.5,
+          226.5,
           46.37
         ],
         [
-          220.5,
+          226.5,
           48.769999999999996
         ],
         [
-          220.5,
+          226.5,
           50.37
         ]
       ]
@@ -2592,15 +2594,15 @@
       "width_m": 2.8,
       "points_xz": [
         [
-          230.0,
+          232.0,
           46.9700002
         ],
         [
-          230.0,
+          232.0,
           49.3700002
         ],
         [
-          230.0,
+          232.0,
           50.9700002
         ]
       ]
@@ -2773,15 +2775,15 @@
       "points_xz": [
         [
           256.0,
-          -4.0
+          2.0
         ],
         [
           256.0,
-          -1.6
+          4.4
         ],
         [
           256.0,
-          0.0
+          6.0
         ]
       ]
     },
@@ -2791,15 +2793,15 @@
       "points_xz": [
         [
           276.125,
-          9.0
+          10.0
         ],
         [
           273.725,
-          9.0
+          10.0
         ],
         [
           272.125,
-          9.0
+          10.0
         ]
       ]
     },
@@ -2853,8 +2855,8 @@
         56
       ],
       "yaw": 0,
-      "blend": 8,
-      "outline": "Ellipse"
+      "blend": 6,
+      "outline": "Rectangle"
     },
     {
       "id": "TerrasseOuestAcierie",
@@ -2868,78 +2870,78 @@
         27
       ],
       "yaw": 0,
-      "blend": 12,
-      "outline": "Ellipse"
+      "blend": 8,
+      "outline": "Rectangle"
     },
     {
       "id": "TerrasseCharbonAcierie",
       "xz": [
-        265,
-        5
+        262,
+        10
       ],
       "altitude": 44.0,
       "size": [
-        29,
-        21
+        30,
+        18
       ],
       "yaw": 0,
-      "blend": 9,
-      "outline": "Ellipse"
+      "blend": 5,
+      "outline": "Rectangle"
     },
     {
       "id": "CourFourneauxAcierie",
       "xz": [
-        267,
-        34
+        260,
+        33
       ],
       "altitude": 43.1,
       "size": [
-        22,
-        26
+        32,
+        30
       ],
       "yaw": 0,
-      "blend": 7,
-      "outline": "Ellipse"
+      "blend": 4,
+      "outline": "Rectangle"
     },
     {
       "id": "CourMineraiAcierie",
       "xz": [
-        274,
-        53
+        270,
+        38
       ],
       "altitude": 43.0,
       "size": [
         18,
-        22
+        28
       ],
       "yaw": 0,
-      "blend": 6,
-      "outline": "Ellipse"
+      "blend": 4,
+      "outline": "Rectangle"
     },
     {
       "id": "CourLogistiqueAcierie",
       "xz": [
-        220,
-        74
+        232,
+        70
       ],
       "altitude": 42.0,
       "size": [
-        27,
-        16
+        52,
+        22
       ],
-      "yaw": -8,
-      "blend": 12,
-      "outline": "Ellipse"
+      "yaw": 0,
+      "blend": 6,
+      "outline": "Rectangle"
     },
     {
       "id": "CourScoriesAcierie",
       "xz": [
-        230,
-        85.5
+        232,
+        85
       ],
       "altitude": 40.65,
       "size": [
-        11,
+        12,
         8
       ],
       "yaw": 0,
@@ -2949,10 +2951,10 @@
     {
       "id": "Sol_MaisonEntreeNord",
       "xz": [
-        195.28750014305115,
-        10.545482158660889
+        196.28750014305115,
+        8.545482158660889
       ],
-      "altitude": 43.0,
+      "altitude": 43.6,
       "size": [
         7.540000000000001,
         8.809999999999999
@@ -2964,38 +2966,38 @@
     {
       "id": "Sol_MaisonPignon",
       "xz": [
-        206.76937007904053,
-        4.801249980926514
+        210.8012499809265,
+        8.230629920959473
       ],
       "altitude": 43.6,
       "size": [
         8.31,
         7.18
       ],
-      "yaw": 0,
+      "yaw": 90,
       "blend": 3.5,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_MaisonHaute",
       "xz": [
-        221.0224997997284,
-        4.275684833526611
+        225.7243151664734,
+        8.022499799728394
       ],
-      "altitude": 44.0,
+      "altitude": 43.9,
       "size": [
         9.57,
         7.69
       ],
-      "yaw": 0,
+      "yaw": -90,
       "blend": 3.5,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_MaisonArdoise",
       "xz": [
-        233.55845284461975,
-        9.0
+        240.55845284461975,
+        8.0
       ],
       "altitude": 43.8,
       "size": [
@@ -3009,8 +3011,8 @@
     {
       "id": "Sol_MaisonCourInterieure",
       "xz": [
-        200.91624999046326,
-        22.95626926422119
+        195.91624999046326,
+        23.95626926422119
       ],
       "altitude": 43.2,
       "size": [
@@ -3024,25 +3026,25 @@
     {
       "id": "Sol_MaisonVirage",
       "xz": [
-        215.0,
-        22.08667278289795
+        211.08667278289795,
+        24.0
       ],
-      "altitude": 42.8,
+      "altitude": 43.1,
       "size": [
         7.18,
         7.85
       ],
-      "yaw": 0,
+      "yaw": 90,
       "blend": 3.5,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_MaisonVenelle",
       "xz": [
-        231.9337501525879,
-        22.989024877548218
+        225.9337501525879,
+        23.989024877548218
       ],
-      "altitude": 43.1,
+      "altitude": 43.2,
       "size": [
         7.0,
         7.46
@@ -3054,53 +3056,23 @@
     {
       "id": "Sol_DortoirNord",
       "xz": [
-        206.0,
-        19.349369764328003
+        240.650630235672,
+        24.0
       ],
       "altitude": 43.2,
       "size": [
         11.08,
         8.93
       ],
-      "yaw": 0,
-      "blend": 3.5,
-      "outline": "Rectangle"
-    },
-    {
-      "id": "Sol_DortoirPlace",
-      "xz": [
-        233.64290380477905,
-        28.632500171661377
-      ],
-      "altitude": 43.1,
-      "size": [
-        10.87,
-        8.54
-      ],
       "yaw": -90,
-      "blend": 3.5,
-      "outline": "Rectangle"
-    },
-    {
-      "id": "Sol_MaisonContremaitre",
-      "xz": [
-        239.07231092453003,
-        28.0
-      ],
-      "altitude": 43.2,
-      "size": [
-        7.779999999999999,
-        8.719999999999999
-      ],
-      "yaw": 90,
       "blend": 3.5,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_MaisonOuest",
       "xz": [
-        194.87829494476318,
-        44.0
+        195.87829494476318,
+        40.0
       ],
       "altitude": 42.8,
       "size": [
@@ -3114,22 +3086,52 @@
     {
       "id": "Sol_MaisonJardin",
       "xz": [
-        211.27999997138977,
-        46.47583484649658
+        211.52416515350342,
+        40.27999997138977
       ],
       "altitude": 42.8,
       "size": [
         7.52,
         7.8
       ],
-      "yaw": 180,
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_DortoirPlace",
+      "xz": [
+        225.64290380477905,
+        39.63250017166138
+      ],
+      "altitude": 42.9,
+      "size": [
+        10.87,
+        8.54
+      ],
+      "yaw": -90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonContremaitre",
+      "xz": [
+        240.92768907546997,
+        40.0
+      ],
+      "altitude": 43.0,
+      "size": [
+        7.779999999999999,
+        8.719999999999999
+      ],
+      "yaw": -90,
       "blend": 3.5,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_CuisineCommune",
       "xz": [
-        219.76500010490417,
+        225.76500010490417,
         53.82114291191101
       ],
       "altitude": 43.0,
@@ -3144,7 +3146,7 @@
     {
       "id": "Sol_GrenierCommun",
       "xz": [
-        230.0,
+        232.0,
         54.1886430978775
       ],
       "altitude": 42.9,
@@ -3295,7 +3297,7 @@
       "id": "Sol_CharbonRouteScierie",
       "xz": [
         256.0,
-        4.0
+        10.0
       ],
       "altitude": 44.0,
       "size": [
@@ -3310,7 +3312,7 @@
       "id": "Sol_CharbonReserve",
       "xz": [
         268.0,
-        9.0
+        10.0
       ],
       "altitude": 44.0,
       "size": [
@@ -3384,120 +3386,120 @@
     {
       "id": "Sol_FourneauUn",
       "xz": [
-        257.69598070164875,
-        34.0170028945939
+        257.986635863781,
+        22.391500055789948
       ],
       "altitude": 43.1,
       "size": [
         6.96,
         5.77
       ],
-      "yaw": -85,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_FourneauDeux",
       "xz": [
-        263.0724705593999,
-        22.446019974835888
+        266.0096358060837,
+        22.38450002670288
       ],
       "altitude": 43.1,
       "size": [
         7.3100000000000005,
         6.0600000000000005
       ],
-      "yaw": 170,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_FourneauTrois",
       "xz": [
-        258.5239987385901,
-        21.948759938297655
+        273.986635863781,
+        22.391500055789948
       ],
       "altitude": 43.1,
       "size": [
         6.96,
         5.77
       ],
-      "yaw": -95,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_FourneauQuatre",
       "xz": [
-        265.20676646459555,
-        17.2946609469963
+        257.986635863781,
+        36.39150005578995
       ],
       "altitude": 43.1,
       "size": [
         6.96,
         5.77
       ],
-      "yaw": 160,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_FourneauCinq",
       "xz": [
-        255.2248341023251,
-        39.75254406020024
+        266.0096358060837,
+        36.38450002670288
       ],
       "altitude": 43.1,
       "size": [
         7.3100000000000005,
         6.0600000000000005
       ],
-      "yaw": -115,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_FourneauSix",
       "xz": [
-        265.85168939137196,
-        33.63352016700882
+        273.986635863781,
+        36.39150005578995
       ],
       "altitude": 43.1,
       "size": [
         6.96,
         5.77
       ],
-      "yaw": -15,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_GrillageUn",
       "xz": [
-        270.0,
-        39.0
+        240.0,
+        22.0
       ],
       "altitude": 43.1,
       "size": [
         6.0,
         5.9
       ],
-      "yaw": -20,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },
     {
       "id": "Sol_GrillageDeux",
       "xz": [
-        275.0,
-        37.0
+        240.0,
+        29.0
       ],
       "altitude": 43.1,
       "size": [
         6.0,
         5.9
       ],
-      "yaw": 10,
+      "yaw": 0,
       "blend": 3,
       "outline": "Rectangle"
     },

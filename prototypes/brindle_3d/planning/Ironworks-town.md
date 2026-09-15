@@ -1,30 +1,28 @@
 # Ironworks settlement — graphics workshop
 
-The west-bank terrace now contains 27 substantial buildings, compared with the
-six ruined buildings in Brindle. The inhabited and industrial footprint occupies
-approximately 100 × 104 m, extending northwest from the existing mine junction.
-The settlement uses the approved stone, slate and heavy-timber ironworks kit.
+The west-bank terrace now contains 27 substantial buildings and an ordered
+production block. The inhabited and industrial footprint occupies approximately
+100 × 104 m, extending northwest from the existing mine junction. The settlement
+uses the approved stone, slate and heavy-timber ironworks kit.
 No new mesh copies or additional external art packs are required.
 
 ## Spatial organization
 
-- A single north-south main lane now leads from the regional road to the common
-  well. A broad, irregular worker loop branches from it, leaving a readable green
-  centre and small front yards instead of a web of crossing paths.
-- The west side is the residential neighbourhood: twelve homes and barracks are
-  arranged in three loose rows around the well, kitchen and granary. The foreman's
-  house marks the eastern edge, while the two latrines stay outside the living
-  cluster. Five birches sit on the edges of the lanes rather than between doors.
-- Stables, wagon shelter and the southern stores form a separate service court at
-  the foot of the residential lane. Finished bars leave this court directly for
-  the regional road without passing through the homes.
-- The east side is divided into three working yards: charcoal and timber at the
-  north, six bloomeries and the two forges in an open central hot yard, then the
-  mine receiving and ore sorting court beside the river. Each yard has one clear
-  approach and enough open ground for carts and workers.
-- The existing mine feeds the two sorting halls. Ore heaps, crushing slabs and
-  roasting beds remain together in the receiving court; the river channel and the
-  footpath to the southern crossing remain open.
+- The west side is the workers' quarter: twelve homes and barracks sit in three
+  aligned rows around a straight residential lane. The kitchen, granary and well
+  sit on the inner edge; the service court and latrines remain below the homes.
+- The east side is a factory block with rectangular work courts. A north storage
+  row holds charcoal, timber and mineral preparation. The six bloomeries form a
+  clear two-row furnace matrix in the centre, with the finishing forges and hot
+  work equipment below it.
+- Ore sorting and raw mineral handling stay on the eastern edge near the mine
+  approach. Finished bars, weighing, tool work and carts use the southern
+  logistics court, keeping inbound ore and outbound iron on separate routes.
+- Three straight factory traverses separate storage, furnaces and finishing. The
+  regional and residential lanes stop at the production boundary; short entrance
+  branches provide access without cutting across a work island.
+- The existing mine, river channel, five bridges and southern footpath remain
+  open. Slag stays on its own southern waste pad away from the production lanes.
 - Two cold slag piles share an open graded pad at the far south, away from the
   working lanes. The intended process is still a medieval bloomery producing
   solid iron blooms, not poured molten steel.
@@ -76,7 +74,7 @@ interior set: closed houses remain solid exterior scenery.
 
 ## Asset coherence pass — 14 September 2026
 
-The composition now uses 47 outside props and 27 buildings. Redundant outdoor
+The composition now uses 43 outside props and 27 buildings. Redundant outdoor
 stocks and a duplicate workbench were removed. Spare tuyères and the grindstone
 are fully under existing roofs; `sheltered_by` records their host in the manifest.
 Cold slag occupies a graded, open yard. Latrines and the southern stable were
@@ -97,7 +95,7 @@ Run it with Godot's `--headless --path . --script` options, then run the town re
 to refresh bounds and access positions. A full kit rebuild remains available by
 omitting `--used-only`. These are offline tools, never runtime dependencies.
 
-`verify_ironworks_coherence.gd`, included in `check_workshop.sh`, adds 104 checks:
+`verify_ironworks_coherence.gd`, included in `check_workshop.sh`, adds 100 checks:
 mesh contact points for every placed kit instance, actual player access to the
 primary and annex doors, the gallery barrack stair and upper door, forge air supply
 connections, and roof coverage over dry equipment. It supplements the 177 town
