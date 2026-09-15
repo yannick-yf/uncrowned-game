@@ -49,6 +49,7 @@ fresh measurements. The current task did not audit source implementation.
 | 2026-09-15 | What does a workers' victory mean? | "Production stops: the workers stop risking their lives, but lose their wages; the crown loses steel." | The exact dispute demands, player actions and encounter script remain a design-review task. Continued worker-run production is not the chosen outcome |
 | 2026-09-15 | How does the demo fit the delivered map, and what is its journey? | "We need to map taht to the map and town already built by my brother". Player creation → fairy conversation → viewing the destroyed village → walking to the steel factory village → helping one side → combat → kingdom impact → visible factory shutdown for workers' victory | The two sides remain workers and management, not two new physical camps. Walk and map existing spaces before fixing quest actions; no new town is requested |
 | 2026-09-15 | How much kingdom feedback does the demo need? | "Say impact on the kingdom (for the demo very basic accepted). And steel factory stop to roks with visual consquence." | Basic kingdom feedback is sufficient; visible local shutdown remains required. Proposed minimum: actual crown steel loss explained by a short NPC/journal response. A separate receiving-yard/capital transformation is deferred |
+| 2026-09-15 | Does the existing map fit the demo, and must outcome art be in the brother's plan? | Yannick confirms "Brindle → le bourg où rencontrer les habitants → les installations de l’aciérie où agir et constater les conséquences" and requires visible map/assets according to player choices in the brother's work. The castle is unnecessary for this demo | The sequence and outcome-visibility requirement are confirmed; the brother's exact asset/staging solution and effort still need joint review. Record before-choice, management and workers states, then verify them in the integrated game |
 
 **The latest milestone clarification governs.** The Windows public demo is the
 beginning of the game on the brother's existing map: creation, fairy, ruined village,
@@ -95,6 +96,15 @@ Plan the tutorial and a quest fight for the demo; retain the king confrontation
 and fight in the full-v1 scope. That is a planning interpretation of the new
 boundary, not a decision to remove existing access to the king or to forbid showing
 him in the demo.
+
+The later map confirmation explicitly excludes castle construction and castle
+consequence art from demo dependencies. The existing inhabited quarter and
+production installations are the same delivered steelworks settlement. The
+brother's [work items](DEMO_WORK_ITEMS.md#shared-visual-checklist--before-the-choice-and-after-each-outcome)
+now include a shared visual checklist for before resolution and both outcomes,
+with an asset/state delivery list in [the walkthrough](DEMO_WALKTHROUGH.md).
+The required shutdown is visible in the world; art delivery, quest-state binding
+and in-game verification have separate owners and all remain to be completed.
 
 The repo already uses "v1", "v2" and "v3" for earlier internal development stages.
 Here **full playable v1 means Yannick's future three-month release milestone**,

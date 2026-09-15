@@ -11,12 +11,18 @@ Date: 2026-09-15. Planning draft by Codex for Yannick and his brother.
   village → walk to the steelworks town → support workers or management → combat
   within the quest → understand the kingdom impact and see the local consequence.
   Fit this journey to the map and town the brother has already built.
+- Confirmed map sequence: **Brindle → the inhabited steelworks quarter → the
+  production installations**. The quarter and works form the same delivered
+  settlement. Castle construction or castle consequence art is not a demo dependency.
 - Quest: a workers' dispute inside the works, with the player supporting workers or
   management. No forest-camp quest is planned for the demo.
 - Workers' victory: production stops. Workers escape the danger but lose their
   wages, and the crown loses steel. Worker-run continued production is not this outcome.
 - Kingdom feedback may be very basic for the demo. The factory shutdown must have
   visible consequences; a second transformed location is not required.
+- The brother's work explicitly includes the map/asset presentation for the two
+  quest outcomes, verified in the integrated game. The shared visual checklist
+  below is part of demo acceptance, not optional final polish.
 - Public demo platform: **Windows only**. Development may continue on macOS.
 - Combat is required. The real-time fighting screen inspired by Street Fighter and
   Budokai is the initial candidate; try another approach and select by playing.
@@ -375,9 +381,9 @@ Owner: Yannick + agent. Estimate: 2 h. Week: 3. Depends on: Y18, Y02.
 
 Owner: Yannick + agent. Estimate: 3 h. Week: 3. Depends on: Y18, Y23.
 
-**Done:** Connect the accepted quest state to B15/B16's works arrangements, reusing the existing active/cold furnace effects. The view reads simulation state; the graphics are the brother's. This task belongs with the owner of the relevant window/ingestion files. Basic kingdom feedback is covered by Y18/Y19, with no second consequence scene.
+**Done:** Connect the accepted quest state to the visual checklist agreed with the brother in B01/Y01 and delivered through B15/B16/B18. Reuse the existing active/cold furnace effects and bind each agreed element to the simulation's production/outcome state. The view reads simulation state; the graphics are the brother's. This task belongs with the owner of the relevant window/ingestion files. Basic kingdom feedback is covered by Y18/Y19, with no second consequence scene.
 
-**Check:** Capture matching factory views before and after both outcomes: management keeps production active; workers' victory stops it visibly. Collision and visible objects agree. A journal entry alone cannot substitute for the local shutdown.
+**Check:** Perform each resolution from the pre-choice scenario, then walk from the inhabited quarter to the production area. Compare the agreed elements against all three columns of the visual checklist. Management keeps production active; workers' victory stops it visibly. Collision and visible objects agree. A debug preview or journal entry alone cannot prove the quest causes the shutdown; Y21 checks the same visual state after save/load.
 
 ### Y21 — Keep quest consequences across save/load and combat defeat
 
@@ -469,11 +475,50 @@ Owner: Yannick + agent. Estimate: 3 h. Week: 3. Depends on: Y10, Y30, B07, B08, 
 
 ## The brother's work items
 
+### Shared visual checklist — before the choice and after each outcome
+
+**Confirmed by Yannick on 2026-09-15:** the existing Brindle → inhabited quarter →
+production-area route is sufficient for the demo, and the map/assets must show
+the consequences of the player's choice. The castle is outside the demo's art
+requirements. This checklist makes that work explicit for the brother; his exact
+visual recipe, asset effort and location choices remain to be agreed.
+
+| Place / visible element | Before the choice | Management outcome | Workers' outcome | Work and acceptance |
+|---|---|---|---|---|
+| Brindle and the route into the inhabited quarter | Existing ruined village and walk to the settlement | Same route remains available | Same route remains available | B01/B02: confirm the path and camera; no new Brindle transformation is required for this dispute |
+| Inhabited quarter and meeting spots | Existing homes, shared spaces and recognizable participants | Outcome response explains continued wages and dangerous work | Outcome response explains safety and lost wages | B12–B14/B18 with Y19: stage readable speakers/status; buildings can remain as delivered |
+| Production fire, furnace glow and smoke | Works visibly operating | Works visibly operating or resuming | Production fire/glow/smoke visibly cease | B15/B16 with Y20: reuse active/cold effects; identify the exact production emitters affected, preserving unrelated domestic fires |
+| Other production activity, if shown | Working poses/moving equipment agree with active production | Activity agrees with continued production | Any depicted activity that implies continued production must stop | B01 lists what actually exists; B15/B16 specify only needed variants. New machinery or worker animations are not automatically commissioned |
+| Entrance/status presentation | Unresolved dispute | Status agrees with management's outcome | Status agrees with the stoppage | B18 with Y19/Y20: agree sign or speaker staging and keep words in localized content |
+| Crown steel | Existing supply | Supply continues under the agreed rules | Actual loss of crown steel | Y18/Y19: simple explanation is sufficient; no castle, convoy or second kingdom scene is required |
+
+For each affected element, B01/Y01 must record **existing asset/site ID, what stays,
+what changes, whether an asset is missing, who delivers it, and the viewing spot**
+in [the walkthrough sheet](DEMO_WALKTHROUGH.md). The mandatory result is visibly
+operating versus stopped production. The brother chooses the concrete visual
+solution with Yannick; the table does not require a second complete town or a
+demolished factory. Management may preserve the initial working appearance.
+
+The brother owns asset creation and staging. Yannick and the assigned integration
+agent connect these to the actual quest state through Y18/Y20/Y23. An exported
+asset or workshop preview alone does not close the playable result. Deliver each
+usable change for integration as it becomes available.
+
+B21's shared review uses **six matched views**: one inhabited-quarter view and one
+production-area view in each of the three states. The ordinary game camera must
+make operating versus stopped production recognizable. Y20 proves the quest causes
+the change; Y21 checks persistence; the Windows play check confirms it in the demo
+build. List any missing cue as a task, rather than accepting text-only local impact.
+
+This checklist refines existing B01/B15/B16/B18/B19/B21 and Y20/Y21 work. It adds no
+assumed art hours to the provisional budget. If the agreed missing pieces exceed a
+session, split and re-estimate them with the brother before implementation.
+
 ### B01 — Confirm the journey's use of the existing map and town
 
 Owner: Brother. Estimate: 2 h. Week: 1. Depends on: Y00.
 
-**Done:** Review Y00's walked route and candidate locations against the delivered Brindle and village_acierie scenes. Confirm the existing spaces suitable for each story beat and identify only actual missing route/presentation pieces. Preserve stable site/building IDs; exact quest actions follow in Y01.
+**Done:** Review Y00's walked route and candidate locations against the delivered Brindle and village_acierie scenes. Confirm the ruined-village → inhabited-quarter → production-area sequence and existing spaces suitable for each beat. Review the shared visual checklist, identifying existing affected elements and only missing route/presentation pieces. Preserve stable IDs and choose the two comparison viewpoints; exact quest actions follow in Y01.
 
 Record the brother's actual review in [DEMO_WALKTHROUGH.md](DEMO_WALKTHROUGH.md), including changes to the proposed art effort. An agent's prepared sheet does not close B01.
 
@@ -587,7 +632,7 @@ Owner: Brother. Estimate: 3 h. Week: 1. Depends on: Y02.
 
 Owner: Brother. Estimate: 3 h. Week: 3. Depends on: Y01, B01.
 
-**Done:** Reuse the delivered working forges and check that continued production is legible at the quest's viewing spot. Make only agreed staging fixes; wages and the remaining danger are explained by Y19. A new outcome scene is unnecessary if the existing working presentation communicates this.
+**Done:** Complete the management column of the shared visual checklist using the delivered working forges and agreed staging. Provide the stable IDs and intended active states to the integration owner. Check continued production is legible at the selected viewing spot; Y19 explains wages and the remaining danger. Reuse the initial working appearance where it already communicates the result.
 
 **Check:** From the normal camera identify the operating factory, then compare it with the workers' stopped outcome. Management may preserve the initial appearance; the player must still understand the resolution from their action and the response.
 
@@ -595,7 +640,7 @@ Owner: Brother. Estimate: 3 h. Week: 3. Depends on: Y01, B01.
 
 Owner: Brother. Estimate: 3 h. Week: 3. Depends on: Y01, B01.
 
-**Done:** Inspect the existing cold-forge/furnace effects first and finish only the missing shutdown presentation agreed in Y01. Production fire/smoke must stop visibly; idle-worker staging is optional if useful and within this session. Lost wages are explained in Y19. Preserve stable IDs and reuse delivered pieces.
+**Done:** Complete the workers column of the shared visual checklist. Inspect the existing cold-forge/furnace effects first and finish only the missing shutdown cues agreed in Y01. Supply the affected asset IDs and their stopped states to the integration owner. Production fire/glow/smoke must visibly cease, and any depicted work must agree with the stoppage. Additional idle-worker staging is optional; Y19 explains lost wages. Reuse delivered pieces.
 
 **Check:** Compare the initial, management and workers views side by side. Point to the cessation of production in the scene; Y19 explains the lost wages.
 
@@ -603,7 +648,7 @@ Owner: Brother. Estimate: 3 h. Week: 3. Depends on: Y01, B01.
 
 Owner: Brother. Estimate: 2 h. Week: 3. Depends on: B01.
 
-**Done:** Provide the sign/speaker staging agreed for the demo entrance. Keep localized words in content rather than baked into a French-only graphic.
+**Done:** Provide the sign/speaker staging agreed for the demo entrance and its checklist states before resolution, after management's outcome and after the stoppage. A single existing object/person can serve all states through localized text; no new graphic variant is required unless agreed with Yannick. Keep localized words in content rather than baked into a French-only graphic.
 
 **Check:** Approach the entrance at normal camera distance. The status can be read through the agreed interaction/HUD, with a visible object/person anchoring it.
 
@@ -611,7 +656,7 @@ Owner: Brother. Estimate: 2 h. Week: 3. Depends on: B01.
 
 Owner: Brother. Estimate: 2 h. Week: 3. Depends on: B15, B16.
 
-**Done:** Adjust the agreed demo scenes so the player, interaction spots and consequence props remain visible from the game camera.
+**Done:** Adjust the agreed demo scenes so the player, interaction spots and consequence elements remain visible from the game camera in all three checklist states. Check the inhabited-quarter → production-area approach and the two agreed comparison viewpoints.
 
 **Check:** Repeat the opening, interaction and both outcome camera checks in the integrated game; record any remaining obstruction for a fix ticket.
 
@@ -627,9 +672,9 @@ Owner: Brother. Estimate: 2 h. Week: 4. Depends on: B07, B08, B09, B10, B11, B15
 
 Owner: Brother. Estimate: 2 h. Week: 4. Depends on: Y20, Y31, B19.
 
-**Done:** Look at the actual candidate game, including creation, fairy, ruins, town approach, both factory outcomes, combat and French/English sign presentation.
+**Done:** Review the actual candidate game with Yannick, including creation, fairy, ruins, inhabited quarter, both factory outcomes, combat and French/English status presentation. Compare every agreed visual element with the shared checklist; a town that looks identical while production continues after a workers' victory is unfinished demo work.
 
-**Check:** Capture the agreed comparison views and report blockers by location/state. Fix work comes from the reserve; workshop-only screenshots do not close this item.
+**Check:** Capture the six matched views: inhabited quarter and production area, each before resolution and after both outcomes. Both brothers can identify working versus stopped production without debug overlays. Record the tested game revision and remaining blockers by location/state. Fix work comes from the reserve; workshop-only screenshots do not close this item.
 
 ## Release proof and what follows
 

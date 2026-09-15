@@ -24,6 +24,13 @@ and costs the crown steel. The shutdown must be visible; basic NPC/journal feedb
 can explain the kingdom effect. The final combat approach remains an experiment.
 See [the decision handoff](V2_VISION_AUDIT.md) for the accepted scope and audit.
 
+Yannick has now confirmed the map sequence: **Brindle → the inhabited quarter
+where the player meets residents → the production installations where the player
+acts and sees consequences**. The inhabited quarter and installations form the
+existing steelworks settlement. Castle construction and castle outcome visuals
+are outside the demo requirements. Exact meeting spots and the brother's review
+remain pending; agreement on this sequence does not certify route playability.
+
 ## Use the same game for the review
 
 Proposed review budget: use Y00's two hours for preparation, walking and notes,
@@ -71,7 +78,7 @@ separating movement from time spent reading or discussing.
 | R05 — Hear management | Candidate exterior near `MaisonContremaitre` or `BureauPesee` | Choose a visible, reachable speaking spot; check the camera and nearby movement. Do not assume the building has a playable interior | Not checked; location choice pending |
 | R06 — Hear workers | Candidate shared space near `CuisineCommune`, `DortoirPlace` or `DortoirNord` | Choose a reachable spot distinguishable from management's; assess existing cast placement and space to converse | Not checked; location choice pending |
 | R07 — Investigate, act and enter combat | Candidate production area near `HalleMartelage`, `ForgeFinition` or `FourneauUn` | Identify space for evidence, the resolving action and encounter entry. Record what exists; the bell, accident and guard intervention remain story proposals | Not checked; action/opponent pending design review |
-| R08 — See production stop or continue | Existing active/cold forge and furnace effects | Choose a repeatable viewing position. Inspect available states and note what a player could actually perceive. A debug preview does not prove the quest causes the change | Not checked; viewing spot pending |
+| R08 — See production stop or continue | Existing active/cold forge and furnace effects | Choose one inhabited-quarter and one production-area viewpoint. Check the shared visual checklist before the choice and after each outcome. A debug preview does not prove the quest causes the change | Not checked; two viewpoints pending |
 | R09 — Understand the cost | Existing quest speakers and journal | List the missing explanation of safety, wages and crown steel. Eventually compare both outcomes and check the words against actual simulation effects | Not checked; exact feedback pending |
 
 Location references: [bake brief](../content/bake_brief.json),
@@ -89,10 +96,11 @@ scene design may also satisfy the experience.
 
 | Decision | Proposal from data inspection | Yannick's review | slosinio's review | Agreed result / date |
 |---|---|---|---|---|
+| Map sequence | Brindle → inhabited quarter → production installations; no castle art required for demo | Confirmed 2026-09-15 | Pending | Exact route still to walk together |
 | Opening route and fairy presentation | Clearing → Brindle → existing steelworks town | Pending | Pending | Pending |
 | Management and worker meeting spots | Existing buildings/shared spaces in R05/R06 | Pending | Pending | Pending |
 | Evidence, action and encounter entry | Existing production area; exact actions undecided | Pending | Pending | Pending |
-| Visible shutdown | Reuse cold furnace/forge effects; identify any missing cue | Pending | Pending | Pending |
+| Visual states for the two outcomes | Use the work-item checklist: operating under management, visibly stopped under workers; select exact elements together | Outcome visibility required, 2026-09-15; recipe pending | Pending | Pending |
 | Combat prototype assets | Reuse the brother's available assets or agreed plain blocks | Pending | Pending | Pending |
 | Next sessions and art effort | Refine the inventory using this walkthrough | Pending | Pending | Pending |
 
@@ -103,9 +111,30 @@ verified walkthrough findings yet; a blank register does not mean the route work
 |---|---|---|---|---|---|
 | To fill after observation | — | — | — | — | — |
 
+Use the [shared visual checklist in the brother's work items](DEMO_WORK_ITEMS.md#shared-visual-checklist--before-the-choice-and-after-each-outcome)
+to fill the following delivery list together. Include each affected production
+effect or activity and the agreed status presentation; reuse existing assets.
+
+| Existing element / stable ID | Location and comparison viewpoint | Before choice | Management outcome | Workers' outcome | Missing asset or staging work | Brother's delivery / integration owner |
+|---|---|---|---|---|---|---|
+| To fill during B01/Y01 | — | — | — | — | — | — |
+
+Production must visibly operate under management and stop after a workers'
+victory. If work activity is depicted, it must match that state. Extra idle-worker
+poses or scenery changes are proposals to agree with the brother, not assumed
+requirements. Brindle and the town's buildings need no new transformation for this
+quest; kingdom feedback can remain simple.
+
+Plan six comparison captures for B21: the inhabited quarter and production area
+in each of the three states, using the same two viewpoints. Record image paths and
+the game revision when they exist. Y20 checks that the actual quest causes these
+states and Y21 that the saved state restores them. These captures and checks are
+pending; the current sheet is a delivery agreement to complete, not visual proof.
+
 The walkthrough is complete when every route row has an honest result, affected
 locations/visual uses have both brothers' recorded review, and each blocking gap
-has an assigned next step. This closes a planning review, not the gameplay fixes.
+has an assigned next step, including the agreed list of visual state changes.
+This closes a planning review, not the gameplay fixes.
 Unresolved location choices remain open; preparation by an agent is not approval.
 
 ## Turn the findings into small, playable work
