@@ -12,11 +12,10 @@ extends RefCounted
 ## Order, and why. Ground first from his samples. Then the brief's woods and grounds,
 ## over open ground only and never inside a place — his map has the works on grass,
 ## and §4 needs it in a wound in a wood. His trees close their tiles. The kit's wound
-## and clearing. Roads — his, then ours — over everything walkable and *over water
-## where his roads cross it*, because a road drawn through a river is a crossing
-## whether or not a bridge was modelled, and the report names every one so the brief
-## can ask for the bridge. The ford is a band on the river. His buildings stand as
-## walls under a prop. Then **the kit**: every place marked scaffold gets its ground,
+## and clearing. His bridge decks open their crossings, then roads meet their
+## landings without opening extra water beside them. The ford is a band on the river.
+## His buildings stand as walls under a prop; the ironworks uses collision polygons
+## extracted by the build tool, so open halls are not closed by their roof bounds. Then **the kit**: every place marked scaffold gets its ground,
 ## streets, landmarks and scenery from `Region.scaffold_place`; a place of his gets the
 ## same only if his data stands no building in it. Last, the border is closed.
 ##
@@ -61,6 +60,7 @@ var tiles_per_second: float = 0.0
 ## Where a road was laid over water: {"road": String, "at": Vector2i, "metres": Vector2}
 var crossings: Array[Dictionary] = []
 var report: Array[String] = []
+var _built_crossings: bool = false
 
 
 # ----------------------------------------------------------------- his files ---
@@ -92,6 +92,8 @@ static func bake(
 	sectors: Dictionary,
 	trees: Array,
 	brief: Dictionary,
+	town: Dictionary = {},
+	routes: Dictionary = {},
 ) -> RegionBake:
 	var out := RegionBake.new()
 	var samples: int = int(landscape.get("grid_size", 0))
@@ -112,15 +114,17 @@ static func bake(
 		walking if walking > 0.0 else out.tiles_per_second * out.metres_per_tile, out.tiles_per_second])
 
 	out._ground(samples, heights, waters, paint)
-	out._places(geography, brief)
+	out._places(geography, brief, town)
 	out._points(sectors, brief)
 	out._woods(brief)
 	out._grounds(brief)
 	out._trees(trees)
 	out._wound_and_clearing()
-	out._roads(geography, sectors, brief)
+	out._bridges(landscape, brief)
+	out._roads(geography, sectors, brief, routes, town)
 	out._ford()
 	out._buildings(sectors, brief)
+	out._ironworks(town)
 	out._kit(brief)
 	out._thin_footprints(brief)
 	out._border()
@@ -139,7 +143,7 @@ func _ground(samples: int, heights: PackedFloat32Array, waters: PackedFloat32Arr
 
 ## The eight places: his where he has them, the brief's where he does not. The zone
 ## is his envelope; the kit's ground is `kit_footprint_xz` when the brief gives one.
-func _places(geography: Dictionary, brief: Dictionary) -> void:
+func _places(geography: Dictionary, brief: Dictionary, town: Dictionary = {}) -> void:
 	var his: Dictionary = {}
 	for entry: Variant in (geography.get("sites", []) as Array):
 		var site: Dictionary = entry as Dictionary
@@ -162,6 +166,11 @@ func _places(geography: Dictionary, brief: Dictionary) -> void:
 		else:
 			report.append("PLACE %s: neither his site '%s' nor a proposal — skipped" % [id, from])
 			continue
+		if bool(row.get("use_town_bounds", false)) and town.has("bounds_xz"):
+			var bounds: Array = town["bounds_xz"]
+			centre = _tile([float(bounds[0]) + float(bounds[2]) * 0.5,
+				float(bounds[1]) + float(bounds[3]) * 0.5])
+			size = _tiles([bounds[2], bounds[3]])
 		var kit: Vector2i = _tiles(row["kit_footprint_xz"]) if row.has("kit_footprint_xz") else size
 		var landed: Vector2i = _dry(centre)
 		if landed != centre:
@@ -329,8 +338,10 @@ func _wound_and_clearing() -> void:
 
 
 ## His roads, his village paths, his bridge, then the brief's roads.
-func _roads(geography: Dictionary, sectors: Dictionary, brief: Dictionary) -> void:
-	for entry: Variant in (geography.get("roads", []) as Array):
+func _roads(geography: Dictionary, sectors: Dictionary, brief: Dictionary,
+		routes: Dictionary = {}, town: Dictionary = {}) -> void:
+	var regional: Array = routes.get("routes", geography.get("roads", [])) as Array
+	for entry: Variant in regional:
 		var road: Dictionary = entry as Dictionary
 		_polyline(String(road.get("id", "road")), road.get("points_xz", []) as Array, ROAD_HALF,
 			Region.Terrain.ROAD)
@@ -340,10 +351,12 @@ func _roads(geography: Dictionary, sectors: Dictionary, brief: Dictionary) -> vo
 		_polyline(String(route.get("id", "path")), route.get("points", []) as Array, half,
 			Region.Terrain.ROAD)
 	var ends: Array = sectors.get("bridge_endpoints_xzy", []) as Array
-	if ends.size() == 2:
+	if ends.size() == 2 and routes.is_empty():
 		var a: Array = ends[0] as Array
 		var b: Array = ends[1] as Array
 		_polyline("his_bridge", [[a[0], a[1]], [b[0], b[1]]], ROAD_HALF, Region.Terrain.ROAD)
+	for path: Dictionary in town.get("paths", []):
+		_polyline(String(path["id"]), path["points_xz"] as Array, 0, Region.Terrain.ROAD)
 	for entry: Variant in (brief.get("roads", []) as Array):
 		var road: Dictionary = entry as Dictionary
 		_polyline(String(road.get("id", "road")) + " (brief)", road.get("points_xz", []) as Array,
@@ -377,6 +390,8 @@ func _polyline(id: String, points_xz: Array, half: int, terrain: Region.Terrain)
 					if here == Region.Terrain.MOUNTAIN:
 						cut += 1
 					if here == Region.Terrain.WATER:
+						if _built_crossings:
+							continue
 						wet += 1
 						if first_wet == Region.NOWHERE:
 							first_wet = tile
@@ -454,7 +469,7 @@ func _kit(_brief: Dictionary) -> void:
 			row["kit_on_his"] = true
 			report.append("kit   %-12s his site, nothing built in it yet: our kit at %s" % [id, kit])
 		else:
-			report.append("kit   %-12s his: %d of his buildings stand in it, nothing of ours" % [id, _his_props_in(id)])
+			report.append("kit   %-12s his: %d of his items stand in it, no settlement kit" % [id, _his_props_in(id)])
 
 
 ## Under a piece of his library the walls are the piece's, not the footprint's. The
@@ -498,7 +513,8 @@ func _ground_beside(at: Vector2i, size: Vector2i) -> Region.Terrain:
 func _his_props_in(zone: StringName) -> int:
 	var count: int = 0
 	for prop: Dictionary in region.props:
-		if region.zone_at(prop["at"] as Vector2i) == zone:
+		if bool(prop.get("his", false)) and (StringName(prop.get("place", &"")) == zone
+			or region.zone_at(prop["at"] as Vector2i) == zone):
 			count += 1
 	return count
 
@@ -616,6 +632,9 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 			out["solid"] = bool(prop["solid"])
 		if bool(prop.get("his", false)):
 			out["his"] = true
+		for key: String in ["source_id", "scene", "place"]:
+			if prop.has(key):
+				out[key] = prop[key]
 		props_out.append(out)
 	var trunk_out: Array = []
 	for id: StringName in trunk:
@@ -673,5 +692,80 @@ static func read(data: Dictionary) -> Region:
 			out["solid"] = bool(prop["solid"])
 		if bool(prop.get("his", false)):
 			out["his"] = true
+		for key: String in ["source_id", "scene", "place"]:
+			if prop.has(key):
+				out[key] = prop[key]
 		region.props.append(out)
 	return region
+
+
+## Built crossings go down before roads, so the report only owes unbuilt crossings.
+## Their end markers are delivered in landscape.json, not coordinates of ours.
+func _bridges(landscape: Dictionary, brief: Dictionary) -> void:
+	for bridge: Dictionary in landscape.get("crossings", []):
+		var entry: Array = bridge["entry_xyz"]
+		var exit: Array = bridge["exit_xyz"]
+		var anchor: Array = bridge["anchor_xz"]
+		var id: StringName = StringName(bridge["id"])
+		points[id] = {"at": _tile(anchor), "scaffold": false}
+		var from := Vector2(float(entry[0]), float(entry[2]))
+		var to := Vector2(float(exit[0]), float(exit[2]))
+		# The narrow footbridge still needs an axis-connected staircase on a 2 m
+		# grid; half a tile diagonal is the minimum raster coverage (2026-09-15).
+		var radius: float = maxf(float(bridge["clear_width_m"]) * 0.5, metres_per_tile / sqrt(2.0))
+		var low: Vector2i = _tile(anchor) - Vector2i.ONE * (ceili(float(bridge["length_m"]) / metres_per_tile) + 1)
+		var high: Vector2i = _tile(anchor) + Vector2i.ONE * (ceili(float(bridge["length_m"]) / metres_per_tile) + 1)
+		for x: int in range(low.x, high.x + 1):
+			for y: int in range(low.y, high.y + 1):
+				var tile := Vector2i(x, y)
+				var metres: Vector2 = BakeRules.metres_for(tile, origin_m, metres_per_tile)
+				if region.in_bounds(tile) and metres.distance_to(Geometry2D.get_closest_point_to_segment(metres, from, to)) <= radius:
+					region.set_terrain(tile, Region.Terrain.ROAD)
+	for name: String in (brief.get("points", {}) as Dictionary):
+		var alias: Dictionary = brief["points"][name] as Dictionary
+		if alias.has("from_crossing"):
+			var source_id: StringName = StringName(alias["from_crossing"])
+			if points.has(source_id):
+				points[StringName(name)] = points[source_id].duplicate()
+			else:
+				report.append("POINT %s: missing delivered crossing %s" % [name, source_id])
+	# Those water tiles are backed by his bridge meshes, not missing crossings.
+	crossings.clear()
+	_built_crossings = not (landscape.get("crossings", []) as Array).is_empty()
+	report.append("bridges: %d of his crossings connect their delivered end markers" %
+		(landscape.get("crossings", []) as Array).size())
+
+
+## His collision shapes, rather than roof-sized boxes, keep open halls walkable.
+## Geometry is extracted outside core by the build tool (2026-09-15).
+func _ironworks(town: Dictionary) -> void:
+	var items: Array = (town.get("buildings", []) as Array) + (town.get("props", []) as Array)
+	for item: Dictionary in items:
+		var centre: Vector2i = _tile(item["xz"])
+		var kind: StringName = &"kiln" if String(item["asset"]).begins_with("bas_fourneau") else StringName(item["asset"])
+		var size_m: Array = item["size_m"]
+		var reach: int = ceili(maxf(float(size_m[0]), float(size_m[2])) / metres_per_tile) + 2
+		var low: Vector2i = centre - Vector2i(reach, reach)
+		var high: Vector2i = centre + Vector2i(reach, reach)
+		var blocked: Array[Vector2i] = []
+		for raw: Array in item.get("obstacles", []):
+			var polygon := PackedVector2Array()
+			for pair: Array in raw:
+				polygon.append(_metres(pair))
+			for x: int in range(low.x, high.x + 1):
+				for y: int in range(low.y, high.y + 1):
+					var tile := Vector2i(x, y)
+					var metres: Vector2 = BakeRules.metres_for(tile, origin_m, metres_per_tile)
+					if region.in_bounds(tile) and Geometry2D.is_point_in_polygon(metres, polygon):
+						if not blocked.has(tile):
+							blocked.append(tile)
+		var first: Vector2i = centre
+		var last: Vector2i = centre
+		for tile: Vector2i in blocked:
+			first = first.min(tile)
+			last = last.max(tile)
+			region.set_terrain(tile, Region.Terrain.WALL)
+		region.props.append({"kind": kind, "at": first, "size": last - first + Vector2i.ONE,
+			"his": true, "source_id": item["id"], "scene": item["scene"], "place": "cinderworks"})
+	report.append("ironworks: %d buildings and %d props, collision shapes retained" % [
+		(town.get("buildings", []) as Array).size(), (town.get("props", []) as Array).size()])

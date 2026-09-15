@@ -134,6 +134,15 @@ and the castle's ramparts stand as blocks. `test_bake` fails on any wall tile th
 does not draw. Do not fix an invisible wall by drawing something of ours — that is the
 art rule the other way round; open it, report it in the bake, and name the debt.
 
+**Delivery ingestion (2026-09-15).** Run `tools/vendor_workshop.sh` before baking or
+checking a bake: `tools/workshop_geometry.gd` reads the copied ironworks collision
+scenes and refuses stale copies. Only the build tool loads those nodes; core receives
+plain polygons. The bake hashes the town and river data and each used collision scene,
+and checks that the landscape's resolved crossings agree with the river layout.
+`tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
+commit checks. The current baked run prints nine DEBT lines for five claims (the road
+ratio joined the existing claims on this delivery), and four OFF lines.
+
 ### Committing — read this before your first `git commit`
 
 **Every git command that writes runs with `GIT_CONFIG_GLOBAL=.git/overnight-gitconfig`.**

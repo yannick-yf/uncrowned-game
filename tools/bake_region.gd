@@ -13,6 +13,8 @@ extends SceneTree
 ## `--check` is for CI: a merged map change that nobody re-baked is a red build,
 ## not a surprise in play.
 
+const Geometry: GDScript = preload("res://tools/workshop_geometry.gd")
+
 const WORKSHOP: String = RegionBake.WORKSHOP
 const BRIEF: String = "res://content/bake_brief.json"
 const OUT: String = "res://content/region.json"
@@ -25,6 +27,9 @@ const INPUTS: Array[String] = [
 	"planning/geographie-v1.json",
 	"planning/brindle-sectors-v1.json",
 	"planning/forest-placements-v1.json",
+	"planning/ironworks-town.json",
+	"planning/river-layout-v2.json",
+	"planning/river-routes-v2.json",
 ]
 
 
@@ -35,16 +40,42 @@ func _initialize() -> void:
 			push_error("missing input: %s" % (WORKSHOP + file))
 			quit(1)
 			return
-	var first: RegionBake = _bake()
+	# The landscape carries resolved bridge endpoints. Refuse stale derived metadata
+	# instead of blessing changed river input with a fresh source hash.
+	var layout: Dictionary = _json(WORKSHOP + "planning/river-layout-v2.json") as Dictionary
+	var meta: Dictionary = _json(WORKSHOP + "assets/landscape/landscape.json") as Dictionary
+	var resolved: Dictionary = {}
+	for bridge: Dictionary in meta.get("crossings", []):
+		resolved[bridge["id"]] = bridge
+	for bridge: Dictionary in layout.get("crossings", []):
+		for key: String in bridge:
+			if not resolved.has(bridge["id"]) or resolved[bridge["id"]].get(key) != bridge[key]:
+				push_error("workshop landscape has stale crossing metadata for %s" % bridge["id"])
+				quit(1)
+				return
+	if resolved.size() != (layout.get("crossings", []) as Array).size():
+		push_error("workshop landscape and river layout name different crossings")
+		quit(1)
+		return
+	var town: Dictionary = _json(WORKSHOP + "planning/ironworks-town.json") as Dictionary
+	var geometry: Dictionary = Geometry.town_with_collisions(town)
+	if geometry.is_empty():
+		push_error("missing workshop scenes; run tools/vendor_workshop.sh")
+		quit(1)
+		return
+	var first: RegionBake = _bake(geometry)
 	if first.region == null:
 		for line: String in first.report:
 			print(line)
 		quit(1)
 		return
-	var second: RegionBake = _bake()
+	var second: RegionBake = _bake(geometry)
 	var source: Dictionary = {}
 	for file: String in INPUTS:
 		source[file] = FileAccess.get_sha256(WORKSHOP + file)
+	for item: Dictionary in (town["buildings"] as Array) + (town["props"] as Array):
+		var relative: String = String(item["scene"]).trim_prefix("res://")
+		source[relative] = FileAccess.get_sha256(WORKSHOP + relative)
 	source["content/bake_brief.json"] = FileAccess.get_sha256(BRIEF)
 	# Keys unsorted, so the places come out in the brief's order — which is the zone
 	# order — and a reader finds the rows top to bottom as on the map.
@@ -83,7 +114,7 @@ func _initialize() -> void:
 	quit(0)
 
 
-func _bake() -> RegionBake:
+func _bake(town: Dictionary) -> RegionBake:
 	var landscape: Dictionary = RegionBake.read_landscape()
 	return RegionBake.bake(
 		landscape.get("meta", {}) as Dictionary,
@@ -94,6 +125,8 @@ func _bake() -> RegionBake:
 		_json(WORKSHOP + "planning/brindle-sectors-v1.json") as Dictionary,
 		_json(WORKSHOP + "planning/forest-placements-v1.json") as Array,
 		_json(BRIEF) as Dictionary,
+		town,
+		_json(WORKSHOP + "planning/river-routes-v2.json") as Dictionary,
 	)
 
 

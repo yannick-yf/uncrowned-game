@@ -65,7 +65,7 @@ func test_criterion_2_no_walkable_tile_touches_the_edge() -> void:
 
 func test_criterion_3_and_4_the_river_is_a_barrier_by_test() -> void:
 	var region: Region = _region()
-	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+	for crossing: Vector2i in river_crossings():
 		var west: bool = false
 		var east: bool = false
 		for step: int in range(3, 14):
@@ -74,12 +74,12 @@ func test_criterion_3_and_4_the_river_is_a_barrier_by_test() -> void:
 		assert_true(west and east, "%s reaches dry land both sides" % crossing)
 
 	var dammed: Dictionary = {}
-	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+	for crossing: Vector2i in river_crossings():
 		for x: int in range(crossing.x - 5, crossing.x + 6):
 			for y: int in range(crossing.y - 5, crossing.y + 6):
 				dammed[Vector2i(x, y)] = true
 	assert_false(_reach(region, Region.BRINDLE, dammed).has(Region.BLACKCAIRN),
-		"dam both and the castle is cut off — the river is a barrier by test")
+		"dam every crossing and the castle is cut off — the river is a barrier by test")
 
 
 func test_criterion_5_and_6_the_road_is_worth_taking_and_not_a_chore() -> void:

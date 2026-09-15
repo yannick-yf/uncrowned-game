@@ -34,7 +34,16 @@ func test_the_window_stands_on_his_ground() -> void:
 		"his scenes stand in the window — run tools/vendor_workshop.sh if %s is missing" % World3d.HIS_MAP)
 	if window.his_present():
 		assert_eq(window.chunk_count, 0, "the bake's ground is not built under his")
-		assert_eq(window.his_props_skipped, 6, "his six ruins are his meshes, not our sprites")
+		var delivered: int = 0
+		for prop: Dictionary in region.props:
+			if bool(prop.get("his", false)):
+				delivered += 1
+		assert_eq(window.his_props_skipped, delivered, "every delivered mesh replaces its placeholder")
+		assert_true(window.get_node_or_null("HisWorld/Decor/Acierie") != null, "his ironworks scene is present")
+		for bridge: Dictionary in (landscape["meta"] as Dictionary)["crossings"]:
+			var centre: Array = bridge["center_xyz"]
+			assert_true(window.height_at(float(centre[0]), float(centre[2])) >= float(centre[1]) - 0.1,
+				"%s carries the walker above the river on its deck" % bridge["id"])
 		assert_true(window.his_kit_count > 20,
 			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
 		assert_true(window.figures_are_his(), "every person is his traveller, not a pack sprite")
@@ -68,5 +77,14 @@ func test_the_window_stands_on_his_ground() -> void:
 	assert_true(window.embers_lit() > 0, "the fires glow: %d embers" % window.embers_lit())
 	assert_eq(window.embers_lit(), window.ember_count() - window.kiln_embers(),
 		"and a freed Cinderworks is cold: its kilns' embers are out")
+	if window.his_present():
+		var smoke: Array[Node] = window.get_node("HisWorld/Decor/Acierie").find_children("*", "CPUParticles3D", true, false)
+		assert_true(smoke.size() > 0, "the delivered active furnaces carry smoke")
+		for effect: CPUParticles3D in smoke:
+			assert_false(effect.emitting, "a freed Cinderworks stops %s" % effect.get_parent().name)
+			assert_false(effect.visible, "old smoke is hidden immediately")
+		window.sync({"free": {&"cinderworks": false}}, 1.0 / 60.0)
+		for effect: CPUParticles3D in smoke:
+			assert_true(effect.emitting and effect.visible, "holding the works restores its furnace effects")
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()
