@@ -248,6 +248,31 @@ And the camera: zoom did not exist in our window. It does now, with his
 `follow_camera`'s numbers — 14 to 48 m, two at a time, on `=`/`-`, the keypad and the
 wheel.
 
+**His second delivery (2026-09-14, evening): rivers and crossings v4, the ironworks
+town, a reshaped relief** — the first real pass through §6.2's loop, on the branch
+`art/ameliorations-graphiques`. What his data now says: four river courses and five
+bridges as data (`planning/river-layout-v2.json`; his King's Road bridge stands 2 m from
+the brief's point), 27 ironworks buildings and 60 props as data
+(`planning/ironworks-town.json`), and a relief whose banks a walker climbs — the three
+road cuttings are gone and 9,000 tiles of rock are open ground. What the loop caught,
+and what each side did about it:
+
+- **The ford point sat on his old course.** Our band covered half the new river. The
+  brief's point moves to (5, 61) m, 45 m below his bridge where the river runs straight
+  and seven tiles wide. The brief follows his river; never the other way round.
+- **Two tests assumed the 2D river's geometry.** "No water within 13 tiles on the
+  crossing's row" is false of a river at 45°, though every zone was reachable. The
+  claim is now the real one — dam a crossing and its shores fall into two pieces — and
+  the one-piece test records a DEBT instead of failing on the next point.
+- **The north his rivers close.** Two new tributaries cut off 8,641 tiles of wild north
+  of the castle, with no crossing over either and nothing of ours in it. A DEBT with his
+  name: a bridge, or wilderness nobody needs.
+- **His new data is not read yet.** The bake still stamps our Cinderworks kit over his
+  ironworks town — three of his buildings stand inside our footprint — and still
+  reports four river crossings his bridges already span. Reading
+  `river-layout-v2.json` and `ironworks-town.json` as *his* props is the next PR on our
+  side, and closes four of the brief's asks at once.
+
 ---
 
 ## 6. The plan, phase by phase
