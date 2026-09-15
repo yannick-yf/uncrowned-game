@@ -134,6 +134,15 @@ and the castle's ramparts stand as blocks. `test_bake` fails on any wall tile th
 does not draw. Do not fix an invisible wall by drawing something of ours — that is the
 art rule the other way round; open it, report it in the bake, and name the debt.
 
+**Delivery ingestion (2026-09-15).** Run `tools/vendor_workshop.sh` before baking or
+checking a bake: `tools/workshop_geometry.gd` reads the copied ironworks collision
+scenes and refuses stale copies. Only the build tool loads those nodes; core receives
+plain polygons. The bake hashes the town and river data and each used collision scene,
+and checks that the landscape's resolved crossings agree with the river layout.
+`tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
+commit checks. The current baked run prints nine DEBT lines for five claims (the road
+ratio joined the existing claims on this delivery), and four OFF lines.
+
 ### Committing — read this before your first `git commit`
 
 **Every git command that writes runs with `GIT_CONFIG_GLOBAL=.git/overnight-gitconfig`.**
@@ -198,6 +207,12 @@ One tick is one in-game minute and the overworld runs 4 ticks per real second, s
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
 
 ## How to work here
+
+**Codex onboarding (2026-09-15).** Root `AGENTS.md` is Codex's automatically loaded
+entry point. It requires this agreement in full, then `docs/V3.md`, then
+`docs/MIGRATION_3D.md` §6.2 and §9, and only the task's needed SPECS section. This
+agreement remains shared and binding; `AGENTS.md` records Codex's lanes and the files
+reserved for Claude's map ingestion, so the two agents do not edit the same work.
 
 Write the test first. Run the suite after every meaningful change — it takes
 milliseconds and it is the only thing that tells you whether something broke.

@@ -72,9 +72,14 @@ func _init() -> void:
 			leaks += 1
 	_ok(2, "no walkable tile touches the region edge", leaks == 0, "%d leaks" % leaks)
 
-	# 3 — both crossings reach dry land on both sides.
+	# 3 — every delivered bridge and the ford reach dry land on both sides.
+	var crossings: Array[Vector2i] = [Region.BRIDGE, Region.FORD]
+	if Places.baked():
+		crossings = [Region.FORD]
+		for bridge: Dictionary in (RegionBake.read_landscape()["meta"] as Dictionary)["crossings"]:
+			crossings.append(Places.shared().point(StringName(bridge["id"])))
 	var dry: bool = true
-	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+	for crossing: Vector2i in crossings:
 		var west: bool = false
 		var east: bool = false
 		for step: int in range(3, 14):
@@ -83,13 +88,14 @@ func _init() -> void:
 			if region.is_passable(crossing + Vector2i(step, 0)):
 				east = true
 		dry = dry and west and east
-	_ok(3, "both crossings reach dry land on both sides", dry, "bridge and ford")
+	_ok(3, "every crossing reaches dry land on both sides", dry, "%d crossings" % crossings.size())
 
-	# 4 — dam both and the castle is cut off.
-	var dammed: Dictionary = _band(Region.BRIDGE, Region.CROSSING_HALF_WIDTH + 3)
-	dammed.merge(_band(Region.FORD, Region.CROSSING_HALF_WIDTH + 3))
+	# 4 — dam all crossings and the castle is cut off.
+	var dammed: Dictionary = {}
+	for crossing: Vector2i in crossings:
+		dammed.merge(_band(crossing, Region.CROSSING_HALF_WIDTH + 3))
 	var cut: Dictionary = _reach(region, Region.BRINDLE, dammed)
-	_ok(4, "damming both crossings cuts Blackcairn off", not cut.has(Region.BLACKCAIRN),
+	_ok(4, "damming all crossings cuts Blackcairn off", not cut.has(Region.BLACKCAIRN),
 		"the river is a barrier by test")
 
 	# 5 and 6 — the road.

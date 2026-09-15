@@ -466,6 +466,14 @@ and put it in front of him where it cannot be denied.
 > its tile grid: the 3D data is **baked** into a `Region` (2 m per tile, 384 × 384) and
 > the tile figures below are read against that grid once it exists.
 
+**Delivered topology, 2026-09-15.** PR #6's five bridges and their regional roads are
+now ingested, alongside the brief's ford. The one-bridge/one-ford figures below still
+describe the procedural map; on the baked world the barrier check closes all five
+bridges and the ford. The Cinderworks is the delivered 27-building, 47-prop town,
+within its own 100 × 104 m bounds. Its distance from Brindle remains owed. The new
+road ratio is 1.24 and full road length 367 tiles (146.7 s at 2.5 tiles/s); the targets
+below remain unsettled map decisions, reported by the existing debt checks.
+
 ### Bounds and scale
 
 One region, bounded on all four sides so the playable area needs no invisible walls:
@@ -3829,6 +3837,8 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 
 | Date | Decision | Alternatives considered | Why |
 |---|---|---|---|
+| 2026-09-15 | **Ingest PR #6's 27 ironworks buildings, 47 props and five bridges.** The Cinderworks uses the delivered town bounds and collision geometry; its kit disappears. Roads join the delivered bridge ends, and the river barrier check closes all bridges plus the ford. The window reads deck heights and cools the delivered industry when the works is freed; people follow anchors | Leaving the new town overlaid by the old kit; filling roof envelopes with walls; retaining two-crossing assumptions; moving his roads to preserve the previous ratio | Yannick authorized Codex to take over ingestion for this task. Nodes are read only in the build tool and window, while core remains a deterministic grid. The narrowest bridge is rasterized at a minimum half-tile diagonal for axis connectivity. The delivered route is 367 tiles, ratio 1.24: the existing ratio debt checks now report it, without relaxing the 1.30–1.50 target or converting a failure to debt. Nine DEBT lines cover five claims; four OFF lines remain |
+| 2026-09-15 | **Codex enters through root `AGENTS.md`, which requires the shared `CLAUDE.md` agreement and records Codex's lanes** | Copying the entire agreement into a second file; relying on a pasted chat brief | Yannick requested persistent Codex instructions. A repository entry point carries the reading order, file ownership and task workflow into future sessions without duplicating the shared agreement or changing personal configuration |
 | 2026-09-10 | Godot, at least for the first versions | Unity, Bevy | Text project files, agent-friendly, MIT |
 | 2026-09-10 | Long save-based RPG | Repeatable runs | Sandbox continues past the main quest |
 | 2026-09-10 | Player never types free text | Free-form chat | Every utterance maps to a known intent |

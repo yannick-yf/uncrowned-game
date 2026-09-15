@@ -3,7 +3,7 @@
   "_places_order": "zone order (Region.ZONE_ORDER); the bake keeps it",
   "places": {
     "brindle": {"from": "brindle"},
-    "cinderworks": {"from": "village_acierie", "kit_footprint_xz": [48, 32], "_why": "his envelope, our kilns and sheds until he draws the works"},
+    "cinderworks": {"from": "village_acierie", "use_town_bounds": true, "kit_footprint_xz": [48, 32], "_why": "2026-09-15: the delivered ironworks-town.json envelope includes the western homes; his buildings replace the kit. Keep the existing wood-exclusion footprint for the simulated wound"},
     "harrowgate": {"centre_xz": [90, 35], "footprint_xz": [80, 56], "scaffold": true, "_why": "where his Brindle road meets his works road, east of the Kettle: the first town, the road passing its gate"},
     "wide_acres": {"from": "village_fermier", "kit_footprint_xz": [48, 32], "_why": "his envelope, our barns and farmhouses until he draws them"},
     "muster": {"centre_xz": [-30, 10], "footprint_xz": [40, 28], "scaffold": true, "_why": "the west bank of the junction crossing, between the farms road and the city road: the crossroads §4 puts the camp on"},
@@ -23,7 +23,8 @@
     {"terrain": "marsh", "place": "saltmarch", "radii_xz": [64, 44], "scaffold": true, "_why": "the marsh the port is named for"}
   ],
   "points": {
-    "bridge": {"xz": [28, 18], "scaffold": true, "_why": "where his works road and his farms road cross the main river at the junction. His built bridge at (269, 62) crosses the works' tributary; it is stamped as a road, not as this point"},
+    "his_bridge": {"from_crossing": "PontMine", "_why": "retain the legacy mine bridge point at its delivered location"},
+    "bridge": {"from_crossing": "PontRouteRoyale", "_why": "2026-09-15: the main crossing follows his delivered bridge anchor and deck endpoints"},
     "ford": {"xz": [5, 61], "scaffold": true, "_why": "a wade 45 m downstream of his King's Road bridge, where his main river runs straight and seven tiles wide (rivers v4, 2026-09-14). The point follows his river, never the other way round: at (-22, 80) on his old course the band covered half the new one"},
     "clearing": {"xz": [200, 190], "scaffold": true, "_why": "in the Brindle wood, 65 m north of the ruins and east of his Brindle road, so the ring closes; one corridor leads south"},
     "working_face": {"xz": [290, 150], "scaffold": true, "_why": "the strip the works is felling now, pushed south-east into the works' wood along the flat and away from the fairies — the point being that they have not reached them"},

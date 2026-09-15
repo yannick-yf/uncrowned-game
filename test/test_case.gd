@@ -213,3 +213,14 @@ func _show(value: Variant) -> String:
 
 func _suffix(message: String) -> String:
 	return "" if message.is_empty() else " — %s" % message
+
+
+## Every built crossing and the ford. The brother's five bridges replace the old
+## assumption that damming two points closes the river (2026-09-15).
+func river_crossings() -> Array[Vector2i]:
+	if not Places.baked():
+		return [Region.BRIDGE, Region.FORD]
+	var out: Array[Vector2i] = [Region.FORD]
+	for bridge: Dictionary in (RegionBake.read_landscape()["meta"] as Dictionary)["crossings"]:
+		out.append(Places.shared().point(StringName(bridge["id"])))
+	return out
