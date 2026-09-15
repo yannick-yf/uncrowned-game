@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "description": "Natural valley cross-sections and connected crossings for the graphics workshop. World positions and level profiles use metres.",
+  "courses": [
+    {"id":"source_nord_est", "profile_xzy":[[290,-285,88],[268,-269,65],[245,-240,53],[223,-227,50],[200,-205,46],[179,-181,40],[162,-167,40]], "half_width_m":[2.1,4.1], "depth_m":1.35, "valley_blend_m":55},
+    {"id":"affluent_ville", "profile_xzy":[[-150,-315,117],[-143,-302,92],[-135,-285,71],[-117,-268,66],[-100,-250,63],[-89,-229,60],[-80,-210,57],[-55,-191,51],[-30,-180,47],[10,-171,42],[44,-161,40],[70,-155,40]], "half_width_m":[2.6,4.6], "depth_m":1.5, "valley_blend_m":65},
+    {"id":"riviere_principale", "profile_xzy":[[105,-110,40],[100,-92,40],[90,-69,39.1],[78,-53,38.6],[70,-35,38],[54,-9,36.9],[30,20,35.8],[5,45,34.7],[1,72,33.2],[-40,100,31.7],[-79,117,29.8],[-110,140,27.5],[-141,167,24.9],[-160,205,22],[-186,233,18.5],[-205,265,12],[-211,288,5],[-215,309,0.8],[-219,326,0],[-225,350,0]], "half_width_m":[5.1,10.5], "depth_m":1.8, "valley_blend_m":95},
+    {"id":"affluent_acierie", "profile_xzy":[[335,-10,136],[320,-5,113],[305,3,78],[297,14,52],[290,30,42],[275,62,41.1],[251,94,36.9],[220,130,33.1],[188,146,31.8],[150,164,30.5],[120,175,29.7],[86,194,28.4],[40,215,27.2],[-4,221,25.9],[-50,230,24.1],[-104,220,23],[-160,205,22]], "half_width_m":[2.8,6.7], "depth_m":1.55, "valley_blend_m":80}
+  ],
+  "crossings": [
+    {"id":"PontRouteRoyale", "label":"Pont de la grande route", "course":"riviere_principale", "anchor_xz":[30,20], "asset":"pierre/pont_pierre_20m", "length_m":20, "clear_width_m":3.8, "water_width_m":14.0, "freeboard_m":2.30, "reason":"Shared crossing for the castle city, farming village and ironworks; keeps the trunk route readable."},
+    {"id":"PontScierie", "label":"Pont de la route du lac", "course":"riviere_principale", "anchor_xz":[90,-69], "asset":"bois/pont_charretier_bois_12m", "length_m":12, "clear_width_m":3.4, "water_width_m":8.4, "freeboard_m":1.85, "reason":"Northern link between castle city and sawmill, forming a loop with the central road."},
+    {"id":"PontMine", "label":"Pont des minerais", "course":"affluent_acierie", "anchor_xz":[275,62], "asset":"pierre/pont_pierre_14m", "length_m":14, "clear_width_m":3.4, "water_width_m":9.2, "freeboard_m":2.65, "reason":"Direct working route between the ironworks terrace and the existing mine entrance."},
+    {"id":"PontBrindle", "label":"Pont de la sortie de Brindle", "course":"affluent_acierie", "anchor_xz":[150,164], "asset":"bois/pont_charretier_bois_12m", "length_m":12, "clear_width_m":3.4, "water_width_m":8.5, "freeboard_m":1.9, "reason":"Connects the existing northern village path to the trunk road with a clear landmark at the river."},
+    {"id":"PasserelleLisiere", "label":"Passerelle de la lisière", "course":"affluent_acierie", "anchor_xz":[220,130], "asset":"bois/passerelle_bois_8m", "length_m":8, "clear_width_m":1.8, "water_width_m":5.5, "freeboard_m":1.65, "reason":"Secondary foot route from Brindle's eastern woodland trail to the ironworks; creates a short exploration loop."}
+  ]
+}
+

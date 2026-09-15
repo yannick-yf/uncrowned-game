@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/slag.tres" id="1_cmcvp"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tas_scories_HeapCore_slag.res" id="2_e1t5f"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tas_scories_LooseMaterial_slag.res" id="3_s5eft"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xflui"]
+size = Vector3(1.75, 0.585, 1.4)
+
+[node name="TasScories" type="Node3D" unique_id=466510136]
+metadata/asset_id = "tas_scories"
+metadata/family = "accessoires"
+metadata/label = "Scories refroidies"
+metadata/purpose = "Tas distinct par matière et couleur, modulable par répétition et rotation."
+metadata/placement = "Minerai près du tri, charbon au sec, scories en aire de rebut séparée."
+
+[node name="PileCollision" type="StaticBody3D" parent="." unique_id=244665814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@669" type="CollisionShape3D" parent="PileCollision" unique_id=1651130436]
+shape = SubResource("BoxShape3D_xflui")
+
+[node name="HeapCoreSlag" type="MeshInstance3D" parent="." unique_id=329320433]
+material_override = ExtResource("1_cmcvp")
+mesh = ExtResource("2_e1t5f")
+
+[node name="LooseMaterialSlag" type="MeshInstance3D" parent="." unique_id=479306213]
+material_override = ExtResource("1_cmcvp")
+mesh = ExtResource("3_s5eft")

@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_mmluu"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/enseigne_forge_SignPost_wood.res" id="2_e8ifi"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/enseigne_forge_SignBracket_wood.res" id="3_ys01m"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/enseigne_forge_SignBrace_wood.res" id="4_kja28"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="5_mvnu8"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/enseigne_forge_SignChains_iron.res" id="6_n2bsa"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/enseigne_forge_SignBoard_wood.res" id="7_34ehu"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="8_dpewm"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/enseigne_forge_AnvilSymbol_metal.res" id="9_nqok6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o6ii1"]
+size = Vector3(0.15, 2.45, 0.15)
+
+[node name="EnseigneForge" type="Node3D" unique_id=1654372763]
+metadata/asset_id = "enseigne_forge"
+metadata/family = "modules"
+metadata/label = "Enseigne de la forge"
+metadata/purpose = "Potence en bois et emblème d’enclume en fer forgé."
+metadata/placement = "À l’entrée d’une cour ou d’un atelier, façade vers +Z."
+
+[node name="SignPostCollision" type="StaticBody3D" parent="." unique_id=97395025]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.75, 1.225, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@725" type="CollisionShape3D" parent="SignPostCollision" unique_id=1316168206]
+shape = SubResource("BoxShape3D_o6ii1")
+
+[node name="SignPostWood" type="MeshInstance3D" parent="." unique_id=11282113]
+material_override = ExtResource("1_mmluu")
+mesh = ExtResource("2_e8ifi")
+
+[node name="SignBracketWood" type="MeshInstance3D" parent="." unique_id=1914778301]
+material_override = ExtResource("1_mmluu")
+mesh = ExtResource("3_ys01m")
+
+[node name="SignBraceWood" type="MeshInstance3D" parent="." unique_id=328380452]
+material_override = ExtResource("1_mmluu")
+mesh = ExtResource("4_kja28")
+
+[node name="SignChainsIron" type="MeshInstance3D" parent="." unique_id=2063550053]
+material_override = ExtResource("5_mvnu8")
+mesh = ExtResource("6_n2bsa")
+
+[node name="SignBoardWood" type="MeshInstance3D" parent="." unique_id=597880136]
+material_override = ExtResource("1_mmluu")
+mesh = ExtResource("7_34ehu")
+
+[node name="AnvilSymbolMetal" type="MeshInstance3D" parent="." unique_id=619159495]
+material_override = ExtResource("8_dpewm")
+mesh = ExtResource("9_nqok6")

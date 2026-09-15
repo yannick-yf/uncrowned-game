@@ -1,0 +1,87 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_yj0og"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portail_cour_GatePosts_wood.res" id="2_uga7c"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portail_cour_OpenGateRails_wood.res" id="3_2ueiy"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portail_cour_GateDiagonal_wood.res" id="4_cti54"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ddl2b"]
+size = Vector3(0.2, 1.5, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6tcov"]
+size = Vector3(0.1, 1.2567418, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mmhkv"]
+size = Vector3(0.1, 1.2567418, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_58v3g"]
+size = Vector3(0.2, 1.5, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tyybm"]
+size = Vector3(0.1, 1.2567418, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tddh6"]
+size = Vector3(0.1, 1.2567418, 0.1)
+
+[node name="PortailCour" type="Node3D" unique_id=306592623]
+metadata/asset_id = "portail_cour"
+metadata/family = "modules"
+metadata/label = "Portail de cour ouvert"
+metadata/purpose = "Deux battants ouverts avec ferrures et poteaux."
+metadata/placement = "Passage central de 2,6 m pour charrettes et piétons."
+
+[node name="GatePostsCollision" type="StaticBody3D" parent="." unique_id=1459570234]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.45, 0.75, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@491" type="CollisionShape3D" parent="GatePostsCollision" unique_id=928003060]
+shape = SubResource("BoxShape3D_ddl2b")
+
+[node name="OpenGateRailsCollision" type="StaticBody3D" parent="." unique_id=1245399096]
+transform = Transform3D(4.5215987e-09, -0.10344212, -0.99463546, -1, -4.371139e-08, 0, -4.34769e-08, 0.99463546, -0.10344212, -1.5150001, 0.4, 0.625)
+collision_mask = 0
+
+[node name="@CollisionShape3D@492" type="CollisionShape3D" parent="OpenGateRailsCollision" unique_id=1830460149]
+shape = SubResource("BoxShape3D_6tcov")
+
+[node name="@StaticBody3D@493" type="StaticBody3D" parent="." unique_id=1413259267]
+transform = Transform3D(4.5215987e-09, -0.10344212, -0.99463546, -1, -4.371139e-08, 0, -4.34769e-08, 0.99463546, -0.10344212, -1.5150001, 1.15, 0.625)
+collision_mask = 0
+
+[node name="@CollisionShape3D@494" type="CollisionShape3D" parent="@StaticBody3D@493" unique_id=985024743]
+shape = SubResource("BoxShape3D_mmhkv")
+
+[node name="@StaticBody3D@495" type="StaticBody3D" parent="." unique_id=1853646480]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.45, 0.75, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@496" type="CollisionShape3D" parent="@StaticBody3D@495" unique_id=1456915148]
+shape = SubResource("BoxShape3D_58v3g")
+
+[node name="@StaticBody3D@497" type="StaticBody3D" parent="." unique_id=734374688]
+transform = Transform3D(4.5215987e-09, 0.10344212, 0.99463546, 1, -4.371139e-08, 0, 4.34769e-08, 0.99463546, -0.10344212, 1.5150001, 0.4, 0.625)
+collision_mask = 0
+
+[node name="@CollisionShape3D@498" type="CollisionShape3D" parent="@StaticBody3D@497" unique_id=1848285771]
+shape = SubResource("BoxShape3D_tyybm")
+
+[node name="@StaticBody3D@499" type="StaticBody3D" parent="." unique_id=562045234]
+transform = Transform3D(4.5215987e-09, 0.10344212, 0.99463546, 1, -4.371139e-08, 0, 4.34769e-08, 0.99463546, -0.10344212, 1.5150001, 1.15, 0.625)
+collision_mask = 0
+
+[node name="@CollisionShape3D@500" type="CollisionShape3D" parent="@StaticBody3D@499" unique_id=37589704]
+shape = SubResource("BoxShape3D_tddh6")
+
+[node name="Passage" type="Marker3D" parent="." unique_id=921521939]
+
+[node name="GatePostsWood" type="MeshInstance3D" parent="." unique_id=1800584380]
+material_override = ExtResource("1_yj0og")
+mesh = ExtResource("2_uga7c")
+
+[node name="OpenGateRailsWood" type="MeshInstance3D" parent="." unique_id=1599772591]
+material_override = ExtResource("1_yj0og")
+mesh = ExtResource("3_2ueiy")
+
+[node name="GateDiagonalWood" type="MeshInstance3D" parent="." unique_id=685653394]
+material_override = ExtResource("1_yj0og")
+mesh = ExtResource("4_cti54")

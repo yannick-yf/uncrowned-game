@@ -1,0 +1,141 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_usmg0"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/soubassement_2m_StoneCourses_stone.res" id="2_ox4v2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_67dda"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v4d7v"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_umr6v"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1qg7j"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4cruc"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aaoot"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_criaq"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6xrss"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g1r7s"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_54jwr"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0b24a"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x7f86"]
+size = Vector3(0.48, 0.22, 0.4)
+
+[node name="Soubassement2m" type="Node3D" unique_id=727308754]
+metadata/asset_id = "soubassement_2m"
+metadata/family = "modules"
+metadata/label = "Mur bas en pierre · 2 m"
+metadata/purpose = "Module de soubassement et de séparation de cour."
+metadata/placement = "Extrémités à X = ±1 m ; dupliquer pour prolonger."
+
+[node name="StoneCoursesCollision" type="StaticBody3D" parent="." unique_id=313699706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0.11, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@677" type="CollisionShape3D" parent="StoneCoursesCollision" unique_id=286560733]
+shape = SubResource("BoxShape3D_67dda")
+
+[node name="@StaticBody3D@678" type="StaticBody3D" parent="." unique_id=423128347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.11, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@679" type="CollisionShape3D" parent="@StaticBody3D@678" unique_id=20008381]
+shape = SubResource("BoxShape3D_v4d7v")
+
+[node name="@StaticBody3D@680" type="StaticBody3D" parent="." unique_id=43552856]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.11, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@681" type="CollisionShape3D" parent="@StaticBody3D@680" unique_id=905837546]
+shape = SubResource("BoxShape3D_umr6v")
+
+[node name="@StaticBody3D@682" type="StaticBody3D" parent="." unique_id=847502699]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.11, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@683" type="CollisionShape3D" parent="@StaticBody3D@682" unique_id=352967450]
+shape = SubResource("BoxShape3D_1qg7j")
+
+[node name="@StaticBody3D@684" type="StaticBody3D" parent="." unique_id=1072274182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0.34, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@685" type="CollisionShape3D" parent="@StaticBody3D@684" unique_id=1013534206]
+shape = SubResource("BoxShape3D_4cruc")
+
+[node name="@StaticBody3D@686" type="StaticBody3D" parent="." unique_id=1244940053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.34, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@687" type="CollisionShape3D" parent="@StaticBody3D@686" unique_id=1619587444]
+shape = SubResource("BoxShape3D_aaoot")
+
+[node name="@StaticBody3D@688" type="StaticBody3D" parent="." unique_id=487233433]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.34, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@689" type="CollisionShape3D" parent="@StaticBody3D@688" unique_id=650836210]
+shape = SubResource("BoxShape3D_criaq")
+
+[node name="@StaticBody3D@690" type="StaticBody3D" parent="." unique_id=1648952338]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.34, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@691" type="CollisionShape3D" parent="@StaticBody3D@690" unique_id=572747129]
+shape = SubResource("BoxShape3D_6xrss")
+
+[node name="@StaticBody3D@692" type="StaticBody3D" parent="." unique_id=1381282797]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 0.57, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@693" type="CollisionShape3D" parent="@StaticBody3D@692" unique_id=2135881204]
+shape = SubResource("BoxShape3D_g1r7s")
+
+[node name="@StaticBody3D@694" type="StaticBody3D" parent="." unique_id=2115557885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.57, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@695" type="CollisionShape3D" parent="@StaticBody3D@694" unique_id=2134842233]
+shape = SubResource("BoxShape3D_54jwr")
+
+[node name="@StaticBody3D@696" type="StaticBody3D" parent="." unique_id=1835984068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.57, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@697" type="CollisionShape3D" parent="@StaticBody3D@696" unique_id=669520156]
+shape = SubResource("BoxShape3D_0b24a")
+
+[node name="@StaticBody3D@698" type="StaticBody3D" parent="." unique_id=1735429784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.57, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@699" type="CollisionShape3D" parent="@StaticBody3D@698" unique_id=544115110]
+shape = SubResource("BoxShape3D_x7f86")
+
+[node name="ConnectLeft" type="Marker3D" parent="." unique_id=1554166182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="ConnectRight" type="Marker3D" parent="." unique_id=95391978]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="StoneCoursesStone" type="MeshInstance3D" parent="." unique_id=34343163]
+material_override = ExtResource("1_usmg0")
+mesh = ExtResource("2_ox4v2")

@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_jboci"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_BenchTop_wood.res" id="2_yka55"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_BenchLegs_wood.res" id="3_57idw"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_LowerShelf_wood.res" id="4_gph54"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_ToolHandle_wood.res" id="5_nmd1c"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="6_px0ou"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_ToolHead_metal.res" id="7_hvup4"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_BenchVice_metal.res" id="8_fkuue"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="9_h33p3"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/etabli_outils_ViceScrew_iron.res" id="10_knrog"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r7u8j"]
+size = Vector3(1.65, 0.15, 0.74)
+
+[node name="EtabliOutils" type="Node3D" unique_id=1435778009]
+metadata/asset_id = "etabli_outils"
+metadata/family = "accessoires"
+metadata/label = "Établi et outils de forge"
+metadata/purpose = "Table de travail renforcée avec outils et étau."
+metadata/placement = "Sous un auvent de finition ou dans une remise."
+
+[node name="BenchTopCollision" type="StaticBody3D" parent="." unique_id=892005156]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@458" type="CollisionShape3D" parent="BenchTopCollision" unique_id=121572186]
+shape = SubResource("BoxShape3D_r7u8j")
+
+[node name="BenchTopWood" type="MeshInstance3D" parent="." unique_id=376818624]
+material_override = ExtResource("1_jboci")
+mesh = ExtResource("2_yka55")
+
+[node name="BenchLegsWood" type="MeshInstance3D" parent="." unique_id=1226605084]
+material_override = ExtResource("1_jboci")
+mesh = ExtResource("3_57idw")
+
+[node name="LowerShelfWood" type="MeshInstance3D" parent="." unique_id=1469414181]
+material_override = ExtResource("1_jboci")
+mesh = ExtResource("4_gph54")
+
+[node name="ToolHandleWood" type="MeshInstance3D" parent="." unique_id=1911582322]
+material_override = ExtResource("1_jboci")
+mesh = ExtResource("5_nmd1c")
+
+[node name="ToolHeadMetal" type="MeshInstance3D" parent="." unique_id=1593940616]
+material_override = ExtResource("6_px0ou")
+mesh = ExtResource("7_hvup4")
+
+[node name="BenchViceMetal" type="MeshInstance3D" parent="." unique_id=664696684]
+material_override = ExtResource("6_px0ou")
+mesh = ExtResource("8_fkuue")
+
+[node name="ViceScrewIron" type="MeshInstance3D" parent="." unique_id=1175494092]
+material_override = ExtResource("9_h33p3")
+mesh = ExtResource("10_knrog")

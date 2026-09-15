@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_k4gc8"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/rigole_pierre_2m_DrainBed_stone.res" id="2_1lurc"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/rigole_pierre_2m_DrainSides_stone.res" id="3_qbcio"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xje8f"]
+size = Vector3(0.6, 0.09, 2)
+
+[node name="RigolePierre2m" type="Node3D" unique_id=496888059]
+metadata/asset_id = "rigole_pierre_2m"
+metadata/family = "modules"
+metadata/label = "Rigole en pierre · 2 m"
+metadata/purpose = "Petit canal ouvert pour aménager les cours et évacuer l’eau."
+metadata/placement = "Module vide à poser suivant une pente ; ne remplace pas le réseau de rivières."
+
+[node name="DrainBedCollision" type="StaticBody3D" parent="." unique_id=962589206]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@511" type="CollisionShape3D" parent="DrainBedCollision" unique_id=1997332038]
+shape = SubResource("BoxShape3D_xje8f")
+
+[node name="ConnectStart" type="Marker3D" parent="." unique_id=799086293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+
+[node name="ConnectEnd" type="Marker3D" parent="." unique_id=501771988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+
+[node name="DrainBedStone" type="MeshInstance3D" parent="." unique_id=1298143291]
+material_override = ExtResource("1_k4gc8")
+mesh = ExtResource("2_1lurc")
+
+[node name="DrainSidesStone" type="MeshInstance3D" parent="." unique_id=1760477828]
+material_override = ExtResource("1_k4gc8")
+mesh = ExtResource("3_qbcio")

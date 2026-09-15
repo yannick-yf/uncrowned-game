@@ -187,10 +187,10 @@ position or the pace. A test says where it stands in the world's terms —
 scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
 the run is the map's or the brief's, not the code's: a claim the spec makes that the
 baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
-apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Three stand
-today: the works far from Brindle, §4's 45–90 s road band at his pace, and the
-clearing's ring of wood. Never turn a failure into a debt to get green; a debt names
-something a person has to settle. A line marked **`OFF`** is the third kind
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Four stand
+today: the works far from Brindle, §4's 45–90 s road band at his pace, the clearing's
+ring of wood, and the north his rivers close with no crossing. Never turn a failure
+into a debt to get green; a debt names something a person has to settle. A line marked **`OFF`** is the third kind
 (`TestCase.off`): a claim that holds only while one of the testing switches below is
 on, printed so the switch is not forgotten and counted apart so the claim is not lost.
 

@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_8phqb"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/outils_mine_RackLegs_wood.res" id="2_ko6qd"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/outils_mine_RackRail_wood.res" id="3_lssfs"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/outils_mine_Handles_wood.res" id="4_c6hkk"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/metal.tres" id="5_0e0i5"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/outils_mine_PickHead_metal.res" id="6_ibutt"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/outils_mine_SpadeBlade_metal.res" id="7_ftkxs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2u7a5"]
+size = Vector3(1.8, 1.55, 0.32)
+
+[node name="OutilsMine" type="Node3D" unique_id=1267490335]
+metadata/asset_id = "outils_mine"
+metadata/family = "accessoires"
+metadata/label = "Râtelier d’outils de mine"
+metadata/purpose = "Pioches, pelles et rangement à la hauteur du personnage."
+metadata/placement = "Mine, remise d’entretien et cour de préparation."
+
+[node name="RackCollision" type="StaticBody3D" parent="." unique_id=1246498214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77, 0.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@459" type="CollisionShape3D" parent="RackCollision" unique_id=203900423]
+shape = SubResource("BoxShape3D_2u7a5")
+
+[node name="RackLegsWood" type="MeshInstance3D" parent="." unique_id=1607162719]
+material_override = ExtResource("1_8phqb")
+mesh = ExtResource("2_ko6qd")
+
+[node name="RackRailWood" type="MeshInstance3D" parent="." unique_id=2049098874]
+material_override = ExtResource("1_8phqb")
+mesh = ExtResource("3_lssfs")
+
+[node name="HandlesWood" type="MeshInstance3D" parent="." unique_id=1493624250]
+material_override = ExtResource("1_8phqb")
+mesh = ExtResource("4_c6hkk")
+
+[node name="PickHeadMetal" type="MeshInstance3D" parent="." unique_id=1991518017]
+material_override = ExtResource("5_0e0i5")
+mesh = ExtResource("6_ibutt")
+
+[node name="SpadeBladeMetal" type="MeshInstance3D" parent="." unique_id=607443320]
+material_override = ExtResource("5_0e0i5")
+mesh = ExtResource("7_ftkxs")

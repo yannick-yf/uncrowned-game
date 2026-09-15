@@ -45,11 +45,11 @@ func _set_guides(visible_now: bool) -> void:
 
 func _update_hud() -> void:
 	if playing:
-		dimensions.text = "UNCROWNED  /  ESSAI DU PERSONNAGE\nBrindle · exploration du village"
+		dimensions.text = "UNCROWNED  /  ESSAI DU PERSONNAGE\nExploration de la carte"
 		controls.text = "ZQSD / WASD / flèches : marcher · Molette : zoom · Clic central : tourner · R : retour à Brindle · Tab : vue libre"
 	else:
 		dimensions.text = "UNCROWNED  /  ATELIER DE CARTE\n%.0f × %.0f m · Vue libre" % [ground.get("width_m"), ground.get("depth_m")]
-		controls.text = "ZQSD / clic droit : déplacer · Molette : zoom · Clic central : tourner · B : Brindle · M : mine · R : ensemble · Tab : jouer"
+		controls.text = "ZQSD / clic droit : déplacer · Molette : zoom · Clic central : tourner · B : Brindle · I : aciérie · M : mine · P : pont suivant · R : ensemble · Tab : jouer"
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:

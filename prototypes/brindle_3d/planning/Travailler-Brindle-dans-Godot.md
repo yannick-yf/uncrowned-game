@@ -15,12 +15,13 @@ set back from the road; woodland and grass continue between the small yards.
 | `scenes/sectors/brindle.tscn` | Buildings, route curves, yards and details |
 | `scenes/sectors/forets_brindle.tscn` | Brindle woodland |
 | `scenes/sectors/forets_nord_est.tscn` | Northern woodland |
-| `scenes/sectors/mine_acierie.tscn` | Mine, sorting area, bridge and path |
+| `scenes/sectors/mine_acierie.tscn` | Mine and sorting area |
+| `scenes/sectors/franchissements.tscn` | Five bridges, foundation extensions and regional paths |
 | `scenes/relief_godot.tscn` | Local pads and slope controls |
 
 F5 plays the character preview. Tab switches to map inspection, B frames Brindle,
-M frames the mine and R shows the region. No NPC placement or dialogue is authored
-by this workshop. Regional road connections and other settlements remain unfinished.
+M frames the mine, P cycles through the five bridges and R shows the region. No NPC placement or dialogue is authored
+by this workshop. The initial regional connections are now present; the other settlements remain to be built.
 
 ## Move a building
 
@@ -71,6 +72,8 @@ This recipe replaces Brindle, its woodland, mask and placement data. Save manual
 edits before rebuilding. `build_brindle_sectors.gd` supplies shared functions but
 running that older tool directly restores the earlier layout.
 
-The 602 woodland trees and ground plants are grouped into MultiMeshes by cell;
+Woodland trees and ground plants are grouped into MultiMeshes by cell;
 seven detail trees remain individual. Further sector work can tune draw distance
 and shadows. A saved MultiMesh scene must be rebuilt with graphics, not headlessly.
+
+The river revision cleared eight existing tree trunks and 24 visual instances from new paths or water. Other forest placements were retained and reseated on the terrain. See [river editing](Rivers-and-crossings.md).

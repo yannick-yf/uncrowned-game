@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_isc1r"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/cuve_trempe_TroughBase_stone.res" id="2_y6epp"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/cuve_trempe_TroughSides_stone.res" id="3_todl4"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/water.tres" id="4_66tgi"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/cuve_trempe_StillWater_water.res" id="5_hc26v"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/cuve_trempe_TroughFeet_stone.res" id="6_y501e"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_58n38"]
+size = Vector3(1.35, 0.14, 0.84)
+
+[node name="CuveTrempe" type="Node3D" unique_id=225207466]
+metadata/asset_id = "cuve_trempe"
+metadata/family = "accessoires"
+metadata/label = "Cuve d’eau de forge"
+metadata/purpose = "Auge maçonnée pour refroidissement et travail de forge."
+metadata/placement = "Près du foyer ; indépendante du puits domestique."
+
+[node name="TroughBaseCollision" type="StaticBody3D" parent="." unique_id=300058519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@673" type="CollisionShape3D" parent="TroughBaseCollision" unique_id=7888793]
+shape = SubResource("BoxShape3D_58n38")
+
+[node name="TroughBaseStone" type="MeshInstance3D" parent="." unique_id=2024952550]
+material_override = ExtResource("1_isc1r")
+mesh = ExtResource("2_y6epp")
+
+[node name="TroughSidesStone" type="MeshInstance3D" parent="." unique_id=1309025611]
+material_override = ExtResource("1_isc1r")
+mesh = ExtResource("3_todl4")
+
+[node name="StillWaterWater" type="MeshInstance3D" parent="." unique_id=21655981]
+material_override = ExtResource("4_66tgi")
+mesh = ExtResource("5_hc26v")
+
+[node name="TroughFeetStone" type="MeshInstance3D" parent="." unique_id=1057193519]
+material_override = ExtResource("1_isc1r")
+mesh = ExtResource("6_y501e")

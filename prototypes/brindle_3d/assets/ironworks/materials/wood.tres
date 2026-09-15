@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/ironworks_surface.gdshader" id="1_hs5fy"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_hs5fy")
+shader_parameter/tint = Color(0.38039216, 0.32941177, 0.2784314, 1)
+shader_parameter/surface_kind = 0
+shader_parameter/roughness = 0.94
+shader_parameter/metalness = 0.0
+shader_parameter/variation = 0.22

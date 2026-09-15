@@ -1,0 +1,95 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_d8qcc"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/quai_chargement_LoadingDeck_wood.res" id="2_6kll7"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="3_gel8v"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/quai_chargement_DeckPiers_stone.res" id="4_5dyff"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/quai_chargement_LoadingRamp_wood.res" id="5_xq8pf"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark_wood.tres" id="6_g5kwi"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/quai_chargement_RampTreads_dark_wood.res" id="7_7xn8v"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k2672"]
+size = Vector3(3.6, 0.18, 2.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vih5v"]
+size = Vector3(0.4, 0.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_irtob"]
+size = Vector3(0.4, 0.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ibcpw"]
+size = Vector3(0.4, 0.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vfo0j"]
+size = Vector3(0.4, 0.6, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b0h1g"]
+size = Vector3(1.65, 0.12, 2.05)
+
+[node name="QuaiChargement" type="Node3D" unique_id=644338996]
+metadata/asset_id = "quai_chargement"
+metadata/family = "modules"
+metadata/label = "Quai de chargement"
+metadata/purpose = "Plateforme de bois avec rampe praticable et pieds en pierre."
+metadata/placement = "Raccord de cour ou devant un dépôt ; rampe vers +Z."
+
+[node name="LoadingDeckCollision" type="StaticBody3D" parent="." unique_id=1236954636]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@501" type="CollisionShape3D" parent="LoadingDeckCollision" unique_id=363858441]
+shape = SubResource("BoxShape3D_k2672")
+
+[node name="DeckPiersCollision" type="StaticBody3D" parent="." unique_id=627371784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.3, -0.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@502" type="CollisionShape3D" parent="DeckPiersCollision" unique_id=730205200]
+shape = SubResource("BoxShape3D_vih5v")
+
+[node name="@StaticBody3D@503" type="StaticBody3D" parent="." unique_id=712018124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.3, 0.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@504" type="CollisionShape3D" parent="@StaticBody3D@503" unique_id=943817370]
+shape = SubResource("BoxShape3D_irtob")
+
+[node name="@StaticBody3D@505" type="StaticBody3D" parent="." unique_id=2085611360]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, -0.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@506" type="CollisionShape3D" parent="@StaticBody3D@505" unique_id=714548911]
+shape = SubResource("BoxShape3D_ibcpw")
+
+[node name="@StaticBody3D@507" type="StaticBody3D" parent="." unique_id=246840907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, 0.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@508" type="CollisionShape3D" parent="@StaticBody3D@507" unique_id=826527244]
+shape = SubResource("BoxShape3D_vfo0j")
+
+[node name="LoadingRampCollision" type="StaticBody3D" parent="." unique_id=367165950]
+transform = Transform3D(1, 0, 0, 0, 0.94923544, -0.31456655, 0, 0.31456655, 0.94923544, 0, 0.37, 2.05)
+collision_mask = 0
+
+[node name="@CollisionShape3D@509" type="CollisionShape3D" parent="LoadingRampCollision" unique_id=1278138588]
+shape = SubResource("BoxShape3D_b0h1g")
+
+[node name="LoadingEdge" type="Marker3D" parent="." unique_id=1649024963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 1.2)
+
+[node name="LoadingDeckWood" type="MeshInstance3D" parent="." unique_id=249064236]
+material_override = ExtResource("1_d8qcc")
+mesh = ExtResource("2_6kll7")
+
+[node name="DeckPiersStone" type="MeshInstance3D" parent="." unique_id=159640793]
+material_override = ExtResource("3_gel8v")
+mesh = ExtResource("4_5dyff")
+
+[node name="LoadingRampWood" type="MeshInstance3D" parent="." unique_id=397802739]
+material_override = ExtResource("1_d8qcc")
+mesh = ExtResource("5_xq8pf")
+
+[node name="RampTreadsDarkWood" type="MeshInstance3D" parent="." unique_id=332931095]
+material_override = ExtResource("6_g5kwi")
+mesh = ExtResource("7_7xn8v")

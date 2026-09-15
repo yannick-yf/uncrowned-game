@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/linen.tres" id="1_nyabb"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/sacs_reserve_SackCloth_linen.res" id="2_moxnl"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/sacs_reserve_TiedMouth_linen.res" id="3_611lr"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/rope.tres" id="4_qocip"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/sacs_reserve_SackTie_rope.res" id="5_kkwey"]
+
+[node name="SacsReserve" type="Node3D" unique_id=1954752362]
+metadata/asset_id = "sacs_reserve"
+metadata/family = "accessoires"
+metadata/label = "Sacs de réserve"
+metadata/purpose = "Trois sacs en toile serrés au col par une corde."
+metadata/placement = "À utiliser sous abri pour vivres ou approvisionnements secs."
+
+[node name="SackClothLinen" type="MeshInstance3D" parent="." unique_id=1300975776]
+material_override = ExtResource("1_nyabb")
+mesh = ExtResource("2_moxnl")
+
+[node name="TiedMouthLinen" type="MeshInstance3D" parent="." unique_id=1448288841]
+material_override = ExtResource("1_nyabb")
+mesh = ExtResource("3_611lr")
+
+[node name="SackTieRope" type="MeshInstance3D" parent="." unique_id=620810802]
+material_override = ExtResource("4_qocip")
+mesh = ExtResource("5_kkwey")

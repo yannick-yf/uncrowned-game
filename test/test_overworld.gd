@@ -38,24 +38,78 @@ func test_both_crossings_are_bands_a_single_step_cannot_miss() -> void:
 		assert_true(along >= 2, "%s is %d tiles deep north-south" % [name, along])
 
 
-func test_the_bridge_and_ford_reach_dry_land_on_both_sides() -> void:
-	# The first version of the bridge stopped in the river: the Kettle runs at an
-	# angle, so it covers more columns per row than its width suggests.
+## The first version of the bridge stopped in the river; the first ford on his rivers
+## v4 covered half the width (2026-09-14). The old test walked the crossing's row and
+## wanted no water within 13 tiles either side — true of a river running north-south,
+## false of his, which runs at 45° there. The claim itself, whatever the angle: **a
+## crossing joins two shores** — dam it, and the dry ground you could reach from it
+## falls into at least two pieces.
+const CROSSING_WINDOW: int = 20
+
+
+func test_the_bridge_and_ford_connect_the_two_banks() -> void:
 	for at: Vector2i in [Region.BRIDGE, Region.FORD]:
-		var row: int = at.y
-		var west_ok: bool = false
-		var east_ok: bool = false
-		for d: int in range(1, 14):
-			if _region.terrain_at(Vector2i(at.x - d, row)) == Region.Terrain.WATER:
-				west_ok = false
-				break
-			west_ok = true
-		for d: int in range(1, 14):
-			if _region.terrain_at(Vector2i(at.x + d, row)) == Region.Terrain.WATER:
-				east_ok = false
-				break
-			east_ok = true
-		assert_true(west_ok and east_ok, "the crossing at %s clears the water" % at)
+		var band: Region.Terrain = _region.terrain_at(at)
+		assert_true(band == Region.Terrain.ROAD or band == Region.Terrain.FORD,
+			"the crossing at %s stands on its band, not in the river (%d)" % [at, band])
+		var shore: Dictionary = _dry_ground_from(at)
+		assert_true(shore.size() > 20, "%s: dry ground on the shores, %d tiles" % [at, shore.size()])
+		var pieces: int = _pieces_once_dammed(at, shore)
+		assert_true(pieces >= 2,
+			"%s: dam the crossing and its shores fall into %d piece(s); a crossing joins two" % [at, pieces])
+
+
+## Everything passable you can walk to from the crossing inside its window, minus
+## the band itself: the dry ground of both shores.
+func _dry_ground_from(at: Vector2i) -> Dictionary:
+	var seen: Dictionary = {at: true}
+	var queue: Array[Vector2i] = [at]
+	var dry: Dictionary = {}
+	while not queue.is_empty():
+		var here: Vector2i = queue.pop_back()
+		if not _is_band(here):
+			dry[here] = true
+		for dx: int in [-1, 0, 1]:
+			for dy: int in [-1, 0, 1]:
+				var next := Vector2i(here.x + dx, here.y + dy)
+				if seen.has(next) or not _in_window(at, next) or not _region.is_passable(next):
+					continue
+				seen[next] = true
+				queue.append(next)
+	return dry
+
+
+## How many pieces that dry ground falls into once every tile of the band in the
+## window is impassable — two shores, if the crossing was doing its job.
+func _pieces_once_dammed(at: Vector2i, dry: Dictionary) -> int:
+	var seen: Dictionary = {}
+	var pieces: int = 0
+	for start: Vector2i in dry.keys():
+		if seen.has(start):
+			continue
+		pieces += 1
+		seen[start] = true
+		var queue: Array[Vector2i] = [start]
+		while not queue.is_empty():
+			var here: Vector2i = queue.pop_back()
+			for dx: int in [-1, 0, 1]:
+				for dy: int in [-1, 0, 1]:
+					var next := Vector2i(here.x + dx, here.y + dy)
+					if seen.has(next) or not dry.has(next):
+						continue
+					seen[next] = true
+					queue.append(next)
+	return pieces
+
+
+func _is_band(tile: Vector2i) -> bool:
+	var terrain: Region.Terrain = _region.terrain_at(tile)
+	return terrain == Region.Terrain.ROAD or terrain == Region.Terrain.FORD
+
+
+func _in_window(centre: Vector2i, tile: Vector2i) -> bool:
+	return _region.in_bounds(tile) and absi(tile.x - centre.x) <= CROSSING_WINDOW \
+		and absi(tile.y - centre.y) <= CROSSING_WINDOW
 
 
 func test_the_road_is_a_dog_leg_not_a_ruled_line() -> void:

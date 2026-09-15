@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_a1myp"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tuyeres_argile_DryingTable_wood.res" id="2_va2bn"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tuyeres_argile_DryingFeet_wood.res" id="3_1o7lj"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/clay.tres" id="4_we7ag"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/tuyeres_argile_SpareTuyeres_clay.res" id="5_xb87l"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xdwtl"]
+size = Vector3(1.25, 0.12, 0.8)
+
+[node name="TuyeresArgile" type="Node3D" unique_id=1610574935]
+metadata/asset_id = "tuyeres_argile"
+metadata/family = "accessoires"
+metadata/label = "Tuyères et argile de réparation"
+metadata/purpose = "Tuyères de rechange et argile rangées sur une table basse."
+metadata/placement = "Réserve technique pour entretenir les bas fourneaux."
+
+[node name="DryingTableCollision" type="StaticBody3D" parent="." unique_id=1610352973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@676" type="CollisionShape3D" parent="DryingTableCollision" unique_id=921415126]
+shape = SubResource("BoxShape3D_xdwtl")
+
+[node name="DryingTableWood" type="MeshInstance3D" parent="." unique_id=798463213]
+material_override = ExtResource("1_a1myp")
+mesh = ExtResource("2_va2bn")
+
+[node name="DryingFeetWood" type="MeshInstance3D" parent="." unique_id=1532949264]
+material_override = ExtResource("1_a1myp")
+mesh = ExtResource("3_1o7lj")
+
+[node name="SpareTuyeresClay" type="MeshInstance3D" parent="." unique_id=1560823137]
+material_override = ExtResource("4_we7ag")
+mesh = ExtResource("5_xb87l")

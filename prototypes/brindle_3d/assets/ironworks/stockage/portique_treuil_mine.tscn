@@ -1,0 +1,108 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="1_twk0p"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_MinePosts_wood.res" id="2_bccbo"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_MineBraces_wood.res" id="3_m503f"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_MineLintel_wood.res" id="4_p13es"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_Pulley_wood.res" id="5_sgf7c"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/rope.tres" id="6_1qjc0"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_HangingRope_rope.res" id="7_8tpo0"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="8_diuum"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_LoadHook_iron.res" id="9_j43fu"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_WinchRope_rope.res" id="10_wnfmt"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_WinchDrum_wood.res" id="11_kfiqn"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_WinchFrame_wood.res" id="12_apc6o"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_WinchCrank_iron.res" id="13_vcpw8"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/portique_treuil_mine_WinchHandle_wood.res" id="14_x73ov"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xskee"]
+size = Vector3(0.29, 2.7, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eiaax"]
+size = Vector3(0.29, 2.7, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_85nc6"]
+size = Vector3(3.85, 0.3, 0.35)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8k6su"]
+height = 0.9
+radius = 0.27
+
+[node name="PortiqueTreuilMine" type="Node3D" unique_id=1622665867]
+metadata/asset_id = "portique_treuil_mine"
+metadata/family = "stockage"
+metadata/label = "Portique et treuil de mine"
+metadata/purpose = "Cadre en bois, tambour manuel, corde et palan pour les charges."
+metadata/placement = "Devant une entrée de mine existante ; le centre reste libre."
+
+[node name="MinePostsCollision" type="StaticBody3D" parent="." unique_id=862052622]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.7, 1.35, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@244" type="CollisionShape3D" parent="MinePostsCollision" unique_id=1889171746]
+shape = SubResource("BoxShape3D_xskee")
+
+[node name="@StaticBody3D@245" type="StaticBody3D" parent="." unique_id=1896899077]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.7, 1.35, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@246" type="CollisionShape3D" parent="@StaticBody3D@245" unique_id=1157649401]
+shape = SubResource("BoxShape3D_eiaax")
+
+[node name="MineLintelCollision" type="StaticBody3D" parent="." unique_id=2093912128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@247" type="CollisionShape3D" parent="MineLintelCollision" unique_id=1219124665]
+shape = SubResource("BoxShape3D_85nc6")
+
+[node name="WinchDrumCollision" type="StaticBody3D" parent="." unique_id=967424156]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 2.4, 0.75, 0.5)
+collision_mask = 0
+
+[node name="@CollisionShape3D@248" type="CollisionShape3D" parent="WinchDrumCollision" unique_id=1963313660]
+shape = SubResource("CylinderShape3D_8k6su")
+
+[node name="MinePostsWood" type="MeshInstance3D" parent="." unique_id=385346984]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("2_bccbo")
+
+[node name="MineBracesWood" type="MeshInstance3D" parent="." unique_id=385283067]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("3_m503f")
+
+[node name="MineLintelWood" type="MeshInstance3D" parent="." unique_id=1119773797]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("4_p13es")
+
+[node name="PulleyWood" type="MeshInstance3D" parent="." unique_id=1614660360]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("5_sgf7c")
+
+[node name="HangingRopeRope" type="MeshInstance3D" parent="." unique_id=1399820151]
+material_override = ExtResource("6_1qjc0")
+mesh = ExtResource("7_8tpo0")
+
+[node name="LoadHookIron" type="MeshInstance3D" parent="." unique_id=1961789807]
+material_override = ExtResource("8_diuum")
+mesh = ExtResource("9_j43fu")
+
+[node name="WinchRopeRope" type="MeshInstance3D" parent="." unique_id=1110054762]
+material_override = ExtResource("6_1qjc0")
+mesh = ExtResource("10_wnfmt")
+
+[node name="WinchDrumWood" type="MeshInstance3D" parent="." unique_id=921208001]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("11_kfiqn")
+
+[node name="WinchFrameWood" type="MeshInstance3D" parent="." unique_id=2125350681]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("12_apc6o")
+
+[node name="WinchCrankIron" type="MeshInstance3D" parent="." unique_id=244544094]
+material_override = ExtResource("8_diuum")
+mesh = ExtResource("13_vcpw8")
+
+[node name="WinchHandleWood" type="MeshInstance3D" parent="." unique_id=1979698109]
+material_override = ExtResource("1_twk0p")
+mesh = ExtResource("14_x73ov")

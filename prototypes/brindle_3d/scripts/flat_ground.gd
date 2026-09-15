@@ -59,6 +59,9 @@ func rebuild_ground() -> void:
 		push_error("Données de relief incomplètes. Relancer tools/build_landscape.py.")
 		return
 	_apply_godot_relief_tools()
+	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/landscape/ironworks_ground_mask.png"):
+		(grass_material as ShaderMaterial).set_shader_parameter("ironworks_ground_mask",load("res://assets/landscape/ironworks_ground_mask.png"))
+		(grass_material as ShaderMaterial).set_shader_parameter("ironworks_mask_enabled",true)
 	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/landscape/brindle_ground_mask.png"):
 		var mask_texture:Texture2D=load("res://assets/landscape/brindle_ground_mask.png")
 		(grass_material as ShaderMaterial).set_shader_parameter("brindle_ground_mask",mask_texture)
@@ -100,12 +103,29 @@ func _apply_godot_relief_tools() -> void:
 				var i: int = z*_n+x
 				if not bool(stamp.get("affect_water_banks")) and _water[i] > 0 and _height[i] < _water[i]+2: continue
 				_height[i] = stamp.call("sample_height",x*2.0-384.0,z*2.0-384.0,_height[i])
+	_apply_bridge_approaches()
 	# Repaint slopes after editing a terrace; retain the original sand and bank channels.
 	for z: int in _n:
 		for x: int in _n:
 			var gx: float = (_height[z*_n+mini(x+1,_n-1)]-_height[z*_n+maxi(0,x-1)])*.25
 			var gz: float = (_height[mini(z+1,_n-1)*_n+x]-_height[maxi(0,z-1)*_n+x])*.25
 			_paint[(z*_n+x)*3] = maxf(smoothstep(.45,1.05,Vector2(gx,gz).length()),smoothstep(92,155,_height[z*_n+x])*.88)
+
+func _apply_bridge_approaches() -> void:
+	# Apply after artistic terrace stamps so an old mine terrace cannot lower a bridge landing.
+	for crossing: Dictionary in _meta.get("crossings",[]):
+		var center: Vector2=Vector2(crossing.center_xyz[0],crossing.center_xyz[2])
+		var direction: Vector2=Vector2(crossing.direction_xz[0],crossing.direction_xz[1])
+		var deck: float=float(crossing.center_xyz[1]);var half: float=float(crossing.length_m)*.5
+		var width: float=float(crossing.clear_width_m)*.5
+		var reach: float=half+26
+		for z: int in range(maxi(0,floori((center.y-reach+384)/2)),mini(_n,ceili((center.y+reach+384)/2))):
+			for x: int in range(maxi(0,floori((center.x-reach+384)/2)),mini(_n,ceili((center.x+reach+384)/2))):
+				var offset: Vector2=Vector2(x*2.0-384,z*2.0-384)-center
+				var along: float=absf(offset.dot(direction))-half
+				var lateral: float=absf(offset.cross(direction))
+				var weight: float=(1-smoothstep(width+.85,width+7,lateral))*(1-smoothstep(3,22,along))*smoothstep(-2.3,-1.6,along)
+				_height[z*_n+x]=lerpf(_height[z*_n+x],deck,weight)
 
 func _point(x: int, z: int, water: bool = false) -> Vector3:
 	var y: float = _water[z * _n + x] if water else _height[z * _n + x]

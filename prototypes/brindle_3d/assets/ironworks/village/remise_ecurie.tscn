@@ -1,0 +1,304 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/ironworks/materials/stone.tres" id="1_tgbu7"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_MasonryPier_stone.res" id="2_6n526"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/mortar.tres" id="3_bm51k"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_PierMortar_mortar.res" id="4_qqk2w"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/dark_wood.tres" id="5_ksnfo"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_HeavyPost_dark_wood.res" id="6_sg553"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/iron.tres" id="7_mphay"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_PostIronCollar_iron.res" id="8_jame7"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/wood.tres" id="9_4it6p"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_KneeBrace_wood.res" id="10_berqw"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_Purlin_dark_wood.res" id="11_b4uwo"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_CrossBeam_dark_wood.res" id="12_a2k10"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_RearWallBody_mortar.res" id="13_hqqyo"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_RubbleMasonry_stone.res" id="14_816u7"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_Boarding_wood.res" id="15_35tx7"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_BoardingBody_dark_wood.res" id="16_sea2l"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_SinglePitchDeck_dark_wood.res" id="17_l8c8h"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/rust_roof.tres" id="18_2675n"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_SlateLeanCourses_rust_roof.res" id="19_cfgb3"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_RoofEdge_dark_wood.res" id="20_bpjj6"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_FrontFascia_dark_wood.res" id="21_hg7j5"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_Manger_wood.res" id="22_xg4wh"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_MangerFeet_wood.res" id="23_2ekb5"]
+[ext_resource type="Material" path="res://assets/ironworks/materials/straw.tres" id="24_x2k4l"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_HayCore_straw.res" id="25_bhp2r"]
+[ext_resource type="ArrayMesh" path="res://assets/ironworks/meshes/remise_ecurie_HayStrands_straw.res" id="26_pxpav"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5mbqh"]
+size = Vector3(0.52, 0.7, 0.52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ht8g3"]
+size = Vector3(0.29, 4.1159997, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qmacr"]
+size = Vector3(0.52, 0.7, 0.52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q1c62"]
+size = Vector3(0.29, 3.108, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4xm1j"]
+size = Vector3(0.52, 0.7, 0.52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nnnd1"]
+size = Vector3(0.29, 2.1000001, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1vnik"]
+size = Vector3(0.52, 0.7, 0.52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ikuxg"]
+size = Vector3(0.29, 4.1159997, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wyva8"]
+size = Vector3(0.52, 0.7, 0.52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_brp7g"]
+size = Vector3(0.29, 3.108, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7v5pm"]
+size = Vector3(0.52, 0.7, 0.52)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cnxpe"]
+size = Vector3(0.29, 2.1000001, 0.29)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dx7wb"]
+size = Vector3(6.2, 1.3, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6qdmq"]
+size = Vector3(6.2, 3.316, 0.09)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iodt4"]
+size = Vector3(2.9, 1.35, 0.09)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ac6c5"]
+size = Vector3(2.9, 1.35, 0.09)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gukfb"]
+size = Vector3(1.45, 0.52, 0.65)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dsoj1"]
+size = Vector3(1.45, 0.52, 0.65)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gm0rw"]
+size = Vector3(1.45, 0.52, 0.65)
+
+[node name="RemiseEcurie" type="Node3D" unique_id=1129797349]
+metadata/asset_id = "remise_ecurie"
+metadata/family = "village"
+metadata/label = "Remise et écurie"
+metadata/purpose = "Abri ouvert avec mangeoires, séparations de stalles et réserve de foin."
+metadata/placement = "À la sortie du quartier logistique ; animaux à ajouter séparément."
+
+[node name="MasonryPierCollision" type="StaticBody3D" parent="." unique_id=420739012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1, 0.35, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@615" type="CollisionShape3D" parent="MasonryPierCollision" unique_id=131290759]
+shape = SubResource("BoxShape3D_5mbqh")
+
+[node name="HeavyPostCollision" type="StaticBody3D" parent="." unique_id=668866575]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -3.1, 2.608, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@616" type="CollisionShape3D" parent="HeavyPostCollision" unique_id=1528562974]
+shape = SubResource("BoxShape3D_ht8g3")
+
+[node name="@StaticBody3D@617" type="StaticBody3D" parent="." unique_id=1624381952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1, 0.35, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@618" type="CollisionShape3D" parent="@StaticBody3D@617" unique_id=593323201]
+shape = SubResource("BoxShape3D_qmacr")
+
+[node name="@StaticBody3D@619" type="StaticBody3D" parent="." unique_id=1580015735]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -3.1, 2.104, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@620" type="CollisionShape3D" parent="@StaticBody3D@619" unique_id=1970612211]
+shape = SubResource("BoxShape3D_q1c62")
+
+[node name="@StaticBody3D@621" type="StaticBody3D" parent="." unique_id=311711854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1, 0.35, 2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@622" type="CollisionShape3D" parent="@StaticBody3D@621" unique_id=1882924032]
+shape = SubResource("BoxShape3D_4xm1j")
+
+[node name="@StaticBody3D@623" type="StaticBody3D" parent="." unique_id=2106259962]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -3.1, 1.6, 2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@624" type="CollisionShape3D" parent="@StaticBody3D@623" unique_id=1363169626]
+shape = SubResource("BoxShape3D_nnnd1")
+
+[node name="@StaticBody3D@625" type="StaticBody3D" parent="." unique_id=1709736961]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 0.35, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@626" type="CollisionShape3D" parent="@StaticBody3D@625" unique_id=111485185]
+shape = SubResource("BoxShape3D_1vnik")
+
+[node name="@StaticBody3D@627" type="StaticBody3D" parent="." unique_id=1390407501]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.1, 2.608, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@628" type="CollisionShape3D" parent="@StaticBody3D@627" unique_id=1589172808]
+shape = SubResource("BoxShape3D_ikuxg")
+
+[node name="@StaticBody3D@629" type="StaticBody3D" parent="." unique_id=1967082556]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 0.35, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@630" type="CollisionShape3D" parent="@StaticBody3D@629" unique_id=1282334750]
+shape = SubResource("BoxShape3D_wyva8")
+
+[node name="@StaticBody3D@631" type="StaticBody3D" parent="." unique_id=137674632]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.1, 2.104, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@632" type="CollisionShape3D" parent="@StaticBody3D@631" unique_id=1287796306]
+shape = SubResource("BoxShape3D_brp7g")
+
+[node name="@StaticBody3D@633" type="StaticBody3D" parent="." unique_id=1848468394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 0.35, 2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@634" type="CollisionShape3D" parent="@StaticBody3D@633" unique_id=273762600]
+shape = SubResource("BoxShape3D_7v5pm")
+
+[node name="@StaticBody3D@635" type="StaticBody3D" parent="." unique_id=1519864687]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.1, 1.6, 2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@636" type="CollisionShape3D" parent="@StaticBody3D@635" unique_id=1507386064]
+shape = SubResource("BoxShape3D_cnxpe")
+
+[node name="RearWallBodyCollision" type="StaticBody3D" parent="." unique_id=1441438577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@637" type="CollisionShape3D" parent="RearWallBodyCollision" unique_id=523522185]
+shape = SubResource("BoxShape3D_dx7wb")
+
+[node name="BoardingBodyCollision" type="StaticBody3D" parent="." unique_id=1477238616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.958, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@638" type="CollisionShape3D" parent="BoardingBodyCollision" unique_id=281037701]
+shape = SubResource("BoxShape3D_6qdmq")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1609481816]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.1)
+
+[node name="@StaticBody3D@639" type="StaticBody3D" parent="." unique_id=671753011]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.05, 0.675, -0.45)
+collision_mask = 0
+
+[node name="@CollisionShape3D@640" type="CollisionShape3D" parent="@StaticBody3D@639" unique_id=1055877541]
+shape = SubResource("BoxShape3D_iodt4")
+
+[node name="@StaticBody3D@641" type="StaticBody3D" parent="." unique_id=2046215558]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.05, 0.675, -0.45)
+collision_mask = 0
+
+[node name="@CollisionShape3D@642" type="CollisionShape3D" parent="@StaticBody3D@641" unique_id=1517489433]
+shape = SubResource("BoxShape3D_ac6c5")
+
+[node name="MangerCollision" type="StaticBody3D" parent="." unique_id=348002917]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 0.4, -1.7)
+collision_mask = 0
+
+[node name="@CollisionShape3D@643" type="CollisionShape3D" parent="MangerCollision" unique_id=1950454834]
+shape = SubResource("BoxShape3D_gukfb")
+
+[node name="@StaticBody3D@644" type="StaticBody3D" parent="." unique_id=42508614]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -1.7)
+collision_mask = 0
+
+[node name="@CollisionShape3D@645" type="CollisionShape3D" parent="@StaticBody3D@644" unique_id=706520638]
+shape = SubResource("BoxShape3D_dsoj1")
+
+[node name="@StaticBody3D@646" type="StaticBody3D" parent="." unique_id=527978845]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 0.4, -1.7)
+collision_mask = 0
+
+[node name="@CollisionShape3D@647" type="CollisionShape3D" parent="@StaticBody3D@646" unique_id=186929292]
+shape = SubResource("BoxShape3D_gm0rw")
+
+[node name="MasonryPierStone" type="MeshInstance3D" parent="." unique_id=1391622631]
+material_override = ExtResource("1_tgbu7")
+mesh = ExtResource("2_6n526")
+
+[node name="PierMortarMortar" type="MeshInstance3D" parent="." unique_id=1492983813]
+material_override = ExtResource("3_bm51k")
+mesh = ExtResource("4_qqk2w")
+
+[node name="HeavyPostDarkWood" type="MeshInstance3D" parent="." unique_id=1902915637]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("6_sg553")
+
+[node name="PostIronCollarIron" type="MeshInstance3D" parent="." unique_id=498014123]
+material_override = ExtResource("7_mphay")
+mesh = ExtResource("8_jame7")
+
+[node name="KneeBraceWood" type="MeshInstance3D" parent="." unique_id=2041777597]
+material_override = ExtResource("9_4it6p")
+mesh = ExtResource("10_berqw")
+
+[node name="PurlinDarkWood" type="MeshInstance3D" parent="." unique_id=407848818]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("11_b4uwo")
+
+[node name="CrossBeamDarkWood" type="MeshInstance3D" parent="." unique_id=2014599545]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("12_a2k10")
+
+[node name="RearWallBodyMortar" type="MeshInstance3D" parent="." unique_id=1454837560]
+material_override = ExtResource("3_bm51k")
+mesh = ExtResource("13_hqqyo")
+
+[node name="RubbleMasonryStone" type="MeshInstance3D" parent="." unique_id=1038640234]
+material_override = ExtResource("1_tgbu7")
+mesh = ExtResource("14_816u7")
+
+[node name="BoardingWood" type="MeshInstance3D" parent="." unique_id=510921048]
+material_override = ExtResource("9_4it6p")
+mesh = ExtResource("15_35tx7")
+
+[node name="BoardingBodyDarkWood" type="MeshInstance3D" parent="." unique_id=1372644663]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("16_sea2l")
+
+[node name="SinglePitchDeckDarkWood" type="MeshInstance3D" parent="." unique_id=1894574652]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("17_l8c8h")
+
+[node name="SlateLeanCoursesRustRoof" type="MeshInstance3D" parent="." unique_id=2113388399]
+material_override = ExtResource("18_2675n")
+mesh = ExtResource("19_cfgb3")
+
+[node name="RoofEdgeDarkWood" type="MeshInstance3D" parent="." unique_id=431926366]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("20_bpjj6")
+
+[node name="FrontFasciaDarkWood" type="MeshInstance3D" parent="." unique_id=513390912]
+material_override = ExtResource("5_ksnfo")
+mesh = ExtResource("21_hg7j5")
+
+[node name="MangerWood" type="MeshInstance3D" parent="." unique_id=1147899787]
+material_override = ExtResource("9_4it6p")
+mesh = ExtResource("22_xg4wh")
+
+[node name="MangerFeetWood" type="MeshInstance3D" parent="." unique_id=863982733]
+material_override = ExtResource("9_4it6p")
+mesh = ExtResource("23_2ekb5")
+
+[node name="HayCoreStraw" type="MeshInstance3D" parent="." unique_id=1060589580]
+material_override = ExtResource("24_x2k4l")
+mesh = ExtResource("25_bhp2r")
+
+[node name="HayStrandsStraw" type="MeshInstance3D" parent="." unique_id=1084807830]
+material_override = ExtResource("24_x2k4l")
+mesh = ExtResource("26_pxpav")

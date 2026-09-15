@@ -72,18 +72,378 @@ outline = "Ellipse"
 position = Vector3(301,46,80)
 script = ExtResource("1")
 footprint_m = Vector2(16,18)
-blend_m = 4.0
+blend_m = 9.0
 
 [node name="RampeMine" type="Node3D" parent="."]
-position = Vector3(297,44.8,68)
+position = Vector3(296,45.3,76)
 script = ExtResource("1")
-footprint_m = Vector2(8,14)
-blend_m = 3.0
-slope = Vector2(0,0.17)
+footprint_m = Vector2(10,10)
+blend_m = 8.0
+slope = Vector2(0.08,0.09)
 
 [node name="ApprocheMine" type="Node3D" parent="."]
-position = Vector3(289,43.8,62)
+position = Vector3(289,44.3,70)
 script = ExtResource("1")
-footprint_m = Vector2(16,7)
+footprint_m = Vector2(16,10)
+blend_m = 8.0
+slope = Vector2(0.10,0.08)
+
+[node name="TerrasseBourgAcierie" type="Node3D" parent="."]
+position = Vector3(216, 43.1, 28)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(46, 56)
+blend_m = 8.0
+outline = "Ellipse"
+
+[node name="TerrasseOuestAcierie" type="Node3D" parent="."]
+position = Vector3(198, 42.8, 36)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(15, 27)
+blend_m = 12.0
+outline = "Ellipse"
+
+[node name="TerrasseCharbonAcierie" type="Node3D" parent="."]
+position = Vector3(265, 44.0, 5)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(29, 21)
+blend_m = 9.0
+outline = "Ellipse"
+
+[node name="CourFourneauxAcierie" type="Node3D" parent="."]
+position = Vector3(267, 43.1, 34)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(22, 26)
+blend_m = 7.0
+outline = "Ellipse"
+
+[node name="CourMineraiAcierie" type="Node3D" parent="."]
+position = Vector3(274, 43.0, 53)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(18, 22)
+blend_m = 6.0
+outline = "Ellipse"
+
+[node name="CourLogistiqueAcierie" type="Node3D" parent="."]
+position = Vector3(220, 42.0, 74)
+rotation_degrees = Vector3(0, -8, 0)
+script = ExtResource("1")
+footprint_m = Vector2(27, 16)
+blend_m = 12.0
+outline = "Ellipse"
+
+[node name="CourScoriesAcierie" type="Node3D" parent="."]
+position = Vector3(230, 40.65, 85.5)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(11, 8)
 blend_m = 3.0
-slope = Vector2(0.06,0)
+outline = "Rectangle"
+
+[node name="Sol_MaisonEntreeNord" type="Node3D" parent="."]
+position = Vector3(195.28750014305115, 43.0, 10.545482158660889)
+rotation_degrees = Vector3(0, 90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.540000000000001, 8.809999999999999)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonPignon" type="Node3D" parent="."]
+position = Vector3(206.76937007904053, 43.6, 4.801249980926514)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.31, 7.18)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonHaute" type="Node3D" parent="."]
+position = Vector3(221.0224997997284, 44.0, 4.275684833526611)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(9.57, 7.69)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonArdoise" type="Node3D" parent="."]
+position = Vector3(233.55845284461975, 43.8, 9.0)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.43, 8.21)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonCourInterieure" type="Node3D" parent="."]
+position = Vector3(200.91624999046326, 43.2, 22.95626926422119)
+rotation_degrees = Vector3(0, 90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.53, 7.66)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonVirage" type="Node3D" parent="."]
+position = Vector3(215.0, 42.8, 22.08667278289795)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.18, 7.85)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonVenelle" type="Node3D" parent="."]
+position = Vector3(231.9337501525879, 43.1, 22.989024877548218)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.0, 7.46)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_DortoirNord" type="Node3D" parent="."]
+position = Vector3(206.0, 43.2, 19.349369764328003)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(11.08, 8.93)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_DortoirPlace" type="Node3D" parent="."]
+position = Vector3(233.64290380477905, 43.1, 28.632500171661377)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(10.87, 8.54)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonContremaitre" type="Node3D" parent="."]
+position = Vector3(239.07231092453003, 43.2, 28.0)
+rotation_degrees = Vector3(0, 90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.779999999999999, 8.719999999999999)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonOuest" type="Node3D" parent="."]
+position = Vector3(194.87829494476318, 42.8, 44.0)
+rotation_degrees = Vector3(0, 90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.73, 8.280000000000001)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonJardin" type="Node3D" parent="."]
+position = Vector3(211.27999997138977, 42.8, 46.47583484649658)
+rotation_degrees = Vector3(0, 180, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.52, 7.8)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_CuisineCommune" type="Node3D" parent="."]
+position = Vector3(219.76500010490417, 43.0, 53.82114291191101)
+rotation_degrees = Vector3(0, 180, 0)
+script = ExtResource("1")
+footprint_m = Vector2(10.43, 9.09)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_GrenierCommun" type="Node3D" parent="."]
+position = Vector3(230.0, 42.9, 54.1886430978775)
+rotation_degrees = Vector3(0, 180, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.0, 8.17)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_EcurieEntree" type="Node3D" parent="."]
+position = Vector3(214.0, 42.0, 79.0)
+rotation_degrees = Vector3(0, 30, 0)
+script = ExtResource("1")
+footprint_m = Vector2(9.32, 7.75)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_RelaisCharrettes" type="Node3D" parent="."]
+position = Vector3(204.0, 42.0, 74.0)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(9.93, 8.75)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_RemiseSud" type="Node3D" parent="."]
+position = Vector3(222.0, 42.0, 82.0)
+rotation_degrees = Vector3(0, 180, 0)
+script = ExtResource("1")
+footprint_m = Vector2(9.18, 7.63)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_BureauPesee" type="Node3D" parent="."]
+position = Vector3(240.99706835898064, 43.0, 55.96649118981579)
+rotation_degrees = Vector3(0, 5, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.18, 7.96)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_AtelierOutillage" type="Node3D" parent="."]
+position = Vector3(230.98554589363027, 43.0, 56.102846310827346)
+rotation_degrees = Vector3(0, -8, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.43, 8.84)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_HalleExpedition" type="Node3D" parent="."]
+position = Vector3(232.0, 41.4, 77.0)
+rotation_degrees = Vector3(0, 175, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.82, 8.15)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_ReserveBarres" type="Node3D" parent="."]
+position = Vector3(220.0, 43.0, 56.05250000953674)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.630000000000001, 9.14)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_TriArriveeMine" type="Node3D" parent="."]
+position = Vector3(267.5, 43.0, 44.5)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(10.32, 7.15)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_TriReserveMinerai" type="Node3D" parent="."]
+position = Vector3(274.0, 43.0, 28.0)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(9.63, 7.33)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_CharbonRouteScierie" type="Node3D" parent="."]
+position = Vector3(256.0, 44.0, 4.0)
+rotation_degrees = Vector3(0, 180, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.53, 7.45)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_CharbonReserve" type="Node3D" parent="."]
+position = Vector3(268.0, 44.0, 9.0)
+rotation_degrees = Vector3(0, 90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.93, 7.63)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_HalleMartelage" type="Node3D" parent="."]
+position = Vector3(242.0, 43.1, 36.0)
+rotation_degrees = Vector3(0, 90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(8.93, 7.95)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_ForgeFinition" type="Node3D" parent="."]
+position = Vector3(244.03237635618933, 43.1, 48.002832564132845)
+rotation_degrees = Vector3(0, 85, 0)
+script = ExtResource("1")
+footprint_m = Vector2(9.08, 8.3)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_LatrinesSud" type="Node3D" parent="."]
+position = Vector3(199, 40.9, 86)
+rotation_degrees = Vector3(0, 175, 0)
+script = ExtResource("1")
+footprint_m = Vector2(5, 5)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_LatrinesOuest" type="Node3D" parent="."]
+position = Vector3(191, 42.6, 43)
+rotation_degrees = Vector3(0, -5, 0)
+script = ExtResource("1")
+footprint_m = Vector2(5, 5)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_FourneauUn" type="Node3D" parent="."]
+position = Vector3(257.69598070164875, 43.1, 34.0170028945939)
+rotation_degrees = Vector3(0, -85, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.96, 5.77)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_FourneauDeux" type="Node3D" parent="."]
+position = Vector3(263.0724705593999, 43.1, 22.446019974835888)
+rotation_degrees = Vector3(0, 170, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.3100000000000005, 6.0600000000000005)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_FourneauTrois" type="Node3D" parent="."]
+position = Vector3(258.5239987385901, 43.1, 21.948759938297655)
+rotation_degrees = Vector3(0, -95, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.96, 5.77)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_FourneauQuatre" type="Node3D" parent="."]
+position = Vector3(265.20676646459555, 43.1, 17.2946609469963)
+rotation_degrees = Vector3(0, 160, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.96, 5.77)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_FourneauCinq" type="Node3D" parent="."]
+position = Vector3(255.2248341023251, 43.1, 39.75254406020024)
+rotation_degrees = Vector3(0, -115, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.3100000000000005, 6.0600000000000005)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_FourneauSix" type="Node3D" parent="."]
+position = Vector3(265.85168939137196, 43.1, 33.63352016700882)
+rotation_degrees = Vector3(0, -15, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.96, 5.77)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_GrillageUn" type="Node3D" parent="."]
+position = Vector3(270.0, 43.1, 39.0)
+rotation_degrees = Vector3(0, -20, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.0, 5.9)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_GrillageDeux" type="Node3D" parent="."]
+position = Vector3(275.0, 43.1, 37.0)
+rotation_degrees = Vector3(0, 10, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.0, 5.9)
+blend_m = 3.0
+outline = "Rectangle"
+
+[node name="Sol_ConcassageDeux" type="Node3D" parent="."]
+position = Vector3(276.0583943439006, 43.1, 21.667450404969433)
+rotation_degrees = Vector3(0, -85, 0)
+script = ExtResource("1")
+footprint_m = Vector2(6.54, 4.89)
+blend_m = 3.0
+outline = "Rectangle"

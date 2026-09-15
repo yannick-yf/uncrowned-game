@@ -1,0 +1,3520 @@
+{
+  "version": 3,
+  "seed": 914,
+  "description": "Medieval bloomery settlement, graphics workshop only; human-scale district layout.",
+  "focus_xz": [
+    230,
+    38
+  ],
+  "bounds_xz": [
+    185,
+    -10,
+    100,
+    104
+  ],
+  "buildings": [
+    {
+      "id": "MaisonEntreeNord",
+      "asset": "logis_porte_basse",
+      "scene": "res://assets/ironworks/village/logis_porte_basse.tscn",
+      "xz": [
+        195,
+        10
+      ],
+      "altitude": 43.0,
+      "yaw": 90,
+      "group": "Habitations",
+      "size_m": [
+        4.94,
+        4.49,
+        5.81
+      ],
+      "bounds_center_m": [
+        -0.545482158660889,
+        2.24500012397766,
+        0.287500143051147
+      ],
+      "building_design": "stone_gable_with_side_store",
+      "building_kind": "house",
+      "entrance_xz": [
+        199.58,
+        10.42
+      ],
+      "approach_xz": [
+        [
+          203.58,
+          10.42
+        ],
+        [
+          201.18,
+          10.42
+        ],
+        [
+          199.58,
+          10.42
+        ]
+      ]
+    },
+    {
+      "id": "MaisonPignon",
+      "asset": "maison_aux_deux_volumes",
+      "scene": "res://assets/ironworks/village/maison_aux_deux_volumes.tscn",
+      "xz": [
+        207,
+        5
+      ],
+      "altitude": 43.6,
+      "yaw": 0,
+      "group": "Habitations",
+      "size_m": [
+        5.71,
+        4.29,
+        4.18
+      ],
+      "bounds_center_m": [
+        -0.230629920959473,
+        2.14499998092651,
+        -0.198750019073486
+      ],
+      "building_design": "hipped_house_and_lower_entry_wing",
+      "building_kind": "house",
+      "entrance_xz": [
+        208.55,
+        8.725
+      ],
+      "approach_xz": [
+        [
+          208.55,
+          12.725
+        ],
+        [
+          208.55,
+          10.325
+        ],
+        [
+          208.55,
+          8.725
+        ]
+      ]
+    },
+    {
+      "id": "MaisonHaute",
+      "asset": "baraquement_des_equipes",
+      "scene": "res://assets/ironworks/village/baraquement_des_equipes.tscn",
+      "xz": [
+        221,
+        4
+      ],
+      "altitude": 44.0,
+      "yaw": 0,
+      "group": "Habitations",
+      "size_m": [
+        6.97,
+        4.17,
+        4.69
+      ],
+      "bounds_center_m": [
+        0.0224997997283936,
+        2.08500003814697,
+        0.275684833526611
+      ],
+      "building_design": "long_low_dual_entry_barrack",
+      "building_kind": "barrack",
+      "entrance_xz": [
+        219.42,
+        8.129999999999999
+      ],
+      "approach_xz": [
+        [
+          219.42,
+          12.129999999999999
+        ],
+        [
+          219.42,
+          9.729999999999999
+        ],
+        [
+          219.42,
+          8.129999999999999
+        ]
+      ]
+    },
+    {
+      "id": "MaisonArdoise",
+      "asset": "logis_a_colombages",
+      "scene": "res://assets/ironworks/village/logis_a_colombages.tscn",
+      "xz": [
+        234,
+        9
+      ],
+      "altitude": 43.8,
+      "yaw": -90,
+      "group": "Habitations",
+      "size_m": [
+        3.83,
+        5.29,
+        5.21
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.64499998092651,
+        0.441547155380249
+      ],
+      "building_design": "tall_half_timber_hipped_corner",
+      "building_kind": "house",
+      "entrance_xz": [
+        229.845,
+        9.24
+      ],
+      "approach_xz": [
+        [
+          225.845,
+          9.24
+        ],
+        [
+          228.245,
+          9.24
+        ],
+        [
+          229.845,
+          9.24
+        ]
+      ]
+    },
+    {
+      "id": "MaisonCourInterieure",
+      "asset": "baraque_jumelee_de_la_cour",
+      "scene": "res://assets/ironworks/village/baraque_jumelee_de_la_cour.tscn",
+      "xz": [
+        201,
+        23
+      ],
+      "altitude": 43.2,
+      "yaw": 90,
+      "group": "Habitations",
+      "size_m": [
+        5.93,
+        4.24,
+        4.66
+      ],
+      "bounds_center_m": [
+        0.0437307357788086,
+        2.12000012397766,
+        -0.0837500095367432
+      ],
+      "building_design": "staggered_gable_and_lean_barrack",
+      "building_kind": "barrack",
+      "entrance_xz": [
+        205.08,
+        24.23
+      ],
+      "approach_xz": [
+        [
+          209.08,
+          24.23
+        ],
+        [
+          206.68,
+          24.23
+        ],
+        [
+          205.08,
+          24.23
+        ]
+      ]
+    },
+    {
+      "id": "MaisonVirage",
+      "asset": "maison_du_virage",
+      "scene": "res://assets/ironworks/village/maison_du_virage.tscn",
+      "xz": [
+        215,
+        22
+      ],
+      "altitude": 42.8,
+      "yaw": 0,
+      "group": "Habitations",
+      "size_m": [
+        4.58,
+        4.57,
+        4.85
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.28500008583069,
+        0.0866727828979492
+      ],
+      "building_design": "broad_hip_with_projecting_bay",
+      "building_kind": "house",
+      "entrance_xz": [
+        214.22,
+        25.83
+      ],
+      "approach_xz": [
+        [
+          214.22,
+          29.83
+        ],
+        [
+          214.22,
+          27.43
+        ],
+        [
+          214.22,
+          25.83
+        ]
+      ]
+    },
+    {
+      "id": "MaisonVenelle",
+      "asset": "maison_haute_de_la_venelle",
+      "scene": "res://assets/ironworks/village/maison_haute_de_la_venelle.tscn",
+      "xz": [
+        232,
+        23
+      ],
+      "altitude": 43.1,
+      "yaw": -90,
+      "group": "Habitations",
+      "size_m": [
+        4.4,
+        5.44,
+        4.46
+      ],
+      "bounds_center_m": [
+        -0.0109751224517822,
+        2.72000002861023,
+        0.0662498474121094
+      ],
+      "building_design": "narrow_two_storey_external_stack",
+      "building_kind": "house",
+      "entrance_xz": [
+        227.87,
+        22.57
+      ],
+      "approach_xz": [
+        [
+          223.87,
+          22.57
+        ],
+        [
+          226.27,
+          22.57
+        ],
+        [
+          227.87,
+          22.57
+        ]
+      ]
+    },
+    {
+      "id": "DortoirNord",
+      "asset": "baraquement_de_la_grande_cour",
+      "scene": "res://assets/ironworks/village/baraquement_de_la_grande_cour.tscn",
+      "xz": [
+        206,
+        19
+      ],
+      "altitude": 43.2,
+      "yaw": 0,
+      "group": "Habitations",
+      "size_m": [
+        8.48,
+        4.69,
+        5.93
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.34500002861023,
+        0.349369764328003
+      ],
+      "building_design": "long_hipped_three_entry_porch_barrack",
+      "building_kind": "barrack",
+      "entrance_xz": [
+        206.0,
+        23.105
+      ],
+      "approach_xz": [
+        [
+          206.0,
+          27.105
+        ],
+        [
+          206.0,
+          24.705000000000002
+        ],
+        [
+          206.0,
+          23.105
+        ]
+      ]
+    },
+    {
+      "id": "DortoirPlace",
+      "asset": "baraquement_a_galerie",
+      "scene": "res://assets/ironworks/village/baraquement_a_galerie.tscn",
+      "xz": [
+        234,
+        29
+      ],
+      "altitude": 43.1,
+      "yaw": -90,
+      "group": "Habitations",
+      "size_m": [
+        8.27,
+        6.07,
+        5.54
+      ],
+      "bounds_center_m": [
+        -0.367499828338623,
+        2.98271822929382,
+        0.357096195220947
+      ],
+      "building_design": "two_storey_gallery_left_stair_barrack",
+      "building_kind": "barrack",
+      "entrance_xz": [
+        229.77,
+        29.3
+      ],
+      "approach_xz": [
+        [
+          225.77,
+          29.3
+        ],
+        [
+          228.17000000000002,
+          29.3
+        ],
+        [
+          229.77,
+          29.3
+        ]
+      ]
+    },
+    {
+      "id": "MaisonContremaitre",
+      "asset": "logis_du_contremaitre_en_l",
+      "scene": "res://assets/ironworks/village/logis_du_contremaitre_en_l.tscn",
+      "xz": [
+        239,
+        28
+      ],
+      "altitude": 43.2,
+      "yaw": 90,
+      "group": "Habitations",
+      "size_m": [
+        5.18,
+        5.24,
+        5.72
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.62000012397766,
+        0.0723109245300293
+      ],
+      "building_design": "l_shaped_house_with_raised_front_room",
+      "building_kind": "house",
+      "entrance_xz": [
+        242.88,
+        26.76
+      ],
+      "approach_xz": [
+        [
+          246.88,
+          26.76
+        ],
+        [
+          244.48,
+          26.76
+        ],
+        [
+          242.88,
+          26.76
+        ]
+      ]
+    },
+    {
+      "id": "MaisonOuest",
+      "asset": "maison_des_charretiers",
+      "scene": "res://assets/ironworks/village/maison_des_charretiers.tscn",
+      "xz": [
+        195,
+        44
+      ],
+      "altitude": 42.8,
+      "yaw": 90,
+      "group": "Habitations",
+      "size_m": [
+        5.13,
+        4.29,
+        5.28
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.14499998092651,
+        -0.121705055236816
+      ],
+      "building_design": "wide_cross_gable_with_rear_store",
+      "building_kind": "house",
+      "entrance_xz": [
+        198.905,
+        43.28
+      ],
+      "approach_xz": [
+        [
+          202.905,
+          43.28
+        ],
+        [
+          200.505,
+          43.28
+        ],
+        [
+          198.905,
+          43.28
+        ]
+      ]
+    },
+    {
+      "id": "MaisonJardin",
+      "asset": "maison_au_toit_decale",
+      "scene": "res://assets/ironworks/village/maison_au_toit_decale.tscn",
+      "xz": [
+        211,
+        47
+      ],
+      "altitude": 42.8,
+      "yaw": 180,
+      "group": "Habitations",
+      "size_m": [
+        4.92,
+        4.29,
+        4.8
+      ],
+      "bounds_center_m": [
+        -0.279999971389771,
+        2.14499998092651,
+        0.524165153503418
+      ],
+      "building_design": "offset_ridge_with_sheltered_bench",
+      "building_kind": "house",
+      "entrance_xz": [
+        210.42,
+        43.095
+      ],
+      "approach_xz": [
+        [
+          210.42,
+          39.095
+        ],
+        [
+          210.42,
+          41.495
+        ],
+        [
+          210.42,
+          43.095
+        ]
+      ]
+    },
+    {
+      "id": "CuisineCommune",
+      "asset": "cuisine_commune",
+      "scene": "res://assets/ironworks/village/cuisine_commune.tscn",
+      "xz": [
+        220,
+        54
+      ],
+      "altitude": 43.0,
+      "yaw": 180,
+      "group": "Services",
+      "size_m": [
+        7.83,
+        4.71,
+        6.09
+      ],
+      "bounds_center_m": [
+        0.234999895095825,
+        2.2960000038147,
+        0.178857088088989
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        220.5,
+        50.37
+      ],
+      "approach_xz": [
+        [
+          220.5,
+          46.37
+        ],
+        [
+          220.5,
+          48.769999999999996
+        ],
+        [
+          220.5,
+          50.37
+        ]
+      ]
+    },
+    {
+      "id": "GrenierCommun",
+      "asset": "grenier_vivres",
+      "scene": "res://assets/ironworks/village/grenier_vivres.tscn",
+      "xz": [
+        230,
+        55
+      ],
+      "altitude": 42.9,
+      "yaw": 180,
+      "group": "Services",
+      "size_m": [
+        4.4,
+        4.47,
+        5.17
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.209801197052,
+        0.811356902122498
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        230.0,
+        50.9700002
+      ],
+      "approach_xz": [
+        [
+          230.0,
+          46.9700002
+        ],
+        [
+          230.0,
+          49.3700002
+        ],
+        [
+          230.0,
+          50.9700002
+        ]
+      ]
+    },
+    {
+      "id": "EcurieEntree",
+      "asset": "remise_ecurie",
+      "scene": "res://assets/ironworks/village/remise_ecurie.tscn",
+      "xz": [
+        214,
+        79
+      ],
+      "altitude": 42.0,
+      "yaw": 30,
+      "group": "Services",
+      "size_m": [
+        6.72,
+        4.87,
+        4.75
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.43448495864868,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        216.075,
+        82.59400542570542
+      ],
+      "approach_xz": [
+        [
+          218.075,
+          86.05810704084317
+        ],
+        [
+          216.875,
+          83.97964607176053
+        ],
+        [
+          216.075,
+          82.59400542570542
+        ]
+      ]
+    },
+    {
+      "id": "RelaisCharrettes",
+      "asset": "hangar_charrettes",
+      "scene": "res://assets/ironworks/stockage/hangar_charrettes.tscn",
+      "xz": [
+        204,
+        74
+      ],
+      "altitude": 42.0,
+      "yaw": 0,
+      "group": "Services",
+      "size_m": [
+        7.33,
+        5.71,
+        5.75
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.84449100494385,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        204.0,
+        78.65
+      ],
+      "approach_xz": [
+        [
+          204.0,
+          82.65
+        ],
+        [
+          204.0,
+          80.25
+        ],
+        [
+          204.0,
+          78.65
+        ]
+      ]
+    },
+    {
+      "id": "RemiseSud",
+      "asset": "remise_des_betes_de_trait",
+      "scene": "res://assets/ironworks/village/remise_des_betes_de_trait.tscn",
+      "xz": [
+        222,
+        82
+      ],
+      "altitude": 42.0,
+      "yaw": 180,
+      "group": "Services",
+      "size_m": [
+        6.58,
+        4.08,
+        4.63
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.03791546821594,
+        0.0
+      ],
+      "building_design": "hipped_two_stall_stable_fodder_room",
+      "building_kind": "service",
+      "entrance_xz": [
+        222.0,
+        77.875
+      ],
+      "approach_xz": [
+        [
+          222.0,
+          73.875
+        ],
+        [
+          222.0,
+          76.275
+        ],
+        [
+          222.0,
+          77.875
+        ]
+      ]
+    },
+    {
+      "id": "BureauPesee",
+      "asset": "bureau_pesee",
+      "scene": "res://assets/ironworks/stockage/bureau_pesee.tscn",
+      "xz": [
+        241,
+        56
+      ],
+      "altitude": 43.0,
+      "yaw": 5,
+      "group": "Production",
+      "size_m": [
+        4.58,
+        4.04,
+        4.96
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.96000003814697,
+        -0.0336368083953857
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        241.26843968766278,
+        59.06827967012258
+      ],
+      "approach_xz": [
+        [
+          241.61706265865342,
+          63.05305846248956
+        ],
+        [
+          241.40788887605902,
+          60.66219118706937
+        ],
+        [
+          241.26843968766278,
+          59.06827967012258
+        ]
+      ]
+    },
+    {
+      "id": "AtelierOutillage",
+      "asset": "atelier_outilleur",
+      "scene": "res://assets/ironworks/production/atelier_outilleur.tscn",
+      "xz": [
+        231,
+        56
+      ],
+      "altitude": 43.0,
+      "yaw": -8,
+      "group": "Production",
+      "size_m": [
+        5.83,
+        4.75,
+        5.84
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.31500005722046,
+        0.103857040405273
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        230.52959491875498,
+        59.347106072346506
+      ],
+      "approach_xz": [
+        [
+          229.97290251491472,
+          63.30817834731279
+        ],
+        [
+          230.30691795721887,
+          60.93153498233302
+        ],
+        [
+          230.52959491875498,
+          59.347106072346506
+        ]
+      ]
+    },
+    {
+      "id": "HalleExpedition",
+      "asset": "depot_barres",
+      "scene": "res://assets/ironworks/stockage/depot_barres.tscn",
+      "xz": [
+        232,
+        77
+      ],
+      "altitude": 41.4,
+      "yaw": 175,
+      "group": "Production",
+      "size_m": [
+        6.22,
+        5.11,
+        5.15
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.55542540550232,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        232.37912748095232,
+        72.66655306330091
+      ],
+      "approach_xz": [
+        [
+          232.72775045194297,
+          68.68177427093393
+        ],
+        [
+          232.51857666934856,
+          71.07264154635412
+        ],
+        [
+          232.37912748095232,
+          72.66655306330091
+        ]
+      ]
+    },
+    {
+      "id": "ReserveBarres",
+      "asset": "reserve_barres_longue",
+      "scene": "res://assets/ironworks/stockage/reserve_barres_longue.tscn",
+      "xz": [
+        220,
+        56
+      ],
+      "altitude": 43.0,
+      "yaw": 0,
+      "group": "Production",
+      "size_m": [
+        5.03,
+        4.04,
+        6.14
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.01999998092651,
+        0.0525000095367432
+      ],
+      "building_design": "narrow_deep_gabled_bar_store",
+      "building_kind": "industrial",
+      "entrance_xz": [
+        220.0,
+        60.8
+      ],
+      "approach_xz": [
+        [
+          220.0,
+          64.8
+        ],
+        [
+          220.0,
+          62.4
+        ],
+        [
+          220.0,
+          60.8
+        ]
+      ]
+    },
+    {
+      "id": "TriArriveeMine",
+      "asset": "halle_tri_minerai",
+      "scene": "res://assets/ironworks/stockage/halle_tri_minerai.tscn",
+      "xz": [
+        267.5,
+        44.5
+      ],
+      "altitude": 43.0,
+      "yaw": -90,
+      "group": "Production",
+      "size_m": [
+        7.72,
+        4.72,
+        4.15
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.27320647239685,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        263.65,
+        44.5
+      ],
+      "approach_xz": [
+        [
+          259.65,
+          44.5
+        ],
+        [
+          262.04999999999995,
+          44.5
+        ],
+        [
+          263.65,
+          44.5
+        ]
+      ]
+    },
+    {
+      "id": "TriReserveMinerai",
+      "asset": "tri_minerai_a_pignon",
+      "scene": "res://assets/ironworks/stockage/tri_minerai_a_pignon.tscn",
+      "xz": [
+        274,
+        28
+      ],
+      "altitude": 43.0,
+      "yaw": -90,
+      "group": "Production",
+      "size_m": [
+        7.03,
+        4.15,
+        4.33
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.97385728359222,
+        0.0
+      ],
+      "building_design": "transverse_gabled_sorting_hall",
+      "building_kind": "industrial",
+      "entrance_xz": [
+        270.025,
+        28.0
+      ],
+      "approach_xz": [
+        [
+          266.025,
+          28.0
+        ],
+        [
+          268.42499999999995,
+          28.0
+        ],
+        [
+          270.025,
+          28.0
+        ]
+      ]
+    },
+    {
+      "id": "CharbonRouteScierie",
+      "asset": "depot_charbon",
+      "scene": "res://assets/ironworks/stockage/depot_charbon.tscn",
+      "xz": [
+        256,
+        4
+      ],
+      "altitude": 44.0,
+      "yaw": 180,
+      "group": "Production",
+      "size_m": [
+        5.93,
+        4.69,
+        4.45
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.27993249893188,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        256.0,
+        0.0
+      ],
+      "approach_xz": [
+        [
+          256.0,
+          -4.0
+        ],
+        [
+          256.0,
+          -1.6
+        ],
+        [
+          256.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "id": "CharbonReserve",
+      "asset": "charbon_halle_a_croupes",
+      "scene": "res://assets/ironworks/stockage/charbon_halle_a_croupes.tscn",
+      "xz": [
+        268,
+        9
+      ],
+      "altitude": 44.0,
+      "yaw": 90,
+      "group": "Production",
+      "size_m": [
+        6.33,
+        4.01,
+        4.63
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.90273928642273,
+        0.0
+      ],
+      "building_design": "hipped_ventilated_charcoal_hall",
+      "building_kind": "industrial",
+      "entrance_xz": [
+        272.125,
+        9.0
+      ],
+      "approach_xz": [
+        [
+          276.125,
+          9.0
+        ],
+        [
+          273.725,
+          9.0
+        ],
+        [
+          272.125,
+          9.0
+        ]
+      ]
+    },
+    {
+      "id": "HalleMartelage",
+      "asset": "forge_affinage",
+      "scene": "res://assets/ironworks/production/forge_affinage.tscn",
+      "xz": [
+        242,
+        36
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Production",
+      "size_m": [
+        6.33,
+        5.12,
+        4.95
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.55761122703552,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        246.25,
+        36.0
+      ],
+      "approach_xz": [
+        [
+          250.25,
+          36.0
+        ],
+        [
+          247.85,
+          36.0
+        ],
+        [
+          246.25,
+          36.0
+        ]
+      ]
+    },
+    {
+      "id": "ForgeFinition",
+      "asset": "forge_de_finition_a_pignon",
+      "scene": "res://assets/ironworks/production/forge_de_finition_a_pignon.tscn",
+      "xz": [
+        244,
+        48
+      ],
+      "altitude": 43.1,
+      "yaw": 85,
+      "group": "Production",
+      "size_m": [
+        6.48,
+        4.89,
+        5.3
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.44500017166138,
+        0.0325000286102295
+      ],
+      "building_design": "gabled_open_finishing_forge",
+      "building_kind": "industrial",
+      "entrance_xz": [
+        248.38325667160368,
+        48.38348526808969
+      ],
+      "approach_xz": [
+        [
+          252.36803546397067,
+          48.732108239080326
+        ],
+        [
+          249.97716818855048,
+          48.52293445648595
+        ],
+        [
+          248.38325667160368,
+          48.38348526808969
+        ]
+      ]
+    }
+  ],
+  "props": [
+    {
+      "id": "PuitsDuBourg",
+      "asset": "puits_abreuvoir",
+      "scene": "res://assets/ironworks/village/puits_abreuvoir.tscn",
+      "xz": [
+        220,
+        34
+      ],
+      "altitude": 43.1,
+      "yaw": 15,
+      "group": "Services",
+      "size_m": [
+        3.72,
+        1.86,
+        2.39
+      ],
+      "bounds_center_m": [
+        0.482500076293945,
+        0.930000007152557,
+        0.342499971389771
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "LatrinesSud",
+      "asset": "latrines_a_deux_places",
+      "scene": "res://assets/ironworks/village/latrines_a_deux_places.tscn",
+      "xz": [
+        199,
+        86
+      ],
+      "altitude": 43.1,
+      "yaw": 175,
+      "group": "Services",
+      "size_m": [
+        3.2,
+        2.77,
+        2.37
+      ],
+      "bounds_center_m": [
+        0.0075000524520874,
+        1.38499999046326,
+        0.112451553344727
+      ],
+      "building_design": "double_compartment_latrine",
+      "building_kind": "service",
+      "entrance_xz": [
+        199.93028597554073,
+        82.93943338518629
+      ]
+    },
+    {
+      "id": "LatrinesOuest",
+      "asset": "latrines_bois",
+      "scene": "res://assets/ironworks/village/latrines_bois.tscn",
+      "xz": [
+        191,
+        43
+      ],
+      "altitude": 43.1,
+      "yaw": -5,
+      "group": "Services",
+      "size_m": [
+        2.1,
+        2.99,
+        2.42
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.49668395519257,
+        0.0607680082321167
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "entrance_xz": [
+        190.72938143619967,
+        46.09318433833593
+      ]
+    },
+    {
+      "id": "FourneauUn",
+      "asset": "bas_fourneau_actif",
+      "scene": "res://assets/ironworks/production/bas_fourneau_actif.tscn",
+      "xz": [
+        258,
+        33
+      ],
+      "altitude": 43.1,
+      "yaw": -85,
+      "group": "Production",
+      "size_m": [
+        3.56,
+        1.81,
+        2.37
+      ],
+      "bounds_center_m": [
+        0.986635863780975,
+        0.905000030994415,
+        0.391500055789948
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "FourneauDeux",
+      "asset": "bas_fourneau_pierre",
+      "scene": "res://assets/ironworks/production/bas_fourneau_pierre.tscn",
+      "xz": [
+        264,
+        23
+      ],
+      "altitude": 43.1,
+      "yaw": 170,
+      "group": "Production",
+      "size_m": [
+        3.91,
+        2.13,
+        2.66
+      ],
+      "bounds_center_m": [
+        1.00963580608368,
+        1.06499993801117,
+        0.384500026702881
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "FourneauTrois",
+      "asset": "bas_fourneau_argile",
+      "scene": "res://assets/ironworks/production/bas_fourneau_argile.tscn",
+      "xz": [
+        259,
+        21
+      ],
+      "altitude": 43.1,
+      "yaw": -95,
+      "group": "Production",
+      "size_m": [
+        3.56,
+        1.81,
+        2.37
+      ],
+      "bounds_center_m": [
+        0.986635863780975,
+        0.905000030994415,
+        0.391500055789948
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "FourneauQuatre",
+      "asset": "bas_fourneau_actif",
+      "scene": "res://assets/ironworks/production/bas_fourneau_actif.tscn",
+      "xz": [
+        266,
+        18
+      ],
+      "altitude": 43.1,
+      "yaw": 160,
+      "group": "Production",
+      "size_m": [
+        3.56,
+        1.81,
+        2.37
+      ],
+      "bounds_center_m": [
+        0.986635863780975,
+        0.905000030994415,
+        0.391500055789948
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "FourneauCinq",
+      "asset": "bas_fourneau_pierre",
+      "scene": "res://assets/ironworks/production/bas_fourneau_pierre.tscn",
+      "xz": [
+        256,
+        39
+      ],
+      "altitude": 43.1,
+      "yaw": -115,
+      "group": "Production",
+      "size_m": [
+        3.91,
+        2.13,
+        2.66
+      ],
+      "bounds_center_m": [
+        1.00963580608368,
+        1.06499993801117,
+        0.384500026702881
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "FourneauSix",
+      "asset": "bas_fourneau_argile",
+      "scene": "res://assets/ironworks/production/bas_fourneau_argile.tscn",
+      "xz": [
+        265,
+        33
+      ],
+      "altitude": 43.1,
+      "yaw": -15,
+      "group": "Production",
+      "size_m": [
+        3.56,
+        1.81,
+        2.37
+      ],
+      "bounds_center_m": [
+        0.986635863780975,
+        0.905000030994415,
+        0.391500055789948
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "GrillageUn",
+      "asset": "grillage_minerai",
+      "scene": "res://assets/ironworks/production/grillage_minerai.tscn",
+      "xz": [
+        270,
+        39
+      ],
+      "altitude": 43.1,
+      "yaw": -20,
+      "group": "Production",
+      "size_m": [
+        2.6,
+        0.72,
+        2.5
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.36060643196106,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "GrillageDeux",
+      "asset": "grillage_minerai",
+      "scene": "res://assets/ironworks/production/grillage_minerai.tscn",
+      "xz": [
+        275,
+        37
+      ],
+      "altitude": 43.1,
+      "yaw": 10,
+      "group": "Production",
+      "size_m": [
+        2.6,
+        0.72,
+        2.5
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.36060643196106,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "ConcassageDeux",
+      "asset": "concassage_minerai",
+      "scene": "res://assets/ironworks/production/concassage_minerai.tscn",
+      "xz": [
+        276,
+        21
+      ],
+      "altitude": 43.1,
+      "yaw": -85,
+      "group": "Production",
+      "size_m": [
+        3.14,
+        0.84,
+        1.49
+      ],
+      "bounds_center_m": [
+        0.669999957084656,
+        0.420000016689301,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MineraiBrutDeux",
+      "asset": "tas_minerai",
+      "scene": "res://assets/ironworks/accessoires/tas_minerai.tscn",
+      "xz": [
+        276,
+        45
+      ],
+      "altitude": 43.1,
+      "yaw": 35,
+      "group": "Production",
+      "size_m": [
+        2.51,
+        1.14,
+        2.14
+      ],
+      "bounds_center_m": [
+        0.0529613494873047,
+        0.482878386974335,
+        -0.00508403778076172
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MineraiBrutTrois",
+      "asset": "tas_minerai",
+      "scene": "res://assets/ironworks/accessoires/tas_minerai.tscn",
+      "xz": [
+        278,
+        30
+      ],
+      "altitude": 43.1,
+      "yaw": 65,
+      "group": "Production",
+      "size_m": [
+        2.51,
+        1.14,
+        2.14
+      ],
+      "bounds_center_m": [
+        0.0529613494873047,
+        0.482878386974335,
+        -0.00508403778076172
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "BacsTries",
+      "asset": "bacs_minerai",
+      "scene": "res://assets/ironworks/accessoires/bacs_minerai.tscn",
+      "xz": [
+        264,
+        51
+      ],
+      "altitude": 43.1,
+      "yaw": -80,
+      "group": "Production",
+      "size_m": [
+        1.77,
+        0.89,
+        1.42
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.352978050708771,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CharretteMine",
+      "asset": "charrette_ore",
+      "scene": "res://assets/ironworks/stockage/charrette_ore.tscn",
+      "xz": [
+        266,
+        54
+      ],
+      "altitude": 43.1,
+      "yaw": 95,
+      "group": "Production",
+      "size_m": [
+        2.0,
+        1.65,
+        4.03
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.817113757133484,
+        1.03885018825531
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CharrettePrete",
+      "asset": "charrette_bars",
+      "scene": "res://assets/ironworks/stockage/charrette_bars.tscn",
+      "xz": [
+        237,
+        75
+      ],
+      "altitude": 43.1,
+      "yaw": 165,
+      "group": "Production",
+      "size_m": [
+        2.0,
+        1.53,
+        4.03
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.757179379463196,
+        1.03885018825531
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "BarresExpediees",
+      "asset": "barres_fer_liees",
+      "scene": "res://assets/ironworks/accessoires/barres_fer_liees.tscn",
+      "xz": [
+        229,
+        73
+      ],
+      "altitude": 43.1,
+      "yaw": 85,
+      "group": "Production",
+      "size_m": [
+        1.05,
+        0.59,
+        2.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.292750000953674,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CuveOuvriere",
+      "asset": "cuve_trempe",
+      "scene": "res://assets/ironworks/accessoires/cuve_trempe.tscn",
+      "xz": [
+        246,
+        43
+      ],
+      "altitude": 43.1,
+      "yaw": -45,
+      "group": "Production",
+      "size_m": [
+        1.48,
+        0.61,
+        0.97
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.305000007152557,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "LoupeChaude",
+      "asset": "loupe_fer_brute",
+      "scene": "res://assets/ironworks/accessoires/loupe_fer_brute.tscn",
+      "xz": [
+        257,
+        47
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Production",
+      "size_m": [
+        0.85,
+        0.38,
+        0.75
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.19068905711174,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "EnclumeCour",
+      "asset": "billot_enclume",
+      "scene": "res://assets/ironworks/accessoires/billot_enclume.tscn",
+      "xz": [
+        257,
+        46
+      ],
+      "altitude": 43.1,
+      "yaw": 25,
+      "group": "Production",
+      "size_m": [
+        1.17,
+        1.16,
+        0.64
+      ],
+      "bounds_center_m": [
+        -0.0949999690055847,
+        0.582499980926514,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "TuyeresReserve",
+      "asset": "tuyeres_argile",
+      "scene": "res://assets/ironworks/accessoires/tuyeres_argile.tscn",
+      "xz": [
+        269.25,
+        10.5
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Production",
+      "size_m": [
+        1.25,
+        0.61,
+        0.8
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.305000007152557,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "sheltered_by": "CharbonReserve"
+    },
+    {
+      "id": "ReserveBoisNord",
+      "asset": "buches_rangees",
+      "scene": "res://assets/ironworks/accessoires/buches_rangees.tscn",
+      "xz": [
+        262,
+        -2
+      ],
+      "altitude": 43.1,
+      "yaw": 20,
+      "group": "Production",
+      "size_m": [
+        1.93,
+        0.72,
+        2.02
+      ],
+      "bounds_center_m": [
+        0.0800000429153442,
+        0.375000059604645,
+        0.00824999809265137
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "BoisCuisine",
+      "asset": "buches_rangees",
+      "scene": "res://assets/ironworks/accessoires/buches_rangees.tscn",
+      "xz": [
+        223,
+        55
+      ],
+      "altitude": 43.1,
+      "yaw": 85,
+      "group": "Services",
+      "size_m": [
+        1.93,
+        0.72,
+        2.02
+      ],
+      "bounds_center_m": [
+        0.0800000429153442,
+        0.375000059604645,
+        0.00824999809265137
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MeuleOutillage",
+      "asset": "meule_manivelle",
+      "scene": "res://assets/ironworks/accessoires/meule_manivelle.tscn",
+      "xz": [
+        243.1,
+        34.3
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Production",
+      "size_m": [
+        1.57,
+        1.36,
+        0.98
+      ],
+      "bounds_center_m": [
+        0.114999949932098,
+        0.668912410736084,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "sheltered_by": "HalleMartelage"
+    },
+    {
+      "id": "EnseigneAtelier",
+      "asset": "enseigne_forge",
+      "scene": "res://assets/ironworks/modules/enseigne_forge.tscn",
+      "xz": [
+        247,
+        62
+      ],
+      "altitude": 43.1,
+      "yaw": 10,
+      "group": "Production",
+      "size_m": [
+        1.57,
+        2.45,
+        0.17
+      ],
+      "bounds_center_m": [
+        -0.0649999976158142,
+        1.22500002384186,
+        0.00999999791383743
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "ScoriesFroidesDeux",
+      "asset": "tas_scories",
+      "scene": "res://assets/ironworks/accessoires/tas_scories.tscn",
+      "xz": [
+        232,
+        85
+      ],
+      "altitude": 43.1,
+      "yaw": 20,
+      "group": "Dechets",
+      "size_m": [
+        2.56,
+        1.12,
+        2.13
+      ],
+      "bounds_center_m": [
+        0.0194469690322876,
+        0.475792229175568,
+        0.0600950717926025
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "ScoriesFroidesTrois",
+      "asset": "tas_scories",
+      "scene": "res://assets/ironworks/accessoires/tas_scories.tscn",
+      "xz": [
+        234,
+        85
+      ],
+      "altitude": 43.1,
+      "yaw": 50,
+      "group": "Dechets",
+      "size_m": [
+        2.56,
+        1.12,
+        2.13
+      ],
+      "bounds_center_m": [
+        0.0194469690322876,
+        0.475792229175568,
+        0.0600950717926025
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretCharbon_00",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        252,
+        7
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretCharbon_01",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        252,
+        5
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretCharbon_02",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        252,
+        3
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretCharbon_03",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        255,
+        8
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretCharbon_04",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        257,
+        8
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretMinerai_00",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        277,
+        41
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretMinerai_01",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        277,
+        43
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretMinerai_02",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        277,
+        47
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "MuretMinerai_03",
+      "asset": "soubassement_2m",
+      "scene": "res://assets/ironworks/modules/soubassement_2m.tscn",
+      "xz": [
+        274,
+        50
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        1.98,
+        0.68,
+        0.4
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.340000003576279,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "JardinHaute_00",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        190,
+        -2
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "JardinHaute_01",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        193,
+        -2
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "JardinHaute_02",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        196,
+        -2
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "JardinHaute_03",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        190,
+        0
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CourPignon_00",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        201,
+        0
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CourPignon_01",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        204,
+        0
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CourPignon_02",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        201,
+        3
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CourOuest_00",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        194,
+        42
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CourOuest_01",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        194,
+        44
+      ],
+      "altitude": 43.1,
+      "yaw": 90,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    },
+    {
+      "id": "CourOuest_02",
+      "asset": "cloture_2m",
+      "scene": "res://assets/ironworks/modules/cloture_2m.tscn",
+      "xz": [
+        197,
+        47
+      ],
+      "altitude": 43.1,
+      "yaw": 0,
+      "group": "Abords",
+      "size_m": [
+        2.13,
+        1.15,
+        0.13
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.574999988079071,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": ""
+    }
+  ],
+  "paths": [
+    {
+      "id": "RueDuBourg",
+      "width_m": 3.0,
+      "points_xz": [
+        [
+          224,
+          66
+        ],
+        [
+          226,
+          58
+        ],
+        [
+          226,
+          50
+        ],
+        [
+          226,
+          42
+        ],
+        [
+          226,
+          34
+        ],
+        [
+          226,
+          26
+        ],
+        [
+          226,
+          18
+        ],
+        [
+          226,
+          10
+        ]
+      ]
+    },
+    {
+      "id": "CheminDesServices",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          224,
+          66
+        ],
+        [
+          217,
+          68
+        ],
+        [
+          210,
+          68
+        ],
+        [
+          203,
+          68
+        ],
+        [
+          198,
+          72
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonEntreeNord",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          203.58,
+          10.42
+        ],
+        [
+          201.18,
+          10.42
+        ],
+        [
+          199.58,
+          10.42
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonPignon",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          208.55,
+          12.725
+        ],
+        [
+          208.55,
+          10.325
+        ],
+        [
+          208.55,
+          8.725
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonHaute",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          219.42,
+          12.129999999999999
+        ],
+        [
+          219.42,
+          9.729999999999999
+        ],
+        [
+          219.42,
+          8.129999999999999
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonArdoise",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          225.845,
+          9.24
+        ],
+        [
+          228.245,
+          9.24
+        ],
+        [
+          229.845,
+          9.24
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonCourInterieure",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          209.08,
+          24.23
+        ],
+        [
+          206.68,
+          24.23
+        ],
+        [
+          205.08,
+          24.23
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonVirage",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          214.22,
+          29.83
+        ],
+        [
+          214.22,
+          27.43
+        ],
+        [
+          214.22,
+          25.83
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonVenelle",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          223.87,
+          22.57
+        ],
+        [
+          226.27,
+          22.57
+        ],
+        [
+          227.87,
+          22.57
+        ]
+      ]
+    },
+    {
+      "id": "Acces_DortoirNord",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          206.0,
+          27.105
+        ],
+        [
+          206.0,
+          24.705000000000002
+        ],
+        [
+          206.0,
+          23.105
+        ]
+      ]
+    },
+    {
+      "id": "Acces_DortoirPlace",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          225.77,
+          29.3
+        ],
+        [
+          228.17000000000002,
+          29.3
+        ],
+        [
+          229.77,
+          29.3
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonContremaitre",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          246.88,
+          26.76
+        ],
+        [
+          244.48,
+          26.76
+        ],
+        [
+          242.88,
+          26.76
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonOuest",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          202.905,
+          43.28
+        ],
+        [
+          200.505,
+          43.28
+        ],
+        [
+          198.905,
+          43.28
+        ]
+      ]
+    },
+    {
+      "id": "Acces_MaisonJardin",
+      "width_m": 2.0,
+      "points_xz": [
+        [
+          210.42,
+          39.095
+        ],
+        [
+          210.42,
+          41.495
+        ],
+        [
+          210.42,
+          43.095
+        ]
+      ]
+    },
+    {
+      "id": "Acces_CuisineCommune",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          220.5,
+          46.37
+        ],
+        [
+          220.5,
+          48.769999999999996
+        ],
+        [
+          220.5,
+          50.37
+        ]
+      ]
+    },
+    {
+      "id": "Acces_GrenierCommun",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          230.0,
+          46.9700002
+        ],
+        [
+          230.0,
+          49.3700002
+        ],
+        [
+          230.0,
+          50.9700002
+        ]
+      ]
+    },
+    {
+      "id": "Acces_EcurieEntree",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          218.075,
+          86.05810704084317
+        ],
+        [
+          216.875,
+          83.97964607176053
+        ],
+        [
+          216.075,
+          82.59400542570542
+        ]
+      ]
+    },
+    {
+      "id": "Acces_RelaisCharrettes",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          204.0,
+          82.65
+        ],
+        [
+          204.0,
+          80.25
+        ],
+        [
+          204.0,
+          78.65
+        ]
+      ]
+    },
+    {
+      "id": "Acces_RemiseSud",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          222.0,
+          73.875
+        ],
+        [
+          222.0,
+          76.275
+        ],
+        [
+          222.0,
+          77.875
+        ]
+      ]
+    },
+    {
+      "id": "Acces_BureauPesee",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          241.61706265865342,
+          63.05305846248956
+        ],
+        [
+          241.40788887605902,
+          60.66219118706937
+        ],
+        [
+          241.26843968766278,
+          59.06827967012258
+        ]
+      ]
+    },
+    {
+      "id": "Acces_AtelierOutillage",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          229.97290251491472,
+          63.30817834731279
+        ],
+        [
+          230.30691795721887,
+          60.93153498233302
+        ],
+        [
+          230.52959491875498,
+          59.347106072346506
+        ]
+      ]
+    },
+    {
+      "id": "Acces_HalleExpedition",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          232.72775045194297,
+          68.68177427093393
+        ],
+        [
+          232.51857666934856,
+          71.07264154635412
+        ],
+        [
+          232.37912748095232,
+          72.66655306330091
+        ]
+      ]
+    },
+    {
+      "id": "Acces_ReserveBarres",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          220.0,
+          64.8
+        ],
+        [
+          220.0,
+          62.4
+        ],
+        [
+          220.0,
+          60.8
+        ]
+      ]
+    },
+    {
+      "id": "Acces_TriArriveeMine",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          259.65,
+          44.5
+        ],
+        [
+          262.04999999999995,
+          44.5
+        ],
+        [
+          263.65,
+          44.5
+        ]
+      ]
+    },
+    {
+      "id": "Acces_TriReserveMinerai",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          266.025,
+          28.0
+        ],
+        [
+          268.42499999999995,
+          28.0
+        ],
+        [
+          270.025,
+          28.0
+        ]
+      ]
+    },
+    {
+      "id": "Acces_CharbonRouteScierie",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          256.0,
+          -4.0
+        ],
+        [
+          256.0,
+          -1.6
+        ],
+        [
+          256.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "id": "Acces_CharbonReserve",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          276.125,
+          9.0
+        ],
+        [
+          273.725,
+          9.0
+        ],
+        [
+          272.125,
+          9.0
+        ]
+      ]
+    },
+    {
+      "id": "Acces_HalleMartelage",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          250.25,
+          36.0
+        ],
+        [
+          247.85,
+          36.0
+        ],
+        [
+          246.25,
+          36.0
+        ]
+      ]
+    },
+    {
+      "id": "Acces_ForgeFinition",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          252.36803546397067,
+          48.732108239080326
+        ],
+        [
+          249.97716818855048,
+          48.52293445648595
+        ],
+        [
+          248.38325667160368,
+          48.38348526808969
+        ]
+      ]
+    }
+  ],
+  "pads": [
+    {
+      "id": "TerrasseBourgAcierie",
+      "xz": [
+        216,
+        28
+      ],
+      "altitude": 43.1,
+      "size": [
+        46,
+        56
+      ],
+      "yaw": 0,
+      "blend": 8,
+      "outline": "Ellipse"
+    },
+    {
+      "id": "TerrasseOuestAcierie",
+      "xz": [
+        198,
+        36
+      ],
+      "altitude": 42.8,
+      "size": [
+        15,
+        27
+      ],
+      "yaw": 0,
+      "blend": 12,
+      "outline": "Ellipse"
+    },
+    {
+      "id": "TerrasseCharbonAcierie",
+      "xz": [
+        265,
+        5
+      ],
+      "altitude": 44.0,
+      "size": [
+        29,
+        21
+      ],
+      "yaw": 0,
+      "blend": 9,
+      "outline": "Ellipse"
+    },
+    {
+      "id": "CourFourneauxAcierie",
+      "xz": [
+        267,
+        34
+      ],
+      "altitude": 43.1,
+      "size": [
+        22,
+        26
+      ],
+      "yaw": 0,
+      "blend": 7,
+      "outline": "Ellipse"
+    },
+    {
+      "id": "CourMineraiAcierie",
+      "xz": [
+        274,
+        53
+      ],
+      "altitude": 43.0,
+      "size": [
+        18,
+        22
+      ],
+      "yaw": 0,
+      "blend": 6,
+      "outline": "Ellipse"
+    },
+    {
+      "id": "CourLogistiqueAcierie",
+      "xz": [
+        220,
+        74
+      ],
+      "altitude": 42.0,
+      "size": [
+        27,
+        16
+      ],
+      "yaw": -8,
+      "blend": 12,
+      "outline": "Ellipse"
+    },
+    {
+      "id": "CourScoriesAcierie",
+      "xz": [
+        230,
+        85.5
+      ],
+      "altitude": 40.65,
+      "size": [
+        11,
+        8
+      ],
+      "yaw": 0,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonEntreeNord",
+      "xz": [
+        195.28750014305115,
+        10.545482158660889
+      ],
+      "altitude": 43.0,
+      "size": [
+        7.540000000000001,
+        8.809999999999999
+      ],
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonPignon",
+      "xz": [
+        206.76937007904053,
+        4.801249980926514
+      ],
+      "altitude": 43.6,
+      "size": [
+        8.31,
+        7.18
+      ],
+      "yaw": 0,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonHaute",
+      "xz": [
+        221.0224997997284,
+        4.275684833526611
+      ],
+      "altitude": 44.0,
+      "size": [
+        9.57,
+        7.69
+      ],
+      "yaw": 0,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonArdoise",
+      "xz": [
+        233.55845284461975,
+        9.0
+      ],
+      "altitude": 43.8,
+      "size": [
+        6.43,
+        8.21
+      ],
+      "yaw": -90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonCourInterieure",
+      "xz": [
+        200.91624999046326,
+        22.95626926422119
+      ],
+      "altitude": 43.2,
+      "size": [
+        8.53,
+        7.66
+      ],
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonVirage",
+      "xz": [
+        215.0,
+        22.08667278289795
+      ],
+      "altitude": 42.8,
+      "size": [
+        7.18,
+        7.85
+      ],
+      "yaw": 0,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonVenelle",
+      "xz": [
+        231.9337501525879,
+        22.989024877548218
+      ],
+      "altitude": 43.1,
+      "size": [
+        7.0,
+        7.46
+      ],
+      "yaw": -90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_DortoirNord",
+      "xz": [
+        206.0,
+        19.349369764328003
+      ],
+      "altitude": 43.2,
+      "size": [
+        11.08,
+        8.93
+      ],
+      "yaw": 0,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_DortoirPlace",
+      "xz": [
+        233.64290380477905,
+        28.632500171661377
+      ],
+      "altitude": 43.1,
+      "size": [
+        10.87,
+        8.54
+      ],
+      "yaw": -90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonContremaitre",
+      "xz": [
+        239.07231092453003,
+        28.0
+      ],
+      "altitude": 43.2,
+      "size": [
+        7.779999999999999,
+        8.719999999999999
+      ],
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonOuest",
+      "xz": [
+        194.87829494476318,
+        44.0
+      ],
+      "altitude": 42.8,
+      "size": [
+        7.73,
+        8.280000000000001
+      ],
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_MaisonJardin",
+      "xz": [
+        211.27999997138977,
+        46.47583484649658
+      ],
+      "altitude": 42.8,
+      "size": [
+        7.52,
+        7.8
+      ],
+      "yaw": 180,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_CuisineCommune",
+      "xz": [
+        219.76500010490417,
+        53.82114291191101
+      ],
+      "altitude": 43.0,
+      "size": [
+        10.43,
+        9.09
+      ],
+      "yaw": 180,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_GrenierCommun",
+      "xz": [
+        230.0,
+        54.1886430978775
+      ],
+      "altitude": 42.9,
+      "size": [
+        7.0,
+        8.17
+      ],
+      "yaw": 180,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_EcurieEntree",
+      "xz": [
+        214.0,
+        79.0
+      ],
+      "altitude": 42.0,
+      "size": [
+        9.32,
+        7.75
+      ],
+      "yaw": 30,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_RelaisCharrettes",
+      "xz": [
+        204.0,
+        74.0
+      ],
+      "altitude": 42.0,
+      "size": [
+        9.93,
+        8.75
+      ],
+      "yaw": 0,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_RemiseSud",
+      "xz": [
+        222.0,
+        82.0
+      ],
+      "altitude": 42.0,
+      "size": [
+        9.18,
+        7.63
+      ],
+      "yaw": 180,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_BureauPesee",
+      "xz": [
+        240.99706835898064,
+        55.96649118981579
+      ],
+      "altitude": 43.0,
+      "size": [
+        7.18,
+        7.96
+      ],
+      "yaw": 5,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_AtelierOutillage",
+      "xz": [
+        230.98554589363027,
+        56.102846310827346
+      ],
+      "altitude": 43.0,
+      "size": [
+        8.43,
+        8.84
+      ],
+      "yaw": -8,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_HalleExpedition",
+      "xz": [
+        232.0,
+        77.0
+      ],
+      "altitude": 41.4,
+      "size": [
+        8.82,
+        8.15
+      ],
+      "yaw": 175,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_ReserveBarres",
+      "xz": [
+        220.0,
+        56.05250000953674
+      ],
+      "altitude": 43.0,
+      "size": [
+        7.630000000000001,
+        9.14
+      ],
+      "yaw": 0,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_TriArriveeMine",
+      "xz": [
+        267.5,
+        44.5
+      ],
+      "altitude": 43.0,
+      "size": [
+        10.32,
+        7.15
+      ],
+      "yaw": -90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_TriReserveMinerai",
+      "xz": [
+        274.0,
+        28.0
+      ],
+      "altitude": 43.0,
+      "size": [
+        9.63,
+        7.33
+      ],
+      "yaw": -90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_CharbonRouteScierie",
+      "xz": [
+        256.0,
+        4.0
+      ],
+      "altitude": 44.0,
+      "size": [
+        8.53,
+        7.45
+      ],
+      "yaw": 180,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_CharbonReserve",
+      "xz": [
+        268.0,
+        9.0
+      ],
+      "altitude": 44.0,
+      "size": [
+        8.93,
+        7.63
+      ],
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_HalleMartelage",
+      "xz": [
+        242.0,
+        36.0
+      ],
+      "altitude": 43.1,
+      "size": [
+        8.93,
+        7.95
+      ],
+      "yaw": 90,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_ForgeFinition",
+      "xz": [
+        244.03237635618933,
+        48.002832564132845
+      ],
+      "altitude": 43.1,
+      "size": [
+        9.08,
+        8.3
+      ],
+      "yaw": 85,
+      "blend": 3.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_LatrinesSud",
+      "xz": [
+        199,
+        86
+      ],
+      "altitude": 40.9,
+      "size": [
+        5,
+        5
+      ],
+      "yaw": 175,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_LatrinesOuest",
+      "xz": [
+        191,
+        43
+      ],
+      "altitude": 42.6,
+      "size": [
+        5,
+        5
+      ],
+      "yaw": -5,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_FourneauUn",
+      "xz": [
+        257.69598070164875,
+        34.0170028945939
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.96,
+        5.77
+      ],
+      "yaw": -85,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_FourneauDeux",
+      "xz": [
+        263.0724705593999,
+        22.446019974835888
+      ],
+      "altitude": 43.1,
+      "size": [
+        7.3100000000000005,
+        6.0600000000000005
+      ],
+      "yaw": 170,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_FourneauTrois",
+      "xz": [
+        258.5239987385901,
+        21.948759938297655
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.96,
+        5.77
+      ],
+      "yaw": -95,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_FourneauQuatre",
+      "xz": [
+        265.20676646459555,
+        17.2946609469963
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.96,
+        5.77
+      ],
+      "yaw": 160,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_FourneauCinq",
+      "xz": [
+        255.2248341023251,
+        39.75254406020024
+      ],
+      "altitude": 43.1,
+      "size": [
+        7.3100000000000005,
+        6.0600000000000005
+      ],
+      "yaw": -115,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_FourneauSix",
+      "xz": [
+        265.85168939137196,
+        33.63352016700882
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.96,
+        5.77
+      ],
+      "yaw": -15,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_GrillageUn",
+      "xz": [
+        270.0,
+        39.0
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.0,
+        5.9
+      ],
+      "yaw": -20,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_GrillageDeux",
+      "xz": [
+        275.0,
+        37.0
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.0,
+        5.9
+      ],
+      "yaw": 10,
+      "blend": 3,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Sol_ConcassageDeux",
+      "xz": [
+        276.0583943439006,
+        21.667450404969433
+      ],
+      "altitude": 43.1,
+      "size": [
+        6.54,
+        4.89
+      ],
+      "yaw": -85,
+      "blend": 3,
+      "outline": "Rectangle"
+    }
+  ]
+}
