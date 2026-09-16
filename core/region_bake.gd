@@ -61,6 +61,9 @@ var tiles_per_second: float = 0.0
 var crossings: Array[Dictionary] = []
 var report: Array[String] = []
 var _built_crossings: bool = false
+## Every tile one of his delivered bridges laid down, so a road meeting water beside
+## one is his deck's own raster and a road meeting water anywhere else is a gap.
+var _bridge_tiles: Dictionary = {}
 
 
 # ----------------------------------------------------------------- his files ---
@@ -390,7 +393,7 @@ func _polyline(id: String, points_xz: Array, half: int, terrain: Region.Terrain)
 					if here == Region.Terrain.MOUNTAIN:
 						cut += 1
 					if here == Region.Terrain.WATER:
-						if _built_crossings:
+						if _built_crossings and _beside_his_bridge(tile):
 							continue
 						wet += 1
 						if first_wet == Region.NOWHERE:
@@ -401,6 +404,27 @@ func _polyline(id: String, points_xz: Array, half: int, terrain: Region.Terrain)
 			"metres": BakeRules.metres_for(first_wet, origin_m, metres_per_tile), "tiles": wet})
 	if cut > 0:
 		report.append("cutting %-28s %d tiles of rock under the road" % [id, cut])
+
+
+## A water tile his own bridge already rastered, or one touching it.
+##
+## **Why this is not simply "he has delivered crossings, so every wet road tile is
+## his"** (2026-09-16). That is what it used to be, and it held only while his bridges
+## covered every place a road met water. His royal city arrived with a moat and a
+## feeder channel, and the King's Road crosses that channel twenty-five tiles from
+## his nearest bridge: the bake laid no road over the three wet tiles, said nothing,
+## and the road to the capital was cut — `along_road` found no way through, the King's
+## Road's waypoints jumped 112 tiles in one leg, and two journeys failed with a
+## walker trudging into a river. His bridges run before the roads and set their own
+## tiles to ROAD, so a tile still wet under a road is one no bridge of his covers;
+## next to one it is his deck's raster, and widening it into the river is ours to
+## refuse.
+func _beside_his_bridge(tile: Vector2i) -> bool:
+	for dx: int in range(-1, 2):
+		for dy: int in range(-1, 2):
+			if _bridge_tiles.has(tile + Vector2i(dx, dy)):
+				return true
+	return false
 
 
 ## The ford: a band of wadeable river around the brief's point. Only water turns to
@@ -721,6 +745,7 @@ func _bridges(landscape: Dictionary, brief: Dictionary) -> void:
 				var metres: Vector2 = BakeRules.metres_for(tile, origin_m, metres_per_tile)
 				if region.in_bounds(tile) and metres.distance_to(Geometry2D.get_closest_point_to_segment(metres, from, to)) <= radius:
 					region.set_terrain(tile, Region.Terrain.ROAD)
+					_bridge_tiles[tile] = true
 	for name: String in (brief.get("points", {}) as Dictionary):
 		var alias: Dictionary = brief["points"][name] as Dictionary
 		if alias.has("from_crossing"):

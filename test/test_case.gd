@@ -158,20 +158,40 @@ func _is_empty_spot(region: Region, cast: Cast, tile: Vector2i, zone: StringName
 
 
 ## On the King's Road, in open country, with nobody near.
+##
+## **The waypoints first, then the road itself** (2026-09-16). This walked only
+## `road_waypoints()` — 34 thinned steering targets — and the day his royal city
+## arrived, 23 of the 34 stood inside a zone (its own is 100 × 90) and somebody was
+## within 14 tiles of all eleven that were left, so four suites failed saying the
+## road had no empty stretch. It had 1941 of them: the sample was too coarse, not
+## the world too crowded. The waypoints are still tried first, because they are
+## cheap and they keep the spot these tests have always used wherever it still
+## holds; the road is scanned only when none of them answers.
 func alone_on_the_road() -> Vector2:
 	var region: Region = Region.build_overworld()
 	var cast: Cast = Cast.shared()
 	for point: Vector2i in Region.road_waypoints():
-		if region.zone_at(point) != &"" or not region.is_passable(point):
-			continue
-		var near: bool = false
-		for npc: Npc in cast.in_zone(WorldState.OVERWORLD):
-			if Vector2(npc.tile).distance_to(Vector2(point)) < 14.0:
-				near = true
-		if not near:
+		if _is_lonely_road(region, cast, point):
 			return Vector2(point) + Vector2(0.5, 0.5)
+	for y: int in region.height:
+		for x: int in region.width:
+			var tile := Vector2i(x, y)
+			if region.terrain_at(tile) != Region.Terrain.ROAD:
+				continue
+			if _is_lonely_road(region, cast, tile):
+				return Vector2(tile) + Vector2(0.5, 0.5)
 	fail("the road has no empty stretch")
 	return Vector2.ZERO
+
+
+## Open road, outside every settlement, with no one of the cast within 14 tiles.
+func _is_lonely_road(region: Region, cast: Cast, tile: Vector2i) -> bool:
+	if region.zone_at(tile) != &"" or not region.is_passable(tile):
+		return false
+	for npc: Npc in cast.in_zone(WorldState.OVERWORLD):
+		if Vector2(npc.tile).distance_to(Vector2(tile)) < 14.0:
+			return false
+	return true
 
 
 ## Next to a person, close enough to talk.

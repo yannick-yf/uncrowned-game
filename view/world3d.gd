@@ -993,13 +993,23 @@ func embers_lit() -> int:
 
 ## The bridge mesh is the walking surface, never the riverbed below it. Only deck
 ## faces are cached, so parapets cannot lift a traveller (2026-09-15).
+##
+## **The list is the contract, and it is deliberately explicit** (2026-09-16). His
+## royal gate bridge arrived with its walking surface named `ContinuousDeckStone`,
+## and the walker fell through the moat because the list had never heard of it. The
+## temptation is a rule — anything whose name contains *deck* — and the reason not to
+## is `ParapetStone` standing right beside it: a guess that lifts a traveller onto a
+## parapet is worse than a name nobody added. `test_world3d` walks every crossing in
+## his river layout and fails **by the bridge's id**, so a name we do not know says
+## so the day he delivers it.
 func _read_bridge_decks() -> void:
 	var bridges: Node = _his.get_node_or_null("Decor/Franchissements/Ponts")
 	if bridges == null:
 		return
 	for bridge: Node3D in bridges.get_children():
 		for child: Node in bridge.get_children():
-			if child is MeshInstance3D and child.name in [&"WornPavingPaving", &"RoadBedEarth", &"DeckPlanksWood"]:
+			if child is MeshInstance3D and child.name in [&"WornPavingPaving", &"RoadBedEarth",
+					&"DeckPlanksWood", &"ContinuousDeckStone"]:
 				var deck := child as MeshInstance3D
 				var transform: Transform3D = bridge.transform * deck.transform
 				_bridge_decks.append({"transform": transform, "inverse": transform.affine_inverse(),
