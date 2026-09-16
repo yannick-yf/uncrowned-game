@@ -273,6 +273,31 @@ and what each side did about it:
   `river-layout-v2.json` and `ironworks-town.json` as *his* props is the next PR on our
   side, and closes four of the brief's asks at once.
 
+**Ingested 2026-09-15 (PR #6, `49ac616`).** Codex took over ingestion for this task
+with Yannick's authorization. `ironworks-town.json` now contributes 27 buildings and
+47 props, and its bounds define the Cinderworks zone; no settlement kit is stamped
+there. `tools/workshop_geometry.gd` extracts obstacle polygons from his saved collision
+shapes before handing plain data to core. Roof extents do not close open halls. The
+existing wood-exclusion footprint and simulated wound remain; neither is new art.
+`river-layout-v2.json` is checked against the resolved crossings in `landscape.json`;
+those five bridge endpoints and `river-routes-v2.json` replace the old regional roads.
+The brief aliases `bridge` and `his_bridge` to his King's Road and mine bridges.
+The former four missing-crossing reports are closed. Tests dam all five bridges and
+the ford to check the river barrier, and each bridge has its own short bank-to-bank path.
+The 2 m grid uses at least half a tile diagonal to rasterize a narrow deck into an
+axis-connected path; it remains a grid approximation of the workshop's physics.
+
+The generated scene copy was refreshed (1,507 files, 25.4 MB). The window uses deck
+surfaces above water and follows the freed/held state for the delivered furnace and
+forge smoke, lights and embers. Halgrave and two watchmen use kiln feature anchors;
+the bridge guard's offset stays on the new diagonal deck. Both worlds retain 431
+passing tests in 43 suites. The baked run has nine DEBT lines and four OFF lines:
+the newly ingested road measures 1.24 against the 1.30–1.50 target, activating two
+existing ratio debt checks. No failing check was converted into a debt. The full road
+length implies 146.7 s at 2.5 tiles/s; the actual walk to the castle approach takes
+136.3 s, against 133.3 s on the wild line with speeds off. These targets remain map
+and design decisions. `map_criteria` reports 8/10, with ratio and time outstanding.
+
 ---
 
 ## 6. The plan, phase by phase

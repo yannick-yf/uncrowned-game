@@ -20,7 +20,8 @@ func run() -> void:
 	camera.set_process_unhandled_input(false)
 	await frames(35)
 	var data: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/landscape/landscape.json"))
-	check(data.crossings.size()==5,"five planned crossings")
+	var planned: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://planning/river-layout-v2.json"))
+	check(data.crossings.size()==planned.crossings.size(),"all planned crossings")
 	check(not world.has_node("Decor/MineAcierie/AccesEtPont"),"old blockout bridge removed")
 	for c: Dictionary in data.crossings:
 		var bridge: Node3D=world.get_node("Decor/Franchissements/Ponts/"+str(c.id))
@@ -64,7 +65,9 @@ func run() -> void:
 		for i: int in range(2,points.size()-2):
 			var p: Vector3=points[i];p.y=ground.call("height_at_world",p.x,p.z)
 			if float(ground.call("water_at_world",p.x,p.z))>p.y+.08:wet+=1
-			if previous!=Vector3.INF and absf(p.y-previous.y)>Vector2(p.x-previous.x,p.z-previous.z).length()*.55:steep+=1
+			if previous!=Vector3.INF and absf(p.y-previous.y)>Vector2(p.x-previous.x,p.z-previous.z).length()*.55:
+				steep+=1
+				if steep<4:print("ROUTE_SLOPE ",route.id," at ",p," previous=",previous)
 			previous=p
 			var query: PhysicsShapeQueryParameters3D=PhysicsShapeQueryParameters3D.new();query.shape=sphere;query.collision_mask=1;query.transform=Transform3D(Basis.IDENTITY,p+Vector3(0,.90,0))
 			var hits: Array[Dictionary]=world.get_world_3d().direct_space_state.intersect_shape(query,1)

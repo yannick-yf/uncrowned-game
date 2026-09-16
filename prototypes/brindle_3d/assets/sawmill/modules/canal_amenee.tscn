@@ -1,0 +1,84 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="1_8o6p2"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/canal_amenee_FlumeBed_wood.res" id="2_imouc"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="3_ke0sk"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/canal_amenee_FlumeSide_dark_wood.res" id="4_10ywf"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/water.tres" id="5_w06he"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/canal_amenee_FlumeWater_water.res" id="6_snj2e"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/canal_amenee_FlumeLegs_dark_wood.res" id="7_x7tl4"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/canal_amenee_FlumeCrossSupport_wood.res" id="8_c5448"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hg574"]
+size = Vector3(0.18, 2.8904023, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n73ch"]
+size = Vector3(0.18, 2.8904023, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ris24"]
+size = Vector3(0.18, 2.8904023, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1xtlo"]
+size = Vector3(0.18, 2.8904023, 0.18)
+
+[node name="CanalAmenee" type="Node3D" unique_id=1433304136]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "canal_amenee"
+metadata/family = "modules"
+metadata/label = "Canal d’amenée sur chevalets"
+metadata/purpose = "Tronçon de 4 m, ouverture de 0,85 m ; raccorder sa sortie au niveau de la roue."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="FlumeLegsCollision" type="StaticBody3D" parent="." unique_id=162158937]
+transform = Transform3D(-0.99640113, 0.08476327, -8.742278e-08, 0.08476327, 0.99640113, 0, 8.7108155e-08, -7.410241e-09, -1, -0.5775, 1.44, -1.56)
+collision_mask = 0
+
+[node name="@CollisionShape3D@340" type="CollisionShape3D" parent="FlumeLegsCollision" unique_id=746224179]
+shape = SubResource("BoxShape3D_hg574")
+
+[node name="@StaticBody3D@341" type="StaticBody3D" parent="." unique_id=1222611733]
+transform = Transform3D(-0.99640113, -0.08476327, -8.742278e-08, -0.08476327, 0.99640113, 0, 8.7108155e-08, 7.410241e-09, -1, 0.5775, 1.44, -1.56)
+collision_mask = 0
+
+[node name="@CollisionShape3D@342" type="CollisionShape3D" parent="@StaticBody3D@341" unique_id=975025773]
+shape = SubResource("BoxShape3D_n73ch")
+
+[node name="@StaticBody3D@343" type="StaticBody3D" parent="." unique_id=1623106140]
+transform = Transform3D(-0.99640113, 0.08476327, -8.742278e-08, 0.08476327, 0.99640113, 0, 8.7108155e-08, -7.410241e-09, -1, -0.5775, 1.44, 1.56)
+collision_mask = 0
+
+[node name="@CollisionShape3D@344" type="CollisionShape3D" parent="@StaticBody3D@343" unique_id=1805287697]
+shape = SubResource("BoxShape3D_ris24")
+
+[node name="@StaticBody3D@345" type="StaticBody3D" parent="." unique_id=1076864239]
+transform = Transform3D(-0.99640113, -0.08476327, -8.742278e-08, -0.08476327, 0.99640113, 0, 8.7108155e-08, 7.410241e-09, -1, 0.5775, 1.44, 1.56)
+collision_mask = 0
+
+[node name="@CollisionShape3D@346" type="CollisionShape3D" parent="@StaticBody3D@345" unique_id=635907127]
+shape = SubResource("BoxShape3D_1xtlo")
+
+[node name="WaterIn" type="Marker3D" parent="." unique_id=586291125]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02, -2)
+
+[node name="WaterOut" type="Marker3D" parent="." unique_id=1696244837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02, 2)
+
+[node name="FlumeBedWood" type="MeshInstance3D" parent="." unique_id=294207894]
+material_override = ExtResource("1_8o6p2")
+mesh = ExtResource("2_imouc")
+
+[node name="FlumeSideDarkWood" type="MeshInstance3D" parent="." unique_id=1773809090]
+material_override = ExtResource("3_ke0sk")
+mesh = ExtResource("4_10ywf")
+
+[node name="FlumeWaterWater" type="MeshInstance3D" parent="." unique_id=497498963]
+material_override = ExtResource("5_w06he")
+mesh = ExtResource("6_snj2e")
+
+[node name="FlumeLegsDarkWood" type="MeshInstance3D" parent="." unique_id=644133593]
+material_override = ExtResource("3_ke0sk")
+mesh = ExtResource("7_x7tl4")
+
+[node name="FlumeCrossSupportWood" type="MeshInstance3D" parent="." unique_id=162742895]
+material_override = ExtResource("1_8o6p2")
+mesh = ExtResource("8_c5448")

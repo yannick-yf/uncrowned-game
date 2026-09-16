@@ -143,18 +143,18 @@ func test_landmarks_never_close_the_road() -> void:
 
 func test_the_kettle_actually_divides_the_map() -> void:
 	# If the river is not a barrier then the bridge and the ford are decoration.
-	# Fill both crossings in and the castle must become unreachable.
-	# A square round each crossing rather than one rectangle spanning both: the 2D
+	# Close every delivered crossing and the castle must become unreachable.
+	# A square round each crossing rather than one rectangle spanning them: the 2D
 	# map's ford lies just downstream of its bridge, the baked world's does not.
 	var dammed := Region.build_overworld(true)
-	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+	for crossing: Vector2i in river_crossings():
 		for x: int in range(crossing.x - 12, crossing.x + 13):
 			for y: int in range(crossing.y - 12, crossing.y + 13):
 				var here: Region.Terrain = dammed.terrain_at(Vector2i(x, y))
 				if here == Region.Terrain.ROAD or here == Region.Terrain.FORD:
 					dammed.set_terrain(Vector2i(x, y), Region.Terrain.WATER)
 	assert_false(_reachable_from(dammed, Region.BRINDLE).has(Region.BLACKCAIRN),
-		"with both crossings dammed, the east bank is cut off — so the river is real")
+		"with every crossing dammed, the east bank is cut off — so the river is real")
 
 
 # --------------------------------------------------------- the two routes ---

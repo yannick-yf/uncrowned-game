@@ -466,6 +466,14 @@ and put it in front of him where it cannot be denied.
 > its tile grid: the 3D data is **baked** into a `Region` (2 m per tile, 384 × 384) and
 > the tile figures below are read against that grid once it exists.
 
+**Delivered topology, 2026-09-15.** PR #6's five bridges and their regional roads are
+now ingested, alongside the brief's ford. The one-bridge/one-ford figures below still
+describe the procedural map; on the baked world the barrier check closes all five
+bridges and the ford. The Cinderworks is the delivered 27-building, 47-prop town,
+within its own 100 × 104 m bounds. Its distance from Brindle remains owed. The new
+road ratio is 1.24 and full road length 367 tiles (146.7 s at 2.5 tiles/s); the targets
+below remain unsettled map decisions, reported by the existing debt checks.
+
 ### Bounds and scale
 
 One region, bounded on all four sides so the playable area needs no invisible walls:

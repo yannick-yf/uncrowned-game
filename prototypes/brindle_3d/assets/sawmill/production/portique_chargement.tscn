@@ -1,0 +1,135 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/stone.tres" id="1_iu1lm"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_CraneFeet_stone.res" id="2_4xl6g"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="3_lxms8"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_CranePosts_dark_wood.res" id="4_qkwtb"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="5_jjpwd"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_CraneBraces_wood.res" id="6_l71q8"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_CraneLintel_dark_wood.res" id="7_u8k4b"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_HoistPulley_wood.res" id="8_fwsll"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/rope.tres" id="9_r6obf"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_HoistLine_rope.res" id="10_uu1qn"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/iron.tres" id="11_5241l"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_HoistHook_iron.res" id="12_buh87"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_Winch_wood.res" id="13_wmqth"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_WinchStand_dark_wood.res" id="14_8tu7o"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_WinchRope_rope.res" id="15_sdc5x"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_WinchCrank_iron.res" id="16_jgtw8"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/portique_chargement_WinchGrip_wood.res" id="17_sf6t8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gw0ql"]
+size = Vector3(0.64, 0.45, 0.68)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s33e4"]
+size = Vector3(0.28, 3.1, 0.28)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7fmhg"]
+size = Vector3(0.64, 0.45, 0.68)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fc1wb"]
+size = Vector3(0.28, 3.1, 0.28)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_344kr"]
+size = Vector3(0.16, 1.15, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ihlkp"]
+size = Vector3(0.16, 1.15, 0.16)
+
+[node name="PortiqueChargement" type="Node3D" unique_id=1590234382]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "portique_chargement"
+metadata/family = "production"
+metadata/label = "Portique de levage à treuil"
+metadata/purpose = "Palan et tambour manuel au-dessus d’un passage de charrette ; hauteur libre 3 m."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="CraneFeetCollision" type="StaticBody3D" parent="." unique_id=1140829171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.225, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@248" type="CollisionShape3D" parent="CraneFeetCollision" unique_id=2023631036]
+shape = SubResource("BoxShape3D_gw0ql")
+
+[node name="CranePostsCollision" type="StaticBody3D" parent="." unique_id=877746744]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -2, 1.95, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@249" type="CollisionShape3D" parent="CranePostsCollision" unique_id=151978386]
+shape = SubResource("BoxShape3D_s33e4")
+
+[node name="@StaticBody3D@250" type="StaticBody3D" parent="." unique_id=1453002286]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.225, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@251" type="CollisionShape3D" parent="@StaticBody3D@250" unique_id=1815843832]
+shape = SubResource("BoxShape3D_7fmhg")
+
+[node name="@StaticBody3D@252" type="StaticBody3D" parent="." unique_id=1355161384]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2, 1.95, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@253" type="CollisionShape3D" parent="@StaticBody3D@252" unique_id=1767112479]
+shape = SubResource("BoxShape3D_fc1wb")
+
+[node name="WinchStandCollision" type="StaticBody3D" parent="." unique_id=68213261]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.12, 0.575, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@254" type="CollisionShape3D" parent="WinchStandCollision" unique_id=456763470]
+shape = SubResource("BoxShape3D_344kr")
+
+[node name="@StaticBody3D@255" type="StaticBody3D" parent="." unique_id=2021409128]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 3.16, 0.575, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@256" type="CollisionShape3D" parent="@StaticBody3D@255" unique_id=263415925]
+shape = SubResource("BoxShape3D_ihlkp")
+
+[node name="CraneFeetStone" type="MeshInstance3D" parent="." unique_id=587846557]
+material_override = ExtResource("1_iu1lm")
+mesh = ExtResource("2_4xl6g")
+
+[node name="CranePostsDarkWood" type="MeshInstance3D" parent="." unique_id=1726013257]
+material_override = ExtResource("3_lxms8")
+mesh = ExtResource("4_qkwtb")
+
+[node name="CraneBracesWood" type="MeshInstance3D" parent="." unique_id=543038640]
+material_override = ExtResource("5_jjpwd")
+mesh = ExtResource("6_l71q8")
+
+[node name="CraneLintelDarkWood" type="MeshInstance3D" parent="." unique_id=37309199]
+material_override = ExtResource("3_lxms8")
+mesh = ExtResource("7_u8k4b")
+
+[node name="HoistPulleyWood" type="MeshInstance3D" parent="." unique_id=2039496581]
+material_override = ExtResource("5_jjpwd")
+mesh = ExtResource("8_fwsll")
+
+[node name="HoistLineRope" type="MeshInstance3D" parent="." unique_id=1034932555]
+material_override = ExtResource("9_r6obf")
+mesh = ExtResource("10_uu1qn")
+
+[node name="HoistHookIron" type="MeshInstance3D" parent="." unique_id=213003654]
+material_override = ExtResource("11_5241l")
+mesh = ExtResource("12_buh87")
+
+[node name="WinchWood" type="MeshInstance3D" parent="." unique_id=609917365]
+material_override = ExtResource("5_jjpwd")
+mesh = ExtResource("13_wmqth")
+
+[node name="WinchStandDarkWood" type="MeshInstance3D" parent="." unique_id=1775495076]
+material_override = ExtResource("3_lxms8")
+mesh = ExtResource("14_8tu7o")
+
+[node name="WinchRopeRope" type="MeshInstance3D" parent="." unique_id=378249787]
+material_override = ExtResource("9_r6obf")
+mesh = ExtResource("15_sdc5x")
+
+[node name="WinchCrankIron" type="MeshInstance3D" parent="." unique_id=1993161565]
+material_override = ExtResource("11_5241l")
+mesh = ExtResource("16_jgtw8")
+
+[node name="WinchGripWood" type="MeshInstance3D" parent="." unique_id=1777480410]
+material_override = ExtResource("5_jjpwd")
+mesh = ExtResource("17_sf6t8")

@@ -59,6 +59,12 @@ func rebuild_ground() -> void:
 		push_error("Données de relief incomplètes. Relancer tools/build_landscape.py.")
 		return
 	_apply_godot_relief_tools()
+	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/landscape/royal_ground_mask.png"):
+		(grass_material as ShaderMaterial).set_shader_parameter("royal_ground_mask",load("res://assets/landscape/royal_ground_mask.png"))
+		(grass_material as ShaderMaterial).set_shader_parameter("royal_mask_enabled",true)
+	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/landscape/sawmill_ground_mask.png"):
+		(grass_material as ShaderMaterial).set_shader_parameter("sawmill_ground_mask",load("res://assets/landscape/sawmill_ground_mask.png"))
+		(grass_material as ShaderMaterial).set_shader_parameter("sawmill_mask_enabled",true)
 	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/landscape/ironworks_ground_mask.png"):
 		(grass_material as ShaderMaterial).set_shader_parameter("ironworks_ground_mask",load("res://assets/landscape/ironworks_ground_mask.png"))
 		(grass_material as ShaderMaterial).set_shader_parameter("ironworks_mask_enabled",true)
@@ -103,6 +109,9 @@ func _apply_godot_relief_tools() -> void:
 				var i: int = z*_n+x
 				if not bool(stamp.get("affect_water_banks")) and _water[i] > 0 and _height[i] < _water[i]+2: continue
 				_height[i] = stamp.call("sample_height",x*2.0-384.0,z*2.0-384.0,_height[i])
+	if stamps.get_node_or_null("Royal_CourChateau")!=null:
+		var royal: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://planning/royal-city.json"))
+		preload("res://scripts/royal_ascent.gd").grade(_height,_n,royal.ramp_xyz)
 	_apply_bridge_approaches()
 	# Repaint slopes after editing a terrace; retain the original sand and bank channels.
 	for z: int in _n:

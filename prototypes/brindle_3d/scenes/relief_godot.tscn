@@ -93,59 +93,59 @@ position = Vector3(216, 43.1, 28)
 rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(46, 56)
-blend_m = 8.0
-outline = "Ellipse"
+blend_m = 6.0
+outline = "Rectangle"
 
 [node name="TerrasseOuestAcierie" type="Node3D" parent="."]
 position = Vector3(198, 42.8, 36)
 rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(15, 27)
-blend_m = 12.0
-outline = "Ellipse"
+blend_m = 8.0
+outline = "Rectangle"
 
 [node name="TerrasseCharbonAcierie" type="Node3D" parent="."]
-position = Vector3(265, 44.0, 5)
+position = Vector3(262, 44.0, 10)
 rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
-footprint_m = Vector2(29, 21)
-blend_m = 9.0
-outline = "Ellipse"
+footprint_m = Vector2(30, 18)
+blend_m = 5.0
+outline = "Rectangle"
 
 [node name="CourFourneauxAcierie" type="Node3D" parent="."]
-position = Vector3(267, 43.1, 34)
+position = Vector3(260, 43.1, 33)
 rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
-footprint_m = Vector2(22, 26)
-blend_m = 7.0
-outline = "Ellipse"
+footprint_m = Vector2(32, 30)
+blend_m = 4.0
+outline = "Rectangle"
 
 [node name="CourMineraiAcierie" type="Node3D" parent="."]
-position = Vector3(274, 43.0, 53)
+position = Vector3(270, 43.0, 38)
 rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
-footprint_m = Vector2(18, 22)
-blend_m = 6.0
-outline = "Ellipse"
+footprint_m = Vector2(18, 28)
+blend_m = 4.0
+outline = "Rectangle"
 
 [node name="CourLogistiqueAcierie" type="Node3D" parent="."]
-position = Vector3(220, 42.0, 74)
-rotation_degrees = Vector3(0, -8, 0)
-script = ExtResource("1")
-footprint_m = Vector2(27, 16)
-blend_m = 12.0
-outline = "Ellipse"
-
-[node name="CourScoriesAcierie" type="Node3D" parent="."]
-position = Vector3(230, 40.65, 85.5)
+position = Vector3(232, 42.0, 70)
 rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
-footprint_m = Vector2(11, 8)
+footprint_m = Vector2(52, 22)
+blend_m = 6.0
+outline = "Rectangle"
+
+[node name="CourScoriesAcierie" type="Node3D" parent="."]
+position = Vector3(232, 40.65, 85)
+rotation_degrees = Vector3(0, 0, 0)
+script = ExtResource("1")
+footprint_m = Vector2(12, 8)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_MaisonEntreeNord" type="Node3D" parent="."]
-position = Vector3(195.28750014305115, 43.0, 10.545482158660889)
+position = Vector3(196.28750014305115, 43.6, 8.545482158660889)
 rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.540000000000001, 8.809999999999999)
@@ -153,23 +153,23 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonPignon" type="Node3D" parent="."]
-position = Vector3(206.76937007904053, 43.6, 4.801249980926514)
-rotation_degrees = Vector3(0, 0, 0)
+position = Vector3(210.8012499809265, 43.6, 8.230629920959473)
+rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(8.31, 7.18)
 blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonHaute" type="Node3D" parent="."]
-position = Vector3(221.0224997997284, 44.0, 4.275684833526611)
-rotation_degrees = Vector3(0, 0, 0)
+position = Vector3(225.7243151664734, 43.9, 8.022499799728394)
+rotation_degrees = Vector3(0, -90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(9.57, 7.69)
 blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonArdoise" type="Node3D" parent="."]
-position = Vector3(233.55845284461975, 43.8, 9.0)
+position = Vector3(240.55845284461975, 43.8, 8.0)
 rotation_degrees = Vector3(0, -90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.43, 8.21)
@@ -177,7 +177,7 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonCourInterieure" type="Node3D" parent="."]
-position = Vector3(200.91624999046326, 43.2, 22.95626926422119)
+position = Vector3(195.91624999046326, 43.2, 23.95626926422119)
 rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(8.53, 7.66)
@@ -185,15 +185,15 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonVirage" type="Node3D" parent="."]
-position = Vector3(215.0, 42.8, 22.08667278289795)
-rotation_degrees = Vector3(0, 0, 0)
+position = Vector3(211.08667278289795, 43.1, 24.0)
+rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.18, 7.85)
 blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonVenelle" type="Node3D" parent="."]
-position = Vector3(231.9337501525879, 43.1, 22.989024877548218)
+position = Vector3(225.9337501525879, 43.2, 23.989024877548218)
 rotation_degrees = Vector3(0, -90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.0, 7.46)
@@ -201,31 +201,15 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_DortoirNord" type="Node3D" parent="."]
-position = Vector3(206.0, 43.2, 19.349369764328003)
-rotation_degrees = Vector3(0, 0, 0)
+position = Vector3(240.650630235672, 43.2, 24.0)
+rotation_degrees = Vector3(0, -90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(11.08, 8.93)
 blend_m = 3.5
 outline = "Rectangle"
 
-[node name="Sol_DortoirPlace" type="Node3D" parent="."]
-position = Vector3(233.64290380477905, 43.1, 28.632500171661377)
-rotation_degrees = Vector3(0, -90, 0)
-script = ExtResource("1")
-footprint_m = Vector2(10.87, 8.54)
-blend_m = 3.5
-outline = "Rectangle"
-
-[node name="Sol_MaisonContremaitre" type="Node3D" parent="."]
-position = Vector3(239.07231092453003, 43.2, 28.0)
-rotation_degrees = Vector3(0, 90, 0)
-script = ExtResource("1")
-footprint_m = Vector2(7.779999999999999, 8.719999999999999)
-blend_m = 3.5
-outline = "Rectangle"
-
 [node name="Sol_MaisonOuest" type="Node3D" parent="."]
-position = Vector3(194.87829494476318, 42.8, 44.0)
+position = Vector3(195.87829494476318, 42.8, 40.0)
 rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.73, 8.280000000000001)
@@ -233,15 +217,31 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_MaisonJardin" type="Node3D" parent="."]
-position = Vector3(211.27999997138977, 42.8, 46.47583484649658)
-rotation_degrees = Vector3(0, 180, 0)
+position = Vector3(211.52416515350342, 42.8, 40.27999997138977)
+rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.52, 7.8)
 blend_m = 3.5
 outline = "Rectangle"
 
+[node name="Sol_DortoirPlace" type="Node3D" parent="."]
+position = Vector3(225.64290380477905, 42.9, 39.63250017166138)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(10.87, 8.54)
+blend_m = 3.5
+outline = "Rectangle"
+
+[node name="Sol_MaisonContremaitre" type="Node3D" parent="."]
+position = Vector3(240.92768907546997, 43.0, 40.0)
+rotation_degrees = Vector3(0, -90, 0)
+script = ExtResource("1")
+footprint_m = Vector2(7.779999999999999, 8.719999999999999)
+blend_m = 3.5
+outline = "Rectangle"
+
 [node name="Sol_CuisineCommune" type="Node3D" parent="."]
-position = Vector3(219.76500010490417, 43.0, 53.82114291191101)
+position = Vector3(225.76500010490417, 43.0, 53.82114291191101)
 rotation_degrees = Vector3(0, 180, 0)
 script = ExtResource("1")
 footprint_m = Vector2(10.43, 9.09)
@@ -249,7 +249,7 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_GrenierCommun" type="Node3D" parent="."]
-position = Vector3(230.0, 42.9, 54.1886430978775)
+position = Vector3(232.0, 42.9, 54.1886430978775)
 rotation_degrees = Vector3(0, 180, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.0, 8.17)
@@ -329,7 +329,7 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_CharbonRouteScierie" type="Node3D" parent="."]
-position = Vector3(256.0, 44.0, 4.0)
+position = Vector3(256.0, 44.0, 10.0)
 rotation_degrees = Vector3(0, 180, 0)
 script = ExtResource("1")
 footprint_m = Vector2(8.53, 7.45)
@@ -337,7 +337,7 @@ blend_m = 3.5
 outline = "Rectangle"
 
 [node name="Sol_CharbonReserve" type="Node3D" parent="."]
-position = Vector3(268.0, 44.0, 9.0)
+position = Vector3(268.0, 44.0, 10.0)
 rotation_degrees = Vector3(0, 90, 0)
 script = ExtResource("1")
 footprint_m = Vector2(8.93, 7.63)
@@ -377,64 +377,64 @@ blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_FourneauUn" type="Node3D" parent="."]
-position = Vector3(257.69598070164875, 43.1, 34.0170028945939)
-rotation_degrees = Vector3(0, -85, 0)
+position = Vector3(257.986635863781, 43.1, 22.391500055789948)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.96, 5.77)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_FourneauDeux" type="Node3D" parent="."]
-position = Vector3(263.0724705593999, 43.1, 22.446019974835888)
-rotation_degrees = Vector3(0, 170, 0)
+position = Vector3(266.0096358060837, 43.1, 22.38450002670288)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.3100000000000005, 6.0600000000000005)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_FourneauTrois" type="Node3D" parent="."]
-position = Vector3(258.5239987385901, 43.1, 21.948759938297655)
-rotation_degrees = Vector3(0, -95, 0)
+position = Vector3(273.986635863781, 43.1, 22.391500055789948)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.96, 5.77)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_FourneauQuatre" type="Node3D" parent="."]
-position = Vector3(265.20676646459555, 43.1, 17.2946609469963)
-rotation_degrees = Vector3(0, 160, 0)
+position = Vector3(257.986635863781, 43.1, 36.39150005578995)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.96, 5.77)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_FourneauCinq" type="Node3D" parent="."]
-position = Vector3(255.2248341023251, 43.1, 39.75254406020024)
-rotation_degrees = Vector3(0, -115, 0)
+position = Vector3(266.0096358060837, 43.1, 36.38450002670288)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(7.3100000000000005, 6.0600000000000005)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_FourneauSix" type="Node3D" parent="."]
-position = Vector3(265.85168939137196, 43.1, 33.63352016700882)
-rotation_degrees = Vector3(0, -15, 0)
+position = Vector3(273.986635863781, 43.1, 36.39150005578995)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.96, 5.77)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_GrillageUn" type="Node3D" parent="."]
-position = Vector3(270.0, 43.1, 39.0)
-rotation_degrees = Vector3(0, -20, 0)
+position = Vector3(240.0, 43.1, 22.0)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.0, 5.9)
 blend_m = 3.0
 outline = "Rectangle"
 
 [node name="Sol_GrillageDeux" type="Node3D" parent="."]
-position = Vector3(275.0, 43.1, 37.0)
-rotation_degrees = Vector3(0, 10, 0)
+position = Vector3(240.0, 43.1, 29.0)
+rotation_degrees = Vector3(0, 0, 0)
 script = ExtResource("1")
 footprint_m = Vector2(6.0, 5.9)
 blend_m = 3.0
@@ -447,3 +447,766 @@ script = ExtResource("1")
 footprint_m = Vector2(6.54, 4.89)
 blend_m = 3.0
 outline = "Rectangle"
+
+[node name="Scierie_TerrasseQuartiers" type="Node3D" parent="."]
+position = Vector3(228,47.9,-159)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(50,76)
+blend_m = 12
+outline = "Ellipse"
+slope = Vector2(0.015,-0.12)
+
+[node name="Scierie_Place" type="Node3D" parent="."]
+position = Vector3(233,45.0,-132)
+rotation_degrees = Vector3(0,-8,0)
+script = ExtResource("1")
+footprint_m = Vector2(12,10)
+blend_m = 7
+outline = "Ellipse"
+slope = Vector2(0.01,-0.05)
+
+[node name="Scierie_CourMoulin" type="Node3D" parent="."]
+position = Vector3(249,44.2,-142)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(13,17)
+blend_m = 5
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_RampeBois0" type="Node3D" parent="."]
+position = Vector3(232.0,48.65,-164.5)
+rotation_degrees = Vector3(0,0.0,0)
+script = ExtResource("1")
+footprint_m = Vector2(5.4,12.2)
+blend_m = 4
+outline = "Rectangle"
+slope = Vector2(0,-0.11818181818181793)
+
+[node name="Scierie_RampeBois1" type="Node3D" parent="."]
+position = Vector3(234.0,47.6,-156.0)
+rotation_degrees = Vector3(0,33.690067525979785,0)
+script = ExtResource("1")
+footprint_m = Vector2(5.4,8.411102550927978)
+blend_m = 4
+outline = "Rectangle"
+slope = Vector2(0,-0.11094003924504543)
+
+[node name="Scierie_RampeBois2" type="Node3D" parent="."]
+position = Vector3(238.0,46.55,-149.0)
+rotation_degrees = Vector3(0,26.56505117707799,0)
+script = ExtResource("1")
+footprint_m = Vector2(5.4,10.144271909999159)
+blend_m = 4
+outline = "Rectangle"
+slope = Vector2(0,-0.1453444185374868)
+
+[node name="Scierie_RampeBois3" type="Node3D" parent="."]
+position = Vector3(240.5,45.3,-141.5)
+rotation_degrees = Vector3(0,8.13010235415598,0)
+script = ExtResource("1")
+footprint_m = Vector2(5.4,8.271067811865475)
+blend_m = 4
+outline = "Rectangle"
+slope = Vector2(0,-0.1697056274847708)
+
+[node name="Scierie_Sol_DepotForestier" type="Node3D" parent="."]
+position = Vector3(240.0,51.7,-194.0)
+rotation_degrees = Vector3(0,12,0)
+script = ExtResource("1")
+footprint_m = Vector2(12.1,9.719999999999999)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_RemiseVoitures" type="Node3D" parent="."]
+position = Vector3(220.0516829328343,50.8,-187.01881104917126)
+rotation_degrees = Vector3(0,20,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.73,9.219999999999999)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_HalleCharron" type="Node3D" parent="."]
+position = Vector3(235.0249047249455,50.0,-178.99782111889903)
+rotation_degrees = Vector3(0,-5,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.469999999999999,8.82)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_BaraquementBucherons" type="Node3D" parent="."]
+position = Vector3(251.97667981939543,51.0,-185.73344911598)
+rotation_degrees = Vector3(0,-5,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.780000000000001,8.2)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_Sechoir" type="Node3D" parent="."]
+position = Vector3(250.0,49.8,-174.0)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.3,9.02)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_MaisonMaitreScieur" type="Node3D" parent="."]
+position = Vector3(236.97972864187008,48.4,-163.90463075818192)
+rotation_degrees = Vector3(0,-12,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.08,9.280000000000001)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_MaisonDeuxVolumes" type="Node3D" parent="."]
+position = Vector3(221.7328200596484,48.8,-165.24393968622402)
+rotation_degrees = Vector3(0,8,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.21,7.84)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_LogisLisiere" type="Node3D" parent="."]
+position = Vector3(210.0003651968512,47.7,-152.5320747914401)
+rotation_degrees = Vector3(0,62,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.71,9.440000000000001)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_MaisonColombages" type="Node3D" parent="."]
+position = Vector3(228.05031764937561,47.0,-148.35802867886886)
+rotation_degrees = Vector3(0,172,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.73,8.870000000000001)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_BaraquementGalerie" type="Node3D" parent="."]
+position = Vector3(212.38014068357276,45.6,-134.75218871389427)
+rotation_degrees = Vector3(0,95,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.94,9.04)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_MaisonVoituriers" type="Node3D" parent="."]
+position = Vector3(222.9893927055147,44.7,-127.87875806924212)
+rotation_degrees = Vector3(0,175,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.98,8.780000000000001)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_MaisonRive" type="Node3D" parent="."]
+position = Vector3(211.88753935432658,48.8,-165.564375716527)
+rotation_degrees = Vector3(0,5,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.68,8.5)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_AtelierCharpentier" type="Node3D" parent="."]
+position = Vector3(246.76400423049927,44.7,-135.0)
+rotation_degrees = Vector3(0,-90,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.030000000000001,10.969999999999999)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_ComptoirBois" type="Node3D" parent="."]
+position = Vector3(234.99353982543502,46.0,-140.9261598668374)
+rotation_degrees = Vector3(0,-5,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.280000000000001,8.85)
+blend_m = 4.0
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_Sol_MaisonColombages_Assise" type="Node3D" parent="."]
+position = Vector3(228.05031764937561,47.0,-148.35802867886886)
+rotation_degrees = Vector3(0,172,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.73,8.870000000000001)
+blend_m = 1.5
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Scierie_RouteAcierie0" type="Node3D" parent="."]
+position = Vector3(236.54665,45.55,-96.092)
+rotation_degrees = Vector3(0,36.16740442282222,0)
+script = ExtResource("1")
+footprint_m = Vector2(7,17.09235438525083)
+blend_m = 7
+outline = "Rectangle"
+slope = Vector2(0,0.19215027198367773)
+
+[node name="Scierie_RouteAcierie1" type="Node3D" parent="."]
+position = Vector3(242.0,48.1,-85.0)
+rotation_degrees = Vector3(0,11.309932474020213,0)
+script = ExtResource("1")
+footprint_m = Vector2(7,12.198039027185569)
+blend_m = 7
+outline = "Rectangle"
+slope = Vector2(0,0.21572774865200273)
+
+[node name="Scierie_RouteAcierie2" type="Node3D" parent="."]
+position = Vector3(243.0,50.25,-75.0)
+rotation_degrees = Vector3(0,0.0,0)
+script = ExtResource("1")
+footprint_m = Vector2(7,12.0)
+blend_m = 7
+outline = "Rectangle"
+slope = Vector2(0,0.20999999999999944)
+
+[node name="Scierie_RouteAcierie3" type="Node3D" parent="."]
+position = Vector3(243.0,50.0,-65.0)
+rotation_degrees = Vector3(0,0.0,0)
+script = ExtResource("1")
+footprint_m = Vector2(7,12.0)
+blend_m = 7
+outline = "Rectangle"
+slope = Vector2(0,-0.25999999999999945)
+
+[node name="Scierie_RouteAcierie4" type="Node3D" parent="."]
+position = Vector3(243.0,48.150000000000006,-55.5)
+rotation_degrees = Vector3(0,0.0,0)
+script = ExtResource("1")
+footprint_m = Vector2(7,11.0)
+blend_m = 7
+outline = "Rectangle"
+slope = Vector2(0,-0.12222222222222238)
+
+[node name="Scierie_RaccordGrandeRoute" type="Node3D" parent="."]
+position = Vector3(186.5,40.225,52.5)
+rotation_degrees = Vector3(0,71.56505117707799,0)
+script = ExtResource("1")
+footprint_m = Vector2(6,16.811388300841898)
+blend_m = 5
+outline = "Rectangle"
+slope = Vector2(0,0.3636619309193636)
+
+[node name="Royal_TerrasseVille" type="Node3D" parent="."]
+position = Vector3(-174,64.75,-175)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(119,92)
+blend_m = 8
+outline = "Ellipse"
+slope = Vector2(0,-0.025)
+
+[node name="Royal_EperonChateau" type="Node3D" parent="."]
+position = Vector3(-193,94,-275)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(91,70)
+blend_m = 12
+outline = "Ellipse"
+slope = Vector2(0,0)
+
+[node name="Royal_CourChateau" type="Node3D" parent="."]
+position = Vector3(-193,94,-275)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(82,63)
+blend_m = 3
+outline = "Rectangle"
+slope = Vector2(0,0)
+
+[node name="Royal_Montee0" type="Node3D" parent="."]
+position = Vector3(-211.0,67.5,-210.0)
+rotation_degrees = Vector3(0,-153.434948822922,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,18.88854381999832)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.22360679774997896)
+
+[node name="Royal_Montee1" type="Node3D" parent="."]
+position = Vector3(-219.5,72.35,-224.0)
+rotation_degrees = Vector3(0,-143.13010235415598,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,16.0)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.38000000000000017)
+
+[node name="Royal_Montee2" type="Node3D" parent="."]
+position = Vector3(-221.5,76.4,-233.5)
+rotation_degrees = Vector3(0,144.46232220802563,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,9.602325267042627)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.2789943329851653)
+
+[node name="Royal_Montee3" type="Node3D" parent="."]
+position = Vector3(-213.5,79.3,-235.0)
+rotation_degrees = Vector3(0,70.01689347810003,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,12.704699910719626)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.2904816036236992)
+
+[node name="Royal_Montee4" type="Node3D" parent="."]
+position = Vector3(-202.5,83.5,-228.0)
+rotation_degrees = Vector3(0,47.72631099390627,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,15.866068747318506)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.3363363969981562)
+
+[node name="Royal_Montee5" type="Node3D" parent="."]
+position = Vector3(-191.0,87.5,-222.5)
+rotation_degrees = Vector3(0,85.23635830927383,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,13.041594578792296)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.2491364395612199)
+
+[node name="Royal_Montee6" type="Node3D" parent="."]
+position = Vector3(-181.5,91.0,-226.0)
+rotation_degrees = Vector3(0,138.81407483429035,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,11.63014581273465)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.3762883473534389)
+
+[node name="Royal_Montee7" type="Node3D" parent="."]
+position = Vector3(-179.0,93.5,-235.5)
+rotation_degrees = Vector3(0,-169.69515353123398,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,12.180339887498949)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.08944271909999159)
+
+[node name="Royal_Montee8" type="Node3D" parent="."]
+position = Vector3(-181.0,94.0,-243.5)
+rotation_degrees = Vector3(0,-158.19859051364818,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,6.385164807134504)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.0)
+
+[node name="Royal_Montee9" type="Node3D" parent="."]
+position = Vector3(-182.0,94.0,-250.5)
+rotation_degrees = Vector3(0,180.0,0)
+script = ExtResource("1")
+footprint_m = Vector2(7.6,10.0)
+blend_m = 3.5
+outline = "Rectangle"
+slope = Vector2(0,0.0)
+
+[node name="Royal_Assise_MaisonDesArdoises" type="Node3D" parent="."]
+position = Vector3(-216.89831795913304,65.225,-194.723505314895)
+rotation_degrees = Vector3(0,82,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.25276985168457,10.59999980926514)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDuTailleur" type="Node3D" parent="."]
+position = Vector3(-214.71999979019165,64.825,-178.0)
+rotation_degrees = Vector3(0,90,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.28000011444092,12.16000022888184)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_AubergeDesVoyageurs" type="Node3D" parent="."]
+position = Vector3(-216.9900747845907,64.375,-160.0012186632159)
+rotation_degrees = Vector3(0,97,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.98000087738037,12.01999988555908)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesTisserands" type="Node3D" parent="."]
+position = Vector3(-192.00941713992145,65.55,-206.86532862489062)
+rotation_degrees = Vector3(0,-4,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.28000011444092,11.47000064849854)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDuPassage" type="Node3D" parent="."]
+position = Vector3(-198.0,64.775,-176.0)
+rotation_degrees = Vector3(0,175,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.1910737991333,10.79999961853027)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_CourDesDrapiers" type="Node3D" parent="."]
+position = Vector3(-196.9986083034991,64.35,-158.99009756485484)
+rotation_degrees = Vector3(0,8,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.88000144958496,10.919999504089361)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDesPignons" type="Node3D" parent="."]
+position = Vector3(-227.01019546123476,65.15,-191.57849662046993)
+rotation_degrees = Vector3(0,92,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.13699998855591,9.82000007629395)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDuRempartOuest" type="Node3D" parent="."]
+position = Vector3(-224.76254675952947,64.625,-169.8516227475184)
+rotation_degrees = Vector3(0,58,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.08000030517578,10.25999965667725)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDeLEchauguette" type="Node3D" parent="."]
+position = Vector3(-225.0,64.875,-180.0)
+rotation_degrees = Vector3(0,178,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.59139289855957,9.90000047683716)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDuPuits" type="Node3D" parent="."]
+position = Vector3(-159.98923352621588,64.0,-133.10243615546884)
+rotation_degrees = Vector3(0,174,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.08000030517578,9.80600109100342)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesChangeurs" type="Node3D" parent="."]
+position = Vector3(-178.9996510136865,65.05,-187.0099936604659)
+rotation_degrees = Vector3(0,178,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.58000030517578,11.419999504089361)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDeLaLoggia" type="Node3D" parent="."]
+position = Vector3(-158.9991284434037,65.025,-186.00996193748045)
+rotation_degrees = Vector3(0,175,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.47999992370605,10.32000007629395)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesEpiciers" type="Node3D" parent="."]
+position = Vector3(-179.23793506622314,64.2,-153.0)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.61587085723877,10.50000038146973)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonAuxTroisPignons" type="Node3D" parent="."]
+position = Vector3(-154.98046820597864,64.15,-150.72068233230559)
+rotation_degrees = Vector3(0,4,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.47999992370605,11.75999965667725)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDuPorche" type="Node3D" parent="."]
+position = Vector3(-152.9986083034991,64.6,-169.00990243514516)
+rotation_degrees = Vector3(0,172,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.58000030517578,10.219999694824219)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesMarchands" type="Node3D" parent="."]
+position = Vector3(-144.12692249016123,64.45,-162.99556776897776)
+rotation_degrees = Vector3(0,-88,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.38000001907349,11.0540002822876)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesLivres" type="Node3D" parent="."]
+position = Vector3(-201.0,65.625,-210.0)
+rotation_degrees = Vector3(0,5,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.59139289855957,11.09999980926514)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDesArcades" type="Node3D" parent="."]
+position = Vector3(-159.00069754744095,65.475,-203.99002460684872)
+rotation_degrees = Vector3(0,-4,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.38000144958496,10.71999969482422)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDeLaRive" type="Node3D" parent="."]
+position = Vector3(-126.00999975204468,64.925,-181.32699990272522)
+rotation_degrees = Vector3(0,-90,0)
+script = ExtResource("1")
+footprint_m = Vector2(11.22600021362305,11.61999931335449)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDeLaPorteEst" type="Node3D" parent="."]
+position = Vector3(-127.27982916469921,64.4,-160.99022815024247)
+rotation_degrees = Vector3(0,-88,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.97999992370605,11.05999984741211)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDuMacon" type="Node3D" parent="."]
+position = Vector3(-130.0,64.05,-147.0)
+rotation_degrees = Vector3(0,158,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.59050979614258,10.20000019073486)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDuGrenier" type="Node3D" parent="."]
+position = Vector3(-151.0,64.0,-134.0829999446869)
+rotation_degrees = Vector3(0,180,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.88000001907349,8.76600017547607)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDeLaTour" type="Node3D" parent="."]
+position = Vector3(-221.0,94.0,-296.9900002479553)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.68000020980835,9.719999694824219)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesJardins" type="Node3D" parent="."]
+position = Vector3(-148.0013916965009,65.775,-215.99009756485484)
+rotation_degrees = Vector3(0,-8,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.88000001907349,10.219999694824219)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDuCanal" type="Node3D" parent="."]
+position = Vector3(-158.0554570404543,65.75,-214.36612312705068)
+rotation_degrees = Vector3(0,-95,0)
+script = ExtResource("1")
+footprint_m = Vector2(10.16340293884277,9.70000019073486)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesVitriers" type="Node3D" parent="."]
+position = Vector3(-199.95137855662233,65.175,-191.72425409212863)
+rotation_degrees = Vector3(0,10,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.97999992370605,10.05999984741211)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_HalleDuMarche" type="Node3D" parent="."]
+position = Vector3(-179.0,64.45,-163.0)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(15.1000007629395,10.09067192077637)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_HotelDeVille" type="Node3D" parent="."]
+position = Vector3(-172.0,65.725,-213.90500020980835)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(16.093845748901398,12.6299995422363)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_GrandeChapelle" type="Node3D" parent="."]
+position = Vector3(-133.69850301742554,65.325,-197.95250034332275)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(14.9770063400269,20.195000076293898)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_EcuriesDeLaPorte" type="Node3D" parent="."]
+position = Vector3(-190.0,64.0,-139.0)
+rotation_degrees = Vector3(0,0,0)
+script = ExtResource("1")
+footprint_m = Vector2(13.1000007629395,9.08991088867188)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_GrenierDeLaVille" type="Node3D" parent="."]
+position = Vector3(-201.41079833285661,64.0,-140.75008171094456)
+rotation_degrees = Vector3(0,80,0)
+script = ExtResource("1")
+footprint_m = Vector2(13.162001037597701,10.50000038146973)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_CorpsDeGarde" type="Node3D" parent="."]
+position = Vector3(-178.69500017166138,64.0,-135.0)
+rotation_degrees = Vector3(0,90,0)
+script = ExtResource("1")
+footprint_m = Vector2(9.49131669998169,10.30999984741211)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_MaisonDesChariots" type="Node3D" parent="."]
+position = Vector3(-177.0,64.65,-171.0)
+rotation_degrees = Vector3(0,-95,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.39029445648193,9.30000057220459)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_Assise_LogisDesCordonniers" type="Node3D" parent="."]
+position = Vector3(-158.89299988746643,64.375,-160.0)
+rotation_degrees = Vector3(0,90,0)
+script = ExtResource("1")
+footprint_m = Vector2(8.78000011444092,10.01400032043457)
+blend_m = 3.4
+outline = "Rectangle"
+slope = Vector2(0,0)
+affect_water_banks = true
+
+[node name="Royal_RouteSud0" type="Node3D" parent="."]
+position = Vector3(-163.5,63.35,-100.0)
+rotation_degrees = Vector3(0,41.98721249581666,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,14.45362404707371)
+blend_m = 10
+outline = "Rectangle"
+slope = Vector2(0,-0.12636000486201848)
+
+[node name="Royal_RouteSud1" type="Node3D" parent="."]
+position = Vector3(-146.0,61.45,-91.0)
+rotation_degrees = Vector3(0,72.89727103094764,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,28.202941017470888)
+blend_m = 10
+outline = "Rectangle"
+slope = Vector2(0,-0.07719753531984987)
+
+[node name="Royal_RouteSud2" type="Node3D" parent="."]
+position = Vector3(-121.5,58.599999999999994,-88.0)
+rotation_degrees = Vector3(0,94.96974072811031,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,24.08679276123039)
+blend_m = 10
+outline = "Rectangle"
+slope = Vector2(0,-0.15593330945671566)
+
+[node name="Royal_RouteSud3" type="Node3D" parent="."]
+position = Vector3(-100.0,55.355,-89.5)
+rotation_degrees = Vector3(0,92.86240522611175,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,21.024984394500787)
+blend_m = 10
+outline = "Rectangle"
+slope = Vector2(0,-0.14431971296784857)
+
+[node name="Royal_RouteSud4" type="Node3D" parent="."]
+position = Vector3(-85.5,52.8,-84.0)
+rotation_degrees = Vector3(0,36.86989764584402,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,16.0)
+blend_m = 10
+outline = "Rectangle"
+slope = Vector2(0,-0.14799999999999994)
+
+[node name="Royal_RouteSud5" type="Node3D" parent="."]
+position = Vector3(-76.5,50.855000000000004,-71.5)
+rotation_degrees = Vector3(0,34.69515353123397,0)
+script = ExtResource("1")
+footprint_m = Vector2(8,16.811388300841898)
+blend_m = 10
+outline = "Rectangle"
+slope = Vector2(0,-0.10562007384962353)

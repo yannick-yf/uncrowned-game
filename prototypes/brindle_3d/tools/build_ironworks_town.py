@@ -23,24 +23,25 @@ def prop(name,asset,x,z,yaw=0,group='Production'):
     return add(name,asset,x,z,yaw,group=group,major=False)
 def road(name,width,pts):roads.append(dict(id=name,width_m=width,points_xz=pts))
 
-# Dwellings form a loose neighbourhood around a common green and a readable main lane.
+# The workers' quarter is a deliberate block beside the factory: two facing rows
+# leave a central lane, while the production side uses straight work courts.
 for v in [
- ('MaisonEntreeNord','logis_porte_basse',195,10,90,43.0),
- ('MaisonPignon','maison_aux_deux_volumes',207,5,0,43.6),
- ('MaisonHaute','baraquement_des_equipes',221,4,0,44.0),
- ('MaisonArdoise','logis_a_colombages',234,9,-90,43.8),
- ('MaisonCourInterieure','baraque_jumelee_de_la_cour',201,23,90,43.2),
- ('MaisonVirage','maison_du_virage',215,22,0,42.8),
- ('MaisonVenelle','maison_haute_de_la_venelle',232,23,-90,43.1),
- ('DortoirNord','baraquement_de_la_grande_cour',206,19,0,43.2),
- ('DortoirPlace','baraquement_a_galerie',234,29,-90,43.1),
- ('MaisonContremaitre','logis_du_contremaitre_en_l',239,28,90,43.2),
- ('MaisonOuest','maison_des_charretiers',195,44,90,42.8),
- ('MaisonJardin','maison_au_toit_decale',211,47,180,42.8),
+ ('MaisonEntreeNord','logis_porte_basse',196,8,90,43.6),
+ ('MaisonPignon','maison_aux_deux_volumes',211,8,90,43.6),
+ ('MaisonHaute','baraquement_des_equipes',226,8,-90,43.9),
+ ('MaisonArdoise','logis_a_colombages',241,8,-90,43.8),
+ ('MaisonCourInterieure','baraque_jumelee_de_la_cour',196,24,90,43.2),
+ ('MaisonVirage','maison_du_virage',211,24,90,43.1),
+ ('MaisonVenelle','maison_haute_de_la_venelle',226,24,-90,43.2),
+ ('DortoirNord','baraquement_de_la_grande_cour',241,24,-90,43.2),
+ ('MaisonOuest','maison_des_charretiers',196,40,90,42.8),
+ ('MaisonJardin','maison_au_toit_decale',211,40,90,42.8),
+ ('DortoirPlace','baraquement_a_galerie',226,40,-90,42.9),
+ ('MaisonContremaitre','logis_du_contremaitre_en_l',241,40,-90,43.0),
 ]:add(*v)
 for v in [
- ('CuisineCommune','cuisine_commune',220,54,180,43.0),
- ('GrenierCommun','grenier_vivres',230,55,180,42.9),
+ ('CuisineCommune','cuisine_commune',226,54,180,43.0),
+ ('GrenierCommun','grenier_vivres',232,55,180,42.9),
  ('EcurieEntree','remise_ecurie',214,79,30,42.0),
  ('RelaisCharrettes','hangar_charrettes',204,74,0,42.0),
  ('RemiseSud','remise_des_betes_de_trait',222,82,180,42.0),
@@ -52,16 +53,22 @@ for v in [
  ('ReserveBarres','reserve_barres_longue',220,56,0,43.0),
  ('TriArriveeMine','halle_tri_minerai',267.5,44.5,-90,43.0),
  ('TriReserveMinerai','tri_minerai_a_pignon',274,28,-90,43.0),
- ('CharbonRouteScierie','depot_charbon',256,4,180,44.0),
- ('CharbonReserve','charbon_halle_a_croupes',268,9,90,44.0),
+ ('CharbonRouteScierie','depot_charbon',256,10,180,44.0),
+ ('CharbonReserve','charbon_halle_a_croupes',268,10,90,44.0),
  ('HalleMartelage','forge_affinage',242,36,90,43.1),
  ('ForgeFinition','forge_de_finition_a_pignon',244,48,85,43.1),
 ]:add(*v,group='Production')
 
-# Internal paths are generated from each real entrance below. Keeping the
-# network sparse leaves visible grass, front yards and open work courts.
-road('RueDuBourg',3.0,[[224,66],[226,58],[226,50],[226,42],[226,34],[226,26],[226,18],[226,10]])
-road('CheminDesServices',2.8,[[224,66],[217,68],[210,68],[203,68],[198,72]])
+# The circulation grid separates people, raw material and finished iron. The
+# central residential lane stays straight; three factory traverses mark the
+# storage, furnace and finishing courts without crossing their work islands.
+road('RueHabitations',3.0,[[218,2],[218,10],[218,18],[218,26],[218,34],[218,42],[218,50]])
+road('TraverseStockage',3.0,[[236,17],[248,17],[260,17],[274,17]])
+road('TraverseFourneaux',3.4,[[248,32],[256,32],[266,32],[268,32]])
+road('TraverseFinition',3.2,[[248,56],[256,56],[260,56]])
+road('RueLogistique',3.4,[[218,66],[230,66],[242,66],[250,66]])
+road('TraverseExpedition',3.2,[[218,68],[230,68],[242,68],[250,68]])
+road('CheminDesServices',2.8,[[224,66],[217,68],[210,68],[203,68]])
 
 # Each front door has a short, separate approach; no story or interaction is attached.
 for b in buildings:
@@ -75,17 +82,17 @@ for b in buildings:
     road('Acces_'+b['id'],2.0 if b['group']=='Habitations' else 2.8,b['approach_xz'])
 
 for v in [
- ('PuitsDuBourg','puits_abreuvoir',220,34,15,'Services'),
+ ('PuitsDuBourg','puits_abreuvoir',224,30,15,'Services'),
  ('LatrinesSud','latrines_a_deux_places',199,86,175,'Services'),
  ('LatrinesOuest','latrines_bois',191,43,-5,'Services'),
- ('FourneauUn','bas_fourneau_actif',258,33,-85,'Production'),
- ('FourneauDeux','bas_fourneau_pierre',264,23,170,'Production'),
- ('FourneauTrois','bas_fourneau_argile',259,21,-95,'Production'),
- ('FourneauQuatre','bas_fourneau_actif',266,18,160,'Production'),
- ('FourneauCinq','bas_fourneau_pierre',256,39,-115,'Production'),
- ('FourneauSix','bas_fourneau_argile',265,33,-15,'Production'),
- ('GrillageUn','grillage_minerai',270,39,-20,'Production'),
- ('GrillageDeux','grillage_minerai',275,37,10,'Production'),
+ ('FourneauUn','bas_fourneau_actif',257,22,0,'Production'),
+ ('FourneauDeux','bas_fourneau_pierre',265,22,0,'Production'),
+ ('FourneauTrois','bas_fourneau_argile',273,22,0,'Production'),
+ ('FourneauQuatre','bas_fourneau_actif',257,36,0,'Production'),
+ ('FourneauCinq','bas_fourneau_pierre',265,36,0,'Production'),
+ ('FourneauSix','bas_fourneau_argile',273,36,0,'Production'),
+ ('GrillageUn','grillage_minerai',240,22,0,'Production'),
+ ('GrillageDeux','grillage_minerai',240,29,0,'Production'),
  ('ConcassageDeux','concassage_minerai',276,21,-85,'Production'),
  ('MineraiBrutDeux','tas_minerai',276,45,35,'Production'),
  ('MineraiBrutTrois','tas_minerai',278,30,65,'Production'),
@@ -97,7 +104,7 @@ for v in [
  ('LoupeChaude','loupe_fer_brute',257,47,0,'Production'),
  ('EnclumeCour','billot_enclume',257,46,25,'Production'),
  ('TuyeresReserve','tuyeres_argile',269.25,10.5,90,'Production'),
- ('ReserveBoisNord','buches_rangees',262,-2,20,'Production'),
+ ('ReserveBoisNord','buches_rangees',262,2,20,'Production'),
  ('BoisCuisine','buches_rangees',223,55,85,'Services'),
  ('MeuleOutillage','meule_manivelle',243.1,34.3,90,'Production'),
  ('EnseigneAtelier','enseigne_forge',247,62,10,'Production'),
@@ -112,7 +119,6 @@ for item in props:
 for name,asset,points in [
  ('MuretCharbon','soubassement_2m',[(252,7,90),(252,5,90),(252,3,90),(255,8,0),(257,8,0)]),
  ('MuretMinerai','soubassement_2m',[(277,41,90),(277,43,90),(277,47,90),(274,50,0)]),
- ('JardinHaute','cloture_2m',[(190,-2,0),(193,-2,0),(196,-2,0),(190,0,90)]),
  ('CourPignon','cloture_2m',[(201,0,0),(204,0,0),(201,3,90)]),
  ('CourOuest','cloture_2m',[(194,42,90),(194,44,90),(197,47,0)]),
 ]:
@@ -120,13 +126,13 @@ for name,asset,points in [
 # Houses already contain sheltered wood stores and barrels in their reusable scenes.
 
 # Broad existing terrace first; independent local pads remain editable in Godot.
-pads=[dict(id='TerrasseBourgAcierie',xz=[216,28],altitude=43.1,size=[46,56],yaw=0,blend=8,outline='Ellipse'),
-      dict(id='TerrasseOuestAcierie',xz=[198,36],altitude=42.8,size=[15,27],yaw=0,blend=12,outline='Ellipse'),
-      dict(id='TerrasseCharbonAcierie',xz=[265,5],altitude=44.0,size=[29,21],yaw=0,blend=9,outline='Ellipse'),
-      dict(id='CourFourneauxAcierie',xz=[267,34],altitude=43.1,size=[22,26],yaw=0,blend=7,outline='Ellipse'),
-      dict(id='CourMineraiAcierie',xz=[274,53],altitude=43.0,size=[18,22],yaw=0,blend=6,outline='Ellipse'),
-      dict(id='CourLogistiqueAcierie',xz=[220,74],altitude=42.0,size=[27,16],yaw=-8,blend=12,outline='Ellipse'),
-      dict(id='CourScoriesAcierie',xz=[230,85.5],altitude=40.65,size=[11,8],yaw=0,blend=3,outline='Rectangle')]
+pads=[dict(id='TerrasseBourgAcierie',xz=[216,28],altitude=43.1,size=[46,56],yaw=0,blend=6,outline='Rectangle'),
+      dict(id='TerrasseOuestAcierie',xz=[198,36],altitude=42.8,size=[15,27],yaw=0,blend=8,outline='Rectangle'),
+      dict(id='TerrasseCharbonAcierie',xz=[262,10],altitude=44.0,size=[30,18],yaw=0,blend=5,outline='Rectangle'),
+      dict(id='CourFourneauxAcierie',xz=[260,33],altitude=43.1,size=[32,30],yaw=0,blend=4,outline='Rectangle'),
+      dict(id='CourMineraiAcierie',xz=[270,38],altitude=43.0,size=[18,28],yaw=0,blend=4,outline='Rectangle'),
+      dict(id='CourLogistiqueAcierie',xz=[232,70],altitude=42.0,size=[52,22],yaw=0,blend=6,outline='Rectangle'),
+      dict(id='CourScoriesAcierie',xz=[232,85],altitude=40.65,size=[12,8],yaw=0,blend=3,outline='Rectangle')]
 for b in buildings:
     s=b['size_m'];c=b['bounds_center_m'];a=math.radians(b['yaw'])
     pads.append(dict(id='Sol_'+b['id'],xz=[b['xz'][0]+c[0]*math.cos(a)+c[2]*math.sin(a),b['xz'][1]-c[0]*math.sin(a)+c[2]*math.cos(a)],altitude=b['altitude'],size=[s[0]+2.6,s[2]+3.0],yaw=b['yaw'],blend=3.5,outline='Rectangle'))
@@ -137,7 +143,7 @@ for b in props:
     elif b['asset'] in ('latrines_bois','latrines_a_deux_places'):
         pads.append(dict(id='Sol_'+b['id'],xz=b['xz'],altitude=40.9 if b['id']=='LatrinesSud' else 42.6,size=[5,5],yaw=b['yaw'],blend=3,outline='Rectangle'))
 
-layout=dict(version=3,seed=914,description='Medieval bloomery settlement, graphics workshop only; human-scale district layout.',focus_xz=[230,38],bounds_xz=[185,-10,100,104],buildings=buildings,props=props,paths=roads,pads=pads)
+layout=dict(version=4,seed=914,description='Medieval bloomery settlement, graphics workshop only; ordered factory grid with separate work courts.',focus_xz=[250,40],bounds_xz=[185,-10,110,104],buildings=buildings,props=props,paths=roads,pads=pads)
 (ROOT/'planning/ironworks-town.json').write_text(json.dumps(layout,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
 
 # Native scene instances share every kit mesh and material with the catalogue.

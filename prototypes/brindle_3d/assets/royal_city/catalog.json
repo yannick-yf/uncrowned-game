@@ -1,0 +1,755 @@
+{
+  "assets": [
+    {
+      "bounds_center_m": [
+        0.730615615844727,
+        5.35300016403198,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondesardoises",
+      "label": "MaisonDesArdoises",
+      "scene": "res://assets/royal_city/buildings/maisondesardoises.tscn",
+      "size_m": [
+        8.85276985168457,
+        10.706000328064,
+        8.19999980926514
+      ],
+      "triangles": 8140.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        4.97000026702881,
+        0.28000020980835
+      ],
+      "collision_shapes": 2.0,
+      "id": "logisdutailleur",
+      "label": "LogisDuTailleur",
+      "scene": "res://assets/royal_city/buildings/logisdutailleur.tscn",
+      "size_m": [
+        6.88000011444092,
+        9.94000053405762,
+        9.76000022888184
+      ],
+      "triangles": 15890.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        6.38300037384033,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "aubergedesvoyageurs",
+      "label": "AubergeDesVoyageurs",
+      "scene": "res://assets/royal_city/buildings/aubergedesvoyageurs.tscn",
+      "size_m": [
+        9.58000087738037,
+        12.7660007476807,
+        9.61999988555908
+      ],
+      "triangles": 19430.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.69000053405762,
+        0.135000228881836
+      ],
+      "collision_shapes": 3.0,
+      "id": "maisondestisserands",
+      "label": "MaisonDesTisserands",
+      "scene": "res://assets/royal_city/buildings/maisondestisserands.tscn",
+      "size_m": [
+        7.88000011444092,
+        11.3800010681152,
+        9.07000064849854
+      ],
+      "triangles": 16470.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        6.03499984741211,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondupassage",
+      "label": "MaisonDuPassage",
+      "scene": "res://assets/royal_city/buildings/maisondupassage.tscn",
+      "size_m": [
+        6.7910737991333,
+        12.0699996948242,
+        8.39999961853027
+      ],
+      "triangles": 8674.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.70400047302246,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "courdesdrapiers",
+      "label": "CourDesDrapiers",
+      "scene": "res://assets/royal_city/buildings/courdesdrapiers.tscn",
+      "size_m": [
+        9.48000144958496,
+        11.4080009460449,
+        8.51999950408936
+      ],
+      "triangles": 17896.0
+    },
+    {
+      "bounds_center_m": [
+        0.578500032424927,
+        5.625,
+        0.00999999046325684
+      ],
+      "collision_shapes": 2.0,
+      "id": "logisdespignons",
+      "label": "LogisDesPignons",
+      "scene": "res://assets/royal_city/buildings/logisdespignons.tscn",
+      "size_m": [
+        7.73699998855591,
+        11.25,
+        7.42000007629395
+      ],
+      "triangles": 15332.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        4.93200016021729,
+        0.279999732971191
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondurempartouest",
+      "label": "MaisonDuRempartOuest",
+      "scene": "res://assets/royal_city/buildings/maisondurempartouest.tscn",
+      "size_m": [
+        7.68000030517578,
+        9.86400032043457,
+        7.85999965667725
+      ],
+      "triangles": 15274.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.59500026702881,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondelechauguette",
+      "label": "MaisonDeLEchauguette",
+      "scene": "res://assets/royal_city/buildings/maisondelechauguette.tscn",
+      "size_m": [
+        7.19139289855957,
+        11.1900005340576,
+        7.50000047683716
+      ],
+      "triangles": 8286.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.23999977111816,
+        0.103000402450562
+      ],
+      "collision_shapes": 3.0,
+      "id": "maisondupuits",
+      "label": "MaisonDuPuits",
+      "scene": "res://assets/royal_city/buildings/maisondupuits.tscn",
+      "size_m": [
+        6.68000030517578,
+        10.4799995422363,
+        7.40600109100342
+      ],
+      "triangles": 14606.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        6.67700052261353,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondeschangeurs",
+      "label": "MaisonDesChangeurs",
+      "scene": "res://assets/royal_city/buildings/maisondeschangeurs.tscn",
+      "size_m": [
+        8.18000030517578,
+        13.3540010452271,
+        9.01999950408936
+      ],
+      "triangles": 17274.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.84800052642822,
+        0.00999999046325684
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondelaloggia",
+      "label": "MaisonDeLaLoggia",
+      "scene": "res://assets/royal_city/buildings/maisondelaloggia.tscn",
+      "size_m": [
+        8.07999992370605,
+        11.6960010528564,
+        7.92000007629395
+      ],
+      "triangles": 16364.0
+    },
+    {
+      "bounds_center_m": [
+        0.762064933776855,
+        5.94000053405762,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondesepiciers",
+      "label": "MaisonDesEpiciers",
+      "scene": "res://assets/royal_city/buildings/maisondesepiciers.tscn",
+      "size_m": [
+        9.21587085723877,
+        11.8800010681152,
+        8.10000038146973
+      ],
+      "triangles": 8228.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        6.14800024032593,
+        0.279999732971191
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisonauxtroispignons",
+      "label": "MaisonAuxTroisPignons",
+      "scene": "res://assets/royal_city/buildings/maisonauxtroispignons.tscn",
+      "size_m": [
+        8.07999992370605,
+        12.2960004806519,
+        9.35999965667725
+      ],
+      "triangles": 17270.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        6.16499996185303,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisonduporche",
+      "label": "MaisonDuPorche",
+      "scene": "res://assets/royal_city/buildings/maisonduporche.tscn",
+      "size_m": [
+        7.18000030517578,
+        12.3299999237061,
+        7.81999969482422
+      ],
+      "triangles": 16546.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.71900033950806,
+        0.126999855041504
+      ],
+      "collision_shapes": 3.0,
+      "id": "maisondesmarchands",
+      "label": "MaisonDesMarchands",
+      "scene": "res://assets/royal_city/buildings/maisondesmarchands.tscn",
+      "size_m": [
+        7.98000001907349,
+        11.4380006790161,
+        8.6540002822876
+      ],
+      "triangles": 16338.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.94500017166138,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondeslivres",
+      "label": "MaisonDesLivres",
+      "scene": "res://assets/royal_city/buildings/maisondeslivres.tscn",
+      "size_m": [
+        7.19139289855957,
+        11.8900003433228,
+        8.69999980926514
+      ],
+      "triangles": 7570.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        6.60900020599365,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "logisdesarcades",
+      "label": "LogisDesArcades",
+      "scene": "res://assets/royal_city/buildings/logisdesarcades.tscn",
+      "size_m": [
+        8.98000144958496,
+        13.2180004119873,
+        8.31999969482422
+      ],
+      "triangles": 18144.0
+    },
+    {
+      "bounds_center_m": [
+        0.67300009727478,
+        5.22400045394897,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondelarive",
+      "label": "MaisonDeLaRive",
+      "scene": "res://assets/royal_city/buildings/maisondelarive.tscn",
+      "size_m": [
+        8.82600021362305,
+        10.4480009078979,
+        9.21999931335449
+      ],
+      "triangles": 17044.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.80300045013428,
+        0.279999732971191
+      ],
+      "collision_shapes": 2.0,
+      "id": "logisdelaporteest",
+      "label": "LogisDeLaPorteEst",
+      "scene": "res://assets/royal_city/buildings/logisdelaporteest.tscn",
+      "size_m": [
+        7.57999992370605,
+        11.6060009002686,
+        8.65999984741211
+      ],
+      "triangles": 16066.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.24499988555908,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondumacon",
+      "label": "MaisonDuMacon",
+      "scene": "res://assets/royal_city/buildings/maisondumacon.tscn",
+      "size_m": [
+        6.19050979614258,
+        10.4899997711182,
+        7.80000019073486
+      ],
+      "triangles": 8198.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        4.96000003814697,
+        0.0829999446868896
+      ],
+      "collision_shapes": 3.0,
+      "id": "logisdugrenier",
+      "label": "LogisDuGrenier",
+      "scene": "res://assets/royal_city/buildings/logisdugrenier.tscn",
+      "size_m": [
+        6.48000001907349,
+        9.92000007629395,
+        6.36600017547607
+      ],
+      "triangles": 13698.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.57999992370605,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondelatour",
+      "label": "MaisonDeLaTour",
+      "scene": "res://assets/royal_city/buildings/maisondelatour.tscn",
+      "size_m": [
+        7.28000020980835,
+        11.1599998474121,
+        7.31999969482422
+      ],
+      "triangles": 15278.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.72400045394897,
+        0.00999975204467773
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondesjardins",
+      "label": "MaisonDesJardins",
+      "scene": "res://assets/royal_city/buildings/maisondesjardins.tscn",
+      "size_m": [
+        7.48000001907349,
+        11.4480009078979,
+        7.81999969482422
+      ],
+      "triangles": 15988.0
+    },
+    {
+      "bounds_center_m": [
+        0.636298179626465,
+        4.84000015258789,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "logisducanal",
+      "label": "LogisDuCanal",
+      "scene": "res://assets/royal_city/buildings/logisducanal.tscn",
+      "size_m": [
+        7.76340293884277,
+        9.68000030517578,
+        7.30000019073486
+      ],
+      "triangles": 6836.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.32499980926514,
+        0.279999732971191
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondesvitriers",
+      "label": "MaisonDesVitriers",
+      "scene": "res://assets/royal_city/buildings/maisondesvitriers.tscn",
+      "size_m": [
+        6.57999992370605,
+        10.6499996185303,
+        7.65999984741211
+      ],
+      "triangles": 14402.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        4.60500049591064,
+        0.0
+      ],
+      "collision_shapes": 16.0,
+      "id": "halledumarche",
+      "label": "HalleDuMarche",
+      "scene": "res://assets/royal_city/buildings/halledumarche.tscn",
+      "size_m": [
+        12.7000007629395,
+        9.21000099182129,
+        7.69067192077637
+      ],
+      "triangles": 4892.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        11.2750005722046,
+        0.0949997901916504
+      ],
+      "collision_shapes": 4.0,
+      "id": "hoteldeville",
+      "label": "HotelDeVille",
+      "scene": "res://assets/royal_city/buildings/hoteldeville.tscn",
+      "size_m": [
+        13.6938457489014,
+        22.5500011444092,
+        10.2299995422363
+      ],
+      "triangles": 15182.0
+    },
+    {
+      "bounds_center_m": [
+        -0.698503017425537,
+        14.5,
+        0.0474996566772461
+      ],
+      "collision_shapes": 8.0,
+      "id": "grandechapelle",
+      "label": "GrandeChapelle",
+      "scene": "res://assets/royal_city/buildings/grandechapelle.tscn",
+      "size_m": [
+        12.5770063400269,
+        29.0,
+        17.7950000762939
+      ],
+      "triangles": 3242.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        3.87000012397766,
+        0.0
+      ],
+      "collision_shapes": 17.0,
+      "id": "ecuriesdelaporte",
+      "label": "EcuriesDeLaPorte",
+      "scene": "res://assets/royal_city/buildings/ecuriesdelaporte.tscn",
+      "size_m": [
+        10.7000007629395,
+        7.74000024795532,
+        6.68991088867188
+      ],
+      "triangles": 5380.0
+    },
+    {
+      "bounds_center_m": [
+        0.841000080108643,
+        6.13800048828125,
+        0.450000047683716
+      ],
+      "collision_shapes": 2.0,
+      "id": "grenierdelaville",
+      "label": "GrenierDeLaVille",
+      "scene": "res://assets/royal_city/buildings/grenierdelaville.tscn",
+      "size_m": [
+        10.7620010375977,
+        12.2760009765625,
+        8.10000038146973
+      ],
+      "triangles": 16980.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        5.23000001907349,
+        0.304999828338623
+      ],
+      "collision_shapes": 2.0,
+      "id": "corpsdegarde",
+      "label": "CorpsDeGarde",
+      "scene": "res://assets/royal_city/buildings/corpsdegarde.tscn",
+      "size_m": [
+        7.09131669998169,
+        10.460000038147,
+        7.90999984741211
+      ],
+      "triangles": 7522.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        4.61500024795532,
+        0.0
+      ],
+      "collision_shapes": 2.0,
+      "id": "maisondeschariots",
+      "label": "MaisonDesChariots",
+      "scene": "res://assets/royal_city/buildings/maisondeschariots.tscn",
+      "size_m": [
+        5.99029445648193,
+        9.23000049591064,
+        6.90000057220459
+      ],
+      "triangles": 6918.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        4.94500017166138,
+        0.107000112533569
+      ],
+      "collision_shapes": 3.0,
+      "id": "logisdescordonniers",
+      "label": "LogisDesCordonniers",
+      "scene": "res://assets/royal_city/buildings/logisdescordonniers.tscn",
+      "size_m": [
+        6.38000011444092,
+        9.89000034332275,
+        7.61400032043457
+      ],
+      "triangles": 14474.0
+    },
+    {
+      "bounds_center_m": [
+        -0.362503051757813,
+        26.0499992370605,
+        -3.0
+      ],
+      "collision_shapes": 48.0,
+      "id": "chateau_de_montagne",
+      "label": "Château de montagne",
+      "scene": "res://assets/royal_city/fortifications/chateau_de_montagne.tscn",
+      "size_m": [
+        91.8249969482422,
+        80.0999984741211,
+        72.5500030517578
+      ],
+      "triangles": 143882.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        10.875,
+        0.0
+      ],
+      "collision_shapes": 5.0,
+      "id": "porte_royale",
+      "label": "Porte royale",
+      "scene": "res://assets/royal_city/fortifications/porte_royale.tscn",
+      "size_m": [
+        22.2999992370605,
+        21.75,
+        8.5
+      ],
+      "triangles": 13372.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        8.875,
+        0.0
+      ],
+      "collision_shapes": 5.0,
+      "id": "porte_haute",
+      "label": "Porte de la montée",
+      "scene": "res://assets/royal_city/fortifications/porte_haute.tscn",
+      "size_m": [
+        16.7999992370605,
+        17.75,
+        6.0
+      ],
+      "triangles": 13372.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        -2.89999985694885,
+        0.0
+      ],
+      "collision_shapes": 6.0,
+      "id": "pont_royal_18m",
+      "label": "Pont des douves",
+      "scene": "res://assets/royal_city/fortifications/pont_royal_18m.tscn",
+      "size_m": [
+        6.55999994277954,
+        7.99999952316284,
+        18.2000007629395
+      ],
+      "triangles": 1128.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.17499995231628,
+        0.0
+      ],
+      "collision_shapes": 1.0,
+      "id": "fontaine_de_la_place",
+      "label": "Fontaine de la place",
+      "scene": "res://assets/royal_city/props/fontaine_de_la_place.tscn",
+      "size_m": [
+        3.59999990463257,
+        2.34999990463257,
+        3.59999990463257
+      ],
+      "triangles": 472.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ],
+      "collision_shapes": 5.0,
+      "id": "etal_marche_0",
+      "label": "Étal du marché 1",
+      "scene": "res://assets/royal_city/props/etal_marche_0.tscn",
+      "size_m": [
+        2.70000004768372,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "triangles": 120.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ],
+      "collision_shapes": 3.0,
+      "id": "etal_marche_1",
+      "label": "Étal du marché 2",
+      "scene": "res://assets/royal_city/props/etal_marche_1.tscn",
+      "size_m": [
+        2.86999988555908,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "triangles": 972.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ],
+      "collision_shapes": 5.0,
+      "id": "etal_marche_2",
+      "label": "Étal du marché 3",
+      "scene": "res://assets/royal_city/props/etal_marche_2.tscn",
+      "size_m": [
+        3.03999996185303,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "triangles": 120.0
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ],
+      "collision_shapes": 3.0,
+      "id": "etal_marche_3",
+      "label": "Étal du marché 4",
+      "scene": "res://assets/royal_city/props/etal_marche_3.tscn",
+      "size_m": [
+        3.21000003814697,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "triangles": 972.0
+    },
+    {
+      "bounds_center_m": [
+        -174.112503051758,
+        76.4886169433594,
+        -184.231811523438
+      ],
+      "collision_shapes": 181,
+      "id": "enceinte_de_la_ville",
+      "label": "Enceinte de la ville",
+      "scene": "res://assets/royal_city/fortifications/enceinte_de_la_ville.tscn",
+      "size_m": [
+        126.850006103516,
+        36.9772262573242,
+        124.963607788086
+      ],
+      "triangles": 115272
+    }
+  ],
+  "provenance": "Original procedural geometry made for this workshop from the user's castle reference. Shared construction helpers, no downloaded pack.",
+  "units": "metres",
+  "version": 1.0
+}

@@ -150,3 +150,70 @@ func test_the_baked_world_has_every_place_and_point_the_content_stands_in() -> v
 		assert_ne(world.node(id), Places.NOWHERE, "trunk node '%s' is a place or a point" % id)
 	assert_true(world.is_scaffold(&"harrowgate"), "and Harrowgate is honestly a scaffold until he builds it")
 	assert_false(world.is_scaffold(&"brindle"), "while Brindle is his")
+
+
+func test_the_delivered_ironworks_replaces_its_scaffold() -> void:
+	var data: Dictionary = _baked()
+	var town: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		RegionBake.WORKSHOP + "planning/ironworks-town.json")) as Dictionary
+	var region: Region = RegionBake.read(data)
+	var found: Dictionary = {}
+	for prop: Dictionary in data.get("props", []):
+		if prop.has("source_id"):
+			found[prop["source_id"]] = prop
+			var at: Array = prop["at"]
+			assert_eq(region.zone_at(Vector2i(int(at[0]), int(at[1]))), &"cinderworks",
+				"%s belongs to the Cinderworks, including its new western homes" % prop["source_id"])
+	for item: Dictionary in (town["buildings"] as Array) + (town["props"] as Array):
+		assert_true(found.has(item["id"]), "his ironworks item %s is in the simulation" % item["id"])
+	assert_false(bool(data["places"]["cinderworks"].get("kit_on_his", true)),
+		"the Cinderworks has his buildings, so our settlement kit must disappear")
+	assert_true((data["source"] as Dictionary).has("planning/ironworks-town.json"),
+		"moving a building invalidates the bake")
+
+
+func test_his_five_bridges_are_named_walkable_crossings() -> void:
+	var data: Dictionary = _baked()
+	var rivers: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		RegionBake.WORKSHOP + "planning/river-layout-v2.json")) as Dictionary
+	var region: Region = RegionBake.read(data)
+	for bridge: Dictionary in rivers["crossings"]:
+		var id: String = String(bridge["id"])
+		assert_true((data["points"] as Dictionary).has(id), "%s is named by the bake" % id)
+		if not (data["points"] as Dictionary).has(id):
+			continue
+		var point: Dictionary = data["points"][id]
+		assert_false(bool(point["scaffold"]), "%s is built by the brother" % id)
+		var at: Array = point["at"]
+		assert_true(region.is_passable(Vector2i(int(at[0]), int(at[1]))), "%s can be crossed" % id)
+	assert_true((data["source"] as Dictionary).has("planning/river-routes-v2.json"),
+		"the roads now meet his bridge landings")
+
+
+func test_each_delivered_bridge_joins_its_banks_without_a_detour() -> void:
+	var data: Dictionary = _baked()
+	var region: Region = RegionBake.read(data)
+	var origin := Vector2(float(data["origin_m"][0]), float(data["origin_m"][1]))
+	var scale_m: float = float(data["metres_per_tile"])
+	for bridge: Dictionary in (RegionBake.read_landscape()["meta"] as Dictionary)["crossings"]:
+		var entry: Array = bridge["entry_xyz"]
+		var exit: Array = bridge["exit_xyz"]
+		var from: Vector2i = BakeRules.tile_for(float(entry[0]), float(entry[2]), origin, scale_m)
+		var to: Vector2i = BakeRules.tile_for(float(exit[0]), float(exit[2]), origin, scale_m)
+		var path: Array[Vector2i] = Navigation.path(region, from, to)
+		assert_false(path.is_empty(), "%s connects both delivered landing markers" % bridge["id"])
+		assert_true(path.size() <= ceili(float(bridge["length_m"]) / scale_m) + 4,
+			"%s crosses the deck, not a detour to another bridge" % bridge["id"])
+
+
+func test_the_towns_delivered_door_approaches_are_open() -> void:
+	var data: Dictionary = _baked()
+	var region: Region = RegionBake.read(data)
+	var town: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		RegionBake.WORKSHOP + "planning/ironworks-town.json")) as Dictionary
+	var origin := Vector2(float(data["origin_m"][0]), float(data["origin_m"][1]))
+	for item: Dictionary in town["buildings"]:
+		var approach: Array = (item["approach_xz"] as Array)[0]
+		var at: Vector2i = BakeRules.tile_for(float(approach[0]), float(approach[1]), origin,
+			float(data["metres_per_tile"]))
+		assert_true(region.is_passable(at), "%s's exterior approach remains open" % item["id"])

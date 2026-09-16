@@ -1,0 +1,792 @@
+{
+  "assets": [
+    {
+      "bounds_center_m": [
+        0.987500190734863,
+        3.92634010314941,
+        -0.636093139648438
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 30,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "scierie_hydraulique",
+      "label": "Grande scierie à roue à eau",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Halle de sciage, chariot de grume, scie verticale, transmission, roue et arrivée d’eau. Mécanisme statique pour le décor.",
+      "scene": "res://assets/sawmill/production/scierie_hydraulique.tscn",
+      "size_m": [
+        10.18,
+        7.97,
+        13.23
+      ],
+      "triangles": 20771
+    },
+    {
+      "bounds_center_m": [
+        -0.0250000953674316,
+        2.21000003814697,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 3,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "roue_a_aubes",
+      "label": "Roue à augets et palier",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Roue indépendante de 4,3 m de diamètre ; axe horizontal et supports.",
+      "scene": "res://assets/sawmill/production/roue_a_aubes.tscn",
+      "size_m": [
+        2.85,
+        4.42,
+        4.34
+      ],
+      "triangles": 1308
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        3.25513219833374,
+        0.235995769500732
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 24,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "atelier_charpentier",
+      "label": "Atelier du maître charpentier",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Maison-atelier à colombages, grand auvent de taille et poutre en cours d’équarrissage.",
+      "scene": "res://assets/sawmill/production/atelier_charpentier.tscn",
+      "size_m": [
+        6.53,
+        6.54,
+        7.47
+      ],
+      "triangles": 18146
+    },
+    {
+      "bounds_center_m": [
+        0.0249998569488525,
+        3.02800011634827,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 15,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "atelier_charron",
+      "label": "Halle du charron",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Atelier ouvert pour assembler roues, essieux et véhicules de transport du bois.",
+      "scene": "res://assets/sawmill/production/atelier_charron.tscn",
+      "size_m": [
+        6.97,
+        6.06,
+        5.32
+      ],
+      "triangles": 11308
+    },
+    {
+      "bounds_center_m": [
+        -0.0425000190734863,
+        1.45042300224304,
+        0.642558097839355
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 6,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "fosse_sciage",
+      "label": "Banc de sciage de long",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Plateforme surélevée : un scieur au-dessus, un passage libre au-dessous. Peut être enfoncée dans une fosse de terrain.",
+      "scene": "res://assets/sawmill/production/fosse_sciage.tscn",
+      "size_m": [
+        3.34,
+        2.94,
+        6.09
+      ],
+      "triangles": 1238
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        3.18500018119812,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 20,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "halle_sechage",
+      "label": "Grand séchoir à planches",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Halle ventilée ; planches empilées sur tasseaux et passage central libre.",
+      "scene": "res://assets/sawmill/stockage/halle_sechage.tscn",
+      "size_m": [
+        7.8,
+        6.37,
+        5.52
+      ],
+      "triangles": 14044
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        3.53450012207031,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 21,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "depot_grumes",
+      "label": "Dépôt couvert des grumes",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Réserve de troncs sous charpente, buttées latérales et allée de manutention.",
+      "scene": "res://assets/sawmill/stockage/depot_grumes.tscn",
+      "size_m": [
+        8.6,
+        7.07,
+        6.22
+      ],
+      "triangles": 21268
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.71050000190735,
+        0.0741221904754639
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 15,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "bureau_bois",
+      "label": "Comptoir et bureau du bois",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Petit bâtiment de gestion des livraisons ; comptoir et registre de coupe sans PNJ.",
+      "scene": "res://assets/sawmill/village/bureau_bois.tscn",
+      "size_m": [
+        4.78,
+        5.42,
+        5.35
+      ],
+      "triangles": 11478
+    },
+    {
+      "bounds_center_m": [
+        0.054999828338623,
+        3.21200013160706,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 14,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "hangar_charrettes_bois",
+      "label": "Remise des charrettes",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Hangar traversant à trois travées, pour manœuvrer les véhicules et protéger les harnais.",
+      "scene": "res://assets/sawmill/stockage/hangar_charrettes_bois.tscn",
+      "size_m": [
+        8.23,
+        6.44,
+        5.72
+      ],
+      "triangles": 10008
+    },
+    {
+      "bounds_center_m": [
+        0.597500085830688,
+        1.83500003814697,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 6,
+      "family": "production",
+      "ground_pivot": true,
+      "id": "portique_chargement",
+      "label": "Portique de levage à treuil",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Palan et tambour manuel au-dessus d’un passage de charrette ; hauteur libre 3 m.",
+      "scene": "res://assets/sawmill/production/portique_chargement.tscn",
+      "size_m": [
+        5.85,
+        3.67,
+        0.68
+      ],
+      "triangles": 548
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.06470537185669,
+        1.18237709999084
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "charrette_grumes",
+      "label": "Charrette de débardage",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Véhicule à quatre roues de bois avec timon, arrimages et trois grumes.",
+      "scene": "res://assets/sawmill/stockage/charrette_grumes.tscn",
+      "size_m": [
+        2.38,
+        2.11,
+        6.64
+      ],
+      "triangles": 4924
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.21640002727509,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 3,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "grumes_longues",
+      "label": "Grumes longues empilées",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Troncs écorcés partiellement, coupes claires et cales de retenue.",
+      "scene": "res://assets/sawmill/accessoires/grumes_longues.tscn",
+      "size_m": [
+        2.96,
+        2.43,
+        5.41
+      ],
+      "triangles": 9864
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.813600063323975,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 3,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "grumes_courtes",
+      "label": "Billons de réserve",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Billons courts triés, destinés aux petites pièces et au charronnage.",
+      "scene": "res://assets/sawmill/accessoires/grumes_courtes.tscn",
+      "size_m": [
+        2.02,
+        1.63,
+        2.36
+      ],
+      "triangles": 5928
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.537999987602234,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 3,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tas_planches",
+      "label": "Planches sur tasseaux",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Planches espacées par des tasseaux : l’air circule entre les lits.",
+      "scene": "res://assets/sawmill/accessoires/tas_planches.tscn",
+      "size_m": [
+        1.78,
+        1.08,
+        4.2
+      ],
+      "triangles": 600
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.535000026226044,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "poutres_equarries",
+      "label": "Poutres équarries",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Longues poutres de charpente rangées sur traverses.",
+      "scene": "res://assets/sawmill/accessoires/poutres_equarries.tscn",
+      "size_m": [
+        1.9,
+        1.07,
+        4.9
+      ],
+      "triangles": 168
+    },
+    {
+      "bounds_center_m": [
+        0.20374995470047,
+        0.588131964206696,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 8,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "chevalets_sciage",
+      "label": "Paire de chevalets de sciage",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Chevalets assemblés, billon et scie à cadre.",
+      "scene": "res://assets/sawmill/accessoires/chevalets_sciage.tscn",
+      "size_m": [
+        1.55,
+        1.2,
+        3.05
+      ],
+      "triangles": 1188
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.623654425144196,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "etabli_menuisier",
+      "label": "Établi de menuisier",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Établi, rabot, maillet, serre-joint et pièce en travail.",
+      "scene": "res://assets/sawmill/accessoires/etabli_menuisier.tscn",
+      "size_m": [
+        1.65,
+        1.25,
+        0.74
+      ],
+      "triangles": 120
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.875,
+        0.0562500059604645
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "ratelier_outils_bois",
+      "label": "Râtelier du bûcheron",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Haches, cognée, scie à cadre et perche de manutention.",
+      "scene": "res://assets/sawmill/accessoires/ratelier_outils_bois.tscn",
+      "size_m": [
+        2.0,
+        1.75,
+        0.24
+      ],
+      "triangles": 180
+    },
+    {
+      "bounds_center_m": [
+        0.031219482421875,
+        0.159999996423721,
+        0.0332285165786743
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 0,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tas_chutes",
+      "label": "Chutes et copeaux",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Petites chutes de taille regroupées hors des circulations.",
+      "scene": "res://assets/sawmill/accessoires/tas_chutes.tscn",
+      "size_m": [
+        1.65,
+        0.23,
+        1.58
+      ],
+      "triangles": 288
+    },
+    {
+      "bounds_center_m": [
+        -0.0208750367164612,
+        0.449999988079071,
+        0.0241250097751617
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 2,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "tonneaux_resine",
+      "label": "Tonneaux et petit seau",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Récipients pour résine et produits d’entretien du bois.",
+      "scene": "res://assets/sawmill/accessoires/tonneaux_resine.tscn",
+      "size_m": [
+        1.59,
+        0.9,
+        0.78
+      ],
+      "triangles": 1056
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.274631202220917,
+        0.654697418212891
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 5,
+      "family": "stockage",
+      "ground_pivot": true,
+      "id": "traineau_debardage",
+      "label": "Traîneau de débardage",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Deux patins relevés, traverses et cordage de traction pour amener le bois.",
+      "scene": "res://assets/sawmill/stockage/traineau_debardage.tscn",
+      "size_m": [
+        1.4,
+        0.43,
+        3.91
+      ],
+      "triangles": 108
+    },
+    {
+      "bounds_center_m": [
+        0.354365676641464,
+        0.74262535572052,
+        0.00692453980445862
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 1,
+      "family": "accessoires",
+      "ground_pivot": true,
+      "id": "billot_fendage",
+      "label": "Billot de fendage",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Billot haut, hache posée et bois fendu.",
+      "scene": "res://assets/sawmill/accessoires/billot_fendage.tscn",
+      "size_m": [
+        1.55,
+        1.49,
+        0.85
+      ],
+      "triangles": 192
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.532500028610229,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 5,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "quai_bois",
+      "label": "Quai de chargement en bois",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Plateforme de rive avec poteaux, planches et anneaux d’amarrage.",
+      "scene": "res://assets/sawmill/modules/quai_bois.tscn",
+      "size_m": [
+        5.2,
+        1.07,
+        3.4
+      ],
+      "triangles": 356
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        0.773750066757202,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 15,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "passerelle_bois",
+      "label": "Passerelle à garde-corps",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Petite passerelle de 5,5 m à poser entre deux berges.",
+      "scene": "res://assets/sawmill/modules/passerelle_bois.tscn",
+      "size_m": [
+        2.15,
+        1.55,
+        5.49
+      ],
+      "triangles": 444
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.62368559837341,
+        0.0
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 4,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "canal_amenee",
+      "label": "Canal d’amenée sur chevalets",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Tronçon de 4 m, ouverture de 0,85 m ; raccorder sa sortie au niveau de la roue.",
+      "scene": "res://assets/sawmill/modules/canal_amenee.tscn",
+      "size_m": [
+        1.68,
+        3.26,
+        4.0
+      ],
+      "triangles": 120
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        1.35000002384186,
+        0.0437500178813934
+      ],
+      "building_design": "",
+      "building_kind": "",
+      "collision_shapes": 8,
+      "family": "modules",
+      "ground_pivot": true,
+      "id": "vanne_bois",
+      "label": "Vanne et crémaillère en bois",
+      "placement": "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre.",
+      "purpose": "Vanne verticale guidée entre deux montants ; panneau statique réglable dans l’éditeur.",
+      "scene": "res://assets/sawmill/modules/vanne_bois.tscn",
+      "size_m": [
+        1.62,
+        2.7,
+        0.31
+      ],
+      "triangles": 252
+    },
+    {
+      "bounds_center_m": [
+        -0.412981986999512,
+        2.47000026702881,
+        0.220000028610229
+      ],
+      "building_design": "stone_gable_with_side_store",
+      "building_kind": "house",
+      "collision_shapes": 14,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "logis_porte_basse",
+      "label": "Logis de la porte basse",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Deep stone gable with a recessed side store.",
+      "scene": "res://assets/sawmill/village/logis_porte_basse.tscn",
+      "size_m": [
+        5.21,
+        4.94,
+        5.94
+      ],
+      "triangles": 15514
+    },
+    {
+      "bounds_center_m": [
+        -0.230629920959473,
+        2.49699997901917,
+        -0.278749942779541
+      ],
+      "building_design": "hipped_house_and_lower_entry_wing",
+      "building_kind": "house",
+      "collision_shapes": 8,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_aux_deux_volumes",
+      "label": "Maison aux deux volumes",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Hipped main roof and a stepped entrance wing.",
+      "scene": "res://assets/sawmill/village/maison_aux_deux_volumes.tscn",
+      "size_m": [
+        5.71,
+        4.99,
+        4.34
+      ],
+      "triangles": 14302
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.37100005149841,
+        0.267569065093994
+      ],
+      "building_design": "long_low_dual_entry_barrack",
+      "building_kind": "barrack",
+      "collision_shapes": 2,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "baraquement_des_equipes",
+      "label": "Baraquement des bûcherons",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Low timber barrack with two entrances and end chimneys.",
+      "scene": "res://assets/sawmill/village/baraquement_des_equipes.tscn",
+      "size_m": [
+        7.28,
+        4.74,
+        4.7
+      ],
+      "triangles": 18486
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.86999988555908,
+        0.361547231674194
+      ],
+      "building_design": "tall_half_timber_hipped_corner",
+      "building_kind": "house",
+      "collision_shapes": 6,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "logis_a_colombages",
+      "label": "Logis d’angle à colombages",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Tall half-timber lodging under a hipped roof.",
+      "scene": "res://assets/sawmill/village/logis_a_colombages.tscn",
+      "size_m": [
+        4.23,
+        5.74,
+        5.37
+      ],
+      "triangles": 13978
+    },
+    {
+      "bounds_center_m": [
+        -0.279999732971191,
+        3.5377185344696,
+        0.357095956802368
+      ],
+      "building_design": "two_storey_gallery_left_stair_barrack",
+      "building_kind": "barrack",
+      "collision_shapes": 15,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "baraquement_a_galerie",
+      "label": "Baraquement à galerie",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Logement des scieurs, galerie et escalier latéral.",
+      "scene": "res://assets/sawmill/village/baraquement_a_galerie.tscn",
+      "size_m": [
+        8.44,
+        7.18,
+        5.54
+      ],
+      "triangles": 21610
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.94899988174438,
+        0.0974998474121094
+      ],
+      "building_design": "l_shaped_house_with_raised_front_room",
+      "building_kind": "house",
+      "collision_shapes": 8,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "logis_du_contremaitre_en_l",
+      "label": "Logis du maître scieur en L",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "L-shaped masonry residence with a taller front room.",
+      "scene": "res://assets/sawmill/village/logis_du_contremaitre_en_l.tscn",
+      "size_m": [
+        5.58,
+        5.9,
+        5.78
+      ],
+      "triangles": 14500
+    },
+    {
+      "bounds_center_m": [
+        0.0,
+        2.37000012397766,
+        -0.121705055236816
+      ],
+      "building_design": "wide_cross_gable_with_rear_store",
+      "building_kind": "house",
+      "collision_shapes": 7,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_des_charretiers",
+      "label": "Maison des voituriers",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Wide low gable with a small rear storage projection.",
+      "scene": "res://assets/sawmill/village/maison_des_charretiers.tscn",
+      "size_m": [
+        5.48,
+        4.74,
+        5.28
+      ],
+      "triangles": 15230
+    },
+    {
+      "bounds_center_m": [
+        -0.149999856948853,
+        2.46000003814697,
+        0.424165010452271
+      ],
+      "building_design": "offset_ridge_with_sheltered_bench",
+      "building_kind": "house",
+      "collision_shapes": 6,
+      "family": "village",
+      "ground_pivot": true,
+      "id": "maison_au_toit_decale",
+      "label": "Maison au toit décalé",
+      "placement": "Bâtiment unique de l’scierie ; conserver son accès et sa fondation.",
+      "purpose": "Asymmetric gable with a short sheltered bench.",
+      "scene": "res://assets/sawmill/village/maison_au_toit_decale.tscn",
+      "size_m": [
+        5.18,
+        4.92,
+        5.0
+      ],
+      "triangles": 8698
+    }
+  ],
+  "front": "+Z",
+  "origin": "ground center",
+  "reference": "User-provided village image, September 16 2026; inspiration only",
+  "style": "Sawmill village: dark oak, warm lime, limestone bases, steep slate and ochre roofs",
+  "units": "meters",
+  "version": 1
+}

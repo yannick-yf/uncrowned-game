@@ -1,0 +1,372 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/sector_tools.gd" id="sector"]
+[ext_resource type="Script" path="res://scripts/ground_path.gd" id="path"]
+[ext_resource type="Script" path="res://scripts/sawmill_machinery.gd" id="motion"]
+[ext_resource type="Material" path="res://materials/brindle_path.tres" id="path_material"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/scierie_eau.tscn" id="waterworks"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/scierie_cours.tscn" id="courtyards"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/atelier_charpentier.tscn" id="asset_0"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/atelier_charron.tscn" id="asset_1"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/baraquement_a_galerie.tscn" id="asset_2"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/baraquement_des_equipes.tscn" id="asset_3"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/billot_fendage.tscn" id="asset_4"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/bureau_bois.tscn" id="asset_5"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/charrette_grumes.tscn" id="asset_6"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/chevalets_sciage.tscn" id="asset_7"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/depot_grumes.tscn" id="asset_8"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/etabli_menuisier.tscn" id="asset_9"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/fosse_sciage.tscn" id="asset_10"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/grumes_courtes.tscn" id="asset_11"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/grumes_longues.tscn" id="asset_12"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/halle_sechage.tscn" id="asset_13"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/hangar_charrettes_bois.tscn" id="asset_14"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/logis_a_colombages.tscn" id="asset_15"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/logis_du_contremaitre_en_l.tscn" id="asset_16"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/logis_porte_basse.tscn" id="asset_17"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/maison_au_toit_decale.tscn" id="asset_18"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/maison_aux_deux_volumes.tscn" id="asset_19"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/maison_des_charretiers.tscn" id="asset_20"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/portique_chargement.tscn" id="asset_21"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/poutres_equarries.tscn" id="asset_22"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/ratelier_outils_bois.tscn" id="asset_23"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/scierie_hydraulique.tscn" id="asset_24"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/tas_chutes.tscn" id="asset_25"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/tas_planches.tscn" id="asset_26"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/tonneaux_resine.tscn" id="asset_27"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/traineau_debardage.tscn" id="asset_28"]
+
+[node name="Scierie" type="Node3D"]
+script = ExtResource("sector")
+metadata/layout_source = "res://planning/sawmill-town.json"
+
+[node name="CourDesGrumes" type="Node3D" parent="."]
+
+[node name="Sechage" type="Node3D" parent="."]
+
+[node name="Logements" type="Node3D" parent="."]
+
+[node name="PlaceDuVillage" type="Node3D" parent="."]
+
+[node name="Ateliers" type="Node3D" parent="."]
+
+[node name="RiveDuMoulin" type="Node3D" parent="."]
+
+[node name="Chemins" type="Node3D" parent="."]
+
+[node name="DepotForestier" parent="CourDesGrumes" instance=ExtResource("asset_8")]
+position = Vector3(240,51.7,-194)
+rotation = Vector3(0,0.20943951023931956,0)
+metadata/ground_offset = -0.02
+
+[node name="RemiseVoitures" parent="CourDesGrumes" instance=ExtResource("asset_14")]
+position = Vector3(220,50.8,-187)
+rotation = Vector3(0,0.3490658503988659,0)
+metadata/ground_offset = -0.02
+
+[node name="HalleCharron" parent="CourDesGrumes" instance=ExtResource("asset_1")]
+position = Vector3(235,50.0,-179)
+rotation = Vector3(0,-0.08726646259971647,0)
+metadata/ground_offset = -0.02
+
+[node name="BaraquementBucherons" parent="Logements" instance=ExtResource("asset_3")]
+position = Vector3(252,51.0,-186)
+rotation = Vector3(0,-0.08726646259971647,0)
+metadata/ground_offset = -0.02
+
+[node name="Sechoir" parent="Sechage" instance=ExtResource("asset_13")]
+position = Vector3(250,49.8,-174)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonMaitreScieur" parent="Logements" instance=ExtResource("asset_16")]
+position = Vector3(237,48.4,-164)
+rotation = Vector3(0,-0.20943951023931956,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDeuxVolumes" parent="Logements" instance=ExtResource("asset_19")]
+position = Vector3(222,48.8,-165)
+rotation = Vector3(0,0.13962634015954636,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisLisiere" parent="Logements" instance=ExtResource("asset_17")]
+position = Vector3(210,47.7,-153)
+rotation = Vector3(0,1.0821041362364843,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonColombages" parent="Logements" instance=ExtResource("asset_15")]
+position = Vector3(228,47.0,-148)
+rotation = Vector3(0,3.001966313430247,0)
+metadata/ground_offset = -0.02
+
+[node name="BaraquementGalerie" parent="Logements" instance=ExtResource("asset_2")]
+position = Vector3(212,45.6,-135)
+rotation = Vector3(0,1.6580627893946132,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonVoituriers" parent="Logements" instance=ExtResource("asset_20")]
+position = Vector3(223,44.7,-128)
+rotation = Vector3(0,3.0543261909900767,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonRive" parent="Logements" instance=ExtResource("asset_18")]
+position = Vector3(212,48.8,-166)
+rotation = Vector3(0,0.08726646259971647,0)
+metadata/ground_offset = -0.02
+
+[node name="GrandeScierie" parent="RiveDuMoulin" instance=ExtResource("asset_24")]
+position = Vector3(250,44.2,-147)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="AtelierCharpentier" parent="Ateliers" instance=ExtResource("asset_0")]
+position = Vector3(247,44.7,-135)
+rotation = Vector3(0,-1.5707963267948966,0)
+metadata/ground_offset = -0.02
+
+[node name="ComptoirBois" parent="PlaceDuVillage" instance=ExtResource("asset_5")]
+position = Vector3(235,46.0,-141)
+rotation = Vector3(0,-0.08726646259971647,0)
+metadata/ground_offset = -0.02
+
+[node name="PortiqueGrumes" parent="CourDesGrumes" instance=ExtResource("asset_21")]
+position = Vector3(235,51.0,-188)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="CharretteChargement" parent="CourDesGrumes" instance=ExtResource("asset_6")]
+position = Vector3(224,50.8,-184)
+rotation = Vector3(0,-0.20943951023931956,0)
+metadata/ground_offset = -0.02
+
+[node name="ReserveTroncs" parent="CourDesGrumes" instance=ExtResource("asset_12")]
+position = Vector3(246,51.7,-199)
+rotation = Vector3(0,0.20943951023931956,0)
+metadata/ground_offset = -0.02
+
+[node name="ReserveBillons" parent="CourDesGrumes" instance=ExtResource("asset_11")]
+position = Vector3(235,51.7,-202)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="TraineauForet" parent="CourDesGrumes" instance=ExtResource("asset_28")]
+position = Vector3(224,51.2,-197)
+rotation = Vector3(0,0.17453292519943295,0)
+metadata/ground_offset = -0.02
+
+[node name="ScieursDeLong" parent="Ateliers" instance=ExtResource("asset_10")]
+position = Vector3(218,49.8,-175)
+rotation = Vector3(0,0.08726646259971647,0)
+metadata/ground_offset = -0.02
+
+[node name="ChevaletsCharpente" parent="Ateliers" instance=ExtResource("asset_7")]
+position = Vector3(240,44.7,-128)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="ReservePoutres" parent="Sechage" instance=ExtResource("asset_22")]
+position = Vector3(258,50.8,-184)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="PlanchesAuSec" parent="Sechage" instance=ExtResource("asset_26")]
+position = Vector3(255,49.8,-172)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="BillonsSciage" parent="RiveDuMoulin" instance=ExtResource("asset_11")]
+position = Vector3(244,44.2,-148)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="ChutesAtelier" parent="Ateliers" instance=ExtResource("asset_25")]
+position = Vector3(250,44.7,-130)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="OutilsBucherons" parent="Ateliers" instance=ExtResource("asset_23")]
+position = Vector3(216,49.8,-172)
+rotation = Vector3(0,-1.5707963267948966,0)
+metadata/ground_offset = -0.02
+
+[node name="BillotCour" parent="Logements" instance=ExtResource("asset_4")]
+position = Vector3(225,48.8,-169)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="TonneauxComptoir" parent="PlaceDuVillage" instance=ExtResource("asset_27")]
+position = Vector3(237,46.0,-144)
+rotation = Vector3(0,0.0,0)
+metadata/ground_offset = -0.02
+
+[node name="EtabliExterieur" parent="Ateliers" instance=ExtResource("asset_9")]
+position = Vector3(242,44.7,-128)
+rotation = Vector3(0,-1.5707963267948966,0)
+metadata/ground_offset = -0.02
+
+[node name="RouteForestiere" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(236, -217, 233, -205, 229, -194, 229, -184, 229, -175)
+width_m = 4.0
+surface_offset_m = 0.045
+
+[node name="RueDuBois" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(229, -175, 232, -170, 232, -159, 236, -153, 240, -145, 241, -138, 237, -133, 235, -132)
+width_m = 3.6
+surface_offset_m = 0.0457
+
+[node name="RueDesLogis" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(229, -159, 220, -158, 218, -150, 219, -142, 221, -135, 228, -133, 235, -132)
+width_m = 2.8
+surface_offset_m = 0.0464
+
+[node name="VenelleDesVoituriers" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(218, -133, 221, -135, 228, -133)
+width_m = 2.5
+surface_offset_m = 0.047099999999999996
+
+[node name="CourSechage" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(232, -170, 240, -172, 245, -168.5, 250, -168.5)
+width_m = 3.5
+surface_offset_m = 0.047799999999999995
+
+[node name="AccesMoulin" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(241, -138, 243, -141, 247, -140.9, 250, -140.8)
+width_m = 3.3
+surface_offset_m = 0.0485
+
+[node name="PlaceAuPont" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(235, -132, 234, -126, 230, -124, 228.95, -119.91)
+width_m = 3.8
+surface_offset_m = 0.0492
+
+[node name="AteliersPlace" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(235, -132, 240, -132, 243, -135)
+width_m = 3.2
+surface_offset_m = 0.0499
+
+[node name="CourBucherons" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(229, -184, 235, -184, 244, -182, 250, -180, 255, -180)
+width_m = 2.6
+surface_offset_m = 0.0506
+
+[node name="Entree_BaraquementBucherons0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(249.9593886065894, -180.01353713113684, 249.8656009511476, -179.73217416481137, 250.12706817939056, -182.7207582590866)
+width_m = 1.6
+surface_offset_m = 0.0513
+
+[node name="Entree_BaraquementBucherons1" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(253.0534239850412, -180.0, 253.0534239850412, -179.45327578801886, 253.31489121328417, -182.4418598822941)
+width_m = 1.6
+surface_offset_m = 0.052
+
+[node name="Entree_MaisonMaitreScieur0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(234.11758547057832, -155.82362179413252, 236.92800877565617, -157.69723733085107, 237.55174384810945, -160.63168013305247)
+width_m = 1.6
+surface_offset_m = 0.0527
+
+[node name="Entree_MaisonDeuxVolumes0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(224.4572230165539, -158.49524700183932, 224.37343343983383, -159.24935319232014, 223.95591413695362, -162.22015739854484)
+width_m = 1.6
+surface_offset_m = 0.053399999999999996
+
+[node name="Entree_LogisLisiere0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(218.04129107861908, -149.6696713710473, 215.87750138249933, -149.39919765903232, 213.22865860392255, -150.80761234739)
+width_m = 1.6
+surface_offset_m = 0.054099999999999995
+
+[node name="Entree_MaisonColombages0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(228.16276558289945, -158.9069739536555, 228.66069803019926, -154.42558192795724, 228.24317872731905, -151.45477772173254)
+width_m = 1.6
+surface_offset_m = 0.0548
+
+[node name="Entree_BaraquementGalerie0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(219.65530418145013, -134.10353612096674, 218.47900465571482, -135.8679854095697, 215.49042056143958, -135.60651818132675)
+width_m = 1.6
+surface_offset_m = 0.0555
+
+[node name="Entree_MaisonVoituriers0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(222.88557651971524, -134.46126385150993, 222.82354120112316, -134.2441402364376, 222.5620739728802, -131.25555614216236)
+width_m = 1.6
+surface_offset_m = 0.0562
+
+[node name="Entree_MaisonRive0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(220.0, -158.0, 213.11859430864243, -159.86916222913436, 212.85712708039947, -162.8577463234096)
+width_m = 1.6
+surface_offset_m = 0.0569
+
+[node name="Entree_AtelierCharpentier0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(240.25, -132.25, 239.7, -132.8, 242.7, -132.8)
+width_m = 1.6
+surface_offset_m = 0.0576
+
+[node name="Entree_ComptoirBois0" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+material_override = ExtResource("path_material")
+points = PackedVector2Array(236.47069029950575, -132.73534514975287, 235.2870946633996, -135.10253642196517, 235.54856189164258, -138.0911205162404)
+width_m = 1.6
+surface_offset_m = 0.0583
+
+[node name="CoursEtJardins" parent="." instance=ExtResource("courtyards")]
+
+[node name="AmenagementsEau" parent="." instance=ExtResource("waterworks")]
+
+[node name="Mecanisme" type="Node3D" parent="RiveDuMoulin/GrandeScierie"]
+script = ExtResource("motion")

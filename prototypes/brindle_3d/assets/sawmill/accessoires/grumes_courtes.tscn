@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_uhyjy"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/grumes_courtes_LogBearers_dark_wood.res" id="2_7h07t"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/bark.tres" id="3_pxyfr"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/grumes_courtes_LogBark_bark.res" id="4_vvei6"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/endgrain.tres" id="5_gi3e0"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/grumes_courtes_CutEnd_endgrain.res" id="6_d3kou"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="7_hglw4"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/grumes_courtes_GrowthRings_wood.res" id="8_fl4r2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_87c32"]
+size = Vector3(2.02, 0.18, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6cx5k"]
+size = Vector3(2.02, 0.18, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kb4rk"]
+size = Vector3(1.62, 1.3608, 2.2)
+
+[node name="GrumesCourtes" type="Node3D" unique_id=139778073]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "grumes_courtes"
+metadata/family = "accessoires"
+metadata/label = "Billons de réserve"
+metadata/purpose = "Billons courts triés, destinés aux petites pièces et au charronnage."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="LogBearersCollision" type="StaticBody3D" parent="." unique_id=956832493]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, -0.704)
+collision_mask = 0
+
+[node name="@CollisionShape3D@264" type="CollisionShape3D" parent="LogBearersCollision" unique_id=1301993946]
+shape = SubResource("BoxShape3D_87c32")
+
+[node name="@StaticBody3D@265" type="StaticBody3D" parent="." unique_id=433733491]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0.704)
+collision_mask = 0
+
+[node name="@CollisionShape3D@266" type="CollisionShape3D" parent="@StaticBody3D@265" unique_id=1736863883]
+shape = SubResource("BoxShape3D_6cx5k")
+
+[node name="LogStackCollision" type="StaticBody3D" parent="." unique_id=971614673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8604, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@267" type="CollisionShape3D" parent="LogStackCollision" unique_id=79689608]
+shape = SubResource("BoxShape3D_kb4rk")
+
+[node name="LogBearersDarkWood" type="MeshInstance3D" parent="." unique_id=1139557044]
+material_override = ExtResource("1_uhyjy")
+mesh = ExtResource("2_7h07t")
+
+[node name="LogBarkBark" type="MeshInstance3D" parent="." unique_id=350479584]
+material_override = ExtResource("3_pxyfr")
+mesh = ExtResource("4_vvei6")
+
+[node name="CutEndEndgrain" type="MeshInstance3D" parent="." unique_id=1707807164]
+material_override = ExtResource("5_gi3e0")
+mesh = ExtResource("6_d3kou")
+
+[node name="GrowthRingsWood" type="MeshInstance3D" parent="." unique_id=1951952328]
+material_override = ExtResource("7_hglw4")
+mesh = ExtResource("8_fl4r2")

@@ -65,21 +65,32 @@ func test_criterion_2_no_walkable_tile_touches_the_edge() -> void:
 
 func test_criterion_3_and_4_the_river_is_a_barrier_by_test() -> void:
 	var region: Region = _region()
-	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+	# **Along the crossing's own axis** (2026-09-16). This probed east and west only,
+	# which held while every river on the map ran north to south. His royal city's
+	# moat is crossed the other way: at (108,132) the road runs north-south over an
+	# east-west water, so dry land is above and below and the old probe found water
+	# on both sides of a bridge that is perfectly sound. What the criterion means is
+	# that a crossing links two banks — not that rivers all run one way.
+	for crossing: Vector2i in river_crossings():
 		var west: bool = false
 		var east: bool = false
+		var north: bool = false
+		var south: bool = false
 		for step: int in range(3, 14):
 			west = west or region.is_passable(crossing - Vector2i(step, 0))
 			east = east or region.is_passable(crossing + Vector2i(step, 0))
-		assert_true(west and east, "%s reaches dry land both sides" % crossing)
+			north = north or region.is_passable(crossing - Vector2i(0, step))
+			south = south or region.is_passable(crossing + Vector2i(0, step))
+		assert_true((west and east) or (north and south),
+			"%s reaches dry land on both banks, along one axis or the other" % crossing)
 
 	var dammed: Dictionary = {}
-	for crossing: Vector2i in [Region.BRIDGE, Region.FORD]:
+	for crossing: Vector2i in river_crossings():
 		for x: int in range(crossing.x - 5, crossing.x + 6):
 			for y: int in range(crossing.y - 5, crossing.y + 6):
 				dammed[Vector2i(x, y)] = true
 	assert_false(_reach(region, Region.BRINDLE, dammed).has(Region.BLACKCAIRN),
-		"dam both and the castle is cut off — the river is a barrier by test")
+		"dam every crossing and the castle is cut off — the river is a barrier by test")
 
 
 func test_criterion_5_and_6_the_road_is_worth_taking_and_not_a_chore() -> void:

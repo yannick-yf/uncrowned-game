@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_fuq2h"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/tas_planches_PlankBearers_dark_wood.res" id="2_4ogfn"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/fresh_wood.tres" id="3_lejfg"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/tas_planches_SeasoningBoards_fresh_wood.res" id="4_nqosi"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="5_bp3rl"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/tas_planches_AirSpacers_wood.res" id="6_fy3as"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pgjdg"]
+size = Vector3(1.78, 0.18, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x6pti"]
+size = Vector3(1.78, 0.18, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wo6pm"]
+size = Vector3(1.6, 1.11, 4.2)
+
+[node name="TasPlanches" type="Node3D" unique_id=2060124000]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tas_planches"
+metadata/family = "accessoires"
+metadata/label = "Planches sur tasseaux"
+metadata/purpose = "Planches espacées par des tasseaux : l’air circule entre les lits."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="PlankBearersCollision" type="StaticBody3D" parent="." unique_id=937218287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, -1.47)
+collision_mask = 0
+
+[node name="@CollisionShape3D@268" type="CollisionShape3D" parent="PlankBearersCollision" unique_id=305003648]
+shape = SubResource("BoxShape3D_pgjdg")
+
+[node name="@StaticBody3D@269" type="StaticBody3D" parent="." unique_id=1083194218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 1.47)
+collision_mask = 0
+
+[node name="@CollisionShape3D@270" type="CollisionShape3D" parent="@StaticBody3D@269" unique_id=1104607178]
+shape = SubResource("BoxShape3D_x6pti")
+
+[node name="PlankStackCollision" type="StaticBody3D" parent="." unique_id=1804003170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.555, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@271" type="CollisionShape3D" parent="PlankStackCollision" unique_id=300026786]
+shape = SubResource("BoxShape3D_wo6pm")
+
+[node name="PlankBearersDarkWood" type="MeshInstance3D" parent="." unique_id=844535147]
+material_override = ExtResource("1_fuq2h")
+mesh = ExtResource("2_4ogfn")
+
+[node name="SeasoningBoardsFreshWood" type="MeshInstance3D" parent="." unique_id=1740470475]
+material_override = ExtResource("3_lejfg")
+mesh = ExtResource("4_nqosi")
+
+[node name="AirSpacersWood" type="MeshInstance3D" parent="." unique_id=1542538911]
+material_override = ExtResource("5_bp3rl")
+mesh = ExtResource("6_fy3as")

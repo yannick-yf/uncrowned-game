@@ -23,8 +23,15 @@ func test_all_eight_zones_of_spec_4_exist_and_are_walkable() -> void:
 
 
 func test_both_crossings_are_bands_a_single_step_cannot_miss() -> void:
-	# A walker covers 6 tiles a second, so a one-tile crossing is one you walk over.
-	for name: String in ["bridge", "ford"]:
+	# On the baked map the bridge follows his diagonal deck, whose narrowest width
+	# still exceeds a simulation step. The old row/column band is the 2D ford.
+	if Places.baked():
+		var meta: Dictionary = RegionBake.read_landscape()["meta"] as Dictionary
+		for bridge: Dictionary in meta["crossings"]:
+			assert_true(float(bridge["clear_width_m"]) > MovementRules.TILES_PER_SECOND *
+				BakeRules.METRES_PER_TILE / float(Sim.STEPS_PER_REAL_SECOND),
+				"%s cannot be stepped over in one simulation step" % bridge["id"])
+	for name: String in (["ford"] if Places.baked() else ["bridge", "ford"]):
 		var at: Vector2i = Region.BRIDGE if name == "bridge" else Region.FORD
 		var want: Region.Terrain = Region.Terrain.ROAD if name == "bridge" else Region.Terrain.FORD
 		var across: int = 0
@@ -235,7 +242,11 @@ func test_every_landmark_kind_has_art() -> void:
 	var art := Art.new()
 	for prop: Dictionary in _region.props:
 		var kind: StringName = prop["kind"] as StringName
-		assert_true(art.can_draw(kind), "nothing knows how to draw a '%s'" % kind)
+		if bool(prop.get("his", false)) and prop.has("scene"):
+			assert_true(ResourceLoader.exists(String(prop["scene"]).replace("res://", "res://view3d/workshop/")),
+				"his scene draws %s" % prop.get("source_id", kind))
+		else:
+			assert_true(art.can_draw(kind), "nothing knows how to draw a '%s'" % kind)
 
 
 func test_every_walkable_terrain_has_a_tile_or_a_deliberate_colour() -> void:

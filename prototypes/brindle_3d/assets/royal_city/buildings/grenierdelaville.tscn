@@ -1,0 +1,242 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/stone.tres" id="1_4fjrd"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_Foundation_stone.res" id="2_2nmx1"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/mortar.tres" id="3_rvwga"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_SolidWalls_mortar.res" id="4_rrlgq"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_RubbleMasonry_stone.res" id="5_wwmsn"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/pale_plaster.tres" id="6_cf7ei"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_LimeInfill_pale_plaster.res" id="7_b1y5n"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark_wood.tres" id="8_s1le1"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_WallRails_dark_wood.res" id="9_dow5n"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_WallStuds_dark_wood.res" id="10_0xfor"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_FrameKnees_dark_wood.res" id="11_437u1"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_InfillDiagonal_dark_wood.res" id="12_0vl31"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark.tres" id="13_mqrnp"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_WindowRecess_dark.res" id="14_ku66x"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/glass.tres" id="15_qdvh4"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_DullGlass_glass.res" id="16_r0rhe"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_OakWindowJamb_dark_wood.res" id="17_b2yc2"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_OakWindowRail_dark_wood.res" id="18_b7svc"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/wood.tres" id="19_voq41"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_WindowMullion_wood.res" id="20_2lsy3"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_WindowTransom_wood.res" id="21_qhcni"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_WindowSill_wood.res" id="22_a5d4f"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_OpenShutters_wood.res" id="23_oodeb"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/iron.tres" id="24_v7a7k"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_ShutterIron_iron.res" id="25_tb6h5"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_UpperStoreyCorbels_dark_wood.res" id="26_lgtcr"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_LimeGable_pale_plaster.res" id="27_rh51q"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_GableTie_dark_wood.res" id="28_kecso"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_GableRafter_dark_wood.res" id="29_mdq3r"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_GableStuds_dark_wood.res" id="30_583kp"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_AtticRail_dark_wood.res" id="31_f8ggn"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/roof.tres" id="32_ctypk"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_RoofDeck_roof.res" id="33_e635j"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_RoofVerge_dark_wood.res" id="34_bc7cb"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_RidgeCap_roof.res" id="35_7nvn3"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_DoorRecess_dark.res" id="36_xc4d0"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_DoorPlanks_wood.res" id="37_7e6n6"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_DoorHinges_iron.res" id="38_u2r2m"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_DoorPull_iron.res" id="39_guo3f"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_OakDoorJamb_dark_wood.res" id="40_ygun0"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_OakDoorLintel_dark_wood.res" id="41_8av28"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/plaster.tres" id="42_i5lc3"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_CrossGableBody_plaster.res" id="43_lj3y2"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_ChimneyCore_mortar.res" id="44_8sql6"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_ChimneyFace_stone.res" id="45_8nud3"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_ChimneyCoping_stone.res" id="46_nacrd"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_ChimneyBlackOpening_dark.res" id="47_hkjl5"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_HoistBeam_dark_wood.res" id="48_yr0wn"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/rope.tres" id="49_ggxkv"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grenierdelaville_HoistRope_rope.res" id="50_ahmtc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jokip"]
+size = Vector3(8.42, 0.22, 6.62)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hd4qv"]
+size = Vector3(8.2, 7.08, 6.4)
+
+[node name="Grenierdelaville" type="Node3D" unique_id=995529759]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "grenierdelaville"
+metadata/family = "buildings"
+metadata/label = "GrenierDeLaVille"
+metadata/purpose = "Bâtiment de la ville royale, silhouette et façade propres."
+metadata/placement = "Façade sur +Z, origine au sol."
+
+[node name="FoundationCollision" type="StaticBody3D" parent="." unique_id=987212162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@131" type="CollisionShape3D" parent="FoundationCollision" unique_id=1970820672]
+shape = SubResource("BoxShape3D_jokip")
+
+[node name="SolidWallsCollision" type="StaticBody3D" parent="." unique_id=617048040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.76, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@132" type="CollisionShape3D" parent="SolidWallsCollision" unique_id=1014413508]
+shape = SubResource("BoxShape3D_hd4qv")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1027276671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.984, 0.12, 4.35)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=641969221]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.984, 0.12, 3.55)
+
+[node name="FoundationStone" type="MeshInstance3D" parent="." unique_id=1999354831]
+material_override = ExtResource("1_4fjrd")
+mesh = ExtResource("2_2nmx1")
+
+[node name="SolidWallsMortar" type="MeshInstance3D" parent="." unique_id=1419215760]
+material_override = ExtResource("3_rvwga")
+mesh = ExtResource("4_rrlgq")
+
+[node name="RubbleMasonryStone" type="MeshInstance3D" parent="." unique_id=1486945313]
+material_override = ExtResource("1_4fjrd")
+mesh = ExtResource("5_wwmsn")
+
+[node name="LimeInfillPalePlaster" type="MeshInstance3D" parent="." unique_id=897666161]
+material_override = ExtResource("6_cf7ei")
+mesh = ExtResource("7_b1y5n")
+
+[node name="WallRailsDarkWood" type="MeshInstance3D" parent="." unique_id=499748502]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("9_dow5n")
+
+[node name="WallStudsDarkWood" type="MeshInstance3D" parent="." unique_id=1159056429]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("10_0xfor")
+
+[node name="FrameKneesDarkWood" type="MeshInstance3D" parent="." unique_id=681662165]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("11_437u1")
+
+[node name="InfillDiagonalDarkWood" type="MeshInstance3D" parent="." unique_id=1277560615]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("12_0vl31")
+
+[node name="WindowRecessDark" type="MeshInstance3D" parent="." unique_id=1452315971]
+material_override = ExtResource("13_mqrnp")
+mesh = ExtResource("14_ku66x")
+
+[node name="DullGlassGlass" type="MeshInstance3D" parent="." unique_id=1966524390]
+material_override = ExtResource("15_qdvh4")
+mesh = ExtResource("16_r0rhe")
+
+[node name="OakWindowJambDarkWood" type="MeshInstance3D" parent="." unique_id=1712576163]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("17_b2yc2")
+
+[node name="OakWindowRailDarkWood" type="MeshInstance3D" parent="." unique_id=2126636534]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("18_b7svc")
+
+[node name="WindowMullionWood" type="MeshInstance3D" parent="." unique_id=2031535022]
+material_override = ExtResource("19_voq41")
+mesh = ExtResource("20_2lsy3")
+
+[node name="WindowTransomWood" type="MeshInstance3D" parent="." unique_id=1232751693]
+material_override = ExtResource("19_voq41")
+mesh = ExtResource("21_qhcni")
+
+[node name="WindowSillWood" type="MeshInstance3D" parent="." unique_id=991838803]
+material_override = ExtResource("19_voq41")
+mesh = ExtResource("22_a5d4f")
+
+[node name="OpenShuttersWood" type="MeshInstance3D" parent="." unique_id=1030839350]
+material_override = ExtResource("19_voq41")
+mesh = ExtResource("23_oodeb")
+
+[node name="ShutterIronIron" type="MeshInstance3D" parent="." unique_id=912207758]
+material_override = ExtResource("24_v7a7k")
+mesh = ExtResource("25_tb6h5")
+
+[node name="UpperStoreyCorbelsDarkWood" type="MeshInstance3D" parent="." unique_id=1541060905]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("26_lgtcr")
+
+[node name="LimeGablePalePlaster" type="MeshInstance3D" parent="." unique_id=1303082255]
+material_override = ExtResource("6_cf7ei")
+mesh = ExtResource("27_rh51q")
+
+[node name="GableTieDarkWood" type="MeshInstance3D" parent="." unique_id=1514436390]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("28_kecso")
+
+[node name="GableRafterDarkWood" type="MeshInstance3D" parent="." unique_id=323568856]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("29_mdq3r")
+
+[node name="GableStudsDarkWood" type="MeshInstance3D" parent="." unique_id=521821350]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("30_583kp")
+
+[node name="AtticRailDarkWood" type="MeshInstance3D" parent="." unique_id=732069213]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("31_f8ggn")
+
+[node name="RoofDeckRoof" type="MeshInstance3D" parent="." unique_id=304942633]
+material_override = ExtResource("32_ctypk")
+mesh = ExtResource("33_e635j")
+
+[node name="RoofVergeDarkWood" type="MeshInstance3D" parent="." unique_id=1017295542]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("34_bc7cb")
+
+[node name="RidgeCapRoof" type="MeshInstance3D" parent="." unique_id=1794270313]
+material_override = ExtResource("32_ctypk")
+mesh = ExtResource("35_7nvn3")
+
+[node name="DoorRecessDark" type="MeshInstance3D" parent="." unique_id=1538819268]
+material_override = ExtResource("13_mqrnp")
+mesh = ExtResource("36_xc4d0")
+
+[node name="DoorPlanksWood" type="MeshInstance3D" parent="." unique_id=608185815]
+material_override = ExtResource("19_voq41")
+mesh = ExtResource("37_7e6n6")
+
+[node name="DoorHingesIron" type="MeshInstance3D" parent="." unique_id=463954750]
+material_override = ExtResource("24_v7a7k")
+mesh = ExtResource("38_u2r2m")
+
+[node name="DoorPullIron" type="MeshInstance3D" parent="." unique_id=2119712542]
+material_override = ExtResource("24_v7a7k")
+mesh = ExtResource("39_guo3f")
+
+[node name="OakDoorJambDarkWood" type="MeshInstance3D" parent="." unique_id=1857204977]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("40_ygun0")
+
+[node name="OakDoorLintelDarkWood" type="MeshInstance3D" parent="." unique_id=501596679]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("41_8av28")
+
+[node name="CrossGableBodyPlaster" type="MeshInstance3D" parent="." unique_id=2059230169]
+material_override = ExtResource("42_i5lc3")
+mesh = ExtResource("43_lj3y2")
+
+[node name="ChimneyCoreMortar" type="MeshInstance3D" parent="." unique_id=1587071751]
+material_override = ExtResource("3_rvwga")
+mesh = ExtResource("44_8sql6")
+
+[node name="ChimneyFaceStone" type="MeshInstance3D" parent="." unique_id=1758839083]
+material_override = ExtResource("1_4fjrd")
+mesh = ExtResource("45_8nud3")
+
+[node name="ChimneyCopingStone" type="MeshInstance3D" parent="." unique_id=778489511]
+material_override = ExtResource("1_4fjrd")
+mesh = ExtResource("46_nacrd")
+
+[node name="ChimneyBlackOpeningDark" type="MeshInstance3D" parent="." unique_id=1905438618]
+material_override = ExtResource("13_mqrnp")
+mesh = ExtResource("47_hkjl5")
+
+[node name="HoistBeamDarkWood" type="MeshInstance3D" parent="." unique_id=1512729030]
+material_override = ExtResource("8_s1le1")
+mesh = ExtResource("48_yr0wn")
+
+[node name="HoistRopeRope" type="MeshInstance3D" parent="." unique_id=1915923061]
+material_override = ExtResource("49_ggxkv")
+mesh = ExtResource("50_ahmtc")

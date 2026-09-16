@@ -81,6 +81,10 @@ const BLOCK_HEIGHT: Dictionary = {
 }
 const BLOCK_HEIGHT_DEFAULT: float = 3.5
 
+var _bridge_decks: Array[Dictionary] = []
+var _workshop_heat: Array[Node3D] = []
+var _workshop_coals: Array[ShaderMaterial] = []
+
 var _region: Region = null
 var _sim: Sim = null
 var _art: Art = null
@@ -227,6 +231,8 @@ func _adopt_his_world() -> void:
 	world.name = "HisWorld"
 	add_child(world)
 	_his = world
+	_read_bridge_decks()
+	_read_workshop_heat()
 	# His site labels are editor guides — a forty-eight-point "Brindle" over the
 	# ruins — and his playtest hides them the moment play starts. They are built when
 	# his terrain rebuilds, a frame later, so they are hidden then; and everything
@@ -676,6 +682,26 @@ func _feet_of(at_tiles: Vector2) -> Vector3:
 ## His ground's height at a point, bilinearly, as his `flat_ground.gd` samples it —
 ## and from his terrain itself once it stands, because his relief stamps shape it.
 func height_at(x_m: float, z_m: float) -> float:
+	var ground: float = _ground_height_at(x_m, z_m)
+	for deck: Dictionary in _bridge_decks:
+		var inverse: Transform3D = deck["inverse"] as Transform3D
+		var local: Vector3 = inverse * Vector3(x_m, 0.0, z_m)
+		var bounds: AABB = deck["bounds"] as AABB
+		if local.x < bounds.position.x or local.x > bounds.end.x or local.z < bounds.position.z or local.z > bounds.end.z:
+			continue
+		# Planks and paving have deliberate visual seams. Their continuous deck
+		# carries the walker across those gaps instead of dropping to the water.
+		ground = maxf(ground, (deck["transform"] as Transform3D).origin.y)
+		var origin := Vector3(local.x, bounds.end.y + 1.0, local.z)
+		var faces: PackedVector3Array = deck["faces"] as PackedVector3Array
+		for i: int in range(0, faces.size(), 3):
+			var hit: Variant = Geometry3D.ray_intersects_triangle(origin, Vector3.DOWN, faces[i], faces[i + 1], faces[i + 2])
+			if hit != null:
+				ground = maxf(ground, ((deck["transform"] as Transform3D) * (hit as Vector3)).y)
+	return ground
+
+
+func _ground_height_at(x_m: float, z_m: float) -> float:
 	if _his_terrain != null and int(_his_terrain.get("chunk_count")) > 0:
 		return float(_his_terrain.call("height_at_world", x_m, z_m))
 	if _samples < 2:
@@ -872,6 +898,13 @@ func _sync_marks(cast: Cast, witnesses: Array) -> void:
 func _sync_embers(frame: Dictionary) -> void:
 	var now: float = float(frame.get("now", 0.0))
 	var free: Dictionary = frame.get("free", {}) as Dictionary
+	var working: bool = not bool(free.get(&"cinderworks", false))
+	for effect: Node3D in _workshop_heat:
+		effect.visible = working
+		if effect is CPUParticles3D:
+			(effect as CPUParticles3D).emitting = working
+	for coals: ShaderMaterial in _workshop_coals:
+		coals.set_shader_parameter("glow_strength", null if working else 0.0)
 	for hearth: Dictionary in _embers:
 		var dots: Array[Sprite3D] = hearth["dots"] as Array[Sprite3D]
 		var lit: bool = (hearth["kind"] as StringName) != &"kiln" or not bool(free.get(&"cinderworks", false))
@@ -956,3 +989,50 @@ func embers_lit() -> int:
 			if dot.visible:
 				lit += 1
 	return lit
+
+
+## The bridge mesh is the walking surface, never the riverbed below it. Only deck
+## faces are cached, so parapets cannot lift a traveller (2026-09-15).
+##
+## **The list is the contract, and it is deliberately explicit** (2026-09-16). His
+## royal gate bridge arrived with its walking surface named `ContinuousDeckStone`,
+## and the walker fell through the moat because the list had never heard of it. The
+## temptation is a rule — anything whose name contains *deck* — and the reason not to
+## is `ParapetStone` standing right beside it: a guess that lifts a traveller onto a
+## parapet is worse than a name nobody added. `test_world3d` walks every crossing in
+## his river layout and fails **by the bridge's id**, so a name we do not know says
+## so the day he delivers it.
+func _read_bridge_decks() -> void:
+	var bridges: Node = _his.get_node_or_null("Decor/Franchissements/Ponts")
+	if bridges == null:
+		return
+	for bridge: Node3D in bridges.get_children():
+		for child: Node in bridge.get_children():
+			if child is MeshInstance3D and child.name in [&"WornPavingPaving", &"RoadBedEarth",
+					&"DeckPlanksWood", &"ContinuousDeckStone"]:
+				var deck := child as MeshInstance3D
+				var transform: Transform3D = bridge.transform * deck.transform
+				_bridge_decks.append({"transform": transform, "inverse": transform.affine_inverse(),
+					"bounds": deck.mesh.get_aabb(), "faces": deck.mesh.get_faces()})
+
+
+## Keep his active furnace effects in the same free/held state as our ember marks.
+## Duplicate only the material instance; the generated workshop stays untouched.
+func _read_workshop_heat() -> void:
+	var town: Node = _his.get_node_or_null("Decor/Acierie")
+	if town == null:
+		return
+	for prop: Dictionary in _region.props:
+		if not prop.has("source_id"):
+			continue
+		var kiln: Node = town.find_child(String(prop["source_id"]), true, false)
+		if kiln == null:
+			continue
+		for child: Node in kiln.find_children("*", "", true, false):
+			if child is CPUParticles3D or child is Light3D:
+				_workshop_heat.append(child as Node3D)
+			elif child is MeshInstance3D and child.name in [&"FurnaceBedEmbers", &"HearthCoalsEmbers"]:
+				var mesh := child as MeshInstance3D
+				var material: ShaderMaterial = (mesh.material_override as ShaderMaterial).duplicate() as ShaderMaterial
+				mesh.material_override = material
+				_workshop_coals.append(material)

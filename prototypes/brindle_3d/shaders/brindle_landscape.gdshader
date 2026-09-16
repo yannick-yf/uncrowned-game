@@ -21,6 +21,11 @@ uniform vec4 ground_ash : source_color = vec4(.35,.335,.305,1.);
 uniform bool ironworks_mask_enabled = false;
 uniform sampler2D ironworks_ground_mask : filter_linear, repeat_disable;
 uniform vec4 ironworks_bounds = vec4(182.,-13.,104.,108.);
+uniform bool sawmill_mask_enabled = false;
+uniform sampler2D sawmill_ground_mask : filter_linear, repeat_disable;
+uniform vec4 sawmill_bounds = vec4(198.,-210.,80.,105.);
+uniform sampler2D royal_ground_mask : filter_linear, repeat_disable;
+uniform bool royal_mask_enabled = false;
 varying vec3 world;
 varying vec3 world_normal;
 float noise(vec2 p) { return texture(ground_noise,p*0.021).r; }
@@ -83,6 +88,23 @@ void fragment() {
         earth=mix(earth,grit,use_mask.b*.65);
         earth=mix(earth,vec3(.022,.023,.021)*(.80+grain*.40),use_mask.g*.84);
         col=mix(col,earth,worn);
+    }
+    if (sawmill_mask_enabled) {
+        vec2 uv=(world.xz-sawmill_bounds.xy)/sawmill_bounds.zw;
+        float inside=step(0.,uv.x)*step(0.,uv.y)*step(uv.x,1.)*step(uv.y,1.);
+        vec3 mask=texture(sawmill_ground_mask,clamp(uv,vec2(0.),vec2(1.))).rgb;
+        vec3 earth=mix(vec3(.22,.177,.115),vec3(.34,.285,.185),noise(p*.7));
+        earth=mix(earth,vec3(.37,.29,.16),mask.g*.30);
+        col=mix(col,earth,smoothstep(.1,.87,mask.r-(grain-.5)*.13)*inside);
+    }
+    if (royal_mask_enabled) {
+        vec2 uv=(world.xz-vec2(-255.,-316.))/vec2(175.,234.);
+        float inside=step(0.,uv.x)*step(0.,uv.y)*step(uv.x,1.)*step(uv.y,1.);
+        vec3 mask=texture(royal_ground_mask,clamp(uv,vec2(0.),vec2(1.))).rgb;
+        vec3 earth=mix(vec3(.23,.192,.137),vec3(.34,.289,.213),noise(p*.5));
+        vec3 courtyard=mix(vec3(.26,.254,.222),vec3(.37,.351,.296),noise(p*2.));
+        col=mix(col,earth,smoothstep(.10,.9,mask.r-(grain-.5)*.16)*inside);
+        col=mix(col,courtyard,smoothstep(.10,.9,mask.g)*inside);
     }
     ALBEDO=col;
     ROUGHNESS=.96;

@@ -1,0 +1,74 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_6kfk0"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_ToolPosts_dark_wood.res" id="2_l716f"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="3_qnmk2"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_ToolRails_wood.res" id="4_vwms8"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_AxeHandles_wood.res" id="5_nvwie"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/metal.tres" id="6_ymicj"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_AxeHeads_metal.res" id="7_go7u6"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_FrameSawEnds_wood.res" id="8_1776a"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_FrameSawBrace_wood.res" id="9_ygxc7"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/rope.tres" id="10_mo6we"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_FrameSawTension_rope.res" id="11_qsue2"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ratelier_outils_bois_FrameSawBlade_metal.res" id="12_l2non"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_24geq"]
+size = Vector3(0.1, 1.75, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t55s0"]
+size = Vector3(0.1, 1.75, 0.1)
+
+[node name="RatelierOutilsBois" type="Node3D" unique_id=1528587607]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "ratelier_outils_bois"
+metadata/family = "accessoires"
+metadata/label = "Râtelier du bûcheron"
+metadata/purpose = "Haches, cognée, scie à cadre et perche de manutention."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="ToolPostsCollision" type="StaticBody3D" parent="." unique_id=383428598]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.9, 0.875, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@291" type="CollisionShape3D" parent="ToolPostsCollision" unique_id=29221763]
+shape = SubResource("BoxShape3D_24geq")
+
+[node name="@StaticBody3D@292" type="StaticBody3D" parent="." unique_id=183241168]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.9, 0.875, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@293" type="CollisionShape3D" parent="@StaticBody3D@292" unique_id=633560275]
+shape = SubResource("BoxShape3D_t55s0")
+
+[node name="ToolPostsDarkWood" type="MeshInstance3D" parent="." unique_id=1046106431]
+material_override = ExtResource("1_6kfk0")
+mesh = ExtResource("2_l716f")
+
+[node name="ToolRailsWood" type="MeshInstance3D" parent="." unique_id=795510369]
+material_override = ExtResource("3_qnmk2")
+mesh = ExtResource("4_vwms8")
+
+[node name="AxeHandlesWood" type="MeshInstance3D" parent="." unique_id=1327782243]
+material_override = ExtResource("3_qnmk2")
+mesh = ExtResource("5_nvwie")
+
+[node name="AxeHeadsMetal" type="MeshInstance3D" parent="." unique_id=1045477373]
+material_override = ExtResource("6_ymicj")
+mesh = ExtResource("7_go7u6")
+
+[node name="FrameSawEndsWood" type="MeshInstance3D" parent="." unique_id=708875455]
+material_override = ExtResource("3_qnmk2")
+mesh = ExtResource("8_1776a")
+
+[node name="FrameSawBraceWood" type="MeshInstance3D" parent="." unique_id=409171458]
+material_override = ExtResource("3_qnmk2")
+mesh = ExtResource("9_ygxc7")
+
+[node name="FrameSawTensionRope" type="MeshInstance3D" parent="." unique_id=1966095130]
+material_override = ExtResource("10_mo6we")
+mesh = ExtResource("11_qsue2")
+
+[node name="FrameSawBladeMetal" type="MeshInstance3D" parent="." unique_id=791746110]
+material_override = ExtResource("6_ymicj")
+mesh = ExtResource("12_l2non")

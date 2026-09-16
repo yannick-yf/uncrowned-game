@@ -1,0 +1,48 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/stone.tres" id="1_xmqj2"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/fontaine_de_la_place_FountainBase_stone.res" id="2_1bcw8"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/fontaine_de_la_place_FountainBasin_stone.res" id="3_5nv3j"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/water.tres" id="4_yku3x"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/fontaine_de_la_place_FountainWater_water.res" id="5_ayxqf"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/fontaine_de_la_place_FountainColumn_stone.res" id="6_ahs63"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/fontaine_de_la_place_UpperBowl_stone.res" id="7_k8pc6"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ys551"]
+height = 1.0
+radius = 1.75
+
+[node name="FontaineDeLaPlace" type="Node3D" unique_id=713027875]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "fontaine_de_la_place"
+metadata/family = "props"
+metadata/label = "Fontaine de la place"
+metadata/purpose = "Bassin de pierre et colonne centrale."
+metadata/placement = "Eau décorative, hors circulation."
+
+[node name="BasinCollision" type="StaticBody3D" parent="." unique_id=1497829470]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@251" type="CollisionShape3D" parent="BasinCollision" unique_id=75467906]
+shape = SubResource("CylinderShape3D_ys551")
+
+[node name="FountainBaseStone" type="MeshInstance3D" parent="." unique_id=1062130378]
+material_override = ExtResource("1_xmqj2")
+mesh = ExtResource("2_1bcw8")
+
+[node name="FountainBasinStone" type="MeshInstance3D" parent="." unique_id=553737050]
+material_override = ExtResource("1_xmqj2")
+mesh = ExtResource("3_5nv3j")
+
+[node name="FountainWaterWater" type="MeshInstance3D" parent="." unique_id=2147029560]
+material_override = ExtResource("4_yku3x")
+mesh = ExtResource("5_ayxqf")
+
+[node name="FountainColumnStone" type="MeshInstance3D" parent="." unique_id=1641484373]
+material_override = ExtResource("1_xmqj2")
+mesh = ExtResource("6_ahs63")
+
+[node name="UpperBowlStone" type="MeshInstance3D" parent="." unique_id=564168999]
+material_override = ExtResource("1_xmqj2")
+mesh = ExtResource("7_k8pc6")
