@@ -1,0 +1,74 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/wood.tres" id="1_k00fc"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_3_StallCounter_wood.res" id="2_amnqy"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark_wood.tres" id="3_bt078"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_3_AwningPosts_dark_wood.res" id="4_l42rl"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/linen.tres" id="5_icxqu"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_3_CanvasAwning_linen.res" id="6_n3nvg"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_3_SackCloth_linen.res" id="7_jdekp"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_3_TiedMouth_linen.res" id="8_rg21g"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/rope.tres" id="9_katem"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_3_SackTie_rope.res" id="10_mhy5d"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w8ov8"]
+size = Vector3(2.81, 0.85, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nmk1w"]
+size = Vector3(0.11, 2.6, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p8y7f"]
+size = Vector3(0.11, 2.6, 0.11)
+
+[node name="EtalMarche3" type="Node3D" unique_id=1804820554]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "etal_marche_3"
+metadata/family = "props"
+metadata/label = "Étal du marché 4"
+metadata/purpose = "Étal vide de personnages, marchandises et auvent."
+metadata/placement = "À placer sur le bord de la place."
+
+[node name="StallCounterCollision" type="StaticBody3D" parent="." unique_id=1912874036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@270" type="CollisionShape3D" parent="StallCounterCollision" unique_id=1026422187]
+shape = SubResource("BoxShape3D_w8ov8")
+
+[node name="AwningPostsCollision" type="StaticBody3D" parent="." unique_id=1747620547]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.405, 1.3, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@271" type="CollisionShape3D" parent="AwningPostsCollision" unique_id=882776019]
+shape = SubResource("BoxShape3D_nmk1w")
+
+[node name="@StaticBody3D@272" type="StaticBody3D" parent="." unique_id=2138375559]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.405, 1.3, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@273" type="CollisionShape3D" parent="@StaticBody3D@272" unique_id=1351783322]
+shape = SubResource("BoxShape3D_p8y7f")
+
+[node name="StallCounterWood" type="MeshInstance3D" parent="." unique_id=837480358]
+material_override = ExtResource("1_k00fc")
+mesh = ExtResource("2_amnqy")
+
+[node name="AwningPostsDarkWood" type="MeshInstance3D" parent="." unique_id=413990792]
+material_override = ExtResource("3_bt078")
+mesh = ExtResource("4_l42rl")
+
+[node name="CanvasAwningLinen" type="MeshInstance3D" parent="." unique_id=1368508192]
+material_override = ExtResource("5_icxqu")
+mesh = ExtResource("6_n3nvg")
+
+[node name="SackClothLinen" type="MeshInstance3D" parent="." unique_id=1145883366]
+material_override = ExtResource("5_icxqu")
+mesh = ExtResource("7_jdekp")
+
+[node name="TiedMouthLinen" type="MeshInstance3D" parent="." unique_id=1717888425]
+material_override = ExtResource("5_icxqu")
+mesh = ExtResource("8_rg21g")
+
+[node name="SackTieRope" type="MeshInstance3D" parent="." unique_id=2113947304]
+material_override = ExtResource("9_katem")
+mesh = ExtResource("10_mhy5d")

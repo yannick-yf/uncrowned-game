@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="1_vja3y"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/tonneaux_resine_BarrelStaves_wood.res" id="2_lre3c"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/iron.tres" id="3_tdt4f"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/tonneaux_resine_BarrelBands_iron.res" id="4_wsdml"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ee8s2"]
+height = 0.9
+radius = 0.36
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_iauae"]
+height = 0.675
+radius = 0.27
+
+[node name="TonneauxResine" type="Node3D" unique_id=523400828]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tonneaux_resine"
+metadata/family = "accessoires"
+metadata/label = "Tonneaux et petit seau"
+metadata/purpose = "Récipients pour résine et produits d’entretien du bois."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="BarrelCollision" type="StaticBody3D" parent="." unique_id=1633572710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.45, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@294" type="CollisionShape3D" parent="BarrelCollision" unique_id=1621344850]
+shape = SubResource("CylinderShape3D_ee8s2")
+
+[node name="@StaticBody3D@295" type="StaticBody3D" parent="." unique_id=2128499337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.3375, 0.14)
+collision_mask = 0
+
+[node name="@CollisionShape3D@296" type="CollisionShape3D" parent="@StaticBody3D@295" unique_id=1324445597]
+shape = SubResource("CylinderShape3D_iauae")
+
+[node name="BarrelStavesWood" type="MeshInstance3D" parent="." unique_id=1444934651]
+material_override = ExtResource("1_vja3y")
+mesh = ExtResource("2_lre3c")
+
+[node name="BarrelBandsIron" type="MeshInstance3D" parent="." unique_id=503737188]
+material_override = ExtResource("3_tdt4f")
+mesh = ExtResource("4_wsdml")

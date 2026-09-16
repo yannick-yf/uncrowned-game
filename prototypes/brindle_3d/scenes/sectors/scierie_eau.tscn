@@ -1,0 +1,279 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateGuide_dark_wood.res" id="2_3aih6"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="2_4xlxc"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_FlumeBed_wood.res" id="3_sg7la"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateLintel_dark_wood.res" id="3_x5q27"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="4_dorm2"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GatePlanks_wood.res" id="5_1i4jy"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_FlumeWalls_dark_wood.res" id="5_y1j8g"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateLiftRod_wood.res" id="6_4a883"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_WoodenRackTeeth_dark_wood.res" id="7_v4x5q"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_SupplyWater_water.res" id="7_x5q27"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_SupplyPosts_dark_wood.res" id="8_1i4jy"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateHandle_wood.res" id="8_3v3dn"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/stone.tres" id="9_4a883"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_WeirShoulder_stone.res" id="10_v4x5q"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_WeirCoping_stone.res" id="11_3v3dn"]
+[ext_resource type="Material" path="res://materials/sawmill_flow.tres" id="11_pptnf"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_WheelBayWall_stone.res" id="12_pptnf"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_MillFootExtension_stone.res" id="13_rsfxl"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/ouvrages_hydrauliques_scierie_TailraceGuidePost_dark_wood.res" id="14_mlodp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oi2bt"]
+size = Vector3(0.18, 0.96551895, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_88x4p"]
+size = Vector3(0.18, 0.9246712, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_80kr6"]
+size = Vector3(2, 1.25, 0.62)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dq7kf"]
+size = Vector3(2, 1.25, 0.62)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hiao3"]
+size = Vector3(0.18, 2.3, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3aioh"]
+size = Vector3(0.18, 2.3, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gx8my"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tk058"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vvguq"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b6umo"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cb0ib"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jop2t"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hs2a0"]
+size = Vector3(0.35, 0.95, 8.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bksp6"]
+size = Vector3(0.35, 0.95, 8.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dyfqb"]
+size = Vector3(0.5, 0.14, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n2grr"]
+size = Vector3(0.5, 0.14, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ovng6"]
+size = Vector3(0.5, 0.14, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xjvc0"]
+size = Vector3(0.5, 0.14, 0.5)
+
+[node name="OuvragesHydrauliquesScierie" type="Node3D" unique_id=1087445960]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "ouvrages_hydrauliques_scierie"
+metadata/family = "modules"
+metadata/label = "Bief et fondations de la scierie"
+metadata/purpose = "Raccord de la retenue, flume et canal de fuite."
+metadata/placement = "Positions mondiales liées à planning/sawmill-town.json."
+
+[node name="SupplyPostsCollision" type="StaticBody3D" parent="." unique_id=1574532297]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 253.94, 48.057243, -155.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@2" type="CollisionShape3D" parent="SupplyPostsCollision" unique_id=1225880516]
+shape = SubResource("BoxShape3D_oi2bt")
+
+[node name="@StaticBody3D@3" type="StaticBody3D" parent="." unique_id=1847316816]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 255.36, 48.077667, -155.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@4" type="CollisionShape3D" parent="@StaticBody3D@3" unique_id=42158356]
+shape = SubResource("BoxShape3D_88x4p")
+
+[node name="WeirShoulderCollision" type="StaticBody3D" parent="." unique_id=1592935535]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 252.8, 48.57, -157.55)
+collision_mask = 0
+
+[node name="@CollisionShape3D@5" type="CollisionShape3D" parent="WeirShoulderCollision" unique_id=1890155478]
+shape = SubResource("BoxShape3D_80kr6")
+
+[node name="@StaticBody3D@6" type="StaticBody3D" parent="." unique_id=275414241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256.5, 48.57, -157.55)
+collision_mask = 0
+
+[node name="@CollisionShape3D@7" type="CollisionShape3D" parent="@StaticBody3D@6" unique_id=792762829]
+shape = SubResource("BoxShape3D_dq7kf")
+
+[node name="VanneBois" type="Node3D" parent="." unique_id=551821354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 254.65, 48.5, -157.55)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "vanne_bois"
+metadata/family = "modules"
+metadata/label = "Vanne et crémaillère en bois"
+metadata/purpose = "Vanne verticale guidée entre deux montants ; panneau statique réglable dans l’éditeur."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="GateGuideCollision" type="StaticBody3D" parent="VanneBois" unique_id=1274491300]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.67, 1.15, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@347" type="CollisionShape3D" parent="VanneBois/GateGuideCollision" unique_id=829653193]
+shape = SubResource("BoxShape3D_hiao3")
+
+[node name="@StaticBody3D@348" type="StaticBody3D" parent="VanneBois" unique_id=1168907523]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.67, 1.15, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@349" type="CollisionShape3D" parent="VanneBois/@StaticBody3D@348" unique_id=185937172]
+shape = SubResource("BoxShape3D_3aioh")
+
+[node name="GatePlanksCollision" type="StaticBody3D" parent="VanneBois" unique_id=392521794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@350" type="CollisionShape3D" parent="VanneBois/GatePlanksCollision" unique_id=715573617]
+shape = SubResource("BoxShape3D_gx8my")
+
+[node name="@StaticBody3D@351" type="StaticBody3D" parent="VanneBois" unique_id=1867235234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@352" type="CollisionShape3D" parent="VanneBois/@StaticBody3D@351" unique_id=1624517498]
+shape = SubResource("BoxShape3D_tk058")
+
+[node name="@StaticBody3D@353" type="StaticBody3D" parent="VanneBois" unique_id=1838689376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@354" type="CollisionShape3D" parent="VanneBois/@StaticBody3D@353" unique_id=585092183]
+shape = SubResource("BoxShape3D_vvguq")
+
+[node name="@StaticBody3D@355" type="StaticBody3D" parent="VanneBois" unique_id=1034564738]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@356" type="CollisionShape3D" parent="VanneBois/@StaticBody3D@355" unique_id=246072669]
+shape = SubResource("BoxShape3D_b6umo")
+
+[node name="@StaticBody3D@357" type="StaticBody3D" parent="VanneBois" unique_id=661544432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@358" type="CollisionShape3D" parent="VanneBois/@StaticBody3D@357" unique_id=1514327866]
+shape = SubResource("BoxShape3D_cb0ib")
+
+[node name="@StaticBody3D@359" type="StaticBody3D" parent="VanneBois" unique_id=737500872]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@360" type="CollisionShape3D" parent="VanneBois/@StaticBody3D@359" unique_id=2036701808]
+shape = SubResource("BoxShape3D_jop2t")
+
+[node name="GateGuideDarkWood" type="MeshInstance3D" parent="VanneBois" unique_id=61988056]
+material_override = ExtResource("4_dorm2")
+mesh = ExtResource("2_3aih6")
+
+[node name="GateLintelDarkWood" type="MeshInstance3D" parent="VanneBois" unique_id=1643128607]
+material_override = ExtResource("4_dorm2")
+mesh = ExtResource("3_x5q27")
+
+[node name="GatePlanksWood" type="MeshInstance3D" parent="VanneBois" unique_id=577108794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+material_override = ExtResource("2_4xlxc")
+mesh = ExtResource("5_1i4jy")
+
+[node name="GateLiftRodWood" type="MeshInstance3D" parent="VanneBois" unique_id=520329966]
+material_override = ExtResource("2_4xlxc")
+mesh = ExtResource("6_4a883")
+
+[node name="WoodenRackTeethDarkWood" type="MeshInstance3D" parent="VanneBois" unique_id=602451768]
+material_override = ExtResource("4_dorm2")
+mesh = ExtResource("7_v4x5q")
+
+[node name="GateHandleWood" type="MeshInstance3D" parent="VanneBois" unique_id=1146406742]
+material_override = ExtResource("2_4xlxc")
+mesh = ExtResource("8_3v3dn")
+
+[node name="WheelBayWallCollision" type="StaticBody3D" parent="." unique_id=1919890120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 253.05, 43.92, -146.5)
+collision_mask = 0
+
+[node name="@CollisionShape3D@8" type="CollisionShape3D" parent="WheelBayWallCollision" unique_id=1698119461]
+shape = SubResource("BoxShape3D_hs2a0")
+
+[node name="@StaticBody3D@9" type="StaticBody3D" parent="." unique_id=1332005429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256.35, 43.92, -146.5)
+collision_mask = 0
+
+[node name="@CollisionShape3D@10" type="CollisionShape3D" parent="@StaticBody3D@9" unique_id=1487729492]
+shape = SubResource("BoxShape3D_bksp6")
+
+[node name="MillFootExtensionCollision" type="StaticBody3D" parent="." unique_id=1182420062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 246.568, 44.15, -149.709)
+collision_mask = 0
+
+[node name="@CollisionShape3D@11" type="CollisionShape3D" parent="MillFootExtensionCollision" unique_id=1629610165]
+shape = SubResource("BoxShape3D_dyfqb")
+
+[node name="@StaticBody3D@12" type="StaticBody3D" parent="." unique_id=1987158012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 246.568, 44.15, -144.291)
+collision_mask = 0
+
+[node name="@CollisionShape3D@13" type="CollisionShape3D" parent="@StaticBody3D@12" unique_id=946406971]
+shape = SubResource("BoxShape3D_n2grr")
+
+[node name="@StaticBody3D@14" type="StaticBody3D" parent="." unique_id=1246781215]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 253.432, 44.15, -149.709)
+collision_mask = 0
+
+[node name="@CollisionShape3D@15" type="CollisionShape3D" parent="@StaticBody3D@14" unique_id=1599100842]
+shape = SubResource("BoxShape3D_ovng6")
+
+[node name="@StaticBody3D@16" type="StaticBody3D" parent="." unique_id=138536726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 253.432, 44.15, -144.291)
+collision_mask = 0
+
+[node name="@CollisionShape3D@17" type="CollisionShape3D" parent="@StaticBody3D@16" unique_id=1224670861]
+shape = SubResource("BoxShape3D_xjvc0")
+
+[node name="FlumeBedWood" type="MeshInstance3D" parent="." unique_id=1276067680]
+material_override = ExtResource("2_4xlxc")
+mesh = ExtResource("3_sg7la")
+
+[node name="FlumeWallsDarkWood" type="MeshInstance3D" parent="." unique_id=180564915]
+material_override = ExtResource("4_dorm2")
+mesh = ExtResource("5_y1j8g")
+
+[node name="SupplyWaterWater" type="MeshInstance3D" parent="." unique_id=502671884]
+material_override = ExtResource("11_pptnf")
+mesh = ExtResource("7_x5q27")
+
+[node name="SupplyPostsDarkWood" type="MeshInstance3D" parent="." unique_id=952190917]
+material_override = ExtResource("4_dorm2")
+mesh = ExtResource("8_1i4jy")
+
+[node name="WeirShoulderStone" type="MeshInstance3D" parent="." unique_id=204428426]
+material_override = ExtResource("9_4a883")
+mesh = ExtResource("10_v4x5q")
+
+[node name="WeirCopingStone" type="MeshInstance3D" parent="." unique_id=1836051968]
+material_override = ExtResource("9_4a883")
+mesh = ExtResource("11_3v3dn")
+
+[node name="WheelBayWallStone" type="MeshInstance3D" parent="." unique_id=1449010726]
+material_override = ExtResource("9_4a883")
+mesh = ExtResource("12_pptnf")
+
+[node name="MillFootExtensionStone" type="MeshInstance3D" parent="." unique_id=573359313]
+material_override = ExtResource("9_4a883")
+mesh = ExtResource("13_rsfxl")
+
+[node name="TailraceGuidePostDarkWood" type="MeshInstance3D" parent="." unique_id=346117099]
+material_override = ExtResource("4_dorm2")
+mesh = ExtResource("14_mlodp")

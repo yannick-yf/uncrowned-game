@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_cawlo"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/poutres_equarries_Bearers_dark_wood.res" id="2_53232"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/fresh_wood.tres" id="3_bpdr2"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/poutres_equarries_SquaredBeam_fresh_wood.res" id="4_dkhif"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vbhk3"]
+size = Vector3(1.9, 0.19, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8pev3"]
+size = Vector3(1.9, 0.19, 0.23)
+
+[node name="PoutresEquarries" type="Node3D" unique_id=1284788714]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "poutres_equarries"
+metadata/family = "accessoires"
+metadata/label = "Poutres équarries"
+metadata/purpose = "Longues poutres de charpente rangées sur traverses."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="BearersCollision" type="StaticBody3D" parent="." unique_id=999444753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.095, -1.8)
+collision_mask = 0
+
+[node name="@CollisionShape3D@272" type="CollisionShape3D" parent="BearersCollision" unique_id=154914570]
+shape = SubResource("BoxShape3D_vbhk3")
+
+[node name="@StaticBody3D@273" type="StaticBody3D" parent="." unique_id=2139462884]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.095, 1.8)
+collision_mask = 0
+
+[node name="@CollisionShape3D@274" type="CollisionShape3D" parent="@StaticBody3D@273" unique_id=1458574387]
+shape = SubResource("BoxShape3D_8pev3")
+
+[node name="BearersDarkWood" type="MeshInstance3D" parent="." unique_id=1559709392]
+material_override = ExtResource("1_cawlo")
+mesh = ExtResource("2_53232")
+
+[node name="SquaredBeamFreshWood" type="MeshInstance3D" parent="." unique_id=1746191152]
+material_override = ExtResource("3_bpdr2")
+mesh = ExtResource("4_dkhif")

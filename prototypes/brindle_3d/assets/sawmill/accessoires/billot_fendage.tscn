@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/bark.tres" id="1_5tt6v"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/billot_fendage_ChoppingBlock_bark.res" id="2_xuuch"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/endgrain.tres" id="3_ys8ml"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/billot_fendage_BlockEnd_endgrain.res" id="4_116ho"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="5_tx3bi"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/billot_fendage_AxeHandle_wood.res" id="6_st7p6"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/metal.tres" id="7_rmfhq"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/billot_fendage_AxeBlade_metal.res" id="8_1g3bf"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/fresh_wood.tres" id="9_ykhq1"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/billot_fendage_SplitWood_fresh_wood.res" id="10_vvbd2"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_meyae"]
+height = 0.7
+radius = 0.42
+
+[node name="BillotFendage" type="Node3D" unique_id=1377733006]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "billot_fendage"
+metadata/family = "accessoires"
+metadata/label = "Billot de fendage"
+metadata/purpose = "Billot haut, hache posée et bois fendu."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="ChoppingBlockCollision" type="StaticBody3D" parent="." unique_id=1238779992]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@305" type="CollisionShape3D" parent="ChoppingBlockCollision" unique_id=229445289]
+shape = SubResource("CylinderShape3D_meyae")
+
+[node name="ChoppingBlockBark" type="MeshInstance3D" parent="." unique_id=1341984224]
+material_override = ExtResource("1_5tt6v")
+mesh = ExtResource("2_xuuch")
+
+[node name="BlockEndEndgrain" type="MeshInstance3D" parent="." unique_id=767954841]
+material_override = ExtResource("3_ys8ml")
+mesh = ExtResource("4_116ho")
+
+[node name="AxeHandleWood" type="MeshInstance3D" parent="." unique_id=1412330997]
+material_override = ExtResource("5_tx3bi")
+mesh = ExtResource("6_st7p6")
+
+[node name="AxeBladeMetal" type="MeshInstance3D" parent="." unique_id=711200355]
+material_override = ExtResource("7_rmfhq")
+mesh = ExtResource("8_1g3bf")
+
+[node name="SplitWoodFreshWood" type="MeshInstance3D" parent="." unique_id=884555144]
+material_override = ExtResource("9_ykhq1")
+mesh = ExtResource("10_vvbd2")

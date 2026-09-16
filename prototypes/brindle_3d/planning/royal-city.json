@@ -1,0 +1,2436 @@
+{
+  "version": 1,
+  "focus_xz": [
+    -177,
+    -232
+  ],
+  "bounds_xz": [
+    -253,
+    -318,
+    167,
+    228
+  ],
+  "buildings": [
+    {
+      "id": "MaisonDesArdoises",
+      "asset": "maisondesardoises",
+      "xz": [
+        -217,
+        -194
+      ],
+      "width": 6.7,
+      "depth": 7.5,
+      "height": 6.6,
+      "yaw": 82,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 0,
+      "altitude": 65.225,
+      "scene": "res://assets/royal_city/buildings/maisondesardoises.tscn",
+      "size_m": [
+        8.85276985168457,
+        10.706000328064,
+        8.19999980926514
+      ],
+      "bounds_center_m": [
+        0.730615615844727,
+        5.35300016403198,
+        0.0
+      ]
+    },
+    {
+      "id": "LogisDuTailleur",
+      "asset": "logisdutailleur",
+      "xz": [
+        -215,
+        -178
+      ],
+      "width": 6.0,
+      "depth": 8.4,
+      "height": 6.1,
+      "yaw": 90,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 1,
+      "altitude": 64.825,
+      "scene": "res://assets/royal_city/buildings/logisdutailleur.tscn",
+      "size_m": [
+        6.88000011444092,
+        9.94000053405762,
+        9.76000022888184
+      ],
+      "bounds_center_m": [
+        0.0,
+        4.97000026702881,
+        0.28000020980835
+      ]
+    },
+    {
+      "id": "AubergeDesVoyageurs",
+      "asset": "aubergedesvoyageurs",
+      "xz": [
+        -217,
+        -160
+      ],
+      "width": 8.7,
+      "depth": 8.8,
+      "height": 7.5,
+      "yaw": 97,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 2,
+      "altitude": 64.375,
+      "scene": "res://assets/royal_city/buildings/aubergedesvoyageurs.tscn",
+      "size_m": [
+        9.58000087738037,
+        12.7660007476807,
+        9.61999988555908
+      ],
+      "bounds_center_m": [
+        0.0,
+        6.38300037384033,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "MaisonDesTisserands",
+      "asset": "maisondestisserands",
+      "xz": [
+        -192,
+        -207
+      ],
+      "width": 7.0,
+      "depth": 8.0,
+      "height": 7.1,
+      "yaw": -4,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 3,
+      "altitude": 65.55,
+      "scene": "res://assets/royal_city/buildings/maisondestisserands.tscn",
+      "size_m": [
+        7.88000011444092,
+        11.3800010681152,
+        9.07000064849854
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.69000053405762,
+        0.135000228881836
+      ]
+    },
+    {
+      "id": "MaisonDuPassage",
+      "asset": "maisondupassage",
+      "xz": [
+        -198,
+        -176
+      ],
+      "width": 6.1,
+      "depth": 7.7,
+      "height": 8.2,
+      "yaw": 175,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 4,
+      "altitude": 64.775,
+      "scene": "res://assets/royal_city/buildings/maisondupassage.tscn",
+      "size_m": [
+        6.7910737991333,
+        12.0699996948242,
+        8.39999961853027
+      ],
+      "bounds_center_m": [
+        0.0,
+        6.03499984741211,
+        0.0
+      ]
+    },
+    {
+      "id": "CourDesDrapiers",
+      "asset": "courdesdrapiers",
+      "xz": [
+        -197,
+        -159
+      ],
+      "width": 8.6,
+      "depth": 7.7,
+      "height": 6.2,
+      "yaw": 8,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 5,
+      "altitude": 64.35,
+      "scene": "res://assets/royal_city/buildings/courdesdrapiers.tscn",
+      "size_m": [
+        9.48000144958496,
+        11.4080009460449,
+        8.51999950408936
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.70400047302246,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "LogisDesPignons",
+      "asset": "logisdespignons",
+      "xz": [
+        -227,
+        -191
+      ],
+      "width": 5.7,
+      "depth": 6.6,
+      "height": 7.5,
+      "yaw": 92,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 6,
+      "altitude": 65.15,
+      "scene": "res://assets/royal_city/buildings/logisdespignons.tscn",
+      "size_m": [
+        7.73699998855591,
+        11.25,
+        7.42000007629395
+      ],
+      "bounds_center_m": [
+        0.578500032424927,
+        5.625,
+        0.00999999046325684
+      ]
+    },
+    {
+      "id": "MaisonDuRempartOuest",
+      "asset": "maisondurempartouest",
+      "xz": [
+        -225,
+        -170
+      ],
+      "width": 6.8,
+      "depth": 6.5,
+      "height": 5.7,
+      "yaw": 58,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 7,
+      "altitude": 64.625,
+      "scene": "res://assets/royal_city/buildings/maisondurempartouest.tscn",
+      "size_m": [
+        7.68000030517578,
+        9.86400032043457,
+        7.85999965667725
+      ],
+      "bounds_center_m": [
+        0.0,
+        4.93200016021729,
+        0.279999732971191
+      ]
+    },
+    {
+      "id": "MaisonDeLEchauguette",
+      "asset": "maisondelechauguette",
+      "xz": [
+        -225,
+        -180
+      ],
+      "width": 6.5,
+      "depth": 6.8,
+      "height": 7.2,
+      "yaw": 178,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 8,
+      "altitude": 64.875,
+      "scene": "res://assets/royal_city/buildings/maisondelechauguette.tscn",
+      "size_m": [
+        7.19139289855957,
+        11.1900005340576,
+        7.50000047683716
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.59500026702881,
+        0.0
+      ]
+    },
+    {
+      "id": "MaisonDuPuits",
+      "asset": "maisondupuits",
+      "xz": [
+        -160,
+        -133
+      ],
+      "width": 5.8,
+      "depth": 6.4,
+      "height": 6.7,
+      "yaw": 174,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 9,
+      "altitude": 64.0,
+      "scene": "res://assets/royal_city/buildings/maisondupuits.tscn",
+      "size_m": [
+        6.68000030517578,
+        10.4799995422363,
+        7.40600109100342
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.23999977111816,
+        0.103000402450562
+      ]
+    },
+    {
+      "id": "MaisonDesChangeurs",
+      "asset": "maisondeschangeurs",
+      "xz": [
+        -179,
+        -187
+      ],
+      "width": 7.3,
+      "depth": 8.2,
+      "height": 8.9,
+      "yaw": 178,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 10,
+      "altitude": 65.05,
+      "scene": "res://assets/royal_city/buildings/maisondeschangeurs.tscn",
+      "size_m": [
+        8.18000030517578,
+        13.3540010452271,
+        9.01999950408936
+      ],
+      "bounds_center_m": [
+        0.0,
+        6.67700052261353,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "MaisonDeLaLoggia",
+      "asset": "maisondelaloggia",
+      "xz": [
+        -159,
+        -186
+      ],
+      "width": 7.2,
+      "depth": 7.1,
+      "height": 7.3,
+      "yaw": 175,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 11,
+      "altitude": 65.025,
+      "scene": "res://assets/royal_city/buildings/maisondelaloggia.tscn",
+      "size_m": [
+        8.07999992370605,
+        11.6960010528564,
+        7.92000007629395
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.84800052642822,
+        0.00999999046325684
+      ]
+    },
+    {
+      "id": "MaisonDesEpiciers",
+      "asset": "maisondesepiciers",
+      "xz": [
+        -180,
+        -153
+      ],
+      "width": 7.0,
+      "depth": 7.4,
+      "height": 7.6,
+      "yaw": 0,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 12,
+      "altitude": 64.2,
+      "scene": "res://assets/royal_city/buildings/maisondesepiciers.tscn",
+      "size_m": [
+        9.21587085723877,
+        11.8800010681152,
+        8.10000038146973
+      ],
+      "bounds_center_m": [
+        0.762064933776855,
+        5.94000053405762,
+        0.0
+      ]
+    },
+    {
+      "id": "MaisonAuxTroisPignons",
+      "asset": "maisonauxtroispignons",
+      "xz": [
+        -155,
+        -151
+      ],
+      "width": 7.2,
+      "depth": 8.0,
+      "height": 7.9,
+      "yaw": 4,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 13,
+      "altitude": 64.15,
+      "scene": "res://assets/royal_city/buildings/maisonauxtroispignons.tscn",
+      "size_m": [
+        8.07999992370605,
+        12.2960004806519,
+        9.35999965667725
+      ],
+      "bounds_center_m": [
+        0.0,
+        6.14800024032593,
+        0.279999732971191
+      ]
+    },
+    {
+      "id": "MaisonDuPorche",
+      "asset": "maisonduporche",
+      "xz": [
+        -153,
+        -169
+      ],
+      "width": 6.3,
+      "depth": 7.0,
+      "height": 8.4,
+      "yaw": 172,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 14,
+      "altitude": 64.6,
+      "scene": "res://assets/royal_city/buildings/maisonduporche.tscn",
+      "size_m": [
+        7.18000030517578,
+        12.3299999237061,
+        7.81999969482422
+      ],
+      "bounds_center_m": [
+        0.0,
+        6.16499996185303,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "MaisonDesMarchands",
+      "asset": "maisondesmarchands",
+      "xz": [
+        -144,
+        -163
+      ],
+      "width": 7.1,
+      "depth": 7.6,
+      "height": 7.1,
+      "yaw": -88,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 15,
+      "altitude": 64.45,
+      "scene": "res://assets/royal_city/buildings/maisondesmarchands.tscn",
+      "size_m": [
+        7.98000001907349,
+        11.4380006790161,
+        8.6540002822876
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.71900033950806,
+        0.126999855041504
+      ]
+    },
+    {
+      "id": "MaisonDesLivres",
+      "asset": "maisondeslivres",
+      "xz": [
+        -201,
+        -210
+      ],
+      "width": 6.5,
+      "depth": 8.0,
+      "height": 7.9,
+      "yaw": 5,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 16,
+      "altitude": 65.625,
+      "scene": "res://assets/royal_city/buildings/maisondeslivres.tscn",
+      "size_m": [
+        7.19139289855957,
+        11.8900003433228,
+        8.69999980926514
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.94500017166138,
+        0.0
+      ]
+    },
+    {
+      "id": "LogisDesArcades",
+      "asset": "logisdesarcades",
+      "xz": [
+        -159,
+        -204
+      ],
+      "width": 8.1,
+      "depth": 7.5,
+      "height": 8.3,
+      "yaw": -4,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 17,
+      "altitude": 65.475,
+      "scene": "res://assets/royal_city/buildings/logisdesarcades.tscn",
+      "size_m": [
+        8.98000144958496,
+        13.2180004119873,
+        8.31999969482422
+      ],
+      "bounds_center_m": [
+        0.0,
+        6.60900020599365,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "MaisonDeLaRive",
+      "asset": "maisondelarive",
+      "xz": [
+        -126,
+        -182
+      ],
+      "width": 6.6,
+      "depth": 8.4,
+      "height": 6.4,
+      "yaw": -90,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 18,
+      "altitude": 64.925,
+      "scene": "res://assets/royal_city/buildings/maisondelarive.tscn",
+      "size_m": [
+        8.82600021362305,
+        10.4480009078979,
+        9.21999931335449
+      ],
+      "bounds_center_m": [
+        0.67300009727478,
+        5.22400045394897,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "LogisDeLaPorteEst",
+      "asset": "logisdelaporteest",
+      "xz": [
+        -127,
+        -161
+      ],
+      "width": 6.7,
+      "depth": 7.3,
+      "height": 7.5,
+      "yaw": -88,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 19,
+      "altitude": 64.4,
+      "scene": "res://assets/royal_city/buildings/logisdelaporteest.tscn",
+      "size_m": [
+        7.57999992370605,
+        11.6060009002686,
+        8.65999984741211
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.80300045013428,
+        0.279999732971191
+      ]
+    },
+    {
+      "id": "MaisonDuMacon",
+      "asset": "maisondumacon",
+      "xz": [
+        -130,
+        -147
+      ],
+      "width": 5.5,
+      "depth": 7.1,
+      "height": 6.8,
+      "yaw": 158,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 20,
+      "altitude": 64.05,
+      "scene": "res://assets/royal_city/buildings/maisondumacon.tscn",
+      "size_m": [
+        6.19050979614258,
+        10.4899997711182,
+        7.80000019073486
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.24499988555908,
+        0.0
+      ]
+    },
+    {
+      "id": "LogisDuGrenier",
+      "asset": "logisdugrenier",
+      "xz": [
+        -151,
+        -134
+      ],
+      "width": 5.6,
+      "depth": 5.4,
+      "height": 6.2,
+      "yaw": 180,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 21,
+      "altitude": 64.0,
+      "scene": "res://assets/royal_city/buildings/logisdugrenier.tscn",
+      "size_m": [
+        6.48000001907349,
+        9.92000007629395,
+        6.36600017547607
+      ],
+      "bounds_center_m": [
+        0.0,
+        4.96000003814697,
+        0.0829999446868896
+      ]
+    },
+    {
+      "id": "MaisonDeLaTour",
+      "asset": "maisondelatour",
+      "xz": [
+        -221,
+        -297
+      ],
+      "width": 6.4,
+      "depth": 6.5,
+      "height": 7.2,
+      "yaw": 0,
+      "group": "Chateau",
+      "kind": "house",
+      "form": 22,
+      "altitude": 94.0,
+      "scene": "res://assets/royal_city/buildings/maisondelatour.tscn",
+      "size_m": [
+        7.28000020980835,
+        11.1599998474121,
+        7.31999969482422
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.57999992370605,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "MaisonDesJardins",
+      "asset": "maisondesjardins",
+      "xz": [
+        -148,
+        -216
+      ],
+      "width": 6.6,
+      "depth": 7.0,
+      "height": 7.4,
+      "yaw": -8,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 23,
+      "altitude": 65.775,
+      "scene": "res://assets/royal_city/buildings/maisondesjardins.tscn",
+      "size_m": [
+        7.48000001907349,
+        11.4480009078979,
+        7.81999969482422
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.72400045394897,
+        0.00999975204467773
+      ]
+    },
+    {
+      "id": "LogisDuCanal",
+      "asset": "logisducanal",
+      "xz": [
+        -158,
+        -215
+      ],
+      "width": 5.8,
+      "depth": 6.6,
+      "height": 5.9,
+      "yaw": -95,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 24,
+      "altitude": 65.75,
+      "scene": "res://assets/royal_city/buildings/logisducanal.tscn",
+      "size_m": [
+        7.76340293884277,
+        9.68000030517578,
+        7.30000019073486
+      ],
+      "bounds_center_m": [
+        0.636298179626465,
+        4.84000015258789,
+        0.0
+      ]
+    },
+    {
+      "id": "MaisonDesVitriers",
+      "asset": "maisondesvitriers",
+      "xz": [
+        -200,
+        -192
+      ],
+      "width": 5.7,
+      "depth": 6.3,
+      "height": 6.9,
+      "yaw": 10,
+      "group": "QuartierDesHabitants",
+      "kind": "house",
+      "form": 25,
+      "altitude": 65.175,
+      "scene": "res://assets/royal_city/buildings/maisondesvitriers.tscn",
+      "size_m": [
+        6.57999992370605,
+        10.6499996185303,
+        7.65999984741211
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.32499980926514,
+        0.279999732971191
+      ]
+    },
+    {
+      "id": "HalleDuMarche",
+      "asset": "halledumarche",
+      "xz": [
+        -179,
+        -163
+      ],
+      "width": 12,
+      "depth": 7,
+      "height": 5,
+      "yaw": 0,
+      "group": "PlaceRoyale",
+      "kind": "hall",
+      "form": 26,
+      "altitude": 64.45,
+      "scene": "res://assets/royal_city/buildings/halledumarche.tscn",
+      "size_m": [
+        12.7000007629395,
+        9.21000099182129,
+        7.69067192077637
+      ],
+      "bounds_center_m": [
+        0.0,
+        4.60500049591064,
+        0.0
+      ]
+    },
+    {
+      "id": "HotelDeVille",
+      "asset": "hoteldeville",
+      "xz": [
+        -172,
+        -214
+      ],
+      "width": 13,
+      "depth": 9,
+      "height": 10.8,
+      "yaw": 0,
+      "group": "HautsQuartiers",
+      "kind": "civic",
+      "form": 27,
+      "altitude": 65.725,
+      "scene": "res://assets/royal_city/buildings/hoteldeville.tscn",
+      "size_m": [
+        13.6938457489014,
+        22.5500011444092,
+        10.2299995422363
+      ],
+      "bounds_center_m": [
+        0.0,
+        11.2750005722046,
+        0.0949997901916504
+      ]
+    },
+    {
+      "id": "GrandeChapelle",
+      "asset": "grandechapelle",
+      "xz": [
+        -133,
+        -198
+      ],
+      "width": 10,
+      "depth": 17,
+      "height": 10.4,
+      "yaw": 0,
+      "group": "HautsQuartiers",
+      "kind": "chapel",
+      "form": 28,
+      "altitude": 65.325,
+      "scene": "res://assets/royal_city/buildings/grandechapelle.tscn",
+      "size_m": [
+        12.5770063400269,
+        29.0,
+        17.7950000762939
+      ],
+      "bounds_center_m": [
+        -0.698503017425537,
+        14.5,
+        0.0474996566772461
+      ]
+    },
+    {
+      "id": "EcuriesDeLaPorte",
+      "asset": "ecuriesdelaporte",
+      "xz": [
+        -190,
+        -139
+      ],
+      "width": 10,
+      "depth": 6,
+      "height": 4.1,
+      "yaw": 0,
+      "group": "QuartierDeLaPorte",
+      "kind": "stable",
+      "form": 29,
+      "altitude": 64.0,
+      "scene": "res://assets/royal_city/buildings/ecuriesdelaporte.tscn",
+      "size_m": [
+        10.7000007629395,
+        7.74000024795532,
+        6.68991088867188
+      ],
+      "bounds_center_m": [
+        0.0,
+        3.87000012397766,
+        0.0
+      ]
+    },
+    {
+      "id": "GrenierDeLaVille",
+      "asset": "grenierdelaville",
+      "xz": [
+        -202,
+        -140
+      ],
+      "width": 8.2,
+      "depth": 6.4,
+      "height": 7.3,
+      "yaw": 80,
+      "group": "QuartierDeLaPorte",
+      "kind": "granary",
+      "form": 30,
+      "altitude": 64.0,
+      "scene": "res://assets/royal_city/buildings/grenierdelaville.tscn",
+      "size_m": [
+        10.7620010375977,
+        12.2760009765625,
+        8.10000038146973
+      ],
+      "bounds_center_m": [
+        0.841000080108643,
+        6.13800048828125,
+        0.450000047683716
+      ]
+    },
+    {
+      "id": "CorpsDeGarde",
+      "asset": "corpsdegarde",
+      "xz": [
+        -179,
+        -135
+      ],
+      "width": 6.4,
+      "depth": 6.6,
+      "height": 6.5,
+      "yaw": 90,
+      "group": "QuartierDeLaPorte",
+      "kind": "guard",
+      "form": 31,
+      "altitude": 64.0,
+      "scene": "res://assets/royal_city/buildings/corpsdegarde.tscn",
+      "size_m": [
+        7.09131669998169,
+        10.460000038147,
+        7.90999984741211
+      ],
+      "bounds_center_m": [
+        0.0,
+        5.23000001907349,
+        0.304999828338623
+      ]
+    },
+    {
+      "id": "MaisonDesChariots",
+      "asset": "maisondeschariots",
+      "xz": [
+        -177,
+        -171
+      ],
+      "width": 5.3,
+      "depth": 6.2,
+      "height": 5.6,
+      "yaw": -95,
+      "group": "QuartierDuMarche",
+      "kind": "house",
+      "form": 32,
+      "altitude": 64.65,
+      "scene": "res://assets/royal_city/buildings/maisondeschariots.tscn",
+      "size_m": [
+        5.99029445648193,
+        9.23000049591064,
+        6.90000057220459
+      ],
+      "bounds_center_m": [
+        0.0,
+        4.61500024795532,
+        0.0
+      ]
+    },
+    {
+      "id": "LogisDesCordonniers",
+      "asset": "logisdescordonniers",
+      "xz": [
+        -159,
+        -160
+      ],
+      "width": 5.5,
+      "depth": 6.6,
+      "height": 6.2,
+      "yaw": 90,
+      "group": "QuartierDesArtisans",
+      "kind": "house",
+      "form": 33,
+      "altitude": 64.375,
+      "scene": "res://assets/royal_city/buildings/logisdescordonniers.tscn",
+      "size_m": [
+        6.38000011444092,
+        9.89000034332275,
+        7.61400032043457
+      ],
+      "bounds_center_m": [
+        0.0,
+        4.94500017166138,
+        0.107000112533569
+      ]
+    }
+  ],
+  "paths": [
+    {
+      "id": "AvenueRoyale",
+      "width_m": 5.8,
+      "points_xz": [
+        [
+          -168,
+          -126
+        ],
+        [
+          -168,
+          -138
+        ],
+        [
+          -169,
+          -150
+        ],
+        [
+          -168,
+          -177
+        ],
+        [
+          -169,
+          -199
+        ],
+        [
+          -172,
+          -205
+        ]
+      ]
+    },
+    {
+      "id": "RueDesArtisans",
+      "width_m": 3.5,
+      "points_xz": [
+        [
+          -208,
+          -146
+        ],
+        [
+          -207,
+          -150
+        ],
+        [
+          -207,
+          -174
+        ],
+        [
+          -207,
+          -191
+        ],
+        [
+          -210,
+          -202
+        ]
+      ]
+    },
+    {
+      "id": "RueDuMarche",
+      "width_m": 4.4,
+      "points_xz": [
+        [
+          -207,
+          -151
+        ],
+        [
+          -191,
+          -148
+        ],
+        [
+          -168,
+          -140
+        ],
+        [
+          -147,
+          -142
+        ],
+        [
+          -136,
+          -152
+        ],
+        [
+          -136,
+          -179
+        ],
+        [
+          -137,
+          -185
+        ]
+      ]
+    },
+    {
+      "id": "TraverseDesHalles",
+      "width_m": 4.0,
+      "points_xz": [
+        [
+          -207,
+          -184
+        ],
+        [
+          -190,
+          -185
+        ],
+        [
+          -186,
+          -178
+        ],
+        [
+          -170,
+          -178
+        ],
+        [
+          -153,
+          -177
+        ],
+        [
+          -137,
+          -179
+        ]
+      ]
+    },
+    {
+      "id": "RueHaute",
+      "width_m": 4.0,
+      "points_xz": [
+        [
+          -207,
+          -202
+        ],
+        [
+          -189,
+          -198
+        ],
+        [
+          -174,
+          -198
+        ],
+        [
+          -151,
+          -195
+        ],
+        [
+          -145,
+          -207
+        ],
+        [
+          -143,
+          -211
+        ]
+      ]
+    },
+    {
+      "id": "ParvisChapelle",
+      "width_m": 3.0,
+      "points_xz": [
+        [
+          -151,
+          -195
+        ],
+        [
+          -143,
+          -186
+        ],
+        [
+          -135,
+          -186
+        ]
+      ]
+    },
+    {
+      "id": "MonteeDuChateau",
+      "width_m": 5.0,
+      "points_xz": [
+        [
+          -207,
+          -202
+        ],
+        [
+          -215,
+          -218
+        ],
+        [
+          -224,
+          -230
+        ],
+        [
+          -219,
+          -237
+        ],
+        [
+          -208,
+          -233
+        ],
+        [
+          -197,
+          -223
+        ],
+        [
+          -185,
+          -222
+        ],
+        [
+          -178,
+          -230
+        ],
+        [
+          -180,
+          -241
+        ],
+        [
+          -182,
+          -246
+        ],
+        [
+          -182,
+          -255
+        ]
+      ]
+    },
+    {
+      "id": "RouteDeLaVille",
+      "width_m": 5.0,
+      "points_xz": [
+        [
+          -168,
+          -105
+        ],
+        [
+          -159,
+          -95
+        ],
+        [
+          -133,
+          -87
+        ],
+        [
+          -110,
+          -89
+        ],
+        [
+          -90,
+          -90
+        ]
+      ]
+    }
+  ],
+  "wall_polygon": [
+    [
+      -224,
+      -216
+    ],
+    [
+      -234,
+      -192
+    ],
+    [
+      -232,
+      -160
+    ],
+    [
+      -218,
+      -139
+    ],
+    [
+      -195,
+      -128
+    ],
+    [
+      -173,
+      -126
+    ],
+    [
+      -163,
+      -126
+    ],
+    [
+      -139,
+      -131
+    ],
+    [
+      -119,
+      -148
+    ],
+    [
+      -114,
+      -176
+    ],
+    [
+      -118,
+      -205
+    ],
+    [
+      -132,
+      -222
+    ],
+    [
+      -185,
+      -222
+    ],
+    [
+      -207,
+      -216
+    ],
+    [
+      -210,
+      -216
+    ],
+    [
+      -220,
+      -216
+    ]
+  ],
+  "wall_y": 64.2,
+  "castle_origin_xyz": [
+    -193,
+    94,
+    -275
+  ],
+  "ramp_xyz": [
+    [
+      -207,
+      -202,
+      65.5
+    ],
+    [
+      -215,
+      -218,
+      69.5
+    ],
+    [
+      -224,
+      -230,
+      75.2
+    ],
+    [
+      -219,
+      -237,
+      77.6
+    ],
+    [
+      -208,
+      -233,
+      81.0
+    ],
+    [
+      -197,
+      -223,
+      86
+    ],
+    [
+      -185,
+      -222,
+      89
+    ],
+    [
+      -178,
+      -230,
+      93
+    ],
+    [
+      -180,
+      -241,
+      94
+    ],
+    [
+      -182,
+      -246,
+      94
+    ],
+    [
+      -182,
+      -255,
+      94
+    ]
+  ],
+  "moat_water_y": 60.0,
+  "gate_xyz": [
+    -168,
+    64.2,
+    -126
+  ],
+  "bridge_id": "PontPorteRoyale",
+  "props": [
+    {
+      "id": "Fontaine",
+      "asset": "fontaine_de_la_place",
+      "xz": [
+        -189,
+        -166
+      ],
+      "yaw": 0,
+      "altitude": 64.525,
+      "group": "PlaceRoyale",
+      "scene": "res://assets/royal_city/props/fontaine_de_la_place.tscn",
+      "size_m": [
+        3.59999990463257,
+        2.34999990463257,
+        3.59999990463257
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.17499995231628,
+        0.0
+      ]
+    },
+    {
+      "id": "EtalVivres",
+      "asset": "etal_marche_0",
+      "xz": [
+        -190,
+        -154
+      ],
+      "yaw": 10,
+      "altitude": 64.225,
+      "group": "PlaceRoyale",
+      "scene": "res://assets/royal_city/props/etal_marche_0.tscn",
+      "size_m": [
+        2.70000004768372,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ]
+    },
+    {
+      "id": "EtalDraps",
+      "asset": "etal_marche_1",
+      "xz": [
+        -194,
+        -166
+      ],
+      "yaw": 90,
+      "altitude": 64.525,
+      "group": "PlaceRoyale",
+      "scene": "res://assets/royal_city/props/etal_marche_1.tscn",
+      "size_m": [
+        2.86999988555908,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ]
+    },
+    {
+      "id": "EtalArtisan",
+      "asset": "etal_marche_2",
+      "xz": [
+        -186,
+        -172
+      ],
+      "yaw": 0,
+      "altitude": 64.675,
+      "group": "PlaceRoyale",
+      "scene": "res://assets/royal_city/props/etal_marche_2.tscn",
+      "size_m": [
+        3.03999996185303,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ]
+    },
+    {
+      "id": "EtalVannerie",
+      "asset": "etal_marche_3",
+      "xz": [
+        -194,
+        -171
+      ],
+      "yaw": 0,
+      "altitude": 64.65,
+      "group": "PlaceRoyale",
+      "scene": "res://assets/royal_city/props/etal_marche_3.tscn",
+      "size_m": [
+        3.21000003814697,
+        2.68453240394592,
+        1.74459779262543
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.34226620197296,
+        -0.150000035762787
+      ]
+    }
+  ],
+  "pads": [
+    {
+      "id": "Royal_TerrasseVille",
+      "xz": [
+        -174,
+        -175
+      ],
+      "altitude": 64.75,
+      "size": [
+        119,
+        92
+      ],
+      "yaw": 0,
+      "blend": 8,
+      "slope": [
+        0,
+        -0.025
+      ],
+      "outline": "Ellipse"
+    },
+    {
+      "id": "Royal_EperonChateau",
+      "xz": [
+        -193,
+        -275
+      ],
+      "altitude": 94,
+      "size": [
+        91,
+        70
+      ],
+      "yaw": 0,
+      "blend": 12,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Ellipse"
+    },
+    {
+      "id": "Royal_CourChateau",
+      "xz": [
+        -193,
+        -275
+      ],
+      "altitude": 94,
+      "size": [
+        82,
+        63
+      ],
+      "yaw": 0,
+      "blend": 3,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee0",
+      "xz": [
+        -211.0,
+        -210.0
+      ],
+      "altitude": 67.5,
+      "size": [
+        7.6,
+        18.88854381999832
+      ],
+      "yaw": -153.434948822922,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.22360679774997896
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee1",
+      "xz": [
+        -219.5,
+        -224.0
+      ],
+      "altitude": 72.35,
+      "size": [
+        7.6,
+        16.0
+      ],
+      "yaw": -143.13010235415598,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.38000000000000017
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee2",
+      "xz": [
+        -221.5,
+        -233.5
+      ],
+      "altitude": 76.4,
+      "size": [
+        7.6,
+        9.602325267042627
+      ],
+      "yaw": 144.46232220802563,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.2789943329851653
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee3",
+      "xz": [
+        -213.5,
+        -235.0
+      ],
+      "altitude": 79.3,
+      "size": [
+        7.6,
+        12.704699910719626
+      ],
+      "yaw": 70.01689347810003,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.2904816036236992
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee4",
+      "xz": [
+        -202.5,
+        -228.0
+      ],
+      "altitude": 83.5,
+      "size": [
+        7.6,
+        15.866068747318506
+      ],
+      "yaw": 47.72631099390627,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.3363363969981562
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee5",
+      "xz": [
+        -191.0,
+        -222.5
+      ],
+      "altitude": 87.5,
+      "size": [
+        7.6,
+        13.041594578792296
+      ],
+      "yaw": 85.23635830927383,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.2491364395612199
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee6",
+      "xz": [
+        -181.5,
+        -226.0
+      ],
+      "altitude": 91.0,
+      "size": [
+        7.6,
+        11.63014581273465
+      ],
+      "yaw": 138.81407483429035,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.3762883473534389
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee7",
+      "xz": [
+        -179.0,
+        -235.5
+      ],
+      "altitude": 93.5,
+      "size": [
+        7.6,
+        12.180339887498949
+      ],
+      "yaw": -169.69515353123398,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.08944271909999159
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee8",
+      "xz": [
+        -181.0,
+        -243.5
+      ],
+      "altitude": 94.0,
+      "size": [
+        7.6,
+        6.385164807134504
+      ],
+      "yaw": -158.19859051364818,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Montee9",
+      "xz": [
+        -182.0,
+        -250.5
+      ],
+      "altitude": 94.0,
+      "size": [
+        7.6,
+        10.0
+      ],
+      "yaw": 180.0,
+      "blend": 3.5,
+      "slope": [
+        0,
+        0.0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesArdoises",
+      "xz": [
+        -216.89831795913304,
+        -194.723505314895
+      ],
+      "altitude": 65.225,
+      "size": [
+        11.25276985168457,
+        10.59999980926514
+      ],
+      "yaw": 82,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDuTailleur",
+      "xz": [
+        -214.71999979019165,
+        -178.0
+      ],
+      "altitude": 64.825,
+      "size": [
+        9.28000011444092,
+        12.16000022888184
+      ],
+      "yaw": 90,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_AubergeDesVoyageurs",
+      "xz": [
+        -216.9900747845907,
+        -160.0012186632159
+      ],
+      "altitude": 64.375,
+      "size": [
+        11.98000087738037,
+        12.01999988555908
+      ],
+      "yaw": 97,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesTisserands",
+      "xz": [
+        -192.00941713992145,
+        -206.86532862489062
+      ],
+      "altitude": 65.55,
+      "size": [
+        10.28000011444092,
+        11.47000064849854
+      ],
+      "yaw": -4,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDuPassage",
+      "xz": [
+        -198.0,
+        -176.0
+      ],
+      "altitude": 64.775,
+      "size": [
+        9.1910737991333,
+        10.79999961853027
+      ],
+      "yaw": 175,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_CourDesDrapiers",
+      "xz": [
+        -196.9986083034991,
+        -158.99009756485484
+      ],
+      "altitude": 64.35,
+      "size": [
+        11.88000144958496,
+        10.919999504089361
+      ],
+      "yaw": 8,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDesPignons",
+      "xz": [
+        -227.01019546123476,
+        -191.57849662046993
+      ],
+      "altitude": 65.15,
+      "size": [
+        10.13699998855591,
+        9.82000007629395
+      ],
+      "yaw": 92,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDuRempartOuest",
+      "xz": [
+        -224.76254675952947,
+        -169.8516227475184
+      ],
+      "altitude": 64.625,
+      "size": [
+        10.08000030517578,
+        10.25999965667725
+      ],
+      "yaw": 58,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDeLEchauguette",
+      "xz": [
+        -225.0,
+        -180.0
+      ],
+      "altitude": 64.875,
+      "size": [
+        9.59139289855957,
+        9.90000047683716
+      ],
+      "yaw": 178,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDuPuits",
+      "xz": [
+        -159.98923352621588,
+        -133.10243615546884
+      ],
+      "altitude": 64.0,
+      "size": [
+        9.08000030517578,
+        9.80600109100342
+      ],
+      "yaw": 174,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesChangeurs",
+      "xz": [
+        -178.9996510136865,
+        -187.0099936604659
+      ],
+      "altitude": 65.05,
+      "size": [
+        10.58000030517578,
+        11.419999504089361
+      ],
+      "yaw": 178,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDeLaLoggia",
+      "xz": [
+        -158.9991284434037,
+        -186.00996193748045
+      ],
+      "altitude": 65.025,
+      "size": [
+        10.47999992370605,
+        10.32000007629395
+      ],
+      "yaw": 175,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesEpiciers",
+      "xz": [
+        -179.23793506622314,
+        -153.0
+      ],
+      "altitude": 64.2,
+      "size": [
+        11.61587085723877,
+        10.50000038146973
+      ],
+      "yaw": 0,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonAuxTroisPignons",
+      "xz": [
+        -154.98046820597864,
+        -150.72068233230559
+      ],
+      "altitude": 64.15,
+      "size": [
+        10.47999992370605,
+        11.75999965667725
+      ],
+      "yaw": 4,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDuPorche",
+      "xz": [
+        -152.9986083034991,
+        -169.00990243514516
+      ],
+      "altitude": 64.6,
+      "size": [
+        9.58000030517578,
+        10.219999694824219
+      ],
+      "yaw": 172,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesMarchands",
+      "xz": [
+        -144.12692249016123,
+        -162.99556776897776
+      ],
+      "altitude": 64.45,
+      "size": [
+        10.38000001907349,
+        11.0540002822876
+      ],
+      "yaw": -88,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesLivres",
+      "xz": [
+        -201.0,
+        -210.0
+      ],
+      "altitude": 65.625,
+      "size": [
+        9.59139289855957,
+        11.09999980926514
+      ],
+      "yaw": 5,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDesArcades",
+      "xz": [
+        -159.00069754744095,
+        -203.99002460684872
+      ],
+      "altitude": 65.475,
+      "size": [
+        11.38000144958496,
+        10.71999969482422
+      ],
+      "yaw": -4,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDeLaRive",
+      "xz": [
+        -126.00999975204468,
+        -181.32699990272522
+      ],
+      "altitude": 64.925,
+      "size": [
+        11.22600021362305,
+        11.61999931335449
+      ],
+      "yaw": -90,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDeLaPorteEst",
+      "xz": [
+        -127.27982916469921,
+        -160.99022815024247
+      ],
+      "altitude": 64.4,
+      "size": [
+        9.97999992370605,
+        11.05999984741211
+      ],
+      "yaw": -88,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDuMacon",
+      "xz": [
+        -130.0,
+        -147.0
+      ],
+      "altitude": 64.05,
+      "size": [
+        8.59050979614258,
+        10.20000019073486
+      ],
+      "yaw": 158,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDuGrenier",
+      "xz": [
+        -151.0,
+        -134.0829999446869
+      ],
+      "altitude": 64.0,
+      "size": [
+        8.88000001907349,
+        8.76600017547607
+      ],
+      "yaw": 180,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDeLaTour",
+      "xz": [
+        -221.0,
+        -296.9900002479553
+      ],
+      "altitude": 94.0,
+      "size": [
+        9.68000020980835,
+        9.719999694824219
+      ],
+      "yaw": 0,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesJardins",
+      "xz": [
+        -148.0013916965009,
+        -215.99009756485484
+      ],
+      "altitude": 65.775,
+      "size": [
+        9.88000001907349,
+        10.219999694824219
+      ],
+      "yaw": -8,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDuCanal",
+      "xz": [
+        -158.0554570404543,
+        -214.36612312705068
+      ],
+      "altitude": 65.75,
+      "size": [
+        10.16340293884277,
+        9.70000019073486
+      ],
+      "yaw": -95,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesVitriers",
+      "xz": [
+        -199.95137855662233,
+        -191.72425409212863
+      ],
+      "altitude": 65.175,
+      "size": [
+        8.97999992370605,
+        10.05999984741211
+      ],
+      "yaw": 10,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_HalleDuMarche",
+      "xz": [
+        -179.0,
+        -163.0
+      ],
+      "altitude": 64.45,
+      "size": [
+        15.1000007629395,
+        10.09067192077637
+      ],
+      "yaw": 0,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_HotelDeVille",
+      "xz": [
+        -172.0,
+        -213.90500020980835
+      ],
+      "altitude": 65.725,
+      "size": [
+        16.093845748901398,
+        12.6299995422363
+      ],
+      "yaw": 0,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_GrandeChapelle",
+      "xz": [
+        -133.69850301742554,
+        -197.95250034332275
+      ],
+      "altitude": 65.325,
+      "size": [
+        14.9770063400269,
+        20.195000076293898
+      ],
+      "yaw": 0,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_EcuriesDeLaPorte",
+      "xz": [
+        -190.0,
+        -139.0
+      ],
+      "altitude": 64.0,
+      "size": [
+        13.1000007629395,
+        9.08991088867188
+      ],
+      "yaw": 0,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_GrenierDeLaVille",
+      "xz": [
+        -201.41079833285661,
+        -140.75008171094456
+      ],
+      "altitude": 64.0,
+      "size": [
+        13.162001037597701,
+        10.50000038146973
+      ],
+      "yaw": 80,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_CorpsDeGarde",
+      "xz": [
+        -178.69500017166138,
+        -135.0
+      ],
+      "altitude": 64.0,
+      "size": [
+        9.49131669998169,
+        10.30999984741211
+      ],
+      "yaw": 90,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_MaisonDesChariots",
+      "xz": [
+        -177.0,
+        -171.0
+      ],
+      "altitude": 64.65,
+      "size": [
+        8.39029445648193,
+        9.30000057220459
+      ],
+      "yaw": -95,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_Assise_LogisDesCordonniers",
+      "xz": [
+        -158.89299988746643,
+        -160.0
+      ],
+      "altitude": 64.375,
+      "size": [
+        8.78000011444092,
+        10.01400032043457
+      ],
+      "yaw": 90,
+      "blend": 3.4,
+      "slope": [
+        0,
+        0
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_RouteSud0",
+      "xz": [
+        -163.5,
+        -100.0
+      ],
+      "altitude": 63.35,
+      "size": [
+        8,
+        14.45362404707371
+      ],
+      "yaw": 41.98721249581666,
+      "blend": 10,
+      "slope": [
+        0,
+        -0.12636000486201848
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_RouteSud1",
+      "xz": [
+        -146.0,
+        -91.0
+      ],
+      "altitude": 61.45,
+      "size": [
+        8,
+        28.202941017470888
+      ],
+      "yaw": 72.89727103094764,
+      "blend": 10,
+      "slope": [
+        0,
+        -0.07719753531984987
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_RouteSud2",
+      "xz": [
+        -121.5,
+        -88.0
+      ],
+      "altitude": 58.599999999999994,
+      "size": [
+        8,
+        24.08679276123039
+      ],
+      "yaw": 94.96974072811031,
+      "blend": 10,
+      "slope": [
+        0,
+        -0.15593330945671566
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_RouteSud3",
+      "xz": [
+        -100.0,
+        -89.5
+      ],
+      "altitude": 55.355,
+      "size": [
+        8,
+        21.024984394500787
+      ],
+      "yaw": 92.86240522611175,
+      "blend": 10,
+      "slope": [
+        0,
+        -0.14431971296784857
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_RouteSud4",
+      "xz": [
+        -85.5,
+        -84.0
+      ],
+      "altitude": 52.8,
+      "size": [
+        8,
+        16.0
+      ],
+      "yaw": 36.86989764584402,
+      "blend": 10,
+      "slope": [
+        0,
+        -0.14799999999999994
+      ],
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Royal_RouteSud5",
+      "xz": [
+        -76.5,
+        -71.5
+      ],
+      "altitude": 50.855000000000004,
+      "size": [
+        8,
+        16.811388300841898
+      ],
+      "yaw": 34.69515353123397,
+      "blend": 10,
+      "slope": [
+        0,
+        -0.10562007384962353
+      ],
+      "outline": "Rectangle"
+    }
+  ]
+}

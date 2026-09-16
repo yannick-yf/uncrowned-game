@@ -1,0 +1,122 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_41l3h"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateGuide_dark_wood.res" id="2_ycjmi"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateLintel_dark_wood.res" id="3_de5fq"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="4_3ua8l"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GatePlanks_wood.res" id="5_pmsyn"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateLiftRod_wood.res" id="6_e1iua"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_WoodenRackTeeth_dark_wood.res" id="7_khjah"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/vanne_bois_GateHandle_wood.res" id="8_wxalc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hiao3"]
+size = Vector3(0.18, 2.3, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3aioh"]
+size = Vector3(0.18, 2.3, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gx8my"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tk058"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vvguq"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b6umo"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cb0ib"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jop2t"]
+size = Vector3(1.18, 0.17, 0.11)
+
+[node name="VanneBois" type="Node3D" unique_id=551821354]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "vanne_bois"
+metadata/family = "modules"
+metadata/label = "Vanne et crémaillère en bois"
+metadata/purpose = "Vanne verticale guidée entre deux montants ; panneau statique réglable dans l’éditeur."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="GateGuideCollision" type="StaticBody3D" parent="." unique_id=1274491300]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.67, 1.15, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@347" type="CollisionShape3D" parent="GateGuideCollision" unique_id=829653193]
+shape = SubResource("BoxShape3D_hiao3")
+
+[node name="@StaticBody3D@348" type="StaticBody3D" parent="." unique_id=1168907523]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.67, 1.15, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@349" type="CollisionShape3D" parent="@StaticBody3D@348" unique_id=185937172]
+shape = SubResource("BoxShape3D_3aioh")
+
+[node name="GatePlanksCollision" type="StaticBody3D" parent="." unique_id=392521794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@350" type="CollisionShape3D" parent="GatePlanksCollision" unique_id=715573617]
+shape = SubResource("BoxShape3D_gx8my")
+
+[node name="@StaticBody3D@351" type="StaticBody3D" parent="." unique_id=1867235234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@352" type="CollisionShape3D" parent="@StaticBody3D@351" unique_id=1624517498]
+shape = SubResource("BoxShape3D_tk058")
+
+[node name="@StaticBody3D@353" type="StaticBody3D" parent="." unique_id=1838689376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@354" type="CollisionShape3D" parent="@StaticBody3D@353" unique_id=585092183]
+shape = SubResource("BoxShape3D_vvguq")
+
+[node name="@StaticBody3D@355" type="StaticBody3D" parent="." unique_id=1034564738]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.96, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@356" type="CollisionShape3D" parent="@StaticBody3D@355" unique_id=246072669]
+shape = SubResource("BoxShape3D_b6umo")
+
+[node name="@StaticBody3D@357" type="StaticBody3D" parent="." unique_id=661544432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@358" type="CollisionShape3D" parent="@StaticBody3D@357" unique_id=1514327866]
+shape = SubResource("BoxShape3D_cb0ib")
+
+[node name="@StaticBody3D@359" type="StaticBody3D" parent="." unique_id=737500872]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@360" type="CollisionShape3D" parent="@StaticBody3D@359" unique_id=2036701808]
+shape = SubResource("BoxShape3D_jop2t")
+
+[node name="GateGuideDarkWood" type="MeshInstance3D" parent="." unique_id=61988056]
+material_override = ExtResource("1_41l3h")
+mesh = ExtResource("2_ycjmi")
+
+[node name="GateLintelDarkWood" type="MeshInstance3D" parent="." unique_id=1643128607]
+material_override = ExtResource("1_41l3h")
+mesh = ExtResource("3_de5fq")
+
+[node name="GatePlanksWood" type="MeshInstance3D" parent="." unique_id=577108794]
+material_override = ExtResource("4_3ua8l")
+mesh = ExtResource("5_pmsyn")
+
+[node name="GateLiftRodWood" type="MeshInstance3D" parent="." unique_id=520329966]
+material_override = ExtResource("4_3ua8l")
+mesh = ExtResource("6_e1iua")
+
+[node name="WoodenRackTeethDarkWood" type="MeshInstance3D" parent="." unique_id=602451768]
+material_override = ExtResource("1_41l3h")
+mesh = ExtResource("7_khjah")
+
+[node name="GateHandleWood" type="MeshInstance3D" parent="." unique_id=1146406742]
+material_override = ExtResource("4_3ua8l")
+mesh = ExtResource("8_wxalc")

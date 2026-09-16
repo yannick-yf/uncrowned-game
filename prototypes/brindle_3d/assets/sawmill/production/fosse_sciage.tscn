@@ -1,0 +1,125 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_8fhn1"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_PitPosts_dark_wood.res" id="2_ap703"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="3_05dxe"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_PitWalkway_wood.res" id="4_4olgs"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_CrossBunks_dark_wood.res" id="5_qg5tn"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/bark.tres" id="6_xtgbd"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_LogBark_bark.res" id="7_p74jq"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/endgrain.tres" id="8_lsoqg"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_CutEnd_endgrain.res" id="9_ly4sl"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_GrowthRings_wood.res" id="10_qw5ta"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/metal.tres" id="11_mn2wx"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_SawBlade_metal.res" id="12_fs00r"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_SawTeeth_metal.res" id="13_tp6ct"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_LadderRails_wood.res" id="14_6qrw0"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/fosse_sciage_LadderRungs_wood.res" id="15_anb72"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o5vf8"]
+size = Vector3(0.22, 2.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pyly3"]
+size = Vector3(0.22, 2.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l5wej"]
+size = Vector3(0.65, 0.17, 4.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fkpwo"]
+size = Vector3(0.22, 2.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mk8xs"]
+size = Vector3(0.22, 2.1, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ru826"]
+size = Vector3(0.65, 0.17, 4.8)
+
+[node name="FosseSciage" type="Node3D" unique_id=676337544]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "fosse_sciage"
+metadata/family = "production"
+metadata/label = "Banc de sciage de long"
+metadata/purpose = "Plateforme surélevée : un scieur au-dessus, un passage libre au-dessous. Peut être enfoncée dans une fosse de terrain."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="PitPostsCollision" type="StaticBody3D" parent="." unique_id=1908907976]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.3, 1.05, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@120" type="CollisionShape3D" parent="PitPostsCollision" unique_id=1941793173]
+shape = SubResource("BoxShape3D_o5vf8")
+
+[node name="@StaticBody3D@121" type="StaticBody3D" parent="." unique_id=1306229206]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.3, 1.05, 2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@122" type="CollisionShape3D" parent="@StaticBody3D@121" unique_id=1678436526]
+shape = SubResource("BoxShape3D_pyly3")
+
+[node name="PitWalkwayCollision" type="StaticBody3D" parent="." unique_id=951639715]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3, 2.1, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@123" type="CollisionShape3D" parent="PitWalkwayCollision" unique_id=764760758]
+shape = SubResource("BoxShape3D_l5wej")
+
+[node name="@StaticBody3D@124" type="StaticBody3D" parent="." unique_id=1299429851]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.3, 1.05, -2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@125" type="CollisionShape3D" parent="@StaticBody3D@124" unique_id=842693868]
+shape = SubResource("BoxShape3D_fkpwo")
+
+[node name="@StaticBody3D@126" type="StaticBody3D" parent="." unique_id=1012051429]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.3, 1.05, 2.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@127" type="CollisionShape3D" parent="@StaticBody3D@126" unique_id=719900534]
+shape = SubResource("BoxShape3D_mk8xs")
+
+[node name="@StaticBody3D@128" type="StaticBody3D" parent="." unique_id=1825276494]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3, 2.1, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@129" type="CollisionShape3D" parent="@StaticBody3D@128" unique_id=1597588760]
+shape = SubResource("BoxShape3D_ru826")
+
+[node name="PitPostsDarkWood" type="MeshInstance3D" parent="." unique_id=351364713]
+material_override = ExtResource("1_8fhn1")
+mesh = ExtResource("2_ap703")
+
+[node name="PitWalkwayWood" type="MeshInstance3D" parent="." unique_id=1940792367]
+material_override = ExtResource("3_05dxe")
+mesh = ExtResource("4_4olgs")
+
+[node name="CrossBunksDarkWood" type="MeshInstance3D" parent="." unique_id=630714333]
+material_override = ExtResource("1_8fhn1")
+mesh = ExtResource("5_qg5tn")
+
+[node name="LogBarkBark" type="MeshInstance3D" parent="." unique_id=1559574983]
+material_override = ExtResource("6_xtgbd")
+mesh = ExtResource("7_p74jq")
+
+[node name="CutEndEndgrain" type="MeshInstance3D" parent="." unique_id=1699526831]
+material_override = ExtResource("8_lsoqg")
+mesh = ExtResource("9_ly4sl")
+
+[node name="GrowthRingsWood" type="MeshInstance3D" parent="." unique_id=1888790674]
+material_override = ExtResource("3_05dxe")
+mesh = ExtResource("10_qw5ta")
+
+[node name="SawBladeMetal" type="MeshInstance3D" parent="." unique_id=2128890862]
+material_override = ExtResource("11_mn2wx")
+mesh = ExtResource("12_fs00r")
+
+[node name="SawTeethMetal" type="MeshInstance3D" parent="." unique_id=309430377]
+material_override = ExtResource("11_mn2wx")
+mesh = ExtResource("13_tp6ct")
+
+[node name="LadderRailsWood" type="MeshInstance3D" parent="." unique_id=271527643]
+material_override = ExtResource("3_05dxe")
+mesh = ExtResource("14_6qrw0")
+
+[node name="LadderRungsWood" type="MeshInstance3D" parent="." unique_id=2009086582]
+material_override = ExtResource("3_05dxe")
+mesh = ExtResource("15_anb72")

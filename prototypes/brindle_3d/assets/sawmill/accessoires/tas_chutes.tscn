@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/fresh_wood.tres" id="1_4yriu"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/tas_chutes_Offcut_fresh_wood.res" id="2_bw7yf"]
+
+[node name="TasChutes" type="Node3D" unique_id=409152393]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tas_chutes"
+metadata/family = "accessoires"
+metadata/label = "Chutes et copeaux"
+metadata/purpose = "Petites chutes de taille regroupées hors des circulations."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="OffcutFreshWood" type="MeshInstance3D" parent="." unique_id=700350503]
+material_override = ExtResource("1_4yriu")
+mesh = ExtResource("2_bw7yf")

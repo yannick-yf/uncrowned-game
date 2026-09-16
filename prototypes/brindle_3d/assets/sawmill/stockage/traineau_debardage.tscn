@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_l8bqn"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/traineau_debardage_Runner_dark_wood.res" id="2_f2yye"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/traineau_debardage_RunnerToe_dark_wood.res" id="3_70kms"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="4_sduef"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/traineau_debardage_SledCross_wood.res" id="5_7v7hf"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/rope.tres" id="6_m8qvc"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/traineau_debardage_TowRope_rope.res" id="7_m3fgh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pf0cm"]
+size = Vector3(0.16, 2.35, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vgov3"]
+size = Vector3(0.16, 2.35, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6w7da"]
+size = Vector3(1.4, 0.15, 0.26)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ktwhr"]
+size = Vector3(1.4, 0.15, 0.26)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ux6kj"]
+size = Vector3(1.4, 0.15, 0.26)
+
+[node name="TraineauDebardage" type="Node3D" unique_id=730133640]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "traineau_debardage"
+metadata/family = "stockage"
+metadata/label = "Traîneau de débardage"
+metadata/purpose = "Deux patins relevés, traverses et cordage de traction pour amener le bois."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="RunnerCollision" type="StaticBody3D" parent="." unique_id=606918994]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.55, 0.15, -0.125)
+collision_mask = 0
+
+[node name="@CollisionShape3D@297" type="CollisionShape3D" parent="RunnerCollision" unique_id=812043106]
+shape = SubResource("BoxShape3D_pf0cm")
+
+[node name="@StaticBody3D@298" type="StaticBody3D" parent="." unique_id=826964157]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0.55, 0.15, -0.125)
+collision_mask = 0
+
+[node name="@CollisionShape3D@299" type="CollisionShape3D" parent="@StaticBody3D@298" unique_id=234170505]
+shape = SubResource("BoxShape3D_vgov3")
+
+[node name="SledCrossCollision" type="StaticBody3D" parent="." unique_id=137110513]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, -0.85)
+collision_mask = 0
+
+[node name="@CollisionShape3D@300" type="CollisionShape3D" parent="SledCrossCollision" unique_id=1344951765]
+shape = SubResource("BoxShape3D_6w7da")
+
+[node name="@StaticBody3D@301" type="StaticBody3D" parent="." unique_id=310427275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@302" type="CollisionShape3D" parent="@StaticBody3D@301" unique_id=1371573614]
+shape = SubResource("BoxShape3D_ktwhr")
+
+[node name="@StaticBody3D@303" type="StaticBody3D" parent="." unique_id=1982589847]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0.85)
+collision_mask = 0
+
+[node name="@CollisionShape3D@304" type="CollisionShape3D" parent="@StaticBody3D@303" unique_id=67325023]
+shape = SubResource("BoxShape3D_ux6kj")
+
+[node name="RunnerDarkWood" type="MeshInstance3D" parent="." unique_id=1296772378]
+material_override = ExtResource("1_l8bqn")
+mesh = ExtResource("2_f2yye")
+
+[node name="RunnerToeDarkWood" type="MeshInstance3D" parent="." unique_id=677420864]
+material_override = ExtResource("1_l8bqn")
+mesh = ExtResource("3_70kms")
+
+[node name="SledCrossWood" type="MeshInstance3D" parent="." unique_id=1336418438]
+material_override = ExtResource("4_sduef")
+mesh = ExtResource("5_7v7hf")
+
+[node name="TowRopeRope" type="MeshInstance3D" parent="." unique_id=1255273471]
+material_override = ExtResource("6_m8qvc")
+mesh = ExtResource("7_m3fgh")

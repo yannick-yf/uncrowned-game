@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/stone.tres" id="1_7vkyy"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/quai_bois_DeckSupports_stone.res" id="2_1omht"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="3_raqxh"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/quai_bois_DeckBoards_wood.res" id="4_w15au"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c543f"]
+size = Vector3(0.48, 1, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hq031"]
+size = Vector3(0.48, 1, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_snqkx"]
+size = Vector3(0.48, 1, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_52lc3"]
+size = Vector3(0.48, 1, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t53y4"]
+size = Vector3(5.2, 0.13, 3.4)
+
+[node name="QuaiBois" type="Node3D" unique_id=1033931967]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "quai_bois"
+metadata/family = "modules"
+metadata/label = "Quai de chargement en bois"
+metadata/purpose = "Plateforme de rive avec poteaux, planches et anneaux d’amarrage."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="DeckSupportsCollision" type="StaticBody3D" parent="." unique_id=1820154808]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.288, 0.5, -1.462)
+collision_mask = 0
+
+[node name="@CollisionShape3D@306" type="CollisionShape3D" parent="DeckSupportsCollision" unique_id=1157785994]
+shape = SubResource("BoxShape3D_c543f")
+
+[node name="@StaticBody3D@307" type="StaticBody3D" parent="." unique_id=1774148339]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.288, 0.5, 1.462)
+collision_mask = 0
+
+[node name="@CollisionShape3D@308" type="CollisionShape3D" parent="@StaticBody3D@307" unique_id=1803460111]
+shape = SubResource("BoxShape3D_hq031")
+
+[node name="@StaticBody3D@309" type="StaticBody3D" parent="." unique_id=1024868602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.288, 0.5, -1.462)
+collision_mask = 0
+
+[node name="@CollisionShape3D@310" type="CollisionShape3D" parent="@StaticBody3D@309" unique_id=1491645614]
+shape = SubResource("BoxShape3D_snqkx")
+
+[node name="@StaticBody3D@311" type="StaticBody3D" parent="." unique_id=157899138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.288, 0.5, 1.462)
+collision_mask = 0
+
+[node name="@CollisionShape3D@312" type="CollisionShape3D" parent="@StaticBody3D@311" unique_id=2002062784]
+shape = SubResource("BoxShape3D_52lc3")
+
+[node name="DeckFloorCollision" type="StaticBody3D" parent="." unique_id=1793493263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@313" type="CollisionShape3D" parent="DeckFloorCollision" unique_id=1866249554]
+shape = SubResource("BoxShape3D_t53y4")
+
+[node name="DeckSupportsStone" type="MeshInstance3D" parent="." unique_id=945098976]
+material_override = ExtResource("1_7vkyy")
+mesh = ExtResource("2_1omht")
+
+[node name="DeckBoardsWood" type="MeshInstance3D" parent="." unique_id=1897169847]
+material_override = ExtResource("3_raqxh")
+mesh = ExtResource("4_w15au")

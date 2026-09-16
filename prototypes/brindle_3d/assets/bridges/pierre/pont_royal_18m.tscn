@@ -1,0 +1,97 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/stone.tres" id="1_jnpuw"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/pont_royal_18m_ContinuousDeck_stone.res" id="2_l0suu"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/pont_royal_18m_Parapet_stone.res" id="3_npspg"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/pont_royal_18m_ArchVoussoirs_stone.res" id="4_yjxbx"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/pont_royal_18m_BridgePiers_stone.res" id="5_kp1gg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kryj6"]
+size = Vector3(5.8, 0.4, 18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cx478"]
+size = Vector3(0.4, 1.1, 18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iuu8s"]
+size = Vector3(0.4, 1.1, 18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mjqak"]
+size = Vector3(6.15, 6.7, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hg5uc"]
+size = Vector3(6.15, 6.7, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kws2g"]
+size = Vector3(6.15, 6.7, 0.85)
+
+[node name="PontRoyal18m" type="Node3D" unique_id=60473942]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "pont_royal_18m"
+metadata/family = "fortifications"
+metadata/label = "Pont des douves"
+metadata/purpose = "Pont de pierre à deux arches et tablier de 5,8 m."
+metadata/placement = "Origine au centre du tablier, axe Z."
+
+[node name="ContinuousDeckCollision" type="StaticBody3D" parent="." unique_id=917748174]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@242" type="CollisionShape3D" parent="ContinuousDeckCollision" unique_id=1139497519]
+shape = SubResource("BoxShape3D_kryj6")
+
+[node name="ParapetCollision" type="StaticBody3D" parent="." unique_id=206283585]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.08, 0.55, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@243" type="CollisionShape3D" parent="ParapetCollision" unique_id=55787988]
+shape = SubResource("BoxShape3D_cx478")
+
+[node name="@StaticBody3D@244" type="StaticBody3D" parent="." unique_id=1585944335]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.08, 0.55, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@245" type="CollisionShape3D" parent="@StaticBody3D@244" unique_id=470003170]
+shape = SubResource("BoxShape3D_iuu8s")
+
+[node name="BridgePiersCollision" type="StaticBody3D" parent="." unique_id=1296359720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.55, -8.65)
+collision_mask = 0
+
+[node name="@CollisionShape3D@246" type="CollisionShape3D" parent="BridgePiersCollision" unique_id=2115183553]
+shape = SubResource("BoxShape3D_mjqak")
+
+[node name="@StaticBody3D@247" type="StaticBody3D" parent="." unique_id=2131237555]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.55, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@248" type="CollisionShape3D" parent="@StaticBody3D@247" unique_id=1293932405]
+shape = SubResource("BoxShape3D_hg5uc")
+
+[node name="@StaticBody3D@249" type="StaticBody3D" parent="." unique_id=732375644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.55, 8.65)
+collision_mask = 0
+
+[node name="@CollisionShape3D@250" type="CollisionShape3D" parent="@StaticBody3D@249" unique_id=616650189]
+shape = SubResource("BoxShape3D_kws2g")
+
+[node name="Entry" type="Marker3D" parent="." unique_id=1078759585]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9)
+
+[node name="Exit" type="Marker3D" parent="." unique_id=184978896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
+
+[node name="ContinuousDeckStone" type="MeshInstance3D" parent="." unique_id=738338042]
+material_override = ExtResource("1_jnpuw")
+mesh = ExtResource("2_l0suu")
+
+[node name="ParapetStone" type="MeshInstance3D" parent="." unique_id=1525350917]
+material_override = ExtResource("1_jnpuw")
+mesh = ExtResource("3_npspg")
+
+[node name="ArchVoussoirsStone" type="MeshInstance3D" parent="." unique_id=304020512]
+material_override = ExtResource("1_jnpuw")
+mesh = ExtResource("4_yjxbx")
+
+[node name="BridgePiersStone" type="MeshInstance3D" parent="." unique_id=834681560]
+material_override = ExtResource("1_jnpuw")
+mesh = ExtResource("5_kp1gg")

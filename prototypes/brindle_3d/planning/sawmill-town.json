@@ -1,0 +1,1832 @@
+{
+  "version": 1,
+  "focus_xz": [
+    235,
+    -159
+  ],
+  "bounds_xz": [
+    199,
+    -205,
+    72,
+    91
+  ],
+  "buildings": [
+    {
+      "id": "DepotForestier",
+      "asset": "depot_grumes",
+      "scene": "res://assets/sawmill/stockage/depot_grumes.tscn",
+      "xz": [
+        240,
+        -194
+      ],
+      "yaw": 12,
+      "altitude": 51.7,
+      "group": "CourDesGrumes",
+      "size_m": [
+        8.6,
+        7.07,
+        6.22
+      ],
+      "bounds_center_m": [
+        0.0,
+        3.53450012207031,
+        0.0
+      ],
+      "doors_local": [],
+      "door_approaches": []
+    },
+    {
+      "id": "RemiseVoitures",
+      "asset": "hangar_charrettes_bois",
+      "scene": "res://assets/sawmill/stockage/hangar_charrettes_bois.tscn",
+      "xz": [
+        220,
+        -187
+      ],
+      "yaw": 20,
+      "altitude": 50.8,
+      "group": "CourDesGrumes",
+      "size_m": [
+        8.23,
+        6.44,
+        5.72
+      ],
+      "bounds_center_m": [
+        0.054999828338623,
+        3.21200013160706,
+        0.0
+      ],
+      "doors_local": [],
+      "door_approaches": []
+    },
+    {
+      "id": "HalleCharron",
+      "asset": "atelier_charron",
+      "scene": "res://assets/sawmill/production/atelier_charron.tscn",
+      "xz": [
+        235,
+        -179
+      ],
+      "yaw": -5,
+      "altitude": 50.0,
+      "group": "CourDesGrumes",
+      "size_m": [
+        6.97,
+        6.06,
+        5.32
+      ],
+      "bounds_center_m": [
+        0.0249998569488525,
+        3.02800011634827,
+        0.0
+      ],
+      "doors_local": [],
+      "door_approaches": []
+    },
+    {
+      "id": "BaraquementBucherons",
+      "asset": "baraquement_des_equipes",
+      "scene": "res://assets/sawmill/village/baraquement_des_equipes.tscn",
+      "xz": [
+        252,
+        -186
+      ],
+      "yaw": -5,
+      "altitude": 51.0,
+      "group": "Logements",
+      "size_m": [
+        7.28,
+        4.74,
+        4.7
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.37100005149841,
+        0.267569065093994
+      ],
+      "doors_local": [
+        [
+          -1.58,
+          0.17,
+          2.28
+        ],
+        [
+          1.62,
+          0.17,
+          2.28
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            249.8656009511476,
+            -179.73217416481137
+          ],
+          [
+            250.12706817939056,
+            -182.7207582590866
+          ]
+        ],
+        [
+          [
+            253.0534239850412,
+            -179.45327578801886
+          ],
+          [
+            253.31489121328417,
+            -182.4418598822941
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "Sechoir",
+      "asset": "halle_sechage",
+      "scene": "res://assets/sawmill/stockage/halle_sechage.tscn",
+      "xz": [
+        250,
+        -174
+      ],
+      "yaw": 0,
+      "altitude": 49.8,
+      "group": "Sechage",
+      "size_m": [
+        7.8,
+        6.37,
+        5.52
+      ],
+      "bounds_center_m": [
+        0.0,
+        3.18500018119812,
+        0.0
+      ],
+      "doors_local": [],
+      "door_approaches": []
+    },
+    {
+      "id": "MaisonMaitreScieur",
+      "asset": "logis_du_contremaitre_en_l",
+      "scene": "res://assets/sawmill/village/logis_du_contremaitre_en_l.tscn",
+      "xz": [
+        237,
+        -164
+      ],
+      "yaw": -12,
+      "altitude": 48.4,
+      "group": "Logements",
+      "size_m": [
+        5.58,
+        5.9,
+        5.78
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.94899988174438,
+        0.0974998474121094
+      ],
+      "doors_local": [
+        [
+          1.24,
+          0.17,
+          2.03
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            236.92800877565617,
+            -157.69723733085107
+          ],
+          [
+            237.55174384810945,
+            -160.63168013305247
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "MaisonDeuxVolumes",
+      "asset": "maison_aux_deux_volumes",
+      "scene": "res://assets/sawmill/village/maison_aux_deux_volumes.tscn",
+      "xz": [
+        222,
+        -165
+      ],
+      "yaw": 8,
+      "altitude": 48.8,
+      "group": "Logements",
+      "size_m": [
+        5.71,
+        4.99,
+        4.34
+      ],
+      "bounds_center_m": [
+        -0.230629920959473,
+        2.49699997901917,
+        -0.278749942779541
+      ],
+      "doors_local": [
+        [
+          1.55,
+          0.17,
+          1.875
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            224.37343343983383,
+            -159.24935319232014
+          ],
+          [
+            223.95591413695362,
+            -162.22015739854484
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "LogisLisiere",
+      "asset": "logis_porte_basse",
+      "scene": "res://assets/sawmill/village/logis_porte_basse.tscn",
+      "xz": [
+        210,
+        -153
+      ],
+      "yaw": 62,
+      "altitude": 47.7,
+      "group": "Logements",
+      "size_m": [
+        5.21,
+        4.94,
+        5.94
+      ],
+      "bounds_center_m": [
+        -0.412981986999512,
+        2.47000026702881,
+        0.220000028610229
+      ],
+      "doors_local": [
+        [
+          -0.42,
+          0.17,
+          2.73
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            215.87750138249933,
+            -149.39919765903232
+          ],
+          [
+            213.22865860392255,
+            -150.80761234739
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "MaisonColombages",
+      "asset": "logis_a_colombages",
+      "scene": "res://assets/sawmill/village/logis_a_colombages.tscn",
+      "xz": [
+        228,
+        -148
+      ],
+      "yaw": 172,
+      "altitude": 47.0,
+      "group": "Logements",
+      "size_m": [
+        4.23,
+        5.74,
+        5.37
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.86999988555908,
+        0.361547231674194
+      ],
+      "doors_local": [
+        [
+          0.24,
+          0.17,
+          2.305
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            228.66069803019926,
+            -154.42558192795724
+          ],
+          [
+            228.24317872731905,
+            -151.45477772173254
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "BaraquementGalerie",
+      "asset": "baraquement_a_galerie",
+      "scene": "res://assets/sawmill/village/baraquement_a_galerie.tscn",
+      "xz": [
+        212,
+        -135
+      ],
+      "yaw": 95,
+      "altitude": 45.6,
+      "group": "Logements",
+      "size_m": [
+        8.44,
+        7.18,
+        5.54
+      ],
+      "bounds_center_m": [
+        -0.279999732971191,
+        3.5377185344696,
+        0.357095956802368
+      ],
+      "doors_local": [
+        [
+          0.3,
+          0.17,
+          2.38
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            218.47900465571482,
+            -135.8679854095697
+          ],
+          [
+            215.49042056143958,
+            -135.60651818132675
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "MaisonVoituriers",
+      "asset": "maison_des_charretiers",
+      "scene": "res://assets/sawmill/village/maison_des_charretiers.tscn",
+      "xz": [
+        223,
+        -128
+      ],
+      "yaw": 175,
+      "altitude": 44.7,
+      "group": "Logements",
+      "size_m": [
+        5.48,
+        4.74,
+        5.28
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.37000012397766,
+        -0.121705055236816
+      ],
+      "doors_local": [
+        [
+          0.72,
+          0.17,
+          2.055
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            222.82354120112316,
+            -134.2441402364376
+          ],
+          [
+            222.5620739728802,
+            -131.25555614216236
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "MaisonRive",
+      "asset": "maison_au_toit_decale",
+      "scene": "res://assets/sawmill/village/maison_au_toit_decale.tscn",
+      "xz": [
+        212,
+        -166
+      ],
+      "yaw": 5,
+      "altitude": 48.8,
+      "group": "Logements",
+      "size_m": [
+        5.18,
+        4.92,
+        5.0
+      ],
+      "bounds_center_m": [
+        -0.149999856948853,
+        2.46000003814697,
+        0.424165010452271
+      ],
+      "doors_local": [
+        [
+          0.58,
+          0.17,
+          2.055
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            213.11859430864243,
+            -159.86916222913436
+          ],
+          [
+            212.85712708039947,
+            -162.8577463234096
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "GrandeScierie",
+      "asset": "scierie_hydraulique",
+      "scene": "res://assets/sawmill/production/scierie_hydraulique.tscn",
+      "xz": [
+        250,
+        -147
+      ],
+      "yaw": 0,
+      "altitude": 44.2,
+      "group": "RiveDuMoulin",
+      "size_m": [
+        10.18,
+        7.97,
+        13.23
+      ],
+      "bounds_center_m": [
+        0.987500190734863,
+        3.92634010314941,
+        -0.636093139648438
+      ],
+      "doors_local": [],
+      "door_approaches": []
+    },
+    {
+      "id": "AtelierCharpentier",
+      "asset": "atelier_charpentier",
+      "scene": "res://assets/sawmill/production/atelier_charpentier.tscn",
+      "xz": [
+        247,
+        -135
+      ],
+      "yaw": -90,
+      "altitude": 44.7,
+      "group": "Ateliers",
+      "size_m": [
+        6.53,
+        6.54,
+        7.47
+      ],
+      "bounds_center_m": [
+        0.0,
+        3.25513219833374,
+        0.235995769500732
+      ],
+      "doors_local": [
+        [
+          0.0,
+          0.17,
+          1.48
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            239.7,
+            -132.8
+          ],
+          [
+            242.7,
+            -132.8
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "ComptoirBois",
+      "asset": "bureau_bois",
+      "scene": "res://assets/sawmill/village/bureau_bois.tscn",
+      "xz": [
+        235,
+        -141
+      ],
+      "yaw": -5,
+      "altitude": 46.0,
+      "group": "PlaceDuVillage",
+      "size_m": [
+        4.78,
+        5.42,
+        5.35
+      ],
+      "bounds_center_m": [
+        0.0,
+        2.71050000190735,
+        0.0741221904754639
+      ],
+      "doors_local": [
+        [
+          0.0,
+          0.17,
+          1.58
+        ]
+      ],
+      "door_approaches": [
+        [
+          [
+            235.2870946633996,
+            -135.10253642196517
+          ],
+          [
+            235.54856189164258,
+            -138.0911205162404
+          ]
+        ]
+      ]
+    }
+  ],
+  "props": [
+    {
+      "id": "PortiqueGrumes",
+      "asset": "portique_chargement",
+      "scene": "res://assets/sawmill/production/portique_chargement.tscn",
+      "xz": [
+        235,
+        -188
+      ],
+      "yaw": 0,
+      "altitude": 51.0,
+      "group": "CourDesGrumes",
+      "size_m": [
+        5.85,
+        3.67,
+        0.68
+      ],
+      "bounds_center_m": [
+        0.597500085830688,
+        1.83500003814697,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "CharretteChargement",
+      "asset": "charrette_grumes",
+      "scene": "res://assets/sawmill/stockage/charrette_grumes.tscn",
+      "xz": [
+        224,
+        -184
+      ],
+      "yaw": -12,
+      "altitude": 50.8,
+      "group": "CourDesGrumes",
+      "size_m": [
+        2.38,
+        2.11,
+        6.64
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.06470537185669,
+        1.18237709999084
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "ReserveTroncs",
+      "asset": "grumes_longues",
+      "scene": "res://assets/sawmill/accessoires/grumes_longues.tscn",
+      "xz": [
+        246,
+        -199
+      ],
+      "yaw": 12,
+      "altitude": 51.7,
+      "group": "CourDesGrumes",
+      "size_m": [
+        2.96,
+        2.43,
+        5.41
+      ],
+      "bounds_center_m": [
+        0.0,
+        1.21640002727509,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "ReserveBillons",
+      "asset": "grumes_courtes",
+      "scene": "res://assets/sawmill/accessoires/grumes_courtes.tscn",
+      "xz": [
+        235,
+        -202
+      ],
+      "yaw": 0,
+      "altitude": 51.7,
+      "group": "CourDesGrumes",
+      "size_m": [
+        2.02,
+        1.63,
+        2.36
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.813600063323975,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "TraineauForet",
+      "asset": "traineau_debardage",
+      "scene": "res://assets/sawmill/stockage/traineau_debardage.tscn",
+      "xz": [
+        224,
+        -197
+      ],
+      "yaw": 10,
+      "altitude": 51.2,
+      "group": "CourDesGrumes",
+      "size_m": [
+        1.4,
+        0.43,
+        3.91
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.274631202220917,
+        0.654697418212891
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "ScieursDeLong",
+      "asset": "fosse_sciage",
+      "scene": "res://assets/sawmill/production/fosse_sciage.tscn",
+      "xz": [
+        218,
+        -175
+      ],
+      "yaw": 5,
+      "altitude": 49.8,
+      "group": "Ateliers",
+      "size_m": [
+        3.34,
+        2.94,
+        6.09
+      ],
+      "bounds_center_m": [
+        -0.0425000190734863,
+        1.45042300224304,
+        0.642558097839355
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "ChevaletsCharpente",
+      "asset": "chevalets_sciage",
+      "scene": "res://assets/sawmill/accessoires/chevalets_sciage.tscn",
+      "xz": [
+        240,
+        -128
+      ],
+      "yaw": 0,
+      "altitude": 44.7,
+      "group": "Ateliers",
+      "size_m": [
+        1.55,
+        1.2,
+        3.05
+      ],
+      "bounds_center_m": [
+        0.20374995470047,
+        0.588131964206696,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "ReservePoutres",
+      "asset": "poutres_equarries",
+      "scene": "res://assets/sawmill/accessoires/poutres_equarries.tscn",
+      "xz": [
+        258,
+        -184
+      ],
+      "yaw": 0,
+      "altitude": 50.8,
+      "group": "Sechage",
+      "size_m": [
+        1.9,
+        1.07,
+        4.9
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.535000026226044,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "PlanchesAuSec",
+      "asset": "tas_planches",
+      "scene": "res://assets/sawmill/accessoires/tas_planches.tscn",
+      "xz": [
+        255,
+        -172
+      ],
+      "yaw": 0,
+      "altitude": 49.8,
+      "group": "Sechage",
+      "size_m": [
+        1.78,
+        1.08,
+        4.2
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.537999987602234,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "BillonsSciage",
+      "asset": "grumes_courtes",
+      "scene": "res://assets/sawmill/accessoires/grumes_courtes.tscn",
+      "xz": [
+        244,
+        -148
+      ],
+      "yaw": 0,
+      "altitude": 44.2,
+      "group": "RiveDuMoulin",
+      "size_m": [
+        2.02,
+        1.63,
+        2.36
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.813600063323975,
+        0.0
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "ChutesAtelier",
+      "asset": "tas_chutes",
+      "scene": "res://assets/sawmill/accessoires/tas_chutes.tscn",
+      "xz": [
+        250,
+        -130
+      ],
+      "yaw": 0,
+      "altitude": 44.7,
+      "group": "Ateliers",
+      "size_m": [
+        1.65,
+        0.23,
+        1.58
+      ],
+      "bounds_center_m": [
+        0.031219482421875,
+        0.159999996423721,
+        0.0332285165786743
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "OutilsBucherons",
+      "asset": "ratelier_outils_bois",
+      "scene": "res://assets/sawmill/accessoires/ratelier_outils_bois.tscn",
+      "xz": [
+        216,
+        -172
+      ],
+      "yaw": -90,
+      "altitude": 49.8,
+      "group": "Ateliers",
+      "size_m": [
+        2.0,
+        1.75,
+        0.24
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.875,
+        0.0562500059604645
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "BillotCour",
+      "asset": "billot_fendage",
+      "scene": "res://assets/sawmill/accessoires/billot_fendage.tscn",
+      "xz": [
+        225,
+        -169
+      ],
+      "yaw": 0,
+      "altitude": 48.8,
+      "group": "Logements",
+      "size_m": [
+        1.55,
+        1.49,
+        0.85
+      ],
+      "bounds_center_m": [
+        0.354365676641464,
+        0.74262535572052,
+        0.00692453980445862
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "TonneauxComptoir",
+      "asset": "tonneaux_resine",
+      "scene": "res://assets/sawmill/accessoires/tonneaux_resine.tscn",
+      "xz": [
+        237,
+        -144
+      ],
+      "yaw": 0,
+      "altitude": 46.0,
+      "group": "PlaceDuVillage",
+      "size_m": [
+        1.59,
+        0.9,
+        0.78
+      ],
+      "bounds_center_m": [
+        -0.0208750367164612,
+        0.449999988079071,
+        0.0241250097751617
+      ],
+      "doors_local": []
+    },
+    {
+      "id": "EtabliExterieur",
+      "asset": "etabli_menuisier",
+      "scene": "res://assets/sawmill/accessoires/etabli_menuisier.tscn",
+      "xz": [
+        242,
+        -128
+      ],
+      "yaw": -90,
+      "altitude": 44.7,
+      "group": "Ateliers",
+      "size_m": [
+        1.65,
+        1.25,
+        0.74
+      ],
+      "bounds_center_m": [
+        0.0,
+        0.623654425144196,
+        0.0
+      ],
+      "doors_local": []
+    }
+  ],
+  "paths": [
+    {
+      "id": "RouteForestiere",
+      "width_m": 4.0,
+      "points_xz": [
+        [
+          236,
+          -217
+        ],
+        [
+          233,
+          -205
+        ],
+        [
+          229,
+          -194
+        ],
+        [
+          229,
+          -184
+        ],
+        [
+          229,
+          -175
+        ]
+      ]
+    },
+    {
+      "id": "RueDuBois",
+      "width_m": 3.6,
+      "points_xz": [
+        [
+          229,
+          -175
+        ],
+        [
+          232,
+          -170
+        ],
+        [
+          232,
+          -159
+        ],
+        [
+          236,
+          -153
+        ],
+        [
+          240,
+          -145
+        ],
+        [
+          241,
+          -138
+        ],
+        [
+          237,
+          -133
+        ],
+        [
+          235,
+          -132
+        ]
+      ]
+    },
+    {
+      "id": "RueDesLogis",
+      "width_m": 2.8,
+      "points_xz": [
+        [
+          229,
+          -159
+        ],
+        [
+          220,
+          -158
+        ],
+        [
+          218,
+          -150
+        ],
+        [
+          219,
+          -142
+        ],
+        [
+          221,
+          -135
+        ],
+        [
+          228,
+          -133
+        ],
+        [
+          235,
+          -132
+        ]
+      ]
+    },
+    {
+      "id": "VenelleDesVoituriers",
+      "width_m": 2.5,
+      "points_xz": [
+        [
+          218,
+          -133
+        ],
+        [
+          221,
+          -135
+        ],
+        [
+          228,
+          -133
+        ]
+      ]
+    },
+    {
+      "id": "CourSechage",
+      "width_m": 3.5,
+      "points_xz": [
+        [
+          232,
+          -170
+        ],
+        [
+          240,
+          -172
+        ],
+        [
+          245,
+          -168.5
+        ],
+        [
+          250,
+          -168.5
+        ]
+      ]
+    },
+    {
+      "id": "AccesMoulin",
+      "width_m": 3.3,
+      "points_xz": [
+        [
+          241,
+          -138
+        ],
+        [
+          243,
+          -141
+        ],
+        [
+          247,
+          -140.9
+        ],
+        [
+          250,
+          -140.8
+        ]
+      ]
+    },
+    {
+      "id": "PlaceAuPont",
+      "width_m": 3.8,
+      "points_xz": [
+        [
+          235,
+          -132
+        ],
+        [
+          234,
+          -126
+        ],
+        [
+          230,
+          -124
+        ],
+        [
+          228.95,
+          -119.91
+        ]
+      ]
+    },
+    {
+      "id": "AteliersPlace",
+      "width_m": 3.2,
+      "points_xz": [
+        [
+          235,
+          -132
+        ],
+        [
+          240,
+          -132
+        ],
+        [
+          243,
+          -135
+        ]
+      ]
+    },
+    {
+      "id": "CourBucherons",
+      "width_m": 2.6,
+      "points_xz": [
+        [
+          229,
+          -184
+        ],
+        [
+          235,
+          -184
+        ],
+        [
+          244,
+          -182
+        ],
+        [
+          250,
+          -180
+        ],
+        [
+          255,
+          -180
+        ]
+      ]
+    },
+    {
+      "id": "Entree_BaraquementBucherons0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          249.9593886065894,
+          -180.01353713113684
+        ],
+        [
+          249.8656009511476,
+          -179.73217416481137
+        ],
+        [
+          250.12706817939056,
+          -182.7207582590866
+        ]
+      ]
+    },
+    {
+      "id": "Entree_BaraquementBucherons1",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          253.0534239850412,
+          -180.0
+        ],
+        [
+          253.0534239850412,
+          -179.45327578801886
+        ],
+        [
+          253.31489121328417,
+          -182.4418598822941
+        ]
+      ]
+    },
+    {
+      "id": "Entree_MaisonMaitreScieur0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          234.11758547057832,
+          -155.82362179413252
+        ],
+        [
+          236.92800877565617,
+          -157.69723733085107
+        ],
+        [
+          237.55174384810945,
+          -160.63168013305247
+        ]
+      ]
+    },
+    {
+      "id": "Entree_MaisonDeuxVolumes0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          224.4572230165539,
+          -158.49524700183932
+        ],
+        [
+          224.37343343983383,
+          -159.24935319232014
+        ],
+        [
+          223.95591413695362,
+          -162.22015739854484
+        ]
+      ]
+    },
+    {
+      "id": "Entree_LogisLisiere0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          218.04129107861908,
+          -149.6696713710473
+        ],
+        [
+          215.87750138249933,
+          -149.39919765903232
+        ],
+        [
+          213.22865860392255,
+          -150.80761234739
+        ]
+      ]
+    },
+    {
+      "id": "Entree_MaisonColombages0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          228.16276558289945,
+          -158.9069739536555
+        ],
+        [
+          228.66069803019926,
+          -154.42558192795724
+        ],
+        [
+          228.24317872731905,
+          -151.45477772173254
+        ]
+      ]
+    },
+    {
+      "id": "Entree_BaraquementGalerie0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          219.65530418145013,
+          -134.10353612096674
+        ],
+        [
+          218.47900465571482,
+          -135.8679854095697
+        ],
+        [
+          215.49042056143958,
+          -135.60651818132675
+        ]
+      ]
+    },
+    {
+      "id": "Entree_MaisonVoituriers0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          222.88557651971524,
+          -134.46126385150993
+        ],
+        [
+          222.82354120112316,
+          -134.2441402364376
+        ],
+        [
+          222.5620739728802,
+          -131.25555614216236
+        ]
+      ]
+    },
+    {
+      "id": "Entree_MaisonRive0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          220.0,
+          -158.0
+        ],
+        [
+          213.11859430864243,
+          -159.86916222913436
+        ],
+        [
+          212.85712708039947,
+          -162.8577463234096
+        ]
+      ]
+    },
+    {
+      "id": "Entree_AtelierCharpentier0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          240.25,
+          -132.25
+        ],
+        [
+          239.7,
+          -132.8
+        ],
+        [
+          242.7,
+          -132.8
+        ]
+      ]
+    },
+    {
+      "id": "Entree_ComptoirBois0",
+      "width_m": 1.6,
+      "points_xz": [
+        [
+          236.47069029950575,
+          -132.73534514975287
+        ],
+        [
+          235.2870946633996,
+          -135.10253642196517
+        ],
+        [
+          235.54856189164258,
+          -138.0911205162404
+        ]
+      ]
+    }
+  ],
+  "pads": [
+    {
+      "id": "Scierie_TerrasseQuartiers",
+      "xz": [
+        228,
+        -159
+      ],
+      "altitude": 47.9,
+      "size": [
+        50,
+        76
+      ],
+      "yaw": 0,
+      "blend": 12,
+      "outline": "Ellipse",
+      "slope": [
+        0.015,
+        -0.12
+      ]
+    },
+    {
+      "id": "Scierie_Place",
+      "xz": [
+        233,
+        -132
+      ],
+      "altitude": 45.0,
+      "size": [
+        12,
+        10
+      ],
+      "yaw": -8,
+      "blend": 7,
+      "outline": "Ellipse",
+      "slope": [
+        0.01,
+        -0.05
+      ]
+    },
+    {
+      "id": "Scierie_CourMoulin",
+      "xz": [
+        249,
+        -142
+      ],
+      "altitude": 44.2,
+      "size": [
+        13,
+        17
+      ],
+      "yaw": 0,
+      "blend": 5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_RampeBois0",
+      "xz": [
+        232.0,
+        -164.5
+      ],
+      "altitude": 48.65,
+      "size": [
+        5.4,
+        12.2
+      ],
+      "yaw": 0.0,
+      "blend": 4,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        -0.11818181818181793
+      ]
+    },
+    {
+      "id": "Scierie_RampeBois1",
+      "xz": [
+        234.0,
+        -156.0
+      ],
+      "altitude": 47.6,
+      "size": [
+        5.4,
+        8.411102550927978
+      ],
+      "yaw": 33.690067525979785,
+      "blend": 4,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        -0.11094003924504543
+      ]
+    },
+    {
+      "id": "Scierie_RampeBois2",
+      "xz": [
+        238.0,
+        -149.0
+      ],
+      "altitude": 46.55,
+      "size": [
+        5.4,
+        10.144271909999159
+      ],
+      "yaw": 26.56505117707799,
+      "blend": 4,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        -0.1453444185374868
+      ]
+    },
+    {
+      "id": "Scierie_RampeBois3",
+      "xz": [
+        240.5,
+        -141.5
+      ],
+      "altitude": 45.3,
+      "size": [
+        5.4,
+        8.271067811865475
+      ],
+      "yaw": 8.13010235415598,
+      "blend": 4,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        -0.1697056274847708
+      ]
+    },
+    {
+      "id": "Scierie_Sol_DepotForestier",
+      "xz": [
+        240.0,
+        -194.0
+      ],
+      "altitude": 51.7,
+      "size": [
+        12.1,
+        9.719999999999999
+      ],
+      "yaw": 12,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_RemiseVoitures",
+      "xz": [
+        220.0516829328343,
+        -187.01881104917126
+      ],
+      "altitude": 50.8,
+      "size": [
+        11.73,
+        9.219999999999999
+      ],
+      "yaw": 20,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_HalleCharron",
+      "xz": [
+        235.0249047249455,
+        -178.99782111889903
+      ],
+      "altitude": 50.0,
+      "size": [
+        10.469999999999999,
+        8.82
+      ],
+      "yaw": -5,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_BaraquementBucherons",
+      "xz": [
+        251.97667981939543,
+        -185.73344911598
+      ],
+      "altitude": 51.0,
+      "size": [
+        10.780000000000001,
+        8.2
+      ],
+      "yaw": -5,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_Sechoir",
+      "xz": [
+        250.0,
+        -174.0
+      ],
+      "altitude": 49.8,
+      "size": [
+        11.3,
+        9.02
+      ],
+      "yaw": 0,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_MaisonMaitreScieur",
+      "xz": [
+        236.97972864187008,
+        -163.90463075818192
+      ],
+      "altitude": 48.4,
+      "size": [
+        9.08,
+        9.280000000000001
+      ],
+      "yaw": -12,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_MaisonDeuxVolumes",
+      "xz": [
+        221.7328200596484,
+        -165.24393968622402
+      ],
+      "altitude": 48.8,
+      "size": [
+        9.21,
+        7.84
+      ],
+      "yaw": 8,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_LogisLisiere",
+      "xz": [
+        210.0003651968512,
+        -152.5320747914401
+      ],
+      "altitude": 47.7,
+      "size": [
+        8.71,
+        9.440000000000001
+      ],
+      "yaw": 62,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_MaisonColombages",
+      "xz": [
+        228.05031764937561,
+        -148.35802867886886
+      ],
+      "altitude": 47.0,
+      "size": [
+        7.73,
+        8.870000000000001
+      ],
+      "yaw": 172,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_BaraquementGalerie",
+      "xz": [
+        212.38014068357276,
+        -134.75218871389427
+      ],
+      "altitude": 45.6,
+      "size": [
+        11.94,
+        9.04
+      ],
+      "yaw": 95,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_MaisonVoituriers",
+      "xz": [
+        222.9893927055147,
+        -127.87875806924212
+      ],
+      "altitude": 44.7,
+      "size": [
+        8.98,
+        8.780000000000001
+      ],
+      "yaw": 175,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_MaisonRive",
+      "xz": [
+        211.88753935432658,
+        -165.564375716527
+      ],
+      "altitude": 48.8,
+      "size": [
+        8.68,
+        8.5
+      ],
+      "yaw": 5,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_AtelierCharpentier",
+      "xz": [
+        246.76400423049927,
+        -135.0
+      ],
+      "altitude": 44.7,
+      "size": [
+        10.030000000000001,
+        10.969999999999999
+      ],
+      "yaw": -90,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_ComptoirBois",
+      "xz": [
+        234.99353982543502,
+        -140.9261598668374
+      ],
+      "altitude": 46.0,
+      "size": [
+        8.280000000000001,
+        8.85
+      ],
+      "yaw": -5,
+      "blend": 4.0,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_Sol_MaisonColombages_Assise",
+      "xz": [
+        228.05031764937561,
+        -148.35802867886886
+      ],
+      "altitude": 47.0,
+      "size": [
+        7.73,
+        8.870000000000001
+      ],
+      "yaw": 172,
+      "blend": 1.5,
+      "outline": "Rectangle"
+    },
+    {
+      "id": "Scierie_RouteAcierie0",
+      "xz": [
+        236.54665,
+        -96.092
+      ],
+      "altitude": 45.55,
+      "size": [
+        7,
+        17.09235438525083
+      ],
+      "yaw": 36.16740442282222,
+      "blend": 7,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        0.19215027198367773
+      ]
+    },
+    {
+      "id": "Scierie_RouteAcierie1",
+      "xz": [
+        242.0,
+        -85.0
+      ],
+      "altitude": 48.1,
+      "size": [
+        7,
+        12.198039027185569
+      ],
+      "yaw": 11.309932474020213,
+      "blend": 7,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        0.21572774865200273
+      ]
+    },
+    {
+      "id": "Scierie_RouteAcierie2",
+      "xz": [
+        243.0,
+        -75.0
+      ],
+      "altitude": 50.25,
+      "size": [
+        7,
+        12.0
+      ],
+      "yaw": 0.0,
+      "blend": 7,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        0.20999999999999944
+      ]
+    },
+    {
+      "id": "Scierie_RouteAcierie3",
+      "xz": [
+        243.0,
+        -65.0
+      ],
+      "altitude": 50.0,
+      "size": [
+        7,
+        12.0
+      ],
+      "yaw": 0.0,
+      "blend": 7,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        -0.25999999999999945
+      ]
+    },
+    {
+      "id": "Scierie_RouteAcierie4",
+      "xz": [
+        243.0,
+        -55.5
+      ],
+      "altitude": 48.150000000000006,
+      "size": [
+        7,
+        11.0
+      ],
+      "yaw": 0.0,
+      "blend": 7,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        -0.12222222222222238
+      ]
+    },
+    {
+      "id": "Scierie_RaccordGrandeRoute",
+      "xz": [
+        186.5,
+        52.5
+      ],
+      "altitude": 40.225,
+      "size": [
+        6,
+        16.811388300841898
+      ],
+      "yaw": 71.56505117707799,
+      "blend": 5,
+      "outline": "Rectangle",
+      "slope": [
+        0,
+        0.3636619309193636
+      ]
+    }
+  ],
+  "districts": [
+    "CourDesGrumes",
+    "Sechage",
+    "Logements",
+    "PlaceDuVillage",
+    "Ateliers",
+    "RiveDuMoulin"
+  ],
+  "hydraulics": {
+    "mill_origin_xyz": [
+      250,
+      44.2,
+      -147
+    ],
+    "headwater_y": 48.88,
+    "flume_water_y": 48.76,
+    "tailwater_y": 44.22,
+    "lake_y": 40,
+    "intake_xyz": [
+      254.65,
+      48.76,
+      -154.25
+    ],
+    "wheel_axis_xyz": [
+      254.65,
+      46.45,
+      -147.65
+    ]
+  }
+}

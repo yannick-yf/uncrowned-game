@@ -1,0 +1,182 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_7rjl1"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/passerelle_bois_DeckSupports_dark_wood.res" id="2_5ia42"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="3_2mwg8"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/passerelle_bois_DeckBoards_wood.res" id="4_io106"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/passerelle_bois_BridgePosts_dark_wood.res" id="5_8164k"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/passerelle_bois_BridgeRail_wood.res" id="6_1okov"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f1ic1"]
+size = Vector3(0.48, 0.38, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nfifx"]
+size = Vector3(0.48, 0.38, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b0irm"]
+size = Vector3(0.48, 0.38, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_svkcd"]
+size = Vector3(0.48, 0.38, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ehikc"]
+size = Vector3(1.9, 0.13, 5.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xp74y"]
+size = Vector3(0.105, 1.17, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sk1h6"]
+size = Vector3(0.105, 1.17, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_msukc"]
+size = Vector3(0.105, 1.17, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2lit2"]
+size = Vector3(0.095, 5.4, 0.095)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mmtes"]
+size = Vector3(0.095, 5.4, 0.095)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kp01q"]
+size = Vector3(0.105, 1.17, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s0mjr"]
+size = Vector3(0.105, 1.17, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1vmwb"]
+size = Vector3(0.105, 1.17, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_34wx4"]
+size = Vector3(0.095, 5.4, 0.095)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8v2mu"]
+size = Vector3(0.095, 5.4, 0.095)
+
+[node name="PasserelleBois" type="Node3D" unique_id=1321799997]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "passerelle_bois"
+metadata/family = "modules"
+metadata/label = "Passerelle à garde-corps"
+metadata/purpose = "Petite passerelle de 5,5 m à poser entre deux berges."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="DeckSupportsCollision" type="StaticBody3D" parent="." unique_id=1184261276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.836, 0.19, -2.365)
+collision_mask = 0
+
+[node name="@CollisionShape3D@314" type="CollisionShape3D" parent="DeckSupportsCollision" unique_id=657626954]
+shape = SubResource("BoxShape3D_f1ic1")
+
+[node name="@StaticBody3D@315" type="StaticBody3D" parent="." unique_id=1619676354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.836, 0.19, 2.365)
+collision_mask = 0
+
+[node name="@CollisionShape3D@316" type="CollisionShape3D" parent="@StaticBody3D@315" unique_id=82508777]
+shape = SubResource("BoxShape3D_nfifx")
+
+[node name="@StaticBody3D@317" type="StaticBody3D" parent="." unique_id=1839294781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.836, 0.19, -2.365)
+collision_mask = 0
+
+[node name="@CollisionShape3D@318" type="CollisionShape3D" parent="@StaticBody3D@317" unique_id=1066460940]
+shape = SubResource("BoxShape3D_b0irm")
+
+[node name="@StaticBody3D@319" type="StaticBody3D" parent="." unique_id=1083608207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.836, 0.19, 2.365)
+collision_mask = 0
+
+[node name="@CollisionShape3D@320" type="CollisionShape3D" parent="@StaticBody3D@319" unique_id=52730392]
+shape = SubResource("BoxShape3D_svkcd")
+
+[node name="DeckFloorCollision" type="StaticBody3D" parent="." unique_id=1439451887]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@321" type="CollisionShape3D" parent="DeckFloorCollision" unique_id=654021742]
+shape = SubResource("BoxShape3D_ehikc")
+
+[node name="BridgePostsCollision" type="StaticBody3D" parent="." unique_id=2066687879]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.91, 0.935, -2.65)
+collision_mask = 0
+
+[node name="@CollisionShape3D@322" type="CollisionShape3D" parent="BridgePostsCollision" unique_id=358683221]
+shape = SubResource("BoxShape3D_xp74y")
+
+[node name="@StaticBody3D@323" type="StaticBody3D" parent="." unique_id=1232369014]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.91, 0.935, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@324" type="CollisionShape3D" parent="@StaticBody3D@323" unique_id=786850751]
+shape = SubResource("BoxShape3D_sk1h6")
+
+[node name="@StaticBody3D@325" type="StaticBody3D" parent="." unique_id=916995143]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.91, 0.935, 2.65)
+collision_mask = 0
+
+[node name="@CollisionShape3D@326" type="CollisionShape3D" parent="@StaticBody3D@325" unique_id=1948611254]
+shape = SubResource("BoxShape3D_msukc")
+
+[node name="BridgeRailCollision" type="StaticBody3D" parent="." unique_id=31252958]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.91, 0.88, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@327" type="CollisionShape3D" parent="BridgeRailCollision" unique_id=1391010257]
+shape = SubResource("BoxShape3D_2lit2")
+
+[node name="@StaticBody3D@328" type="StaticBody3D" parent="." unique_id=1684443008]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.91, 1.5, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@329" type="CollisionShape3D" parent="@StaticBody3D@328" unique_id=1442025199]
+shape = SubResource("BoxShape3D_mmtes")
+
+[node name="@StaticBody3D@330" type="StaticBody3D" parent="." unique_id=1990540399]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.91, 0.935, -2.65)
+collision_mask = 0
+
+[node name="@CollisionShape3D@331" type="CollisionShape3D" parent="@StaticBody3D@330" unique_id=474735917]
+shape = SubResource("BoxShape3D_kp01q")
+
+[node name="@StaticBody3D@332" type="StaticBody3D" parent="." unique_id=83860589]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.91, 0.935, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@333" type="CollisionShape3D" parent="@StaticBody3D@332" unique_id=1479173640]
+shape = SubResource("BoxShape3D_s0mjr")
+
+[node name="@StaticBody3D@334" type="StaticBody3D" parent="." unique_id=1981056662]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.91, 0.935, 2.65)
+collision_mask = 0
+
+[node name="@CollisionShape3D@335" type="CollisionShape3D" parent="@StaticBody3D@334" unique_id=1437703569]
+shape = SubResource("BoxShape3D_1vmwb")
+
+[node name="@StaticBody3D@336" type="StaticBody3D" parent="." unique_id=248970987]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0.91, 0.88, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@337" type="CollisionShape3D" parent="@StaticBody3D@336" unique_id=237774283]
+shape = SubResource("BoxShape3D_34wx4")
+
+[node name="@StaticBody3D@338" type="StaticBody3D" parent="." unique_id=1877474702]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0.91, 1.5, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@339" type="CollisionShape3D" parent="@StaticBody3D@338" unique_id=523227917]
+shape = SubResource("BoxShape3D_8v2mu")
+
+[node name="DeckSupportsDarkWood" type="MeshInstance3D" parent="." unique_id=1974153925]
+material_override = ExtResource("1_7rjl1")
+mesh = ExtResource("2_5ia42")
+
+[node name="DeckBoardsWood" type="MeshInstance3D" parent="." unique_id=233116944]
+material_override = ExtResource("3_2mwg8")
+mesh = ExtResource("4_io106")
+
+[node name="BridgePostsDarkWood" type="MeshInstance3D" parent="." unique_id=1471202311]
+material_override = ExtResource("1_7rjl1")
+mesh = ExtResource("5_8164k")
+
+[node name="BridgeRailWood" type="MeshInstance3D" parent="." unique_id=743754908]
+material_override = ExtResource("3_2mwg8")
+mesh = ExtResource("6_1okov")

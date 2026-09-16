@@ -24,7 +24,21 @@
         55,
         75
       ],
-      "reason": "Ville au bord d'un affluent, château sur un éperon dominant la vallée."
+      "reason": "Ville au bord d'un affluent, château sur un éperon dominant la vallée.",
+      "built_scene": "res://scenes/sectors/ville_royale.tscn",
+      "built_focus_xz": [
+        -177,
+        -232
+      ],
+      "built_bounds_xz": [
+        -253,
+        -318,
+        167,
+        228
+      ],
+      "built_buildings": 34,
+      "castle_terrace_height_m": 94,
+      "moat_water_height_m": 60
     },
     {
       "id": "village_fermier",
@@ -48,7 +62,7 @@
       "label": "Village scierie",
       "center_xz": [
         235,
-        -125
+        -159
       ],
       "footprint_xz": [
         90,
@@ -58,7 +72,12 @@
         45,
         65
       ],
-      "reason": "Lisière de la forêt, près du lac et d'une route vers l'aciérie."
+      "reason": "Village du bois à la lisière, organisé entre les dépôts forestiers, les logis et le moulin alimenté par un bief.",
+      "terrain_center_xz": [
+        235,
+        -125
+      ],
+      "built_scene": "res://scenes/sectors/scierie.tscn"
     },
     {
       "id": "village_acierie",
@@ -511,7 +530,7 @@
     }
   ],
   "notes": [
-    "Disposition confirmée par Yannick et son frère. Relief, eau, première implantation de Brindle et forêts construits ; mine et pont ajoutés près de l'aciérie. Les autres villages restent à construire.",
+    "Disposition confirmée par Yannick et son frère. Brindle, aciérie, scierie et cité royale construits dans l’atelier graphique ; village fermier encore réservé.",
     "Les cours d'eau traversant une enveloppe de village devront être réservés dans son plan local ; les bâtiments seront placés sur les berges adaptées.",
     "L'affluent de l'aciérie rejoint la rivière principale après le secteur agricole et ne se jette pas dans le lac.",
     "Le terrain suit ces profils descendants. assets/landscape/landscape.json contient les courbes interpolées, les raccords aux berges et les hauteurs réelles des centres de sites.",

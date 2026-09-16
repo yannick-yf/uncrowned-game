@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/flat_ground.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/map_camera.gd" id="2"]
@@ -11,6 +11,9 @@
 
 [ext_resource type="PackedScene" path="res://scenes/sectors/franchissements.tscn" id="9_ponts"]
 [ext_resource type="PackedScene" path="res://scenes/sectors/acierie.tscn" id="10_acierie"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/scierie.tscn" id="11_scierie"]
+
+[ext_resource type="PackedScene" path="res://scenes/sectors/ville_royale.tscn" id="12_royal"]
 
 [sub_resource type="Environment" id="Environment_map"]
 background_mode = 1
@@ -49,6 +52,10 @@ mine_cutout = Rect2(300,70,28,20)
 [node name="Franchissements" parent="Decor" instance=ExtResource("9_ponts")]
 
 [node name="Acierie" parent="Decor" instance=ExtResource("10_acierie")]
+
+[node name="Scierie" parent="Decor" instance=ExtResource("11_scierie")]
+
+[node name="VilleRoyale" parent="Decor" instance=ExtResource("12_royal")]
 
 [node name="ReliefGodot" parent="." instance=ExtResource("4")]
 
@@ -102,9 +109,12 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 15
-text = "Molette : zoom · Clic droit / ZQSD : déplacer · Clic central : tourner · R : ensemble · B : Brindle · I : aciérie · M : mine · P : pont suivant · F : lac · G : repères"
+text = "Molette : zoom · Clic droit / ZQSD : déplacer · Clic central : tourner · R : ensemble · B : Brindle · I : aciérie · T : scierie · C : ville/château · M : mine · P : pont suivant · F : lac · G : repères"
 
 [editable path="ReliefGodot"]
 [editable path="Decor/Brindle"]
 [editable path="Decor/MineAcierie"]
 [editable path="Decor/Acierie"]
+[editable path="Decor/Scierie"]
+
+[editable path="Decor/VilleRoyale"]

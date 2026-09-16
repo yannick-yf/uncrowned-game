@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_kb3wi"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_WheelRim_dark_wood.res" id="2_40bjs"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/iron.tres" id="3_sfghm"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_WheelIronBand_iron.res" id="4_3p0w0"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="5_ev0t6"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_WheelSpokes_wood.res" id="6_piqt4"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_WheelBuckets_wood.res" id="7_h1a2q"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_WheelHub_dark_wood.res" id="8_74a0c"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_DriveAxle_dark_wood.res" id="9_vf27f"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/stone.tres" id="10_sf2fu"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/roue_a_aubes_BearingPier_stone.res" id="11_mr0mn"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8tkeo"]
+height = 1.06
+radius = 2.19
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7uc3h"]
+size = Vector3(0.65, 2.12, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x73pw"]
+size = Vector3(0.65, 2.12, 0.7)
+
+[node name="RoueAAubes" type="Node3D" unique_id=1890898926]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "roue_a_aubes"
+metadata/family = "production"
+metadata/label = "Roue à augets et palier"
+metadata/purpose = "Roue indépendante de 4,3 m de diamètre ; axe horizontal et supports."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="WaterwheelCollision" type="StaticBody3D" parent="." unique_id=44155476]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 2.25, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@50" type="CollisionShape3D" parent="WaterwheelCollision" unique_id=1222305136]
+shape = SubResource("CylinderShape3D_8tkeo")
+
+[node name="WheelAxis" type="Marker3D" parent="." unique_id=1902562749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+
+[node name="BearingPierCollision" type="StaticBody3D" parent="." unique_id=1013992644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98, 1.06, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@51" type="CollisionShape3D" parent="BearingPierCollision" unique_id=620451488]
+shape = SubResource("BoxShape3D_7uc3h")
+
+[node name="@StaticBody3D@52" type="StaticBody3D" parent="." unique_id=1077818287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98, 1.06, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@53" type="CollisionShape3D" parent="@StaticBody3D@52" unique_id=467776426]
+shape = SubResource("BoxShape3D_x73pw")
+
+[node name="WheelRimDarkWood" type="MeshInstance3D" parent="." unique_id=891941767]
+material_override = ExtResource("1_kb3wi")
+mesh = ExtResource("2_40bjs")
+
+[node name="WheelIronBandIron" type="MeshInstance3D" parent="." unique_id=63118854]
+material_override = ExtResource("3_sfghm")
+mesh = ExtResource("4_3p0w0")
+
+[node name="WheelSpokesWood" type="MeshInstance3D" parent="." unique_id=96206622]
+material_override = ExtResource("5_ev0t6")
+mesh = ExtResource("6_piqt4")
+
+[node name="WheelBucketsWood" type="MeshInstance3D" parent="." unique_id=1183835528]
+material_override = ExtResource("5_ev0t6")
+mesh = ExtResource("7_h1a2q")
+
+[node name="WheelHubDarkWood" type="MeshInstance3D" parent="." unique_id=792868700]
+material_override = ExtResource("1_kb3wi")
+mesh = ExtResource("8_74a0c")
+
+[node name="DriveAxleDarkWood" type="MeshInstance3D" parent="." unique_id=148991031]
+material_override = ExtResource("1_kb3wi")
+mesh = ExtResource("9_vf27f")
+
+[node name="BearingPierStone" type="MeshInstance3D" parent="." unique_id=1569119246]
+material_override = ExtResource("10_sf2fu")
+mesh = ExtResource("11_mr0mn")
