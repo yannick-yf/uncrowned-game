@@ -3829,6 +3829,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 
 | Date | Decision | Alternatives considered | Why |
 |---|---|---|---|
+| 2026-09-15 | **Codex enters through root `AGENTS.md`, which requires the shared `CLAUDE.md` agreement and records Codex's lanes** | Copying the entire agreement into a second file; relying on a pasted chat brief | Yannick requested persistent Codex instructions. A repository entry point carries the reading order, file ownership and task workflow into future sessions without duplicating the shared agreement or changing personal configuration |
 | 2026-09-10 | Godot, at least for the first versions | Unity, Bevy | Text project files, agent-friendly, MIT |
 | 2026-09-10 | Long save-based RPG | Repeatable runs | Sandbox continues past the main quest |
 | 2026-09-10 | Player never types free text | Free-form chat | Every utterance maps to a known intent |
