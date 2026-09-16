@@ -101,7 +101,7 @@ H += mountains*((noise(X,Z,14,12)-.5)*7 + (noise(X,Z,6,14)-.5)*2)
 # Rounded building terraces; river valleys are carved afterwards and always take precedence.
 targets = {'ville_chateau':62,'village_fermier':30,'village_scierie':54,'village_acierie':43,'brindle':25}
 for site in SPEC['sites']:
-    cx,cz=site['center_xz']; w,d=site['footprint_xz']
+    cx,cz=site.get('terrain_center_xz',site['center_xz']); w,d=site['footprint_xz']
     radius = (((X-cx)/(w*.57))**4+((Z-cz)/(d*.57))**4)**.25
     weight = 1-smooth(.66,1.4,radius)
     target = targets[site['id']] + (noise(X,Z,45,31)-.5)*.7
@@ -174,12 +174,18 @@ for course in RIVER_SPEC['courses']:
     # Low shelves at the water, then a gradual climb into the undisturbed hillside.
     target_bank=water+.16*bank_distance+.0018*bank_distance**2
     target=np.where(edge<0,bed,target_bank)
-    reach=np.clip(course['valley_blend_m']+np.maximum(0,H-water-7)*1.5,45,140)
+    reach=course['valley_blend_m'] if course['id']=='bras_scierie' or course['id'].startswith('royal_') else np.clip(course['valley_blend_m']+np.maximum(0,H-water-7)*1.5,45,140)
     influence=1-smooth(5,reach,edge)
     H=H*(1-influence)+np.minimum(H,target)*influence
     # Fit the wet channel itself, with a two-metre shoreline shelf at its boundary.
     shore_fit=1-smooth(1,5,edge)
     H=H*(1-shore_fit)+target*shore_fit
+    if course['id'].startswith('royal_'):
+        # These defensive channels include a constructed earth bank. Their constant
+        # water level must never extend as a suspended sheet over lower outer ground.
+        bank_weight=(1-smooth(7,16,edge))*smooth(-.1,1.0,edge)
+        bank_top=water+.9+.05*np.maximum(edge,0)
+        H=H*(1-bank_weight)+np.maximum(H,bank_top)*bank_weight
     river_bed=np.minimum(river_bed,np.where(edge<0,bed,np.inf))
     choose=(edge<6)&(dist/half<water_nearest)
     W=np.where(choose,water,W)
@@ -218,6 +224,11 @@ for crossing in crossings:
 
 # The original Brindle building terraces are applied in Godot after loading this data.
 
+
+# The sawmill's elevated supply and low tailrace have different hydraulic levels.
+if any(c['id']=='bras_scierie' for c in RIVER_SPEC['courses']):
+    from sawmill_hydrology import apply as apply_sawmill_water
+    apply_sawmill_water(H,W,flowx,flowz,speed,X,Z)
 
 # Paint data is shared by terrain vertices. Existing Brindle palette is applied in Godot.
 gz,gx=np.gradient(H,EXTENT/(N-1))

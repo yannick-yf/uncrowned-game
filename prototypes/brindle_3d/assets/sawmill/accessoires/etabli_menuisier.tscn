@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="1_ylpma"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_BenchTop_wood.res" id="2_tnjuy"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_BenchLegs_wood.res" id="3_fyp8r"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_LowerShelf_wood.res" id="4_ue64j"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="5_xlnbf"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_PlaneBody_dark_wood.res" id="6_oaxri"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/metal.tres" id="7_r6h5p"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_PlaneIron_metal.res" id="8_jugj2"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_MalletHandle_wood.res" id="9_tmjw7"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/etabli_menuisier_MalletHead_wood.res" id="10_2wy5n"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mjoso"]
+size = Vector3(1.65, 0.15, 0.74)
+
+[node name="EtabliMenuisier" type="Node3D" unique_id=75297163]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "etabli_menuisier"
+metadata/family = "accessoires"
+metadata/label = "Établi de menuisier"
+metadata/purpose = "Établi, rabot, maillet, serre-joint et pièce en travail."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="BenchTopCollision" type="StaticBody3D" parent="." unique_id=1899902951]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@290" type="CollisionShape3D" parent="BenchTopCollision" unique_id=1684201675]
+shape = SubResource("BoxShape3D_mjoso")
+
+[node name="BenchTopWood" type="MeshInstance3D" parent="." unique_id=915269189]
+material_override = ExtResource("1_ylpma")
+mesh = ExtResource("2_tnjuy")
+
+[node name="BenchLegsWood" type="MeshInstance3D" parent="." unique_id=1672293298]
+material_override = ExtResource("1_ylpma")
+mesh = ExtResource("3_fyp8r")
+
+[node name="LowerShelfWood" type="MeshInstance3D" parent="." unique_id=458695225]
+material_override = ExtResource("1_ylpma")
+mesh = ExtResource("4_ue64j")
+
+[node name="PlaneBodyDarkWood" type="MeshInstance3D" parent="." unique_id=1574991249]
+material_override = ExtResource("5_xlnbf")
+mesh = ExtResource("6_oaxri")
+
+[node name="PlaneIronMetal" type="MeshInstance3D" parent="." unique_id=1782129496]
+material_override = ExtResource("7_r6h5p")
+mesh = ExtResource("8_jugj2")
+
+[node name="MalletHandleWood" type="MeshInstance3D" parent="." unique_id=1733952728]
+material_override = ExtResource("1_ylpma")
+mesh = ExtResource("9_tmjw7")
+
+[node name="MalletHeadWood" type="MeshInstance3D" parent="." unique_id=16784007]
+material_override = ExtResource("1_ylpma")
+mesh = ExtResource("10_2wy5n")

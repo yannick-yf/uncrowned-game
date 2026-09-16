@@ -1,0 +1,89 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/wood.tres" id="1_xbvbb"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_0_StallCounter_wood.res" id="2_jg7tj"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark_wood.tres" id="3_bk6sx"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_0_AwningPosts_dark_wood.res" id="4_2fi2w"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/banner.tres" id="5_dvv5g"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_0_CanvasAwning_banner.res" id="6_88km0"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_0_Crate_wood.res" id="7_e08pa"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/iron.tres" id="8_87nne"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/etal_marche_0_CrateStraps_iron.res" id="9_u3eij"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ytlti"]
+size = Vector3(2.3, 0.85, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_882aa"]
+size = Vector3(0.11, 2.6, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tia6f"]
+size = Vector3(0.11, 2.6, 0.11)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kerqg"]
+size = Vector3(0.429, 0.3575, 0.39600003)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3f1uy"]
+size = Vector3(0.429, 0.3575, 0.39600003)
+
+[node name="EtalMarche0" type="Node3D" unique_id=1435287531]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "etal_marche_0"
+metadata/family = "props"
+metadata/label = "Étal du marché 1"
+metadata/purpose = "Étal vide de personnages, marchandises et auvent."
+metadata/placement = "À placer sur le bord de la place."
+
+[node name="StallCounterCollision" type="StaticBody3D" parent="." unique_id=918439878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@252" type="CollisionShape3D" parent="StallCounterCollision" unique_id=1316170724]
+shape = SubResource("BoxShape3D_ytlti")
+
+[node name="AwningPostsCollision" type="StaticBody3D" parent="." unique_id=1200521072]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.15, 1.3, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@253" type="CollisionShape3D" parent="AwningPostsCollision" unique_id=292333391]
+shape = SubResource("BoxShape3D_882aa")
+
+[node name="@StaticBody3D@254" type="StaticBody3D" parent="." unique_id=1418565386]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.15, 1.3, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@255" type="CollisionShape3D" parent="@StaticBody3D@254" unique_id=264196812]
+shape = SubResource("BoxShape3D_tia6f")
+
+[node name="CrateCollision" type="StaticBody3D" parent="." unique_id=1326584051]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.667, 1.03875, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@256" type="CollisionShape3D" parent="CrateCollision" unique_id=328692058]
+shape = SubResource("BoxShape3D_kerqg")
+
+[node name="@StaticBody3D@257" type="StaticBody3D" parent="." unique_id=678918799]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.598, 1.03875, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@258" type="CollisionShape3D" parent="@StaticBody3D@257" unique_id=1818469475]
+shape = SubResource("BoxShape3D_3f1uy")
+
+[node name="StallCounterWood" type="MeshInstance3D" parent="." unique_id=574538593]
+material_override = ExtResource("1_xbvbb")
+mesh = ExtResource("2_jg7tj")
+
+[node name="AwningPostsDarkWood" type="MeshInstance3D" parent="." unique_id=1514502788]
+material_override = ExtResource("3_bk6sx")
+mesh = ExtResource("4_2fi2w")
+
+[node name="CanvasAwningBanner" type="MeshInstance3D" parent="." unique_id=953940227]
+material_override = ExtResource("5_dvv5g")
+mesh = ExtResource("6_88km0")
+
+[node name="CrateWood" type="MeshInstance3D" parent="." unique_id=1814179088]
+material_override = ExtResource("1_xbvbb")
+mesh = ExtResource("7_e08pa")
+
+[node name="CrateStrapsIron" type="MeshInstance3D" parent="." unique_id=855354132]
+material_override = ExtResource("8_87nne")
+mesh = ExtResource("9_u3eij")

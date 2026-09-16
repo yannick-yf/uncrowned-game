@@ -33,22 +33,37 @@ to regenerate the regional height data, not to open, edit or play the project.
 | Middle drag | Orbit | Orbit and tilt |
 | Right drag | — | Pan |
 | R | Return to Brindle spawn | Show whole map |
-| B / M / F | — | Brindle / mine / lake |
+| B / I / T / C / M / F | — | Brindle / ironworks / sawmill / royal city / mine / lake |
 | Tab | Switch to map | Return to character |
 
 ![Playable preview](apercus/brindle-ruines-variees-en-jeu.png)
 
+To inspect the sawmill directly, use **Ouvrir-village-scierie.cmd**. It opens the
+actual playable workshop at the village square; **Tab** switches to the character.
+The **T** shortcut frames this village in the free map camera. Its layout, water
+levels and rebuilding steps are in [Sawmill village](planning/Scierie-village.md).
+
+To inspect the mountain capital, use **Ouvrir-ville-chateau.cmd**, or press **C**
+in the free map camera. See [Royal city and castle](planning/Ville-royale.md) for
+its districts, 44 original assets, moat levels and editable ascent profile.
+
 ## What is included
 
 - Northern/eastern mountains, river valleys, a lake, tributaries and west/south sea.
-  The lake surface is 40 m, its central bed 33 m; the highest terrain is about 233 m.
+  The lake surface is 40 m, its central bed 33 m; the highest terrain is about 208 m.
 - Working positions for Brindle, farming, sawmill and steel villages, and a city
-  with a castle. Only Brindle and the mine currently have detailed construction.
+  with a castle. Brindle, the ironworks, the sawmill, the royal city and the mine now have detailed construction.
 - Brindle: five ruined houses, a ruined barn, a well, yards, nine curved routes,
   602 woodland trees and seven individual detail trees. The northern forest has
   another 295 trees.
 - A mine entrance cut from the eastern hillside with native Godot CSG, a sorting
   area and a bridge across the steel-village tributary.
+- Sawmill village: 15 distinct buildings in six editable district groups, 15 work
+  props, 20 connected paths, gardens, a well, an animated waterwheel, a headrace,
+  a tailrace and a sixth bridge connecting the village to the regional roads.
+- Mountain capital: a high keep, palace and upper court; 34 distinct town/service
+  buildings; district streets, market, chapel, ramparts, a walkable ascent, fed
+  moats and a seventh bridge.
 - The existing Brindle traveler spritesheet and directional walking animations,
   a camera and physical movement for assessing scale, slopes and access.
 - Saved editable scenes, shaders, imported source models and offline reconstruction

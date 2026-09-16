@@ -1,0 +1,158 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/stone.tres" id="1_t2mej"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_Foundation_stone.res" id="2_0od1u"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_SolidWalls_stone.res" id="3_oh4b8"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_StoneStringCourse_stone.res" id="4_g1hh1"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_StoneGable_stone.res" id="5_i2kem"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/rust_roof.tres" id="6_eiwtg"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_RoofDeck_rust_roof.res" id="7_cel5d"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark_wood.tres" id="8_u6roc"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_RoofVerge_dark_wood.res" id="9_v2dt0"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_RidgeCap_rust_roof.res" id="10_ss374"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark.tres" id="11_x4uod"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_DoorRecess_dark.res" id="12_wgo66"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/wood.tres" id="13_mq6pp"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_DoorPlanks_wood.res" id="14_uvfnu"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/iron.tres" id="15_sdick"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_DoorHinges_iron.res" id="16_eb4j5"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_DoorPull_iron.res" id="17_e7kxg"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_OakDoorJamb_dark_wood.res" id="18_esqh1"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_OakDoorLintel_dark_wood.res" id="19_nehl1"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_DeepWindow_dark.res" id="20_l7swp"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_WindowQuoins_stone.res" id="21_8wib2"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_WindowLintels_stone.res" id="22_7xfhq"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_WindowMullion_stone.res" id="23_08hul"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_WindowTransom_stone.res" id="24_by5t0"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_SteppedGableCoping_stone.res" id="25_nkx1p"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/mortar.tres" id="26_xunu4"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_ChimneyCore_mortar.res" id="27_xcrcv"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_ChimneyFace_stone.res" id="28_cvwpb"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_ChimneyCoping_stone.res" id="29_qaelk"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/maisondeslivres_ChimneyBlackOpening_dark.res" id="30_mywmu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u3i54"]
+size = Vector3(6.75, 0.24, 8.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fxtqc"]
+size = Vector3(6.5, 7.9, 8)
+
+[node name="Maisondeslivres" type="Node3D" unique_id=944433428]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "maisondeslivres"
+metadata/family = "buildings"
+metadata/label = "MaisonDesLivres"
+metadata/purpose = "Bâtiment de la ville royale, silhouette et façade propres."
+metadata/placement = "Façade sur +Z, origine au sol."
+
+[node name="FoundationCollision" type="StaticBody3D" parent="." unique_id=1632365983]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@37" type="CollisionShape3D" parent="FoundationCollision" unique_id=609131676]
+shape = SubResource("BoxShape3D_u3i54")
+
+[node name="SolidWallsCollision" type="StaticBody3D" parent="." unique_id=212887244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.95, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@38" type="CollisionShape3D" parent="SolidWallsCollision" unique_id=1433599959]
+shape = SubResource("BoxShape3D_fxtqc")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=772930536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04, 0.12, 5.1)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=944194683]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04, 0.12, 4.2999997)
+
+[node name="FoundationStone" type="MeshInstance3D" parent="." unique_id=2009591446]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("2_0od1u")
+
+[node name="SolidWallsStone" type="MeshInstance3D" parent="." unique_id=1303769059]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("3_oh4b8")
+
+[node name="StoneStringCourseStone" type="MeshInstance3D" parent="." unique_id=334133623]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("4_g1hh1")
+
+[node name="StoneGableStone" type="MeshInstance3D" parent="." unique_id=1473600907]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("5_i2kem")
+
+[node name="RoofDeckRustRoof" type="MeshInstance3D" parent="." unique_id=353287318]
+material_override = ExtResource("6_eiwtg")
+mesh = ExtResource("7_cel5d")
+
+[node name="RoofVergeDarkWood" type="MeshInstance3D" parent="." unique_id=1994549675]
+material_override = ExtResource("8_u6roc")
+mesh = ExtResource("9_v2dt0")
+
+[node name="RidgeCapRustRoof" type="MeshInstance3D" parent="." unique_id=2045384542]
+material_override = ExtResource("6_eiwtg")
+mesh = ExtResource("10_ss374")
+
+[node name="DoorRecessDark" type="MeshInstance3D" parent="." unique_id=836300542]
+material_override = ExtResource("11_x4uod")
+mesh = ExtResource("12_wgo66")
+
+[node name="DoorPlanksWood" type="MeshInstance3D" parent="." unique_id=1639260408]
+material_override = ExtResource("13_mq6pp")
+mesh = ExtResource("14_uvfnu")
+
+[node name="DoorHingesIron" type="MeshInstance3D" parent="." unique_id=580771072]
+material_override = ExtResource("15_sdick")
+mesh = ExtResource("16_eb4j5")
+
+[node name="DoorPullIron" type="MeshInstance3D" parent="." unique_id=1206829701]
+material_override = ExtResource("15_sdick")
+mesh = ExtResource("17_e7kxg")
+
+[node name="OakDoorJambDarkWood" type="MeshInstance3D" parent="." unique_id=1229438274]
+material_override = ExtResource("8_u6roc")
+mesh = ExtResource("18_esqh1")
+
+[node name="OakDoorLintelDarkWood" type="MeshInstance3D" parent="." unique_id=2061344301]
+material_override = ExtResource("8_u6roc")
+mesh = ExtResource("19_nehl1")
+
+[node name="DeepWindowDark" type="MeshInstance3D" parent="." unique_id=961210906]
+material_override = ExtResource("11_x4uod")
+mesh = ExtResource("20_l7swp")
+
+[node name="WindowQuoinsStone" type="MeshInstance3D" parent="." unique_id=1959548180]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("21_8wib2")
+
+[node name="WindowLintelsStone" type="MeshInstance3D" parent="." unique_id=1993470703]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("22_7xfhq")
+
+[node name="WindowMullionStone" type="MeshInstance3D" parent="." unique_id=1062048506]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("23_08hul")
+
+[node name="WindowTransomStone" type="MeshInstance3D" parent="." unique_id=1340014008]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("24_by5t0")
+
+[node name="SteppedGableCopingStone" type="MeshInstance3D" parent="." unique_id=1633523907]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("25_nkx1p")
+
+[node name="ChimneyCoreMortar" type="MeshInstance3D" parent="." unique_id=2012717304]
+material_override = ExtResource("26_xunu4")
+mesh = ExtResource("27_xcrcv")
+
+[node name="ChimneyFaceStone" type="MeshInstance3D" parent="." unique_id=248499505]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("28_cvwpb")
+
+[node name="ChimneyCopingStone" type="MeshInstance3D" parent="." unique_id=40025919]
+material_override = ExtResource("1_t2mej")
+mesh = ExtResource("29_qaelk")
+
+[node name="ChimneyBlackOpeningDark" type="MeshInstance3D" parent="." unique_id=1690416602]
+material_override = ExtResource("11_x4uod")
+mesh = ExtResource("30_mywmu")

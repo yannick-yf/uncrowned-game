@@ -1,0 +1,101 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="1_vg8ly"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartAxle_dark_wood.res" id="2_uvacc"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="3_ojrlq"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartRim_wood.res" id="4_wyd4o"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/iron.tres" id="5_cdgv7"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartTyre_iron.res" id="6_fsp06"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartSpokes_wood.res" id="7_74pw5"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartHub_dark_wood.res" id="8_iodst"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartChassis_dark_wood.res" id="9_41fw5"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartBunk_wood.res" id="10_fn10v"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartStake_dark_wood.res" id="11_mtc4p"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/bark.tres" id="12_aupp8"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_LogBark_bark.res" id="13_4pimi"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/endgrain.tres" id="14_jnc2y"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CutEnd_endgrain.res" id="15_0mv73"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_GrowthRings_wood.res" id="16_aqcn0"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/rope.tres" id="17_1uk71"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_Lashing_rope.res" id="18_cmfxy"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/charrette_grumes_CartPole_wood.res" id="19_hpykp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l2u5n"]
+size = Vector3(0.17, 3.9, 0.17)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b0a1i"]
+size = Vector3(0.17, 3.9, 0.17)
+
+[node name="CharretteGrumes" type="Node3D" unique_id=400332456]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "charrette_grumes"
+metadata/family = "stockage"
+metadata/label = "Charrette de débardage"
+metadata/purpose = "Véhicule à quatre roues de bois avec timon, arrimages et trois grumes."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="CartChassisCollision" type="StaticBody3D" parent="." unique_id=2104608096]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.68, 0.91, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@257" type="CollisionShape3D" parent="CartChassisCollision" unique_id=880837705]
+shape = SubResource("BoxShape3D_l2u5n")
+
+[node name="@StaticBody3D@258" type="StaticBody3D" parent="." unique_id=1056648202]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0.68, 0.91, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@259" type="CollisionShape3D" parent="@StaticBody3D@258" unique_id=338540323]
+shape = SubResource("BoxShape3D_b0a1i")
+
+[node name="CartAxleDarkWood" type="MeshInstance3D" parent="." unique_id=1996854332]
+material_override = ExtResource("1_vg8ly")
+mesh = ExtResource("2_uvacc")
+
+[node name="CartRimWood" type="MeshInstance3D" parent="." unique_id=746488947]
+material_override = ExtResource("3_ojrlq")
+mesh = ExtResource("4_wyd4o")
+
+[node name="CartTyreIron" type="MeshInstance3D" parent="." unique_id=141988053]
+material_override = ExtResource("5_cdgv7")
+mesh = ExtResource("6_fsp06")
+
+[node name="CartSpokesWood" type="MeshInstance3D" parent="." unique_id=957011533]
+material_override = ExtResource("3_ojrlq")
+mesh = ExtResource("7_74pw5")
+
+[node name="CartHubDarkWood" type="MeshInstance3D" parent="." unique_id=619745329]
+material_override = ExtResource("1_vg8ly")
+mesh = ExtResource("8_iodst")
+
+[node name="CartChassisDarkWood" type="MeshInstance3D" parent="." unique_id=1900707365]
+material_override = ExtResource("1_vg8ly")
+mesh = ExtResource("9_41fw5")
+
+[node name="CartBunkWood" type="MeshInstance3D" parent="." unique_id=1561303576]
+material_override = ExtResource("3_ojrlq")
+mesh = ExtResource("10_fn10v")
+
+[node name="CartStakeDarkWood" type="MeshInstance3D" parent="." unique_id=2131680434]
+material_override = ExtResource("1_vg8ly")
+mesh = ExtResource("11_mtc4p")
+
+[node name="LogBarkBark" type="MeshInstance3D" parent="." unique_id=1271547095]
+material_override = ExtResource("12_aupp8")
+mesh = ExtResource("13_4pimi")
+
+[node name="CutEndEndgrain" type="MeshInstance3D" parent="." unique_id=747377098]
+material_override = ExtResource("14_jnc2y")
+mesh = ExtResource("15_0mv73")
+
+[node name="GrowthRingsWood" type="MeshInstance3D" parent="." unique_id=901388336]
+material_override = ExtResource("3_ojrlq")
+mesh = ExtResource("16_aqcn0")
+
+[node name="LashingRope" type="MeshInstance3D" parent="." unique_id=206468876]
+material_override = ExtResource("17_1uk71")
+mesh = ExtResource("18_cmfxy")
+
+[node name="CartPoleWood" type="MeshInstance3D" parent="." unique_id=1184758948]
+material_override = ExtResource("3_ojrlq")
+mesh = ExtResource("19_hpykp")

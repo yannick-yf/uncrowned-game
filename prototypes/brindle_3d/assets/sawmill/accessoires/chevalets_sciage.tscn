@@ -1,0 +1,146 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/sawmill/materials/wood.tres" id="1_ck38c"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_HorseLeg_wood.res" id="2_csap4"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/dark_wood.tres" id="3_kfv75"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_HorseTop_dark_wood.res" id="4_1iult"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_HorseBrace_wood.res" id="5_rm6qs"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/bark.tres" id="6_t615l"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_LogBark_bark.res" id="7_f3o05"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/endgrain.tres" id="8_io4sc"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_CutEnd_endgrain.res" id="9_4rrsn"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_GrowthRings_wood.res" id="10_o3mme"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_FrameSawEnds_wood.res" id="11_gftik"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_FrameSawBrace_wood.res" id="12_qdo8k"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/rope.tres" id="13_4jna0"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_FrameSawTension_rope.res" id="14_0xu11"]
+[ext_resource type="Material" path="res://assets/sawmill/materials/metal.tres" id="15_c0n2q"]
+[ext_resource type="ArrayMesh" path="res://assets/sawmill/meshes/chevalets_sciage_FrameSawBlade_metal.res" id="16_n0fi8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mlkmg"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fq2mi"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ba8f"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7cveo"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6xgi5"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u6vh1"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ephn4"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1r0gp"]
+size = Vector3(0.1, 0.9464143, 0.1)
+
+[node name="ChevaletsSciage" type="Node3D" unique_id=842184978]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "chevalets_sciage"
+metadata/family = "accessoires"
+metadata/label = "Paire de chevalets de sciage"
+metadata/purpose = "Chevalets assemblés, billon et scie à cadre."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="HorseLegCollision" type="StaticBody3D" parent="." unique_id=681642032]
+transform = Transform3D(-0.96152395, 0.27472112, -8.742278e-08, 0.27472112, 0.96152395, 0, 8.4059096e-08, -2.4016883e-08, -1, -0.32, 0.455, -1.29)
+collision_mask = 0
+
+[node name="@CollisionShape3D@275" type="CollisionShape3D" parent="HorseLegCollision" unique_id=1700318684]
+shape = SubResource("BoxShape3D_mlkmg")
+
+[node name="@StaticBody3D@276" type="StaticBody3D" parent="." unique_id=1248916887]
+transform = Transform3D(-0.96152395, -0.27472112, -8.742278e-08, -0.27472112, 0.96152395, 0, 8.4059096e-08, 2.4016883e-08, -1, 0.32, 0.455, -1.29)
+collision_mask = 0
+
+[node name="@CollisionShape3D@277" type="CollisionShape3D" parent="@StaticBody3D@276" unique_id=1187316165]
+shape = SubResource("BoxShape3D_fq2mi")
+
+[node name="@StaticBody3D@278" type="StaticBody3D" parent="." unique_id=330777031]
+transform = Transform3D(-0.96152395, 0.27472112, -8.742278e-08, 0.27472112, 0.96152395, 0, 8.4059096e-08, -2.4016883e-08, -1, -0.32, 0.455, -0.71000004)
+collision_mask = 0
+
+[node name="@CollisionShape3D@279" type="CollisionShape3D" parent="@StaticBody3D@278" unique_id=171793718]
+shape = SubResource("BoxShape3D_1ba8f")
+
+[node name="@StaticBody3D@280" type="StaticBody3D" parent="." unique_id=926383265]
+transform = Transform3D(-0.96152395, -0.27472112, -8.742278e-08, -0.27472112, 0.96152395, 0, 8.4059096e-08, 2.4016883e-08, -1, 0.32, 0.455, -0.71000004)
+collision_mask = 0
+
+[node name="@CollisionShape3D@281" type="CollisionShape3D" parent="@StaticBody3D@280" unique_id=1603362420]
+shape = SubResource("BoxShape3D_7cveo")
+
+[node name="@StaticBody3D@282" type="StaticBody3D" parent="." unique_id=745620357]
+transform = Transform3D(-0.96152395, 0.27472112, -8.742278e-08, 0.27472112, 0.96152395, 0, 8.4059096e-08, -2.4016883e-08, -1, -0.32, 0.455, 0.71000004)
+collision_mask = 0
+
+[node name="@CollisionShape3D@283" type="CollisionShape3D" parent="@StaticBody3D@282" unique_id=1817977486]
+shape = SubResource("BoxShape3D_6xgi5")
+
+[node name="@StaticBody3D@284" type="StaticBody3D" parent="." unique_id=893600136]
+transform = Transform3D(-0.96152395, -0.27472112, -8.742278e-08, -0.27472112, 0.96152395, 0, 8.4059096e-08, 2.4016883e-08, -1, 0.32, 0.455, 0.71000004)
+collision_mask = 0
+
+[node name="@CollisionShape3D@285" type="CollisionShape3D" parent="@StaticBody3D@284" unique_id=805133863]
+shape = SubResource("BoxShape3D_u6vh1")
+
+[node name="@StaticBody3D@286" type="StaticBody3D" parent="." unique_id=2126210105]
+transform = Transform3D(-0.96152395, 0.27472112, -8.742278e-08, 0.27472112, 0.96152395, 0, 8.4059096e-08, -2.4016883e-08, -1, -0.32, 0.455, 1.29)
+collision_mask = 0
+
+[node name="@CollisionShape3D@287" type="CollisionShape3D" parent="@StaticBody3D@286" unique_id=1789161913]
+shape = SubResource("BoxShape3D_ephn4")
+
+[node name="@StaticBody3D@288" type="StaticBody3D" parent="." unique_id=1516660511]
+transform = Transform3D(-0.96152395, -0.27472112, -8.742278e-08, -0.27472112, 0.96152395, 0, 8.4059096e-08, 2.4016883e-08, -1, 0.32, 0.455, 1.29)
+collision_mask = 0
+
+[node name="@CollisionShape3D@289" type="CollisionShape3D" parent="@StaticBody3D@288" unique_id=1816780270]
+shape = SubResource("BoxShape3D_1r0gp")
+
+[node name="HorseLegWood" type="MeshInstance3D" parent="." unique_id=814709357]
+material_override = ExtResource("1_ck38c")
+mesh = ExtResource("2_csap4")
+
+[node name="HorseTopDarkWood" type="MeshInstance3D" parent="." unique_id=1363864708]
+material_override = ExtResource("3_kfv75")
+mesh = ExtResource("4_1iult")
+
+[node name="HorseBraceWood" type="MeshInstance3D" parent="." unique_id=1893940645]
+material_override = ExtResource("1_ck38c")
+mesh = ExtResource("5_rm6qs")
+
+[node name="LogBarkBark" type="MeshInstance3D" parent="." unique_id=2030767873]
+material_override = ExtResource("6_t615l")
+mesh = ExtResource("7_f3o05")
+
+[node name="CutEndEndgrain" type="MeshInstance3D" parent="." unique_id=1588817114]
+material_override = ExtResource("8_io4sc")
+mesh = ExtResource("9_4rrsn")
+
+[node name="GrowthRingsWood" type="MeshInstance3D" parent="." unique_id=18710575]
+material_override = ExtResource("1_ck38c")
+mesh = ExtResource("10_o3mme")
+
+[node name="FrameSawEndsWood" type="MeshInstance3D" parent="." unique_id=1047531204]
+material_override = ExtResource("1_ck38c")
+mesh = ExtResource("11_gftik")
+
+[node name="FrameSawBraceWood" type="MeshInstance3D" parent="." unique_id=126135480]
+material_override = ExtResource("1_ck38c")
+mesh = ExtResource("12_qdo8k")
+
+[node name="FrameSawTensionRope" type="MeshInstance3D" parent="." unique_id=453234500]
+material_override = ExtResource("13_4jna0")
+mesh = ExtResource("14_0xu11")
+
+[node name="FrameSawBladeMetal" type="MeshInstance3D" parent="." unique_id=562853209]
+material_override = ExtResource("15_c0n2q")
+mesh = ExtResource("16_n0fi8")

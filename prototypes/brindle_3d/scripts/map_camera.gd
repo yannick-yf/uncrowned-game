@@ -20,7 +20,7 @@ func _ready() -> void:
 
 
 func _on_ground_rebuilt() -> void:
-	_dimensions.text = "UNCROWNED  /  ATELIER DE CARTE\n%.0f × %.0f m  ·  Rivières et cinq ponts" % [
+	_dimensions.text = "UNCROWNED  /  ATELIER DE CARTE\n%.0f × %.0f m  ·  Brindle, aciérie, scierie et cité royale" % [
 		float(_ground.get("width_m")), float(_ground.get("depth_m"))]
 	frame_all()
 
@@ -110,6 +110,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			set_view(Vector2(308,80),62,27,-70)
 		elif event.keycode == KEY_I:
 			set_view(Vector2(235,37),112,49,-25)
+		elif event.keycode == KEY_C:
+			set_view(Vector2(-177,-232),230,38,-18)
+		elif event.keycode == KEY_T:
+			set_view(Vector2(237,-159),98,48,24)
 		elif event.keycode == KEY_P:
 			var bridges: Node3D=get_node_or_null("../Decor/Franchissements/Ponts")
 			if bridges!=null and bridges.get_child_count()>0:

@@ -1,0 +1,550 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/sawmill_catalog.gd" id="1_aq71k"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/scierie_hydraulique.tscn" id="2_tvjta"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/roue_a_aubes.tscn" id="3_dlygs"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/atelier_charpentier.tscn" id="4_8cjpm"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/atelier_charron.tscn" id="5_ixuf8"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/fosse_sciage.tscn" id="6_d36pk"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/halle_sechage.tscn" id="7_ryvw6"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/depot_grumes.tscn" id="8_gqffd"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/bureau_bois.tscn" id="9_mwwr0"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/hangar_charrettes_bois.tscn" id="10_12hfe"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/production/portique_chargement.tscn" id="11_ruy0p"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/charrette_grumes.tscn" id="12_rg1xp"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/grumes_longues.tscn" id="13_2lyc4"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/grumes_courtes.tscn" id="14_g6eo3"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/tas_planches.tscn" id="15_0sc2g"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/poutres_equarries.tscn" id="16_gr5lk"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/chevalets_sciage.tscn" id="17_pfwua"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/etabli_menuisier.tscn" id="18_hmeyl"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/ratelier_outils_bois.tscn" id="19_ic3sb"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/tas_chutes.tscn" id="20_i6imx"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/tonneaux_resine.tscn" id="21_rwahy"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/stockage/traineau_debardage.tscn" id="22_sqirp"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/accessoires/billot_fendage.tscn" id="23_c0bu5"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/modules/quai_bois.tscn" id="24_r42cl"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/modules/passerelle_bois.tscn" id="25_lfgm0"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/modules/canal_amenee.tscn" id="26_sp8us"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/modules/vanne_bois.tscn" id="27_fdht0"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/logis_porte_basse.tscn" id="28_8gdfd"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/maison_aux_deux_volumes.tscn" id="29_ayub0"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/baraquement_des_equipes.tscn" id="30_qqdj2"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/logis_a_colombages.tscn" id="31_0ojmk"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/baraquement_a_galerie.tscn" id="32_baqcg"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/logis_du_contremaitre_en_l.tscn" id="33_f3bid"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/maison_des_charretiers.tscn" id="34_esiy8"]
+[ext_resource type="PackedScene" path="res://assets/sawmill/village/maison_au_toit_decale.tscn" id="35_br7p7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uq4il"]
+albedo_color = Color(0.56078434, 0.5686275, 0.4745098, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r2sow"]
+size = Vector2(260, 220)
+
+[sub_resource type="Environment" id="Environment_alku8"]
+background_mode = 1
+background_color = Color(0.6627451, 0.7137255, 0.67058825, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6313726, 0.69411767, 0.7294118, 1)
+ambient_light_energy = 0.52
+tonemap_mode = 2
+ssao_enabled = true
+ssao_radius = 1.4
+ssao_intensity = 1.3
+
+[node name="CatalogueScierie" type="Node3D" unique_id=545773889]
+script = ExtResource("1_aq71k")
+
+[node name="Assets" type="Node3D" parent="." unique_id=559434874]
+
+[node name="ScierieHydraulique" type="Node3D" parent="Assets" unique_id=1244377217 instance=ExtResource("2_tvjta")]
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "scierie_hydraulique"
+metadata/family = "production"
+metadata/label = "Grande scierie à roue à eau"
+metadata/purpose = "Halle de sciage, chariot de grume, scie verticale, transmission, roue et arrivée d’eau. Mécanisme statique pour le décor."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 0
+
+[node name="RoueAAubes" type="Node3D" parent="Assets" unique_id=1890898926 instance=ExtResource("3_dlygs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "roue_a_aubes"
+metadata/family = "production"
+metadata/label = "Roue à augets et palier"
+metadata/purpose = "Roue indépendante de 4,3 m de diamètre ; axe horizontal et supports."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 1
+
+[node name="AtelierCharpentier" type="Node3D" parent="Assets" unique_id=1550549985 instance=ExtResource("4_8cjpm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "atelier_charpentier"
+metadata/family = "production"
+metadata/label = "Atelier du maître charpentier"
+metadata/purpose = "Maison-atelier à colombages, grand auvent de taille et poutre en cours d’équarrissage."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 2
+
+[node name="AtelierCharron" type="Node3D" parent="Assets" unique_id=383677460 instance=ExtResource("5_ixuf8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "atelier_charron"
+metadata/family = "production"
+metadata/label = "Halle du charron"
+metadata/purpose = "Atelier ouvert pour assembler roues, essieux et véhicules de transport du bois."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 3
+
+[node name="FosseSciage" type="Node3D" parent="Assets" unique_id=676337544 instance=ExtResource("6_d36pk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "fosse_sciage"
+metadata/family = "production"
+metadata/label = "Banc de sciage de long"
+metadata/purpose = "Plateforme surélevée : un scieur au-dessus, un passage libre au-dessous. Peut être enfoncée dans une fosse de terrain."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 4
+
+[node name="HalleSechage" type="Node3D" parent="Assets" unique_id=562786020 instance=ExtResource("7_ryvw6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "halle_sechage"
+metadata/family = "stockage"
+metadata/label = "Grand séchoir à planches"
+metadata/purpose = "Halle ventilée ; planches empilées sur tasseaux et passage central libre."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 5
+
+[node name="DepotGrumes" type="Node3D" parent="Assets" unique_id=206910243 instance=ExtResource("8_gqffd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "depot_grumes"
+metadata/family = "stockage"
+metadata/label = "Dépôt couvert des grumes"
+metadata/purpose = "Réserve de troncs sous charpente, buttées latérales et allée de manutention."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 6
+
+[node name="BureauBois" type="Node3D" parent="Assets" unique_id=1546522962 instance=ExtResource("9_mwwr0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 0)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "bureau_bois"
+metadata/family = "village"
+metadata/label = "Comptoir et bureau du bois"
+metadata/purpose = "Petit bâtiment de gestion des livraisons ; comptoir et registre de coupe sans PNJ."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 7
+
+[node name="HangarCharrettesBois" type="Node3D" parent="Assets" unique_id=1029185088 instance=ExtResource("10_12hfe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "hangar_charrettes_bois"
+metadata/family = "stockage"
+metadata/label = "Remise des charrettes"
+metadata/purpose = "Hangar traversant à trois travées, pour manœuvrer les véhicules et protéger les harnais."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 8
+
+[node name="PortiqueChargement" type="Node3D" parent="Assets" unique_id=1590234382 instance=ExtResource("11_ruy0p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "portique_chargement"
+metadata/family = "production"
+metadata/label = "Portique de levage à treuil"
+metadata/purpose = "Palan et tambour manuel au-dessus d’un passage de charrette ; hauteur libre 3 m."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 9
+
+[node name="CharretteGrumes" type="Node3D" parent="Assets" unique_id=400332456 instance=ExtResource("12_rg1xp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "charrette_grumes"
+metadata/family = "stockage"
+metadata/label = "Charrette de débardage"
+metadata/purpose = "Véhicule à quatre roues de bois avec timon, arrimages et trois grumes."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 10
+
+[node name="GrumesLongues" type="Node3D" parent="Assets" unique_id=1155037894 instance=ExtResource("13_2lyc4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "grumes_longues"
+metadata/family = "accessoires"
+metadata/label = "Grumes longues empilées"
+metadata/purpose = "Troncs écorcés partiellement, coupes claires et cales de retenue."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 11
+
+[node name="GrumesCourtes" type="Node3D" parent="Assets" unique_id=139778073 instance=ExtResource("14_g6eo3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "grumes_courtes"
+metadata/family = "accessoires"
+metadata/label = "Billons de réserve"
+metadata/purpose = "Billons courts triés, destinés aux petites pièces et au charronnage."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 12
+
+[node name="TasPlanches" type="Node3D" parent="Assets" unique_id=2060124000 instance=ExtResource("15_0sc2g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tas_planches"
+metadata/family = "accessoires"
+metadata/label = "Planches sur tasseaux"
+metadata/purpose = "Planches espacées par des tasseaux : l’air circule entre les lits."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 13
+
+[node name="PoutresEquarries" type="Node3D" parent="Assets" unique_id=1284788714 instance=ExtResource("16_gr5lk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "poutres_equarries"
+metadata/family = "accessoires"
+metadata/label = "Poutres équarries"
+metadata/purpose = "Longues poutres de charpente rangées sur traverses."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 14
+
+[node name="ChevaletsSciage" type="Node3D" parent="Assets" unique_id=842184978 instance=ExtResource("17_pfwua")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "chevalets_sciage"
+metadata/family = "accessoires"
+metadata/label = "Paire de chevalets de sciage"
+metadata/purpose = "Chevalets assemblés, billon et scie à cadre."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 15
+
+[node name="EtabliMenuisier" type="Node3D" parent="Assets" unique_id=75297163 instance=ExtResource("18_hmeyl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "etabli_menuisier"
+metadata/family = "accessoires"
+metadata/label = "Établi de menuisier"
+metadata/purpose = "Établi, rabot, maillet, serre-joint et pièce en travail."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 16
+
+[node name="RatelierOutilsBois" type="Node3D" parent="Assets" unique_id=1528587607 instance=ExtResource("19_ic3sb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "ratelier_outils_bois"
+metadata/family = "accessoires"
+metadata/label = "Râtelier du bûcheron"
+metadata/purpose = "Haches, cognée, scie à cadre et perche de manutention."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 17
+
+[node name="TasChutes" type="Node3D" parent="Assets" unique_id=409152393 instance=ExtResource("20_i6imx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tas_chutes"
+metadata/family = "accessoires"
+metadata/label = "Chutes et copeaux"
+metadata/purpose = "Petites chutes de taille regroupées hors des circulations."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 18
+
+[node name="TonneauxResine" type="Node3D" parent="Assets" unique_id=523400828 instance=ExtResource("21_rwahy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tonneaux_resine"
+metadata/family = "accessoires"
+metadata/label = "Tonneaux et petit seau"
+metadata/purpose = "Récipients pour résine et produits d’entretien du bois."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 19
+
+[node name="TraineauDebardage" type="Node3D" parent="Assets" unique_id=730133640 instance=ExtResource("22_sqirp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "traineau_debardage"
+metadata/family = "stockage"
+metadata/label = "Traîneau de débardage"
+metadata/purpose = "Deux patins relevés, traverses et cordage de traction pour amener le bois."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 20
+
+[node name="BillotFendage" type="Node3D" parent="Assets" unique_id=1377733006 instance=ExtResource("23_c0bu5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "billot_fendage"
+metadata/family = "accessoires"
+metadata/label = "Billot de fendage"
+metadata/purpose = "Billot haut, hache posée et bois fendu."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 21
+
+[node name="QuaiBois" type="Node3D" parent="Assets" unique_id=1033931967 instance=ExtResource("24_r42cl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "quai_bois"
+metadata/family = "modules"
+metadata/label = "Quai de chargement en bois"
+metadata/purpose = "Plateforme de rive avec poteaux, planches et anneaux d’amarrage."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 22
+
+[node name="PasserelleBois" type="Node3D" parent="Assets" unique_id=1321799997 instance=ExtResource("25_lfgm0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 28)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "passerelle_bois"
+metadata/family = "modules"
+metadata/label = "Passerelle à garde-corps"
+metadata/purpose = "Petite passerelle de 5,5 m à poser entre deux berges."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 23
+
+[node name="CanalAmenee" type="Node3D" parent="Assets" unique_id=1433304136 instance=ExtResource("26_sp8us")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "canal_amenee"
+metadata/family = "modules"
+metadata/label = "Canal d’amenée sur chevalets"
+metadata/purpose = "Tronçon de 4 m, ouverture de 0,85 m ; raccorder sa sortie au niveau de la roue."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 24
+
+[node name="VanneBois" type="Node3D" parent="Assets" unique_id=551821354 instance=ExtResource("27_fdht0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "vanne_bois"
+metadata/family = "modules"
+metadata/label = "Vanne et crémaillère en bois"
+metadata/purpose = "Vanne verticale guidée entre deux montants ; panneau statique réglable dans l’éditeur."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+metadata/catalog_index = 25
+
+[node name="LogisPorteBasse" type="Node3D" parent="Assets" unique_id=544649590 instance=ExtResource("28_8gdfd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "logis_porte_basse"
+metadata/family = "village"
+metadata/label = "Logis de la porte basse"
+metadata/purpose = "Deep stone gable with a recessed side store."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "stone_gable_with_side_store"
+metadata/building_kind = "house"
+metadata/catalog_index = 26
+
+[node name="MaisonAuxDeuxVolumes" type="Node3D" parent="Assets" unique_id=1469010784 instance=ExtResource("29_ayub0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "maison_aux_deux_volumes"
+metadata/family = "village"
+metadata/label = "Maison aux deux volumes"
+metadata/purpose = "Hipped main roof and a stepped entrance wing."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "hipped_house_and_lower_entry_wing"
+metadata/building_kind = "house"
+metadata/catalog_index = 27
+
+[node name="BaraquementDesEquipes" type="Node3D" parent="Assets" unique_id=1719132765 instance=ExtResource("30_qqdj2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "baraquement_des_equipes"
+metadata/family = "village"
+metadata/label = "Baraquement des bûcherons"
+metadata/purpose = "Low timber barrack with two entrances and end chimneys."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "long_low_dual_entry_barrack"
+metadata/building_kind = "barrack"
+metadata/catalog_index = 28
+
+[node name="LogisAColombages" type="Node3D" parent="Assets" unique_id=1932165790 instance=ExtResource("31_0ojmk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "logis_a_colombages"
+metadata/family = "village"
+metadata/label = "Logis d’angle à colombages"
+metadata/purpose = "Tall half-timber lodging under a hipped roof."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "tall_half_timber_hipped_corner"
+metadata/building_kind = "house"
+metadata/catalog_index = 29
+
+[node name="BaraquementAGalerie" type="Node3D" parent="Assets" unique_id=403999060 instance=ExtResource("32_baqcg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 84, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "baraquement_a_galerie"
+metadata/family = "village"
+metadata/label = "Baraquement à galerie"
+metadata/purpose = "Logement des scieurs, galerie et escalier latéral."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "two_storey_gallery_left_stair_barrack"
+metadata/building_kind = "barrack"
+metadata/catalog_index = 30
+
+[node name="LogisDuContremaitreEnL" type="Node3D" parent="Assets" unique_id=672230667 instance=ExtResource("33_f3bid")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 98, 0, 42)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "logis_du_contremaitre_en_l"
+metadata/family = "village"
+metadata/label = "Logis du maître scieur en L"
+metadata/purpose = "L-shaped masonry residence with a taller front room."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "l_shaped_house_with_raised_front_room"
+metadata/building_kind = "house"
+metadata/catalog_index = 31
+
+[node name="MaisonDesCharretiers" type="Node3D" parent="Assets" unique_id=804122581 instance=ExtResource("34_esiy8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 56)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "maison_des_charretiers"
+metadata/family = "village"
+metadata/label = "Maison des voituriers"
+metadata/purpose = "Wide low gable with a small rear storage projection."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "wide_cross_gable_with_rear_store"
+metadata/building_kind = "house"
+metadata/catalog_index = 32
+
+[node name="MaisonAuToitDecale" type="Node3D" parent="Assets" unique_id=550602390 instance=ExtResource("35_br7p7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 56)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "maison_au_toit_decale"
+metadata/family = "village"
+metadata/label = "Maison au toit décalé"
+metadata/purpose = "Asymmetric gable with a short sheltered bench."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "offset_ridge_with_sheltered_bench"
+metadata/building_kind = "house"
+metadata/catalog_index = 33
+
+[node name="Demonstration" type="Node3D" parent="." unique_id=1021353572]
+
+[node name="ScierieHydraulique" type="Node3D" parent="Demonstration" unique_id=1602666459 instance=ExtResource("2_tvjta")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -8)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "scierie_hydraulique"
+metadata/family = "production"
+metadata/label = "Grande scierie à roue à eau"
+metadata/purpose = "Halle de sciage, chariot de grume, scie verticale, transmission, roue et arrivée d’eau. Mécanisme statique pour le décor."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="AtelierCharpentier" type="Node3D" parent="Demonstration" unique_id=727834523 instance=ExtResource("4_8cjpm")]
+transform = Transform3D(0.99280864, 0, 0.119712204, 0, 1, 0, -0.119712204, 0, 0.99280864, -14, 0, 4)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "atelier_charpentier"
+metadata/family = "production"
+metadata/label = "Atelier du maître charpentier"
+metadata/purpose = "Maison-atelier à colombages, grand auvent de taille et poutre en cours d’équarrissage."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="HalleSechage" type="Node3D" parent="Demonstration" unique_id=1823973787 instance=ExtResource("7_ryvw6")]
+transform = Transform3D(0.9950042, 0, -0.09983342, 0, 1, 0, 0.09983342, 0, 0.9950042, 13, 0, 5)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "halle_sechage"
+metadata/family = "stockage"
+metadata/label = "Grand séchoir à planches"
+metadata/purpose = "Halle ventilée ; planches empilées sur tasseaux et passage central libre."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="DepotGrumes" type="Node3D" parent="Demonstration" unique_id=295510465 instance=ExtResource("8_gqffd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -7)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "depot_grumes"
+metadata/family = "stockage"
+metadata/label = "Dépôt couvert des grumes"
+metadata/purpose = "Réserve de troncs sous charpente, buttées latérales et allée de manutention."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="PortiqueChargement" type="Node3D" parent="Demonstration" unique_id=1209727087 instance=ExtResource("11_ruy0p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "portique_chargement"
+metadata/family = "production"
+metadata/label = "Portique de levage à treuil"
+metadata/purpose = "Palan et tambour manuel au-dessus d’un passage de charrette ; hauteur libre 3 m."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="CharretteGrumes" type="Node3D" parent="Demonstration" unique_id=443064262 instance=ExtResource("12_rg1xp")]
+transform = Transform3D(0.9689124, 0, 0.24740396, 0, 1, 0, -0.24740396, 0, 0.9689124, 6, 0, 14)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "charrette_grumes"
+metadata/family = "stockage"
+metadata/label = "Charrette de débardage"
+metadata/purpose = "Véhicule à quatre roues de bois avec timon, arrimages et trois grumes."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="LogisAColombages" type="Node3D" parent="Demonstration" unique_id=1594957633 instance=ExtResource("31_0ojmk")]
+transform = Transform3D(0.99280864, 0, 0.119712204, 0, 1, 0, -0.119712204, 0, 0.99280864, -8, 0, 18)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "logis_a_colombages"
+metadata/family = "village"
+metadata/label = "Logis d’angle à colombages"
+metadata/purpose = "Tall half-timber lodging under a hipped roof."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "tall_half_timber_hipped_corner"
+metadata/building_kind = "house"
+
+[node name="MaisonAuxDeuxVolumes" type="Node3D" parent="Demonstration" unique_id=219395950 instance=ExtResource("29_ayub0")]
+transform = Transform3D(0.99280864, 0, -0.119712204, 0, 1, 0, 0.119712204, 0, 0.99280864, 0, 0, 20)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "maison_aux_deux_volumes"
+metadata/family = "village"
+metadata/label = "Maison aux deux volumes"
+metadata/purpose = "Hipped main roof and a stepped entrance wing."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "hipped_house_and_lower_entry_wing"
+metadata/building_kind = "house"
+
+[node name="BaraquementDesEquipes" type="Node3D" parent="Demonstration" unique_id=694977689 instance=ExtResource("30_qqdj2")]
+transform = Transform3D(0.99875027, 0, 0.04997917, 0, 1, 0, -0.04997917, 0, 0.99875027, -14, 0, 17)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "baraquement_des_equipes"
+metadata/family = "village"
+metadata/label = "Baraquement des bûcherons"
+metadata/purpose = "Low timber barrack with two entrances and end chimneys."
+metadata/placement = "Bâtiment unique de l’scierie ; conserver son accès et sa fondation."
+metadata/building_design = "long_low_dual_entry_barrack"
+metadata/building_kind = "barrack"
+
+[node name="BureauBois" type="Node3D" parent="Demonstration" unique_id=946049589 instance=ExtResource("9_mwwr0")]
+transform = Transform3D(0.9950042, 0, 0.09983342, 0, 1, 0, -0.09983342, 0, 0.9950042, -15, 0, -7)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "bureau_bois"
+metadata/family = "village"
+metadata/label = "Comptoir et bureau du bois"
+metadata/purpose = "Petit bâtiment de gestion des livraisons ; comptoir et registre de coupe sans PNJ."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="TasPlanches" type="Node3D" parent="Demonstration" unique_id=1817619757 instance=ExtResource("15_0sc2g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 1)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "tas_planches"
+metadata/family = "accessoires"
+metadata/label = "Planches sur tasseaux"
+metadata/purpose = "Planches espacées par des tasseaux : l’air circule entre les lits."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="ChevaletsSciage" type="Node3D" parent="Demonstration" unique_id=2133382172 instance=ExtResource("17_pfwua")]
+transform = Transform3D(0.99280864, 0, 0.119712204, 0, 1, 0, -0.119712204, 0, 0.99280864, -10, 0, 8)
+metadata/art_direction = "reference_village_2026_09_16"
+metadata/asset_id = "chevalets_sciage"
+metadata/family = "accessoires"
+metadata/label = "Paire de chevalets de sciage"
+metadata/purpose = "Chevalets assemblés, billon et scie à cadre."
+metadata/placement = "Asset de la scierie, à placer sur une assise adaptée ; 1 unité = 1 mètre."
+
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1263131030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, -0.07, 25)
+material_override = SubResource("StandardMaterial3D_uq4il")
+mesh = SubResource("PlaneMesh_r2sow")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1399683269]
+transform = Transform3D(0.81915206, 0.45198438, -0.35312894, 0, 0.6156615, 0.7880107, 0.57357645, -0.6455006, 0.5043204, 0, 0, 0)
+light_color = Color(1, 0.97, 0.91, 1)
+light_energy = 1.25
+shadow_enabled = true
+directional_shadow_max_distance = 250.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=60290408]
+environment = SubResource("Environment_alku8")
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1771147534]
+projection = 1
+current = true
+far = 450.0

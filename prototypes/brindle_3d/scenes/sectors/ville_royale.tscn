@@ -1,0 +1,315 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/sector_tools.gd" id="sector"]
+[ext_resource type="Script" path="res://scripts/ground_path.gd" id="path"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondesardoises.tscn" id="maisondesardoises"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisdutailleur.tscn" id="logisdutailleur"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/aubergedesvoyageurs.tscn" id="aubergedesvoyageurs"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondestisserands.tscn" id="maisondestisserands"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondupassage.tscn" id="maisondupassage"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/courdesdrapiers.tscn" id="courdesdrapiers"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisdespignons.tscn" id="logisdespignons"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondurempartouest.tscn" id="maisondurempartouest"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondelechauguette.tscn" id="maisondelechauguette"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondupuits.tscn" id="maisondupuits"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondeschangeurs.tscn" id="maisondeschangeurs"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondelaloggia.tscn" id="maisondelaloggia"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondesepiciers.tscn" id="maisondesepiciers"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisonauxtroispignons.tscn" id="maisonauxtroispignons"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisonduporche.tscn" id="maisonduporche"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondesmarchands.tscn" id="maisondesmarchands"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondeslivres.tscn" id="maisondeslivres"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisdesarcades.tscn" id="logisdesarcades"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondelarive.tscn" id="maisondelarive"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisdelaporteest.tscn" id="logisdelaporteest"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondumacon.tscn" id="maisondumacon"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisdugrenier.tscn" id="logisdugrenier"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondelatour.tscn" id="maisondelatour"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondesjardins.tscn" id="maisondesjardins"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisducanal.tscn" id="logisducanal"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondesvitriers.tscn" id="maisondesvitriers"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/halledumarche.tscn" id="halledumarche"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/hoteldeville.tscn" id="hoteldeville"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/grandechapelle.tscn" id="grandechapelle"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/ecuriesdelaporte.tscn" id="ecuriesdelaporte"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/grenierdelaville.tscn" id="grenierdelaville"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/corpsdegarde.tscn" id="corpsdegarde"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/maisondeschariots.tscn" id="maisondeschariots"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/buildings/logisdescordonniers.tscn" id="logisdescordonniers"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/props/fontaine_de_la_place.tscn" id="fontaine_de_la_place"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/props/etal_marche_0.tscn" id="etal_marche_0"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/props/etal_marche_1.tscn" id="etal_marche_1"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/props/etal_marche_2.tscn" id="etal_marche_2"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/props/etal_marche_3.tscn" id="etal_marche_3"]
+[ext_resource type="PackedScene" path="res://assets/royal_city/fortifications/chateau_de_montagne.tscn" id="chateau_de_montagne"]
+[ext_resource type="PackedScene" path="res://scenes/sectors/ville_royale_enceinte.tscn" id="walls"]
+
+[node name="VilleRoyale" type="Node3D"]
+script = ExtResource("sector")
+metadata/layout_source = "res://planning/royal-city.json"
+
+[node name="QuartierDesArtisans" type="Node3D" parent="."]
+
+[node name="QuartierDuMarche" type="Node3D" parent="."]
+
+[node name="QuartierDesHabitants" type="Node3D" parent="."]
+
+[node name="Chateau" type="Node3D" parent="."]
+
+[node name="PlaceRoyale" type="Node3D" parent="."]
+
+[node name="HautsQuartiers" type="Node3D" parent="."]
+
+[node name="QuartierDeLaPorte" type="Node3D" parent="."]
+
+[node name="Fortifications" type="Node3D" parent="."]
+
+[node name="Chemins" type="Node3D" parent="."]
+
+[node name="MaisonDesArdoises" parent="QuartierDesArtisans" instance=ExtResource("maisondesardoises")]
+position = Vector3(-217,65.225,-194)
+rotation_degrees = Vector3(0,82,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDuTailleur" parent="QuartierDesArtisans" instance=ExtResource("logisdutailleur")]
+position = Vector3(-215,64.825,-178)
+rotation_degrees = Vector3(0,90,0)
+metadata/ground_offset = -0.02
+
+[node name="AubergeDesVoyageurs" parent="QuartierDesArtisans" instance=ExtResource("aubergedesvoyageurs")]
+position = Vector3(-217,64.375,-160)
+rotation_degrees = Vector3(0,97,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesTisserands" parent="QuartierDesArtisans" instance=ExtResource("maisondestisserands")]
+position = Vector3(-192,65.55,-207)
+rotation_degrees = Vector3(0,-4,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDuPassage" parent="QuartierDesArtisans" instance=ExtResource("maisondupassage")]
+position = Vector3(-198,64.775,-176)
+rotation_degrees = Vector3(0,175,0)
+metadata/ground_offset = -0.02
+
+[node name="CourDesDrapiers" parent="QuartierDesArtisans" instance=ExtResource("courdesdrapiers")]
+position = Vector3(-197,64.35,-159)
+rotation_degrees = Vector3(0,8,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDesPignons" parent="QuartierDesArtisans" instance=ExtResource("logisdespignons")]
+position = Vector3(-227,65.15,-191)
+rotation_degrees = Vector3(0,92,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDuRempartOuest" parent="QuartierDesArtisans" instance=ExtResource("maisondurempartouest")]
+position = Vector3(-225,64.625,-170)
+rotation_degrees = Vector3(0,58,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDeLEchauguette" parent="QuartierDesArtisans" instance=ExtResource("maisondelechauguette")]
+position = Vector3(-225,64.875,-180)
+rotation_degrees = Vector3(0,178,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDuPuits" parent="QuartierDesArtisans" instance=ExtResource("maisondupuits")]
+position = Vector3(-160,64.0,-133)
+rotation_degrees = Vector3(0,174,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesChangeurs" parent="QuartierDuMarche" instance=ExtResource("maisondeschangeurs")]
+position = Vector3(-179,65.05,-187)
+rotation_degrees = Vector3(0,178,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDeLaLoggia" parent="QuartierDuMarche" instance=ExtResource("maisondelaloggia")]
+position = Vector3(-159,65.025,-186)
+rotation_degrees = Vector3(0,175,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesEpiciers" parent="QuartierDuMarche" instance=ExtResource("maisondesepiciers")]
+position = Vector3(-180,64.2,-153)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonAuxTroisPignons" parent="QuartierDuMarche" instance=ExtResource("maisonauxtroispignons")]
+position = Vector3(-155,64.15,-151)
+rotation_degrees = Vector3(0,4,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDuPorche" parent="QuartierDuMarche" instance=ExtResource("maisonduporche")]
+position = Vector3(-153,64.6,-169)
+rotation_degrees = Vector3(0,172,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesMarchands" parent="QuartierDuMarche" instance=ExtResource("maisondesmarchands")]
+position = Vector3(-144,64.45,-163)
+rotation_degrees = Vector3(0,-88,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesLivres" parent="QuartierDuMarche" instance=ExtResource("maisondeslivres")]
+position = Vector3(-201,65.625,-210)
+rotation_degrees = Vector3(0,5,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDesArcades" parent="QuartierDuMarche" instance=ExtResource("logisdesarcades")]
+position = Vector3(-159,65.475,-204)
+rotation_degrees = Vector3(0,-4,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDeLaRive" parent="QuartierDesHabitants" instance=ExtResource("maisondelarive")]
+position = Vector3(-126,64.925,-182)
+rotation_degrees = Vector3(0,-90,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDeLaPorteEst" parent="QuartierDesHabitants" instance=ExtResource("logisdelaporteest")]
+position = Vector3(-127,64.4,-161)
+rotation_degrees = Vector3(0,-88,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDuMacon" parent="QuartierDesHabitants" instance=ExtResource("maisondumacon")]
+position = Vector3(-130,64.05,-147)
+rotation_degrees = Vector3(0,158,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDuGrenier" parent="QuartierDesHabitants" instance=ExtResource("logisdugrenier")]
+position = Vector3(-151,64.0,-134)
+rotation_degrees = Vector3(0,180,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDeLaTour" parent="Chateau" instance=ExtResource("maisondelatour")]
+position = Vector3(-221,94.0,-297)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesJardins" parent="QuartierDesHabitants" instance=ExtResource("maisondesjardins")]
+position = Vector3(-148,65.775,-216)
+rotation_degrees = Vector3(0,-8,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDuCanal" parent="QuartierDesHabitants" instance=ExtResource("logisducanal")]
+position = Vector3(-158,65.75,-215)
+rotation_degrees = Vector3(0,-95,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesVitriers" parent="QuartierDesHabitants" instance=ExtResource("maisondesvitriers")]
+position = Vector3(-200,65.175,-192)
+rotation_degrees = Vector3(0,10,0)
+metadata/ground_offset = -0.02
+
+[node name="HalleDuMarche" parent="PlaceRoyale" instance=ExtResource("halledumarche")]
+position = Vector3(-179,64.45,-163)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="HotelDeVille" parent="HautsQuartiers" instance=ExtResource("hoteldeville")]
+position = Vector3(-172,65.725,-214)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="GrandeChapelle" parent="HautsQuartiers" instance=ExtResource("grandechapelle")]
+position = Vector3(-133,65.325,-198)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="EcuriesDeLaPorte" parent="QuartierDeLaPorte" instance=ExtResource("ecuriesdelaporte")]
+position = Vector3(-190,64.0,-139)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="GrenierDeLaVille" parent="QuartierDeLaPorte" instance=ExtResource("grenierdelaville")]
+position = Vector3(-202,64.0,-140)
+rotation_degrees = Vector3(0,80,0)
+metadata/ground_offset = -0.02
+
+[node name="CorpsDeGarde" parent="QuartierDeLaPorte" instance=ExtResource("corpsdegarde")]
+position = Vector3(-179,64.0,-135)
+rotation_degrees = Vector3(0,90,0)
+metadata/ground_offset = -0.02
+
+[node name="MaisonDesChariots" parent="QuartierDuMarche" instance=ExtResource("maisondeschariots")]
+position = Vector3(-177,64.65,-171)
+rotation_degrees = Vector3(0,-95,0)
+metadata/ground_offset = -0.02
+
+[node name="LogisDesCordonniers" parent="QuartierDesArtisans" instance=ExtResource("logisdescordonniers")]
+position = Vector3(-159,64.375,-160)
+rotation_degrees = Vector3(0,90,0)
+metadata/ground_offset = -0.02
+
+[node name="Fontaine" parent="PlaceRoyale" instance=ExtResource("fontaine_de_la_place")]
+position = Vector3(-189,64.525,-166)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="EtalVivres" parent="PlaceRoyale" instance=ExtResource("etal_marche_0")]
+position = Vector3(-190,64.225,-154)
+rotation_degrees = Vector3(0,10,0)
+metadata/ground_offset = -0.02
+
+[node name="EtalDraps" parent="PlaceRoyale" instance=ExtResource("etal_marche_1")]
+position = Vector3(-194,64.525,-166)
+rotation_degrees = Vector3(0,90,0)
+metadata/ground_offset = -0.02
+
+[node name="EtalArtisan" parent="PlaceRoyale" instance=ExtResource("etal_marche_2")]
+position = Vector3(-186,64.675,-172)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="EtalVannerie" parent="PlaceRoyale" instance=ExtResource("etal_marche_3")]
+position = Vector3(-194,64.65,-171)
+rotation_degrees = Vector3(0,0,0)
+metadata/ground_offset = -0.02
+
+[node name="Citadelle" parent="Chateau" instance=ExtResource("chateau_de_montagne")]
+position = Vector3(-193,94,-275)
+
+[node name="Enceinte" parent="Fortifications" instance=ExtResource("walls")]
+
+[node name="AvenueRoyale" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-168, -126, -168, -138, -169, -150, -168, -177, -169, -199, -172, -205)
+width_m = 5.8
+
+[node name="RueDesArtisans" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-208, -146, -207, -150, -207, -174, -207, -191, -210, -202)
+width_m = 3.5
+
+[node name="RueDuMarche" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-207, -151, -191, -148, -168, -140, -147, -142, -136, -152, -136, -179, -137, -185)
+width_m = 4.4
+
+[node name="TraverseDesHalles" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-207, -184, -190, -185, -186, -178, -170, -178, -153, -177, -137, -179)
+width_m = 4.0
+
+[node name="RueHaute" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-207, -202, -189, -198, -174, -198, -151, -195, -145, -207, -143, -211)
+width_m = 4.0
+
+[node name="ParvisChapelle" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-151, -195, -143, -186, -135, -186)
+width_m = 3.0
+
+[node name="MonteeDuChateau" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-207, -202, -215, -218, -224, -230, -219, -237, -208, -233, -197, -223, -185, -222, -178, -230, -180, -241, -182, -246, -182, -255)
+width_m = 5.0
+
+[node name="RouteDeLaVille" type="MeshInstance3D" parent="Chemins"]
+visible = false
+script = ExtResource("path")
+points = PackedVector2Array(-168, -105, -159, -95, -133, -87, -110, -89, -90, -90)
+width_m = 5.0

@@ -5,6 +5,7 @@ var ground: Node3D
 var routes: Array=[]
 var curve_samples: Array[Dictionary]=[]
 var excluded_trees: Array[Vector2]=[]
+var village: Dictionary={}
 var removed_instances: int=0
 var removed_colliders: int=0
 
@@ -16,6 +17,7 @@ func run() -> void:
 	ground=world.get_node("Terrain")
 	for i: int in 30:await process_frame
 	var meta: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/landscape/landscape.json"))
+	village=JSON.parse_string(FileAccess.get_file_as_string("res://planning/sawmill-town.json"))
 	routes=JSON.parse_string(FileAccess.get_file_as_string("res://planning/river-routes-v2.json")).routes
 	var sector: Node3D=Node3D.new();sector.name="Franchissements";world.add_child(sector)
 	var bridges: Node3D=Node3D.new();bridges.name="Ponts";sector.add_child(bridges)
@@ -48,7 +50,9 @@ func run() -> void:
 	# Remove only vegetation newly inside water or a crossing approach; preserve the composition elsewhere.
 	for name: String in ["ForetsBrindle","ForetsNordEst"]:
 		var forest: Node3D=world.get_node("Decor/"+name)
+		var removed_before: int=removed_instances+removed_colliders
 		_clear_vegetation(forest)
+		if removed_before==removed_instances+removed_colliders:continue
 		_save(forest,"res://scenes/sectors/"+("forets_brindle.tscn" if name=="ForetsBrindle" else "forets_nord_est.tscn"))
 	print("RIVER_CROSSINGS_BUILD_OK bridges=",meta.crossings.size()," routes=",routes.size()," removed_visual_instances=",removed_instances," removed_trunks=",removed_colliders)
 	world.queue_free();await process_frame;quit(0)
@@ -89,6 +93,14 @@ func _clear_at(p: Vector3,padding: float=1.5) -> bool:
 	for route: Dictionary in curve_samples:
 		for sample: Vector3 in route.points:
 			if Vector2(sample.x-p.x,sample.z-p.z).length()<float(route.width)*.5+padding:return true
+	for b: Dictionary in village.get("buildings",[])+village.get("props",[]):
+		var at: Vector3=Vector3(b.xz[0],0,b.xz[1])
+		var local: Vector3=Basis(Vector3.UP,-deg_to_rad(b.yaw))*(p-at)
+		if absf(local.x-b.bounds_center_m[0])<b.size_m[0]*.5+2.4 and absf(local.z-b.bounds_center_m[2])<b.size_m[2]*.5+2.4:return true
+	for r: Dictionary in village.get("paths",[]):
+		for i: int in range(1,r.points_xz.size()):
+			var a: Vector2=Vector2(r.points_xz[i-1][0],r.points_xz[i-1][1]);var b: Vector2=Vector2(r.points_xz[i][0],r.points_xz[i][1])
+			if Geometry2D.get_closest_point_to_segment(Vector2(p.x,p.z),a,b).distance_to(Vector2(p.x,p.z))<r.width_m*.5+padding+1.0:return true
 	return false
 
 func _clear_vegetation(forest: Node3D) -> void:

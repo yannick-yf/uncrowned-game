@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/royal_surface.gdshader" id="1_ai60v"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ai60v")
+shader_parameter/tint = Color(0.2509804, 0.4117647, 0.41960785, 1)
+shader_parameter/surface_kind = 3

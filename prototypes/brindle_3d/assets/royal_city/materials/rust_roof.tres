@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/royal_surface.gdshader" id="1_vahwa"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_vahwa")
+shader_parameter/tint = Color(0.57254905, 0.4509804, 0.32941177, 1)
+shader_parameter/surface_kind = 2

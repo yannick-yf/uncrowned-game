@@ -1,0 +1,197 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/royal_city/materials/stone.tres" id="1_vyact"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_Nave_stone.res" id="2_bqs18"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_StoneGable_stone.res" id="3_7ue14"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/roof.tres" id="4_ptv4w"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_RoofDeck_roof.res" id="5_x3kli"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark_wood.tres" id="6_8xqpo"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_RoofVerge_dark_wood.res" id="7_kbu7d"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_RidgeCap_roof.res" id="8_ja8p5"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_Buttresses_stone.res" id="9_wagwo"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/dark.tres" id="10_hgdgl"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_DeepWindow_dark.res" id="11_2phls"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_WindowQuoins_stone.res" id="12_c7hc7"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_WindowLintels_stone.res" id="13_x4uxn"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_WindowMullion_stone.res" id="14_e0vv3"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_WindowTransom_stone.res" id="15_tyiam"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_DoorRecess_dark.res" id="16_pa6cw"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/wood.tres" id="17_mg1jm"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_DoorPlanks_wood.res" id="18_5j4pn"]
+[ext_resource type="Material" path="res://assets/royal_city/materials/iron.tres" id="19_rf3qx"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_DoorHinges_iron.res" id="20_qjn11"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_DoorPull_iron.res" id="21_klh7g"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_OakDoorJamb_dark_wood.res" id="22_c6l1y"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_OakDoorLintel_dark_wood.res" id="23_yjla4"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_BellTower_stone.res" id="24_gv778"]
+[ext_resource type="ArrayMesh" path="res://assets/royal_city/meshes/grandechapelle_BellSpire_roof.res" id="25_2urtn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1lsf5"]
+size = Vector3(10, 10.4, 17)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23tgf"]
+size = Vector3(0.7, 7.488, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sx8ya"]
+size = Vector3(0.7, 7.488, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2dap2"]
+size = Vector3(0.7, 7.488, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hhw1g"]
+size = Vector3(0.7, 7.488, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t2fqd"]
+size = Vector3(0.7, 7.488, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vi4yr"]
+size = Vector3(0.7, 7.488, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_it6v8"]
+size = Vector3(4.6, 19, 4.7)
+
+[node name="Grandechapelle" type="Node3D" unique_id=2016222694]
+metadata/art_direction = "mountain_capital_reference_2026_09_16"
+metadata/asset_id = "grandechapelle"
+metadata/family = "buildings"
+metadata/label = "GrandeChapelle"
+metadata/purpose = "Bâtiment de la ville royale, silhouette et façade propres."
+metadata/placement = "Façade sur +Z, origine au sol."
+
+[node name="NaveCollision" type="StaticBody3D" parent="." unique_id=1584792802]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@89" type="CollisionShape3D" parent="NaveCollision" unique_id=1196372906]
+shape = SubResource("BoxShape3D_1lsf5")
+
+[node name="ButtressesCollision" type="StaticBody3D" parent="." unique_id=1276154903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.24, 3.744, -5.95)
+collision_mask = 0
+
+[node name="@CollisionShape3D@90" type="CollisionShape3D" parent="ButtressesCollision" unique_id=1630898546]
+shape = SubResource("BoxShape3D_23tgf")
+
+[node name="@StaticBody3D@91" type="StaticBody3D" parent="." unique_id=1722994199]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.24, 3.744, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@92" type="CollisionShape3D" parent="@StaticBody3D@91" unique_id=1365583846]
+shape = SubResource("BoxShape3D_sx8ya")
+
+[node name="@StaticBody3D@93" type="StaticBody3D" parent="." unique_id=1102354093]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.24, 3.744, 5.95)
+collision_mask = 0
+
+[node name="@CollisionShape3D@94" type="CollisionShape3D" parent="@StaticBody3D@93" unique_id=557538945]
+shape = SubResource("BoxShape3D_2dap2")
+
+[node name="@StaticBody3D@95" type="StaticBody3D" parent="." unique_id=464747732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.24, 3.744, -5.95)
+collision_mask = 0
+
+[node name="@CollisionShape3D@96" type="CollisionShape3D" parent="@StaticBody3D@95" unique_id=1802172634]
+shape = SubResource("BoxShape3D_hhw1g")
+
+[node name="@StaticBody3D@97" type="StaticBody3D" parent="." unique_id=302710661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.24, 3.744, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@98" type="CollisionShape3D" parent="@StaticBody3D@97" unique_id=643437371]
+shape = SubResource("BoxShape3D_t2fqd")
+
+[node name="@StaticBody3D@99" type="StaticBody3D" parent="." unique_id=2037748960]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.24, 3.744, 5.95)
+collision_mask = 0
+
+[node name="@CollisionShape3D@100" type="CollisionShape3D" parent="@StaticBody3D@99" unique_id=772382920]
+shape = SubResource("BoxShape3D_vi4yr")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=101233161]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 9.63)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=967814868]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 8.83)
+
+[node name="BellTowerCollision" type="StaticBody3D" parent="." unique_id=2050514877]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 9.5, 4.25)
+collision_mask = 0
+
+[node name="@CollisionShape3D@101" type="CollisionShape3D" parent="BellTowerCollision" unique_id=1536652602]
+shape = SubResource("BoxShape3D_it6v8")
+
+[node name="NaveStone" type="MeshInstance3D" parent="." unique_id=2089611430]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("2_bqs18")
+
+[node name="StoneGableStone" type="MeshInstance3D" parent="." unique_id=605702269]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("3_7ue14")
+
+[node name="RoofDeckRoof" type="MeshInstance3D" parent="." unique_id=1296399989]
+material_override = ExtResource("4_ptv4w")
+mesh = ExtResource("5_x3kli")
+
+[node name="RoofVergeDarkWood" type="MeshInstance3D" parent="." unique_id=539733732]
+material_override = ExtResource("6_8xqpo")
+mesh = ExtResource("7_kbu7d")
+
+[node name="RidgeCapRoof" type="MeshInstance3D" parent="." unique_id=2019987520]
+material_override = ExtResource("4_ptv4w")
+mesh = ExtResource("8_ja8p5")
+
+[node name="ButtressesStone" type="MeshInstance3D" parent="." unique_id=2134524212]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("9_wagwo")
+
+[node name="DeepWindowDark" type="MeshInstance3D" parent="." unique_id=1315952413]
+material_override = ExtResource("10_hgdgl")
+mesh = ExtResource("11_2phls")
+
+[node name="WindowQuoinsStone" type="MeshInstance3D" parent="." unique_id=1331559346]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("12_c7hc7")
+
+[node name="WindowLintelsStone" type="MeshInstance3D" parent="." unique_id=495904852]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("13_x4uxn")
+
+[node name="WindowMullionStone" type="MeshInstance3D" parent="." unique_id=1661411018]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("14_e0vv3")
+
+[node name="WindowTransomStone" type="MeshInstance3D" parent="." unique_id=1710049057]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("15_tyiam")
+
+[node name="DoorRecessDark" type="MeshInstance3D" parent="." unique_id=806890074]
+material_override = ExtResource("10_hgdgl")
+mesh = ExtResource("16_pa6cw")
+
+[node name="DoorPlanksWood" type="MeshInstance3D" parent="." unique_id=1188552944]
+material_override = ExtResource("17_mg1jm")
+mesh = ExtResource("18_5j4pn")
+
+[node name="DoorHingesIron" type="MeshInstance3D" parent="." unique_id=1979769864]
+material_override = ExtResource("19_rf3qx")
+mesh = ExtResource("20_qjn11")
+
+[node name="DoorPullIron" type="MeshInstance3D" parent="." unique_id=275479431]
+material_override = ExtResource("19_rf3qx")
+mesh = ExtResource("21_klh7g")
+
+[node name="OakDoorJambDarkWood" type="MeshInstance3D" parent="." unique_id=175347344]
+material_override = ExtResource("6_8xqpo")
+mesh = ExtResource("22_c6l1y")
+
+[node name="OakDoorLintelDarkWood" type="MeshInstance3D" parent="." unique_id=1855012626]
+material_override = ExtResource("6_8xqpo")
+mesh = ExtResource("23_yjla4")
+
+[node name="BellTowerStone" type="MeshInstance3D" parent="." unique_id=6509818]
+material_override = ExtResource("1_vyact")
+mesh = ExtResource("24_gv778")
+
+[node name="BellSpireRoof" type="MeshInstance3D" parent="." unique_id=1200328264]
+material_override = ExtResource("4_ptv4w")
+mesh = ExtResource("25_2urtn")

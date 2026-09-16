@@ -41,6 +41,30 @@ if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || 
   exit 1
 fi
 
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_sawmill.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'SAWMILL_CHECK PASS' "$LOG"; then
+  echo "FAILED: sawmill asset kit verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_sawmill_town.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'SAWMILL_TOWN_CHECK PASS' "$LOG"; then
+  echo "FAILED: sawmill village verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_royal_city.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'ROYAL_CITY_CHECK PASS' "$LOG"; then
+  echo "FAILED: royal city and castle verification"
+  exit 1
+fi
+
 "$GODOT" --headless --path "$WORKSHOP" --script res://tools/verify_workshop.gd >"$LOG" 2>&1
 CODE=$?
 cat "$LOG"
