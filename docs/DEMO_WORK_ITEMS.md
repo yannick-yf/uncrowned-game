@@ -38,7 +38,12 @@ open. No source, spec or workshop file was changed to create this plan.
 
 **Start with [the shared walkthrough sheet](DEMO_WALKTHROUGH.md).** It is the
 concrete Y00/B01 deliverable and records the route checks, both brothers' decisions,
-gaps and next-session cards. The brother has not agreed this inventory or its art
+gaps and next-session cards. Its route rows and gap register were filled with
+measured observations on 2026-09-16 — headless paths and rendered frames, not a
+played walk, and with no review by slosinio. **Y00 is part done and B01 is
+untouched.** [The existing-behaviour review](DEMO_EXISTING_BEHAVIOUR.md) narrows
+Y01 to four open questions and holds the first five refined cards; read it before
+treating Y01, Y04, Y15–Y18 as ready to code. The brother has not agreed this inventory or its art
 estimates. The 52 cards below are a draft inventory, not a validated session plan;
 refine oversized items before execution and integrate usable deliveries throughout
 development, rather than waiting for week three. The walkthrough sheet records the
