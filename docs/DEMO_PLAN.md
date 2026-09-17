@@ -28,48 +28,33 @@ only process.
 
 ---
 
-## The state that reorders everything: his current factory is not in the game
+## What landed on 2026-09-17, and what is left of his map
 
-Checked 2026-09-16. `content/region.json` is **up to date with the workshop data on
-this branch** (`bake_region.gd -- --check` passes) — but that data is one delivery
-behind him.
+**His delivery is in `main`** (PR #9, squash-merged as `0f1f49b`): the v4 ironworks
+layout, the sawmill village and the royal mountain city, together with the ingestion
+that makes the first of them playable. `main` is green — the bake is deterministic at
+93,218 bytes, `--check` is clean, and both suites pass.
 
-`origin/art/ameliorations-graphiques` carries **`4f4d13e`, "art: order ironworks
-factory layout", slosinio, 2026-09-15**, which is not in `main` and not here. It is
-**version 4** of the ironworks town; the game plays version 3. Content difference,
-six files: `ironworks-town.json`, `acierie.tscn`, `relief_godot.tscn`,
-`ironworks_ground_mask.png`, `Ironworks-town.md`, `build_ironworks_town.py`.
-
-What moved, in the tiles the simulation uses:
-
-| Building | Tile today | Tile in his v4 |
+| His settlement | In the window | In the simulation |
 |---|---|---|
-| `DortoirNord` | (294, 200) | **(311, 203)** — right across the site |
-| `MaisonContremaitre` | (310, 205) | **(311, 211)** |
-| `DortoirPlace` | (308, 206) | **(304, 211)** |
-| `CuisineCommune` | (300, 218) | **(304, 218)** |
-| `BureauPesee`, `HalleMartelage`, `ForgeFinition` | unchanged | unchanged |
-| The six furnaces | scattered | **an ordered 3 × 2 grid**, rows 202 and 209, columns 319 / 323 / 327 |
+| **Ironworks (Cinderworks)** | his meshes | **ingested** — 27 buildings, 43 props, read by his building ids; the six furnaces in their ordered grid; zone (55 × 52) centred (312,213) |
+| **Sawmill village** | **drawn** — his map plate carries `scierie.tscn` | **not ingested** — `village_scierie` is still ignored by the brief; the HUD calls it *les terres sauvages* and his walls stop nobody |
+| **Royal city and castle** | **drawn** — his map plate carries `ville_royale.tscn` | **not ingested** — Cairnwell still wears our scaffold kit *on top of* his city |
 
-16 of 27 buildings moved, up to 35 m; four garden-fence props removed; the town
-bounds widened from 100 m to 110 m.
+He has already done his half of the contract: `geographie-v1.json` now names both with
+`built_scene`, `built_bounds_xz` and `built_buildings`, and the buildings themselves
+are in `sawmill-town.json` (15) and `royal-city.json` (34), in the same shape as
+`ironworks-town.json`. **Reading them is one session apiece** — W1 and W2 below.
 
-**Consequence for the plan: no placement work happens before this is ingested.**
-Choosing meeting spots against version 3 would choose spots that have already
-moved.
+**One branch note, so it does not bite twice.** PR #9 was squash-merged, so
+`chore/ingest-recent-map-changes` has content identical to `main` but an unrelated
+history: that is the "conflict" GitHub reports, and there is nothing in the branch
+worth rescuing. Close its pull request and delete it. Work continues on
+`chore/ingest-sawmill-and-royal-city`, branched from `main`.
 
-**How it reaches us (Yannick, 2026-09-16):** his brother opens a pull request for
-`art/ameliorations-graphiques`, because the git history is kept clean and a branch's
-author opens its own PR. So **W0 is blocked on somebody else**, and the plan is
-ordered so that nothing else waits with it.
-
-**Unrelated, and worth clearing:** the local change to
-`prototypes/brindle_3d/assets/landscape/ironworks_ground_mask.png.import` is not
-work. It is Godot re-importing his texture with VRAM compression because his
-project was opened on this machine. It is a change inside his project, which we
-never edit. Recommended: revert it before it travels.
-
----
+**And a recurring hygiene note.** Opening his Godot project re-imports his textures
+and dirties tracked `.import` files — it has happened three times now. After looking
+at his workshop, run `git checkout -- prototypes/`.
 
 ## Platform: Windows only
 
@@ -141,9 +126,9 @@ fourth question.
 Three tracks. They are sequenced, not parallel, except where the work is in his
 brother's hands.
 
-**W — unblock.** One item. Everything positional depends on it, and it is blocked
-on his brother's PR — so it is first *in the A-track's dependency order*, not first
-in the calendar.
+**W — his map into the simulation.** W0 is delivered; W1 and W2 remain, one settlement
+each. Not on the demo's critical path, because the demo happens at Brindle and the
+ironworks, and both are ingested.
 
 **A — the quest.** The demo's argument: a choice, an act, and a world that changes
 where you can see it. Most of it exists in some form, which is why it is second —
@@ -158,32 +143,34 @@ Last, because a shell around nothing proves nothing — except C3, which is pull
 early because an export that has never been built is where week-four surprises
 come from.
 
-### The first six sessions
+### The next six sessions
 
-**Revised 2026-09-16.** W0 is blocked: his art branch reaches us through a pull
-request his brother opens, and Yannick keeps the git history clean rather than
-merging it for him. So W0 waits on someone else, and the order changes to put in
-front of it the three items that need nothing from anybody — **and A2 moves ahead
-of W0 on its own merits**, because an anchor that names a building by its stable id
-is exactly what makes a layout change safe. Doing it first means W0 re-bakes under
-content that survives the move instead of following a re-ordered list.
+**Revised 2026-09-17,** now that his delivery is in `main` and the branch tangle is
+behind us. W0 is delivered. Nothing below waits on anybody else.
 
-| # | Item | Whose hands | Est. | Blocked by |
+| # | Item | Whose hands | Est. | Depends on |
 |---|---|---|---|---|
 | 1 | **A1** — the quest's spine, on paper | Yannick + Claude | 1–2 h | — |
-| 2 | **A2** — an anchor can name one of his buildings | Claude | 2 h | — |
-| 3 | **B1** — what a fight is here, on paper | Yannick + Claude | 1 h | — · **unblocks his brother's prototype figures** |
-| 4 | **C3** — a repeatable Windows export | Claude | 2 h | — |
-| 5 | **W0** — ingest his v4 factory | Claude | 2–3 h | **his brother's PR** |
-| 6 | **A3** — the three speakers stand where we meet them | Yannick chooses, Claude places | 1–2 h | W0 |
+| 2 | **W1** — the sawmill enters the simulation | Claude | 2–3 h | — |
+| 3 | **W2** — the royal city enters the simulation | Claude | 3–4 h | — |
+| 4 | **A2** — an anchor can name one of his buildings | Claude | 2 h | — |
+| 5 | **A3** — the three speakers stand where we meet them | Yannick chooses, Claude places | 1–2 h | A1, A2 |
+| 6 | **A4** — one conversation gives one actionable fact | Claude, Yannick reviews the French | 2–3 h | A3 |
 
-Then A4 and **A5, which is the first moment the demo exists**: the player walks in,
-learns something, goes somewhere, does something, and the furnaces go out.
+Then **A5, the first moment the demo exists**: the player walks in, learns something,
+goes somewhere, does something, and the furnaces go out.
 
-Nothing in this list waits on the PR except W0 and what follows it. If the PR lands
-early, W0 slots in wherever it arrives — it does not have to wait for its row.
+**A1 is first and it is paper.** It needs nothing from the map, and every implementation
+item after it is a bet until it is answered. Its four questions are prepared below.
 
----
+**W1 and W2 can slide.** They are not on the demo's critical path — the demo happens at
+Brindle and the ironworks, both ingested. They are here early because his art is worth
+more in the game than in his workshop, and because W2 is what finally replaces our
+scaffold kit standing on top of his capital. If the demo presses, they move.
+
+**B1 — what a fight is, on paper — should be scheduled the moment A1 is done**, because
+it is what lets his brother start the prototype combat figures. It is the only work that
+can genuinely run in parallel, since it is in his hands, not ours.
 
 ## The items
 
@@ -191,24 +178,55 @@ Specified in full down to A5. Beyond that they are named with an estimate and ar
 specified when we reach them — a card written three weeks early is a card written
 before we know what we learned.
 
-### W0 — The game plays his current factory
+### W0 — The game plays his current factory — **delivered 2026-09-17**
 
-Owner: Claude. Estimate: 2–3 h. **Blocked on his brother opening a pull request**
-for `art/ameliorations-graphiques` (Yannick, 2026-09-16: the git history is kept
-clean, so the branch's author opens its PR). Nothing else in the plan waits on it.
+His v4 ironworks is ingested and `main` carries it. What it cost, recorded because the
+next delivery will cost the same kind of thing: the factory itself landed for nothing —
+the town is read by his building ids, so no content named a tile that moved — and three
+things broke that were ours, not his. `alone_on_the_road` sampled 34 thinned waypoints
+and 23 of them fell inside his new royal city's 100 × 90 zone; the river-barrier
+criterion probed east-west only, and his royal moat is crossed north-south; and the bake
+assumed that once he delivers any crossing, every wet road tile is one of his bridges —
+his royal feeder channel crossed the King's Road twenty-five tiles from the nearest, and
+the road to the capital was cut in silence. All three fixed, both suites green.
 
-**Player-visible result:** the works looks like the one his brother drew last —
-the furnaces in an ordered grid, the dormitories where he put them.
+### W1 — The sawmill village enters the simulation
 
-**What it involves:** `tools/vendor_workshop.sh`, re-bake, then fix what moved.
-Expect the existing Cinderworks anchors to need attention: Halgrave's
-`feature: kiln` anchor follows whichever furnace is first in the new list, and the
-works' zone grows with the widened bounds.
+Owner: Claude. Estimate: 2–3 h. Depends on: —.
 
-**Exact check:** `bake_region.gd -- --check` clean; `tools/run_tests.sh --all` and
-`--procedural --all` green; `test_anchors` names nothing; a frame at the production
-viewpoint showing the ordered furnaces, and one at the quarter. Any new DEBT line
-gets a written reason, and no failure becomes a debt.
+**Player-visible result:** standing in his sawmill, the HUD names the place instead of
+saying *les terres sauvages*, and his fifteen buildings stop you the way his ironworks
+does.
+
+**What it involves:** read `planning/sawmill-town.json` the way `ironworks-town.json` is
+read — his building ids, their scenes, their collision — and stop ignoring
+`village_scierie` in `content/bake_brief.json`. The site is his, so the settlement kit
+must not stamp over it. Expect the same class of fallout as W0: something of ours that
+assumed the old map.
+
+**Exact check:** the bake reports the sawmill's buildings instead of ignoring the site;
+`test_anchors` names nothing; both full suites green; `--check` clean; a frame at the
+sawmill showing the HUD naming it, and a walk into one of his walls.
+
+### W2 — The royal city and castle enter the simulation
+
+Owner: Claude. Estimate: 3–4 h. Depends on: —.
+
+**Player-visible result:** Cairnwell stops being our placeholder town standing on top of
+his city. His thirty-four buildings, his curtain wall and his gate are what the
+simulation sees, and the climb to the castle is walkable.
+
+**What it involves:** `planning/royal-city.json`, his `built_bounds_xz`, and dropping the
+scaffold kit for `cairnwell`. This one is larger than W1 because the castle is not a
+settlement: there is a terrace at 94 m, a switchback climb, a curtain wall with a gate,
+and the simulation's own castle and rampart terrain already claim that ground.
+Blackcairn's anchors and the king's escort stand there.
+
+**Exact check:** the bake stands his city instead of the kit; every anchor in Cairnwell
+and Blackcairn still resolves, by name; a walker can reach the castle courtyard; both
+suites green; frames of the city and the climb.
+
+**If this one grows past a session, split it** — the lower town first, the castle after.
 
 ### A1 — The quest's spine, decided on paper
 
