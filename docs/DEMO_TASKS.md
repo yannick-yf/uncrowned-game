@@ -38,17 +38,19 @@ measured. Names of new files are proposals; the shape is what matters.
 
 Foundation. Enables everything below. Est. 2 h. Depends on: —.
 
-A store holding **allégeance** and **richesse** per place, read from a new
-`content/towns.json`, advanced only through `Sim`, and carried by the save like
-everything else. The Cinderworks starts at **6 and 4**; the other five places get
-plausible starts; **Brindle has none** — it is outside the system.
+**Delivered 2026-09-18.** A store holding **allégeance** and **richesse** for the
+**five** places that carry them — the Cinderworks at its settled 6 and 4, the other
+four proposed in the file and changed in one place. Brindle is absent, and asking
+about it returns −1 rather than 0, because a ruin has no standing to report and that
+is not the same as having a low one. Cairnwell and Blackcairn are absent too: they are
+the kingdom.
 
-New: `core/town_state.gd` (store), `core/rules/town_rules.gd` (thresholds, the ±3,
-the floors and ceilings), `content/towns.json`.
+`content/towns.json`, `core/rules/town_rules.gd` (floor, ceiling, the threshold at 5,
+the ±3, the four appearances), `core/town_state.gd`, `core/systems/town_system.gd` —
+the only thing that writes a number, and only from an event, so a replay rebuilds the
+same kingdom.
 
-**Check:** a test reads 6 and 4 for the Cinderworks and nothing for Brindle; a value
-pushed past its floor or ceiling clamps; a run that changes a value and replays its
-log lands on the same numbers.
+**Checked:** 7 new tests. 44 suites, 438 tests, 0 failed on both worlds.
 
 ### M2 · Richesse lights or cools the furnaces
 

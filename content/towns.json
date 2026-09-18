@@ -1,0 +1,31 @@
+{
+  "_note": "Where each place stands, as the two values the simulation runs on (docs/SIMULATION_MODEL.md, 2026-09-18). Allégeance is how far a place is with the king; richesse is how well it is doing. Both are 0-10, and 5 is the threshold that turns a number into an appearance. These are STARTING values only: everything after the first tick is in the event log. Brindle is absent on purpose — a ruined village is outside the system. Cairnwell and Blackcairn are absent because together they are the kingdom, which carries its own two values.",
+  "_starts_note": "The Cinderworks' 6 and 4 are settled (docs/QUEST_CINDERWORKS.md): loyal, and going badly, so the dispute is visible before anybody speaks. The other four are proposals — change them here and nowhere else.",
+  "towns": {
+    "cinderworks": {
+      "allegiance": 6,
+      "richesse": 4,
+      "_why": "Settled. The king's third steelworks, and the shift is already breaking down: some furnaces cold, people idle."
+    },
+    "wide_acres": {
+      "allegiance": 7,
+      "richesse": 7,
+      "_why": "Proposal. The crown eats what the estates grow, and the estates are paid for it."
+    },
+    "harrowgate": {
+      "allegiance": 6,
+      "richesse": 6,
+      "_why": "Proposal. A market town on the road's hinge: it takes the crown's coin and keeps its opinions."
+    },
+    "muster": {
+      "allegiance": 8,
+      "richesse": 4,
+      "_why": "Proposal. The king's own camp — loyal as anywhere in the kingdom, and it lives on rations."
+    },
+    "saltmarch": {
+      "allegiance": 4,
+      "richesse": 3,
+      "_why": "Proposal. Far from the road, poor, and it has never seen much of the crown but its tax."
+    }
+  }
+}

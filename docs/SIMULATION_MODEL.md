@@ -24,9 +24,9 @@ wrong, and the fix is to split it rather than to document it better.
 A second rule, and it is the point of the whole model: **the numbers must be
 locatable.** The model it replaces has twelve quantities for the whole kingdom —
 `faction_tension`, `bank_confidence`, `patrol_density` — abstractions no player can
-go and look at. This model has fourteen, which is barely fewer, and every one of them
-belongs to a place a player can stand in and see. **The gain is not fewer numbers.
-It is numbers with an address.**
+go and look at. This model has twelve too, and every one of them belongs to a place a
+player can stand in and see. **The gain is not fewer numbers. It is numbers with an
+address.**
 
 ---
 
@@ -43,8 +43,9 @@ Nothing else. `strength level` and `happiness` were in the first draft and are c
 strength belongs to the kingdom, not to a town, and happiness was doing the same job
 as richesse. The draft's own visual grid used only these two.
 
-**Six places carry them**, because the seventh and eighth are the kingdom (§2):
-Brindle, the Cinderworks, Harrowgate, the Wide Acres, the Muster, Saltmarch.
+**Five places carry them.** The Cinderworks, the Wide Acres, Harrowgate, the Muster
+and Saltmarch. Brindle does not (below), and Cairnwell and Blackcairn do not because
+together they are the kingdom (§2).
 
 **Brindle is outside the system** (Yannick, 2026-09-18). It is a ruined village with
 one inhabitant: it carries no values, sends nothing and receives nothing. The door
@@ -71,7 +72,9 @@ is its true relation, and it is one line rather than a third flow.
 **The king himself has no state.** His kingdom has one, and it shows on him: his
 royal guard, who stands at the gate, and what the capital looks like.
 
-**Fourteen numbers in total.** 6 × 2 + 2.
+**Twelve numbers in total.** 5 × 2 + 2. (It read fourteen until M1 was built and the
+count was done against the code: Brindle had already been ruled out of the system and
+the arithmetic had not followed.)
 
 ## 3. The star — settled
 
