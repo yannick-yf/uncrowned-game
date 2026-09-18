@@ -61,6 +61,19 @@ static func look_of(allegiance: int, richesse: int) -> StringName:
 	return &"hostile_rich" if is_high(richesse) else &"hostile_poor"
 
 
+## How many of a place's furnaces burn, given its richesse.
+##
+## **Proportional, so the works reads as three things rather than two.** All-or-nothing
+## would give a working town and a dead one and nothing in between — and the Cinderworks
+## spends the whole quest *in* between, which is how the player knows there is an
+## argument before anybody speaks. Of six furnaces: none at 1, two at 4, four at 7, all
+## six at 10.
+static func lit_of(total: int, richesse: int) -> int:
+	if total <= 0:
+		return 0
+	return clampi(total * clamped(richesse) / CEILING, 0, total)
+
+
 ## A value after an act moved it. `direction` is +1 or -1; anything else moves nothing,
 ## because a caller that means "no change" should say so rather than pass a zero that
 ## reads like an arithmetic accident.

@@ -271,6 +271,13 @@ screen at all, and "no script errors" says nothing about what is on it.
 to them. Same gate, same reason: `--headless` never draws, and a fence that fails to go
 missing is invisible to the suite.
 
+**`UNCROWNED_TOWN=place:allegiance/richesse`** (2026-09-18) sets a place's two numbers
+for the frame, comma-separated for more than one — `UNCROWNED_TOWN=cinderworks:9/7`.
+The same gate and the same reason as `UNCROWNED_FREE`, which it will outlive: an
+outcome has to be lookable at before there is a quest to play to it, and until Q5 lands
+there is no other way to see the works working. **It writes the store directly and is
+therefore not a save-able state** — it is one frame, for one photograph.
+
 **The journal's last section lists who is where.** Every named person, the town
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more
 of them and "walk about until you find him" is not a way to review a character.

@@ -69,22 +69,35 @@ func test_the_window_stands_on_his_ground() -> void:
 	var before: String = world.fingerprint()
 	window.sync({
 		"player": Vector2(292.5, 287.5), "facing": Vector2i(0, 1), "camera": Vector2(292.5, 287.5),
-		"tents": 6, "crowd": 4, "free": {&"cinderworks": true}, "shuttered": false, "escort": 10,
+		"tents": 6, "crowd": 4, "free": {}, "shuttered": false, "escort": 10,
+		"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},
 		"extra_guards": 0, "witnesses": ["maddox", "bell"], "now": 3.2,
 	}, 1.0 / 60.0)
 	assert_true(window.people_count() >= 30, "the cast stands in the window: %d" % window.people_count())
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
 	assert_true(window.embers_lit() > 0, "the fires glow: %d embers" % window.embers_lit())
+	# **Richesse is what burns** (M2, 2026-09-18). It used to be the freed/held flag, and
+	# a works could only be working or dead; now a works at the floor is cold, and the
+	# campfires around it are not — somebody still has to eat in a town that has stopped.
 	assert_eq(window.embers_lit(), window.ember_count() - window.kiln_embers(),
-		"and a freed Cinderworks is cold: its kilns' embers are out")
+		"a works with nothing left burns nothing: its furnaces' embers are out")
 	if window.his_present():
 		var smoke: Array[Node] = window.get_node("HisWorld/Decor/Acierie").find_children("*", "CPUParticles3D", true, false)
 		assert_true(smoke.size() > 0, "the delivered active furnaces carry smoke")
 		for effect: CPUParticles3D in smoke:
-			assert_false(effect.emitting, "a freed Cinderworks stops %s" % effect.get_parent().name)
+			assert_false(effect.emitting, "a works at the floor stops %s" % effect.get_parent().name)
 			assert_false(effect.visible, "old smoke is hidden immediately")
-		window.sync({"free": {&"cinderworks": false}}, 1.0 / 60.0)
+		window.sync({"towns": {&"cinderworks": {"allegiance": 6, "richesse": 10}}}, 1.0 / 60.0)
 		for effect: CPUParticles3D in smoke:
-			assert_true(effect.emitting and effect.visible, "holding the works restores its furnace effects")
+			assert_true(effect.emitting and effect.visible, "a works at its ceiling burns everything")
+
+		# And the reading the quest actually starts on: going badly, not dead. Two of
+		# his six furnaces, and it must look like neither of the other two states.
+		window.sync({"towns": {&"cinderworks": {"allegiance": 6, "richesse": 4}}}, 1.0 / 60.0)
+		var middling: int = window.embers_lit()
+		window.sync({"towns": {&"cinderworks": {"allegiance": 6, "richesse": 10}}}, 1.0 / 60.0)
+		assert_true(middling < window.embers_lit(), "fewer fires than a works that is working")
+		window.sync({"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}}}, 1.0 / 60.0)
+		assert_true(middling > window.embers_lit(), "and more than one that has stopped")
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()

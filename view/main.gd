@@ -152,6 +152,22 @@ func _ready() -> void:
 		# Comma-separated, so two places freed at once photograph a crisis at the wall.
 		for zone: String in freed.split(","):
 			_mine.decide(StringName(zone.strip_edges()), FactionRules.OPPOSITION, _sim.tick)
+	# **`UNCROWNED_TOWN=cinderworks:9/7`** — a place's two numbers, set for the frame
+	# `shot.sh` takes, so an outcome can be looked at before there is a quest to play to
+	# it. `place:allegiance/richesse`, comma-separated for more than one. The same debug
+	# gate as the two above, and listed with them in CLAUDE.md.
+	var towns_set: String = OS.get_environment("UNCROWNED_TOWN")
+	var towns_store := _sim.store(&"towns") as TownState
+	if OS.has_feature("debug") and towns_set != "" and towns_store != null:
+		for row: String in towns_set.split(","):
+			var halves: PackedStringArray = row.strip_edges().split(":")
+			if halves.size() != 2:
+				continue
+			var pair: PackedStringArray = halves[1].split("/")
+			var place := StringName(halves[0].strip_edges())
+			towns_store.set_value(place, TownRules.ALLEGIANCE, int(pair[0]))
+			if pair.size() > 1:
+				towns_store.set_value(place, TownRules.RICHESSE, int(pair[1]))
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
@@ -183,6 +199,10 @@ func _frame(eye: Vector2) -> Dictionary:
 			&"wide_acres": _is_free(&"wide_acres"), &"cairnwell": _is_free(&"cairnwell"),
 			&"cinderworks": _is_free(&"cinderworks"), &"muster": _is_free(&"muster"),
 		},
+		# Where each place stands, in its two numbers (M1). One reader, as with the
+		# free-state kits above: the window is handed the reading and never asks the
+		# store what it means.
+		"towns": _town_rows(),
 		"shuttered": CastleRules.wealth(_ticked) == CastleRules.SHUTTERED,
 		"escort": _ticked.kings_escort(),
 		"extra_guards": CastleRules.extra_guards(CastleRules.instability(_mine, _sim.tick)),
@@ -192,6 +212,21 @@ func _frame(eye: Vector2) -> Dictionary:
 			if _can_steal() or _can_give_back() or _can_warn() else [],
 		"now": _real_seconds,
 	}
+
+
+## Every place that carries the two numbers, and what they read as.
+func _town_rows() -> Dictionary:
+	var out: Dictionary = {}
+	var towns := _sim.store(&"towns") as TownState
+	if towns == null:
+		return out
+	for id: StringName in towns.ids():
+		out[id] = {
+			"allegiance": towns.allegiance_of(id),
+			"richesse": towns.richesse_of(id),
+			"look": String(towns.look_of(id)),
+		}
+	return out
 
 
 ## **M — the map of Erileo.**

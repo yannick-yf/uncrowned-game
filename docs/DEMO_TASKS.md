@@ -54,15 +54,26 @@ same kingdom.
 
 ### M2 · Richesse lights or cools the furnaces
 
-**First visible result.** Est. 2 h. Depends on: M1.
+**Delivered 2026-09-18.** The window reads richesse and it decides **how many of his
+six furnaces burn** — proportional rather than all-or-nothing, which was the task's
+first wording and would have given a working works and a dead one and nothing between.
+Of six: **none at 1, two at 4, four at 7, all six at 10.** The works spends the whole
+quest in between, and that is how the player knows there is an argument before anybody
+speaks.
 
-The window reads richesse and binds it to his furnace and forge effects: **below the
-threshold some are cold, above it they all burn.** Nothing else changes yet.
+His delivered heat is now grouped per furnace rather than flattened into one list, and
+numbered by the same pass that builds our embers so the two can never disagree about
+which furnace is the third one. A campfire is never touched: somebody still has to eat
+in a town that has stopped. `view/world3d.gd`, the frame dictionary in `view/main.gd`,
+and `TownRules.lit_of`.
 
-Touches `view/world3d.gd` only — the window reads, it never writes.
+**Checked:** three frames at **(320,207)** — richesse 1, 4 and 7 — and they read as
+dead, going badly, and working. **Honestly: cold-versus-lit is unmistakable; 4 against
+7 is visible but quiet.** What will make *going badly* loud is P3, the props of daily
+life going away. 44 suites, 438 tests, 0 failed on both worlds.
 
-**Check:** two frames at the production viewpoint **(320,207)**, richesse 4 and
-richesse 7, side by side. The first must read as *going badly* without a word of text.
+`UNCROWNED_TOWN=cinderworks:9/7` was added to take those frames, gated on debug and
+listed in `CLAUDE.md`: an outcome has to be lookable at before there is a quest.
 
 ### M3 · Allégeance shows on a place
 

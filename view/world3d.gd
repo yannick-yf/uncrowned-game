@@ -82,8 +82,16 @@ const BLOCK_HEIGHT: Dictionary = {
 const BLOCK_HEIGHT_DEFAULT: float = 3.5
 
 var _bridge_decks: Array[Dictionary] = []
-var _workshop_heat: Array[Node3D] = []
-var _workshop_coals: Array[ShaderMaterial] = []
+## His delivered heat, **grouped by the piece it belongs to**, so a works can have
+## some furnaces burning and some cold rather than all or nothing. Each row is
+## {place, index, nodes, coals}; `index` is the furnace's place in its works, or -1
+## for heat that is not a furnace.
+var _workshop_heat: Array[Dictionary] = []
+## Furnace tile -> its index in its own works, and how many each works has. Built once
+## with the embers, and read by his delivered effects, so the two never disagree about
+## which furnace is the third one.
+var _kiln_index: Dictionary = {}
+var _kilns_in: Dictionary = {}
 
 var _region: Region = null
 var _sim: Sim = null
@@ -647,8 +655,11 @@ func _dot_sprite() -> Sprite3D:
 
 
 ## Embers over every kiln and every fire: a handful of dots each, on their own
-## periods, so the group never pulses together — which is the thing that reads as
-## fake. Whether a kiln glows is the frame's to say: a freed Cinderworks is cold.
+## periods, so the group never pulses together — which is the thing that reads as fake.
+##
+## **Whether a furnace glows is richesse's to say** (M2, 2026-09-18): a works at 4 of
+## 10 burns two of its six, at 1 none, at 7 four. A campfire is not production and is
+## never touched — a place can be ruined and still have somebody cooking.
 func _build_embers() -> void:
 	var hearths := Node3D.new()
 	hearths.name = "Embers"
@@ -667,8 +678,17 @@ func _build_embers() -> void:
 			dot.pixel_size = 0.025
 			hearths.add_child(dot)
 			dots.append(dot)
-		_embers.append({"kind": kind, "at": Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5),
-			"dots": dots})
+		var hearth: Dictionary = {"kind": kind, "dots": dots,
+			"at": Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5)}
+		if kind == &"kiln":
+			# Only production carries a place: a hearth without one always burns.
+			var place: StringName = _region.zone_at(at)
+			var index: int = int(_kilns_in.get(place, 0))
+			_kilns_in[place] = index + 1
+			_kiln_index[at] = index
+			hearth["place"] = place
+			hearth["index"] = index
+		_embers.append(hearth)
 
 
 # ------------------------------------------------------------------- ground ---
@@ -897,17 +917,25 @@ func _sync_marks(cast: Cast, witnesses: Array) -> void:
 
 func _sync_embers(frame: Dictionary) -> void:
 	var now: float = float(frame.get("now", 0.0))
-	var free: Dictionary = frame.get("free", {}) as Dictionary
-	var working: bool = not bool(free.get(&"cinderworks", false))
-	for effect: Node3D in _workshop_heat:
-		effect.visible = working
-		if effect is CPUParticles3D:
-			(effect as CPUParticles3D).emitting = working
-	for coals: ShaderMaterial in _workshop_coals:
-		coals.set_shader_parameter("glow_strength", null if working else 0.0)
+	# **How many furnaces burn is richesse's to say** (M2). The frame carries each
+	# place's two numbers; nothing here asks the store.
+	var towns: Dictionary = frame.get("towns", {}) as Dictionary
+	var burning: Dictionary = {}
+	for place: StringName in _kilns_in.keys():
+		var row: Dictionary = towns.get(place, {}) as Dictionary
+		burning[place] = TownRules.lit_of(int(_kilns_in[place]),
+			int(row.get("richesse", TownRules.CEILING)))
+	for group: Dictionary in _workshop_heat:
+		var on: bool = _burns(burning, group)
+		for node: Node3D in (group["nodes"] as Array[Node3D]):
+			node.visible = on
+			if node is CPUParticles3D:
+				(node as CPUParticles3D).emitting = on
+		for coals: ShaderMaterial in (group["coals"] as Array[ShaderMaterial]):
+			coals.set_shader_parameter("glow_strength", null if on else 0.0)
 	for hearth: Dictionary in _embers:
 		var dots: Array[Sprite3D] = hearth["dots"] as Array[Sprite3D]
-		var lit: bool = (hearth["kind"] as StringName) != &"kiln" or not bool(free.get(&"cinderworks", false))
+		var lit: bool = _burns(burning, hearth)
 		var colour: Color = Color(1.0, 0.62, 0.28) if (hearth["kind"] as StringName) == &"kiln" else Color(1.0, 0.74, 0.40)
 		var base: Vector3 = _feet_of(hearth["at"] as Vector2)
 		var lift: float = float(BLOCK_HEIGHT.get(hearth["kind"] as StringName, 0.5))
@@ -967,6 +995,21 @@ func marks_shown() -> int:
 	return shown
 
 
+## Whether this piece of a works is alight.
+##
+## A furnace burns while its number is under the count richesse pays for. Heat that is
+## **not** a furnace — his forges — burns while the works is working at all. Anything
+## with no place at all is not production: a campfire goes on burning in a dead town,
+## because somebody still has to eat.
+func _burns(burning: Dictionary, piece: Dictionary) -> bool:
+	var place: StringName = piece.get("place", &"") as StringName
+	if not burning.has(place):
+		return true
+	var count: int = int(burning[place])
+	var index: int = int(piece.get("index", -1))
+	return index < count if index >= 0 else count > 0
+
+
 func ember_count() -> int:
 	var total: int = 0
 	for hearth: Dictionary in _embers:
@@ -1016,7 +1059,9 @@ func _read_bridge_decks() -> void:
 					"bounds": deck.mesh.get_aabb(), "faces": deck.mesh.get_faces()})
 
 
-## Keep his active furnace effects in the same free/held state as our ember marks.
+## Keep his delivered furnace and forge effects in step with our ember marks, piece by
+## piece: a furnace has its own row, so richesse can cool the third one and leave the
+## other two burning. Runs after `_build_embers`, which is what numbered them.
 ## Duplicate only the material instance; the generated workshop stays untouched.
 func _read_workshop_heat() -> void:
 	var town: Node = _his.get_node_or_null("Decor/Acierie")
@@ -1025,14 +1070,21 @@ func _read_workshop_heat() -> void:
 	for prop: Dictionary in _region.props:
 		if not prop.has("source_id"):
 			continue
-		var kiln: Node = town.find_child(String(prop["source_id"]), true, false)
-		if kiln == null:
+		var piece: Node = town.find_child(String(prop["source_id"]), true, false)
+		if piece == null:
 			continue
-		for child: Node in kiln.find_children("*", "", true, false):
+		var at: Vector2i = prop["at"] as Vector2i
+		var nodes: Array[Node3D] = []
+		var coals: Array[ShaderMaterial] = []
+		for child: Node in piece.find_children("*", "", true, false):
 			if child is CPUParticles3D or child is Light3D:
-				_workshop_heat.append(child as Node3D)
+				nodes.append(child as Node3D)
 			elif child is MeshInstance3D and child.name in [&"FurnaceBedEmbers", &"HearthCoalsEmbers"]:
 				var mesh := child as MeshInstance3D
 				var material: ShaderMaterial = (mesh.material_override as ShaderMaterial).duplicate() as ShaderMaterial
 				mesh.material_override = material
-				_workshop_coals.append(material)
+				coals.append(material)
+		if nodes.is_empty() and coals.is_empty():
+			continue
+		_workshop_heat.append({"place": _region.zone_at(at), "nodes": nodes, "coals": coals,
+			"index": int(_kiln_index.get(at, -1))})
