@@ -77,14 +77,26 @@ listed in `CLAUDE.md`: an outcome has to be lookable at before there is a quest.
 
 ### M3 · Allégeance shows on a place
 
-Est. 2–3 h. Depends on: M1.
+**Delivered 2026-09-18, in half.** The colour cast is built: standing in a place the
+king still holds, the light leans **warm**; in one that has turned, **cold**; in the
+wild and anywhere outside the system it is exactly his light and nothing of ours.
 
-The second axis becomes visible: **the colour cast, warm where the king is supported
-and cold where he is not**, plus the king's guard standing or absent. The banner
-itself waits for his brother.
+**It is a tint over his sun and his sky, never a replacement.** His map plate carries
+both, so the window remembers what he chose and multiplies it, and the midpoint of the
+two leans is white — his look is the neutral state. The first frame lands on its light
+rather than fading into it, as the camera in that file already does; after that it
+eases, because a hard flip at a zone's edge reads as a bug rather than as a mood.
 
-**Check:** four frames at the quarter viewpoint **(299,206)** — the four combinations
-of the two thresholds. A stranger shown them in a random order can sort them.
+**Checked:** four frames at **(299,206)**. **Honestly: they sort into two, not four.**
+Warm against cold is unmistakable. The richesse axis makes no difference at this
+viewpoint, because no furnace is in frame and nothing else reads richesse yet — that is
+**P3**, when the carts and the woodpiles stop being placed. 44 suites, 438 tests, 0
+failed on both worlds.
+
+**Deferred, with a reason: the king's guard standing or absent.** Whether the crown's
+men are in a place is the *simulation's* answer, not the window's — the window would be
+hiding somebody the simulation says is there. It belongs with **P1**, which is where
+who is present and what they are doing lives.
 
 ### M4 · The kingdom's two values
 
@@ -100,11 +112,19 @@ every place turning against the king lowers it too, with no steel having moved.
 
 Est. 2–3 h. Depends on: M4.
 
-Food and weapons, **and nothing else**. A place badly fed loses richesse, **over
-days**, on a slow tick — never in the same instant as the cause.
+Food and weapons, **and nothing else**. The drift goes **both ways**: a place badly
+fed loses richesse, a place well fed gains it, **over days**, on a slow tick — never in
+the same instant as the cause.
 
-**Check:** a test at tick granularity: the cause lands on day 1 and the effect is
-still arriving on day 3. Played with `T`, a day at a time, the change is watchable.
+**And the kingdom redistributes only what it receives.** It creates nothing, so a
+place grows rich on what another place produced. This is what stops everything
+drifting to the ceiling, and it is what makes the ironworks' last two furnaces worth
+helping the farms for: a quest's ±3 takes the works to 7 of 10, and only the kingdom
+can carry it the rest of the way.
+
+**Check:** a test at tick granularity: the cause lands on day 1 and the effect is still
+arriving on day 3. A test that the kingdom cannot give out more than it took in.
+Played with `T`, a day at a time, the change is watchable.
 
 ### M6 · One table for the arithmetic
 

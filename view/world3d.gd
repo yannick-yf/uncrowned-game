@@ -65,6 +65,21 @@ const BRIEF: String = "res://content/bake_brief.json"
 ## Walls the simulation has and his map does not show yet — the castle's ramparts —
 ## stand as blocks this tall, so a wall you cannot pass is a wall you can see.
 const WALL_HEIGHT_M: float = 3.0
+## **The light a place stands in** (M3, 2026-09-18). Allégeance's half of the four
+## appearances: warm where the king is supported, cold where he is not.
+##
+## **A tint over his light, never a replacement.** The sun and the sky are his — his
+## map plate carries them — so these multiply what he chose, and their midpoint is
+## exactly white. A place with no opinion, and the wild, therefore look precisely as he
+## drew them, and what the window adds is a lean rather than a look of its own.
+const TINT_LOYAL: Color = Color(1.10, 1.02, 0.90)
+const TINT_HOSTILE: Color = Color(0.90, 0.98, 1.10)
+const ENERGY_LOYAL: float = 1.08
+const ENERGY_HOSTILE: float = 0.92
+## How fast the light settles when the player walks in or out of a place. Eased rather
+## than switched: a hard flip at a zone's edge reads as a bug rather than as a mood.
+const LIGHT_SETTLES: float = 1.6
+
 ## The lens zooms as his camera does: size in metres, two at a time, between his limits.
 const ZOOM_MIN: float = 14.0
 const ZOOM_MAX: float = 48.0
@@ -130,6 +145,18 @@ var _walk_phase: float = 0.0
 var _people: Dictionary = {}
 var _traffic: Dictionary = {}
 var _guards: Array[Node3D] = []
+var _sun: DirectionalLight3D = null
+var _air: Environment = null
+var _sun_base: Color = Color.WHITE
+var _sun_energy_base: float = 1.0
+var _air_base: Color = Color.WHITE
+## The first frame lands on its light rather than fading into it: walking into a game
+## already standing in a town that has turned should look that way at once. The same
+## rule the camera and the player already follow in this file.
+var _warmth_placed: bool = false
+## 0 is a place that has turned against the king, 1 is one that has not, and 0.5 is
+## anywhere with no opinion — the wild, or a place outside the system.
+var _warmth: float = 0.5
 ## One entry per prop of the region: the prop, the node standing for it, and how far
 ## above its feet the node's origin sits.
 var _props: Array[Dictionary] = []
@@ -241,6 +268,12 @@ func _adopt_his_world() -> void:
 	_his = world
 	_read_bridge_decks()
 	_read_workshop_heat()
+	# His sun and his sky, to be leaned warm or cold by allégeance and by nothing else.
+	_sun = world.get_node_or_null("Sun") as DirectionalLight3D
+	var his_air := world.get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if his_air != null:
+		_air = his_air.environment
+	_remember_light()
 	# His site labels are editor guides — a forty-eight-point "Brindle" over the
 	# ruins — and his playtest hides them the moment play starts. They are built when
 	# his terrain rebuilds, a frame later, so they are hidden then; and everything
@@ -275,6 +308,7 @@ func _build_light() -> void:
 	sun.shadow_enabled = false
 	sun.transform = Transform3D(Basis.looking_at(Vector3(-0.5, -1.0, -0.35).normalized(), Vector3.UP), Vector3.ZERO)
 	add_child(sun)
+	_sun = sun
 	var environment := Environment.new()
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = Color(0.62, 0.72, 0.80)
@@ -285,6 +319,8 @@ func _build_light() -> void:
 	world_environment.name = "Air"
 	world_environment.environment = environment
 	add_child(world_environment)
+	_air = environment
+	_remember_light()
 
 
 ## The fallback ground, for a clone without his scenes: his heights as chunks of
@@ -757,6 +793,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
 	_sync_embers(frame)
+	_sync_light(frame, delta)
 	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2, delta)
 
 
@@ -1008,6 +1045,47 @@ func _burns(burning: Dictionary, piece: Dictionary) -> bool:
 	var count: int = int(burning[place])
 	var index: int = int(piece.get("index", -1))
 	return index < count if index >= 0 else count > 0
+
+
+## Warm or cold, by the allégeance of the place the player is standing in.
+##
+## The window looks up which place that is — reading the region, as it reads everything
+## — and takes the number from the frame. A place with no row, and the wild, sit at the
+## midpoint, which is the light this window had before there were two numbers.
+func _sync_light(frame: Dictionary, delta: float) -> void:
+	var towns: Dictionary = frame.get("towns", {}) as Dictionary
+	var at: Vector2 = frame.get("player", Vector2.ZERO) as Vector2
+	var here: StringName = _region.zone_at(Vector2i(at.floor()))
+	var target: float = 0.5
+	if towns.has(here):
+		var allegiance: int = int((towns[here] as Dictionary).get("allegiance", TownRules.CEILING))
+		target = 1.0 if TownRules.is_high(allegiance) else 0.0
+	if not _warmth_placed:
+		_warmth_placed = true
+		_warmth = target
+	else:
+		_warmth = lerpf(_warmth, target, clampf(delta * LIGHT_SETTLES, 0.0, 1.0))
+	var tint: Color = TINT_HOSTILE.lerp(TINT_LOYAL, _warmth)
+	if _sun != null:
+		_sun.light_color = Color(_sun_base.r * tint.r, _sun_base.g * tint.g, _sun_base.b * tint.b)
+		_sun.light_energy = _sun_energy_base * lerpf(ENERGY_HOSTILE, ENERGY_LOYAL, _warmth)
+	if _air != null:
+		_air.ambient_light_color = Color(_air_base.r * tint.r, _air_base.g * tint.g, _air_base.b * tint.b)
+
+
+## What he chose, kept so the tint multiplies it rather than replacing it.
+func _remember_light() -> void:
+	if _sun != null:
+		_sun_base = _sun.light_color
+		_sun_energy_base = _sun.light_energy
+	if _air != null:
+		_air_base = _air.ambient_light_color
+
+
+## How warm the light is: 1 loyal, 0 turned, 0.5 no opinion. For the suite, which
+## cannot see a colour.
+func light_warmth() -> float:
+	return _warmth
 
 
 func ember_count() -> int:

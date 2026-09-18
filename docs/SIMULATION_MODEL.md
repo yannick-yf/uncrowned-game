@@ -111,6 +111,12 @@ another place directly, and every hop is one the player can be told in a sentenc
 ### Three guardrails, so it cannot run away — settled
 
 1. **Propagation is always place → kingdom → places.** Never place → place.
+   **And the kingdom redistributes what it receives — it never creates** (Yannick,
+   2026-09-18). A place can only grow rich on what another place produced, so *help
+   the farms and the ironworks feels it* is a trade rather than free money, and
+   nothing drifts to 10 everywhere unless the player has helped everywhere. It is
+   also what the old model got wrong: everything started at its ceiling, so building
+   the kingdom up could not be felt.
 2. **Every value has a floor and a ceiling.** Food in particular can never fall below
    a threshold in v1 (Yannick, 2026-09-18). Without floors a bad turn becomes a
    spiral nobody can stop, and the player watches a machine instead of playing.
@@ -199,7 +205,7 @@ do not hold up. The roles may survive as a starting point; the writing does not.
 | Value | What moves it |
 |---|---|
 | **Allégeance** | **The player's act, and nothing else.** It never drifts |
-| **Richesse** | The player's act, **and** a slow drift on what the kingdom sends the place |
+| **Richesse** | The player's act, **and** a slow drift, **both ways**, on what the kingdom sends the place |
 
 Allégeance is the moral spine: it is who this place is *with*. If it drifted on its
 own, the player's choice would dilute and a town could turn back with nobody having

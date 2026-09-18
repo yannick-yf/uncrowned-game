@@ -99,5 +99,29 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(middling < window.embers_lit(), "fewer fires than a works that is working")
 		window.sync({"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}}}, 1.0 / 60.0)
 		assert_true(middling > window.embers_lit(), "and more than one that has stopped")
+	# **The light a place stands in** (M3). Standing in the works, the light is warm
+	# while the king holds it and cold when it has turned; the wild has no opinion and
+	# keeps the light this window had before there were two numbers.
+	# The region the window was built on, not `Places` — on the procedural world those
+	# are two different maps, and the window is always over the baked one here.
+	var works: Vector2 = Vector2(region.sites[&"cinderworks"] as Vector2i) + Vector2(0.5, 0.5)
+	_settle(window, {"player": works, "camera": works,
+		"towns": {&"cinderworks": {"allegiance": 9, "richesse": 7}}})
+	assert_true(window.light_warmth() > 0.9, "a works the king still holds stands in warm light")
+	_settle(window, {"player": works, "camera": works,
+		"towns": {&"cinderworks": {"allegiance": 3, "richesse": 1}}})
+	assert_true(window.light_warmth() < 0.1, "and one that has turned stands in cold")
+	_settle(window, {"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
+		"towns": {&"cinderworks": {"allegiance": 3, "richesse": 1}}})
+	assert_true(absf(window.light_warmth() - 0.5) < 0.1,
+		"the wild has no opinion about the king: %.2f" % window.light_warmth())
+
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()
+
+
+## A second of frames, so an eased value has arrived. The light settles rather than
+## switching, because a hard flip at a zone's edge reads as a bug rather than a mood.
+func _settle(window: World3d, frame: Dictionary) -> void:
+	for _i: int in 90:
+		window.sync(frame, 1.0 / 60.0)
