@@ -35,6 +35,7 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"traits", Traits.new())
 	sim.add_store(&"towns", TownState.new())
 	sim.add_store(&"folk", Folk.new())
+	sim.add_store(&"fight", Fight.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -88,6 +89,7 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(TownSystem.new())
 	systems.append(FolkSystem.new())
 	systems.append(KingdomSystem.new())
+	systems.append(CombatSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
@@ -113,7 +115,7 @@ static func fresh_stores() -> Dictionary:
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
-		&"towns": TownState.new(), &"folk": Folk.new(),
+		&"towns": TownState.new(), &"folk": Folk.new(), &"fight": Fight.new(),
 	}
 
 

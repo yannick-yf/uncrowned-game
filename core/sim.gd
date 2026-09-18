@@ -132,6 +132,18 @@ func pending_count() -> int:
 var _steppers: Array[SimSystem] = []
 var _tickers: Array[SimSystem] = []
 
+## **The world's clock, held.** `SPECS` §8: *combat runs beside the sim, and the world
+## clock stops during a fight; when it resolves, the sim resumes from the tick it
+## stopped on.* Steps keep running — a fight needs sixty of them a second — and only the
+## tick is held.
+##
+## Without it, thirty real seconds of fighting is 1,800 steps and **two in-game hours**
+## of grain drifting, rumours travelling and armies moving: a fight would cost a morning.
+##
+## Set by `CombatSystem` from the fight store every step, so it is recomputed rather
+## than remembered and cannot be left on by a fight that ended. Nothing else may touch it.
+var ticks_held: bool = false
+
 
 func advance(steps: int = 1) -> void:
 	for _i: int in maxi(steps, 0):
@@ -147,7 +159,7 @@ func advance(steps: int = 1) -> void:
 			system.on_step(self, step)
 
 		_steps_into_tick += 1
-		if _steps_into_tick >= STEPS_PER_WORLD_TICK:
+		if _steps_into_tick >= STEPS_PER_WORLD_TICK and not ticks_held:
 			_steps_into_tick = 0
 			tick += 1
 			for system: SimSystem in _tickers:

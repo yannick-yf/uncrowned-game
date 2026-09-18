@@ -160,7 +160,38 @@ mais il ne devine pas le nouveau.
 
 ---
 
-## 8. Détail pratique : ouvrir ton projet salit des fichiers
+## 8. Le combat arrive, et il y a une question pour toi
+
+On a commencé le système de combat. Le calcul est fait et testé : deux combattants, des
+coups, une garde, un résultat. L'image attend une décision de Yannick, et cette décision
+te concerne directement.
+
+**La question.** Le combat se passe où ? Deux réponses possibles. Sur un écran séparé, en
+2D vue de côté. Ou sur place, dans le monde 3D, avec la caméra qui descend.
+
+**Ce qu'on a vérifié dans ton fichier `traveler_walk_frames.tres`.** Ton voyageur a huit
+animations : `idle` et `walk`, dans quatre directions — `up`, `left`, `right`, `down`. Et
+le jeu choisit laquelle afficher d'après la direction **dans le monde**, pas d'après la
+caméra.
+
+Conséquence : **la caméra ne peut pas tourner.** Si on la fait pivoter de quatre-vingt-dix
+degrés, un personnage qui marche vers l'est reste dessiné de face. Les coups partiraient
+dans le vide.
+
+**Ce qu'on recommande, et ça ne te demande aucun dessin.** Garder l'orientation de la
+caméra exactement où elle est. Baisser seulement sa hauteur — de 48 degrés à 25 ou 30 —
+et resserrer le cadre. Le combat se déroule alors sur l'axe est-ouest. Les deux profils
+dont il a besoin sont tes images `left` et `right`, qui existent déjà.
+
+**L'autre solution coûterait cher, à toi.** Faire tourner la caméra voudrait dire
+redessiner chaque personnage sous huit angles. C'est la plus grosse demande de dessin du
+projet, et on préfère te l'éviter.
+
+Rien n'est construit côté image. Yannick tranche.
+
+---
+
+## 9. Détail pratique : ouvrir ton projet salit des fichiers
 
 Chaque fois que ton projet Godot est ouvert, Godot réimporte tes textures et modifie
 des fichiers `.import` suivis par git. C'est arrivé trois fois cette semaine.

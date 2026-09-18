@@ -1,0 +1,42 @@
+{
+  "_note": "The frame data of the fight (docs/COMBAT.md, F1). EVERY NUMBER IS AN INTEGER COUNT OF SIM STEPS, because the simulation already runs at 60 steps a second and one step is one frame — so thirty years of published fighting-game frame data can be read straight into this file without conversion. Distances are millimetres on the fight's line, also integers: no float ever decides whether a blow lands.",
+  "_reactable_note": "The opponent's startups are DELIBERATELY SLOW, and this is the finding that most shapes the fight. Measured human reaction is about 265 ms, which is 16 frames. A Street Fighter jab is 4 frames — it exists to be guessed at, in a game against another person. Against one scripted opponent the player has to be able to learn the tell and answer it, which puts every attack of his in the 18-28 frame band. Street Fighter's feel at a quarter of Street Fighter's speed.",
+  "_tuning_note": "This file is the whole of the fight's balance. Change a number here and nothing else. Frame advantage on hit = hitstun - (active - 1 + recovery); on block = blockstun - the same.",
+  "moves": {
+    "strike": {
+      "startup": 8,
+      "active": 3,
+      "recovery": 12,
+      "damage": 2,
+      "hitstun": 16,
+      "blockstun": 10,
+      "hitstop": 8,
+      "reach_mm": 1300,
+      "knockback_mm": 300,
+      "_why": "The player's one blow. 8 frames to land is fast enough to feel like yours and slow enough to be beaten by his guard. On hit it leaves you +2; on block, -4, so swinging into a raised guard is punished."
+    },
+    "swing": {
+      "startup": 24,
+      "active": 4,
+      "recovery": 22,
+      "damage": 3,
+      "hitstun": 20,
+      "blockstun": 14,
+      "hitstop": 8,
+      "reach_mm": 1500,
+      "knockback_mm": 500,
+      "_why": "His blow. 24 frames of startup — 400 ms — is readable by a person who has seen it once, which is the whole design. It hits harder and further than yours, and it is punishable: -11 on block."
+    }
+  },
+  "fighters": {
+    "guard": {
+      "damage_through_mm": 0,
+      "damage_taken_percent": 25,
+      "_why": "A guard does not make you invulnerable, it makes the exchange survivable: a quarter of the damage and blockstun instead of hitstun. Holding it is not a strategy — every blocked blow still costs, and you cannot attack while it is up."
+    },
+    "walk_mm_per_step": 45,
+    "reach_slack_mm": 250,
+    "start_apart_mm": 2400,
+    "_why": "45 mm a step is 2.7 m a second, close to the world's own 2.5 tiles a second, so stepping into range inside a fight feels like walking outside one."
+  }
+}

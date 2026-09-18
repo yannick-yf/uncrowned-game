@@ -201,7 +201,7 @@ the only thing that closes the gap.
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
 walks, no asset pack — in about **12 s**, which is the one to run without
 thinking. `--all` adds the journeys, the asset pack and the days of weather, and takes
-about **38 s** on the baked world and **32 s** on the 2D map.
+about **42 s** on the baked world and **36 s** on the 2D map.
 (It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people;
 4.7 s and 18 s when v1 shipped; 9 s and 25 s before the simplified simulation, which
 added a system running sixty times a second and tests that advance whole in-game days.
@@ -209,13 +209,16 @@ The numbers are here to be kept true, not to be admired: if the fast suite ever
 stops being the thing you run without thinking, that is the thing to fix. Two things
 were already done for that on 2026-09-18 — the walking population is matched once an
 in-game hour rather than once a minute, and each day a test simulates is a day it
-actually needs.)
+actually needs. The 4 s the full suites gained on 2026-09-19 is **not** the fight:
+`--all` was measured at 42.2 s with `CombatSystem` taken out of `Game.build()` and
+42.8 s with it in, so a system on the step costs the other 478 tests nothing
+measurable. The fourteen combat tests are in the **fast** suite for the same reason.)
 A suite marked `const SLOW := true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
-`run_tests.sh` runs on the baked world (about **12 s** fast, **38 s** all);
+`run_tests.sh` runs on the baked world (about **12 s** fast, **42 s** all);
 `tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
-**32 s**), and both have to be green before a commit that touches the map, the kit, a
+**36 s**), and both have to be green before a commit that touches the map, the kit, a
 position or the pace. A test says where it stands in the world's terms —
 `at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
 `TestCase` — and never as a tile; a time budget written for six tiles a second is
@@ -410,6 +413,15 @@ without asking.
    the overworld, three touches**. The real side-on combat screen is Phase 4, which is
    out of v1 and out of v2 — so this exception outlived the phase that created it and
    is now the oldest debt in the project. Nothing may assume the combat screen's shape.
+
+   **Half settled, 2026-09-19.** The fight's *rules* are built and tested headless —
+   `core/rules/combat_rules.gd`, `core/fight.gd`, `core/systems/combat_system.gd`,
+   `content/moves.json`, and the world clock held by `Sim.ticks_held`. They assume no
+   screen and no camera, which is why they could be built before the question was
+   answered. **The question itself is open and is Yannick's**: `docs/COMBAT.md` §1 sets
+   §10's *"never in the overworld, side-on 2D"* against an in-place 3D arena, with the
+   sprite-facing constraint that decides the cost of each. Do not build a camera until
+   he has ruled.
 
 **Retired, kept here so the history reads straight:**
 

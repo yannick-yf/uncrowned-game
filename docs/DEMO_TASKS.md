@@ -309,7 +309,7 @@ Both brothers can tell which is which with no overlay. Save, reload, and they ho
 
 ## F — the fight
 
-### F1 · A fight resolves, with no screen
+### F1 · A fight resolves, with no screen — **built 2026-09-19**
 
 Est. 3–4 h. Depends on: —.
 
@@ -317,7 +317,9 @@ Two combatants, one attack, damage, a defence, a result — as simulation state,
 advanced through `Sim`. **World time pauses for the fight and resumes after.**
 
 **Check:** headless. The same inputs replay to the same health, the same result and
-the same world tick; different advance chunk sizes agree.
+the same world tick; different advance chunk sizes agree. — *met; 14 tests in
+`test/test_combat.gd`, in the fast suite.* See `docs/COMBAT.md` §5 for what playing it
+found that the tests did not.
 
 ### F2 · The arena
 
@@ -346,6 +348,12 @@ Est. 3 h. Depends on: F3.
 
 One approach, one attack with a readable wind-up, and one defensive action for the
 player. Driven by the fight's state, never by a scene timer.
+
+**Half of this arrived with F1 and was not planned to.** The opponent had to walk, or
+his first knockback ended the fight in a deadlock, and he had to choose when to swing,
+or he was a post. So the approach, the twenty-four frame wind-up and the guard all
+exist and are tested headless. What F4 still owes is the player's *evasion*, the
+opponent's second option, and the part that can only be judged by playing it.
 
 **Check:** avoid or block the signalled attack, then punish its recovery. Slow the
 rendering down and the timings do not change.
