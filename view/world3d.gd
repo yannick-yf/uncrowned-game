@@ -62,6 +62,13 @@ const HIS_BLOCK_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials
 ## `kit_library` — the bake opens the walls round such a piece to the piece's own size
 ## from the same table, so the two never disagree — and he can change a match in a line.
 const BRIEF: String = "res://content/bake_brief.json"
+## The pieces a place stops putting out once it falls below the threshold (P3). The
+## list is `content/towns.json`'s and **belongs to his brother**: art direction, one
+## line to change, no code. Two rules this file enforces whatever the list says —
+## nothing is hidden off a tile the player could not already walk on, so no invisible
+## thing is ever left blocking the way; and a building is never in the list, because a
+## place that has stopped is empty rather than demolished.
+const TOWNS: String = "res://content/towns.json"
 ## Walls the simulation has and his map does not show yet — the castle's ramparts —
 ## stand as blocks this tall, so a wall you cannot pass is a wall you can see.
 const WALL_HEIGHT_M: float = 3.0
@@ -154,6 +161,10 @@ var _air_base: Color = Color.WHITE
 ## already standing in a town that has turned should look that way at once. The same
 ## rule the camera and the player already follow in this file.
 var _warmth_placed: bool = false
+## Prop kind -> true, from the file. And every piece that can go, with the place it
+## stands in: his, found in his scene by its id, and ours, found in `_props`.
+var _poverty: Dictionary = {}
+var _fading: Array[Dictionary] = []
 ## 0 is a place that has turned against the king, 1 is one that has not, and 0.5 is
 ## anywhere with no opinion — the wild, or a place outside the system.
 var _warmth: float = 0.5
@@ -196,6 +207,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_metres_per_tile = extent / float(_samples - 1)
 		_origin_m = Vector2(-extent * 0.5, -extent * 0.5)
 	_build_camera()
+	_load_poverty()
 	_load_his_materials()
 	_adopt_his_world()
 	if _his == null:
@@ -469,6 +481,7 @@ func _build_props() -> void:
 		var at: Vector2i = prop["at"] as Vector2i
 		if _his != null and bool(prop.get("his", false)):
 			his_props_skipped += 1
+			_note_fading(prop, null)
 			continue
 		var entry: Dictionary = {"prop": prop, "node": null, "lift": 0.0, "figure": false}
 		if kind == &"townsfolk":
@@ -490,6 +503,7 @@ func _build_props() -> void:
 		node.name = "%s_%d_%d" % [kind, at.x, at.y]
 		stand.add_child(node)
 		_stand(entry)
+		_note_fading(prop, entry["node"] as Node3D)
 		_props.append(entry)
 
 
@@ -928,6 +942,10 @@ func _sync_props(frame: Dictionary) -> void:
 			folk += 1
 			shown = folk <= crowd
 		node.visible = shown
+	# **Last**, so it has the last word. The loop above sets every one of our own props
+	# visible again each frame, and a piece that a poor place has stopped putting out
+	# would have come straight back.
+	_sync_fading(frame)
 
 
 ## Who can see you, marked over their heads while there is an act in front of you
@@ -1086,6 +1104,75 @@ func _remember_light() -> void:
 ## cannot see a colour.
 func light_warmth() -> float:
 	return _warmth
+
+
+## The list of what a poor place stops putting out. His brother's file, not ours.
+func _load_poverty() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(TOWNS))
+	if not (parsed is Dictionary):
+		return
+	var block: Dictionary = (parsed as Dictionary).get("poverty", {}) as Dictionary
+	for kind: Variant in (block.get("gone_below_threshold", []) as Array):
+		_poverty[StringName(String(kind))] = true
+
+
+## Remember a piece that can go missing — **only if the player could already walk on
+## its tile.** Some of his carts and ore heaps stand on ground the simulation refuses,
+## and hiding one of those would leave a wall nobody can see, which is the rule this
+## project has held since his map arrived. `node` is null for a piece of his, which is
+## drawn by his own scene and has to be found in it by its id.
+func _note_fading(prop: Dictionary, node: Node3D) -> void:
+	var kind: StringName = prop["kind"] as StringName
+	if not _poverty.has(kind):
+		return
+	var at: Vector2i = prop["at"] as Vector2i
+	if not _region.is_passable(at):
+		return
+	var piece: Node3D = node
+	if piece == null:
+		var town: Node = _his.get_node_or_null("Decor/Acierie") if _his != null else null
+		if town == null or not prop.has("source_id"):
+			return
+		piece = town.find_child(String(prop["source_id"]), true, false) as Node3D
+		if piece == null:
+			return
+	_fading.append({"node": piece, "place": _region.zone_at(at), "at": at})
+
+
+## A place below the threshold stops putting its work out: the carts, the bundled bars,
+## the firewood stacked ready. The buildings stay, the slag stays, the walls stay — a
+## works that has stopped is **empty, not demolished**.
+func _sync_fading(frame: Dictionary) -> void:
+	if _fading.is_empty():
+		return
+	var towns: Dictionary = frame.get("towns", {}) as Dictionary
+	for piece: Dictionary in _fading:
+		var place: StringName = piece["place"] as StringName
+		var row: Dictionary = towns.get(place, {}) as Dictionary
+		var richesse: int = int(row.get("richesse", TownRules.CEILING))
+		(piece["node"] as Node3D).visible = TownRules.is_high(richesse)
+
+
+## How many pieces are hidden because their place is poor. For the suite.
+func faded_count() -> int:
+	var gone: int = 0
+	for piece: Dictionary in _fading:
+		if not (piece["node"] as Node3D).visible:
+			gone += 1
+	return gone
+
+
+func fading_count() -> int:
+	return _fading.size()
+
+
+## Where every piece that can go missing stands. For the suite, which has to be able to
+## prove that none of them was ever what stopped the player.
+func fading_tiles() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for piece: Dictionary in _fading:
+		out.append(piece["at"] as Vector2i)
+	return out
 
 
 func ember_count() -> int:

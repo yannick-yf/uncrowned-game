@@ -171,14 +171,28 @@ none of the four states' lines would make sense in another state.
 
 ### P3 · Abandonment is absence
 
-Est. 2 h. Depends on: M1, P1.
+**Delivered 2026-09-18, and it is not enough on its own — measured.** Below the
+threshold a place stops putting its work out: the ore cart, the bundled bars, the hot
+bloom, the firewood stacked ready. The buildings stay, the slag stays, the chimneys
+stay. A works that has stopped is **empty, not demolished**.
 
-Below the richesse threshold the props of daily life stop being placed: no carts, no
-woodpiles, no washing, no fires. **The chimneys stay, cold.** No building gets a
-second version.
+**The list lives in `content/towns.json` and belongs to slosinio.** It is art
+direction: one line to change, no code. Two rules the window enforces whatever the list
+says — a piece is hidden only if the player could already walk on its tile, so nothing
+invisible is ever left blocking the way, and a building is never in the list.
 
-**Check:** the two frames of M2 again, now with the yard emptied. Collision agrees
-with what is drawn.
+**Measured, and this is the part that matters: it changes 0.35% of the picture.** Five
+pieces fade in the whole works and they are small. **P3 does not make a poor works
+readable**, and no list of his props will: what a stopped town looks like is **nobody
+walking to the mine**. That is **P1**, and it has just become the most important task
+in the M/P group rather than the third one.
+
+What P3 is worth keeping for: it is the mechanism, and it grows for free. Every piece
+his brother adds to the list, or to the works, is carried by it without code.
+
+**Checked:** frames at (313,220) rich and poor, a pixel count between them, and a test
+that no hidden piece ever stood on ground the simulation refuses. 44 suites, 438 tests,
+0 failed on both worlds.
 
 ---
 

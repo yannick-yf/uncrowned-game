@@ -27,5 +27,20 @@
       "richesse": 3,
       "_why": "Proposal. Far from the road, poor, and it has never seen much of the crown but its tax."
     }
+  },
+  "_poverty_note": "What stops being put out when a place falls below the threshold (P3). The mechanism is ours; THIS LIST IS ART DIRECTION AND BELONGS TO SLOSINIO — change a line here, no code. Two rules the window enforces whatever the list says: a piece is only ever hidden if the player could already walk on its tile, so nothing invisible is ever left blocking the way; and a building is never hidden, because a place that has stopped is empty, not demolished.",
+  "poverty": {
+    "gone_below_threshold": [
+      "charrette_ore",
+      "charrette_bars",
+      "barres_fer_liees",
+      "loupe_fer_brute",
+      "bacs_minerai",
+      "buches_rangees",
+      "produce",
+      "crates",
+      "barrels"
+    ],
+    "_why": "Proposals. The work that is in progress: ore waiting to be loaded, bars bundled to go, a bloom still hot, firewood stacked ready. What stays: the slag, the walls, the chimneys, the water. A dead works keeps its waste and its buildings."
   }
 }

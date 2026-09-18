@@ -116,6 +116,34 @@ func test_the_window_stands_on_his_ground() -> void:
 	assert_true(absf(window.light_warmth() - 0.5) < 0.1,
 		"the wild has no opinion about the king: %.2f" % window.light_warmth())
 
+	# **What a poor place stops putting out** (P3). The carts, the bundled bars, the
+	# firewood stacked ready. Never a building, and never anything standing on ground
+	# the simulation already refuses — hiding one of those leaves a wall nobody can see.
+	assert_true(window.fading_count() > 0,
+		"the works has work in progress to stop putting out: %d pieces" % window.fading_count())
+	# Every place at once, so the count is about the rule and not about which fixture
+	# happens to name which town.
+	var rich: Dictionary = {}
+	var poor: Dictionary = {}
+	for id: StringName in (Game.build().store(&"towns") as TownState).ids():
+		rich[id] = {"allegiance": 6, "richesse": 7}
+		poor[id] = {"allegiance": 6, "richesse": 1}
+	window.sync({"player": works, "camera": works, "towns": rich}, 1.0 / 60.0)
+	assert_eq(window.faded_count(), 0, "a place that is working puts its work out")
+	window.sync({"player": works, "camera": works, "towns": poor}, 1.0 / 60.0)
+	# Only a place that carries the two numbers can go poor. A piece standing in Brindle
+	# or in the capital is in no place's keeping and stays put whatever happens.
+	var can_go: int = 0
+	for tile: Vector2i in window.fading_tiles():
+		if rich.has(region.zone_at(tile)):
+			can_go += 1
+	assert_true(can_go > 0, "the works has work in progress to stop putting out: %d" % can_go)
+	assert_eq(window.faded_count(), can_go,
+		"a place that has stopped puts none of its work out, and nowhere else changes")
+	for tile: Vector2i in window.fading_tiles():
+		assert_true(region.is_passable(tile),
+			"%s can be hidden because it never stopped anybody" % tile)
+
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()
 
