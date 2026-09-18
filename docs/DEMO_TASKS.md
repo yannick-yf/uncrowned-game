@@ -77,6 +77,13 @@ listed in `CLAUDE.md`: an outcome has to be lookable at before there is a quest.
 
 ### M3 · Allégeance shows on a place
 
+> **Not accepted, 2026-09-18.** Yannick is unsure about the colour cast and wants to
+> look at it with his brother, whose the map's light is. It is left in place, working
+> and tested, and it is **one commit to undo**. Three ways out when they decide: keep
+> it, soften the lean, or drop it and carry allégeance some other way — the king's
+> banner and the presence of his guard being the obvious one, and both are things his
+> brother can draw.
+
 **Delivered 2026-09-18, in half.** The colour cast is built: standing in a place the
 king still holds, the light leans **warm**; in one that has turned, **cold**; in the
 wild and anywhere outside the system it is exactly his light and nothing of ours.
