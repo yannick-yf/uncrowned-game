@@ -33,9 +33,11 @@ func test_a_works_that_has_stopped_sends_nobody() -> void:
 	assert_true(folk.in_place(&"cinderworks") < working,
 		"fewer walk to the mine: %d, was %d" % [folk.in_place(&"cinderworks"), working])
 
-	# And at the floor, the road is empty.
-	towns.set_value(&"cinderworks", TownRules.RICHESSE, TownRules.FLOOR)
+	# And at the floor, the road is empty. Through the event, like everything else: a
+	# test that writes the store directly is testing a game nobody can play.
+	sim.submit(&"move_town_value", {"place": "cinderworks", "value": "richesse", "direction": -1})
 	sim.advance(Sim.STEPS_PER_REAL_SECOND)
+	assert_eq(towns.richesse_of(&"cinderworks"), TownRules.FLOOR)
 	assert_eq(folk.in_place(&"cinderworks"), 0, "a dead works sends nobody")
 
 
@@ -55,6 +57,8 @@ func test_they_move() -> void:
 	var folk := sim.store(&"folk") as Folk
 	sim.advance(Sim.STEPS_PER_REAL_SECOND)
 	assert_true(folk.walkers.size() > 0, "somebody is out")
+	if folk.walkers.is_empty():
+		return
 	var before: Vector2 = folk.walkers[0]["pos"] as Vector2
 	sim.advance(Sim.STEPS_PER_REAL_SECOND * 2)
 	var after: Vector2 = folk.walkers[0]["pos"] as Vector2

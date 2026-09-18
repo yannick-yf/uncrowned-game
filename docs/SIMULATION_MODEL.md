@@ -30,6 +30,56 @@ address.**
 
 ---
 
+## The six rules — settled 2026-09-18, and they are the model
+
+Everything after this section explains or implements one of these six. If a section
+below disagrees with one of them, the rule wins.
+
+1. **A place has two numbers**: *allégeance* and *richesse*, each 0–10.
+2. **A place sends its good to the king only while it is still with him.** What it
+   sends is worth its richesse. A place that has turned keeps what it makes.
+3. **The kingdom has two numbers**: its *trésor* — what it has actually received — and
+   its *allégeance*, the average of its places'.
+4. **The king's force is his trésor.** The same number, not a second one: troops have
+   to be fed and armed out of the same store.
+5. **Allégeance and trésor decide what the capital looks like**, on the same four
+   appearances and the same thresholds as any place.
+6. **The kingdom redistributes the food**, which moves a place's richesse a point a
+   day. **A place whose quest has been resolved is frozen** and stops drifting.
+
+### Why rule 2 is the one that matters
+
+Rule 4 makes force and trésor the same number, which is simpler and right — and on its
+own it would have cost the game half of itself, because the king could then only be
+weakened by breaking things. **Rule 2 gives that back.** A place that turns against him
+stops shipping, the trésor falls, and the king is weaker: *allégeance weakens the king
+by what it cuts off, not by being a term in a formula.*
+
+So the player can still bring a king down without burning anything, and the rules stayed
+simpler rather than more complicated.
+
+### Goods have a category, not an identity
+
+So that adding one is a line rather than a rule (Yannick, 2026-09-18):
+
+| Category | What is in it | What it is for |
+|---|---|---|
+| **Vivres** | blé, poisson… | **feeding the places** — the only thing that drifts richesse |
+| **Matériel** | acier, bois, pierre… | **arming the crown** |
+
+Wood joins *matériel* the day the sawmill is ingested; a fishing port joins *vivres*.
+Neither is a new rule.
+
+**Later, and not the demo's problem** (Yannick): high matériel could mean better-armed
+soldiers, and low vivres fewer hit points. That is refinement of the full game.
+
+### The guardrail
+
+Food never drifts a place below a floor in v1, so the kingdom can make a place suffer
+and cannot starve it to death. Only the player's own act takes a place to the bottom.
+
+---
+
 ## 1. Two values per place — settled
 
 Every place carries exactly two, each **out of 10**:
@@ -66,12 +116,12 @@ those two decide how it looks. One rule learnt once and used twice.
 | Value | Fed by |
 |---|---|
 | **Allégeance** | The average of the allégeance its places send it. *Toutes les villes envoient une valeur d'allégeance* |
-| **Trésor** | The **sum of the goods** the places send — food, steel, later wood — normalised onto the same 0–10 scale. The works sends 8 of steel and the farm 7 of food, so the trésor is 7.5 |
+| **Trésor** | The **sum of the goods it actually received**, normalised onto the same 0–10 scale. The works sends 8 of steel and the farm 7 of food, so the trésor is 7.5 — **and a place that has turned sends nothing at all**, which is rule 2 |
 
-**Force is a reading of those two, not a third number.** It can be worked out from
-allégeance and trésor, so it carries nothing of its own, and the whole game stays at
-twelve numbers rather than thirteen. It is what the confrontation will read: how hard
-the king is to put down.
+**Force is the trésor.** Not a second number and not a formula over two: the same number
+with the name we use when we are talking about the king rather than about his accounts.
+Troops are fed and armed out of one store. The code says so literally, and a test holds
+them equal so nobody can make them drift apart.
 
 **And the capital is read like any other place**: allégeance × trésor, the same four
 appearances, the same thresholds. A player who has learnt to read a town has learnt to

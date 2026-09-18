@@ -56,5 +56,10 @@
       "_why": "The walk out to the cutting face, where the works takes its wood. It stops when the works stops -- and an empty road is the strongest thing the game can say about a town that has died. It is also the link between this quest and the fairy's: the people who walk out there are the ones eating the forest. Chosen over the road to his mine because the cutting face exists on both worlds, and because it means something."
     }
   },
-  "_produces_note": "What each place sends the kingdom (M4). Two goods in v1 and no more -- food and steel; wood waits for the sawmill, where it will be the fuel steel is made with rather than a third flow. A place with nothing here consumes and does not produce, which is a real answer and not an omission."
+  "_produces_note": "What each place sends the kingdom (M4). Two goods in v1 and no more -- food and steel; wood waits for the sawmill, where it will be the fuel steel is made with rather than a third flow. A place with nothing here consumes and does not produce, which is a real answer and not an omission.",
+  "_goods_note": "What each good is FOR (rule 2 and the categories, 2026-09-18). Adding a good is a line here, never a rule: wood joins materiel the day the sawmill is ingested, a fishing port's catch joins vivres. Vivres are the only thing that comes back to the places; materiel stays with the crown.",
+  "goods": {
+    "food": "vivres",
+    "steel": "materiel"
+  }
 }

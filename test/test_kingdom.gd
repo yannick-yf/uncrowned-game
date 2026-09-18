@@ -22,19 +22,20 @@ func test_stopping_the_works_costs_the_crown_its_force() -> void:
 
 
 func test_a_kingdom_can_be_disarmed_by_talking() -> void:
-	# An army needs weapons and men. Every place turning against him costs the king his
-	# force with no steel having moved at all — which is the argument of the whole game
-	# in one number.
+	# **Rule 2 is what makes this true**, now that the king's force is only his treasury.
+	# Nothing is destroyed — every place keeps exactly the richesse it had — and the king
+	# is weaker anyway, because a place that has turned stops shipping to him.
 	var towns: TownState = _towns()
 	var before: float = KingdomRules.force(towns)
-	var steel_before: float = KingdomRules.supply_of(towns, KingdomRules.STEEL)
-	var tresor_before: float = KingdomRules.tresor(towns)
+	var kept: Dictionary = {}
 	for place: StringName in towns.ids():
+		kept[place] = towns.richesse_of(place)
 		towns.set_value(place, TownRules.ALLEGIANCE, TownRules.FLOOR)
-	assert_eq(KingdomRules.supply_of(towns, KingdomRules.STEEL), steel_before,
-		"not a furnace has changed")
-	assert_eq(KingdomRules.tresor(towns), tresor_before, "and the treasury is untouched")
-	assert_true(KingdomRules.force(towns) < before, "and the king is weaker anyway")
+	for place: StringName in towns.ids():
+		assert_eq(towns.richesse_of(place), int(kept[place]),
+			"%s makes exactly what it made: nothing was broken" % place)
+	assert_eq(KingdomRules.tresor(towns), 0.0, "and none of it reaches the crown")
+	assert_true(KingdomRules.force(towns) < before, "so the king is weaker")
 
 
 func test_only_the_places_that_send_something_fill_the_treasury() -> void:
@@ -62,17 +63,16 @@ func test_the_capital_is_read_like_any_other_place() -> void:
 	assert_eq(KingdomRules.look(towns), &"loyal_rich")
 	for place: StringName in towns.ids():
 		towns.set_value(place, TownRules.ALLEGIANCE, TownRules.FLOOR)
-	assert_eq(KingdomRules.look(towns), &"hostile_rich",
-		"a rich crown nobody is with any more")
+	assert_eq(KingdomRules.look(towns), &"hostile_poor",
+		"a crown nobody is with is a poor crown: rule 2 means nothing arrives any more")
 
 
 func test_force_is_a_reading_and_not_a_number_of_its_own() -> void:
-	# It is worked out from the other two, so it cannot disagree with them and it is
-	# not a thirteenth number. Twelve in the whole game, and that is the point.
+	# One number with two names is how two numbers are born. This holds them equal.
 	var towns: TownState = _towns()
 	towns.set_value(&"cinderworks", TownRules.RICHESSE, 9)
-	var by_hand: float = (KingdomRules.tresor(towns) + KingdomRules.allegiance(towns)) * 0.5
-	assert_eq(KingdomRules.force(towns), by_hand, "force is its two halves and nothing else")
+	assert_eq(KingdomRules.force(towns), KingdomRules.tresor(towns),
+		"rule 4: the king's force is his treasury, the same number under another name")
 
 
 func test_the_two_numbers_stay_on_the_same_scale_as_everything_else() -> void:

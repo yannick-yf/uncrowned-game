@@ -15,7 +15,34 @@ extends SimSystem
 ## Nothing here is random. Where a new walker starts is its index along the route, so a
 ## replay puts the same people on the same stones.
 
-func on_tick(sim: Sim, _tick: int) -> void:
+## Once an in-game hour rather than once a minute. How many people go to work changes
+## at most once a day — the kingdom feeds on a daily clock and the player acts rarely —
+## and asking sixty times an hour cost the fast suite two seconds for nothing.
+const ASKED_EVERY: int = 60
+
+
+## **The player's act shows at once.** The hourly clock below is for the weather — the
+## slow drift of a place's fortunes — and it would have meant a works stopping and
+## everybody carrying on up the road for the rest of the hour. A test said so.
+func on_event(sim: Sim, event: SimEvent) -> void:
+	if event.type != &"town_moved" and event.type != &"town_fed":
+		return
+	var world := sim.store(&"world") as WorldState
+	var towns := sim.store(&"towns") as TownState
+	var folk := sim.store(&"folk") as Folk
+	if world == null or towns == null or folk == null:
+		return
+	var place: StringName = StringName(String(event.data.get("place", "")))
+	if Folk.count_in(place) > 0:
+		_match_population(world, towns, folk, place)
+
+
+func on_tick(sim: Sim, tick: int) -> void:
+	# The first tick puts everybody out; after that, once an hour. Asking only on the
+	# hour looked tidier and meant a run of four minutes had nobody on the road at all —
+	# five tests said so before anybody looked at a screen.
+	if tick > 1 and tick % ASKED_EVERY != 0:
+		return
 	var world := sim.store(&"world") as WorldState
 	var towns := sim.store(&"towns") as TownState
 	var folk := sim.store(&"folk") as Folk
@@ -28,11 +55,18 @@ func on_tick(sim: Sim, _tick: int) -> void:
 func on_step(sim: Sim, _step: int) -> void:
 	var world := sim.store(&"world") as WorldState
 	var folk := sim.store(&"folk") as Folk
-	if world == null or folk == null:
+	if world == null or folk == null or folk.walkers.is_empty():
 		return
 	var seconds: float = Game.seconds_per_step()
-	for walker: Dictionary in folk.walkers:
-		_walk(world, folk, walker, seconds)
+	# The route is looked up once a place rather than once a walker: this runs sixty
+	# times a second and the lookup was the whole of its cost.
+	for place: StringName in Folk.places():
+		var route: Array[Vector2] = folk.route_in(world.region(), place)
+		if route.size() < 2:
+			continue
+		for walker: Dictionary in folk.walkers:
+			if (walker["place"] as StringName) == place:
+				_walk(route, walker, seconds)
 
 
 ## As many as richesse pays for — the same rule that lights the furnaces, so the two
@@ -63,10 +97,7 @@ func _match_population(world: WorldState, towns: TownState, folk: Folk, place: S
 ## One step along the walk, turning round at either end. The road's own rule, because
 ## somebody walking to the mine and somebody walking the King's Road are the same
 ## problem and should not be two pieces of code that drift apart.
-func _walk(world: WorldState, folk: Folk, walker: Dictionary, seconds: float) -> void:
-	var route: Array[Vector2] = folk.route_in(world.region(), walker["place"] as StringName)
-	if route.size() < 2:
-		return
+func _walk(route: Array[Vector2], walker: Dictionary, seconds: float) -> void:
 	var leg: int = int(walker["leg"])
 	var heading: int = int(walker["heading"])
 	var target: int = clampi(leg + heading, 0, route.size() - 1)

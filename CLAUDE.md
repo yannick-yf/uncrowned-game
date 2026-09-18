@@ -199,18 +199,23 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **7.5 s**, which is the one to run without
-thinking. `--all` adds the journeys and the asset pack and takes about **21 s**.
-(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people,
-and 4.7 s and 18 s when v1 shipped; v2's place tests each build a full world.
+walks, no asset pack — in about **12 s**, which is the one to run without
+thinking. `--all` adds the journeys, the asset pack and the days of weather, and takes
+about **38 s** on the baked world and **32 s** on the 2D map.
+(It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people;
+4.7 s and 18 s when v1 shipped; 9 s and 25 s before the simplified simulation, which
+added a system running sixty times a second and tests that advance whole in-game days.
 The numbers are here to be kept true, not to be admired: if the fast suite ever
-stops being the thing you run without thinking, that is the thing to fix.)
+stops being the thing you run without thinking, that is the thing to fix. Two things
+were already done for that on 2026-09-18 — the walking population is matched once an
+in-game hour rather than once a minute, and each day a test simulates is a day it
+actually needs.)
 A suite marked `const SLOW := true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
-`run_tests.sh` runs on the baked world (about **8 s** fast, **24 s** all);
+`run_tests.sh` runs on the baked world (about **12 s** fast, **38 s** all);
 `tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
-**20 s**), and both have to be green before a commit that touches the map, the kit, a
+**32 s**), and both have to be green before a commit that touches the map, the kit, a
 position or the pace. A test says where it stands in the world's terms —
 `at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
 `TestCase` — and never as a tile; a time budget written for six tiles a second is

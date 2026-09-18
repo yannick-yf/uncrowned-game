@@ -87,6 +87,7 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(AllegianceSystem.new())
 	systems.append(TownSystem.new())
 	systems.append(FolkSystem.new())
+	systems.append(KingdomSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())

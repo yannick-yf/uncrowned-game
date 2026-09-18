@@ -30,6 +30,11 @@ const CEILING: int = 10
 ## boundary case is a definition rather than a decision anybody plays against.
 const THRESHOLD: int = 5
 
+## **The guardrail** (Yannick, 2026-09-18): the food a place drifts toward never counts
+## as less than this, so the kingdom can make a place suffer and cannot starve it to
+## death. Only the player's own act takes a place to the bottom.
+const FOOD_FLOOR: int = 3
+
 ## What one act of the player's moves a value.
 ##
 ## **Three, chosen so an outcome always crosses the threshold** from the starts in

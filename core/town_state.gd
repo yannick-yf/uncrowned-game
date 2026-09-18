@@ -25,6 +25,11 @@ static var _starts: Dictionary = {}
 ## outside the system, and asking about one is not an error — it has no standing to
 ## report, which is different from having a low one.
 var towns: Dictionary = {}
+## Places whose quest the player has resolved. **Rule 6**: a settled place is frozen —
+## its richesse stops drifting, so nobody starves in it and no choice of the player's
+## is quietly undone by the weather. Its story is told. In the full game a quest could
+## be reopened after some days, and that is this dictionary losing an entry.
+var settled: Dictionary = {}
 
 
 func _init() -> void:
@@ -50,6 +55,18 @@ static func starts() -> Dictionary:
 
 func has_state(place: StringName) -> bool:
 	return towns.has(place)
+
+
+func is_settled(place: StringName) -> bool:
+	return settled.has(place)
+
+
+## Called by `TownSystem` on the event, and by nothing else.
+func settle(place: StringName) -> bool:
+	if not has_state(place) or is_settled(place):
+		return false
+	settled[place] = true
+	return true
 
 
 func ids() -> Array[StringName]:
@@ -110,5 +127,6 @@ func fingerprint() -> String:
 	ids.sort()
 	var parts: PackedStringArray = PackedStringArray()
 	for id: StringName in ids:
-		parts.append("%s=%d/%d" % [String(id), allegiance_of(id), richesse_of(id)])
+		parts.append("%s=%d/%d%s" % [String(id), allegiance_of(id), richesse_of(id),
+			"!" if is_settled(id) else ""])
 	return ",".join(parts)

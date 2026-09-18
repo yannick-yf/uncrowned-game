@@ -13,6 +13,9 @@ extends SimSystem
 ## told something changed without watching a number.
 
 func on_event(sim: Sim, event: SimEvent) -> void:
+	if event.type == &"settle_town":
+		_settle(sim, event)
+		return
 	if event.type != &"move_town_value":
 		return
 	var towns := sim.store(&"towns") as TownState
@@ -37,13 +40,25 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	})
 
 
+## **Rule 6's freeze.** A place whose quest the player has resolved stops drifting: its
+## story is told, nobody starves in it, and the weather cannot undo what was chosen.
+func _settle(sim: Sim, event: SimEvent) -> void:
+	var towns := sim.store(&"towns") as TownState
+	if towns == null:
+		return
+	var place: StringName = StringName(String(event.data.get("place", "")))
+	if towns.settle(place):
+		sim.derive(&"town_settled", {"place": String(place),
+			"look": String(towns.look_of(place))})
+
+
 ## Nothing sixty times a second.
 func steps() -> bool:
 	return false
 
 
-## Nothing on the world's clock yet. The slow drift of richesse on what the kingdom
-## sends a place is M5, and it belongs here when it arrives.
+## Nothing on the world's clock: the slow drift is `KingdomSystem`'s, because it is the
+## kingdom redistributing rather than a place changing its own mind.
 func ticks() -> bool:
 	return false
 
