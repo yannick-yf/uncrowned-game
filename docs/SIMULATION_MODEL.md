@@ -53,8 +53,12 @@ place's two values; they carry the kingdom's:
 
 | Value | Fed by |
 |---|---|
-| **Force** | What the places send — steel above all |
-| **Trésor** | What the places send — food, and what they are worth |
+| **Force** | The average of the steel received and the places' allégeance. An army needs weapons **and** men, and a place that is no longer with the king does not send its sons |
+| **Trésor** | The **sum of the goods** the places send — food, steel, later wood — normalised onto the same 0–10 scale (Yannick, 2026-09-18) |
+
+**Two goods in v1, food and steel.** Wood waits for the sawmill, which is neither
+ingested nor in the demo; when it arrives it is **the fuel steel is made with**, which
+is its true relation, and it is one line rather than a third flow.
 
 **The king himself has no state.** His kingdom has one, and it shows on him: his
 royal guard, who stands at the gate, and what the capital looks like.
@@ -74,7 +78,7 @@ royal guard, who stands at the gate, and what the capital looks like.
 ```
 
 Each place sends what it produces **and its allégeance** to the kingdom. The kingdom
-redistributes **food and weapons, and nothing else in v1** (§6). A place never sends
+redistributes **food and weapons, and nothing else in v1** (§7). A place never sends
 anything to another place.
 
 This is the single most important simplification on the page: **eight places make
@@ -159,19 +163,71 @@ than a clock and reads just as well:
 
 Removing people is the cheapest signal in the whole model and the strongest.
 
-**They share their lines, and the lines change with the state.** Ten sentences drawn
-at random per state, four states, so forty per town.
+**Their lines change with the state, and they belong to the place** (Yannick,
+2026-09-18). Lines are **not** shared between towns with a word swapped for the local
+trade — that was proposed and rejected, rightly: a farmer and a furnaceman do not
+speak alike whatever their richesse or allégeance, and a town that talks like the
+next one undoes the half of the model that gives places an identity. **Variety is
+wanted from the start, and most of all variety by place.**
 
-**The writing bill, stated so it is paid knowingly:** 40 lines × 2 languages is **80
-lines for the demo's one town**, which is fine, and **480 for six towns**, which is
-Yannick's own hand. Two ways to cut it when the time comes — five sentences per state
-rather than ten, since nobody counts repeats after twenty minutes; or lines shared
-between towns with one word that changes with the local trade.
+Ten sentences per state, four states, so **forty per town**, each written for that
+town. For the demo's one town that is 40 lines in two languages — and the five other
+towns cost what they cost, when we know how they sound.
 
 **They need no names.** The codebase already has *strangers* — eight people addressed
 by their role rather than a name — which is exactly this second family.
 
-## 5. Where the player enters — settled
+**Every line of dialogue already in the game is to be rewritten** (Yannick,
+2026-09-18): the 93 options and 21 reactions in the cast sheets were written fast and
+do not hold up. The roles may survive as a starting point; the writing does not.
+
+## 5. What moves the two values — settled
+
+**One value belongs to the player, the other belongs to the world.**
+
+| Value | What moves it |
+|---|---|
+| **Allégeance** | **The player's act, and nothing else.** It never drifts |
+| **Richesse** | The player's act, **and** a slow drift on what the kingdom sends the place |
+
+Allégeance is the moral spine: it is who this place is *with*. If it drifted on its
+own, the player's choice would dilute and a town could turn back with nobody having
+done anything. **It is a decision, not a weather system.**
+
+Richesse is what makes the star do any work at all. It is what carries *destroy the
+farms and the ironworks feels it*, which is the thing the whole model was built for.
+
+### How far an act moves a value — settled for v1
+
+**±3, against a threshold at 5.** The threshold is what turns a number into an
+appearance — above 5 a place reads as loyal or rich, below it as hostile or poor —
+and ±3 is chosen so that **an outcome always crosses it**. The criterion is
+legibility, not balance: a choice the player cannot see is not a choice.
+
+Worked on the Cinderworks, which starts at 7 and 7:
+
+| | Allégeance | Richesse | What it reads as |
+|---|---|---|---|
+| **At the start** | 7 | 7 | loyal and rich |
+| **I back the workers** | 4 | 4 | **hostile and poor** — both axes turn |
+| **I back the management** | 10 | 9 | loyal and rich, locked in |
+
+The numbers are hardcoded and live in one table, so re-balancing is one line
+(Yannick, 2026-09-18). Accepted with its limits for v1.
+
+### The hole this leaves, and why it is left
+
+A workers' victory means they stop risking their lives (good) and lose their wages
+(bad). Richesse falls, so **the bad is represented and the good is not**.
+
+**It stays that way on purpose.** The good is shown by the routines and the lines —
+the people are alive, they are at the riverside instead of at the furnace, and they
+say so. That is exactly what the second family of NPCs is for.
+
+> The two numbers run the world. The human truth is in what people do and say.
+> **Not everything that matters has to be a number.**
+
+## 6. Where the player enters — settled
 
 **One quest per place. Two outcomes. Each outcome has something good and something
 bad in it.**
@@ -193,7 +249,7 @@ to be felt across the map.
 
 ---
 
-## 6. What the kingdom redistributes — settled
+## 7. What the kingdom redistributes — settled
 
 **Food and weapons, and nothing else in v1.** The first draft's diagram said "food
 distribute ⊕ weapons ⊕ etc"; the *etc* is exactly where complexity gets in, and two
@@ -203,19 +259,13 @@ flows are enough to carry every consequence the demo and the first quests need.
 
 ## What is still open, gathered
 
-1. **What moves a place's two values.** The mechanical heart, and not yet written.
-   Three candidate sources: the outcome of the place's quest (certain), what the
-   kingdom sends it — does a place that is fed badly grow poorer? — and its own
-   production. **This is the next thing to settle.**
-2. **How far a quest outcome moves a value.** Hardcoded numbers in v1 (Yannick,
-   2026-09-18), tuned by playing rather than derived.
-3. **What feeds the kingdom's *force*** — an average of what the places send, with a
-   weighting possible later (Yannick, 2026-09-18). Whether wood counts alongside
-   steel is undecided.
-4. **How many lines per state**, and whether they are shared between towns (§4).
+Nothing of the model itself. What remains is tuning, and tuning is done by playing:
+the exact ±3, the exact thresholds, the weighting inside **force**, and the
+normalisation that puts **trésor** on a 0–10 scale. All of it lives in one table.
 
 **Closed since the first draft:** Brindle (outside the system), what a routine is (a
-destination), what the kingdom redistributes (food and weapons), and the first
+destination), what the kingdom redistributes (food and weapons), what feeds the
+kingdom's two values, how lines are written (by place, never shared), and the first
 draft's "average of three drives" — which dissolved when the place's four values
 became two, since `strength` and `happiness` no longer exist to be averaged.
 
