@@ -6,6 +6,14 @@ written against it.
 
 What it replaces is recorded in [SIMULATION_AS_BUILT.md](SIMULATION_AS_BUILT.md).
 Read that to know what is being given up; read this to know what is being built.
+What survives it is proposed in
+[SIMULATION_KEEP_OR_DROP.md](SIMULATION_KEEP_OR_DROP.md).
+
+**Scope: this is the simulation of *places*.** How the player influences it, and what
+the player's own reputation and status are, is a second document Yannick will draft
+(2026-09-18). The direction is already set and it is a good one: **treat the player as
+a town, with a status of the same shape.** Same two values, same thresholds, same ways
+of moving — nothing new for anyone to learn.
 
 ## The rule that governs every decision below
 
@@ -234,6 +242,11 @@ bad in it.**
 
 That is the whole hook, and it is the same at every place, which is what makes
 extending the model a matter of adding data rather than writing code.
+
+**A quest starts in conversation** (Yannick, 2026-09-18): the player talks to the
+place's key NPCs and **explicitly chooses certain actions** with them. There is no
+document to find and read aloud — that mechanism is deleted (see the keep-or-drop
+review). What the chosen action then *is*, physically, is A1's question.
 
 Worked example, the Cinderworks, and the demo's own quest:
 

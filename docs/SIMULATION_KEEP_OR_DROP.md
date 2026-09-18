@@ -67,9 +67,9 @@ One sentence for the whole review: **keep the machine, replace the game.**
 | The twelve quantities (`WorldTick`, `WorldRules` drift) | Two values per place, two for the kingdom |
 | `DeedRules` — 24 acts and their effect tables | Two outcomes per place, ±3, in one table |
 | Hardship per town | Folded into **richesse** |
-| `Standing`, `Allegiance`, faction ranks | One allégeance per place. Whether the *player's own* standing with the crown survives for the endings is open and outside the demo |
+| `Standing`, `Allegiance`, faction ranks | One allégeance per place — and, when Yannick's player document lands, one for the player too, since **the player is treated as a town**. None of this file survives in its present shape |
 | Rumours and travellers carrying news | The intent survives as guardrail 3 — **propagation takes days** — but as a slow kingdom tick, not a system that walks stories along roads |
-| The five documents | The decisive act is now the quest. A1 may reuse the idea that evidence sits in a place rather than in a person; the mechanism as it stands does not survive |
+| The five documents | **Deleted** (Yannick, 2026-09-18). A quest starts in conversation with the place's key NPCs and by explicitly choosing actions with them, so there is no paper to find, carry and read aloud. `DocumentRules`, the pick-up in `ActSystem` and the reading in `TellingSystem` all go |
 | `GrainSystem`, `UnrestSystem`, `ArmySystem`, `CastleRules` | Organs of the old kingdom model. The two kingdom values do their work |
 
 ### Delete outright
@@ -109,15 +109,18 @@ it, and it is the only thing here whose removal cannot break anything.
 
 ---
 
-## What is open in this review
+## Closed since this review was written
 
-- **The player's own standing with the crown.** The new model gives allégeance to
-  places, not to the player. The endings need to know whether the king counts the
-  player as his. Out of the demo's scope, but it decides whether `Standing` dies or
-  shrinks.
-- **The documents.** A1 decides. If the ironworks' deciding act turns out to be
-  reading the ledger somewhere, the mechanism earns its keep; if it is a physical act
-  at a landmark, it does not.
-- **`Region.TERRAIN_SLOWS_YOU`, `Sound.MUSIC`, `Screens.QUICK_START`.** Three testing
-  switches with working code behind them. Simplifying is a good moment to decide
-  whether the layers they hide come back or go.
+- **The player's own standing with the crown** — answered by Yannick's direction of
+  2026-09-18: **the player is treated as a town, with a status of the same shape.** So
+  the player has an allégeance, and that is what the king thinks of them. `Standing`
+  as it exists does not survive; what replaces it is the player document Yannick will
+  draft.
+- **The documents** — deleted. See above.
+- **The three testing switches** (Yannick, 2026-09-18):
+
+| Switch | What happens |
+|---|---|
+| `Region.TERRAIN_SLOWS_YOU` — the ground slowing the walker | **The layer goes.** The speed table and its tests are removed; he found it useless walking his brother's map |
+| `Sound.MUSIC` | **The tables go.** They point at the 2D pack's tracks, which the art rule now forbids anyway. Music returns one day with real tracks |
+| `Screens.QUICK_START` | **The switch goes, the screens stay.** The public build passes through creation — the demo opens on it — and the quick launch survives as a development path only |
