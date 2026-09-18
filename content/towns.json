@@ -42,5 +42,13 @@
       "barrels"
     ],
     "_why": "Proposals. The work that is in progress: ore waiting to be loaded, bars bundled to go, a bloom still hot, firewood stacked ready. What stays: the slag, the walls, the chimneys, the water. A dead works keeps its waste and its buildings."
+  },
+  "_routines_note": "Who walks where, and how many (P1). The count is what a place at its ceiling puts on the road; richesse decides how many of them actually go, by the same rule that decides how many furnaces burn. A place with no entry here has no routine people. LIKE THE POVERTY LIST, THIS IS CONTENT: change the count or the destination here, no code.",
+  "routines": {
+    "cinderworks": {
+      "count": 12,
+      "to_point": "working_face",
+      "_why": "The walk out to the cutting face, where the works takes its wood. It stops when the works stops -- and an empty road is the strongest thing the game can say about a town that has died. It is also the link between this quest and the fairy's: the people who walk out there are the ones eating the forest. Chosen over the road to his mine because the cutting face exists on both worlds, and because it means something."
+    }
   }
 }

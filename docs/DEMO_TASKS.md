@@ -149,15 +149,32 @@ one line and never a hunt.
 
 ### P1 · Routine people, who go somewhere
 
-Est. 3 h. Depends on: M1.
+**Delivered 2026-09-18, and it is the one that works.** Twelve people walk out of the
+works to the cutting face and back. **Richesse decides how many go** — the same rule
+that lights the furnaces, so a place's two halves never disagree about how it is doing.
+At the ceiling, everybody. At the floor, **nobody**.
 
-A family of unnamed people — the existing *strangers* shape — who **have a destination
-that depends on the place's state.** The works runs: they walk to the mine and back.
-The works has stopped: they are at the riverside, in the wood, **or gone**.
+**They walk to the cutting face, not to the mine.** The mine's road is a point of his
+map and does not exist on the 2D one; the cutting face exists on both. It is also the
+better fiction: the people walking out there **are the ones eating the forest**, which
+is the link between this quest and the fairy's that `QUEST_CINDERWORKS.md` §9 records
+as open.
 
-**Check:** two frames of the same street, works running and works stopped. In the
-first, people on the road to the mine; in the second, the street empty. And a walk,
-because a frame does not show that they move.
+`core/folk.gd`, `core/systems/folk_system.gd`, the `routines` block of
+`content/towns.json` — count and destination are content, not code — and the window.
+They reuse the road travellers' walk rather than a second one that would drift.
+
+**Measured against the other two:**
+
+| | share of the picture that changes |
+|---|---|
+| P3, the props fading | 0.35% |
+| **P1, the people** | **2.33%** |
+
+Seven times as much, and the frames are not close: a dozen figures on the road and
+three on the bridge, against an empty road. **This is what a town that has stopped
+looks like.** 45 suites, 444 tests, 0 failed on both worlds, including a replay that
+puts the same people on the same stones.
 
 ### P2 · Their lines, by state
 

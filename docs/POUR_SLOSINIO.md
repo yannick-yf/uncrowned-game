@@ -1,7 +1,7 @@
 # Pour slosinio — ce qu'on apprend en branchant la simulation sur ta carte
 
 Écrit en français, pour toi. Mis à jour au fur et à mesure du travail.
-Dernière mise à jour : 2026-09-18.
+Dernière mise à jour : 2026-09-18 (les gens qui marchent).
 
 Ce document n'est pas une commande. C'est ce qu'on découvre en jouant, mesuré plutôt
 que supposé, pour que tu décides de ton côté en sachant ce qui se voit et ce qui ne se
@@ -87,12 +87,28 @@ la bannière du roi et la présence de sa garde, ce que toi tu peux dessiner.
 C'est la conclusion des trois mesures ci-dessus, et c'est aussi ce que Yannick avait
 décrit en premier.
 
-Une ville qui s'arrête, ce n'est pas des objets en moins. **C'est vingt personnes qui
-ne partent plus à la mine.** Elles sont redirigées vers la rivière ou la forêt, ou
-elles ne sont tout simplement plus là.
+Une ville qui s'arrête, ce n'est pas des objets en moins. **C'est des gens qui ne
+partent plus travailler.**
 
-C'est en cours de construction de notre côté. Ça ne te demande **aucune animation
-nouvelle** : ce sont des gens qui se tiennent ailleurs, ou qui ne sont plus là.
+**C'est construit, et mesuré.** Douze personnes sortent de l'usine vers la coupe et
+reviennent. La richesse décide combien partent : toutes au plafond, **aucune au
+plancher**.
+
+| Ce qu'on a essayé | Part de l'image qui change |
+|---|---|
+| Les objets qui disparaissent | 0,35 % |
+| **Les gens** | **2,33 %** |
+
+Sept fois plus, et les deux images ne se ressemblent pas : une douzaine de silhouettes
+sur la route et trois sur ton pont, contre une route vide.
+
+**Ça ne t'a demandé aucune animation nouvelle** — c'est ton voyageur qui marche.
+
+Un détail qui te concerne : ils marchent vers **la coupe** (le `working_face`), pas
+vers la mine. La route de la mine est un point de ta carte qui n'existe pas sur
+l'ancienne carte 2D, et la coupe existe sur les deux. C'est aussi une meilleure
+histoire : les gens qui vont là-bas **sont ceux qui mangent la forêt**, ce qui relie
+cette quête à celle de la fée.
 
 ---
 

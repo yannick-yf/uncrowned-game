@@ -151,6 +151,9 @@ var _player_placed: bool = false
 var _walk_phase: float = 0.0
 var _people: Dictionary = {}
 var _traffic: Dictionary = {}
+## The people of a place walking to work (P1), by their id. Drawn exactly as the road's
+## travellers are, because that is what they are: furniture that moves.
+var _folk: Dictionary = {}
 var _guards: Array[Node3D] = []
 var _sun: DirectionalLight3D = null
 var _air: Environment = null
@@ -800,9 +803,11 @@ func sync(frame: Dictionary, delta: float) -> void:
 	var world := _sim.store(&"world") as WorldState
 	var cast := _sim.store(&"cast") as Cast
 	var road := _sim.store(&"travellers") as Travellers
+	var folk := _sim.store(&"folk") as Folk
 	_sync_player(frame)
 	_sync_people(cast, world)
 	_sync_traffic(road, world)
+	_sync_folk(folk, world)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
@@ -922,6 +927,45 @@ func _sync_guards(world: WorldState, escort: int, extra: int) -> void:
 ## What stands and what has gone: the visible half of §8's consequences, as the 2D
 ## window shows them. A piece of his or a block cannot be tinted; it shows or it does
 ## not, and the darkened readings wait for his scenes of the two states.
+## The people of a place, walking to work or not walking at all. The simulation decides
+## how many there are; this only puts them where it says.
+func _sync_folk(folk: Folk, world: WorldState) -> void:
+	if folk == null:
+		return
+	var seen: Dictionary = {}
+	for walker: Dictionary in folk.walkers:
+		var id: int = int(walker["id"])
+		seen[id] = true
+		var figure: Node3D = _folk.get(id, null) as Node3D
+		if figure == null:
+			figure = _figure()
+			figure.name = "Folk_%d" % id
+			add_child(figure)
+			_folk[id] = figure
+		var pos: Vector2 = walker["pos"] as Vector2
+		var route: Array[Vector2] = folk.route_in(world.region(), walker["place"] as StringName)
+		var facing := Vector2i(0, 1)
+		if route.size() > 1:
+			var target: int = clampi(int(walker["leg"]) + int(walker["heading"]), 0, route.size() - 1)
+			var to: Vector2 = route[target] - pos
+			if absf(to.y) > absf(to.x):
+				facing = Vector2i(0, 1 if to.y > 0.0 else -1)
+			else:
+				facing = Vector2i(1 if to.x > 0.0 else -1, 0)
+		_walk(figure, facing, fposmod((pos.x + pos.y) * _metres_per_tile / WALK_CYCLE_M, 1.0))
+		_foot_figure(figure, pos + Vector2(0.0, 0.5))
+	# Somebody the works no longer sends is not hidden, they are gone.
+	for id: Variant in _folk.keys():
+		if not seen.has(id):
+			(_folk[id] as Node3D).queue_free()
+			_folk.erase(id)
+
+
+## How many of a place's people the window is standing. For the suite.
+func folk_shown() -> int:
+	return _folk.size()
+
+
 func _sync_props(frame: Dictionary) -> void:
 	var tents_standing: int = int(frame.get("tents", 0))
 	var crowd: int = int(frame.get("crowd", 0))
