@@ -10,6 +10,12 @@ This list supersedes the Y/B numbering of [DEMO_WORK_ITEMS.md](DEMO_WORK_ITEMS.m
 for everything it covers. That document keeps its capacity table and its brother's
 items.
 
+**Done before the list started (2026-09-18):** `CLAUDE.md`'s reading order, precedence,
+testing switches and current phase were rewritten for this design, and the five
+superseded planning documents each carry a banner saying what of them still holds. A
+session that reads `CLAUDE.md` first — which every session does — now lands on the new
+model instead of the old one.
+
 ## How to run this list
 
 1. **One task at a time.** Never two.

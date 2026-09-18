@@ -1,5 +1,10 @@
 # The demo plan — what we build, in what order
 
+> **Partly superseded, 2026-09-18.** Its five working rules, the Windows-only decision
+> and the answer on rebuilding the back end still stand. Its **items** — W0–W2, A1–A5,
+> B, C, S — are replaced by [DEMO_TASKS.md](DEMO_TASKS.md), and A1 itself is now
+> [QUEST_CINDERWORKS.md](QUEST_CINDERWORKS.md).
+
 Date: 2026-09-16. Author: Claude, for Yannick. Supersedes the *ordering* of
 [DEMO_WORK_ITEMS.md](DEMO_WORK_ITEMS.md), which remains the wider inventory and
 the brother's B-item list. Evidence is in
