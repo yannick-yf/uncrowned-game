@@ -38,9 +38,12 @@ as richesse. The draft's own visual grid used only these two.
 **Six places carry them**, because the seventh and eighth are the kingdom (§2):
 Brindle, the Cinderworks, Harrowgate, the Wide Acres, the Muster, Saltmarch.
 
-**Brindle is an open question.** It is a ruined village with one inhabitant. Is its
-richesse simply 0, or is a ruin outside the system until it is rebuilt? The answer
-decides whether the model can ever show Brindle recovering.
+**Brindle is outside the system** (Yannick, 2026-09-18). It is a ruined village with
+one inhabitant: it carries no values, sends nothing and receives nothing. The door
+this closes, knowingly: **the model cannot show Brindle recovering.** Reopening it
+later means giving Brindle the two values like anywhere else, which is cheap in code
+and not free in design — a village that can be rebuilt is a different game from a
+village that stands as the reason you set out.
 
 ## 2. Two values for the kingdom — settled
 
@@ -71,8 +74,8 @@ royal guard, who stands at the gate, and what the capital looks like.
 ```
 
 Each place sends what it produces **and its allégeance** to the kingdom. The kingdom
-redistributes — food, weapons, and what else the design later needs. A place never
-sends anything to another place.
+redistributes **food and weapons, and nothing else in v1** (§6). A place never sends
+anything to another place.
 
 This is the single most important simplification on the page: **eight places make
 eight links instead of sixty-four.** Keep it even when it itches.
@@ -147,9 +150,26 @@ The second is the new idea and the best one on the page, because it makes a
 consequence visible without a line of text: **a place that has stopped is a place
 where people have stopped doing what they were doing.**
 
-**Open: what a routine is, in v1.** The recommendation is *where someone stands at
-what hour*, not what they animate — it asks nothing new of the artist and already
-shows a town at work or at a standstill.
+**A routine is a destination, not a timetable** (Yannick, 2026-09-18). It is simpler
+than a clock and reads just as well:
+
+> The ironworks is running and loyal → twenty people set out for the mine and come
+> back. The ironworks has stopped → they are redirected to the riverside or the
+> forest, **or they are simply gone.**
+
+Removing people is the cheapest signal in the whole model and the strongest.
+
+**They share their lines, and the lines change with the state.** Ten sentences drawn
+at random per state, four states, so forty per town.
+
+**The writing bill, stated so it is paid knowingly:** 40 lines × 2 languages is **80
+lines for the demo's one town**, which is fine, and **480 for six towns**, which is
+Yannick's own hand. Two ways to cut it when the time comes — five sentences per state
+rather than ten, since nobody counts repeats after twenty minutes; or lines shared
+between towns with one word that changes with the local trade.
+
+**They need no names.** The codebase already has *strangers* — eight people addressed
+by their role rather than a name — which is exactly this second family.
 
 ## 5. Where the player enters — settled
 
@@ -173,17 +193,31 @@ to be felt across the map.
 
 ---
 
+## 6. What the kingdom redistributes — settled
+
+**Food and weapons, and nothing else in v1.** The first draft's diagram said "food
+distribute ⊕ weapons ⊕ etc"; the *etc* is exactly where complexity gets in, and two
+flows are enough to carry every consequence the demo and the first quests need.
+
+---
+
 ## What is still open, gathered
 
-1. **Brindle in ruins** — richesse 0, or outside the system?
-2. **What a routine is** in v1.
-3. **How far a quest outcome moves a value.**
-4. **`strength level` as one variable for steel and wood** — Yannick's first draft
-   folded both into one number. Cut from §1 as a place value; whether the kingdom's
-   **force** should be fed by wood as well as steel is not decided.
-5. **The "average of three drives"** of the first draft — parked by Yannick as
-   possibly too complex, to be revisited when the simulation rules are planned.
-6. **What the kingdom redistributes beyond food and weapons.**
+1. **What moves a place's two values.** The mechanical heart, and not yet written.
+   Three candidate sources: the outcome of the place's quest (certain), what the
+   kingdom sends it — does a place that is fed badly grow poorer? — and its own
+   production. **This is the next thing to settle.**
+2. **How far a quest outcome moves a value.** Hardcoded numbers in v1 (Yannick,
+   2026-09-18), tuned by playing rather than derived.
+3. **What feeds the kingdom's *force*** — an average of what the places send, with a
+   weighting possible later (Yannick, 2026-09-18). Whether wood counts alongside
+   steel is undecided.
+4. **How many lines per state**, and whether they are shared between towns (§4).
+
+**Closed since the first draft:** Brindle (outside the system), what a routine is (a
+destination), what the kingdom redistributes (food and weapons), and the first
+draft's "average of three drives" — which dissolved when the place's four values
+became two, since `strength` and `happiness` no longer exist to be averaged.
 
 ## What this does not say
 
