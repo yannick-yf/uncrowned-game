@@ -89,6 +89,25 @@ royal guard, who stands at the gate, and what the capital looks like.
 **Twelve numbers in total.** 5 × 2 + 2 — and no more, because force and the four
 appearances are readings of those twelve rather than numbers beside them.
 
+**Which way the arrows go, checked in the code on 2026-09-18.** Today only one of the
+two exists: **place → kingdom**. Nothing the kingdom does can change a place's numbers,
+because the kingdom's own two are *derived* and `KingdomRules` writes nothing anywhere.
+The complete list of what can move a place's richesse is the `move_town_value` event
+and the `UNCROWNED_TOWN` debug hook, and nothing else.
+
+**M5 is that missing arrow**, and after it the answer changes on purpose: destroy the
+farms, the crown's trésor falls, the works is fed worse, its richesse drifts down over
+days, it crosses the threshold and furnaces go out. **With one limit, Yannick's own**:
+food never falls below a floor in v1, so the kingdom can make a works suffer and cannot
+starve it to death. The player stays responsible for what they break.
+
+**One place is one fifth.** With five places, a quest that moves the works' allégeance
+by 3 moves the kingdom's by 0.6, and its force by 0.3 of 10. **That is intended**
+(Yannick, 2026-09-18): a change in steel does not change the other towns and the crown
+stays nearly as strong. The demo's feedback is not about force — it is about the steel
+supply, which falls from 4 to 1 and is loud. A weighting, so that one place counts for
+more than another, stays open and is one line when it is wanted.
+
 **Open:** a kingdom whose every place has turned is a king alone in his own capital.
 Yannick wants a guardrail against allégeance reaching 0 everywhere, and hardcoded rules
 for what happens if it does. Neither is designed, and it is not the demo's problem. (It read fourteen until M1 was built and the
