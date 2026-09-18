@@ -358,6 +358,27 @@ becomes a small task.
 
 ---
 
+## B — what goes to his brother
+
+### B0 · Keep the letter to slosinio current — **running, never finished**
+
+Owner: Claude, as work happens. Est. minutes each time.
+
+[POUR_SLOSINIO.md](POUR_SLOSINIO.md) — **in French, addressed to him.** Everything this
+run is learning that changes what he should draw, measured rather than guessed: which
+signals carry and which do not, what the demo needs from him, what the list in
+`content/towns.json` lets him change without code, the identifier contract, and the
+`.import` files his editor dirties.
+
+**Rule: a measurement that changes what he should do goes in the letter the same day.**
+Three are in it already — the furnaces carry, the fading props change 0.35% of the
+picture, and the colour cast is his call and one commit to undo.
+
+**Open, for him to answer:** the fence and gate, the visible pollution, whether
+destroyed-works pieces are worth the work, and whether the building count comes down.
+
+---
+
 ## C — the clean-up, last
 
 **Nothing here starts before the demo runs on the new model**, except C1.
