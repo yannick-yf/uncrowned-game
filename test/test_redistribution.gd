@@ -41,29 +41,53 @@ func test_the_king_can_be_brought_down_without_burning_anything() -> void:
 		"and the king is weaker anyway: %.1f, was %.1f" % [KingdomRules.force(towns), before])
 
 
-func test_the_food_comes_back_and_moves_a_place_a_point_a_day() -> void:
+func test_a_kingdom_at_rest_moves_nothing() -> void:
+	# **The property the first build did not have, and the whole reason it was wrong.**
+	# Everything drifted toward the food level, so two days later every place that does
+	# not grow food sat on the same number and the kingdom stopped having places in it.
+	# The kingdom now pulls only across a real gap, so at rest a town keeps what it is.
 	var sim: Sim = Game.build()
 	var towns := sim.store(&"towns") as TownState
-	# Harrowgate sends nothing and starts at 6, above the food the kingdom has: it
-	# should be fed down toward what there is to eat, one point at a time.
+	var before: Dictionary = {}
+	for place: StringName in towns.ids():
+		before[place] = towns.richesse_of(place)
+	sim.advance(A_DAY * 5)
+	for place: StringName in towns.ids():
+		assert_eq(towns.richesse_of(place), int(before[place]),
+			"%s is where it was five days ago, because nothing happened" % place)
+
+
+func test_famine_reaches_a_town_a_point_a_day() -> void:
+	var sim: Sim = Game.build()
+	var towns := sim.store(&"towns") as TownState
+	# The harvest fails. Harrowgate grows nothing and lives on what the crown hands out.
+	towns.set_value(&"wide_acres", TownRules.RICHESSE, TownRules.FLOOR)
 	var start: int = towns.richesse_of(&"harrowgate")
 	sim.advance(A_DAY)
-	var after_one: int = towns.richesse_of(&"harrowgate")
-	assert_eq(absi(after_one - start), 1, "one point on the first day, and only one")
-	sim.advance(A_DAY)
-	assert_eq(absi(towns.richesse_of(&"harrowgate") - start), 2, "and one more on the next")
+	assert_eq(towns.richesse_of(&"harrowgate"), start - 1, "one point on the first day")
+	sim.advance(A_DAY * 3)
+	assert_true(towns.richesse_of(&"harrowgate") < start,
+		"and the town is poorer than it was, without being emptied")
 
 
 func test_nothing_starves_to_death() -> void:
-	# The guardrail: however badly the kingdom is doing, a place drifts no lower than
+	# The guardrail: however badly the kingdom is doing, it never drifts a place below
 	# the food floor. Only the player's own act takes a place to the bottom.
 	var sim: Sim = Game.build()
 	var towns := sim.store(&"towns") as TownState
 	for place: StringName in towns.ids():
-		towns.set_value(place, TownRules.RICHESSE, TownRules.FLOOR)
-	sim.advance(A_DAY * 6)
-	assert_eq(towns.richesse_of(&"harrowgate"), TownRules.FOOD_FLOOR,
-		"a kingdom with nothing left still does not starve its towns to death")
+		towns.set_value(place, TownRules.RICHESSE, TownRules.CEILING)
+	towns.set_value(&"wide_acres", TownRules.RICHESSE, TownRules.FLOOR)
+	towns.set_value(&"saltmarch", TownRules.RICHESSE, TownRules.FLOOR)
+	sim.advance(A_DAY * 8)
+	for place: StringName in towns.ids():
+		# The floor protects the places the kingdom feeds. It does not rescue a farm
+		# somebody burned: the source of the food is not fed by itself, and what the
+		# player ruined stays ruined until the player sees to it.
+		if KingdomRules.category_of(KingdomRules.sends(place)) == KingdomRules.VIVRES:
+			continue
+		assert_true(towns.richesse_of(place) >= TownRules.FOOD_FLOOR,
+			"%s is hungry at %d and not dead" % [place, towns.richesse_of(place)])
 
 
 func test_a_settled_place_is_frozen() -> void:
@@ -76,11 +100,13 @@ func test_a_settled_place_is_frozen() -> void:
 	sim.advance(2)
 	assert_eq(towns.richesse_of(&"cinderworks"), 1)
 	assert_true(towns.is_settled(&"cinderworks"))
+	# Make the kingdom hungry, so everywhere unsettled is being pulled.
+	towns.set_value(&"wide_acres", TownRules.RICHESSE, TownRules.FLOOR)
 	sim.advance(A_DAY * 4)
 	assert_eq(towns.richesse_of(&"cinderworks"), 1,
 		"four days later the works is exactly where the player left it")
-	assert_true(towns.richesse_of(&"harrowgate") != 6,
-		"while everywhere unsettled has moved")
+	assert_true(towns.richesse_of(&"harrowgate") < 6,
+		"while everywhere unsettled has felt the famine")
 
 
 func test_helping_one_place_reaches_another_through_the_crown() -> void:
@@ -89,12 +115,14 @@ func test_helping_one_place_reaches_another_through_the_crown() -> void:
 	var poor: Sim = Game.build()
 	var poor_towns := poor.store(&"towns") as TownState
 	poor_towns.set_value(&"wide_acres", TownRules.RICHESSE, TownRules.FLOOR)
-	poor_towns.set_value(&"saltmarch", TownRules.RICHESSE, TownRules.FLOOR)
 	poor.advance(A_DAY * 5)
 
 	var rich: Sim = Game.build()
 	var rich_towns := rich.store(&"towns") as TownState
 	rich_towns.set_value(&"wide_acres", TownRules.RICHESSE, TownRules.CEILING)
+	# Saltmarch starts below the threshold and so ships the crown nothing (rule 2).
+	# Feeding the kingdom means winning it back as well as growing more.
+	rich_towns.set_value(&"saltmarch", TownRules.ALLEGIANCE, TownRules.CEILING)
 	rich_towns.set_value(&"saltmarch", TownRules.RICHESSE, TownRules.CEILING)
 	rich.advance(A_DAY * 5)
 

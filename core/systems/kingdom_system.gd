@@ -43,7 +43,10 @@ func on_tick(sim: Sim, tick: int) -> void:
 		if KingdomRules.category_of(KingdomRules.sends(place)) == KingdomRules.VIVRES:
 			continue
 		var now: int = towns.richesse_of(place)
-		if now == food:
+		# Only a real gap pulls. A place within `PULLS_FROM` of what there is to eat
+		# keeps the fortunes it has: otherwise everywhere converges on one number and
+		# the kingdom stops having places in it.
+		if absi(food - now) < TownRules.PULLS_FROM:
 			continue
 		var direction: int = 1 if food > now else -1
 		if towns.set_value(place, TownRules.RICHESSE, now + direction):

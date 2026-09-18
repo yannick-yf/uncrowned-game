@@ -45,7 +45,8 @@ below disagrees with one of them, the rule wins.
 5. **Allégeance and trésor decide what the capital looks like**, on the same four
    appearances and the same thresholds as any place.
 6. **The kingdom redistributes the food**, which moves a place's richesse a point a
-   day. **A place whose quest has been resolved is frozen** and stops drifting.
+   day **while the gap is three or more**. **A place whose quest has been resolved is
+   frozen** and stops drifting.
 
 ### Why rule 2 is the one that matters
 
@@ -73,10 +74,36 @@ Neither is a new rule.
 **Later, and not the demo's problem** (Yannick): high matériel could mean better-armed
 soldiers, and low vivres fewer hit points. That is refinement of the full game.
 
+### Why rule 6 says *while the gap is three or more*
+
+Because the first build did not, and it was wrong. Every place drifted **toward** the
+food level, so two days in, every place that does not grow food sat on exactly the same
+number: Harrowgate had been richer than the works and was not any more. Anything that
+all moves toward one number ends up on that number — arithmetic, not a bug in the food.
+
+**Three is the player's own step** (`STEP`), and that is the point of choosing it: the
+kingdom can never move a place as far as one act of the player's. **The weather does not
+replace a decision.**
+
+What it does now, measured over six days:
+
+| | Aciérie | Harrowgate | Muster |
+|---|---|---|---|
+| **At rest** — nothing ever moves | 4 | 6 | 4 |
+| **The farms die** (food 3) | 4 | 6 → **5** | 4 |
+| **The farms flourish** (food 10) | 4 → **8** | 6 → **8** | 4 → **8** |
+
+At rest and in famine a town keeps what it is. **In great plenty everything still
+converges** on one band — a limit that is known and written down rather than
+discovered later. The fix, if it is wanted, is to make famine bite harder than plenty
+lifts; it is one more rule and is not proposed.
+
 ### The guardrail
 
 Food never drifts a place below a floor in v1, so the kingdom can make a place suffer
-and cannot starve it to death. Only the player's own act takes a place to the bottom.
+and cannot starve it to death. Only the player's own act takes a place to the bottom —
+**and the floor protects the places the kingdom feeds, not a farm somebody burned**: the
+source of the food is not fed by itself.
 
 ---
 

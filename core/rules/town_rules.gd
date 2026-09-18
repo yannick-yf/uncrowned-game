@@ -35,6 +35,19 @@ const THRESHOLD: int = 5
 ## death. Only the player's own act takes a place to the bottom.
 const FOOD_FLOOR: int = 3
 
+## **How far apart food and a place have to be before the kingdom pulls at all.**
+##
+## The first build had every place drift *toward* the food level, and two days later
+## every place that does not grow food sat on exactly the same number — Harrowgate had
+## been richer and was not any more. Anything that all moves toward one number ends up
+## on that number; that is arithmetic rather than a bug in the food.
+##
+## So the kingdom only pulls when the gap is **three or more**, which leaves a place its
+## own character while famine and plenty still reach it. Three is `STEP`, deliberately:
+## **the kingdom can never move a place as far as one act of the player's.** The weather
+## does not get to replace a decision.
+const PULLS_FROM: int = 3
+
 ## What one act of the player's moves a value.
 ##
 ## **Three, chosen so an outcome always crosses the threshold** from the starts in
