@@ -290,7 +290,14 @@ therefore not a save-able state** — it is one frame, for one photograph.
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more
 of them and "walk about until you find him" is not a way to review a character.
 
-**All four are gated on `OS.has_feature("debug")`**, so they are absent from a
+**`UNCROWNED_LENS=tilt,size`** (2026-09-19) moves the 3D camera for the frame `shot.sh`
+takes — a tilt in degrees and an orthographic size in metres. Added for one question and
+no other: `docs/COMBAT.md` §1 asks whether a fight happens on a separate 2D screen or in
+place in his world, that is a question about a *picture*, and `--headless` never draws.
+**The azimuth is deliberately not offered**, because his traveller's four facings are
+keyed to the world's axes and a turned camera draws every fighter looking the wrong way.
+
+**All five are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

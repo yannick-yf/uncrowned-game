@@ -250,3 +250,36 @@ frame** of the fight rather than at the end, which is what caught it: frame 262.
 - **§4's two open questions stand**, unchanged: the `dead` ending is unreachable, and a
   fight is a dexterity gate in a game whose currency is not dexterity.
 
+---
+
+## 6. And then I looked at it
+
+§1 recommends a tilt of 25–30° with the azimuth untouched. That is a claim about a
+picture, and this project has one rule about claims about pictures: *a night was spent
+shipping things that drew wrong without erroring.* So the camera was tilted for one
+frame — `UNCROWNED_LENS=tilt,size`, debug-gated, listed in `CLAUDE.md` — and the frames
+were looked at.
+
+**The framing works.** At 27° and 10 m the traveller is large, legible and lit, and
+because the azimuth never moved he is drawn with the frames his brother has already made.
+Nothing about it needs new art. At 22° it is better still for the figure and worse for
+everything else.
+
+**But the camera was the smaller half of the question.** Two frames say so:
+
+- **In the works' quarter, the roofs swallow the fight.** Lower the camera and his
+  buildings stand between it and the fighters. At 22° the player is behind a roof.
+- **On open ground, nothing frames the fight at all.** Clean, readable, and completely
+  empty: two figures on a field.
+
+**Both are the same problem and it has one answer, already in §1.** Yakuza's ring of
+bystanders: the fight needs open ground *and* a boundary, and the boundary is people. It
+costs no geometry and no new art, because an onlooker is the traveller sprite every NPC
+in this game already is. And for a game whose currency is standing, **who watched you
+fight the king's man is a fact the simulation can keep.**
+
+So the recommendation stands and gains a condition: **a fight happens on open ground,
+ringed by whoever was near enough to watch.** Where the works' quarter has no such ground,
+that is a thing to ask his brother for — a yard — and it is a far smaller ask than eight
+facings.
+

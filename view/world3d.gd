@@ -231,8 +231,36 @@ func _unhandled_input(event: InputEvent) -> void:
 		_zoom = clampf(_zoom + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX)
 
 
+## `UNCROWNED_LENS=tilt,size` moves his camera for one frame, and for nothing else.
+##
+## **Not a feature and not the combat camera.** `docs/COMBAT.md` §1 asks whether a fight
+## happens on a separate 2D screen or in place in his world, and that is Yannick's to
+## settle — but it is a question about a *picture*, and the suite cannot draw. This is
+## the same gate and the same reason as `UNCROWNED_FREE`: one frame, so the thing can be
+## looked at instead of argued about.
+##
+##     UNCROWNED_LENS=27,10 tools/shot.sh /tmp/arene.png play 150,174
+##
+## **The azimuth is deliberately not offered.** His traveller has four facings keyed to
+## the world's axes, so a turned camera draws every fighter looking the wrong way. Tilt
+## and framing are free; the turn is the one that would cost him the largest piece of art
+## in the project.
+func _debug_lens() -> Vector2:
+	if not OS.has_feature("debug"):
+		return Vector2.ZERO
+	var asked: String = OS.get_environment("UNCROWNED_LENS")
+	if asked.is_empty():
+		return Vector2.ZERO
+	var parts: PackedStringArray = asked.split(",")
+	if parts.size() != 2 or not parts[0].is_valid_float() or not parts[1].is_valid_float():
+		push_warning("UNCROWNED_LENS wants tilt,size in degrees and metres: '%s'" % asked)
+		return Vector2.ZERO
+	return Vector2(parts[0].to_float(), parts[1].to_float())
+
+
 func _build_camera() -> void:
-	var tilt: float = deg_to_rad(TILT_DEGREES)
+	var lens: Vector2 = _debug_lens()
+	var tilt: float = deg_to_rad(lens.x if lens.x > 0.0 else TILT_DEGREES)
 	var azimuth: float = deg_to_rad(AZIMUTH_DEGREES)
 	_lens_offset = Vector3(sin(azimuth) * cos(tilt), sin(tilt), cos(azimuth) * cos(tilt))
 	var forward: Vector3 = -_lens_offset
@@ -240,7 +268,8 @@ func _build_camera() -> void:
 	_camera = Camera3D.new()
 	_camera.name = "Lens"
 	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	_camera.size = CAMERA_SIZE
+	_camera.size = lens.y if lens.y > 0.0 else CAMERA_SIZE
+	_zoom = _camera.size
 	_camera.near = 0.5
 	_camera.far = 400.0
 	_camera.current = true
