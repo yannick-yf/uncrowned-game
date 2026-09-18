@@ -149,13 +149,28 @@ Played with `T`, a day at a time, the change is watchable.
 
 ### M6 · One table for the arithmetic
 
-Est. 1 h. Depends on: M1, M4, M5.
+**Delivered 2026-09-18, and it was almost already true.** A hunt through the model's
+six files turned up no loose balancing number at all — everything there is a 0, a 1 or
+a 2, which is a counter or an index rather than a setting.
 
-Every number in the model — the ±3, the thresholds, the floors and ceilings, the
-weights inside force, the normalisation of trésor — in **one file**, so balancing is
-one line and never a hunt.
+**Two places, because they are two kinds of thing.** `core/rules/town_rules.gd` holds
+the rules' numbers: floor 0, ceiling 10, threshold 5, the player's step 3, the food
+floor, the gap the kingdom pulls across. `content/towns.json` holds the world's: where
+each place starts, what it sends, how many people walk, what disappears when it is
+poor. One is design and the other is data, and **neither is code anybody has to read to
+change a balance.**
 
-**Check:** a test asserts no magic number lives outside it.
+What was actually built is the guard, because *almost* true decays. `test_model_numbers`
+scans the model's files and fails naming the file and the line, the way
+`test_workshop_provenance` does for his library. One exception exists and is a **named
+declaration rather than a wider list of tolerated numbers** — a tolerated number is a
+door — and it is `ASKED_EVERY`, how often the walking population is recounted, which is
+a cost and not a balance.
+
+**Checked:** 4 new tests. 48 suites, 464 tests, 0 failed on both worlds.
+
+**This closes the M group.** M1–M6 and P1, P3 are built; P2 is Yannick's writing and
+the Q and F groups are untouched.
 
 ---
 
