@@ -60,10 +60,24 @@ village that stands as the reason you set out.
 (Yannick, 2026-09-18): Blackcairn and Cairnwell together. They do not carry a
 place's two values; they carry the kingdom's:
 
+**The kingdom has the same shape as a place** (Yannick, 2026-09-18): two numbers, and
+those two decide how it looks. One rule learnt once and used twice.
+
 | Value | Fed by |
 |---|---|
-| **Force** | The average of the steel received and the places' allégeance. An army needs weapons **and** men, and a place that is no longer with the king does not send its sons |
-| **Trésor** | The **sum of the goods** the places send — food, steel, later wood — normalised onto the same 0–10 scale (Yannick, 2026-09-18) |
+| **Allégeance** | The average of the allégeance its places send it. *Toutes les villes envoient une valeur d'allégeance* |
+| **Trésor** | The **sum of the goods** the places send — food, steel, later wood — normalised onto the same 0–10 scale. The works sends 8 of steel and the farm 7 of food, so the trésor is 7.5 |
+
+**Force is a reading of those two, not a third number.** It can be worked out from
+allégeance and trésor, so it carries nothing of its own, and the whole game stays at
+twelve numbers rather than thirteen. It is what the confrontation will read: how hard
+the king is to put down.
+
+**And the capital is read like any other place**: allégeance × trésor, the same four
+appearances, the same thresholds. A player who has learnt to read a town has learnt to
+read the kingdom. What those four look like — and the routines of the people in the
+capital — is a spec of its own, and his brother's work; the rules are what is settled
+here.
 
 **Two goods in v1, food and steel.** Wood waits for the sawmill, which is neither
 ingested nor in the demo; when it arrives it is **the fuel steel is made with**, which
@@ -72,7 +86,12 @@ is its true relation, and it is one line rather than a third flow.
 **The king himself has no state.** His kingdom has one, and it shows on him: his
 royal guard, who stands at the gate, and what the capital looks like.
 
-**Twelve numbers in total.** 5 × 2 + 2. (It read fourteen until M1 was built and the
+**Twelve numbers in total.** 5 × 2 + 2 — and no more, because force and the four
+appearances are readings of those twelve rather than numbers beside them.
+
+**Open:** a kingdom whose every place has turned is a king alone in his own capital.
+Yannick wants a guardrail against allégeance reaching 0 everywhere, and hardcoded rules
+for what happens if it does. Neither is designed, and it is not the demo's problem. (It read fourteen until M1 was built and the
 count was done against the code: Brindle had already been ruled out of the system and
 the arithmetic had not followed.)
 

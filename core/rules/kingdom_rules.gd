@@ -3,10 +3,18 @@ extends RefCounted
 
 ## The kingdom's two numbers (`docs/SIMULATION_MODEL.md` §2).
 ##
-## **There is one kingdom and it is the castle plus the capital.** It carries a
-## **force** and a **trésor**, both 0–10 like everything else, and it is what turns
-## *the ironworks has stopped* into *the crown is short of steel* — the hop that makes
-## the star do any work at all.
+## **There is one kingdom and it is the castle plus the capital.** Yannick's correction
+## of 2026-09-18 gave it **the same shape as a place**: two numbers, **allégeance** and
+## **trésor**, and those two decide how it looks. One rule learnt once and used twice,
+## which is the whole design principle of this model.
+##
+## Its **force** is a *reading* of the two, not a third number. If force can be worked
+## out from allégeance and trésor it carries no information of its own, and the count
+## stays at twelve numbers in the whole game rather than thirteen. It is what the
+## confrontation will read: how hard the king is to put down.
+##
+## This is what turns *the ironworks has stopped* into *the crown is short of steel* —
+## the hop that makes the star do any work at all.
 ##
 ## **Derived, never stored.** Both are functions of where the places stand, recomputed
 ## whenever anybody asks. There is no kingdom store, no kingdom event and nothing to
@@ -65,8 +73,11 @@ static func supply_of(towns: TownState, good: StringName) -> float:
 	return 0.0 if places == 0 else float(total) / float(places)
 
 
-## How far the kingdom's places are with the king, 0–10.
-static func loyalty(towns: TownState) -> float:
+## **The kingdom's allégeance**: the average of what its places send it of theirs.
+##
+## Yannick, 2026-09-18: *toutes les villes envoient une valeur d'allégeance*. A place
+## that has turned sends a low one, and the crown is that much less the crown.
+static func allegiance(towns: TownState) -> float:
 	var total: int = 0
 	var places: int = 0
 	for place: StringName in towns.ids():
@@ -75,13 +86,13 @@ static func loyalty(towns: TownState) -> float:
 	return 0.0 if places == 0 else float(total) / float(places)
 
 
-## **Force**: the average of the steel it receives and how far its places are with it.
+## **Force**, the reading: what the kingdom holds and who is with it, together.
 ##
-## An army needs weapons **and** men. A place that has turned does not send its sons,
-## so a kingdom can be disarmed by talking as surely as by putting out its furnaces —
-## which is the argument the whole game is about, in one number.
+## An army needs weapons **and** men. A kingdom whose places have turned is weaker
+## without a furnace having gone out — which is the argument the whole game is about,
+## and the reason the player can beat a king without burning anything.
 static func force(towns: TownState) -> float:
-	return clampf((supply_of(towns, STEEL) + loyalty(towns)) * 0.5,
+	return clampf((tresor(towns) + allegiance(towns)) * 0.5,
 		float(TownRules.FLOOR), float(TownRules.CEILING))
 
 
@@ -104,6 +115,14 @@ static func tresor(towns: TownState) -> float:
 		float(TownRules.FLOOR), float(TownRules.CEILING))
 
 
-## The two numbers as a reading, for a journal or a window that wants both at once.
+## How the capital looks: the same four appearances as any place, off the same two
+## thresholds. A capital reads loyal or hostile, rich or poor, and a player who has
+## learnt to read one town has learnt to read the kingdom.
+static func look(towns: TownState) -> StringName:
+	return TownRules.look_of(roundi(allegiance(towns)), roundi(tresor(towns)))
+
+
+## Everything about the kingdom at once, for a journal or a window.
 static func reading(towns: TownState) -> Dictionary:
-	return {"force": force(towns), "tresor": tresor(towns)}
+	return {"allegiance": allegiance(towns), "tresor": tresor(towns),
+		"force": force(towns), "look": String(look(towns))}

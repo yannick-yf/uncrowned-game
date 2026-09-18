@@ -28,10 +28,12 @@ func test_a_kingdom_can_be_disarmed_by_talking() -> void:
 	var towns: TownState = _towns()
 	var before: float = KingdomRules.force(towns)
 	var steel_before: float = KingdomRules.supply_of(towns, KingdomRules.STEEL)
+	var tresor_before: float = KingdomRules.tresor(towns)
 	for place: StringName in towns.ids():
 		towns.set_value(place, TownRules.ALLEGIANCE, TownRules.FLOOR)
 	assert_eq(KingdomRules.supply_of(towns, KingdomRules.STEEL), steel_before,
 		"not a furnace has changed")
+	assert_eq(KingdomRules.tresor(towns), tresor_before, "and the treasury is untouched")
 	assert_true(KingdomRules.force(towns) < before, "and the king is weaker anyway")
 
 
@@ -47,6 +49,30 @@ func test_only_the_places_that_send_something_fill_the_treasury() -> void:
 	assert_eq(KingdomRules.tresor(towns), before, "a rich camp is not a rich crown")
 	towns.set_value(&"wide_acres", TownRules.RICHESSE, TownRules.CEILING)
 	assert_true(KingdomRules.tresor(towns) > before, "rich farms are")
+
+
+func test_the_capital_is_read_like_any_other_place() -> void:
+	# Yannick's correction of 2026-09-18: the kingdom has the same shape as a place.
+	# Two numbers, four appearances, the same thresholds. Somebody who has learnt to
+	# read a town has learnt to read the kingdom.
+	var towns: TownState = _towns()
+	for place: StringName in towns.ids():
+		towns.set_value(place, TownRules.ALLEGIANCE, TownRules.CEILING)
+		towns.set_value(place, TownRules.RICHESSE, TownRules.CEILING)
+	assert_eq(KingdomRules.look(towns), &"loyal_rich")
+	for place: StringName in towns.ids():
+		towns.set_value(place, TownRules.ALLEGIANCE, TownRules.FLOOR)
+	assert_eq(KingdomRules.look(towns), &"hostile_rich",
+		"a rich crown nobody is with any more")
+
+
+func test_force_is_a_reading_and_not_a_number_of_its_own() -> void:
+	# It is worked out from the other two, so it cannot disagree with them and it is
+	# not a thirteenth number. Twelve in the whole game, and that is the point.
+	var towns: TownState = _towns()
+	towns.set_value(&"cinderworks", TownRules.RICHESSE, 9)
+	var by_hand: float = (KingdomRules.tresor(towns) + KingdomRules.allegiance(towns)) * 0.5
+	assert_eq(KingdomRules.force(towns), by_hand, "force is its two halves and nothing else")
 
 
 func test_the_two_numbers_stay_on_the_same_scale_as_everything_else() -> void:
