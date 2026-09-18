@@ -107,13 +107,27 @@ who is present and what they are doing lives.
 
 ### M4 · The kingdom's two values
 
-Est. 2 h. Depends on: M1.
+**Delivered 2026-09-18, and smaller than it was estimated.** **Force** is the average
+of the steel it receives and how far its places are with it; **trésor** is what the
+places send, on the same 0–10 scale as everything else. What each place sends is in
+`content/towns.json` — which place grows food and which makes steel is design, not
+arithmetic. Two goods and no more; wood waits for the sawmill, where it will be the
+fuel steel is made with rather than a third flow.
 
-**Force** = the average of the steel received and the places' allégeance. **Trésor** =
-the sum of the goods sent, normalised to 0–10. Places send; the kingdom holds.
+**Derived, never stored** — and that is the whole design of it. There is no kingdom
+store, no kingdom event and nothing to replay. A number that cannot be written cannot
+drift out of step with the towns that make it, which is exactly how the twelve
+quantities this replaces went wrong. `core/rules/kingdom_rules.gd`, and nothing else.
 
-**Check:** a test: drop the Cinderworks' richesse and the kingdom's force falls;
-every place turning against the king lowers it too, with no steel having moved.
+**Checked:** stopping the works costs the crown its force; **every place turning
+against the king costs him force with not a furnace having moved**, which is the
+argument of the whole game in one number; a rich Muster is not a rich crown, because
+the camp sends nothing; both numbers reach 0 and 10 and no further. 46 suites, 449
+tests, 0 failed on both worlds.
+
+**Nothing of this is visible yet.** It is the hop that turns *the ironworks has
+stopped* into *the crown is short of steel*, and somebody has to say that sentence
+before a player meets it — that is Q6.
 
 ### M5 · What the kingdom sends back, and how slowly
 
@@ -376,6 +390,19 @@ becomes a small task.
 ---
 
 ## B — what goes to his brother
+
+### B00 · A spec for the NPC routines, with Yannick — **after this run**
+
+Owner: Yannick + Claude, on paper. Est. 1–2 h. Depends on: this run ending.
+
+P1 built the smallest thing that works: how many people walk, and where. It says
+nothing about **what a routine is** in general — hours, several destinations, what
+people do when they arrive, whether the key NPCs have routines too, what happens in the
+other five towns. Yannick asked to sit down and write that spec **if it turns out to be
+needed**, which is the right order: the thing is built and measured first, and the
+general rule is written from what was learnt rather than guessed in advance.
+
+**Check:** either a written spec, or a written decision that P1's version is enough.
 
 ### B0 · Keep the letter to slosinio current — **running, never finished**
 

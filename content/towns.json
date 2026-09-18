@@ -5,27 +5,32 @@
     "cinderworks": {
       "allegiance": 6,
       "richesse": 4,
-      "_why": "Settled. The king's third steelworks, and the shift is already breaking down: some furnaces cold, people idle."
+      "_why": "Settled. The king's third steelworks, and the shift is already breaking down: some furnaces cold, people idle.",
+      "produces": "steel"
     },
     "wide_acres": {
       "allegiance": 7,
       "richesse": 7,
-      "_why": "Proposal. The crown eats what the estates grow, and the estates are paid for it."
+      "_why": "Proposal. The crown eats what the estates grow, and the estates are paid for it.",
+      "produces": "food"
     },
     "harrowgate": {
       "allegiance": 6,
       "richesse": 6,
-      "_why": "Proposal. A market town on the road's hinge: it takes the crown's coin and keeps its opinions."
+      "_why": "Proposal. A market town on the road's hinge: it takes the crown's coin and keeps its opinions.",
+      "produces": ""
     },
     "muster": {
       "allegiance": 8,
       "richesse": 4,
-      "_why": "Proposal. The king's own camp — loyal as anywhere in the kingdom, and it lives on rations."
+      "_why": "Proposal. The king's own camp — loyal as anywhere in the kingdom, and it lives on rations.",
+      "produces": ""
     },
     "saltmarch": {
       "allegiance": 4,
       "richesse": 3,
-      "_why": "Proposal. Far from the road, poor, and it has never seen much of the crown but its tax."
+      "_why": "Proposal. Far from the road, poor, and it has never seen much of the crown but its tax.",
+      "produces": "food"
     }
   },
   "_poverty_note": "What stops being put out when a place falls below the threshold (P3). The mechanism is ours; THIS LIST IS ART DIRECTION AND BELONGS TO SLOSINIO — change a line here, no code. Two rules the window enforces whatever the list says: a piece is only ever hidden if the player could already walk on its tile, so nothing invisible is ever left blocking the way; and a building is never hidden, because a place that has stopped is empty, not demolished.",
@@ -50,5 +55,6 @@
       "to_point": "working_face",
       "_why": "The walk out to the cutting face, where the works takes its wood. It stops when the works stops -- and an empty road is the strongest thing the game can say about a town that has died. It is also the link between this quest and the fairy's: the people who walk out there are the ones eating the forest. Chosen over the road to his mine because the cutting face exists on both worlds, and because it means something."
     }
-  }
+  },
+  "_produces_note": "What each place sends the kingdom (M4). Two goods in v1 and no more -- food and steel; wood waits for the sawmill, where it will be the fuel steel is made with rather than a third flow. A place with nothing here consumes and does not produce, which is a real answer and not an omission."
 }
