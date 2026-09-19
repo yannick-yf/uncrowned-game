@@ -141,6 +141,11 @@ var width: int = 0
 var height: int = 0
 var portals: Dictionary = {}
 var props: Array[Dictionary] = []
+## **Tiles somebody stands in the way of** (Q1). Tile -> ward name; `WardRules` says
+## what opens each. Not terrain, because terrain is what the ground *is* and a ward is
+## a person's decision about you — and because a warded tile has to look walkable,
+## since it is. See `WardRules`.
+var wards: Dictionary = {}
 ## The places this region was built around — id -> centre — and their footprints.
 ## Set by whoever builds the region: the procedural builder from the statics above,
 ## the bake from the baked places. The kit and the zones read these and never a

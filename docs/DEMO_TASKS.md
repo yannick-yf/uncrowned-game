@@ -253,15 +253,43 @@ that no hidden piece ever stood on ground the simulation refuses. 44 suites, 438
 
 ## Q — the quest
 
-### Q1 · The production area is closed
+### Q1 · The production area is closed — **built 2026-09-19**
 
 Est. 2–3 h. Depends on: —. **Needs his brother's fence line, or ours from his pieces.**
+— *his: `modules/fence_2m.tscn`, which his own ironworks delivery already stands
+elsewhere on the same site.*
 
 A fence with one gate between the quarter and the works, and a guard on the gate. The
 furnaces are **unreachable**: not gated by a flag, simply behind something.
 
 **Check:** walk from the quarter and fail to reach a furnace. The wall that stops you
-is drawn — nothing invisible. A frame of the gate.
+is drawn — nothing invisible. A frame of the gate. — ***met***, 5 tests in
+`test/test_works_yard.gd`, and the frame is taken.
+
+**The gate is a man, not a lock** (Yannick, 2026-09-19). His street runs north–south
+straight through where the west wall wants to be, and this map's oldest rule is that a
+wall never closes a road — it has already caught a curtain wall sealing the only way into
+Blackcairn. So the road keeps its gap, `WardRules` puts somebody in it, and what gets you
+past him is a **fact**: invariant 4 working rather than being bent, and two keys rather
+than one so that a death cannot close the works for ever (invariant 6).
+
+  - `content/bake_brief.json` — a `yards` block: two corners, a kind, a gate side
+  - `BakeRules.yard_of` — the geometry, pure. **A ring, never a line**: a fence straight
+    across open country is walked round in four seconds, which is why the castle's
+    curtain is a ring. Checked before building: sealed it holds 368 tiles, open 6483
+  - `core/rules/ward_rules.gd` — which fact opens which gateway
+  - `MovementSystem._past_the_watch` — per axis, so you slide along the fence
+
+**Three things the guards caught, all mine:** nothing knew how to draw the kind I first
+chose; the fence was being drawn across his street where `place()` rightly refuses to
+wall a road — *a fence you walk through is worse than a wall you cannot see*; and
+`fence` as a kind would have made the works' yard vanish whenever the Wide Acres turned
+free, which is that place's business and not this one's.
+
+**Two things left, both content:** the man in the gateway speaks the bridge guard's
+lines and announces himself as *« un garde du pont »*, and the procedural map has no yard
+— its corners are offsets tuned to his buildings, and the kit stands nothing there. The
+tests say `DEBT` on that world rather than pretending.
 
 ### Q2 · Tom and Drissa stand in the quarter
 

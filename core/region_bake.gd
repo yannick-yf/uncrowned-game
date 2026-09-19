@@ -570,14 +570,24 @@ func _yards(brief: Dictionary) -> void:
 					continue
 				place(kind, at, Vector2i.ONE)
 				barred += 1
-		if not gate.is_empty():
-			var first: Vector2i = gate[0] as Vector2i
-			var last: Vector2i = gate[gate.size() - 1] as Vector2i
-			points[StringName("%s_gate" % id)] = {
-				"at": (first + last) / 2, "scaffold": true,
-			}
-		report.append("yard  %-12s %d fence tiles, %d left open where his street crosses"
-			% [id, barred, opened])
+		# **The way in is whatever is left open**, and somebody stands in it. His street
+		# makes most of that gap and the brief's gate the rest; both are warded, because
+		# a guard who only watches half a gateway is a guard you walk round.
+		var ward := StringName("%s_gate" % id)
+		var open_tiles: Array[Vector2i] = []
+		for group: String in ["wall", "gate"]:
+			for tile: Variant in (yard[group] as Array):
+				var at: Vector2i = tile as Vector2i
+				if region.is_passable(at):
+					open_tiles.append(at)
+					region.wards[at] = ward
+		if not open_tiles.is_empty():
+			var sum := Vector2i.ZERO
+			for at: Vector2i in open_tiles:
+				sum += at
+			points[ward] = {"at": sum / open_tiles.size(), "scaffold": true}
+		report.append("yard  %-12s %d fence tiles, %d open and warded by %s"
+			% [id, barred, open_tiles.size(), ward])
 
 
 ## What the ground is next to a footprint — the street it stands on, usually.
@@ -701,6 +711,13 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		var row: Dictionary = points[id] as Dictionary
 		points_out[String(id)] = {"at": [(row["at"] as Vector2i).x, (row["at"] as Vector2i).y],
 			"scaffold": bool(row["scaffold"])}
+	# The warded tiles, sorted so a re-bake of the same map is the same file.
+	var wards_out: Array = []
+	var warded: Array = region.wards.keys()
+	warded.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return a.y < b.y or (a.y == b.y and a.x < b.x))
+	for tile: Vector2i in warded:
+		wards_out.append({"at": [tile.x, tile.y], "ward": String(region.wards[tile])})
 	var props_out: Array = []
 	for prop: Dictionary in region.props:
 		var out: Dictionary = {"kind": String(prop["kind"]),
@@ -741,6 +758,7 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		"spurs": spurs_out,
 		"crossings": crossings_out,
 		"props": props_out,
+		"wards": wards_out,
 		"rows": rows,
 	}
 
@@ -762,6 +780,10 @@ static func read(data: Dictionary) -> Region:
 		region.sites[StringName(id)] = _pair(row.get("centre", [0, 0]))
 		region.footprints[StringName(id)] = _pair(row.get("size", [1, 1]))
 	region.bake_zones()
+	for entry: Variant in (data.get("wards", []) as Array):
+		var row: Dictionary = entry as Dictionary
+		var at: Array = row.get("at", [0, 0]) as Array
+		region.wards[Vector2i(int(at[0]), int(at[1]))] = StringName(String(row.get("ward", "")))
 	for entry: Variant in (data.get("props", []) as Array):
 		var prop: Dictionary = entry as Dictionary
 		var out: Dictionary = {"kind": StringName(String(prop.get("kind", ""))),

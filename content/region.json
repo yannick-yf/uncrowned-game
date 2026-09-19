@@ -338,8 +338,8 @@
     },
     "cinderworks_gate": {
       "at": [
-        316,
-        208
+        317,
+        207
       ],
       "scaffold": true
     }
@@ -3227,6 +3227,211 @@
         1,
         1
       ]
+    }
+  ],
+  "wards": [
+    {
+      "at": [
+        316,
+        194
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        320,
+        194
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        195
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        196
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        197
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        198
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        199
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        200
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        201
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        202
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        203
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        204
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        205
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        206
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        207
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        208
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        209
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        210
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        211
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        316,
+        216
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        317,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        318,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        319,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        320,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        321,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        322,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        323,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        324,
+        218
+      ],
+      "ward": "cinderworks_gate"
+    },
+    {
+      "at": [
+        325,
+        218
+      ],
+      "ward": "cinderworks_gate"
     }
   ],
   "rows": [
