@@ -1235,6 +1235,20 @@ changed region.
 
 > 25 named NPCs across 8 zones, approved 2026-09-11. Names remain placeholders.
 > ★ = route-critical, and every ★ fact has at least one other source.
+>
+> **27 since 2026-09-19** (Yannick). The demo needs two people this budget did not
+> foresee, because it did not exist when the budget was approved, and both are named
+> here rather than absorbed:
+>
+> | Who | Why | Where |
+> |---|---|---|
+> | **Bram**, survivor of Brindle | The sparring partner, so the fight can be reached and retuned without playing the quest to it (`DEMO_TASKS.md` F2) | Brindle's crossroads |
+> | **Tom**, the unionist | The one person the demo's quest genuinely adds — the foreman and the worker it needs are already `halgrave` and `sena` (`QUEST_CINDERWORKS.md`) | The Cinderworks |
+>
+> The number is a tripwire against the cast sprawling by degrees, not a law, and it is
+> still a tripwire: `test_townsfolk_are_not_cast` fails on the twenty-eighth. Passages
+> elsewhere in this document that say *"the twenty-five"* mean the named cast, whatever
+> its size — they are about strangers and travellers **not** being in it.
 
 **Named NPCs are people with a sheet**: a voice, wants, facts, and social edges.
 > **Generic types now carry dialogue** (2026-09-11). A stranger has a trade, a line

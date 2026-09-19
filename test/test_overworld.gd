@@ -305,17 +305,16 @@ func test_townsfolk_are_not_cast() -> void:
 		if (prop["kind"] as StringName) == &"townsfolk":
 			assert_null(cast.get_npc(&"townsfolk"), "nobody in the crowd is in the roster")
 			break
-	# §17 budgets twenty-five named people for the whole region, approved 2026-09-11.
-	# **Twenty-six since 2026-09-19**, and the extra one is named here rather than
-	# absorbed: `bram`, the sparring partner F2 puts in Brindle's ruins so the fight can
-	# be reached and retuned without playing the quest to it. What this line is really
-	# for is that the *crowd* never quietly joins the roster — the number is the
-	# tripwire, so it is raised by one deliberately and trips again on the next.
+	# §6 budgeted twenty-five named people for the whole region on 2026-09-11, and
+	# **Yannick moved it to twenty-seven on 2026-09-19** — the two the demo needs and
+	# the budget did not foresee, because the demo did not exist when it was approved:
+	# `bram`, the sparring partner, and `tom`, the quest's one genuinely new person.
+	# Both are named in §6 rather than absorbed.
 	#
-	# **Yannick has been asked whether the budget moves to 26 or Bram is temporary.**
-	# If he is temporary this goes back to 25 and takes Bram with it.
-	assert_true(cast.named().size() <= 26,
-		"the named cast is inside §6's budget, plus Bram: %d" % cast.named().size())
+	# What this line is really for is that the *crowd* never joins the roster by
+	# degrees, so the number stays a tripwire: it fails on the twenty-eighth.
+	assert_true(cast.named().size() <= 27,
+		"the named cast is inside §6's budget of 27: %d" % cast.named().size())
 	for id: StringName in cast.npcs.keys():
 		assert_false(String(id).begins_with("townsfolk"),
 			"nobody in the crowd has acquired a sheet")

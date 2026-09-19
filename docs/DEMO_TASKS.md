@@ -341,9 +341,9 @@ the fight and closes the conversation on the same step. Played end to end headle
 
 **Three things this turned up**, each caught by a guard that already existed:
 
-- **§6 budgets twenty-five named people and Bram is the twenty-sixth.** The tripwire in
-  `test_overworld.gd` is raised to 26 and names him, rather than absorbing him.
-  **Yannick has been asked** whether the budget moves or Bram is temporary.
+- **§6 budgeted twenty-five named people and Bram is the twenty-sixth.** Yannick moved
+  the budget to **27** the same day — Bram and Tom, both named in §6 rather than
+  absorbed. The tripwire still fails on the twenty-eighth.
 - **His first tile put him behind one of his brother's trees**, and the tile was not
   clear on the procedural map at all. The offset is now chosen by asking both worlds for
   a prop-free tile — `region.props` alone does not know about the kit's trees, so the
