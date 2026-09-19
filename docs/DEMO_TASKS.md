@@ -147,6 +147,15 @@ can carry it the rest of the way.
 arriving on day 3. A test that the kingdom cannot give out more than it took in.
 Played with `T`, a day at a time, the change is watchable.
 
+**Delivered 2026-09-18** (`core/systems/kingdom_system.gd`, 9 tests in
+`test/test_redistribution.gd`), and **the first build of it was wrong**: pulling every
+place toward the average flattened the whole kingdom to one number within two in-game
+days. `TownRules.PULLS_FROM` is the fix — the crown only moves a place across a gap of
+three or more, and never further in a day than the player moves one by hand.
+
+*This block went unmarked until 2026-09-19, when the plan was read back and found to be
+claiming work that was done. The record is the plan's only job.*
+
 ### M6 · One table for the arithmetic
 
 **Delivered 2026-09-18, and it was almost already true.** A hunt through the model's
