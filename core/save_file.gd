@@ -13,7 +13,20 @@ extends RefCounted
 ## the last one.** Phase 0's "respawn in Brindle keeping everything" is retired.
 ##
 ## A snapshot beside the log is the obvious optimisation when replaying a long run
-## gets slow. Not built: measure first (§20).
+## gets slow. Not built, and now **measured** rather than guessed at (2026-09-19,
+## Yannick asked whether the whole idea was worth its complexity):
+##
+## | played | rows in the save | to load |
+## |---|---|---|
+## | 1 hour | 1 | 4.2 s |
+## | 2 hours | 1 | 8.6 s |
+##
+## Linear, as it must be: loading re-simulates every step. **The demo is thirty to sixty
+## minutes, so two to four seconds** — fine, and not worth a snapshot yet. A ten-hour run
+## would be forty seconds, which is not fine, and that is when this gets built.
+##
+## The row count is not a typo. An hour of walking is one event, because holding a key
+## is one event; the log grows with what the player *does*, not with how long they do it.
 
 const PATH: String = "user://save.json"
 const VERSION: int = 1
