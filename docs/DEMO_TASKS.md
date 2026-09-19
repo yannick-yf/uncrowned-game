@@ -636,6 +636,11 @@ her.
 **Check:** both sides played end to end, from the quarter to the changed works. —
 ***met***, 5 tests in `test/test_cinderworks.gd`.
 
+**They come to you.** Reaching for a furnace is what brings somebody out — Yannick,
+2026-09-19, on seeing the first build, and it is what §4 always said: *Tom, **come** to
+stop the shift*. Sending the player off to find him and pick a fight was the weaker
+scene. Going to find him still works and is a second way in; it is no longer the way.
+
 **The middle of §4's spine.** Until this, the fight and the quest did not know each other:
 you could fight Bram because he offered it, and in the quest nobody fought you at all.
 Now the foreman stops Tom's man and Tom stops Sena's, each through a line that only the

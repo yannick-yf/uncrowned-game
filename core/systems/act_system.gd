@@ -75,6 +75,13 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 func _the_quests_act(sim: Sim, world: WorldState, deed: StringName, at: Vector2i) -> void:
 	if sim.facts.has(deed):
 		return
+	# **Somebody comes out to stop you** (Yannick, 2026-09-19). Reaching for the furnace
+	# is the moment, not a fight you went looking for: the quest document always said
+	# *Tom, come to stop the shift*. He arrives where you are standing, which is what
+	# `fight_began` does anyway — it squares the two of you up on the ground you are on.
+	if not sim.facts.has(SiteRules.FACED):
+		_somebody_stops_you(sim, world)
+		return
 	var where: StringName = world.region().zone_at(world.player_tile())
 	sim.facts.add_source(deed, &"witnessed")
 	world.spent_sites[at] = true
@@ -84,6 +91,24 @@ func _the_quests_act(sim: Sim, world: WorldState, deed: StringName, at: Vector2i
 	sim.derive(&"works_act", {
 		"deed": String(deed), "town": String(where), "seen": world.last_act_seen,
 	})
+
+
+## The man who puts himself between the player and the furnace. Nothing happens if there
+## is nobody to send — a player with no side cannot be here, and one who has already
+## settled it is not stopped twice.
+func _somebody_stops_you(sim: Sim, world: WorldState) -> void:
+	if (sim.store(&"fight") as Fight) == null:
+		return
+	var cast := sim.store(&"cast") as Cast
+	if cast == null:
+		return
+	for npc: Npc in cast.named():
+		if not SiteRules.stands_in_the_way(npc.id, sim.facts):
+			continue
+		world.last_act_step = sim.step
+		sim.derive(&"stopped_at_the_furnaces", {"by": String(npc.id)})
+		sim.derive(&"fight_began", {"opponent": String(npc.id), "asked_by": "the_furnaces"})
+		return
 
 
 ## Picking a document up. Reading it and holding it happen in the same movement —

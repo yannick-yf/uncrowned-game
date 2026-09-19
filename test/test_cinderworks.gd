@@ -317,20 +317,13 @@ func _act(sim: Sim) -> void:
 	sim.advance(2)
 
 
-func test_the_furnaces_offer_nothing_until_somebody_has_been_faced() -> void:
+func test_the_furnaces_offer_nothing_to_somebody_with_no_side() -> void:
 	var sim: Sim = _world()
-	_at_a_furnace(sim)
 	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), &"",
 		"a stranger at a furnace is offered none of it")
-
-	# A side on its own is not enough: being let in is not having faced anybody.
 	sim.facts.add_source(VOUCHED, &"sena")
-	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), &"",
-		"and neither is being vouched for")
-
-	sim.facts.add_source(SiteRules.FACED, &"witnessed")
 	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), RELIGHT,
-		"only both together")
+		"and somebody she answered for is offered it the moment they are inside")
 
 
 func test_the_side_you_took_decides_which_way_the_act_goes() -> void:
@@ -566,22 +559,58 @@ func test_the_line_that_squares_you_up_appears_only_to_the_other_side() -> void:
 	assert_true(_talk(sim, &"harry").has("face_harry"), "and every quarrel with Tom's man")
 
 
-func test_beating_him_is_what_opens_the_furnaces() -> void:
-	# The whole of F6 in one run: take a side, square up, win, and the furnaces that
-	# offered nothing now offer the act.
+func test_reaching_for_a_furnace_brings_somebody_out() -> void:
+	# **Yannick, 2026-09-19, and it is what the quest document always said**: *Tom, come
+	# to stop the shift*. He arrives. Sending the player off to find him and pick a fight
+	# was the weaker half of F6, and reaching for the furnace is the better moment — the
+	# prompt says what you are reaching for, never what it will cost you.
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
 	var sim: Sim = _world()
 	sim.facts.add_source(VOUCHED, &"sena")
-	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), &"", "nothing on offer yet")
+	_at_a_furnace(sim)
+	_act(sim)
 
-	_talk(sim, &"tom")
-	_say(sim, &"face_tom")
-	assert_true((sim.store(&"fight") as Fight).on(), "saying it squares the two of you up")
-	assert_eq(_fight_it_out(sim), &"won", "and he goes down")
+	var fight := sim.store(&"fight") as Fight
+	assert_true(fight.on(), "somebody came out")
+	assert_eq(fight.opponent, &"tom", "and on her side it is Tom")
+	assert_false(sim.facts.has(RELIGHT), "the furnaces are untouched while he is standing there")
+
+
+func test_beating_him_is_what_lets_the_act_through() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _world()
+	sim.facts.add_source(VOUCHED, &"sena")
+	_at_a_furnace(sim)
+	_act(sim)
+	assert_eq(_fight_it_out(sim), &"won", "he goes down")
 	sim.advance(4)
-
 	assert_true(sim.facts.has(FACED), "which is what having faced somebody means")
-	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), RELIGHT,
-		"and the furnaces have something to say now")
+
+	_at_a_furnace(sim)
+	_act(sim)
+	assert_true(sim.facts.has(RELIGHT), "and now the act goes through")
+	# The act raises an event, the outcome answers it, and the town system answers that.
+	# Three steps of the world talking to itself before the two numbers have moved.
+	sim.advance(4)
+	assert_eq(_values(sim), [9, 7], "and the works runs")
+
+
+func test_he_does_not_come_out_twice() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _world()
+	sim.facts.add_source(VOUCHED, &"sena")
+	sim.facts.add_source(FACED, &"tom")
+	_at_a_furnace(sim)
+	_act(sim)
+	assert_false((sim.store(&"fight") as Fight).on(),
+		"somebody already stopped you once, and lost")
+	assert_true(sim.facts.has(RELIGHT), "so the furnace answers instead")
 
 
 func test_losing_opens_nothing() -> void:
@@ -607,9 +636,10 @@ func test_losing_opens_nothing() -> void:
 
 
 func test_the_whole_quest_replays_from_its_log() -> void:
-	# **The debt Q5 could not pay, and it is paid by walking.** Everything here is an
-	# event: the steps taken, the side chosen in conversation, the fight begun by a line,
-	# every blow, and the act at the furnace. Nothing is put anywhere by hand.
+	# **The quest, played the way it is meant to go, and then rebuilt from the log.**
+	# Everything here is an event: the steps taken, the side chosen in conversation, the
+	# man who comes out when the player reaches for a furnace, every blow, and the act.
+	# Nothing is put anywhere by hand.
 	#
 	# That last part is the whole difficulty. `_talk` teleports, because forty other tests
 	# only care what somebody says — and a position written into the store is not in the
@@ -629,15 +659,15 @@ func test_the_whole_quest_replays_from_its_log() -> void:
 	sim.submit(&"end_talk")
 	sim.advance(2)
 
-	assert_true(_walk_to(sim, Vector2i(cast.get_npc(&"tom").centre()), 6000), "and to Tom")
-	sim.submit(&"talk", {"npc": "tom"})
-	sim.advance(2)
-	_say(sim, &"face_tom")
+	# She answers for him at the gate, so the yard lets him in: Q1 and Q3, played.
+	assert_true(_walk_to(sim, _a_furnace_tile(), 6000), "and into the yard")
+	_act(sim)
+	var fight := sim.store(&"fight") as Fight
+	assert_true(fight.on(), "and Tom comes out to stop the shift")
+	assert_eq(fight.opponent, &"tom", "it is him and not somebody else")
 	assert_eq(_fight_it_out(sim), &"won", "Tom is stopped")
 	sim.advance(4)
 
-	# And this proves Q1 and Q3 between them: the gate opens for somebody she answered for.
-	assert_true(_walk_to(sim, _a_furnace_tile(), 6000), "the yard lets you in now")
 	_act(sim)
 	sim.advance(4)
 	assert_eq(_values(sim), [9, 7], "and the works runs")

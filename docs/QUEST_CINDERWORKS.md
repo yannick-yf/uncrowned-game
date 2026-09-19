@@ -116,6 +116,13 @@ let in, both of which are things the world already models.
 The fight is not an addition: it is the moment somebody puts themselves physically
 between the player and the act.
 
+**And they come to you** (Yannick, 2026-09-19; built the same day). Reaching for a
+furnace is what brings them out — the prompt says what you are reaching for, and the
+answer is a man standing in front of it. The first build had the player go and find him
+and pick the fight, which is a weaker scene and was never what this table said: *Tom,
+**come** to stop the shift*. Going to find him still works, and is a second way in; it is
+no longer the way.
+
 ## 5. What each outcome changes
 
 ### Tom's outcome — the works dies

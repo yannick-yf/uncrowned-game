@@ -63,8 +63,15 @@ static func stands_in_the_way(who: StringName, facts: FactBase) -> bool:
 	return false
 
 
+## **What the furnaces offer, to somebody who got in.** Whose side you took decides the
+## direction. Having faced anybody is **not** asked here — the prompt is there the moment
+## you are inside, and reaching for it is what brings somebody out to stop you.
+##
+## That is Yannick's, 2026-09-19, and it is what the quest document always said: *Tom,
+## **come** to stop the shift*. He arrives. Sending the player off to find him and pick a
+## fight was the weaker half of F6 and it is gone.
 static func quest_deed_at(kind: StringName, facts: FactBase) -> StringName:
-	if kind != &"kiln" or facts == null or not facts.has(FACED):
+	if kind != &"kiln" or facts == null:
 		return &""
 	if facts.has(BROUGHT_THROUGH):
 		return DeedRules.DEED_DOUSE
