@@ -133,6 +133,39 @@ static func advantage_on_block(move: StringName) -> int:
 	return of(move, "blockstun") - (of(move, "active") - 1 + of(move, "recovery"))
 
 
+## **The shape of a blow, for whoever is drawing it.** −1 is fully drawn back, +1 is
+## fully thrust forward, 0 is standing. Returned as a fraction so the window decides how
+## many centimetres that is worth and the rule decides *when*.
+##
+## **This exists because his brother has not drawn a blow.** `traveler_walk_frames.tres`
+## holds eight animations — idle and walk, four directions — and no attack, no guard and
+## no flinch. Without something, a strike, a guard and a backstep all look like a person
+## standing still, and the twenty-four frames of wind-up the whole fight is built to be
+## read are invisible. Moving the sprite he already made is not drawing over him: it is a
+## placeholder that is visibly a placeholder, which is this project's rule for anything
+## his library does not have yet.
+##
+## Pure and here rather than in the window because *when* a blow reads as coming is the
+## fight's business, and because it can then be tested without drawing anything.
+static func lunge_at(move: StringName, frame: int) -> float:
+	if move == &"" or not is_attack(move):
+		return 0.0
+	var startup: int = of(move, "startup")
+	if frame < startup:
+		# Drawn back, further the closer it is to landing. The tell.
+		return -float(frame + 1) / float(maxi(startup, 1))
+	if is_active(move, frame):
+		return 1.0
+	var since: int = frame - startup - of(move, "active") + 1
+	var recovery: int = maxi(of(move, "recovery"), 1)
+	return maxf(1.0 - float(since) / float(recovery), 0.0)
+
+
+## How far a fighter leans away while holding a guard. Small: it is a stance, not a move.
+static func guard_lean() -> float:
+	return -0.35
+
+
 ## Does this blow reach? One subtraction and one comparison, on integers.
 ##
 ## The slack is the pushbox by another name: two fighters cannot stand in the same

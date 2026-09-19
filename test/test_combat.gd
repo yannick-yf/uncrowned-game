@@ -738,6 +738,22 @@ func test_the_jab_beats_a_backstep_you_saw_coming() -> void:
 		% [safe_at, CombatRules.of(CombatRules.SWING, "startup")])
 
 
+func test_a_dodge_on_reaction_clears_his_heavy_blow() -> void:
+	# **The relation that keeps the backstep a dodge**, and it broke silently once: the
+	# heavy blow was slowed from 24 frames to 28 to make the fight easier, and the last
+	# two frames of it then landed after the invulnerable window had closed. Both numbers
+	# are now held against each other here rather than against nothing.
+	const REACTION: int = 16
+	var safe_from: int = REACTION + CombatRules.of(CombatRules.BACKSTEP, "invulnerable_from")
+	var safe_to: int = REACTION + CombatRules.of(CombatRules.BACKSTEP, "invulnerable_to") - 1
+	var lands_from: int = CombatRules.of(CombatRules.SWING, "startup")
+	var lands_to: int = lands_from + CombatRules.of(CombatRules.SWING, "active") - 1
+	assert_true(safe_from <= lands_from,
+		"you are gone before it starts: safe on %d, out on %d" % [safe_from, lands_from])
+	assert_true(safe_to >= lands_to,
+		"and still gone when it finishes: safe until %d, out until %d" % [safe_to, lands_to])
+
+
 func test_the_backstep_is_invulnerable_exactly_while_it_travels() -> void:
 	# Not a frame more. The startup can be hit — that is what the short blow punishes —
 	# and so can the recovery, which is what stops it being a free button.
@@ -816,4 +832,62 @@ func test_the_three_keys_are_bound() -> void:
 		assert_true(InputMap.has_action(action), "%s is a key" % action)
 		assert_true(InputMap.action_get_events(action).size() > 0,
 			"%s has something bound to it" % action)
+
+
+# ------------------------------------------------- a blow you can see coming (F5) ---
+#
+# **His brother has drawn no attack and no guard.** `traveler_walk_frames.tres` holds
+# eight animations — idle and walk in four directions — and that is all there is. Without
+# something, a strike, a guard and a backstep all look like a person standing still, and
+# the twenty-eight frames of wind-up the whole fight is built to be read are invisible.
+# So the figure he *did* draw is moved: drawn back through the wind-up, thrust forward on
+# the blow. A placeholder, and visibly one, which is this project's rule for anything his
+# library does not have yet.
+
+func test_his_brother_has_not_drawn_a_blow() -> void:
+	# Written down as a test rather than as a note, so the day the sheet gains an
+	# `attack_left` this fails and somebody goes and uses it.
+	var frames: SpriteFrames = load(World3d.HIS_FRAMES) as SpriteFrames
+	if frames == null:
+		debt("his workshop is not copied in; run tools/vendor_workshop.sh")
+		return
+	var names: PackedStringArray = PackedStringArray()
+	for name: StringName in frames.get_animation_names():
+		names.append(String(name))
+	assert_eq(names.size(), 8, "eight animations: %s" % str(names))
+	for way: String in ["up", "down", "left", "right"]:
+		assert_true(names.has("idle_" + way), "idle_%s" % way)
+		assert_true(names.has("walk_" + way), "walk_%s" % way)
+	debt("no attack and no guard animation exists: the fight's tell is the figure moved")
+
+
+func test_a_wind_up_draws_him_back_and_the_blow_throws_him_forward() -> void:
+	var startup: int = CombatRules.of(CombatRules.SWING, "startup")
+	assert_true(CombatRules.lunge_at(CombatRules.SWING, 0) < 0.0,
+		"the wind-up begins to draw him back")
+	assert_true(CombatRules.lunge_at(CombatRules.SWING, startup - 1)
+			< CombatRules.lunge_at(CombatRules.SWING, 1),
+		"and keeps drawing back the closer it is to landing")
+	assert_eq(CombatRules.lunge_at(CombatRules.SWING, startup - 1), -1.0,
+		"fully back on the last frame before it lands")
+	assert_eq(CombatRules.lunge_at(CombatRules.SWING, startup), 1.0,
+		"and fully through on the frame it does")
+
+
+func test_the_recovery_eases_him_back_to_standing() -> void:
+	var move: StringName = CombatRules.STRIKE
+	var after: int = CombatRules.of(move, "startup") + CombatRules.of(move, "active")
+	var last: int = CombatRules.length(move) - 1
+	assert_true(CombatRules.lunge_at(move, after) > 0.0, "still forward as he recovers")
+	assert_true(CombatRules.lunge_at(move, last) < CombatRules.lunge_at(move, after),
+		"and coming back")
+	assert_true(CombatRules.lunge_at(move, last) < 0.2, "nearly standing by the end")
+
+
+func test_nothing_that_is_not_a_blow_lunges() -> void:
+	assert_eq(CombatRules.lunge_at(&"", 0), 0.0, "standing still is standing still")
+	assert_eq(CombatRules.lunge_at(CombatRules.BACKSTEP, 5), 0.0,
+		"a backstep already moves; it does not also lean")
+	assert_true(CombatRules.guard_lean() < 0.0, "a guard leans away, never into it")
+	assert_true(absf(CombatRules.guard_lean()) < 1.0, "and it is a stance, not a move")
 

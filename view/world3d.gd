@@ -32,6 +32,12 @@ const AZIMUTH_DEGREES: float = 0.0
 ## project. Because it never turns, a fight runs east-west and uses the `left` and
 ## `right` frames his brother has already made.
 const FIGHT_TILT_DEGREES: float = 27.0
+## How far a fighter leans and lunges, in tiles, so a blow can be seen coming. A tile is
+## two metres, so this is about forty-five centimetres at full thrust. **A placeholder
+## and visibly one**: `traveler_walk_frames.tres` holds idle and walk in four directions
+## and nothing else, so until his brother draws an attack and a guard the only honest
+## tell is the figure he did draw, moved. The timing of it is `CombatRules.lunge_at`.
+const FIGHT_LUNGE_TILES: float = 0.30
 const FIGHT_SIZE_M: float = 7.0
 const CAMERA_SIZE: float = 24.0
 const CAMERA_DISTANCE: float = 45.0
@@ -880,7 +886,10 @@ func _sync_player(frame: Dictionary) -> void:
 		_walk(_player, facing, _walk_phase)
 	else:
 		_idle(_player, facing)
-	_foot_figure(_player, at)
+	# The lunge is added to where he is *drawn* and not to where he is: the walk cycle is
+	# driven by ground covered, and a blow that made his feet turn over would read as a
+	# man walking on the spot.
+	_foot_figure(_player, at + Vector2(_lunge_of(frame.get("fight", {}) as Dictionary, true), 0.0))
 
 
 ## `fighting` is empty unless somebody is squared up with the player, in which case it
@@ -916,6 +925,7 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		if npc.id == foe:
 			stands_at = fighting.get("at", stands_at) as Vector2
 			_step_the_foe(figure, stands_at, fighting.get("facing", Vector2i(0, 1)) as Vector2i)
+			stands_at += Vector2(_lunge_of(fighting, false), 0.0)
 		_foot_figure(figure, stands_at)
 		figure.visible = true
 	_fairy.visible = fairy_seen
@@ -938,6 +948,22 @@ func _step_the_foe(figure: Node3D, at: Vector2, facing: Vector2i) -> void:
 		_walk(figure, facing, _foe_phase)
 	else:
 		_idle(figure, facing)
+
+
+## **How far a fighter is drawn from where he stands**, in tiles along the fight's line.
+## Negative is drawn back — the wind-up, and the guard's stance — and positive is thrust
+## forward. `CombatRules.lunge_at` decides the shape; this only decides how far.
+func _lunge_of(fighting: Dictionary, mine: bool) -> float:
+	if fighting.is_empty():
+		return 0.0
+	var toward: int = int(fighting.get("toward", 1))
+	var forward: float = float(toward if mine else -toward)
+	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
+	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
+	var shape: float = CombatRules.lunge_at(move, at_frame)
+	if mine and move == &"" and bool(fighting.get("guarding", false)):
+		shape = CombatRules.guard_lean()
+	return shape * FIGHT_LUNGE_TILES * forward
 
 
 ## Traffic: his traveller walking the road, the cycle read off where they stand.

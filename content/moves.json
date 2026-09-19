@@ -16,16 +16,16 @@
       "_why": "The player's one blow. 8 frames to land is fast enough to feel like yours and slow enough to be beaten by his guard. On hit it leaves you +2; on block, -4, so swinging into a raised guard is punished."
     },
     "swing": {
-      "startup": 24,
+      "startup": 28,
       "active": 4,
       "recovery": 22,
-      "damage": 3,
+      "damage": 2,
       "hitstun": 20,
       "blockstun": 14,
       "hitstop": 8,
-      "reach_mm": 2000,
+      "reach_mm": 2200,
       "knockback_mm": 500,
-      "_why": "His heavy blow, and it out-reaches everything by a long way on purpose. At 1500 it was never thrown once in a played fight: the band between the jab’s threshold and his own was two hundred millimetres wide and both fighters crossed it in five frames, so he was always already too close and always jabbed. At 2000 he holds ground the player cannot reach from — their strike is 1300 — so closing on him is the dangerous part, which is what a heavy weapon ought to mean. Twenty-four frames of wind-up and -11 on block: it is the blow you punish him for."
+      "_why": "His heavy blow, and it out-reaches everything by a long way on purpose. At 1500 it was never thrown once in a played fight: the band between the jab’s threshold and his own was two hundred millimetres wide and both fighters crossed it in five frames, so he was always already too close and always jabbed. At 2000 he holds ground the player cannot reach from — their strike is 1300 — so closing on him is the dangerous part, which is what a heavy weapon ought to mean. Twenty-four frames of wind-up and -11 on block: it is the blow you punish him for.\n**Easier, on Yannick’s call, 2026-09-19.** Startup 24 -> 28, the top of the readable band in docs/COMBAT.md §2, and damage 3 -> 2. The jab stays at 18: it is the floor of that band and it is the only thing keeping the backstep honest — raise it and a player who steps on reaction escapes everything. Reach 2000 -> 2200 when the decision delay was raised: the band a heavy blow lives in has to be wider than the distance the player walks while he is thinking, or the move goes back to never being thrown. test_he_has_two_blows_and_the_distance_picks_one keeps that relation true and is what caught it."
     },
     "jab": {
       "startup": 18,
@@ -41,7 +41,7 @@
     },
     "backstep": {
       "startup": 4,
-      "active": 10,
+      "active": 14,
       "recovery": 8,
       "damage": 0,
       "hitstun": 0,
@@ -50,9 +50,9 @@
       "reach_mm": 0,
       "knockback_mm": 0,
       "travel_mm": 90,
-      "_why": "The player’s evasion, and the third thing you can do. Ten frames of travel at twice walking speed, and **they are invulnerable** — frames 4 to 13, exactly the travel. Without them it was not a dodge at all: reacting to the heavy blow at the human’s sixteen frames, the backstep had carried you 360 mm when it landed and you were still well inside its reach. A played fight said so — the dodging player lost at 1 health having landed nothing — while the frame data looked fine.\nThe four frames of startup are the balance. React to the heavy blow at 16 and you are invulnerable from 20, before it lands on 24. React to the short blow at 16 and it lands on 18, two frames before you are. So the backstep answers the heavy blow, the short blow answers the backstep, and the guard answers the short blow.",
+      "_why": "The player’s evasion, and the third thing you can do. Ten frames of travel at twice walking speed, and **they are invulnerable** — frames 4 to 13, exactly the travel. Without them it was not a dodge at all: reacting to the heavy blow at the human’s sixteen frames, the backstep had carried you 360 mm when it landed and you were still well inside its reach. A played fight said so — the dodging player lost at 1 health having landed nothing — while the frame data looked fine.\nThe four frames of startup are the balance. React to the heavy blow at 16 and you are invulnerable from 20, before it lands on 24. React to the short blow at 16 and it lands on 18, two frames before you are. So the backstep answers the heavy blow, the short blow answers the backstep, and the guard answers the short blow.\n**Fourteen frames of travel, not ten, since the heavy blow slowed down.** The relation that matters is that the invulnerable frames cover the *whole* of his heavy blow when you step on seeing it: reacting at 16, you are safe from frame 20 to 33, and his blow is out from 28 to 31. At ten frames it ended on 29 and the last two frames of the blow went through — making the swing slower had quietly broken the dodge. test_a_dodge_on_reaction_clears_his_heavy_blow keeps the two numbers honest.",
       "invulnerable_from": 4,
-      "invulnerable_to": 14
+      "invulnerable_to": 18
     }
   },
   "fighters": {
@@ -63,12 +63,13 @@
     },
     "walk_mm_per_step": 45,
     "reach_slack_mm": 250,
-    "start_apart_mm": 2400,
+    "start_apart_mm": 2800,
     "_why": "45 mm a step is 2.7 m a second, close to the world's own 2.5 tiles a second, so stepping into range inside a fight feels like walking outside one.",
     "arena_radius_mm": 4000,
     "_arena_note": "How far from the middle of the fight either fighter may go, in mm. A tile is 2 m (BakeRules.METRES_PER_TILE), so 4000 is two tiles each way and four tiles across - which fits inside the fight camera’s frame with room to spare. Yannick, 2026-09-19: there is no fleeing in the demo, so this is a wall and not a warning.",
-    "decides_after_steps": 10,
-    "_decides_note": "How long he stands free before he commits to something. It used to be the swing’s own startup, 24, which meant he waited twenty-four frames and then wound up for twenty-four more — and in that waiting the player walked 1080 mm, straight through the whole band where he would have swung. The heavy blow was never thrown once in a played fight because of it. Ten is short enough that the band survives the wait and long enough that he is still a pattern rather than a machine gun."
+    "decides_after_steps": 16,
+    "_decides_note": "How long he stands free before he commits to something. It used to be the swing’s own startup, 24, which meant he waited twenty-four frames and then wound up for twenty-four more — and in that waiting the player walked 1080 mm, straight through the whole band where he would have swung. The heavy blow was never thrown once in a played fight because of it. Ten is short enough that the band survives the wait and long enough that he is still a pattern rather than a machine gun. Raised from 10 to 16 on Yannick’s call to make the fight easier: he commits less often, so there is more room between his blows.",
+    "_start_note": "They have to begin outside the longest reach in the game, or the fight opens with somebody already able to hit somebody. His heavy blow reaches 2200 plus 250 of slack, so 2400 was inside it the moment that reach grew — caught by test_a_fight_begins_with_the_two_of_them_apart."
   },
   "_opponents_note": "Who you can be put in front of, and what they are worth. A fighter not listed here takes the default: the player’s own health, and no mercy. \"spares\" means he stops when you go down instead of killing you — Bram says so in his own line, and a sparring partner who sends you back to the fairies’ clearing twelve seconds into the game is not a sparring partner.",
   "opponents": {

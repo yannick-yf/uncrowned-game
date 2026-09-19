@@ -177,8 +177,13 @@ func _ready() -> void:
 	# long enough for a camera that takes a second to move.
 	var squaring_up: String = OS.get_environment("UNCROWNED_FIGHT")
 	if OS.has_feature("debug") and squaring_up != "":
-		_sim.submit(&"fight_began", {"opponent": squaring_up.strip_edges()})
+		# `bram` squares up; `bram:40` squares up and runs forty steps first, so a
+		# wind-up or a blow can be photographed rather than only a stand-off.
+		var parts: PackedStringArray = squaring_up.strip_edges().split(":")
+		_sim.submit(&"fight_began", {"opponent": parts[0]})
 		_sim.advance(1)
+		if parts.size() > 1 and parts[1].is_valid_int():
+			_sim.advance(maxi(parts[1].to_int(), 0))
 		_fight_lens = 1.0
 		_snap_lens = true
 		_draw_ring()
@@ -233,6 +238,16 @@ func _frame(eye: Vector2) -> Dictionary:
 			"who": String(_fight.opponent),
 			"at": _fight.at_tiles(_fight.opponent_at_mm),
 			"facing": Vector2i(-_fight.toward, 0),
+			# What each of them is doing this frame, so the window can *show* it. His
+			# brother has drawn no blow and no guard — eight animations, idle and walk
+			# in four directions — so the only thing that can read as a wind-up is the
+			# figure he already made, moved.
+			"toward": _fight.toward,
+			"his_move": String(_fight.opponent_move),
+			"his_frame": _fight.opponent_frame,
+			"my_move": String(_fight.player_move),
+			"my_frame": _fight.player_frame,
+			"guarding": _fight.pressing_guard and _fight.player_move == &"",
 		},
 		"tents": tents,
 		"crowd": _crowd_size(),

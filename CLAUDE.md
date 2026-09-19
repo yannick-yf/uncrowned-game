@@ -161,8 +161,11 @@ scenes and refuses stale copies. Only the build tool loads those nodes; core rec
 plain polygons. The bake hashes the town and river data and each used collision scene,
 and checks that the landscape's resolved crossings agree with the river layout.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
-commit checks. The current baked run prints nine DEBT lines for five claims (the road
-ratio joined the existing claims on this delivery), and four OFF lines.
+commit checks. The current baked run prints **ten** DEBT lines for **six** claims and
+four OFF lines. Five claims are the map's and the brief's; the sixth is **his brother's
+figures** — `traveler_walk_frames.tres` holds idle and walk in four directions and no
+attack, no guard and no flinch, so a fight's blows are shown by moving the figure he did
+draw (2026-09-19, F5). The procedural world prints one, for the same reason.
 
 ### Committing — read this before your first `git commit`
 

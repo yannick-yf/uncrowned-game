@@ -207,6 +207,34 @@ une règle du jeu, pas un effet d'image.
 l'angle de la caméra (48° en exploration, 27° en combat). Tout ça se change en trois
 nombres. Regarde l'image et dis-moi.
 
+### La seule chose qu'on te demande vraiment : trois images
+
+On a vérifié ton fichier `traveler_walk_frames.tres`. Il contient huit animations :
+`idle` et `walk`, dans quatre directions. C'est tout.
+
+Donc aujourd'hui, dans un combat, **frapper, garder et reculer se ressemblent tous** :
+quelqu'un debout. Et tout le combat est construit pour qu'on *voie venir* un coup — il y
+a vingt-huit images de préparation avant qu'il parte. Personne ne les voit.
+
+En attendant, on déplace ton personnage : il se ramasse pendant la préparation, il se
+détend d'un coup quand le coup part, il s'écarte derrière une garde. Ça se lit en
+mouvement. Ce n'est pas un dessin, c'est un déplacement, et c'est marqué comme provisoire
+dans nos tests.
+
+**Ce qui remplacerait ça, c'est trois images :**
+
+| | |
+|---|---|
+| **Attaque** | le personnage qui frappe |
+| **Garde** | le personnage qui se protège |
+| **Encaisse** | le personnage touché, une image suffit |
+
+**Et seulement `left` et `right`.** Pas besoin de `up` ni de `down` : la caméra ne tourne
+jamais pendant un combat, donc un combat se déroule toujours d'est en ouest. Six images en
+tout, donc, si tu comptes les deux sens.
+
+C'est la seule chose qui manque vraiment au combat. Le reste marche.
+
 Donc concrètement, pour toi : **rien à redessiner.** La caméra garde son orientation,
 elle descend seulement. Le combat se déroule d'est en ouest, et il utilise tes images
 `left` et `right` telles quelles.

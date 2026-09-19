@@ -464,10 +464,42 @@ looked right on paper:
    heavy blow landed, which is nowhere near out of a blow reaching two metres: the dodging
    player lost at 1 health having landed nothing. Invulnerable frames fixed it.
 
-**Balance, measured and left honest.** Against a scripted player on 16 frames of reaction:
-guarding wins at 8 of 10 health, backstepping wins at 10 of 10. **The backstep is
-currently the stronger of the two** and wants a pass — probably fewer invulnerable frames
-or a longer recovery. Every number is one row of `content/moves.json`.
+**Easier, on Yannick's call (2026-09-19), and measured.** His heavy blow winds up for 28
+frames instead of 24 and costs 2 instead of 3; he commits every 16 frames instead of 10.
+The jab stays at 18 — it is the floor of the readable band and the only thing keeping the
+backstep honest. Against a scripted player, by reaction speed:
+
+| Reaction | Guarding | Backstepping |
+|---|---|---|
+| 16 frames | won, 9 of 10 | won, 10 of 10 |
+| 22 frames | won, 9 of 10 | won, 10 of 10 |
+| 28 frames | won, 8 of 10 | won, 8 of 10 |
+| 34 frames | won, 8 of 10 | won, 8 of 10 |
+
+**No losing case at any reaction speed**, where before a 22-frame dodger lost at 1 health.
+Two numbers had to move with it and both were caught by tests rather than by eye: his
+reach (2000 → 2200), because the band a heavy blow lives in must be wider than the ground
+the player covers while he thinks; and the starting distance (2400 → 2800), because they
+must begin outside the longest reach in the game.
+
+**And the backstep's invulnerable frames grew 10 → 14**, because slowing the heavy blow
+had quietly broken the dodge: its last two active frames landed after the window closed.
+That relation is now its own test.
+
+### A blow you can see coming — and what his brother owes
+
+**There is no attack animation and no guard animation.** `traveler_walk_frames.tres` holds
+eight: idle and walk, four directions. A strike, a guard and a backstep all looked like a
+person standing still, and the 28 frames of wind-up the whole fight is built to be read
+were **invisible** — which is most of why it felt hard with hands on it.
+
+Until he draws them, the figure he *did* draw is moved: drawn back through the wind-up,
+thrust forward on the blow, leaning away behind a guard. `CombatRules.lunge_at` decides
+the timing (pure, tested) and the window decides the distance (0.3 tiles). **A placeholder
+and visibly one**, and it prints a `DEBT` line in every run so it is not forgotten.
+
+**What would replace it: three frames.** An attack, a guard, and a flinch — `left` and
+`right` only, because the camera never turns.
 
 ### F6 · The fight belongs to the quest
 

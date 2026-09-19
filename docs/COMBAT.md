@@ -456,10 +456,54 @@ and none of them would have failed a test written from the design.
 > and a played fight finds what you did not.** Both are cheap here — a fight is integers
 > and no window — so both get run.
 
-### Left honest
+### Easier, on Yannick's call
 
-Against a scripted player on 16 frames of reaction: guarding wins at 8 of 10 health,
-backstepping wins at 10 of 10. **The backstep is the stronger of the two and wants a
-pass** — fewer invulnerable frames, or a longer recovery. Yannick's call, and it is one
-row of `content/moves.json`.
+He played it and asked for it easier (2026-09-19). Heavy blow: 24 → 28 frames of wind-up,
+3 → 2 damage. Decision delay: 10 → 16. The jab stays at 18, the floor of §2's readable
+band and the only thing keeping the backstep honest.
+
+| Reaction | Guarding | Backstepping |
+|---|---|---|
+| 16 frames | won, 9 of 10 | won, 10 of 10 |
+| 22 frames | won, 9 of 10 | won, 10 of 10 |
+| 28 frames | won, 8 of 10 | won, 8 of 10 |
+| 34 frames | won, 8 of 10 | won, 8 of 10 |
+
+No losing case at any speed, where a 22-frame dodger used to lose at 1 health. Two other
+numbers had to follow, and **both were caught by tests rather than by eye**: his reach
+(2000 → 2200), because the band a heavy blow lives in must be wider than the ground the
+player covers while he thinks; and the starting distance (2400 → 2800), because they must
+begin outside the longest reach in the game. And the backstep's invulnerable frames grew
+from 10 to 14, because slowing the heavy blow had silently broken the dodge — its last two
+active frames were landing after the window shut.
+
+---
+
+## 11. Nobody has drawn a blow
+
+**Asked by Yannick and checked rather than remembered, 2026-09-19.**
+`prototypes/brindle_3d/prototype_3d/assets/traveler_walk_frames.tres` holds **eight**
+animations: `idle` and `walk` × `up`, `down`, `left`, `right`. One sheet,
+`traveler_walk_v2.png`. There is **no attack, no guard and no flinch**, anywhere in his
+workshop.
+
+So until F5 a strike, a guard and a backstep all looked like a person standing still, and
+the 28 frames of wind-up this entire fight is built to be *read* were invisible. That is
+most of why it felt hard with hands on it, and no amount of tuning the frame data fixes
+it: the numbers were never the problem, the tell was missing.
+
+**What is there now, and what it is not.** The figure he already drew is *moved*: drawn
+back through the wind-up, further the closer the blow is to landing; thrust forward on the
+frames it is out; eased back through the recovery; leaning away behind a guard.
+`CombatRules.lunge_at` decides the timing — pure and tested, so *when* a blow reads as
+coming is the fight's business and not the camera's — and the window decides how far
+(0.3 tiles, about sixty centimetres).
+
+It reads in motion and barely at all in a still, which is exactly what a displacement is.
+**It is a placeholder and it prints a `DEBT` line in every run**, alongside the map's, so
+it is counted and not forgotten. `test_his_brother_has_not_drawn_a_blow` fails the day the
+sheet grows a ninth animation, so that nobody ships the placeholder over real work.
+
+**What would replace it is three frames**: an attack, a guard, a flinch — `left` and
+`right` only, because the camera never turns. It is in `docs/POUR_SLOSINIO.md` §8.
 
