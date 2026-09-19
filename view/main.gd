@@ -595,7 +595,8 @@ func _skip_a_day() -> void:
 		before, _sim.tick, _clock(_sim.tick)])
 
 
-## The fight's keys: **K** strikes, **O** guards, and left and right walk the line.
+## The fight's keys: **K** strikes, **O** guards, **I** steps back, and left and right
+## walk the line.
 ##
 ## One event per change of what is held, which is `CombatSystem`'s contract and the
 ## reason a saved fight is a handful of rows rather than a recording of the keyboard.
@@ -612,9 +613,15 @@ func _read_fight_input() -> void:
 	var want: Dictionary = {
 		"attack": Input.is_action_pressed(&"strike"),
 		"guard": Input.is_action_pressed(&"guard"),
+		# **Pressed, not held.** The other two are states the fight reads every frame;
+		# a backstep is one decision, and the simulation spends it on use. Sending the
+		# edge keeps that true however long the key is down.
+		"evade": Input.is_action_just_pressed(&"evade"),
 		"walk": walk,
 	}
-	if want == _held_fight:
+	# The edge has to go out even when nothing else changed, or a backstep pressed on a
+	# frame where the player was already holding nothing would never reach the fight.
+	if want == _held_fight and not bool(want["evade"]):
 		return
 	_held_fight = want
 	_sim.submit(&"fight_input", want)

@@ -48,6 +48,9 @@ var freeze: int = 0
 ## What the player is holding down, remembered rather than re-sent every frame.
 var pressing_attack: bool = false
 var pressing_guard: bool = false
+## The backstep is pressed rather than held — but it is remembered like the other two,
+## because the log holds *changes* of what is down and not sixty events a second.
+var pressing_evade: bool = false
 var walking: int = 0
 
 ## Set once a move has landed, so one blow cannot hit twice on its three active frames.

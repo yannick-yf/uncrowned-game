@@ -617,3 +617,203 @@ func test_a_blow_costs_what_the_file_says_it_costs() -> void:
 	assert_eq(world.touches_taken, announced,
 		"every blow the fight announced is a blow the player actually took")
 
+
+# ----------------------------------------------- he does something, so do you (F5) ---
+#
+# F1 gave him one blow and the player two buttons, which is a drill and not a fight.
+# F5 gives him a second blow chosen by distance, and the player a way out that is not
+# the guard. What matters is the relationship between the three, and it was found by
+# playing rather than by design: **the guard answers the jab, the jab answers the
+# backstep, and the backstep answers the swing.**
+
+func test_he_has_two_blows_and_the_distance_picks_one() -> void:
+	# Not a coin and not a timer. Step inside his swing and he answers with the short
+	# blow; stand at the edge of it and he has to wind up the slow one.
+	assert_true(CombatRules.has_move(CombatRules.JAB), "he has a short blow")
+	var close: int = CombatRules.of(CombatRules.JAB, "reach_mm")
+	var far: int = CombatRules.of(CombatRules.SWING, "reach_mm")
+	assert_eq(CombatRules.chooses(close), CombatRules.JAB, "close, the short one")
+	assert_eq(CombatRules.chooses(far), CombatRules.SWING, "at range, the heavy one")
+	assert_true(far > close + 500,
+		"and the heavy one out-reaches it by enough to be worth holding: %d against %d"
+		% [far, close])
+	# The band the swing lives in has to survive his decision delay, or he never throws
+	# it — which is exactly what happened when the two were 1500 and 1100 apart.
+	var crossed: int = CombatRules.decides_after_steps() * CombatRules.walk_mm_per_step()
+	assert_true(far - close > crossed,
+		"the player cannot walk through the whole heavy band while he thinks: %d mm of band, %d mm of walking"
+		% [far - close, crossed])
+
+
+func test_his_wind_up_is_not_his_wait() -> void:
+	# They were the same number, and that is why the heavy blow was dead content: he
+	# waited twenty-four frames and then wound up for twenty-four more.
+	assert_true(CombatRules.decides_after_steps()
+			< CombatRules.of(CombatRules.SWING, "startup"),
+		"he decides faster than he swings")
+	assert_true(CombatRules.decides_after_steps() > 0, "but he is not instant")
+
+
+func test_the_backstep_takes_you_out_of_his_reach() -> void:
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	# Walk in until he could hit you, then wait for a clean moment. The first draft of
+	# this pressed the key while the player was in sixteen frames of hitstun and
+	# measured eight frames of travel out of ten, which said nothing about the backstep.
+	sim.submit(&"fight_input", {"walk": 1})
+	sim.advance(40)
+	sim.submit(&"fight_input", {"walk": 0})
+	var ready: bool = false
+	for _step: int in 240:
+		sim.advance(1)
+		if fight.player_free() and fight.opponent_move == &"":
+			ready = true
+			break
+	assert_true(ready, "a moment when nobody is mid-anything")
+
+	# Measured on the player’s own position, not on the gap: he walks too, and a gap
+	# is two people.
+	var before: int = fight.player_at_mm
+	sim.submit(&"fight_input", {"evade": true})
+	sim.advance(CombatRules.length(CombatRules.BACKSTEP) + 2)
+	var travelled: int = absi(fight.player_at_mm - before)
+	assert_true(travelled > CombatRules.walk_mm_per_step() * 10,
+		"further than walking would have carried you: %d mm against %d"
+		% [travelled, CombatRules.walk_mm_per_step() * 10])
+	assert_true(fight.player_at_mm < before, "and away from him, not into him")
+
+
+func test_one_press_is_one_backstep() -> void:
+	# A dash is a decision, and a decision you can lean on is not one.
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	sim.submit(&"fight_input", {"evade": true})
+	sim.advance(CombatRules.length(CombatRules.BACKSTEP) * 3)
+	assert_false(fight.pressing_evade, "the press was spent")
+	assert_eq(fight.player_move, &"", "and holding it did not start a second one")
+
+
+func test_a_backstep_hits_nobody() -> void:
+	# It has active frames like any move and no blow in them. Without `is_attack` the
+	# log would fill with blows that cost nothing.
+	assert_false(CombatRules.is_attack(CombatRules.BACKSTEP), "it is not an attack")
+	assert_true(CombatRules.is_attack(CombatRules.STRIKE), "and a strike is")
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	sim.submit(&"fight_input", {"walk": 1})
+	sim.advance(40)
+	var hp: int = fight.opponent_hp
+	sim.submit(&"fight_input", {"walk": 0, "evade": true})
+	sim.advance(CombatRules.length(CombatRules.BACKSTEP) + 2)
+	assert_eq(fight.opponent_hp, hp, "stepping away costs him nothing")
+
+
+func test_a_blocked_swing_can_be_punished() -> void:
+	# F5's check, as frame data: blockstun is shorter than his recovery by more than it
+	# takes you to get a blow out, so a guarded heavy blow is your turn.
+	var owed: int = -CombatRules.advantage_on_block(CombatRules.SWING)
+	assert_true(owed > CombatRules.of(CombatRules.STRIKE, "startup"),
+		"blocking it leaves him owing %d frames and your blow takes %d"
+		% [owed, CombatRules.of(CombatRules.STRIKE, "startup")])
+	# And the short blow is the safer of the two to have blocked, or there would be no
+	# reason for him ever to throw it.
+	assert_true(CombatRules.advantage_on_block(CombatRules.JAB)
+			> CombatRules.advantage_on_block(CombatRules.SWING),
+		"the short blow is the safer one")
+
+
+func test_the_jab_beats_a_backstep_you_saw_coming() -> void:
+	# The triangle's third side, and the reason the backstep has four frames of startup.
+	# Human reaction is about 16 frames (`docs/COMBAT.md` §2), and what matters is when
+	# the **invulnerable** frames begin — not when the travel does. Travel alone was not
+	# a dodge: measured, it had carried the player 360 mm when the heavy blow landed,
+	# which is nowhere near out of a blow that reaches two metres.
+	const REACTION: int = 16
+	var safe_at: int = REACTION + CombatRules.of(CombatRules.BACKSTEP, "invulnerable_from")
+	assert_true(safe_at > CombatRules.of(CombatRules.JAB, "startup"),
+		"too slow for the short blow: safe on %d, it lands on %d"
+		% [safe_at, CombatRules.of(CombatRules.JAB, "startup")])
+	assert_true(safe_at <= CombatRules.of(CombatRules.SWING, "startup"),
+		"but in time for the heavy one: safe on %d, it lands on %d"
+		% [safe_at, CombatRules.of(CombatRules.SWING, "startup")])
+
+
+func test_the_backstep_is_invulnerable_exactly_while_it_travels() -> void:
+	# Not a frame more. The startup can be hit — that is what the short blow punishes —
+	# and so can the recovery, which is what stops it being a free button.
+	var from: int = CombatRules.of(CombatRules.BACKSTEP, "invulnerable_from")
+	var to: int = CombatRules.of(CombatRules.BACKSTEP, "invulnerable_to")
+	assert_eq(from, CombatRules.of(CombatRules.BACKSTEP, "startup"),
+		"it starts when the travel does")
+	assert_eq(to - from, CombatRules.of(CombatRules.BACKSTEP, "active"),
+		"and ends when the travel does")
+	assert_false(CombatRules.is_invulnerable(CombatRules.BACKSTEP, from - 1),
+		"the wind-up can be hit")
+	assert_true(CombatRules.is_invulnerable(CombatRules.BACKSTEP, from), "the travel cannot")
+	assert_false(CombatRules.is_invulnerable(CombatRules.BACKSTEP, to),
+		"and the recovery can be punished")
+	assert_false(CombatRules.is_invulnerable(CombatRules.STRIKE, 1),
+		"nothing else in the fight has a frame of it")
+
+
+func test_a_blow_passes_through_a_dodge() -> void:
+	# The rule, played, and measured on **that one swing** rather than on the whole
+	# fight: the first draft asserted the player finished untouched, which a player who
+	# only ever dodges one blow and never guards obviously does not.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	var held: Dictionary = {}
+	var hp_at_dodge: int = -1
+	var watching: bool = false
+	for _step: int in 1200:
+		if not fight.on():
+			break
+		var want: Dictionary = {"walk": 0, "attack": false, "guard": false, "evade": false}
+		if hp_at_dodge < 0 and fight.opponent_move == CombatRules.SWING \
+				and fight.opponent_frame == CombatRules.of(CombatRules.SWING, "startup") - 8 \
+				and fight.player_free():
+			want["evade"] = true
+			hp_at_dodge = world.player_hp
+			watching = true
+		elif not CombatRules.reaches(fight.player_at_mm, fight.opponent_at_mm, CombatRules.STRIKE):
+			want["walk"] = 1
+		if want != held or bool(want["evade"]):
+			sim.submit(&"fight_input", want)
+			held = want
+		sim.advance(1)
+		# Watch only until that swing is over.
+		if watching and fight.opponent_move != CombatRules.SWING:
+			break
+	assert_true(hp_at_dodge >= 0, "he swung at least once and the player stepped")
+	assert_eq(world.player_hp, hp_at_dodge,
+		"and that blow went through them: %d of %d" % [world.player_hp, hp_at_dodge])
+
+
+func test_both_of_his_blows_come_out_in_a_played_fight() -> void:
+	# The check the frame data cannot make on its own: at 1500 and 1100 of reach every
+	# one of these numbers looked right and he threw the heavy blow exactly zero times.
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	var thrown: Dictionary = {}
+	var was: StringName = &""
+	for _step: int in 3000:
+		if not fight.on():
+			break
+		_play(sim, fight, 1)
+		if fight.opponent_move != was:
+			was = fight.opponent_move
+			if was != &"":
+				thrown[was] = int(thrown.get(was, 0)) + 1
+	assert_true(int(thrown.get(CombatRules.JAB, 0)) > 0,
+		"he threw the short one: %s" % str(thrown))
+	assert_true(int(thrown.get(CombatRules.SWING, 0)) > 0,
+		"and the heavy one: %s" % str(thrown))
+
+
+func test_the_three_keys_are_bound() -> void:
+	for action: StringName in [&"strike", &"guard", &"evade"]:
+		assert_true(InputMap.has_action(action), "%s is a key" % action)
+		assert_true(InputMap.action_get_events(action).size() > 0,
+			"%s has something bound to it" % action)
+

@@ -414,3 +414,52 @@ that was a bad measurement, which counted a killing blow as zero because death r
 health to full. The window is now contact's alone — a trap closed before F5 and F6 bring
 a faster opponent, not a bug that was biting.
 
+---
+
+## 10. F5 — two blows, three answers, and four numbers that lied
+
+**Built 2026-09-19.** F1 left him with one blow and the player with two buttons, which is
+a drill. F5 makes it a fight.
+
+| | |
+|---|---|
+| **His jab** | 18/3/12, reach 1300, 1 damage. −2 on hit, −6 on block: it neither locks you out nor is free |
+| **His choice** | by distance, not by a coin or a timer. Inside 1550 mm he answers short; beyond it he must wind up the heavy one |
+| **His heavy blow** | reach 1500 → **2000**, so he holds ground the player's 1300 cannot reach from |
+| **His decision delay** | its own number (10), no longer the move's own startup |
+| **Your backstep** | `I`. 4 startup, 10 of travel at twice walking speed, **invulnerable for exactly those ten**, 8 of recovery. One press, one step |
+
+**The relationship is the design:** the guard answers the jab, the jab answers the
+backstep, the backstep answers the swing. It works because human reaction is ~16 frames
+(§2): react to the heavy blow and you are invulnerable on frame 20, before it lands on 24;
+react to the short one and it lands on 18, two frames before you are safe.
+
+### Four numbers that looked right and were not
+
+Every one of these was found by *playing* the fight with a scripted opponent and counting,
+and none of them would have failed a test written from the design.
+
+1. **The heavy blow was thrown zero times.** He waited 24 frames and then wound up for 24
+   more; the player crossed 1080 mm in the wait — the whole band in which he would have
+   swung. Separating the delay from the startup is what let the move exist.
+2. **Its reach was too short.** The band between the jab's threshold and his own was
+   200 mm and both fighters crossed it in five frames.
+3. **The jab was thrown zero times as well**, at reach 1100. He stands at the edge of his
+   swing and the player at the edge of theirs, and the band sat below both of them.
+4. **The backstep was not a dodge.** Travel alone had moved the player 360 mm when the
+   heavy blow landed — nowhere near out of a blow reaching two metres. The dodging player
+   lost at 1 health having landed nothing, while the frame data looked correct. A test
+   asserting *"in time for the heavy one"* was passing on the arithmetic of when travel
+   **begins**; the played fight is what said it meant nothing.
+
+> The pattern across F1 and F5 is now hard to miss: **a test asserts what you thought of,
+> and a played fight finds what you did not.** Both are cheap here — a fight is integers
+> and no window — so both get run.
+
+### Left honest
+
+Against a scripted player on 16 frames of reaction: guarding wins at 8 of 10 health,
+backstepping wins at 10 of 10. **The backstep is the stronger of the two and wants a
+pass** — fewer invulnerable frames, or a longer recovery. Yannick's call, and it is one
+row of `content/moves.json`.
+

@@ -58,6 +58,7 @@ func on_step(sim: Sim, _step: int) -> void:
 	_advance_move(fight, true)
 	_advance_move(fight, false)
 	_count_down(fight)
+	_travel(fight)
 	_walk(fight)
 	_decide(fight)
 	_resolve(sim, fight, world)
@@ -112,6 +113,7 @@ func _begin(sim: Sim, fight: Fight, event: SimEvent) -> void:
 	fight.freeze = 0
 	fight.pressing_attack = false
 	fight.pressing_guard = false
+	fight.pressing_evade = false
 	fight.walking = 0
 	fight.player_connected = false
 	fight.opponent_connected = false
@@ -130,6 +132,8 @@ func _input(fight: Fight, event: SimEvent) -> void:
 		fight.pressing_attack = bool(event.data["attack"])
 	if event.data.has("guard"):
 		fight.pressing_guard = bool(event.data["guard"])
+	if event.data.has("evade"):
+		fight.pressing_evade = bool(event.data["evade"])
 	if event.data.has("walk"):
 		fight.walking = signi(int(event.data["walk"]))
 
@@ -161,6 +165,21 @@ func _count_down(fight: Fight) -> void:
 	fight.opponent_stun = maxi(fight.opponent_stun - 1, 0)
 
 
+## **The backstep carries you** (F5). A move that moves the fighter rather than hitting
+## anybody: ten frames of travel at twice walking speed, then eight of recovery you can
+## be punished during. No invulnerability frames — it gets you out of his reach instead
+## of through his blow, which is a choice against the guard rather than a strictly
+## better version of it. The guard is safe and chips you; this is free and costs ground.
+func _travel(fight: Fight) -> void:
+	if fight.player_move != CombatRules.BACKSTEP or fight.freeze > 0:
+		return
+	if not CombatRules.is_active(CombatRules.BACKSTEP, fight.player_frame):
+		return
+	var away: int = -1 if fight.opponent_at_mm > fight.player_at_mm else 1
+	fight.player_at_mm = CombatRules.inside_arena(
+		fight.player_at_mm + away * CombatRules.travel_mm(CombatRules.BACKSTEP))
+
+
 ## Walking, and the pushbox: two fighters cannot stand in the same millimetre.
 func _walk(fight: Fight) -> void:
 	if not fight.player_free() or fight.walking == 0 or fight.pressing_guard:
@@ -183,10 +202,20 @@ func _walk(fight: Fight) -> void:
 ## enough and the player is within his reach. **Nothing here is a coin.** He is a
 ## pattern to be learnt, which is what a twenty-four frame wind-up is for.
 func _decide(fight: Fight) -> void:
-	if fight.player_free() and fight.pressing_attack and not fight.pressing_guard:
-		fight.player_move = CombatRules.STRIKE
-		fight.player_frame = 0
-		fight.player_connected = false
+	if fight.player_free():
+		# The backstep is read first: a player who presses both wanted the way out, and
+		# a fight that swung instead would feel like a dropped input.
+		if fight.pressing_evade:
+			fight.player_move = CombatRules.BACKSTEP
+			fight.player_frame = 0
+			fight.player_connected = false
+			# Spent on use. Holding the key is one backstep, not a retreat: a dash is a
+			# decision, and a decision you can lean on is not one.
+			fight.pressing_evade = false
+		elif fight.pressing_attack and not fight.pressing_guard:
+			fight.player_move = CombatRules.STRIKE
+			fight.player_frame = 0
+			fight.player_connected = false
 
 	# **Being hit does not make him forget he was waiting.** The first build reset this
 	# whenever he was stunned, and the player's blow leaves +2 — so a player who simply
@@ -207,8 +236,12 @@ func _decide(fight: Fight) -> void:
 		wanted = maxi(wanted, closest) if toward < 0 else mini(wanted, closest)
 		fight.opponent_at_mm = CombatRules.inside_arena(wanted)
 		return
-	if fight.opponent_waited >= CombatRules.of(CombatRules.SWING, "startup"):
-		fight.opponent_move = CombatRules.SWING
+	# **Which of the two, decided by the distance** (F5). Not a coin, and not a timer:
+	# step inside his swing and he answers with the short blow, stand at the edge of it
+	# and he has to wind up the slow one. That is the thing the player is reading.
+	var throws: StringName = CombatRules.chooses(fight.apart_mm())
+	if fight.opponent_waited >= CombatRules.decides_after_steps():
+		fight.opponent_move = throws
 		fight.opponent_frame = 0
 		fight.opponent_connected = false
 		fight.opponent_waited = 0
@@ -226,12 +259,20 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 	var already: bool = fight.player_connected if by_player else fight.opponent_connected
 	if move == &"" or already or not CombatRules.is_active(move, frame):
 		return
+	# A backstep has active frames and no blow in them.
+	if not CombatRules.is_attack(move):
+		return
+	# A blow passes through somebody who is not there. Only the player has frames like
+	# these today, and they are the ten his backstep travels for.
+	if not by_player and CombatRules.is_invulnerable(fight.player_move, fight.player_frame):
+		return
 	var from_mm: int = fight.player_at_mm if by_player else fight.opponent_at_mm
 	var to_mm: int = fight.opponent_at_mm if by_player else fight.player_at_mm
 	if not CombatRules.reaches(from_mm, to_mm, move):
 		return
 
-	# A guard is only a guard while nothing of yours is out.
+	# A guard is only a guard while nothing of yours is out — a backstep included, which
+	# is what stops the two of them being held at once for the best of both.
 	var guarding: bool = (not by_player) and fight.pressing_guard and fight.player_move == &""
 	var damage: int = CombatRules.damage_through(move, guarding)
 	var stun: int = CombatRules.stun_from(move, guarding)

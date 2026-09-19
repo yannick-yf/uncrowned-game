@@ -23,9 +23,36 @@
       "hitstun": 20,
       "blockstun": 14,
       "hitstop": 8,
-      "reach_mm": 1500,
+      "reach_mm": 2000,
       "knockback_mm": 500,
-      "_why": "His blow. 24 frames of startup — 400 ms — is readable by a person who has seen it once, which is the whole design. It hits harder and further than yours, and it is punishable: -11 on block."
+      "_why": "His heavy blow, and it out-reaches everything by a long way on purpose. At 1500 it was never thrown once in a played fight: the band between the jab’s threshold and his own was two hundred millimetres wide and both fighters crossed it in five frames, so he was always already too close and always jabbed. At 2000 he holds ground the player cannot reach from — their strike is 1300 — so closing on him is the dangerous part, which is what a heavy weapon ought to mean. Twenty-four frames of wind-up and -11 on block: it is the blow you punish him for."
+    },
+    "jab": {
+      "startup": 18,
+      "active": 3,
+      "recovery": 12,
+      "damage": 1,
+      "hitstun": 12,
+      "blockstun": 8,
+      "hitstop": 5,
+      "reach_mm": 1300,
+      "knockback_mm": 200,
+      "_why": "His second option, and the reason distance is a decision. Its reach is the player’s own strike reach on purpose: the moment you are close enough to hit him, he answers with the short blow instead of the slow one. At 1100 he never threw it once in a played fight — he stands at the edge of his swing, the player stands at the edge of theirs, and the band was below both. -2 on hit and -6 on block, so it neither locks you out nor is free."
+    },
+    "backstep": {
+      "startup": 4,
+      "active": 10,
+      "recovery": 8,
+      "damage": 0,
+      "hitstun": 0,
+      "blockstun": 0,
+      "hitstop": 0,
+      "reach_mm": 0,
+      "knockback_mm": 0,
+      "travel_mm": 90,
+      "_why": "The player’s evasion, and the third thing you can do. Ten frames of travel at twice walking speed, and **they are invulnerable** — frames 4 to 13, exactly the travel. Without them it was not a dodge at all: reacting to the heavy blow at the human’s sixteen frames, the backstep had carried you 360 mm when it landed and you were still well inside its reach. A played fight said so — the dodging player lost at 1 health having landed nothing — while the frame data looked fine.\nThe four frames of startup are the balance. React to the heavy blow at 16 and you are invulnerable from 20, before it lands on 24. React to the short blow at 16 and it lands on 18, two frames before you are. So the backstep answers the heavy blow, the short blow answers the backstep, and the guard answers the short blow.",
+      "invulnerable_from": 4,
+      "invulnerable_to": 14
     }
   },
   "fighters": {
@@ -39,7 +66,9 @@
     "start_apart_mm": 2400,
     "_why": "45 mm a step is 2.7 m a second, close to the world's own 2.5 tiles a second, so stepping into range inside a fight feels like walking outside one.",
     "arena_radius_mm": 4000,
-    "_arena_note": "How far from the middle of the fight either fighter may go, in mm. A tile is 2 m (BakeRules.METRES_PER_TILE), so 4000 is two tiles each way and four tiles across - which fits inside the fight camera’s frame with room to spare. Yannick, 2026-09-19: there is no fleeing in the demo, so this is a wall and not a warning."
+    "_arena_note": "How far from the middle of the fight either fighter may go, in mm. A tile is 2 m (BakeRules.METRES_PER_TILE), so 4000 is two tiles each way and four tiles across - which fits inside the fight camera’s frame with room to spare. Yannick, 2026-09-19: there is no fleeing in the demo, so this is a wall and not a warning.",
+    "decides_after_steps": 10,
+    "_decides_note": "How long he stands free before he commits to something. It used to be the swing’s own startup, 24, which meant he waited twenty-four frames and then wound up for twenty-four more — and in that waiting the player walked 1080 mm, straight through the whole band where he would have swung. The heavy blow was never thrown once in a played fight because of it. Ten is short enough that the band survives the wait and long enough that he is still a pattern rather than a machine gun."
   },
   "_opponents_note": "Who you can be put in front of, and what they are worth. A fighter not listed here takes the default: the player’s own health, and no mercy. \"spares\" means he stops when you go down instead of killing you — Bram says so in his own line, and a sparring partner who sends you back to the fairies’ clearing twelve seconds into the game is not a sparring partner.",
   "opponents": {

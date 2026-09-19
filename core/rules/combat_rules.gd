@@ -23,6 +23,10 @@ const PATH: String = "res://content/moves.json"
 
 const STRIKE: StringName = &"strike"
 const SWING: StringName = &"swing"
+## His second option (F5), and the reason distance is a decision rather than a number.
+const JAB: StringName = &"jab"
+## The player's third thing to do, beside hitting and holding (F5).
+const BACKSTEP: StringName = &"backstep"
 
 static var _moves: Dictionary = {}
 static var _fighters: Dictionary = {}
@@ -70,11 +74,47 @@ static func length(move: StringName) -> int:
 	return of(move, "startup") + of(move, "active") + of(move, "recovery")
 
 
+## **Does this move hurt anybody?** The backstep is a move like the others — it runs
+## its frames, it cannot be interrupted, and you cannot act during it — but it has no
+## blow in it. Without this, its ten travelling frames would read as ten active frames
+## of a hitbox that does nothing, and the log would fill with blows that cost zero.
+static func is_attack(move: StringName) -> bool:
+	return of(move, "damage") > 0
+
+
+## How far a move carries the fighter, per frame of its active window. Only the
+## backstep has one; everything else is zero and moves nobody.
+static func travel_mm(move: StringName) -> int:
+	return of(move, "travel_mm")
+
+
+## **Which blow he throws, and it is not a coin** (F5). The distance decides it, so it
+## is a thing the player can learn and then use: stand at the edge of his reach and he
+## must wind up the slow one, step inside it and he answers with the short one.
+##
+## Pure, and here rather than in the system, because "what he does" is the half of the
+## fight a player is actually reading.
+static func chooses(apart_mm: int) -> StringName:
+	if apart_mm <= of(JAB, "reach_mm") + slack_mm():
+		return JAB
+	return SWING
+
+
 ## Whether the blow is out on this frame of the move. Before that the fighter is
 ## winding up and can be hit; after it, they are recovering and can be punished.
 static func is_active(move: StringName, frame: int) -> bool:
 	var startup: int = of(move, "startup")
 	return frame >= startup and frame < startup + of(move, "active")
+
+
+## **Frames a move cannot be hit during.** Only the backstep has any, and they are
+## exactly its travel. It is what makes it a dodge rather than a slow walk backwards:
+## measured without them, reacting to the heavy blow at a human’s sixteen frames left
+## the player 360 mm further away when it landed, which is nowhere near out of a blow
+## that reaches two metres. The played fight said so while every number looked right.
+static func is_invulnerable(move: StringName, frame: int) -> bool:
+	var to: int = of(move, "invulnerable_to")
+	return to > 0 and frame >= of(move, "invulnerable_from") and frame < to
 
 
 ## Whether the fighter can still be hit *before* their own blow is out. The whole of
@@ -108,6 +148,14 @@ static func slack_mm() -> int:
 
 static func walk_mm_per_step() -> int:
 	return int(fighters().get("walk_mm_per_step", 0))
+
+
+## **How long he stands free before he commits.** Deliberately not the move’s own
+## startup, which is what it was: he then waited as long as the blow took to wind up
+## and wound up for that long again, and the player crossed a whole distance band in
+## the gap. Separating the two is what let the heavy blow exist at all.
+static func decides_after_steps() -> int:
+	return int(fighters().get("decides_after_steps", 0))
 
 
 static func start_apart_mm() -> int:

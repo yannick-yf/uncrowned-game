@@ -418,7 +418,7 @@ and **who asked** (`ask_bram_spar`), which is the hook F6 needs. 6 more tests.
   honestly: it eats none of Bram's, whose swings are seventy-four frames apart. It is a
   trap closed before F5 and F6 add a faster opponent, not a bug that was biting.
 
-### F5 · The opponent does something
+### F5 · The opponent does something — **built 2026-09-19**
 
 Est. 2–3 h. Depends on: F4. *(Was F4.)*
 
@@ -431,8 +431,43 @@ or he was a post. So the approach, the twenty-four frame wind-up and the guard a
 exist and are tested headless. What F5 still owes is the player's *evasion*, the
 opponent's second option, and the part that can only be judged by playing it.
 
+**What F5 added:** his **jab** (18/3/12, reach 1300) beside the swing, chosen by the
+distance between them — inside 1550 mm he answers short, beyond it he must wind up the
+heavy one. And the player's **backstep** on `I`: four frames of startup, ten of travel at
+twice walking speed, **invulnerable for exactly those ten**, eight of recovery.
+
+**The relationship, which is the actual design:** the guard answers the jab, the jab
+answers the backstep, and the backstep answers the swing. It holds because human reaction
+is about 16 frames — step on seeing the heavy blow and you are invulnerable on frame 20,
+before it lands on 24; step on seeing the short one and it lands on 18, two frames before
+you are safe.
+
 **Check:** avoid or block the signalled attack, then punish its recovery. Slow the
-rendering down and the timings do not change.
+rendering down and the timings do not change. — ***met***: a blocked swing leaves him
+owing 11 frames against a strike that takes 8, and both are tested; the dodge is tested
+in play. 11 more tests. Timings are in steps and nothing reads a clock, which
+`test_how_the_caller_chunks_its_steps_changes_nothing` has covered since F1.
+
+**Four things playing it found that the frame data did not**, each one a number that
+looked right on paper:
+
+1. **The heavy blow was thrown exactly zero times.** He waited 24 frames and then wound
+   up for 24 more, and the player walked 1080 mm through the whole band in the gap. His
+   decision delay is now its own number (10), separate from any move's startup.
+2. **And its reach was too short** — the band between the jab's threshold and his own was
+   200 mm wide, crossed in five frames. 1500 → 2000, so closing on him is the dangerous
+   part, which is what a heavy weapon ought to mean.
+3. **The jab was thrown zero times too**, at reach 1100: he stands at the edge of his
+   swing, the player at the edge of theirs, and the band was below both. Its reach is now
+   the player's own (1300) — the moment you can hit him, he answers short.
+4. **The backstep was not a dodge.** Travel alone had carried the player 360 mm when the
+   heavy blow landed, which is nowhere near out of a blow reaching two metres: the dodging
+   player lost at 1 health having landed nothing. Invulnerable frames fixed it.
+
+**Balance, measured and left honest.** Against a scripted player on 16 frames of reaction:
+guarding wins at 8 of 10 health, backstepping wins at 10 of 10. **The backstep is
+currently the stronger of the two** and wants a pass — probably fewer invulnerable frames
+or a longer recovery. Every number is one row of `content/moves.json`.
 
 ### F6 · The fight belongs to the quest
 
