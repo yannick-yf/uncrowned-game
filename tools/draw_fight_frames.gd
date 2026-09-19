@@ -46,7 +46,10 @@ const OUT_PNG: String = "view3d/fight/traveler_sheet.png"
 ## right-facing row and then the left-facing one. `view/world3d.gd` reads the same
 ## numbers, so they live in one place — here — and are printed at the end of a run.
 const CELL: Vector2i = Vector2i(160, 200)
-const POSES: Array[StringName] = [&"attack", &"guard", &"hurt"]
+## **Four, since the second pass.** `ready` is the cocked arm, and it is the one that
+## was missing: without it the twenty-eight frames of wind-up had no drawing at all and
+## the fight's whole tell was a lean. Now the arm pulls back and snaps out.
+const POSES: Array[StringName] = [&"ready", &"attack", &"guard", &"hurt"]
 const WAYS: Array[StringName] = [&"right", &"left"]
 
 
@@ -135,17 +138,26 @@ func _pose(sheet: Image, base: Rect2i, pose: StringName, forward: int) -> Image:
 	hand.position += at
 	tunic.position += at
 
+	# **All three arms live in one narrow band, across his chest.** His hair is enormous —
+	# it takes the top three fifths of the frame — so anything drawn at head height is lost
+	# behind it or smeared across his face. Two passes were spent finding that out: a guard
+	# under the chin put a dark blob over his eye, and a fist cocked at shoulder height
+	# disappeared behind his own backpack. The clear ground is the chest, so the three
+	# poses differ by how far the arm goes and which way, never by height.
+	var punch_y: int = tunic.position.y + int(float(tunic.size.y) * 0.34)
 	match pose:
+		&"ready":
+			# The arm drawn back, and the frame that was missing: without it the wind-up
+			# had no drawing at all and the whole tell was a lean, which Yannick played
+			# and called very slight.
+			_reach(cell, hand, tunic, ink, forward, 22, punch_y + 3, -forward)
 		&"attack":
-			_reach(cell, hand, tunic, ink, forward, 30,
-				tunic.position.y + int(float(tunic.size.y) * 0.34))
+			_reach(cell, hand, tunic, ink, forward, 30, punch_y)
 		&"guard":
-			# **The same arm, higher and shorter.** A slanting two-pixel forearm was tried
-			# first and read as a stick: at this size an arm has to be as thick as his own
-			# or it is a line. So a guard is the punch's forearm, brought up under the chin
-			# and stopped half way.
-			_reach(cell, hand, tunic, ink, forward, 14,
-				_face_in(sheet, base).end.y + at.y - 14)
+			# Short, forward, and a little above the punch line: an arm held up rather
+			# than thrown out. A slanting two-pixel forearm was tried first and read as a
+			# stick — at this size an arm has to be as thick as his own or it is a line.
+			_reach(cell, hand, tunic, ink, forward, 15, punch_y - 9)
 		&"hurt":
 			_recoil(cell, at, base.size, forward)
 	return cell
@@ -154,10 +166,14 @@ func _pose(sheet: Image, base: Rect2i, pose: StringName, forward: int) -> Image:
 ## An arm put out: his sleeve lengthened by repeating one of its own columns, his hand
 ## on the end, his outline above and below. `along` is how far, `down` where on the
 ## torso it leaves from as a fraction of its height.
-func _reach(cell: Image, hand: Rect2i, tunic: Rect2i, ink: Color, forward: int,
-		along: int, y: int) -> void:
+func _reach(cell: Image, hand: Rect2i, tunic: Rect2i, ink: Color, facing: int,
+		along: int, y: int, arm: int = 0) -> void:
+	var forward: int = arm if arm != 0 else facing
 	var thick: int = 11
-	var shoulder: int = tunic.end.x - 6 if forward > 0 else tunic.position.x + 6
+	# The shoulder is on the side he faces whichever way the arm goes: a cocked arm
+	# comes off the same shoulder as the punch, or the two frames do not belong to one
+	# movement.
+	var shoulder: int = tunic.end.x - 6 if facing > 0 else tunic.position.x + 6
 	# **The sleeve is one of his own columns, repeated** — and it has to be a column that
 	# is actually his blue. Taking the middle of the tunic's box landed on the strap and
 	# came out black, which read as a stick rather than an arm, so the column is now
@@ -195,16 +211,23 @@ func _face_in(sheet: Image, base: Rect2i) -> Rect2i:
 
 ## Hit: his head and shoulders shoved back, the rest of him staying put. A shear rather
 ## than a redraw, so every pixel is still his and in his order.
+## Hit: **the whole of him knocked back, and his head further than his feet.** The first
+## pass moved only the head three pixels and was invisible at playing size. He goes back
+## six and down two, and the head another five on top of that, which is a body folding
+## round a blow rather than a man with a crooked neck.
 func _recoil(cell: Image, at: Vector2i, size: Vector2i, forward: int) -> void:
-	var top: Image = Image.create(size.x, size.y, false, cell.get_format())
-	top.blit_rect(cell, Rect2i(at, size), Vector2i.ZERO)
-	var waist: int = int(float(size.y) * 0.62)
-	# Blank the upper half and put it back three pixels behind him and one pixel up.
+	var whole: Image = Image.create(size.x, size.y, false, cell.get_format())
+	whole.blit_rect(cell, Rect2i(at, size), Vector2i.ZERO)
 	var chequer: Color = cell.get_pixelv(at + Vector2i(1, 1))
-	for y: int in waist:
+	for y: int in size.y:
 		for x: int in size.x:
 			cell.set_pixelv(at + Vector2i(x, y), chequer)
-	cell.blit_rect(top, Rect2i(0, 0, size.x, waist), at + Vector2i(-3 * forward, -1))
+	var waist: int = int(float(size.y) * 0.62)
+	# The legs, back six and down two.
+	cell.blit_rect(whole, Rect2i(0, waist, size.x, size.y - waist),
+		at + Vector2i(-6 * forward, waist + 2))
+	# The head and shoulders, back eleven and down one.
+	cell.blit_rect(whole, Rect2i(0, 0, size.x, waist), at + Vector2i(-11 * forward, 1))
 
 
 ## The two-pixel column inside his tunic with the most of his blue in it, at the height

@@ -79,7 +79,7 @@ const HIS_FRAMES: String = "res://view3d/workshop/prototype_3d/assets/traveler_w
 ## sheet grows an `attack_left` of its own, delete this and the tool with it.
 const OUR_FIGHT_FRAMES: String = "res://view3d/fight/traveler_sheet.png"
 const OUR_CELL: Vector2i = Vector2i(160, 200)
-const OUR_POSES: Array[StringName] = [&"attack", &"guard", &"hurt"]
+const OUR_POSES: Array[StringName] = [&"ready", &"attack", &"guard", &"hurt"]
 const OUR_WAYS: Array[StringName] = [&"right", &"left"]
 const HIS_FIGURE_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/traveler_sprite.tres"
 const HIS_FIGURE_PIXEL_SIZE: float = 0.0077832513

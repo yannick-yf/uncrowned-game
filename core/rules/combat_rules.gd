@@ -180,16 +180,22 @@ static func dip_at(move: StringName, frame: int) -> float:
 ## **Which of the three drawn poses a fighter is in**, or `&""` for none of them —
 ## standing or walking, as the rest of the game draws people.
 ##
-## The wind-up deliberately has no pose of its own: there are three frames and a fourth
-## would have to be drawn. What tells you a blow is coming is the lean and the gather
-## (`lunge_at`, `dip_at`), and the drawn attack frame snaps out on the frame the blow
-## does. That is the classic two-pose attack and it is more legible than a third drawing
-## would be.
+## **The wind-up has its own drawing since the second pass**, and it is the one that was
+## missing. Without it the twenty-eight frames a blow takes to arrive showed nothing but
+## a lean, and Yannick played it and said the animation was very slight. Now the arm
+## comes back on `ready` and snaps out on `attack`: a cocked arm is what a person reads,
+## and it costs one more frame of his pixels.
 static func pose_of(move: StringName, frame: int, stunned: int, guarding: bool) -> StringName:
 	if stunned > 0:
 		return &"hurt"
-	if is_attack(move) and frame >= of(move, "startup"):
-		return &"attack"
+	if is_attack(move):
+		if frame >= of(move, "startup"):
+			return &"attack"
+		# Not from the first frame: a fist that cocks instantly reads as a twitch. It
+		# comes back over the second half of the wind-up, which is also when the lean is
+		# deepest.
+		if frame >= of(move, "startup") / 2:
+			return &"ready"
 	if guarding and move == &"":
 		return &"guard"
 	return &""

@@ -899,7 +899,9 @@ func test_which_pose_a_fighter_is_in() -> void:
 	# frame that snapped on at the *start* of a wind-up would say "now" far too early.
 	var startup: int = CombatRules.of(CombatRules.STRIKE, "startup")
 	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, 0, 0, false), &"",
-		"winding up is the lean's job, not a drawing's")
+		"the first frame of a wind-up is nothing: a fist that cocks instantly is a twitch")
+	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, startup - 1, 0, false), &"ready",
+		"the arm comes back over the second half of it")
 	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, startup, 0, false), &"attack",
 		"and the drawn blow snaps out on the frame the blow does")
 	assert_eq(CombatRules.pose_of(&"", 0, 0, true), &"guard", "a guard is a pose")

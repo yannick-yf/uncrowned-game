@@ -83,8 +83,10 @@ in pixels. (The HUD's font is the pack's, and an open question.)
 no attack and no guard — eight animations, idle and walk in four directions — so a fight
 showed three different actions as a person standing still. Yannick was told plainly that
 a second hand on his brother's character would show, and said to do it anyway. So
-`tools/draw_fight_frames.gd` builds six frames — attack, guard, flinch, left and right —
-and `view3d/fight/traveler_sheet.png` is the result.
+`tools/draw_fight_frames.gd` builds **eight** frames — a cocked arm, an attack, a guard
+and a flinch, left and right — and `view3d/fight/traveler_sheet.png` is the result. It
+was six until Yannick played it and said the animation was very slight: the wind-up had
+no drawing at all, which is the half of a blow a person reads.
 
 Three things keep it honest, and none of them makes it *not* an exception:
 

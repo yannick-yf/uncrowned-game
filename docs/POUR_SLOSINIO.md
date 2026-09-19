@@ -239,8 +239,13 @@ Ce qu'on a fait, exactement :
   les tiennes, on supprime l'outil et le fichier, et un test nous force la main : il
   échoue dès que ta planche gagne une neuvième animation.
 
-C'est grossier. Un bras bleu tendu avec un poing au bout, un poing levé au menton, une
-tête qui recule. Ça se lit en jeu, et ce n'est pas mieux que ça.
+C'est grossier, et Yannick l'a dit après avoir joué. On a fait une deuxième passe : il y
+a maintenant **quatre** poses, parce que la préparation du coup n'en avait aucune — le
+bras se ramène, puis il part. Ça se lit en jeu. Ce n'est pas mieux que ça.
+
+Une chose qu'on a apprise en s'y cassant les dents, et qui te servira : **ta chevelure
+prend les trois cinquièmes du haut du sprite.** Tout bras dessiné à hauteur de tête s'y
+perd ou barbouille le visage. La seule bande dégagée est la poitrine.
 
 **Ce qui remplacerait ça, c'est trois images :**
 
