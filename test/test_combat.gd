@@ -933,3 +933,40 @@ func test_the_six_frames_we_drew_are_there() -> void:
 			int(his.get_height()) + World3d.OUR_CELL.y * World3d.OUR_WAYS.size(),
 			"with our two rows below it — his pixels stay at his coordinates")
 
+
+
+func test_the_development_switch_that_stops_you_dying() -> void:
+	# **A development tool, not a difficulty setting** (2026-09-19). `G` toggles it so the
+	# demo can be walked without dying to it, and it is gated on a debug build where the
+	# key is read. It matters that it goes through an **event**: a flag the window set
+	# would not be in the log, and a run played through it would not replay through it —
+	# the save would quietly disagree with the game.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	assert_false(world.unkillable, "off to begin with")
+
+	sim.submit(&"unkillable", {"on": true})
+	sim.advance(2)
+	assert_true(world.unkillable, "and on when asked")
+
+	var fight: Fight = _square_up(sim)
+	_take_it(sim, fight, 2000)
+	assert_eq(world.player_hp, WorldState.MAX_HP, "he cannot take a point off you")
+	assert_eq(world.deaths, 0, "nor can anything else")
+	assert_true(fight.on() or fight.outcome != &"lost", "so you do not lose")
+
+	sim.submit(&"unkillable", {"on": false})
+	sim.advance(2)
+	assert_false(world.unkillable, "and it goes off again")
+
+
+func test_a_run_played_unkillable_replays_unkillable() -> void:
+	var sim: Sim = Game.build()
+	sim.submit(&"unkillable", {"on": true})
+	var fight: Fight = _square_up(sim)
+	_take_it(sim, fight, 1200)
+	var replayed: Sim = Game.replay(sim)
+	assert_true((replayed.store(&"world") as WorldState).unkillable,
+		"the log carries it, so the rebuilt run is the run that was played")
+	assert_eq((replayed.store(&"world") as WorldState).player_hp,
+		(sim.store(&"world") as WorldState).player_hp, "and ends on the same health")

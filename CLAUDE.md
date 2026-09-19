@@ -286,6 +286,16 @@ through the ordinary tick path, so a skipped day is identical to a waited one:
 same drift, same events, same replay. Which also means a day skipped standing in
 the Thornwood is a day of being eaten.
 
+**`G` makes the player unkillable.** Added 2026-09-19 so Yannick could walk the demo
+without dying to it. **A development tool and not a difficulty setting**: nothing can take
+a point off him, and the HUD says `[G] INVULNÉRABLE` while it is on, because a switch
+nobody can see is a switch nobody turns off.
+>
+> It is submitted as an **event**, not set as a flag by the window. A flag would not be in
+> the log, and a run played through it would not replay through it — the save would
+> quietly disagree with the game it came from. `WorldState.hurt` is the only thing that
+> reads it, which is the same reason everything else that can hurt you goes through there.
+
 **`M` opens the map of Erileo.** Every tile in its terrain colour, the eight places
 named, the fairies' clearing, and where you are standing. Asked for as a debug tool
 and kept as a real one: a game whose argument is *the road against the forest* should
@@ -336,7 +346,7 @@ Same gate and same reason as the two above, plus one of its own: the picture is 
 twelve frames in and the fight's camera takes about a second to move, so without this
 every photograph of a fight is a photograph of a camera halfway through moving.
 
-**All six are gated on `OS.has_feature("debug")`**, so they are absent from a
+**All seven are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

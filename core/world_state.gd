@@ -124,6 +124,10 @@ func player_tile() -> Vector2i:
 	return Vector2i(floori(player_pos.x), floori(player_pos.y))
 
 
+## Nothing can take a point off you. Debug builds only; see `hurt`.
+var unkillable: bool = false
+
+
 func in_dialogue() -> bool:
 	return talking_to != &""
 
@@ -160,6 +164,12 @@ func tiles_to_blackcairn() -> float:
 ## Everything else still goes down one path — the death, the count, the mending, the
 ## respawn at the last fire — which is the point of this function.
 func hurt(amount: int, step: int, grace: bool = true) -> bool:
+	# **A development tool, and it lives here because everything that hurts you does.**
+	# `G` toggles it (see `CLAUDE.md`), it is gated on a debug build at the keyboard, and
+	# it arrives as an event rather than as a flag the window sets — so a run played
+	# through it replays through it, and the save does not quietly disagree with itself.
+	if unkillable:
+		return false
 	if grace and step < invulnerable_until:
 		return false
 	player_hp = ContactRules.damage_after(player_hp, amount)

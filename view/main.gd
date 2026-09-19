@@ -539,6 +539,12 @@ func _read_input() -> void:
 	if _debug_available and Input.is_action_just_pressed(&"debug_skip_day"):
 		_skip_a_day()
 
+	# **G: nothing can take a point off you.** For walking the demo without dying to it.
+	# Submitted rather than set, so a run played through it replays through it — see
+	# `WorldState.hurt`. Same gate as the day-skip, and listed with it in CLAUDE.md.
+	if _debug_available and Input.is_action_just_pressed(&"debug_unkillable"):
+		_sim.submit(&"unkillable", {"on": not _world.unkillable})
+
 	if Input.is_action_just_pressed(&"interact"):
 		var npc: Npc = _nearby_npc()
 		if npc != null:
@@ -1430,6 +1436,8 @@ func _draw_hud() -> void:
 	lines.append(Text.of(&"hud.language", [Text.locale().to_upper()]))
 	if _debug_available:
 		lines.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
+		if _world.unkillable:
+			lines.append("[G] INVULNÉRABLE")
 	_info.text = "\n".join(lines)
 
 	_box.visible = _world.in_dialogue()
