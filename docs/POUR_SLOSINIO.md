@@ -187,7 +187,20 @@ dont il a besoin sont tes images `left` et `right`, qui existent déjà.
 redessiner chaque personnage sous huit angles. C'est la plus grosse demande de dessin du
 projet, et on préfère te l'éviter.
 
-Rien n'est construit côté image. Yannick tranche.
+**Yannick a tranché le 19 septembre : le combat se passe sur place, sans coupure.**
+
+Donc concrètement, pour toi : **rien à redessiner.** La caméra garde son orientation,
+elle descend seulement. Le combat se déroule d'est en ouest, et il utilise tes images
+`left` et `right` telles quelles.
+
+Une seule chose pourrait venir vers toi plus tard. On a rendu quatre cadrages pour
+vérifier, et deux choses sont ressorties. Dans un quartier bâti, les toits passent devant
+les combattants quand la caméra descend. En terrain nu, rien ne cadre le combat. La
+réponse aux deux est la même : le combat se passe sur un terrain dégagé, entouré des gens
+qui regardent — et un spectateur, c'est le sprite voyageur que tu as déjà.
+
+Donc si tu veux bien, **une cour dégagée près de l'aciérie** serait utile un jour. Pas
+urgent, et bien plus petit que les huit orientations qu'on vient d'éviter.
 
 ---
 

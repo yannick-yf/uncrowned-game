@@ -321,30 +321,50 @@ the same world tick; different advance chunk sizes agree. — *met; 14 tests in
 `test/test_combat.gd`, in the fast suite.* See `docs/COMBAT.md` §5 for what playing it
 found that the tests did not.
 
-### F2 · The arena
+### F2 · An opponent, an option, two keys — **the way in**
 
-Est. 3 h. Depends on: F1.
+Est. 2–3 h. Depends on: F1. **New on 2026-09-19**, and it is why the old F2 could not
+be played: nothing in the game submits `fight_began`, and no key is bound to a blow.
 
-A separate screen, side-on: a short load out of the world, **his traveller against a
-different traveller**, a floor, two health bars. Move, face, and strike a still
-opponent.
+A **neutral sparring partner** stands within a minute's walk of where the game starts.
+He belongs to no side and no quest — he exists so the fight can be reached, played and
+retuned long before the quest does. Talking to him offers **one dialogue option that
+begins a fight** (`DialogueRules`' intents, so the player never types and the option is
+part of the closed set). Two keys are bound: **strike** and **guard**.
 
-**Check:** played. Strike in range, miss out of range, hold the button and gain
-nothing. Damage follows the fight's own cadence, not the frame rate.
+**Check:** from a fresh game, reach a fight in under a minute and land a blow — the
+HUD's health falls and the opponent's does too. The same key presses replay to the same
+health.
 
-### F3 · Into the fight and back out
+### F3 · The camera drops, and does not turn
 
-Est. 3 h. Depends on: F2, Q3.
+Est. 3 h. Depends on: F2. **Yannick ruled for the in-place arena on 2026-09-19**, so
+this is no longer a separate screen: `SPECS.md` §10 was rewritten and `docs/COMBAT.md`
+§1 carries the argument.
 
-The quest enters the fight and receives one result. Victory and defeat both return to
-the right place, with the right health, and defeat obeys the checkpoint rule.
+Tilt from 48° to about 27°, tighten the framing, and **never touch the azimuth** — the
+traveller's four facings are keyed to the world's axes, so a turned camera draws every
+fighter looking the wrong way. It eases in when the fight begins and back out when it
+ends. No load, no cut: same region, same simulation, same sprites.
+
+**Check:** played. Strike in range, miss out of range, hold the button and gain nothing.
+Damage follows the fight's own cadence, not the frame rate. The camera returns to
+exactly where exploration left it.
+
+### F4 · Into the fight and back out
+
+Est. 3 h. Depends on: F3. *(Was F3, and depended on Q3 — it no longer does, because F2's
+sparring partner gives it a fight to enter without the quest.)*
+
+Whoever asked for the fight receives one result. Victory and defeat both return to the
+right place, with the right health, and defeat obeys the checkpoint rule.
 
 **Check:** win once and lose once from the same starting point. World time resumes.
 Nothing is applied twice.
 
-### F4 · The opponent does something
+### F5 · The opponent does something
 
-Est. 3 h. Depends on: F3.
+Est. 2–3 h. Depends on: F4. *(Was F4.)*
 
 One approach, one attack with a readable wind-up, and one defensive action for the
 player. Driven by the fight's state, never by a scene timer.
@@ -352,18 +372,24 @@ player. Driven by the fight's state, never by a scene timer.
 **Half of this arrived with F1 and was not planned to.** The opponent had to walk, or
 his first knockback ended the fight in a deadlock, and he had to choose when to swing,
 or he was a post. So the approach, the twenty-four frame wind-up and the guard all
-exist and are tested headless. What F4 still owes is the player's *evasion*, the
+exist and are tested headless. What F5 still owes is the player's *evasion*, the
 opponent's second option, and the part that can only be judged by playing it.
 
 **Check:** avoid or block the signalled attack, then punish its recovery. Slow the
 rendering down and the timings do not change.
 
-### F5 · The fight belongs to the quest
+### F6 · The fight belongs to the quest
 
-Est. 2 h. Depends on: F4, Q4.
+Est. 2 h. Depends on: F5, Q4. *(Was F5.)*
 
 Tom's side: a foreman or the gate's guard. Drissa's side: **Tom**. The fight happens
 where the act happens, and its result decides whether the act goes through.
+
+**One person fewer than the quest doc assumes.** `Contremaître Halgrave` is already the
+works' foreman and `Sena` is already a worker there, so Tom's side has its opponent
+today and Drissa's role has a body. **Tom is the only new person the quest needs.** The
+naming review (`QUEST_CINDERWORKS.md` §4) decides whether Drissa *is* Sena or replaces
+her.
 
 **Check:** both sides played end to end, from the quarter to the changed works.
 
@@ -485,11 +511,16 @@ and the music tables, with their tests.
 badly, with no quest in the game at all. That is the model earning its place before
 anything is built on it.
 
-Then **M3–M6** and **P1**, then the quest **Q1–Q6**, then the fight **F1–F5**, then
-the shell, then the deletions. **F1 can be pulled forward at any time** — it depends
-on nothing and it is the only part of the demo built from zero.
+Then **M3–M6** and **P1**, then the quest **Q1–Q6**, then the fight **F1–F6**, then
+the shell, then the deletions.
 
-Roughly **60 hours** of sessions, twenty-six tasks. That is more than the 45–55 the
+**The fight no longer waits for the quest** (2026-09-19). F1 is built, and F2 puts a
+neutral sparring partner near the start, so **F2–F5 can run at any point** and the fight
+can be played and retuned while the quest is still being written. Only **F6** needs the
+quest. This was decided after Yannick walked to the works looking for a fight and found
+that nothing in the game could start one.
+
+Roughly **63 hours** of sessions, twenty-seven tasks. That is more than the 45–55 the
 plan estimated before the model was designed, and the difference is the model itself:
 six tasks that did not exist when the demo was going to run on the old simulation.
 

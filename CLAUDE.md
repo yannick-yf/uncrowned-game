@@ -415,20 +415,24 @@ Carried forward from Phase 0. An exception contradicts SPECS on purpose and name
 decision that will replace it. Do not generalise from it, and do not add a second
 without asking.
 
-1. **No combat screen.** SPECS §10 rules that fights happen never in the overworld.
-   Phase 0 breaches that and v1 still does: the king kills the player **on contact in
-   the overworld, three touches**. The real side-on combat screen is Phase 4, which is
-   out of v1 and out of v2 — so this exception outlived the phase that created it and
-   is now the oldest debt in the project. Nothing may assume the combat screen's shape.
+1. **The king kills you on contact, and there is no fight.** v1's Phase 0 gave the
+   king three touches and a death, and that is still what happens. It is the oldest
+   debt in the project, and what retires it is the F group of `docs/DEMO_TASKS.md`.
 
-   **Half settled, 2026-09-19.** The fight's *rules* are built and tested headless —
+   **The screen question is settled, 2026-09-19.** Yannick ruled for the **in-place
+   arena**: a fight happens in the world, with no cut and no separate screen; the
+   camera drops to about 27° and **never turns**; the arena's boundary is the people
+   watching. `SPECS.md` §10 has been rewritten to say so — it previously ruled the
+   opposite ("never in the overworld… side-on 2D"), and the reversal is recorded in
+   place rather than quietly applied. The argument is `docs/COMBAT.md` §1 and §6.
+
+   **What is built:** the fight's rules, headless and tested —
    `core/rules/combat_rules.gd`, `core/fight.gd`, `core/systems/combat_system.gd`,
    `content/moves.json`, and the world clock held by `Sim.ticks_held`. They assume no
-   screen and no camera, which is why they could be built before the question was
-   answered. **The question itself is open and is Yannick's**: `docs/COMBAT.md` §1 sets
-   §10's *"never in the overworld, side-on 2D"* against an in-place 3D arena, with the
-   sprite-facing constraint that decides the cost of each. Do not build a camera until
-   he has ruled.
+   screen and no camera, which is why they could be built before the ruling.
+
+   **What the ruling still owes:** the camera, the two keys, and a way into a fight.
+   Nothing may assume a *separate screen* any more — that shape is now wrong.
 
 **Retired, kept here so the history reads straight:**
 

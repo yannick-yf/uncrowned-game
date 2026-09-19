@@ -10,6 +10,22 @@ and nothing visual is built until he does.
 
 ## 1. The decision: `SPECS.md` §10 against the in-place arena
 
+> ### ✅ Ruled 2026-09-19: **in place, no cut.**
+>
+> Yannick chose option 1 below. `SPECS.md` §10 has been rewritten to match — the
+> paragraph it replaced is quoted there, because the reversal is the point. `CLAUDE.md`'s
+> standing exception now records the king's on-contact death as the remaining breach,
+> and no longer warns against assuming the screen's shape: the shape is decided.
+>
+> Two more rulings came with it, in answer to *"how do I even reach a fight?"* —
+> the first person the player can fight is **a neutral sparring partner near the start
+> of the game**, put there so the fight can be played and tuned long before the quest
+> exists; and **a fight begins from a dialogue option**, not from contact and not from
+> an act at a site.
+>
+> What follows is the argument as it was put, kept unedited.
+
+
 **What the spec says**, `docs/SPECS.md:2699-2703`:
 
 > **Where it happens.** Never in the overworld. Any fight transitions to a dedicated

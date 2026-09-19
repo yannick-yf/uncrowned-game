@@ -2696,11 +2696,29 @@ words.
 
 ## 10. Combat
 
-**Where it happens.** Never in the overworld. Any fight transitions to a dedicated
-combat screen, in the manner of *Pokémon* or a classic *Final Fantasy*.
+**Where it happens. Settled 2026-09-19, and this reverses what this section used to
+say.** A fight happens **in place, in the world, with no cut and no separate screen**.
+The camera drops from 48° to about 27° and tightens. **It never turns.**
 
-**The combat screen.** Side-on 2D. Player on the right, one or more opponents on the
-left.
+> This section previously read: *"Never in the overworld. Any fight transitions to a
+> dedicated combat screen, in the manner of Pokémon or a classic Final Fantasy. The
+> combat screen. Side-on 2D. Player on the right, one or more opponents on the left."*
+> It is kept here because the reversal is the point, not a tidy-up.
+
+Two findings changed it, both in `docs/COMBAT.md` §1. **There is nothing to load** — a
+fight uses the same baked region, the same simulation and the same sprites, so the
+entire cost of a "transition" is about half a second of camera movement. And **the
+camera cannot turn**: the traveller has four facings keyed to the world's axes
+(`view/world3d.gd`), so a camera that orbited would need eight drawn rotations for
+every character, which is the largest art request in the project. Yannick ruled for the
+in-place arena.
+
+**There is no combat screen.** The fight runs along the world's **east–west axis**,
+which is exactly the `left` and `right` frames the traveller already has — so the
+in-place arena costs no new art. **The boundary of the arena is people**: whoever was
+near enough to watch. No geometry and no fog gate, because an onlooker is the traveller
+sprite every NPC already is. And for a game whose currency is standing, who watched you
+fight the king's man is a fact the simulation keeps.
 
 **The genre.** A real-time fighting game — *Dragon Ball Budokai*, *Street Fighter* —
 not turn-based. Movement, blocking, timing.
