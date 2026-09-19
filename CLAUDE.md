@@ -312,7 +312,12 @@ for the frame, comma-separated for more than one — `UNCROWNED_TOWN=cinderworks
 The same gate and the same reason as `UNCROWNED_FREE`, which it will outlive: an
 outcome has to be lookable at before there is a quest to play to it, and until Q5 lands
 there is no other way to see the works working. **It writes the store directly and is
-therefore not a save-able state** — it is one frame, for one photograph.
+therefore not a save-able state** — it is one frame, for one photograph. **It then runs
+an in-game hour** (2026-09-19), because writing the two numbers is not the picture: how
+many people walk to work is matched when a place *moves*, and a value set straight into
+the store moves nothing. Six photographs of the three states were taken before that
+existed and every one showed a full shift standing in front of cold furnaces — a picture
+of the tool rather than of the game.
 
 **The journal's last section lists who is where.** Every named person, the town
 they stand in, the distance and the compass direction. Phase 6 brings eighteen more

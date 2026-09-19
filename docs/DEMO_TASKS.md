@@ -413,7 +413,7 @@ replay of that run does not do the act at all. An assertion that passed there wo
 measuring the test. When F6 gives the facing an event of its own, this becomes a real
 end-to-end replay and the debt goes.
 
-### Q6 · What the works looks like, and what people say, after
+### Q6 · What the works looks like, and what people say, after — **built 2026-09-19, except the lines**
 
 Est. 3 h. Depends on: Q5, M2, M3, P1, P2.
 
@@ -421,7 +421,32 @@ The outcome's signals and routines, and the lines that follow it — including, 
 Sena's path, **that Tom and his people are not there any more, and that those who
 remain know it.**
 
-**Check:** the six frames — quarter and production, in each of the three states.
+**Check:** the six frames — quarter and production, in each of the three states. —
+***taken***, and 5 tests in `test/test_cinderworks.gd`.
+
+**Most of this was already built and had never been checked together.** M2 lights the
+furnaces off richesse, P1 walks people to work off the same number, Q5 moves it. Measured
+on a played run rather than assumed:
+
+| | fires lit | on the road |
+|---|---|---|
+| before | 4 of 6 | 4 |
+| put out | **0 of 6** | **1** |
+| lit again | 4 of 6 | **8** |
+
+**One thing was missing and is now built: Tom is not there any more** once the works runs
+again. Read from a fact, through the same one question the fairy answers — *should the
+world still draw this person* — so the window and the conversation cannot disagree. His
+people go with him without being modelled one by one, because richesse decides how many
+walk to work.
+
+**The production frame reads at a glance. The quarter frame does not**, and that is not
+news: P3 measured its props at 0.35% of the picture, and the only other thing that changes
+there is M3's colour cast, which Yannick has not accepted. Both are his brother's to
+improve, and both were already written down.
+
+**What is left is the lines**, which are P2 and Yannick's — including, on Sena's path,
+that those who remain know Tom is gone.
 Both brothers can tell which is which with no overlay. Save, reload, and they hold.
 
 ---
