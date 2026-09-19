@@ -44,8 +44,30 @@ static func fairy_is_here(facts: FactBase) -> bool:
 
 
 ## Whether this is somebody the world should stop drawing and stop offering.
+##
+## **Two people can leave it, for opposite reasons** (Q6, 2026-09-19). The fairy goes
+## because she is finished with you. **Tom goes because the works went back to work** —
+## `docs/QUEST_CINDERWORKS.md` §5, Sena's outcome: *Tom and his people are not there any
+## more, and those who remain know it*. Whether he was stopped or killed, the quest does
+## not say and neither does this.
+##
+## It is read from a fact and nothing is kept in step: no removal event, no flag, nothing
+## that can disagree with the world. And his people go with him without being modelled one
+## by one, because richesse decides how many walk to work and putting the fires back on
+## does not bring back the men who wanted them out.
+##
+## This lives beside the fairy rather than in a quest file because there is one question
+## here — *should the world still draw this person* — and one place worth asking it.
+const TOM: StringName = &"tom"
+const WORKS_RELIT: StringName = &"i_lit_them_again"
+
+
 static func is_gone(who: StringName, facts: FactBase) -> bool:
-	return who == FAIRY and not fairy_is_here(facts)
+	if who == FAIRY:
+		return not fairy_is_here(facts)
+	if who == TOM:
+		return facts != null and facts.has(WORKS_RELIT)
+	return false
 
 
 # ------------------------------------------------------- what became of it ---

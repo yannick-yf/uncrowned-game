@@ -194,6 +194,7 @@ func _ready() -> void:
 	# gate as the two above, and listed with them in CLAUDE.md.
 	var towns_set: String = OS.get_environment("UNCROWNED_TOWN")
 	var towns_store := _sim.store(&"towns") as TownState
+	var changed: bool = false
 	if OS.has_feature("debug") and towns_set != "" and towns_store != null:
 		for row: String in towns_set.split(","):
 			var halves: PackedStringArray = row.strip_edges().split(":")
@@ -204,6 +205,15 @@ func _ready() -> void:
 			towns_store.set_value(place, TownRules.ALLEGIANCE, int(pair[0]))
 			if pair.size() > 1:
 				towns_store.set_value(place, TownRules.RICHESSE, int(pair[1]))
+			changed = true
+	if changed:
+		# **And let the world answer.** Writing the two numbers is not the picture: how
+		# many people walk to work is matched when a place *moves*, and a value set
+		# straight into the store moves nothing. Six photographs of the three states were
+		# taken before this existed and every one of them showed a full shift standing in
+		# front of cold furnaces — a picture of the debug tool rather than of the game.
+		# An hour is what the population is matched on.
+		_sim.advance(Sim.STEPS_PER_WORLD_TICK * 61)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":

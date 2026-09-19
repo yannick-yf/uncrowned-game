@@ -677,3 +677,82 @@ func test_the_whole_quest_replays_from_its_log() -> void:
 	assert_eq(theirs.value_of(&"cinderworks", &"allegiance"), 9, "the log rebuilds it")
 	assert_eq(theirs.value_of(&"cinderworks", &"richesse"), 7, "both of it")
 	assert_true(replayed.facts.has(FACED), "including the fight in the middle")
+
+
+# ------------------------------------------- what the works becomes after (Q6) ---
+#
+# **Most of this was already built and had never been checked together.** M2 lights the
+# furnaces off richesse, P1 walks people to work off the same number, and Q5 moves it.
+# Q6's job was to find out what that actually amounts to, and to add the one thing
+# missing: on Sena's path, Tom is not there any more.
+
+func _settle_the_works(side: StringName) -> Sim:
+	var sim: Sim = _world()
+	var world := sim.store(&"world") as WorldState
+	sim.advance(Sim.STEPS_PER_WORLD_TICK * 90)
+	sim.facts.add_source(side, &"witnessed")
+	sim.facts.add_source(FACED, &"witnessed")
+	_at_a_furnace(sim)
+	_act(sim)
+	sim.advance(Sim.STEPS_PER_WORLD_TICK * 90)
+	return sim
+
+
+func _furnaces_alight(sim: Sim) -> int:
+	var towns := sim.store(&"towns") as TownState
+	var kilns: int = 0
+	for prop: Dictionary in (sim.store(&"world") as WorldState).region().props:
+		if String(prop["kind"]) == "kiln":
+			kilns += 1
+	return TownRules.lit_of(kilns, towns.value_of(&"cinderworks", &"richesse"))
+
+
+func test_putting_them_out_empties_the_road_and_the_furnaces() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _settle_the_works(BROUGHT)
+	var folk := sim.store(&"folk") as Folk
+	assert_eq(_furnaces_alight(sim), 0, "not one furnace still burning")
+	assert_true(folk.in_place(&"cinderworks") <= 1,
+		"and all but the last man off the road: %d" % folk.in_place(&"cinderworks"))
+
+
+func test_lighting_them_again_fills_both() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _settle_the_works(VOUCHED)
+	var folk := sim.store(&"folk") as Folk
+	assert_true(_furnaces_alight(sim) >= 4, "the fires are up: %d" % _furnaces_alight(sim))
+	assert_true(folk.in_place(&"cinderworks") >= 6,
+		"and the road is fuller than it was: %d" % folk.in_place(&"cinderworks"))
+
+
+func test_tom_is_not_there_any_more_once_the_works_runs() -> void:
+	# §5, Sena's outcome: *Tom and his people are not there any more, and those who
+	# remain know it.* Whether he was stopped or killed the quest does not say, and
+	# neither does this.
+	var before: Sim = _world()
+	assert_false(OpeningRules.is_gone(&"tom", before.facts), "he is here to begin with")
+
+	var after: Sim = _settle_the_works(VOUCHED)
+	assert_true(OpeningRules.is_gone(&"tom", after.facts), "and gone once the fires are back")
+	assert_false(OpeningRules.is_gone(&"sena", after.facts), "she is not")
+
+
+func test_he_is_still_there_if_you_took_his_side() -> void:
+	var sim: Sim = _settle_the_works(BROUGHT)
+	assert_false(OpeningRules.is_gone(&"tom", sim.facts),
+		"putting the fires out is what he wanted; he has no reason to go")
+
+
+func test_somebody_who_is_gone_cannot_be_talked_to() -> void:
+	# The fairy's rule, and now his: one question — *should the world still draw this
+	# person* — asked in one place, so the window and the conversation cannot disagree.
+	var sim: Sim = _settle_the_works(VOUCHED)
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"tom").centre()
+	sim.submit(&"talk", {"npc": "tom"})
+	sim.advance(2)
+	assert_false(world.in_dialogue(), "there is nobody there to answer")
