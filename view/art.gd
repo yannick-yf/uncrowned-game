@@ -50,6 +50,9 @@ const CASTING: Dictionary = {
 	# The Cinderworks.
 	&"halgrave": "OldMan3",
 	&"sena": "Villager3",
+	# Tom's is a placeholder for the same reason Bram's is, below: every `Villager` sheet
+	# in the pack is already somebody. M3b replaces the whole table with his brother's.
+	&"tom": "SamuraiBlue",
 	&"ivo": "Master",
 	# The Wide Acres.
 	&"cadan": "Sultan",

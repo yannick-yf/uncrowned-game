@@ -119,3 +119,87 @@ func test_nobody_at_the_works_hands_over_the_ledger() -> void:
 		for option: DialogueOption in cast.get_npc(who).options:
 			assert_false(DocumentRules.is_document(option.teaches),
 				"%s hands over a document, which a death could then destroy" % who)
+
+
+# ------------------------------------------------- the quest's two sides (Q2) ---
+#
+# **Two people, and either one starts it.** `docs/QUEST_CINDERWORKS.md`: each tells the
+# player about the other, so no single death makes the quest unreachable — invariant 6
+# for a route that is a conversation rather than a paper.
+#
+# **Tom is the only person Q2 adds.** The worker the quest wanted is Sena, who already
+# stands at the works, and her sheet makes the part better than the draft did: a woman
+# who left her hand in furnace four and still says the fires must not go out is a
+# stronger argument for the works than somebody merely glad of the money.
+
+const TOM_DOWN: StringName = &"cinderworks:tom_wants_it_down"
+const SENA_KEEP: StringName = &"cinderworks:sena_wants_it_kept"
+
+
+func test_both_sides_of_the_works_are_people_you_can_find() -> void:
+	var sim: Sim = _world()
+	var cast := sim.store(&"cast") as Cast
+	var region: Region = (sim.store(&"world") as WorldState).region()
+	for who: StringName in [&"tom", &"sena"]:
+		var npc: Npc = cast.get_npc(who)
+		assert_not_null(npc, "%s stands somewhere" % who)
+		var at: Vector2i = Vector2i(npc.centre())
+		assert_true(region.is_passable(at), "%s can be walked up to: %s" % [who, str(at)])
+		if Places.baked():
+			assert_false(region.wards.has(at),
+				"%s is not standing in the gateway" % who)
+
+	# Not in the same breath: finding one has to be a different walk from finding the
+	# other, or "two people" is one conversation with two names on it.
+	var apart: float = cast.get_npc(&"tom").centre().distance_to(cast.get_npc(&"sena").centre())
+	assert_true(apart > 6.0, "and they are not side by side: %.0f tiles apart" % apart)
+
+
+func test_neither_of_them_is_the_only_way_in() -> void:
+	# The check that matters: kill either and the other still names them. A quest whose
+	# two halves are each reachable only through themselves has one half.
+	var sim: Sim = _world()
+	var from_tom: Array[String] = _talk(sim, &"tom")
+	assert_true(from_tom.has("ask_tom_other"), "Tom will talk about her: %s" % str(from_tom))
+	_say(sim, &"ask_tom_other")
+	assert_true(sim.facts.has(SENA_KEEP), "and saying it is how you learn she exists")
+
+	# **She names him in a line she already had**, and that is not a shortcut. The
+	# dialogue box holds three lines; Sena had three, and every one she gains pushes one
+	# out — the first attempt pushed `ask_organise`, which a route needs, out of reach
+	# entirely and two old tests said so at once. Her hand is her position, so Tom
+	# belongs in the same breath.
+	var other: Sim = _world()
+	var from_sena: Array[String] = _talk(other, &"sena")
+	assert_true(from_sena.has("ask_hand"), "she will talk about her hand: %s" % str(from_sena))
+	var line: DialogueOption = DialogueRules.find(
+		(other.store(&"cast") as Cast).get_npc(&"sena"), &"ask_hand")
+	assert_true(line.reply.contains("Tom"), "and Tom is in the answer: %s" % line.reply)
+	_say(other, &"ask_hand")
+	assert_true(other.facts.has(SENA_KEEP), "which is also where she says where she stands")
+
+
+func test_what_each_of_them_wants_is_learnable_from_them() -> void:
+	var sim: Sim = _world()
+	_talk(sim, &"tom")
+	_say(sim, &"ask_tom_pay")
+	assert_true(sim.facts.has(TOM_DOWN), "Tom says what he wants")
+
+	var other: Sim = _world()
+	_talk(other, &"sena")
+	_say(other, &"ask_hand")
+	assert_true(other.facts.has(SENA_KEEP), "and she says what she wants")
+
+
+func test_the_line_that_names_the_other_is_never_refused() -> void:
+	# **Marked `costs: free`, and that is invariant 6 again.** Everything that teaches a
+	# fact asks for goodwill by default, and a player the works already dislikes would
+	# otherwise be unable to learn that the other side exists — which would close the
+	# quest by being rude rather than by anything a player could see.
+	var cast := Cast.shared()
+	for pair: Array in [[&"tom", &"ask_tom_other"], [&"sena", &"ask_hand"]]:
+		var option: DialogueOption = DialogueRules.find(
+			cast.get_npc(pair[0] as StringName), pair[1] as StringName)
+		assert_not_null(option, "%s has the line" % pair[0])
+		assert_false(option.asks_for_goodwill(),
+			"%s names the other whatever they think of you" % pair[0])

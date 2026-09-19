@@ -37,7 +37,9 @@
     "thornwood:dying": "Les fées meurent.",
     "you:remembered": "La fée vous a connu avant l'incendie. C'est le seul témoin de votre vie qui ne soit pas un papier.",
     "you:owed": "La fée ne vous a pas choisi parce que vous êtes quelqu'un. Elle vous a choisi parce qu'on vous doit quelque chose.",
-    "thornwood:save_us": "Les fées vous demandent de les sauver, si vous le pouvez."
+    "thornwood:save_us": "Les fées vous demandent de les sauver, si vous le pouvez.",
+    "cinderworks:tom_wants_it_down": "Tom, né au village avant l'usine, veut voir les forges fermées et cherche quelqu'un pour l'y aider.",
+    "cinderworks:sena_wants_it_kept": "Sena, qui a perdu une main au four numéro 4, défend quand même les forges : quatre cents personnes y mangent."
   },
   "npcs": {
     "fairy": {
@@ -474,7 +476,9 @@
         {
           "intent": "ask_hand",
           "text": "Qu'est-il arrivé à votre main ?",
-          "reply": "Le four numéro 4, il y a 6 ans. Les forges m'ont payé 11 jours de salaire et le médecin a écrit que c'était ma faute."
+          "reply": "Le four numéro 4. Onze jours de salaire, et le médecin a écrit que c'était ma faute. Je les défends quand même : quatre cents personnes mangent ici. Tom, aux remises, veut tout éteindre.",
+          "teaches": "cinderworks:sena_wants_it_kept",
+          "costs": "free"
         },
         {
           "intent": "ask_toll",
@@ -490,6 +494,33 @@
           "costs": "goodwill",
           "causes": "i_turned_the_workers",
           "requires": "cinderworks:death_toll"
+        }
+      ]
+    },
+    "tom": {
+      "name": "Tom",
+      "role": "Ouvrier, né au village",
+      "zone": "overworld",
+      "greeting": "Il y avait un village ici avant l'usine. J'y suis né. Regardez ce qu'il en reste et dites-moi que c'est un progrès.",
+      "options": [
+        {
+          "intent": "ask_tom_other",
+          "text": "Tout le monde pense comme vous, ici ?",
+          "reply": "Non. Sena non. Elle a laissé sa main au four numéro 4 et elle défend encore cet endroit. Vous la trouverez près de la cuisine commune.",
+          "teaches": "cinderworks:sena_wants_it_kept",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_tom_pay",
+          "text": "Les forges paient bien, pourtant.",
+          "reply": "Elles paient bien, et on n'a rien où le dépenser parce qu'on est aux fours seize heures. De l'argent qu'on n'a pas le temps de vivre, ce n'est pas de la paie.",
+          "teaches": "cinderworks:tom_wants_it_down",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_tom_before",
+          "text": "C'était comment, avant ?",
+          "reply": "On voyait les étoiles. On buvait l'eau du ruisseau. Mon père est mort à soixante-douze ans et pas d'une toux."
         }
       ]
     },

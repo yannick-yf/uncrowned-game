@@ -37,7 +37,9 @@
     "thornwood:dying": "The fairies are dying.",
     "you:remembered": "The fairy knew you before the fire. It is the one witness to your life that is not a piece of paper.",
     "you:owed": "The fairy did not choose you because you are someone. She chose you because you are owed something.",
-    "thornwood:save_us": "The fairies have asked you to save them, if you can."
+    "thornwood:save_us": "The fairies have asked you to save them, if you can.",
+    "cinderworks:tom_wants_it_down": "Tom, born in the village before the works, wants them shut and is looking for somebody to help him do it.",
+    "cinderworks:sena_wants_it_kept": "Sena, who lost a hand in furnace four, defends the works even so: four hundred people eat by them."
   },
   "npcs": {
     "fairy": {
@@ -474,7 +476,9 @@
         {
           "intent": "ask_hand",
           "text": "What happened to your hand?",
-          "reply": "Furnace number 4, 6 years ago. The works paid me 11 days of wages and the doctor wrote that it was my own fault."
+          "reply": "Furnace four. Eleven days' wages, and the doctor wrote that it was my fault. I defend them even so: four hundred people eat here. Tom, at the sheds, wants the fires out.",
+          "teaches": "cinderworks:sena_wants_it_kept",
+          "costs": "free"
         },
         {
           "intent": "ask_toll",
@@ -490,6 +494,33 @@
           "costs": "goodwill",
           "causes": "i_turned_the_workers",
           "requires": "cinderworks:death_toll"
+        }
+      ]
+    },
+    "tom": {
+      "name": "Tom",
+      "role": "Worker, born in the village",
+      "zone": "overworld",
+      "greeting": "There was a village here before the works. I was born in it. Look at what is left and tell me that is progress.",
+      "options": [
+        {
+          "intent": "ask_tom_other",
+          "text": "Does everybody here think as you do?",
+          "reply": "No. Sena does not. She left her hand in furnace four and she still defends the place. You will find her by the common kitchen.",
+          "teaches": "cinderworks:sena_wants_it_kept",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_tom_pay",
+          "text": "The works pay well, though.",
+          "reply": "They pay well, and there is nothing to spend it on because we are at the furnaces sixteen hours. Money you have no time to live on is not pay.",
+          "teaches": "cinderworks:tom_wants_it_down",
+          "costs": "free"
+        },
+        {
+          "intent": "ask_tom_before",
+          "text": "What was it like before?",
+          "reply": "You could see the stars. You drank from the stream. My father died at seventy-two and not of a cough."
         }
       ]
     },

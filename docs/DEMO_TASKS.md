@@ -291,15 +291,39 @@ lines and announces himself as *« un garde du pont »*, and the procedural map 
 — its corners are offsets tuned to his buildings, and the kit stands nothing there. The
 tests say `DEBT` on that world rather than pretending.
 
-### Q2 · Tom and Drissa stand in the quarter
+### Q2 · Tom and Sena stand in the quarter — **built 2026-09-19**
 
 Est. 2 h. Depends on: M1, Q1, and the naming review.
+
+**Drissa is Sena, and that was already the recorded decision** — SPECS §6's budget of 27
+names Tom as "the one person the demo's quest genuinely adds", because the foreman and
+the worker it needs are `halgrave` and `sena`. Her existing sheet makes the part better
+than the draft did: a woman who left her hand in furnace four and still says the fires
+must not go out is a stronger argument for the works than somebody merely glad of the
+money.
 
 Two key people at agreed spots, each with their position, **and each telling the
 player about the other**, so neither is a single point of failure.
 
-**Check:** find both without the debug list; hear about Drissa from Tom and about Tom
-from Drissa; a frame of each where they stand.
+**Check:** find both without the debug list; hear about Sena from Tom and about Tom
+from Sena; a frame of each where they stand. — ***met***, 4 tests in
+`test/test_cinderworks.gd`, and Tom's frame is taken.
+
+**The dialogue box holds three lines, and that shaped the whole task.** Sena already had
+three, so every line she gained pushed one out: the first attempt gave her two and pushed
+`ask_organise` — which a route needs — out of reach entirely, and two old tests said so at
+once. She names Tom in the line she already had instead. Her hand *is* her position, so he
+belongs in the same breath.
+
+**Sena also moved.** She stood at offset +4,+1, which is where Q1's yard fence now runs:
+she would have been inside her own workplace's wall. She is by the common kitchen, in the
+quarter, where Tom says to look for her.
+
+**Four content guards fired, every one of them right:** the packet leaked the new fact
+ids until they had sayable descriptions; the font has no em dash; a joined line ran past
+its word budget twice; and **invariant 6** caught that `cinderworks:tom_wants_it_down` had
+one source behind a goodwill gate, so a rude player could never learn the other side
+existed. Tom's line is `costs: free` now, which is also true of him: he needs help.
 
 ### Q3 · Choosing a side, and getting in
 

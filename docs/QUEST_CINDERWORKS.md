@@ -47,7 +47,13 @@ He has reached the point of wanting to hurt the works and bring it down. He does
 like what the crown does; for him the system itself is wrong, and **the destruction of
 nature is not worth the price**. He needs the player to help him end it.
 
-### Drissa — the worker
+### Drissa — the worker, and she is **Sena** (settled 2026-09-19)
+
+The cast already had her: `sena`, who lost a hand in furnace four six years ago, was paid
+eleven days' wages, and was told by the works' own doctor that it was her fault. She
+defends the place anyway, and that is a better argument for it than the draft below had.
+The name Drissa is retired; everything under it is hers.
+
 
 She was **brought to the village by force**. She works long hours and is glad of the
 money. She thinks that without the resistance of a few, and by working with the
