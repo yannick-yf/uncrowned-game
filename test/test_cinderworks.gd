@@ -292,3 +292,115 @@ func test_getting_in_is_not_getting_to_the_furnaces() -> void:
 	assert_false(sim.facts.has(&"cinderworks:faced_them"),
 		"being let in is not having faced anybody")
 	assert_true(_a_furnace_tile().x > 0, "and there is a furnace waiting behind it")
+
+
+# ---------------------------------------------------- the act at the furnaces (Q4) ---
+#
+# One act in two directions: Tom's people put the fires out, Sena's light them again.
+# **Which one is offered is whose side you took; whether it is offered at all is whether
+# you have faced anybody.** §4's spine is *get in, face whoever stands in the way, act*,
+# and the fight is the middle of it rather than an addition to it.
+
+const DOUSE: StringName = &"i_put_the_fires_out"
+const RELIGHT: StringName = &"i_lit_them_again"
+
+
+func _at_a_furnace(sim: Sim) -> Vector2i:
+	var world := sim.store(&"world") as WorldState
+	var at: Vector2i = _a_furnace_tile()
+	world.player_pos = Vector2(at) + Vector2(0.5, 1.5)
+	return at
+
+
+func _act(sim: Sim) -> void:
+	sim.submit(&"act")
+	sim.advance(2)
+
+
+func test_the_furnaces_offer_nothing_until_somebody_has_been_faced() -> void:
+	var sim: Sim = _world()
+	_at_a_furnace(sim)
+	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), &"",
+		"a stranger at a furnace is offered none of it")
+
+	# A side on its own is not enough: being let in is not having faced anybody.
+	sim.facts.add_source(VOUCHED, &"sena")
+	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), &"",
+		"and neither is being vouched for")
+
+	sim.facts.add_source(SiteRules.FACED, &"witnessed")
+	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), RELIGHT,
+		"only both together")
+
+
+func test_the_side_you_took_decides_which_way_the_act_goes() -> void:
+	var his: Sim = _world()
+	his.facts.add_source(SiteRules.FACED, &"witnessed")
+	his.facts.add_source(BROUGHT, &"tom")
+	assert_eq(SiteRules.quest_deed_at(&"kiln", his.facts), DOUSE, "Tom's people put them out")
+
+	var hers: Sim = _world()
+	hers.facts.add_source(SiteRules.FACED, &"witnessed")
+	hers.facts.add_source(VOUCHED, &"sena")
+	assert_eq(SiteRules.quest_deed_at(&"kiln", hers.facts), RELIGHT, "Sena's light them again")
+
+
+func test_each_direction_performed_in_its_own_run() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	for pair: Array in [[BROUGHT, DOUSE], [VOUCHED, RELIGHT]]:
+		var sim: Sim = _world()
+		sim.facts.add_source(SiteRules.FACED, &"witnessed")
+		sim.facts.add_source(pair[0] as StringName, &"witnessed")
+		_at_a_furnace(sim)
+		_act(sim)
+		assert_true(sim.facts.has(pair[1] as StringName),
+			"the act went through: %s" % pair[1])
+		assert_eq((sim.store(&"world") as WorldState).last_act, pair[1] as StringName,
+			"and it is the one the side asked for")
+
+
+func test_doing_it_at_the_second_furnace_does_not_count_twice() -> void:
+	# **`spent_sites` is per tile, and that is right for a lever against the crown** —
+	# six furnaces are six things you can wreck. This is not that. Putting the fires out
+	# is one decision about the works, so it is remembered as a fact and the second
+	# furnace has nothing left to offer.
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _world()
+	var world := sim.store(&"world") as WorldState
+	sim.facts.add_source(SiteRules.FACED, &"witnessed")
+	sim.facts.add_source(BROUGHT, &"tom")
+	_at_a_furnace(sim)
+	_act(sim)
+	assert_true(sim.facts.has(DOUSE), "done once")
+
+	var done: int = 0
+	for event: SimEvent in sim.events.all():
+		if event.type == &"works_act":
+			done += 1
+	# Every other furnace on the site, one after another.
+	var region: Region = world.region()
+	for prop: Dictionary in region.props:
+		if String(prop["kind"]) != "kiln":
+			continue
+		world.player_pos = Vector2(prop["at"] as Vector2i) + Vector2(0.5, 1.5)
+		_act(sim)
+	var after: int = 0
+	for event: SimEvent in sim.events.all():
+		if event.type == &"works_act":
+			after += 1
+	assert_eq(after, done, "and once however many furnaces you walk to: %d" % after)
+
+
+func test_the_act_has_a_prompt_in_both_languages() -> void:
+	# An act with no words is an act nobody is offered.
+	for deed: StringName in [DOUSE, RELIGHT]:
+		var key: StringName = SiteRules.quest_label_key(deed)
+		assert_true(key != &"", "%s has a prompt key" % deed)
+		for locale: String in ["fr", "en"]:
+			var words: Dictionary = JSON.parse_string(
+				FileAccess.get_file_as_string("res://content/text.%s.json" % locale)) as Dictionary
+			assert_true(words.has(String(key)), "%s is written in %s" % [key, locale])

@@ -28,6 +28,46 @@ static func deed_at(kind: StringName) -> StringName:
 	return &""
 
 
+## **The quest's act at the furnaces, and what it takes to be offered** (Q4).
+##
+## Two gates, and they are different in kind. **Whose side you took** decides which
+## direction the act goes — Tom's people put the fires out, Sena's relight them. **Having
+## faced somebody** decides whether it is offered at all: §4's spine is *get in, face
+## whoever stands in the way, act*, and the fight is not an addition to that, it is the
+## middle of it. Walking through the gate straight to a furnace would leave a hole where
+## the quest should be (Yannick, 2026-09-19).
+##
+## `&""` for anything else, and the site keeps whatever `deed_at` gives it.
+##
+## **The facing fact is written by F6**, which wires the fight into this. Until it does,
+## the act is reachable in a test and not in play, which is the honest state to be in:
+## the gate is built and the thing that opens it is not.
+const FACED: StringName = &"cinderworks:faced_them"
+const BROUGHT_THROUGH: StringName = &"cinderworks:brought_through"
+const VOUCHED_FOR: StringName = &"cinderworks:vouched_for"
+
+
+static func quest_deed_at(kind: StringName, facts: FactBase) -> StringName:
+	if kind != &"kiln" or facts == null or not facts.has(FACED):
+		return &""
+	if facts.has(BROUGHT_THROUGH):
+		return DeedRules.DEED_DOUSE
+	if facts.has(VOUCHED_FOR):
+		return DeedRules.DEED_RELIGHT
+	return &""
+
+
+## And its prompt. A verb and a thing, like every other one: the window never says what
+## an act will cost.
+static func quest_label_key(deed: StringName) -> StringName:
+	match deed:
+		DeedRules.DEED_DOUSE:
+			return &"act.kiln.douse"
+		DeedRules.DEED_RELIGHT:
+			return &"act.kiln.relight"
+	return &""
+
+
 static func is_site(kind: StringName) -> bool:
 	return deed_at(kind) != &""
 

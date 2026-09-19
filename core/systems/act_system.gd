@@ -28,7 +28,15 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var at: Vector2i = site["at"] as Vector2i
 	if world.spent_sites.has(at):
 		return
-	var deed: StringName = SiteRules.deed_at(site["kind"] as StringName)
+	# **The quest's act comes first where there is one** (Q4). At a furnace, once the
+	# player has taken a side and faced whoever stood in the way, this is what the
+	# furnace offers instead of the old crown-lever sabotage.
+	var kind: StringName = site["kind"] as StringName
+	var quest: StringName = SiteRules.quest_deed_at(kind, sim.facts)
+	if quest != &"":
+		_the_quests_act(sim, world, quest, at)
+		return
+	var deed: StringName = SiteRules.deed_at(kind)
 	if deed == &"":
 		return
 	# A roused watch stands over what it guards. Not a failure and not a refusal to
@@ -51,6 +59,31 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	world.last_act = deed
 	var where: StringName = world.region().zone_at(world.player_tile())
 	world.last_act_seen = Deeds.perform(sim, deed, where, world.player_pos, &"act_unseen").size()
+
+
+## **One act, once, however many furnaces there are** (Q4).
+##
+## `spent_sites` is per tile, which is right for a lever against the crown — six furnaces
+## are six things you can wreck. The quest's act is not that: putting the fires out is one
+## decision about the works, and doing it at the second furnace must not count again. So
+## it is remembered as a fact rather than as a tile, and the fact is what Q5 reads to move
+## the place's two values exactly once.
+##
+## It still goes through `Deeds.perform`, which costs nothing — neither of these has a row
+## in `world_effects`, so nothing of the old twelve quantities moves — and buys the thing
+## that does matter: **who saw you do it.**
+func _the_quests_act(sim: Sim, world: WorldState, deed: StringName, at: Vector2i) -> void:
+	if sim.facts.has(deed):
+		return
+	var where: StringName = world.region().zone_at(world.player_tile())
+	sim.facts.add_source(deed, &"witnessed")
+	world.spent_sites[at] = true
+	world.last_act_step = sim.step
+	world.last_act = deed
+	world.last_act_seen = Deeds.perform(sim, deed, where, world.player_pos, &"act_unseen").size()
+	sim.derive(&"works_act", {
+		"deed": String(deed), "town": String(where), "seen": world.last_act_seen,
+	})
 
 
 ## Picking a document up. Reading it and holding it happen in the same movement —

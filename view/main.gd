@@ -700,6 +700,10 @@ func _site_in_reach() -> String:
 	var site: Dictionary = _world.region().nearest_site(_world.player_tile(), SiteRules.REACH)
 	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
 		return ""
+	# The quest's act, where the quest has one to offer (Q4).
+	var quest: StringName = SiteRules.quest_deed_at(site["kind"] as StringName, _sim.facts)
+	if quest != &"":
+		return "" if _sim.facts.has(quest) else Text.of(SiteRules.quest_label_key(quest))
 	return Text.of(SiteRules.label_key(site["kind"] as StringName))
 
 

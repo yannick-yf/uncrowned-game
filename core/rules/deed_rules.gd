@@ -21,6 +21,13 @@ const DEED_WARNING: StringName = &"i_warned_the_town"
 ## quantities inputs that are not somebody's dialogue — which is the whole of why
 ## Phase 5 was reshaped. Each is a row here rather than a system of its own.
 const DEED_SABOTAGE: StringName = &"i_wrecked_a_furnace"
+## **The quest's act, in its two directions** (Q4, 2026-09-19). Not levers against the
+## crown like the rest of this table: they move the *place's* two values and nothing
+## else, which is why neither has a row in `world_effects`. `docs/QUEST_CINDERWORKS.md`
+## §4: one act, two directions, and which one is offered is decided by whose side the
+## player took.
+const DEED_DOUSE: StringName = &"i_put_the_fires_out"
+const DEED_RELIGHT: StringName = &"i_lit_them_again"
 const DEED_BURN_STORES: StringName = &"i_burned_the_stores"
 const DEED_ROB_BANK: StringName = &"i_emptied_the_vault"
 const DEED_WRECK_ROLLS: StringName = &"i_destroyed_the_muster_rolls"

@@ -350,7 +350,7 @@ would have closed the works to a rude player entirely (invariant 6).
 **The words are placeholders and say so in the file.** They are Yannick's, in P2. What is
 tested is the shape, not the wording.
 
-### Q4 · The act at the furnaces
+### Q4 · The act at the furnaces — **built 2026-09-19**
 
 Est. 2 h. Depends on: Q3.
 
@@ -369,7 +369,21 @@ act with its gate first, the fight wired into it after. Not the other way round,
 would be waiting on a fight that has nothing to decide.
 
 **Check:** perform each in its own run. Repeating it does not count twice. The prompt
-appears only inside the works, and only once somebody has been faced.
+appears only inside the works, and only once somebody has been faced. — ***met***, 5 tests
+in `test/test_cinderworks.gd`.
+
+**Two gates, different in kind.** Whose side you took decides the *direction*; having
+faced somebody decides whether it is offered *at all*. A side on its own is not enough,
+and there is a test that says so.
+
+**Once, however many furnaces you walk to.** `spent_sites` is per tile, which is right for
+a lever against the crown — six furnaces are six things you can wreck — and wrong for
+this. Putting the fires out is one decision about the works, so it is remembered as a fact
+and the second furnace has nothing left to offer. That fact is what Q5 reads.
+
+**`cinderworks:faced_them` is written by nobody yet.** F6 wires the fight into it. Until
+then the act is reachable in a test and not in play, which is the honest state: the gate
+is built and the thing that opens it is not.
 
 ### Q5 · The outcome moves the two values, once
 

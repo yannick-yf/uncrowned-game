@@ -40,6 +40,8 @@
   "prompt.watched": "the watch is standing over it",
   "prompt.exit": "{0}. (say nothing and go), or E, or Esc",
   "act.kiln": "E, put out the furnace",
+  "act.kiln.douse": "E, put the furnaces out",
+  "act.kiln.relight": "E, light the furnaces again",
   "act.granary": "E, burn the stores",
   "act.counting_house": "E, empty the vault",
   "act.muster_rolls": "E, destroy the muster rolls",
