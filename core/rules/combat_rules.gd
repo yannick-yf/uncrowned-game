@@ -161,9 +161,30 @@ static func lunge_at(move: StringName, frame: int) -> float:
 	return maxf(1.0 - float(since) / float(recovery), 0.0)
 
 
+## **How low a fighter is carried, as the same fraction.** Positive is a crouch and
+## negative is a rise. A blow is a gather and a release: he sinks through the wind-up and
+## comes up as it goes out, which is the part of a punch a person actually reads. Purely
+## up and down, so his pixels are never stretched — a pixel figure squashed to sell a
+## movement stops being pixel art.
+static func dip_at(move: StringName, frame: int) -> float:
+	if move == &"" or not is_attack(move):
+		return 0.0
+	var startup: int = of(move, "startup")
+	if frame < startup:
+		return float(frame + 1) / float(maxi(startup, 1))
+	if is_active(move, frame):
+		return -0.4
+	return 0.0
+
+
 ## How far a fighter leans away while holding a guard. Small: it is a stance, not a move.
 static func guard_lean() -> float:
 	return -0.35
+
+
+## And how low. Behind a guard you are braced, not standing.
+static func guard_dip() -> float:
+	return 0.5
 
 
 ## Does this blow reach? One subtraction and one comparison, on integers.

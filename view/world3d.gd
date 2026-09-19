@@ -38,6 +38,14 @@ const FIGHT_TILT_DEGREES: float = 27.0
 ## and nothing else, so until his brother draws an attack and a guard the only honest
 ## tell is the figure he did draw, moved. The timing of it is `CombatRules.lunge_at`.
 const FIGHT_LUNGE_TILES: float = 0.30
+## And how far he sinks, in metres. A blow is a gather and a release, and the gather is
+## the half of it a person reads first.
+##
+## **Deliberately small.** A single sprite has no knees: lower it far and it reads as a
+## figure sinking into the ground rather than one bending. Thirty centimetres looked like
+## sinking in a photograph, so it is fifteen. Up and down only, never a squash — a pixel
+## figure stretched to sell a movement stops being pixel art.
+const FIGHT_DIP_M: float = 0.15
 const FIGHT_SIZE_M: float = 7.0
 const CAMERA_SIZE: float = 24.0
 const CAMERA_DISTANCE: float = 45.0
@@ -698,14 +706,15 @@ func _walk(node: Node3D, facing: Vector2i, phase: float) -> void:
 ## Put a figure's feet on the ground at a tile position (fractional tiles). His
 ## sprite is lifted along the lens's up by half its frame so it stands; a capsule by
 ## half its height.
-func _foot_figure(node: Node3D, at_tiles: Vector2) -> void:
+func _foot_figure(node: Node3D, at_tiles: Vector2, dip: float = 0.0) -> void:
 	var sprite: AnimatedSprite3D = node as AnimatedSprite3D
 	if sprite == null:
 		node.position = _feet_of(at_tiles) + Vector3.UP * FIGURE_HEIGHT_M * 0.5
 		return
 	var texture: Texture2D = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
 	var height_px: float = float(texture.get_height()) if texture != null else FIGURE_HEIGHT_M / HIS_FIGURE_PIXEL_SIZE
-	node.position = _feet_of(at_tiles) + _lens_up * (height_px * sprite.pixel_size * 0.5)
+	node.position = _feet_of(at_tiles) \
+		+ _lens_up * (height_px * sprite.pixel_size * 0.5 - dip * FIGHT_DIP_M)
 
 
 # --------------------------------------------------------------------- glows ---
@@ -889,7 +898,8 @@ func _sync_player(frame: Dictionary) -> void:
 	# The lunge is added to where he is *drawn* and not to where he is: the walk cycle is
 	# driven by ground covered, and a blow that made his feet turn over would read as a
 	# man walking on the spot.
-	_foot_figure(_player, at + Vector2(_lunge_of(frame.get("fight", {}) as Dictionary, true), 0.0))
+	var fighting: Dictionary = frame.get("fight", {}) as Dictionary
+	_foot_figure(_player, at + Vector2(_lunge_of(fighting, true), 0.0), _dip_of(fighting, true))
 
 
 ## `fighting` is empty unless somebody is squared up with the player, in which case it
@@ -926,6 +936,9 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			stands_at = fighting.get("at", stands_at) as Vector2
 			_step_the_foe(figure, stands_at, fighting.get("facing", Vector2i(0, 1)) as Vector2i)
 			stands_at += Vector2(_lunge_of(fighting, false), 0.0)
+			_foot_figure(figure, stands_at, _dip_of(fighting, false))
+			figure.visible = true
+			continue
 		_foot_figure(figure, stands_at)
 		figure.visible = true
 	_fairy.visible = fairy_seen
@@ -964,6 +977,18 @@ func _lunge_of(fighting: Dictionary, mine: bool) -> float:
 	if mine and move == &"" and bool(fighting.get("guarding", false)):
 		shape = CombatRules.guard_lean()
 	return shape * FIGHT_LUNGE_TILES * forward
+
+
+## **How low he is carried this frame.** The other half of the tell, and the half a
+## person reads first: he gathers through the wind-up and comes up as the blow goes out.
+func _dip_of(fighting: Dictionary, mine: bool) -> float:
+	if fighting.is_empty():
+		return 0.0
+	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
+	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
+	if mine and move == &"" and bool(fighting.get("guarding", false)):
+		return CombatRules.guard_dip()
+	return CombatRules.dip_at(move, at_frame)
 
 
 ## Traffic: his traveller walking the road, the cycle read off where they stand.
