@@ -349,7 +349,7 @@ appears only inside the works.
 
 Est. 2 h. Depends on: Q4, M1.
 
-Tom: 6 → 3 and 4 → 1. Drissa: 6 → 9 and 4 → 7. Applied once, as events, so the log
+Tom: 6 → 3 and 4 → 1. Sena: 6 → 9 and 4 → 7. Applied once, as events, so the log
 replays to the same state.
 
 **Check:** both outcomes from a fresh run, then replay each log. No double
@@ -360,7 +360,7 @@ application, no drift afterwards.
 Est. 3 h. Depends on: Q5, M2, M3, P1, P2.
 
 The outcome's signals and routines, and the lines that follow it — including, on
-Drissa's path, **that Tom and his people are not there any more, and that those who
+Sena's path, **that Tom and his people are not there any more, and that those who
 remain know it.**
 
 **Check:** the six frames — quarter and production, in each of the three states.
