@@ -620,7 +620,7 @@ and visibly one**, and it prints a `DEBT` line in every run so it is not forgott
 **What would replace it: three frames.** An attack, a guard, and a flinch — `left` and
 `right` only, because the camera never turns.
 
-### F6 · The fight belongs to the quest
+### F6 · The fight belongs to the quest — **built 2026-09-19**
 
 Est. 2 h. Depends on: F5, Q4. *(Was F5.)*
 
@@ -633,7 +633,27 @@ today and Drissa's role has a body. **Tom is the only new person the quest needs
 naming review (`QUEST_CINDERWORKS.md` §4) decides whether Drissa *is* Sena or replaces
 her.
 
-**Check:** both sides played end to end, from the quarter to the changed works.
+**Check:** both sides played end to end, from the quarter to the changed works. —
+***met***, 5 tests in `test/test_cinderworks.gd`.
+
+**The middle of §4's spine.** Until this, the fight and the quest did not know each other:
+you could fight Bram because he offered it, and in the quest nobody fought you at all.
+Now the foreman stops Tom's man and Tom stops Sena's, each through a line that only the
+other side is offered, and **only a win** writes `cinderworks:faced_them`. Losing sends
+the player back to the last fire with the works still shut to them; walking away counts
+for nothing. That is what makes the fight the price of the act rather than a scene in
+front of it.
+
+**And Q5's debt is paid.** `test_the_whole_quest_replays_from_its_log` walks the whole
+thing from where the game begins — no hand on any position, any fact or any fight — and
+rebuilds the same works from the log alone: side chosen in conversation, fight begun by a
+line, every blow, the act at the furnace, 9 and 7.
+
+Getting that test honest took two goes, and both failures were the test's. It teleported
+to each person, because `_talk` does and forty other tests only care what somebody says;
+a position written into the store is not in the log, so the replay walked from the wrong
+field. Then it steered by eye and wedged itself in the first doorway. It follows
+`Navigation.path` now, and it walks every step.
 
 ---
 

@@ -47,6 +47,22 @@ const BROUGHT_THROUGH: StringName = &"cinderworks:brought_through"
 const VOUCHED_FOR: StringName = &"cinderworks:vouched_for"
 
 
+## **Who puts themselves between the player and the furnaces** (F6). Whose side you
+## took decides who that is: Tom's man is stopped by the foreman, Sena's by Tom himself,
+## come to stop the shift.
+##
+## It is a fact about the quest rather than about a site, and it sits here because the
+## quest's three facts already do. If a fourth arrives, they all move together.
+static func stands_in_the_way(who: StringName, facts: FactBase) -> bool:
+	if facts == null:
+		return false
+	if facts.has(BROUGHT_THROUGH):
+		return who == &"harry"
+	if facts.has(VOUCHED_FOR):
+		return who == &"tom"
+	return false
+
+
 static func quest_deed_at(kind: StringName, facts: FactBase) -> StringName:
 	if kind != &"kiln" or facts == null or not facts.has(FACED):
 		return &""

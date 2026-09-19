@@ -475,13 +475,175 @@ func test_it_is_applied_once_and_the_log_replays_to_it() -> void:
 			_act(sim)
 	assert_eq(_values(sim), [3, 1], "every other furnace changes nothing")
 
-	# **And the replay half cannot honestly be proven yet.** This test hands itself
-	# `cinderworks:faced_them` directly, because nothing in the game writes it until F6
-	# wires the fight in. A fact set by hand is not in the log, so a replay of this run
-	# does not do the act at all — and an assertion that passed here would be measuring
-	# the test rather than the game.
+	# This run still hands itself `cinderworks:faced_them`, so it cannot be replayed: a
+	# fact set by hand is not in the log. **That debt is paid elsewhere** —
+	# `test_the_whole_quest_replays_from_its_log` walks the thing from where the game
+	# begins, with no hand on anything, and rebuilds the same works from the log alone.
+	# Kept apart because this one is about *once*, and that one is about *again*.
+
+
+# ------------------------------------------ the fight belongs to the quest (F6) ---
+#
+# The middle of §4's spine. Until this, the fight and the quest did not know each other:
+# you could fight Bram because he offered it, and in the quest nobody fought you at all.
+
+const FACED: StringName = &"cinderworks:faced_them"
+
+
+## Play a fight out with a competent player and hand back the outcome.
+## Walk the player to a tile the way a player does: held directions, through the
+## simulation, so every step of it is in the log.
+##
+## It follows `Navigation.path` rather than steering by eye — a town is full of his
+## buildings and naive "go west, then north" gets wedged in the first doorway, which is
+## what the first draft of this did.
+func _walk_to(sim: Sim, target: Vector2i, budget: int) -> bool:
+	var world := sim.store(&"world") as WorldState
+	var route: Array[Vector2i] = Navigation.path(
+		world.region(), world.player_tile(), target, true)
+	if route.is_empty():
+		return false
+	var held := Vector2i.ZERO
+	var next: int = 0
+	for _step: int in budget:
+		while next < route.size() \
+				and world.player_pos.distance_to(Vector2(route[next]) + Vector2(0.5, 0.5)) < 0.9:
+			next += 1
+		if next >= route.size():
+			sim.submit(&"move_intent", {"x": 0, "y": 0})
+			sim.advance(2)
+			return true
+		var gap: Vector2 = Vector2(route[next]) + Vector2(0.5, 0.5) - world.player_pos
+		var wanted := Vector2i(
+			signi(int(round(gap.x))) if absf(gap.x) > 0.4 else 0,
+			signi(int(round(gap.y))) if absf(gap.y) > 0.4 else 0)
+		if wanted != held:
+			held = wanted
+			sim.submit(&"move_intent", {"x": held.x, "y": held.y})
+		sim.advance(1)
+	return false
+
+
+func _fight_it_out(sim: Sim) -> StringName:
+	var fight := sim.store(&"fight") as Fight
+	var held: Dictionary = {}
+	for _step: int in 6000:
+		if not fight.on():
+			break
+		var want: Dictionary = {"walk": 0, "attack": false, "guard": true, "evade": false}
+		if not CombatRules.reaches(fight.player_at_mm, fight.opponent_at_mm, CombatRules.STRIKE):
+			want = {"walk": 1, "attack": false, "guard": false, "evade": false}
+		elif fight.player_free() and (fight.opponent_stun > 0 or fight.opponent_move == &""):
+			want = {"walk": 0, "attack": true, "guard": false, "evade": false}
+		if want != held:
+			sim.submit(&"fight_input", want)
+			held = want
+		sim.advance(1)
+	return fight.outcome
+
+
+func test_whose_side_you_took_decides_who_stands_in_the_way() -> void:
+	var his: Sim = _world()
+	his.facts.add_source(BROUGHT, &"tom")
+	assert_true(SiteRules.stands_in_the_way(&"harry", his.facts), "Tom's man is stopped by the foreman")
+	assert_false(SiteRules.stands_in_the_way(&"tom", his.facts), "not by Tom, who sent him")
+
+	var hers: Sim = _world()
+	hers.facts.add_source(VOUCHED, &"sena")
+	assert_true(SiteRules.stands_in_the_way(&"tom", hers.facts), "Sena's is stopped by Tom")
+	assert_false(SiteRules.stands_in_the_way(&"harry", hers.facts), "not by the foreman")
+
+	assert_false(SiteRules.stands_in_the_way(&"harry", _world().facts),
+		"and nobody stands in the way of somebody who has taken no side")
+
+
+func test_the_line_that_squares_you_up_appears_only_to_the_other_side() -> void:
+	var sim: Sim = _world()
+	assert_false(_talk(sim, &"harry").has("face_harry"), "the foreman has no quarrel with a stranger")
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	sim.facts.add_source(BROUGHT, &"tom")
+	assert_true(_talk(sim, &"harry").has("face_harry"), "and every quarrel with Tom's man")
+
+
+func test_beating_him_is_what_opens_the_furnaces() -> void:
+	# The whole of F6 in one run: take a side, square up, win, and the furnaces that
+	# offered nothing now offer the act.
+	var sim: Sim = _world()
+	sim.facts.add_source(VOUCHED, &"sena")
+	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), &"", "nothing on offer yet")
+
+	_talk(sim, &"tom")
+	_say(sim, &"face_tom")
+	assert_true((sim.store(&"fight") as Fight).on(), "saying it squares the two of you up")
+	assert_eq(_fight_it_out(sim), &"won", "and he goes down")
+	sim.advance(4)
+
+	assert_true(sim.facts.has(FACED), "which is what having faced somebody means")
+	assert_eq(SiteRules.quest_deed_at(&"kiln", sim.facts), RELIGHT,
+		"and the furnaces have something to say now")
+
+
+func test_losing_opens_nothing() -> void:
+	# Only a win counts, which is what makes the fight the price of the act rather than
+	# a scene in front of it.
+	var sim: Sim = _world()
+	sim.facts.add_source(BROUGHT, &"tom")
+	_talk(sim, &"harry")
+	_say(sim, &"face_harry")
+	var fight := sim.store(&"fight") as Fight
+	var held: Dictionary = {}
+	for _step: int in 6000:
+		if not fight.on():
+			break
+		var want: Dictionary = {"walk": 0, "attack": false, "guard": false, "evade": false}
+		if want != held:
+			sim.submit(&"fight_input", want)
+			held = want
+		sim.advance(1)
+	assert_eq(fight.outcome, &"lost", "stand there and he fells you")
+	sim.advance(4)
+	assert_false(sim.facts.has(FACED), "and the furnaces are still shut to you")
+
+
+func test_the_whole_quest_replays_from_its_log() -> void:
+	# **The debt Q5 could not pay, and it is paid by walking.** Everything here is an
+	# event: the steps taken, the side chosen in conversation, the fight begun by a line,
+	# every blow, and the act at the furnace. Nothing is put anywhere by hand.
 	#
-	# What *is* already proven: the outcome goes through events, and `test_sim`'s replay
-	# check covers every event the log holds. When F6 gives the facing an event of its
-	# own, this becomes a real end-to-end replay and the debt goes.
-	debt("Q5's replay waits on F6: nothing writes cinderworks:faced_them into the log yet")
+	# That last part is the whole difficulty. `_talk` teleports, because forty other tests
+	# only care what somebody says — and a position written into the store is not in the
+	# log, so a replay of a run that teleported starts its walk from the wrong field and
+	# never arrives. This one walks from where the game begins.
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _world()
+	var cast := sim.store(&"cast") as Cast
+
+	assert_true(_walk_to(sim, Vector2i(cast.get_npc(&"sena").centre()), 6000), "walked to Sena")
+	sim.submit(&"talk", {"npc": "sena"})
+	sim.advance(2)
+	_say(sim, &"ask_hand")
+	_say(sim, &"side_with_sena")
+	sim.submit(&"end_talk")
+	sim.advance(2)
+
+	assert_true(_walk_to(sim, Vector2i(cast.get_npc(&"tom").centre()), 6000), "and to Tom")
+	sim.submit(&"talk", {"npc": "tom"})
+	sim.advance(2)
+	_say(sim, &"face_tom")
+	assert_eq(_fight_it_out(sim), &"won", "Tom is stopped")
+	sim.advance(4)
+
+	# And this proves Q1 and Q3 between them: the gate opens for somebody she answered for.
+	assert_true(_walk_to(sim, _a_furnace_tile(), 6000), "the yard lets you in now")
+	_act(sim)
+	sim.advance(4)
+	assert_eq(_values(sim), [9, 7], "and the works runs")
+
+	var replayed: Sim = Game.replay(sim)
+	var theirs := replayed.store(&"towns") as TownState
+	assert_eq(theirs.value_of(&"cinderworks", &"allegiance"), 9, "the log rebuilds it")
+	assert_eq(theirs.value_of(&"cinderworks", &"richesse"), 7, "both of it")
+	assert_true(replayed.facts.has(FACED), "including the fight in the middle")

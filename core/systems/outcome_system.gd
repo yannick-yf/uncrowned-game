@@ -1,7 +1,11 @@
 class_name OutcomeSystem
 extends SimSystem
 
-## **What the act at the furnaces does to the place** (Q5).
+## **What the quest's two hinges do to the world** (Q5, then F6).
+##
+## Two things happen in the Cinderworks quest that the rest of the game has to answer:
+## somebody is faced, and the furnaces are touched. Both arrive here as events and leave
+## as events, and this system is the only thing that knows they belong to each other.
 ##
 ## One act, two numbers and a freeze. `docs/QUEST_CINDERWORKS.md` §5: putting the fires
 ## out takes the Cinderworks from 6 and 4 to 3 and 1; lighting them again takes it to 9
@@ -21,6 +25,9 @@ const UP: int = 1
 
 
 func on_event(sim: Sim, event: SimEvent) -> void:
+	if event.type == &"fight_ended":
+		_faced(sim, event)
+		return
 	if event.type != &"works_act":
 		return
 	var deed := StringName(String(event.data.get("deed", "")))
@@ -37,6 +44,27 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	# **Rule 6's freeze.** The place's story is told: the crown stops redistributing into
 	# it, nobody starves in it, and the weather cannot undo what the player chose.
 	sim.derive(&"settle_town", {"place": String(place)})
+
+
+## **Beating whoever stood in the way** (F6), which is the middle of §4's spine and the
+## thing the furnaces wait for.
+##
+## Only a win counts. Losing sends the player back to the last fire with the works still
+## closed to them, and walking away counts for nothing at all — which is what makes the
+## fight the price of the act rather than a scene in front of it.
+##
+## **Written as a fact, from an event**, so it is in the log and a replay arrives at the
+## same works. Until this existed, nothing wrote it and Q5 could not prove its own replay.
+func _faced(sim: Sim, event: SimEvent) -> void:
+	if String(event.data.get("how", "")) != "won":
+		return
+	var who := StringName(String(event.data.get("opponent", "")))
+	if not SiteRules.stands_in_the_way(who, sim.facts):
+		return
+	if sim.facts.has(SiteRules.FACED):
+		return
+	sim.facts.add_source(SiteRules.FACED, who)
+	sim.derive(&"faced_them", {"opponent": String(who)})
 
 
 ## Which way the two numbers go. Out of the deed rather than out of whose side the

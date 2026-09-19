@@ -411,6 +411,16 @@
       ],
       "options": [
         {
+          "intent": "face_harry",
+          "text": "Écartez-vous des fours.",
+          "reply": "Non. Je tiens le livre et je tiens la porte.",
+          "requires": "cinderworks:brought_through",
+          "hides_after": "cinderworks:faced_them",
+          "fights": "harry",
+          "costs": "free",
+          "_p2": "placeholder wording, 2026-09-19: the words are Yannick's (P2). What must stay is the shape - offered only to whoever took the other side, and gone once it has been settled."
+        },
+        {
           "intent": "ask_works",
           "text": "Qu'est-ce que vous fabriquez ici ?",
           "reply": "Du fer et de l'acier. Des rails, des plaques, des outils, des clous. Avant les forges, 1 enfant sur 4 mourait ici chaque hiver. Maintenant c'est 1 sur 40."
@@ -515,6 +525,16 @@
       "zone": "overworld",
       "greeting": "Il y avait un village ici avant l'usine. J'y suis né. Regardez ce qu'il en reste et dites-moi que c'est un progrès.",
       "options": [
+        {
+          "intent": "face_tom",
+          "text": "L'équipe reprend. Laissez-la passer.",
+          "reply": "Pas celle-là. Pas aujourd'hui.",
+          "requires": "cinderworks:vouched_for",
+          "hides_after": "cinderworks:faced_them",
+          "fights": "tom",
+          "costs": "free",
+          "_p2": "placeholder wording, 2026-09-19: the words are Yannick's (P2). What must stay is the shape - offered only to whoever took the other side, and gone once it has been settled."
+        },
         {
           "intent": "ask_tom_other",
           "text": "Tout le monde pense comme vous, ici ?",

@@ -80,6 +80,15 @@
     "bram": {
       "hp": 10,
       "spares": true
-    }
+    },
+    "harry": {
+      "hp": 10,
+      "spares": false
+    },
+    "tom": {
+      "hp": 10,
+      "spares": false
+    },
+    "_quest_note": "Neither of these is a sparring partner. They are standing between the player and the thing the player came to do, and losing to somebody who means it is the checkpoint rule doing its job."
   }
 }

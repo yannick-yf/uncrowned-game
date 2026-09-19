@@ -411,6 +411,16 @@
       ],
       "options": [
         {
+          "intent": "face_harry",
+          "text": "Stand away from the furnaces.",
+          "reply": "No. I keep the book and I keep the door.",
+          "requires": "cinderworks:brought_through",
+          "hides_after": "cinderworks:faced_them",
+          "fights": "harry",
+          "costs": "free",
+          "_p2": "placeholder wording, 2026-09-19: the words are Yannick's (P2). What must stay is the shape - offered only to whoever took the other side, and gone once it has been settled."
+        },
+        {
           "intent": "ask_works",
           "text": "What is it you make here?",
           "reply": "Iron and steel. Rails, plates, tools, nails. Before the works, 1 child in 4 died here every winter. Now it is 1 in 40."
@@ -515,6 +525,16 @@
       "zone": "overworld",
       "greeting": "There was a village here before the works. I was born in it. Look at what is left and tell me that is progress.",
       "options": [
+        {
+          "intent": "face_tom",
+          "text": "The shift is going back. Let it past.",
+          "reply": "Not that one. Not today.",
+          "requires": "cinderworks:vouched_for",
+          "hides_after": "cinderworks:faced_them",
+          "fights": "tom",
+          "costs": "free",
+          "_p2": "placeholder wording, 2026-09-19: the words are Yannick's (P2). What must stay is the shape - offered only to whoever took the other side, and gone once it has been settled."
+        },
         {
           "intent": "ask_tom_other",
           "text": "Does everybody here think as you do?",
