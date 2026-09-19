@@ -79,6 +79,29 @@ library carries a provenance-and-licence manifest and `test_workshop_provenance`
 a file without one. Mixing artists is the mark of an amateur game in meshes exactly as
 in pixels. (The HUD's font is the pack's, and an open question.)
 
+**One exception, and Yannick made it deliberately (2026-09-19).** His brother had drawn
+no attack and no guard — eight animations, idle and walk in four directions — so a fight
+showed three different actions as a person standing still. Yannick was told plainly that
+a second hand on his brother's character would show, and said to do it anyway. So
+`tools/draw_fight_frames.gd` builds six frames — attack, guard, flinch, left and right —
+and `view3d/fight/traveler_sheet.png` is the result.
+
+Three things keep it honest, and none of them makes it *not* an exception:
+
+- **No colour is invented.** His hand is copied to a new place, his sleeve lengthened by
+  repeating one of its own columns, his outline sampled from his own line. His figure is
+  painted rather than flat — the hair alone runs to thousands of browns — so a flat
+  rectangle beside it would read as somebody else's hand at fifty paces.
+- **His files are never touched.** `prototypes/` is his, the tool only reads it, and the
+  combined sheet and the extra animations are ours.
+- **It is written down where he will see it**, in `docs/POUR_SLOSINIO.md` §8, so he does
+  not discover it. `test_his_brother_has_not_drawn_a_blow` fails the day his own sheet
+  grows a ninth animation, and on that day this tool and this exception are deleted.
+
+The sheet is **not** in `assets/`: that folder is the approved 2D pack's family and
+`tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
+has never lived there — his own sheet is in `prototypes/`.
+
 Free assets may be used, but only from the packs approved in `docs/SPECS.md` §13.
 **Never mix packs from different artists** — palettes, pixel densities and light
 angles do not reconcile, and mixing them is the clearest mark of an amateur game.

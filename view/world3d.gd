@@ -72,6 +72,15 @@ const HIS_LIBRARY: String = "res://view3d/workshop/prototype_3d/assets/library/"
 ## the traffic. His frames, his material, his pixel size (a 197-pixel frame stands
 ## 1.53 m), his billboard trick. §13's *nobody shares a face* is a debt he settles.
 const HIS_FRAMES: String = "res://view3d/workshop/prototype_3d/assets/traveler_walk_frames.tres"
+## **Ours, and it says so.** Six frames of his traveller fighting, built from his own
+## pixels by `tools/draw_fight_frames.gd` because he has drawn no attack and no guard.
+## Yannick's call on 2026-09-19, over the art rule and knowing a second hand would show;
+## the reasoning is in that tool's header and in `docs/POUR_SLOSINIO.md` §8. The day his
+## sheet grows an `attack_left` of its own, delete this and the tool with it.
+const OUR_FIGHT_FRAMES: String = "res://view3d/fight/traveler_sheet.png"
+const OUR_CELL: Vector2i = Vector2i(160, 200)
+const OUR_POSES: Array[StringName] = [&"attack", &"guard", &"hurt"]
+const OUR_WAYS: Array[StringName] = [&"right", &"left"]
 const HIS_FIGURE_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/traveler_sprite.tres"
 const HIS_FIGURE_PIXEL_SIZE: float = 0.0077832513
 const FIGURE_HEIGHT_M: float = 1.55
@@ -314,12 +323,56 @@ func _load_his_materials() -> void:
 		_frames = load(HIS_FRAMES) as SpriteFrames
 	if ResourceLoader.exists(HIS_FIGURE_MATERIAL):
 		_figure_material = load(HIS_FIGURE_MATERIAL) as Material
+	# After both, because it re-points his frames *and* his material at one sheet.
+	_add_our_fight_frames()
 	if ResourceLoader.exists(HIS_BLOCK_MATERIAL):
 		_block_material = load(HIS_BLOCK_MATERIAL) as Material
 
 
 ## His map plate as the world, with his lights and sky, minus his map camera and its
 ## labels. The copy under `view3d/workshop/` is his tree with its paths repointed.
+## Adds `attack_*`, `guard_*` and `hurt_*` to a **copy** of his frames, so his own
+## resource is never touched and a clone without our sheet simply has eight animations
+## and the fight's lean to tell a blow by, as it did before.
+##
+## **Every one of his frames is re-pointed at the combined sheet too**, and that is not
+## optional. His material hands the whole sheet to his shader as a uniform and the frames
+## index into it by UV, so a frame whose atlas is one image and a uniform that is another
+## do not agree: six frames of ours in their own file drew the entire file, shrunk, onto
+## every fighter. One sheet, his pixels at their original coordinates, ours below.
+func _add_our_fight_frames() -> void:
+	if _frames == null or not ResourceLoader.exists(OUR_FIGHT_FRAMES):
+		return
+	var sheet: Texture2D = load(OUR_FIGHT_FRAMES) as Texture2D
+	if sheet == null:
+		return
+	_frames = _frames.duplicate(true) as SpriteFrames
+	for named: StringName in _frames.get_animation_names():
+		for i: int in _frames.get_frame_count(named):
+			var slice := _frames.get_frame_texture(named, i) as AtlasTexture
+			if slice != null:
+				slice.atlas = sheet
+	var below: int = int(sheet.get_height()) - OUR_CELL.y * OUR_WAYS.size()
+	for row: int in OUR_WAYS.size():
+		for col: int in OUR_POSES.size():
+			var named := StringName("%s_%s" % [OUR_POSES[col], OUR_WAYS[row]])
+			if _frames.has_animation(named):
+				continue
+			_frames.add_animation(named)
+			_frames.set_animation_loop(named, false)
+			var slice := AtlasTexture.new()
+			slice.atlas = sheet
+			slice.region = Rect2(
+				Vector2(col * OUR_CELL.x, below + row * OUR_CELL.y), Vector2(OUR_CELL))
+			_frames.add_frame(named, slice)
+	# And the shader has to be handed the same sheet, or it samples his and finds his
+	# walk cycle where our fist should be.
+	var paint := _figure_material as ShaderMaterial
+	if paint != null:
+		_figure_material = paint.duplicate(true)
+		(_figure_material as ShaderMaterial).set_shader_parameter("sprite_sheet", sheet)
+
+
 func _adopt_his_world() -> void:
 	if not ResourceLoader.exists(HIS_MAP):
 		push_warning("his scenes are not vendored at %s — showing the bake's ground; run tools/vendor_workshop.sh" % HIS_MAP)
@@ -890,15 +943,16 @@ func _sync_player(frame: Dictionary) -> void:
 	var moved: float = Vector2(feet.x, feet.z).distance_to(Vector2(_player_last.x, _player_last.z)) if _player_placed else 0.0
 	_player_last = feet
 	_player_placed = true
-	if moved > 0.002:
-		_walk_phase = fposmod(_walk_phase + moved / WALK_CYCLE_M, 1.0)
-		_walk(_player, facing, _walk_phase)
-	else:
-		_idle(_player, facing)
+	var fighting: Dictionary = frame.get("fight", {}) as Dictionary
+	if not _fight_pose(_player, fighting, true, facing):
+		if moved > 0.002:
+			_walk_phase = fposmod(_walk_phase + moved / WALK_CYCLE_M, 1.0)
+			_walk(_player, facing, _walk_phase)
+		else:
+			_idle(_player, facing)
 	# The lunge is added to where he is *drawn* and not to where he is: the walk cycle is
 	# driven by ground covered, and a blow that made his feet turn over would read as a
 	# man walking on the spot.
-	var fighting: Dictionary = frame.get("fight", {}) as Dictionary
 	_foot_figure(_player, at + Vector2(_lunge_of(fighting, true), 0.0), _dip_of(fighting, true))
 
 
@@ -934,7 +988,8 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		var stands_at: Vector2 = npc.centre()
 		if npc.id == foe:
 			stands_at = fighting.get("at", stands_at) as Vector2
-			_step_the_foe(figure, stands_at, fighting.get("facing", Vector2i(0, 1)) as Vector2i)
+			_step_the_foe(figure, stands_at,
+				fighting.get("facing", Vector2i(0, 1)) as Vector2i, fighting)
 			stands_at += Vector2(_lunge_of(fighting, false), 0.0)
 			_foot_figure(figure, stands_at, _dip_of(fighting, false))
 			figure.visible = true
@@ -950,17 +1005,43 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 ## The man in front of you: walking when the fight moves him, and always looking at
 ## you. The cycle is driven by the ground he actually covers, the same rule the player
 ## and the road's travellers are drawn by, so nothing about a fight animates on a timer.
-func _step_the_foe(figure: Node3D, at: Vector2, facing: Vector2i) -> void:
+func _step_the_foe(figure: Node3D, at: Vector2, facing: Vector2i, fighting: Dictionary) -> void:
 	var feet: Vector3 = _feet_of(at)
 	var moved: float = Vector2(feet.x, feet.z).distance_to(
 		Vector2(_foe_last.x, _foe_last.z)) if _foe_placed else 0.0
 	_foe_last = feet
 	_foe_placed = true
+	if _fight_pose(figure, fighting, false, facing):
+		return
 	if moved > 0.002:
 		_foe_phase = fposmod(_foe_phase + moved / WALK_CYCLE_M, 1.0)
 		_walk(figure, facing, _foe_phase)
 	else:
 		_idle(figure, facing)
+
+
+## Puts one of our three fight poses on a figure, and says whether it did. `false` means
+## nobody is fighting or this frame has no pose of its own, and the caller draws them
+## standing or walking as usual.
+func _fight_pose(figure: Node3D, fighting: Dictionary, mine: bool, facing: Vector2i) -> bool:
+	if fighting.is_empty():
+		return false
+	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
+	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
+	var stunned: int = int(fighting.get("my_stun" if mine else "his_stun", 0))
+	var guarding: bool = mine and bool(fighting.get("guarding", false))
+	var pose: StringName = CombatRules.pose_of(move, at_frame, stunned, guarding)
+	if pose == &"":
+		return false
+	var named := StringName("%s_%s" % [pose, _facing_name(facing)])
+	var sprite := figure as AnimatedSprite3D
+	if sprite == null or not sprite.sprite_frames.has_animation(named):
+		return false
+	if sprite.animation != named:
+		sprite.animation = named
+	sprite.pause()
+	sprite.set_frame_and_progress(0, 0.0)
+	return true
 
 
 ## **How far a fighter is drawn from where he stands**, in tiles along the fight's line.

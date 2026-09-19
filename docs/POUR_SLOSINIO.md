@@ -221,6 +221,27 @@ détend d'un coup quand le coup part, il s'écarte derrière une garde. Ça se l
 mouvement. Ce n'est pas un dessin, c'est un déplacement, et c'est marqué comme provisoire
 dans nos tests.
 
+### On a dessiné dessus, et tu dois le savoir
+
+**Yannick a décidé le 19 septembre qu'on les fasse nous-mêmes, en attendant.** Je lui ai
+dit qu'une deuxième main sur ton personnage se verrait. Il a dit d'y aller quand même.
+Donc c'est écrit ici plutôt que découvert.
+
+Ce qu'on a fait, exactement :
+
+- **Aucune couleur inventée.** Ta main est recopiée ailleurs, ta manche est allongée en
+  répétant une de ses propres colonnes, ton contour est prélevé sur ton trait. Ton
+  personnage est peint, pas en aplats — rien que les cheveux font des milliers de bruns —
+  donc un rectangle de couleur à côté aurait sauté aux yeux.
+- **On n'a pas touché à tes fichiers.** `prototypes/` est à toi, l'outil ne fait que le
+  lire. La planche combinée et les animations en plus sont chez nous, dans `view3d/`.
+- **L'outil est `tools/draw_fight_frames.gd`** et il se relance. Le jour où tu dessines
+  les tiennes, on supprime l'outil et le fichier, et un test nous force la main : il
+  échoue dès que ta planche gagne une neuvième animation.
+
+C'est grossier. Un bras bleu tendu avec un poing au bout, un poing levé au menton, une
+tête qui recule. Ça se lit en jeu, et ce n'est pas mieux que ça.
+
 **Ce qui remplacerait ça, c'est trois images :**
 
 | | |

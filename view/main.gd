@@ -247,6 +247,8 @@ func _frame(eye: Vector2) -> Dictionary:
 			"his_frame": _fight.opponent_frame,
 			"my_move": String(_fight.player_move),
 			"my_frame": _fight.player_frame,
+			"my_stun": _fight.player_stun,
+			"his_stun": _fight.opponent_stun,
 			"guarding": _fight.pressing_guard and _fight.player_move == &"",
 		},
 		"tents": tents,

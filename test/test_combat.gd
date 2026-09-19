@@ -858,7 +858,8 @@ func test_his_brother_has_not_drawn_a_blow() -> void:
 	for way: String in ["up", "down", "left", "right"]:
 		assert_true(names.has("idle_" + way), "idle_%s" % way)
 		assert_true(names.has("walk_" + way), "walk_%s" % way)
-	debt("no attack and no guard animation exists: the fight's tell is the figure moved")
+	debt("he has drawn no attack, guard or flinch; ours are built from his own pixels by "
+		+ "tools/draw_fight_frames.gd — delete both the day he draws them")
 
 
 func test_a_wind_up_draws_him_back_and_the_blow_throws_him_forward() -> void:
@@ -890,4 +891,43 @@ func test_nothing_that_is_not_a_blow_lunges() -> void:
 		"a backstep already moves; it does not also lean")
 	assert_true(CombatRules.guard_lean() < 0.0, "a guard leans away, never into it")
 	assert_true(absf(CombatRules.guard_lean()) < 1.0, "and it is a stance, not a move")
+
+
+func test_which_pose_a_fighter_is_in() -> void:
+	# Three drawn poses and no fourth: the wind-up has none of its own on purpose,
+	# because what tells you a blow is coming is the lean and the gather, and a drawn
+	# frame that snapped on at the *start* of a wind-up would say "now" far too early.
+	var startup: int = CombatRules.of(CombatRules.STRIKE, "startup")
+	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, 0, 0, false), &"",
+		"winding up is the lean's job, not a drawing's")
+	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, startup, 0, false), &"attack",
+		"and the drawn blow snaps out on the frame the blow does")
+	assert_eq(CombatRules.pose_of(&"", 0, 0, true), &"guard", "a guard is a pose")
+	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, startup, 0, true), &"attack",
+		"but a blow of your own beats it — you cannot do both")
+	assert_eq(CombatRules.pose_of(&"", 0, 6, false), &"hurt", "and being hit beats everything")
+	assert_eq(CombatRules.pose_of(CombatRules.BACKSTEP, 5, 0, false), &"",
+		"a backstep has no drawing; it is the only move that moves you instead")
+
+
+func test_the_six_frames_we_drew_are_there() -> void:
+	# Yannick's exception to the art rule, 2026-09-19, kept as a check so that a build
+	# which quietly lost the sheet falls back to his eight animations and says so rather
+	# than drawing a fist that is not there.
+	if not ResourceLoader.exists(World3d.OUR_FIGHT_FRAMES):
+		debt("view3d/fight/traveler_sheet.png is missing — run tools/draw_fight_frames.gd")
+		return
+	var sheet: Texture2D = load(World3d.OUR_FIGHT_FRAMES) as Texture2D
+	assert_not_null(sheet, "our sheet loads")
+	var his: Texture2D = null
+	var frames: SpriteFrames = load(World3d.HIS_FRAMES) as SpriteFrames
+	if frames != null:
+		var slice := frames.get_frame_texture(&"idle_right", 0) as AtlasTexture
+		his = slice.atlas if slice != null else null
+	if his != null:
+		assert_eq(int(sheet.get_width()), int(his.get_width()),
+			"ours is his sheet, the same width")
+		assert_eq(int(sheet.get_height()),
+			int(his.get_height()) + World3d.OUR_CELL.y * World3d.OUR_WAYS.size(),
+			"with our two rows below it — his pixels stay at his coordinates")
 
