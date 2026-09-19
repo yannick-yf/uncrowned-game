@@ -203,3 +203,92 @@ func test_the_line_that_names_the_other_is_never_refused() -> void:
 		assert_not_null(option, "%s has the line" % pair[0])
 		assert_false(option.asks_for_goodwill(),
 			"%s names the other whatever they think of you" % pair[0])
+
+
+# --------------------------------------------- choosing a side gets you in (Q3) ---
+#
+# **Choosing is what opens the gate.** The yard's way in is a man (Q1, `WardRules`), and
+# what gets you past him is a fact somebody gave you: Tom brings you through a way he
+# knows, Sena answers for you at the gate. Two keys, so a death does not close the works.
+#
+# The *words* of these two lines are Yannick's (P2). What is tested here is their shape.
+
+const BROUGHT: StringName = &"cinderworks:brought_through"
+const VOUCHED: StringName = &"cinderworks:vouched_for"
+
+
+func _a_furnace_tile() -> Vector2i:
+	var region: Region = Region.build_overworld()
+	for prop: Dictionary in region.props:
+		if String(prop["kind"]) == "kiln":
+			return prop["at"] as Vector2i
+	return Vector2i(-1, -1)
+
+
+func test_you_cannot_take_a_side_before_you_know_what_it_is() -> void:
+	# A player who has said nothing to him cannot offer to help him do a thing he has
+	# not said he wants. It is also what frees the slot: the box holds three lines, and
+	# the one that taught you is spent by the time this one appears.
+	var sim: Sim = _world()
+	assert_false(_talk(sim, &"tom").has("side_with_tom"), "nothing to take sides about yet")
+	_say(sim, &"ask_tom_pay")
+	assert_true(sim.facts.has(TOM_DOWN), "now he has said what he wants")
+	assert_true(_talk(sim, &"tom").has("side_with_tom"), "and now you can offer")
+
+
+func test_taking_one_side_closes_the_other() -> void:
+	var sim: Sim = _world()
+	_talk(sim, &"tom")
+	_say(sim, &"ask_tom_pay")
+	_say(sim, &"side_with_tom")
+	assert_true(sim.facts.has(BROUGHT), "Tom brings you through")
+
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	_talk(sim, &"sena")
+	_say(sim, &"ask_hand")
+	assert_false(_talk(sim, &"sena").has("side_with_sena"),
+		"and she is not going to vouch for Tom's man")
+
+
+func test_either_side_is_a_key_to_the_yard() -> void:
+	if not Places.baked():
+		debt("the yard is the baked world's")
+		return
+	for taking: StringName in [BROUGHT, VOUCHED]:
+		var sim: Sim = _world()
+		var region: Region = (sim.store(&"world") as WorldState).region()
+		var gate: Vector2i = region.wards.keys()[0] as Vector2i
+		assert_false(WardRules.opens(region.wards[gate] as StringName, sim.facts),
+			"shut to a stranger")
+		sim.facts.add_source(taking, &"witnessed")
+		assert_true(WardRules.opens(region.wards[gate] as StringName, sim.facts),
+			"and %s opens it" % taking)
+
+
+func test_neither_side_refuses_you_for_being_disliked() -> void:
+	# **Invariant 6.** Both of them want something from the player: Tom needs somebody to
+	# help him, Sena needs a number. Neither is doing a favour, and if both were behind a
+	# goodwill gate a rude player could never enter the works at all.
+	var cast := Cast.shared()
+	for pair: Array in [[&"tom", &"side_with_tom"], [&"sena", &"side_with_sena"]]:
+		var option: DialogueOption = DialogueRules.find(
+			cast.get_npc(pair[0] as StringName), pair[1] as StringName)
+		assert_not_null(option, "%s can be taken up on it" % pair[0])
+		assert_false(option.asks_for_goodwill(),
+			"%s takes your help whatever they think of you" % pair[0])
+
+
+func test_getting_in_is_not_getting_to_the_furnaces() -> void:
+	# **Yannick, 2026-09-19.** The gate opening must not hand the player the act. The
+	# quest's spine is *get in, face whoever stands in the way, act* — the fight is the
+	# moment somebody puts themselves between the two. Walking straight from the gate to
+	# a cold furnace with nothing in between is the thing this guards against.
+	if not Places.baked():
+		debt("the yard is the baked world's")
+		return
+	var sim: Sim = _world()
+	sim.facts.add_source(VOUCHED, &"sena")
+	assert_false(sim.facts.has(&"cinderworks:faced_them"),
+		"being let in is not having faced anybody")
+	assert_true(_a_furnace_tile().x > 0, "and there is a furnace waiting behind it")

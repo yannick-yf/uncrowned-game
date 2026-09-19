@@ -39,7 +39,9 @@
     "you:owed": "The fairy did not choose you because you are someone. She chose you because you are owed something.",
     "thornwood:save_us": "The fairies have asked you to save them, if you can.",
     "cinderworks:tom_wants_it_down": "Tom, born in the village before the works, wants them shut and is looking for somebody to help him do it.",
-    "cinderworks:sena_wants_it_kept": "Sena, who lost a hand in furnace four, defends the works even so: four hundred people eat by them."
+    "cinderworks:sena_wants_it_kept": "Sena, who lost a hand in furnace four, defends the works even so: four hundred people eat by them.",
+    "cinderworks:brought_through": "Tom brought the player into the works' yard by a way he knows.",
+    "cinderworks:vouched_for": "Sena answered for the player at the works' yard gate."
   },
   "npcs": {
     "fairy": {
@@ -494,6 +496,16 @@
           "costs": "goodwill",
           "causes": "i_turned_the_workers",
           "requires": "cinderworks:death_toll"
+        },
+        {
+          "intent": "side_with_sena",
+          "text": "I will help you.",
+          "reply": "Come. I will answer for you at the gate.",
+          "requires": "cinderworks:sena_wants_it_kept",
+          "teaches": "cinderworks:vouched_for",
+          "hides_after": "cinderworks:brought_through",
+          "costs": "free",
+          "_p2": "placeholder wording, 2026-09-19: the words are Yannick's (P2). What must stay is the shape - it is only offered once you have heard what they want, and it stops being offered once you have taken the other side."
         }
       ]
     },
@@ -521,6 +533,16 @@
           "intent": "ask_tom_before",
           "text": "What was it like before?",
           "reply": "You could see the stars. You drank from the stream. My father died at seventy-two and not of a cough."
+        },
+        {
+          "intent": "side_with_tom",
+          "text": "I will help you.",
+          "reply": "Then come. I know a way through.",
+          "requires": "cinderworks:tom_wants_it_down",
+          "teaches": "cinderworks:brought_through",
+          "hides_after": "cinderworks:vouched_for",
+          "costs": "free",
+          "_p2": "placeholder wording, 2026-09-19: the words are Yannick's (P2). What must stay is the shape - it is only offered once you have heard what they want, and it stops being offered once you have taken the other side."
         }
       ]
     },

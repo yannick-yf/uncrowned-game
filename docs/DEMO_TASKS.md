@@ -325,7 +325,7 @@ its word budget twice; and **invariant 6** caught that `cinderworks:tom_wants_it
 one source behind a goodwill gate, so a rude player could never learn the other side
 existed. Tom's line is `costs: free` now, which is also true of him: he needs help.
 
-### Q3 · Choosing a side, and getting in
+### Q3 · Choosing a side, and getting in — **built 2026-09-19**
 
 Est. 3 h. Depends on: Q1, Q2.
 
@@ -333,17 +333,43 @@ The choice is explicit, in conversation. Choosing is what opens the gate — **T
 brings you through, Drissa vouches for you.**
 
 **Check:** both ways, in two fresh runs. Before choosing, the gate refuses; after, it
-does not. The refusal says nothing about a quest.
+does not. The refusal says nothing about a quest. — ***met***, 5 tests in
+`test/test_cinderworks.gd`.
+
+**No new machinery was needed.** Taking a side is a line that teaches a fact, and Q1's
+ward already reads the two facts. `side_with_tom` teaches `cinderworks:brought_through`,
+`side_with_sena` teaches `cinderworks:vouched_for`, and each `hides_after` the other, so
+choosing closes the other door.
+
+**Each is only offered once you have heard what that person wants** — which is both good
+sense and the thing that frees the slot: the box holds three lines, and the one that
+taught you is spent by the time this one appears. Both are `costs: free`, because both of
+them want something from the player and neither is doing a favour; two goodwill gates
+would have closed the works to a rude player entirely (invariant 6).
+
+**The words are placeholders and say so in the file.** They are Yannick's, in P2. What is
+tested is the shape, not the wording.
 
 ### Q4 · The act at the furnaces
 
 Est. 2 h. Depends on: Q3.
 
 **Put out the ones still burning, or relight the cold ones** — a row in the landmark
-table the game already has, offered only inside. It is one act, in two directions.
+table the game already has. It is one act, in two directions.
+
+**Offered inside the yard *and* only after the facing** (Yannick, 2026-09-19; it was
+"offered only inside", which was too thin). §4's spine is **get in → face whoever stands
+in the way → act**, and *the fight is not an addition: it is the moment somebody puts
+themselves physically between the player and the act*. Walking through the gate straight
+to a furnace, with nothing in between, reads as a hole where the quest should be.
+
+So Q4 builds the act **and the gate in front of it** — a fact that says the player has
+faced whoever was in the way. **F6 is what fills that fact**, and that is the order: the
+act with its gate first, the fight wired into it after. Not the other way round, or Q4
+would be waiting on a fight that has nothing to decide.
 
 **Check:** perform each in its own run. Repeating it does not count twice. The prompt
-appears only inside the works.
+appears only inside the works, and only once somebody has been faced.
 
 ### Q5 · The outcome moves the two values, once
 

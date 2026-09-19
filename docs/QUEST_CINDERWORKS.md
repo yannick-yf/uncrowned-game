@@ -47,12 +47,35 @@ He has reached the point of wanting to hurt the works and bring it down. He does
 like what the crown does; for him the system itself is wrong, and **the destruction of
 nature is not worth the price**. He needs the player to help him end it.
 
-### Drissa — the worker, and she is **Sena** (settled 2026-09-19)
+### Sena — the worker (settled 2026-09-19; the name Drissa is retired)
 
-The cast already had her: `sena`, who lost a hand in furnace four six years ago, was paid
-eleven days' wages, and was told by the works' own doctor that it was her fault. She
-defends the place anyway, and that is a better argument for it than the draft below had.
-The name Drissa is retired; everything under it is hers.
+The cast already had her, and her context is now settled — **Yannick's, agreed
+2026-09-19.** The eleven days' wages are gone: they were invented here, and they made the
+works' answer to a maimed woman derisory, which is the opposite of what she is for.
+
+**She came on her own, for the pay.** Before the works, one child in four died here every
+winter. She knew that when she came.
+
+**Furnace four took her left hand.**
+
+**What the works did then: they kept her.** You cannot hold a bar one-handed, so the
+foreman gave her the weighing office — every load in and out goes across her desk. It is
+sitting work, under a roof, and it is hers for life.
+
+That is where she holds together. **She is not grateful; she is useful.** And because she
+weighs everything, she has the figures — which is why the other workers listen to her, and
+why the foreman settles a rise through her rather than through them.
+
+**Her position: one in four against one in forty.** She paid a hand for that difference.
+She thinks the account balances. She does not say it is fair.
+
+Two things recommend this. The **weighing office is a real building on his brother's map**
+(`bureau_pesee`), already standing at the works. And it explains all three lines she
+already had, without changing one of them: why she will not move for a feeling, why 381
+changes everything, why she asks for a week.
+
+**Her words are Yannick's.** What is written here is context, in English, like the rest of
+these documents; the French she speaks is P2's and his.
 
 
 She was **brought to the village by force**. She works long hours and is glad of the
