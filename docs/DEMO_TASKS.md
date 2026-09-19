@@ -386,7 +386,7 @@ in `content/places.json` — where he stood *before* squaring up — so he would
 moved on screen. And `Escape` had stopped working during a fight, which left the player
 unable to pause; it opens the pause menu now, which is not fleeing.
 
-### F4 · Into the fight and back out
+### F4 · Into the fight and back out — **built 2026-09-19**
 
 Est. 3 h. Depends on: F3. *(Was F3, and depended on Q3 — it no longer does, because F2's
 sparring partner gives it a fight to enter without the quest.)*
@@ -394,8 +394,29 @@ sparring partner gives it a fight to enter without the quest.)*
 Whoever asked for the fight receives one result. Victory and defeat both return to the
 right place, with the right health, and defeat obeys the checkpoint rule.
 
+**Losing is not always dying** (2026-09-19). Whether an opponent finishes you is a fact
+about *him*, in `content/moves.json`'s new `opponents` block, not a branch in the code.
+Bram spares you — he says so in his own line — so losing to him leaves you standing in
+the village on one health. Anybody not listed does not spare you: the default kills, and
+the checkpoint rule takes over.
+
 **Check:** win once and lose once from the same starting point. World time resumes.
-Nothing is applied twice.
+Nothing is applied twice. — ***met***: lose → `lost`, 1 health, **no death**, still in
+Brindle; win → `won`, 8 health; one `fight_ended` each, carrying the answer, the opponent
+and **who asked** (`ask_bram_spar`), which is the hook F6 needs. 6 more tests.
+
+**Two things fixed on the way:**
+
+- **The loss was being read back out of `WorldState`** — full health, a death on the
+  counter, and still in hitstun. Three conditions that are each true for other reasons,
+  and none of which hold when the opponent spares you. `Fight.player_felled` is set by
+  the blow that did it, which is the only place that knows.
+- **A blow now costs what the file says it costs.** `WorldState.hurt` had half a second
+  of grace after every wound — *contact's* rule, because standing inside the king drains
+  ten health in three frames. A fight's blows are spaced by frame data and already cannot
+  land twice, so the window has nothing to protect and would silently eat blows. Measured
+  honestly: it eats none of Bram's, whose swings are seventy-four frames apart. It is a
+  trap closed before F5 and F6 add a faster opponent, not a bug that was biting.
 
 ### F5 · The opponent does something
 

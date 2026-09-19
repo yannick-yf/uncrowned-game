@@ -149,7 +149,9 @@ func _choose(
 		# Derived, not submitted: the player's event was the line they chose, and the
 		# fight is the world's answer to it. Replay recomputes this from the choice,
 		# so the log holds one intent rather than an intent and a fight.
-		sim.derive(&"fight_began", {"opponent": String(option.fights)})
+		sim.derive(&"fight_began", {
+			"opponent": String(option.fights), "asked_by": String(intent),
+		})
 
 
 func _close(world: WorldState) -> void:

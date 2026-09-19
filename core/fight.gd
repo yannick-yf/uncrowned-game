@@ -58,6 +58,19 @@ var opponent_connected: bool = false
 ## and not a coin. Nothing in a fight is random.
 var opponent_waited: int = 0
 
+## **Who asked for this fight**, so the answer can be given back to them (F4). Today it
+## is the dialogue intent that started it; `fight_ended` carries it out again. Nothing
+## in the demo listens yet — Bram's fight has no consequence beyond the bruises — but
+## the quest's fights (F6) turn on exactly this, and a result nobody can be handed is a
+## result that gets applied by whoever happens to notice, twice.
+var asked_by: StringName = &""
+
+## **You went down.** Set the frame a blow would have felled you, whether or not it
+## actually did — an opponent who spares you stops the killing blow but you still lost.
+## The alternative was reading it back out of `WorldState` afterwards, which is how the
+## first build did it, with three conditions that were each true for other reasons.
+var player_felled: bool = false
+
 ## Why it ended, for the journal and for whoever asked for the fight: `&"won"`,
 ## `&"lost"`, `&"left"`, or `&""` while it is still going.
 var outcome: StringName = &""
@@ -101,7 +114,8 @@ func opponent_free() -> bool:
 func fingerprint() -> String:
 	if not on():
 		return "none"
-	return "%s p=%d/%s@%d/s%d o=%d/%s@%d/s%d hp=%d f=%d %s @%.4f,%.4f>%d" % [
+	return "%s p=%d/%s@%d/s%d o=%d/%s@%d/s%d hp=%d f=%d %s @%.4f,%.4f>%d fell=%s" % [
 		String(opponent), player_at_mm, String(player_move), player_frame, player_stun,
 		opponent_at_mm, String(opponent_move), opponent_frame, opponent_stun,
-		opponent_hp, freeze, String(outcome), origin_tiles.x, origin_tiles.y, toward]
+		opponent_hp, freeze, String(outcome), origin_tiles.x, origin_tiles.y, toward,
+		player_felled]

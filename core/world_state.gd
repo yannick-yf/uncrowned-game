@@ -140,14 +140,33 @@ func tiles_to_blackcairn() -> float:
 ##
 ## One path for everything that can hurt you — the king today, a fight in Phase 4 —
 ## so that death, the respawn and the grace window cannot drift apart between them.
-func hurt(amount: int, step: int) -> bool:
-	if step < invulnerable_until:
+## **`grace` is the half-second of mercy, and only *contact* wants it** (F4,
+## 2026-09-19). It exists because standing inside the king drains ten hit points in
+## three frames; a blow in a fight is not that. A fight's blows are discrete, already
+## cannot land twice on their own active frames, and are spaced by the frame data in
+## `content/moves.json` — so the window has nothing to protect against and silently
+## eats blows instead.
+##
+## **A trap removed, not a bug fixed, and the difference was measured.** The first
+## claim here was that a played fight lost a whole swing to the window; measuring it
+## properly said otherwise — four blows announced, four taken. Bram swings about every
+## seventy-four frames and the window is thirty, so nothing of his is ever eaten. What
+## is eaten is any blow that lands inside thirty frames of the last one: a faster
+## opponent, a second opponent, or two guarded blows in quick succession, all of which
+## the F group is about to add. A file that says a blow costs three and a game that
+## silently delivers nothing is the exact failure the frame data exists to prevent, and
+## it is cheaper to close now than to find later.
+##
+## Everything else still goes down one path — the death, the count, the mending, the
+## respawn at the last fire — which is the point of this function.
+func hurt(amount: int, step: int, grace: bool = true) -> bool:
+	if grace and step < invulnerable_until:
 		return false
 	player_hp = ContactRules.damage_after(player_hp, amount)
 	touches_taken += 1
 	last_hurt_step = step
 	mending_steps = 0
-	invulnerable_until = step + ContactRules.invulnerable_steps()
+	invulnerable_until = step + (ContactRules.invulnerable_steps() if grace else 0)
 	if not ContactRules.is_dead(player_hp):
 		return false
 	deaths += 1

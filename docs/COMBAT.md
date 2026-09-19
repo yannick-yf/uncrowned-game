@@ -370,3 +370,47 @@ a replay would not have.
   pause menu, and that is not fleeing: **there is no fleeing in the demo** (Yannick,
   2026-09-19), so `fight_left` stays an outcome that nothing in the game produces.
 
+---
+
+## 9. F4 — one result, handed back, once
+
+**Built 2026-09-19.** A fight now ends properly in both directions and says so to
+whoever asked for it.
+
+### Losing is not always dying, and that is data
+
+`content/moves.json` gains an `opponents` block: what each one is worth, and whether he
+**spares** you. Bram does — *« je m'arrête quand tu tombes »* is in his own dialogue, and
+a sparring partner who sends you back to the fairies' clearing twelve seconds into the
+game is not a sparring partner. Anyone not listed takes `_default`, which does not spare.
+
+So: lose to Bram and you are left standing in the village on one health, no death on the
+counter. Lose to the foreman and the checkpoint rule takes over exactly as it always has.
+**Down is recorded before the damage is softened**, so losing to a man who spares you is
+still losing.
+
+### The result
+
+`fight_ended` now carries `asked_by` — the dialogue intent that started it. Nothing in
+the demo listens yet, because Bram's fight has no consequence beyond the bruises, but the
+quest's fights (F6) turn on exactly this: a result nobody can be handed is a result that
+gets applied by whoever notices, twice. It is derived **once**, because `_end` puts the
+fight down before anything else and cannot run again — and that is a test, not a comment.
+
+### Two things this cleaned up
+
+**The loss was being inferred.** The first build read it back out of `WorldState`: full
+health, a death on the counter, and still in hitstun. Each of those is true for other
+reasons, and none of them held once an opponent could spare you. `Fight.player_felled` is
+set by the blow that did it.
+
+**A blow costs what the file says.** `WorldState.hurt` gave half a second of grace after
+every wound. That is *contact's* rule — standing inside the king drains ten health in
+three frames — and a fight's blows are already discrete, already cannot land twice, and
+are already spaced by frame data. **Measured before and after, honestly: it was eating
+none of Bram's blows**, whose swings are seventy-four frames apart against a
+thirty-frame window. The first draft of this section claimed it had eaten a whole swing;
+that was a bad measurement, which counted a killing blow as zero because death resets
+health to full. The window is now contact's alone — a trap closed before F5 and F6 bring
+a faster opponent, not a bug that was biting.
+

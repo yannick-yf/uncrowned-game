@@ -102,7 +102,7 @@ func _begin(sim: Sim, fight: Fight, event: SimEvent) -> void:
 	fight.player_side = -fight.toward
 	fight.player_at_mm = 0
 	fight.opponent_at_mm = apart
-	fight.opponent_hp = CombatRules.opponent_hp()
+	fight.opponent_hp = CombatRules.hp_of(who)
 	fight.player_move = &""
 	fight.opponent_move = &""
 	fight.player_frame = 0
@@ -116,6 +116,8 @@ func _begin(sim: Sim, fight: Fight, event: SimEvent) -> void:
 	fight.player_connected = false
 	fight.opponent_connected = false
 	fight.opponent_waited = 0
+	fight.player_felled = false
+	fight.asked_by = StringName(String(event.data.get("asked_by", "")))
 	fight.outcome = &""
 	sim.derive(&"fight_ready", {"opponent": String(who), "apart_mm": apart})
 
@@ -244,9 +246,16 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 		fight.opponent_connected = true
 		fight.player_stun = stun
 		fight.player_at_mm = CombatRules.inside_arena(fight.player_at_mm - back)
+		# **Down is down, whether or not he finishes it.** Recorded before the damage is
+		# softened, so losing to a man who spares you is still losing.
+		if world.player_hp - damage <= 0:
+			fight.player_felled = true
+			if CombatRules.spares(fight.opponent):
+				damage = maxi(world.player_hp - 1, 0)
 		# One path for everything that can hurt you: the same one the king's touch
 		# uses, so death, the grace window and the respawn cannot drift apart.
-		world.hurt(damage, sim.step)
+		# No grace: a fight's spacing is its frame data, not a timer. See `hurt`.
+		world.hurt(damage, sim.step, false)
 	fight.freeze = CombatRules.hitstop(move)
 	sim.derive(&"blow_landed", {
 		"by": "player" if by_player else String(fight.opponent),
@@ -255,17 +264,23 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 	})
 
 
-func _finish(sim: Sim, fight: Fight, world: WorldState) -> void:
+## **One of the two of you is down, and the fight is over** (F4).
+##
+## The first build read the loss back out of `WorldState` — full health, a death on the
+## counter, and still in hitstun — three conditions that were each true for other
+## reasons and none of which held when the opponent spared you. `Fight.player_felled` is
+## set by the blow that did it, which is the only place that knows.
+func _finish(sim: Sim, fight: Fight, _world: WorldState) -> void:
 	if CombatRules.is_down(fight.opponent_hp):
 		_end(sim, fight, &"won")
-	elif world.player_hp >= WorldState.MAX_HP and world.deaths > 0 and fight.player_stun > 0:
-		# `hurt()` already respawned them somewhere else. The fight cannot follow.
+	elif fight.player_felled:
 		_end(sim, fight, &"lost")
 
 
 func _end(sim: Sim, fight: Fight, how: StringName) -> void:
 	var who: StringName = fight.opponent
 	fight.outcome = how
+	var fight_asked_by: StringName = fight.asked_by
 	fight.opponent = Fight.NOBODY
 	fight.player_move = &""
 	fight.opponent_move = &""
@@ -277,7 +292,12 @@ func _end(sim: Sim, fight: Fight, how: StringName) -> void:
 	# same one, so clearing it in the middle lets the world tick on the frame the last
 	# blow lands — which a test caught on frame 262 of a fight that was still running.
 	# One writer, once a step. The next step turns it off on its own.
-	sim.derive(&"fight_ended", {"opponent": String(who), "how": String(how)})
+	# **The one result, handed back to whoever asked for it.** Derived once and only
+	# once: `_end` cannot run twice, because the first thing it does is put the fight
+	# down. `asked_by` is how the quest's fights (F6) will know the answer is theirs.
+	sim.derive(&"fight_ended", {
+		"opponent": String(who), "how": String(how), "asked_by": String(fight_asked_by),
+	})
 
 
 ## Sixty times a second, which is the point of it.

@@ -40,5 +40,16 @@
     "_why": "45 mm a step is 2.7 m a second, close to the world's own 2.5 tiles a second, so stepping into range inside a fight feels like walking outside one.",
     "arena_radius_mm": 4000,
     "_arena_note": "How far from the middle of the fight either fighter may go, in mm. A tile is 2 m (BakeRules.METRES_PER_TILE), so 4000 is two tiles each way and four tiles across - which fits inside the fight camera’s frame with room to spare. Yannick, 2026-09-19: there is no fleeing in the demo, so this is a wall and not a warning."
+  },
+  "_opponents_note": "Who you can be put in front of, and what they are worth. A fighter not listed here takes the default: the player’s own health, and no mercy. \"spares\" means he stops when you go down instead of killing you — Bram says so in his own line, and a sparring partner who sends you back to the fairies’ clearing twelve seconds into the game is not a sparring partner.",
+  "opponents": {
+    "_default": {
+      "hp": 10,
+      "spares": false
+    },
+    "bram": {
+      "hp": 10,
+      "spares": true
+    }
   }
 }

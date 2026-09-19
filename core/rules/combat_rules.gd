@@ -26,6 +26,7 @@ const SWING: StringName = &"swing"
 
 static var _moves: Dictionary = {}
 static var _fighters: Dictionary = {}
+static var _opponents: Dictionary = {}
 
 
 ## The frame data, read once. Everything a fight can be balanced with is in that file
@@ -50,6 +51,7 @@ static func _read() -> void:
 	for id: String in (root.get("moves", {}) as Dictionary).keys():
 		_moves[StringName(id)] = (root["moves"] as Dictionary)[id]
 	_fighters = root.get("fighters", {}) as Dictionary
+	_opponents = root.get("opponents", {}) as Dictionary
 
 
 static func has_move(move: StringName) -> bool:
@@ -148,6 +150,37 @@ static func hitstop(move: StringName) -> int:
 ## because a fight has to be able to kill you down the same path everything else does.
 static func opponent_hp() -> int:
 	return WorldState.MAX_HP
+
+
+# -------------------------------------------------------------- who he is (F4) ---
+
+static func opponents() -> Dictionary:
+	if _opponents.is_empty():
+		_read()
+	return _opponents
+
+
+static func _about(who: StringName) -> Dictionary:
+	var all: Dictionary = opponents()
+	if all.has(who):
+		return all[who] as Dictionary
+	return all.get("_default", {}) as Dictionary
+
+
+static func hp_of(who: StringName) -> int:
+	return int(_about(who).get("hp", WorldState.MAX_HP))
+
+
+## **Whether he stops when you go down.** A sparring partner does, and Bram says so in
+## his own line — *« je m'arrête quand tu tombes »* — so the code had better agree with
+## the content. Anybody not listed does not: the demo's fights are not all friendly, and
+## the king least of all.
+##
+## It is per opponent and lives in `content/moves.json` rather than in a branch here,
+## because "who spares you" is a fact about a person and the whole of this fight's
+## tuning is one file.
+static func spares(who: StringName) -> bool:
+	return bool(_about(who).get("spares", false))
 
 
 static func is_down(hp: int) -> bool:

@@ -487,3 +487,133 @@ func test_the_arena_fits_in_the_frame() -> void:
 	assert_true(across_m < frame_m,
 		"the arena is %.1f m across and the frame is %.1f m" % [across_m, frame_m])
 
+
+# ------------------------------------------------ in, and back out again (F4) ---
+#
+# A fight has to hand back exactly one result, to whoever asked for it, and leave the
+# player somewhere with a health they can believe. The first build read the loss out of
+# `WorldState` afterwards — full health, a death on the counter, still in hitstun — and
+# every one of those three can be true for another reason.
+
+## Stand there and take it. The shortest way to lose a fight.
+func _take_it(sim: Sim, fight: Fight, steps: int) -> void:
+	var held: Dictionary = {}
+	for _step: int in steps:
+		if not fight.on():
+			return
+		var want: Dictionary = {"walk": 0, "attack": false, "guard": false}
+		if want != held:
+			sim.submit(&"fight_input", want)
+			held = want
+		sim.advance(1)
+
+
+func test_he_stops_when_you_go_down() -> void:
+	# Bram says so in his own line, so the code had better agree with the content: a
+	# sparring partner who sends you back to the fairies' clearing twelve seconds into
+	# the game is not a sparring partner.
+	assert_true(CombatRules.spares(&"bram"), "he is written as sparing you")
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	var stood_at: Vector2 = world.player_pos
+	_take_it(sim, fight, 4000)
+
+	assert_eq(fight.outcome, &"lost", "you lost")
+	assert_eq(world.deaths, 0, "but you did not die")
+	assert_eq(world.player_hp, 1, "he left you one")
+	assert_true(stood_at.distance_to(world.player_pos) < 4.0,
+		"and you are still in the village, not back in the clearing: %.1f tiles"
+		% stood_at.distance_to(world.player_pos))
+
+
+func test_somebody_who_does_not_spare_you_kills_you() -> void:
+	# The other half of the same rule, and the default: anybody not written as sparing
+	# you finishes it. `halgrave` is not in `content/moves.json`, so he takes `_default`.
+	assert_false(CombatRules.spares(&"halgrave"), "the foreman is nobody's sparring partner")
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"fight_began", {"opponent": "halgrave"})
+	sim.advance(1)
+	var fight: Fight = _fight(sim)
+	_take_it(sim, fight, 4000)
+
+	assert_eq(fight.outcome, &"lost", "you lost this one too")
+	assert_eq(world.deaths, 1, "and this time you died for it")
+	assert_eq(world.player_hp, WorldState.MAX_HP, "woken up whole, as the checkpoint rule says")
+	assert_true(world.player_pos.distance_to(world.region().clearing_centre()) < 2.0,
+		"back where you first woke, having never rested")
+
+
+func test_winning_leaves_you_standing_with_your_bruises() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	var stood_at: Vector2 = world.player_pos
+	_play(sim, fight, 4000)
+
+	assert_eq(fight.outcome, &"won", "he went down")
+	assert_eq(world.deaths, 0, "you did not")
+	assert_true(world.player_hp < WorldState.MAX_HP, "and it cost you: %d" % world.player_hp)
+	assert_true(world.player_hp > 0, "but you are up")
+	assert_true(stood_at.distance_to(world.player_pos) <= fight.arena_tiles() + 0.01,
+		"and you are inside the arena you fought in")
+
+
+func test_one_result_to_whoever_asked_and_only_one() -> void:
+	# **Nothing is applied twice.** `_end` cannot run again because the first thing it
+	# does is put the fight down, and that is worth a test rather than a comment: a
+	# quest that applied its outcome twice would move a place's two numbers twice.
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	assert_eq(fight.asked_by, &"ask_bram_spar", "the fight remembers the line that started it")
+	_play(sim, fight, 4000)
+
+	# Ask it to end again, several ways, after it already has.
+	sim.submit(&"fight_left", {})
+	sim.advance(4)
+
+	var ended: Array[SimEvent] = []
+	for event: SimEvent in sim.events.all():
+		if event.type == &"fight_ended":
+			ended.append(event)
+	assert_eq(ended.size(), 1, "exactly one result came out of one fight")
+	assert_eq(String(ended[0].data.get("asked_by", "")), "ask_bram_spar",
+		"and it is handed back to whoever asked")
+	assert_eq(String(ended[0].data.get("how", "")), "won", "with the answer")
+	assert_eq(String(ended[0].data.get("opponent", "")), "bram", "and who it was against")
+
+
+func test_the_world_starts_again_whichever_way_it_went() -> void:
+	for lose: bool in [true, false]:
+		var sim: Sim = Game.build()
+		var fight: Fight = _square_up(sim)
+		var stopped_at: int = sim.tick
+		if lose:
+			_take_it(sim, fight, 4000)
+		else:
+			_play(sim, fight, 4000)
+		assert_false(fight.on(), "the fight is over")
+		assert_eq(sim.tick, stopped_at, "and the world did not move while it ran")
+		sim.advance(Sim.STEPS_PER_WORLD_TICK * 3)
+		assert_true(sim.tick > stopped_at,
+			"and it is running again afterwards (lost: %s)" % lose)
+
+
+func test_a_blow_costs_what_the_file_says_it_costs() -> void:
+	# The grace window in `WorldState.hurt` is *contact's* — it exists because standing
+	# inside the king drains ten hit points in three frames. A fight's blows are spaced
+	# by frame data and already cannot land twice, so a blow announced is a blow taken.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	_take_it(sim, fight, 4000)
+
+	var announced: int = 0
+	for event: SimEvent in sim.events.all():
+		if event.type == &"blow_landed" and String(event.data.get("by", "")) == "bram":
+			announced += 1
+	assert_true(announced > 0, "he hit you at all")
+	assert_eq(world.touches_taken, announced,
+		"every blow the fight announced is a blow the player actually took")
+
