@@ -197,6 +197,10 @@ func _init() -> void:
 		&"barrels": [&"camp", Rect2i(0, 0, 48, 16)],
 		&"logs": [&"camp", Rect2i(16, 88, 32, 32)],
 		&"fence": [&"camp", Rect2i(0, 118, 48, 16)],
+		# The works' yard (Q1). Its own kind rather than `fence`, which the two windows
+		# make vanish when the Wide Acres turns free — the farm's fences coming down is
+		# that place's free state, and the ironworks' yard has nothing to do with it.
+		&"yard_fence": [&"camp", Rect2i(0, 118, 48, 16)],
 		&"produce": [&"house", Rect2i(240, 208, 64, 32)],
 		&"oven": [&"house", Rect2i(464, 176, 32, 48)],
 	}

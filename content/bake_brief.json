@@ -22,6 +22,10 @@
     {"terrain": "farmland", "place": "wide_acres", "radii_xz": [68, 48], "scaffold": true, "_why": "the fields around the farms, as the 2D map lays them"},
     {"terrain": "marsh", "place": "saltmarch", "radii_xz": [64, 44], "scaffold": true, "_why": "the marsh the port is named for"}
   ],
+  "_yards": "A yard closed with his own fence, and one gate in it (Q1, 2026-09-19). Offsets are tiles from the place's centre, x east and y south. A straight fence across open country is walked round, so a yard is a ring or it is nothing — the same shape the castle's curtain has. The pieces are his cloture_2m, which his own delivery already stands at the works, and the bake makes every tile under a prop impassable: the wall is drawn and the drawn thing is what stops you.",
+  "yards": [
+    {"place": "cinderworks", "kind": "yard_fence", "from": [4, -19], "to": [21, 5], "gate_side": "west", "gate_from": -6, "gate_to": -3, "_why": "the production yard. His homes sit at x -23..0 and his kilns at x +8..+16, so the fence runs at +4 and the quarter stays outside it. The gate faces the quarter, between the two rows of kilns, because that is the way a worker walks to them."}
+  ],
   "points": {
     "his_bridge": {"from_crossing": "PontMine", "_why": "retain the legacy mine bridge point at its delivered location"},
     "bridge": {"from_crossing": "PontRouteRoyale", "_why": "2026-09-15: the main crossing follows his delivered bridge anchor and deck endpoints"},
@@ -60,7 +64,7 @@
     "granary": "houses/storehouse.tscn", "workshop": "houses/storehouse.tscn",
     "well": "props/well.tscn", "barrels": "props/barrel_closed.tscn",
     "crates": "props/crate_single.tscn", "logs": "props/woodpile.tscn",
-    "fence": "modules/fence_2m.tscn", "overgrowth": "plants/shrub_hazel.tscn"
+    "fence": "modules/fence_2m.tscn", "yard_fence": "modules/fence_2m.tscn", "overgrowth": "plants/shrub_hazel.tscn"
   },
   "buildings": {
     "footprint_tiles": [2, 2],

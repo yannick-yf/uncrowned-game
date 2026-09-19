@@ -89,3 +89,48 @@ static func decode_row(text: String, width: int) -> PackedByteArray:
 	if out.size() > width:
 		out.resize(width)
 	return out
+
+
+## **A closed yard, and the one gap in it** (Q1, 2026-09-19). Pure, and shared by the
+## two worlds: the bake stands his fence on these tiles for the baked map and
+## `Region` stands the same ones for the procedural map, so a quest written against a
+## gate finds the gate on both.
+##
+## **A ring, never a line.** A fence drawn straight across open country is walked round
+## in four seconds, which is how the castle's curtain came to be a ring and not a
+## frontage. So an entry gives two corners and the wall is their perimeter.
+##
+## `from` and `to` are tile offsets from the place's centre, x east and y south.
+## `gate_side` is which wall the gap is in and `gate_from`/`gate_to` are its run along
+## that wall, in the same offsets.
+##
+## Returns the wall tiles and the gate tiles apart, because the gate is a thing the
+## quest opens and the wall is not.
+static func yard_of(entry: Dictionary, centre: Vector2i) -> Dictionary:
+	var from: Array = entry.get("from", []) as Array
+	var to: Array = entry.get("to", []) as Array
+	if from.size() != 2 or to.size() != 2:
+		return {"wall": [] as Array[Vector2i], "gate": [] as Array[Vector2i]}
+	var lo := Vector2i(mini(int(from[0]), int(to[0])), mini(int(from[1]), int(to[1])))
+	var hi := Vector2i(maxi(int(from[0]), int(to[0])), maxi(int(from[1]), int(to[1])))
+	var side: String = String(entry.get("gate_side", ""))
+	var gate_lo: int = int(entry.get("gate_from", 1))
+	var gate_hi: int = int(entry.get("gate_to", 0))
+
+	var wall: Array[Vector2i] = []
+	var gate: Array[Vector2i] = []
+	for x: int in range(lo.x, hi.x + 1):
+		for y: int in range(lo.y, hi.y + 1):
+			if x != lo.x and x != hi.x and y != lo.y and y != hi.y:
+				continue
+			var along: int = y if (side == "west" or side == "east") else x
+			var on_that_side: bool = (side == "west" and x == lo.x) \
+				or (side == "east" and x == hi.x) \
+				or (side == "north" and y == lo.y) \
+				or (side == "south" and y == hi.y)
+			var tile: Vector2i = centre + Vector2i(x, y)
+			if on_that_side and along >= gate_lo and along <= gate_hi:
+				gate.append(tile)
+			else:
+				wall.append(tile)
+	return {"wall": wall, "gate": gate}

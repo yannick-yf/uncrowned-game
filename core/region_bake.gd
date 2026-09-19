@@ -130,6 +130,11 @@ static func bake(
 	out._ironworks(town)
 	out._kit(brief)
 	out._thin_footprints(brief)
+	# After the thinning, never before it: a yard is a ring one tile thick, and the
+	# thinning exists to open the outer ring of a footprint. It leaves 1x1 pieces alone
+	# today, but a yard opened by a rule meant for cottages would be a hole nobody could
+	# see and nobody would look for.
+	out._yards(brief)
 	out._border()
 	out._summarise()
 	return out
@@ -524,6 +529,55 @@ func _thin_footprints(brief: Dictionary) -> void:
 					region.set_terrain(tile, ground)
 					opened += 1
 	report.append("footprints: %d wall tiles opened around pieces of his library" % opened)
+
+
+## **The brief's yards: a fence in a ring, with one way in** (Q1, 2026-09-19).
+##
+## The geometry is `BakeRules.yard_of`, shared with the procedural map so that a quest
+## written against this gate finds it on both worlds. The pieces are **his** —
+## `cloture_2m`, which his own ironworks delivery already stands elsewhere on the same
+## site — and `place()` makes every tile under a prop impassable, so the thing that
+## stops the player is a thing he can see.
+##
+## **The gate is barred, and that is a debt rather than a design.** His library has one
+## module in it, `fence_2m`, and no gate: a shut gate can only be drawn as more fence.
+## The tiles are still recorded apart, as the point `works_gate`, because Q3 opens them
+## and a gate you cannot name is a gate nobody can open.
+func _yards(brief: Dictionary) -> void:
+	for entry: Variant in (brief.get("yards", []) as Array):
+		var row: Dictionary = entry as Dictionary
+		var id := StringName(String(row.get("place", "")))
+		if not places.has(id):
+			report.append("yard  %-12s no such place, skipped" % id)
+			continue
+		var centre: Vector2i = (places[id] as Dictionary)["centre"] as Vector2i
+		var kind := StringName(String(row.get("kind", "fence")))
+		var yard: Dictionary = BakeRules.yard_of(row, centre)
+		var wall: Array = yard["wall"]
+		var gate: Array = yard["gate"]
+		# **Never across his street.** `place()` refuses to wall a road, and rightly — it
+		# is the rule that stops a curtain wall sealing the way in. But it still stands
+		# the piece, and a fence you walk through is worse than a wall you cannot see:
+		# one is a thing that fails to work, the other is a thing that is not there. So
+		# the road makes its own gap, and the gap is visible because the fence stops.
+		var barred: int = 0
+		var opened: int = 0
+		for group: String in ["wall", "gate"]:
+			for tile: Variant in (yard[group] as Array):
+				var at: Vector2i = tile as Vector2i
+				if region.terrain_at(at) == Region.Terrain.ROAD:
+					opened += 1
+					continue
+				place(kind, at, Vector2i.ONE)
+				barred += 1
+		if not gate.is_empty():
+			var first: Vector2i = gate[0] as Vector2i
+			var last: Vector2i = gate[gate.size() - 1] as Vector2i
+			points[StringName("%s_gate" % id)] = {
+				"at": (first + last) / 2, "scaffold": true,
+			}
+		report.append("yard  %-12s %d fence tiles, %d left open where his street crosses"
+			% [id, barred, opened])
 
 
 ## What the ground is next to a footprint — the street it stands on, usually.
