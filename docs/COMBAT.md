@@ -299,3 +299,31 @@ ringed by whoever was near enough to watch.** Where the works' quarter has no su
 that is a thing to ask his brother for — a yard — and it is a far smaller ask than eight
 facings.
 
+---
+
+## 7. F2 — the way in, and why F1 was not playable
+
+**Built 2026-09-19**, the same day Yannick walked to the works looking for a fight and
+found neither an opponent nor a way to start one. Three things were missing, and none of
+them was the arithmetic:
+
+| Missing | Now |
+|---|---|
+| Nothing submitted `fight_began` | `DialogueOption.fights` names an opponent; `DialogueSystem` **derives** the event and closes the conversation on the same step |
+| No key was bound to a blow | **K** strikes, **O** guards, as *physical* keycodes so the pair sits in the same place on AZERTY and QWERTY. Left and right walk the line |
+| Nobody to fight before the quest | **Bram**, survivor of Brindle, at the village crossroads — 30 tiles from where a new run wakes |
+
+**A fight is something you say.** Not something you walk into: walking into somebody is
+the king's on-contact death, which is the project's oldest debt and not the design. The
+option goes through the closed set of intents (invariant 9), so the log holds the line
+the player chose and replay recomputes the fight from it — which is why `fight_began` is
+*derived* and not submitted. Submitting it would start two fights on a replayed log.
+
+**He is repeatable on purpose.** The fight will be retuned many times, and a sparring
+partner you can only fight once is no use after Tuesday.
+
+**What F2 deliberately did not settle.** Bram's blows are real and so are his: losing to
+him respawns the player at the clearing, because they have not rested yet. Whether
+sparring should stop short of that is **F4's** question, which is where winning and
+losing are handled, not F2's.
+

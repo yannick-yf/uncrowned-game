@@ -370,6 +370,26 @@
         }
       ]
     },
+    "bram": {
+      "name": "Bram",
+      "role": "Survivor of Brindle",
+      "zone": "overworld",
+      "greeting": "I was out in the wood the day it happened. I came back to a village of ash. I have hit that post every morning since.",
+      "options": [
+        {
+          "intent": "ask_bram_post",
+          "text": "Why hit a post?",
+          "reply": "Because it does not hit back. It is restful. It teaches you nothing."
+        },
+        {
+          "intent": "ask_bram_spar",
+          "text": "Teach me to fight.",
+          "reply": "Then get your hands up. I do not hold back much, but I stop when you go down.",
+          "fights": "bram",
+          "repeatable": true
+        }
+      ]
+    },
     "halgrave": {
       "name": "Foreman Halgrave",
       "role": "Foreman",

@@ -123,6 +123,12 @@ func _choose(
 	if option.causes != &"":
 		Deeds.perform(sim, option.causes, world.region().zone_at(world.player_tile()),
 			world.player_pos)
+	# **Squaring up ends the conversation.** Not politeness: `_read_input` reads the
+	# fight's keys only when nothing else is open, and a fight running behind an open
+	# dialogue box would take the player's blows as menu choices. The line is spoken
+	# first — it is already in `spoken` below — and the box closes on the same step the
+	# fight begins, which is why this is raised and the close happens after.
+	var squares_up: bool = option.fights != &""
 	# The reaction goes in front of the answer, **once**, on the first thing they tell
 	# you in this conversation. Not on every answer: a man who says "you pay first"
 	# four times in one exchange is a machine with a stuck key, and the relationship
@@ -137,6 +143,13 @@ func _choose(
 	world.last_intent = intent
 	world.options = DialogueRules.available(npc, sim.facts, conditions, regard,
 		sim.store(&"traits") as Traits)
+
+	if squares_up:
+		_close(world)
+		# Derived, not submitted: the player's event was the line they chose, and the
+		# fight is the world's answer to it. Replay recomputes this from the choice,
+		# so the log holds one intent rather than an intent and a fight.
+		sim.derive(&"fight_began", {"opponent": String(option.fights)})
 
 
 func _close(world: WorldState) -> void:

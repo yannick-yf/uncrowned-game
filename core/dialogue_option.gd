@@ -46,6 +46,17 @@ var causes: StringName = &""
 ## want different machinery. Content names the side; `FactionRules` decides whether
 ## it is one.
 var joins: StringName = &""
+## Whom saying this puts you in front of. A third kind beside `causes` and `joins`,
+## and it needs its own field for the same reason they do: a fight is not a deed
+## against a place and not a declaration about yourself.
+##
+## **This is the only way into a fight** (F2, 2026-09-19). SPECS §10 used to say fights
+## never happen in the overworld; it now says they happen in place, but neither version
+## wanted a fight you could start by walking into somebody — that is the king's
+## on-contact death, which is the debt, not the design. A fight is something you *say*,
+## so it goes through the closed set of intents like everything else, and it is in the
+## log and replays.
+var fights: StringName = &""
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible

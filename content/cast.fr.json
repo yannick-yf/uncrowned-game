@@ -370,6 +370,26 @@
         }
       ]
     },
+    "bram": {
+      "name": "Bram",
+      "role": "Survivant de Brindle",
+      "zone": "overworld",
+      "greeting": "J'étais au bois le jour où c'est arrivé. Je suis rentré à un village de cendre. Depuis je frappe ce poteau tous les matins.",
+      "options": [
+        {
+          "intent": "ask_bram_post",
+          "text": "Pourquoi frapper un poteau ?",
+          "reply": "Parce qu'il ne rend pas les coups. C'est reposant. Ça n'apprend rien."
+        },
+        {
+          "intent": "ask_bram_spar",
+          "text": "Apprenez-moi à me battre.",
+          "reply": "Alors lève les mains. Je ne retiens pas grand-chose, mais je m'arrête quand tu tombes.",
+          "fights": "bram",
+          "repeatable": true
+        }
+      ]
+    },
     "halgrave": {
       "name": "Contremaître Halgrave",
       "role": "Contremaître",

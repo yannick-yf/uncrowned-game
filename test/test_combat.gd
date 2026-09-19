@@ -257,3 +257,105 @@ func test_how_the_caller_chunks_its_steps_changes_nothing() -> void:
 	assert_eq((one.store(&"fight") as Fight).fingerprint(),
 		(many.store(&"fight") as Fight).fingerprint(),
 		"two hundred steps at once and one at a time are the same two hundred steps")
+
+
+# --------------------------------------------------------------- the way in (F2) ---
+#
+# F1 built a fight that nothing could reach: `fight_began` was submitted by tests and
+# by nothing else, and no key was bound to a blow. Yannick walked to the works looking
+# for a fight, found nobody to fight and no way to start one, and that is what these
+# check. The sparring partner belongs to no side and no quest on purpose — the fight
+# has to be playable and retunable long before the quest exists.
+
+func _stand_by(sim: Sim, who: StringName) -> Array[String]:
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(who).centre()
+	sim.submit(&"talk", {"npc": String(who)})
+	sim.advance(2)
+	var out: Array[String] = []
+	for option: DialogueOption in world.options:
+		out.append(String(option.intent))
+	return out
+
+
+func test_somebody_near_the_start_will_fight_you() -> void:
+	var sim: Sim = Game.build()
+	var cast := sim.store(&"cast") as Cast
+	var bram: Npc = cast.get_npc(&"bram")
+	assert_not_null(bram, "the sparring partner exists")
+
+	# Within a short walk of where a new run wakes up: the clearing, per
+	# `WorldState`'s respawn rule. A fight nobody can reach is what F1 shipped.
+	var world := sim.store(&"world") as WorldState
+	var woke_at: Vector2 = world.region().clearing_centre()
+	var tiles: float = woke_at.distance_to(bram.centre())
+	assert_true(tiles < 60.0,
+		"and he is a short walk from where the game starts: %.0f tiles" % tiles)
+
+	var offered: Array[String] = _stand_by(sim, &"bram")
+	assert_true(offered.has("ask_bram_spar"),
+		"and one of the things you may say to him starts a fight: %s" % str(offered))
+
+
+func test_a_fight_begins_because_you_said_so() -> void:
+	# **A fight is something you say.** Not something you walk into — that is the king's
+	# on-contact death, which is the oldest debt in the project and not the design.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _fight(sim)
+	_stand_by(sim, &"bram")
+	assert_true(world.in_dialogue(), "you are talking to him")
+	assert_false(fight.on(), "and nobody is fighting yet")
+
+	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.advance(4)
+	assert_true(fight.on(), "saying it squares the two of you up")
+	assert_eq(fight.opponent, &"bram", "against him and nobody else")
+	assert_false(world.in_dialogue(),
+		"and the conversation is over — a dialogue box open behind a fight would read "
+		+ "the player's blows as menu choices")
+
+
+func test_you_can_ask_him_again() -> void:
+	# The whole reason he exists: the fight will be retuned many times, and a sparring
+	# partner you can only fight once is a sparring partner who is no use after Tuesday.
+	var sim: Sim = Game.build()
+	var fight: Fight = _fight(sim)
+	_stand_by(sim, &"bram")
+	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.advance(4)
+	sim.submit(&"fight_left", {})
+	sim.advance(2)
+	assert_false(fight.on(), "the first one is over")
+
+	var again: Array[String] = _stand_by(sim, &"bram")
+	assert_true(again.has("ask_bram_spar"), "and he will go again: %s" % str(again))
+
+
+func test_the_fight_you_talked_your_way_into_replays() -> void:
+	# The log holds the line you chose, not the fight: `fight_began` is *derived*, so
+	# replay recomputes it from the intent. If that were submitted instead, a replayed
+	# log would start two fights.
+	var sim: Sim = Game.build()
+	_stand_by(sim, &"bram")
+	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.advance(4)
+	var fight: Fight = _fight(sim)
+	_play(sim, fight, 400)
+
+	var replayed: Sim = Game.replay(sim)
+	assert_eq((replayed.store(&"fight") as Fight).fingerprint(), fight.fingerprint(),
+		"the same fight, rebuilt from the conversation alone")
+	assert_eq((replayed.store(&"world") as WorldState).player_hp,
+		(sim.store(&"world") as WorldState).player_hp, "and the same wounds")
+
+
+func test_the_two_keys_are_bound() -> void:
+	# The third thing missing on 2026-09-19: the fight could not be reached, and if it
+	# had been there was no key to hit anybody with. K and O, as **physical** keycodes,
+	# so the pair sits in the same place on AZERTY and on QWERTY.
+	for action: StringName in [&"strike", &"guard"]:
+		assert_true(InputMap.has_action(action), "%s is a key" % action)
+		assert_true(InputMap.action_get_events(action).size() > 0,
+			"%s has something bound to it" % action)
+

@@ -40,6 +40,13 @@ const CASTING: Dictionary = {
 	&"ossa": "OldWoman",
 	&"garrick": "Villager2",
 	&"wren": "Villager5",
+	# **Bram's is a placeholder and reads as one** (F2, 2026-09-19). Every `Villager`
+	# sheet in the pack is already somebody, so the sparring partner is cast as a man
+	# who trains with a weapon instead — which is what he is, and wrong for a burnt
+	# village, and visible as wrong. It costs nothing: the art rule has kept the 2D pack
+	# out of the 3D world since 2026-09-14, so this table only dresses the procedural
+	# map, and M3b replaces every row of it with his brother's faces.
+	&"bram": "Samurai",
 	# The Cinderworks.
 	&"halgrave": "OldMan3",
 	&"sena": "Villager3",

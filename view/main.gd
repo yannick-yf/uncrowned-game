@@ -61,6 +61,10 @@ var _seconds_per_step: float = 1.0 / 60.0
 var _debug_available: bool = false
 var _skipped_days: int = 0
 var _held_dir: Vector2i = Vector2i.ZERO
+var _fight: Fight = null
+## What the fight's keys were last frame, so one event is sent per **change** and not
+## sixty a second. `_held_dir` does the same job for walking, and for the same reason.
+var _held_fight: Dictionary = {}
 var _real_seconds: float = 0.0
 var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
@@ -123,6 +127,7 @@ func _ready() -> void:
 	if _sim == null:
 		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
+	_fight = _sim.store(&"fight") as Fight
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
@@ -408,6 +413,16 @@ func _pause_menu() -> void:
 
 
 func _read_input() -> void:
+	# **A fight takes the keyboard before anything else.** It runs at sixty steps a
+	# second with the world's clock held, and nothing else may be open while it does:
+	# a dialogue box would read the player's blows as menu choices, and walking would
+	# go out as `move_intent` instead of along the fight's own line.
+	if _fight != null and _fight.on():
+		_read_fight_input()
+		return
+	if not _held_fight.is_empty():
+		_held_fight = {}
+
 	if _world.in_dialogue():
 		if _held_dir != Vector2i.ZERO:
 			_held_dir = Vector2i.ZERO
@@ -527,6 +542,31 @@ func _skip_a_day() -> void:
 		before, _sim.tick, _clock(_sim.tick)])
 
 
+## The fight's keys: **K** strikes, **O** guards, and left and right walk the line.
+##
+## One event per change of what is held, which is `CombatSystem`'s contract and the
+## reason a saved fight is a handful of rows rather than a recording of the keyboard.
+##
+## Right is *toward him* and left is away. That holds while the fight has no picture;
+## when the camera drops (F3) the line becomes the world's east–west axis and this
+## reads the player's side instead of assuming it.
+func _read_fight_input() -> void:
+	var walk: int = 0
+	if Input.is_action_pressed(&"move_right"):
+		walk += 1
+	if Input.is_action_pressed(&"move_left"):
+		walk -= 1
+	var want: Dictionary = {
+		"attack": Input.is_action_pressed(&"strike"),
+		"guard": Input.is_action_pressed(&"guard"),
+		"walk": walk,
+	}
+	if want == _held_fight:
+		return
+	_held_fight = want
+	_sim.submit(&"fight_input", want)
+
+
 func _read_direction() -> Vector2i:
 	var dir := Vector2i.ZERO
 	if Input.is_action_pressed(&"move_right"):
@@ -622,6 +662,7 @@ func _reload() -> void:
 		return
 	_sim = loaded
 	_world = _sim.store(&"world") as WorldState
+	_fight = _sim.store(&"fight") as Fight
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing

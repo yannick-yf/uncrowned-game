@@ -106,6 +106,7 @@ static func load_from(path: String) -> Cast:
 			option.repeatable = bool(data.get("repeatable", false))
 			option.causes = StringName(data.get("causes", ""))
 			option.joins = StringName(data.get("joins", ""))
+			option.fights = StringName(data.get("fights", ""))
 			npc.options.append(option)
 		cast.npcs[npc.id] = npc
 

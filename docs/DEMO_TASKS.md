@@ -321,7 +321,7 @@ the same world tick; different advance chunk sizes agree. — *met; 14 tests in
 `test/test_combat.gd`, in the fast suite.* See `docs/COMBAT.md` §5 for what playing it
 found that the tests did not.
 
-### F2 · An opponent, an option, two keys — **the way in**
+### F2 · An opponent, an option, two keys — **the way in** — **built 2026-09-19**
 
 Est. 2–3 h. Depends on: F1. **New on 2026-09-19**, and it is why the old F2 could not
 be played: nothing in the game submits `fight_began`, and no key is bound to a blow.
@@ -334,7 +334,22 @@ part of the closed set). Two keys are bound: **strike** and **guard**.
 
 **Check:** from a fresh game, reach a fight in under a minute and land a blow — the
 HUD's health falls and the opponent's does too. The same key presses replay to the same
-health.
+health. — ***met***: **Bram**, survivor of Brindle, stands at the village crossroads
+**30 tiles / 12 s** from where a new run wakes, on both worlds. `ask_bram_spar` begins
+the fight and closes the conversation on the same step. Played end to end headless:
+**won, 8 of 10 health left, nobody dead.** Five tests in `test/test_combat.gd`.
+
+**Three things this turned up**, each caught by a guard that already existed:
+
+- **§6 budgets twenty-five named people and Bram is the twenty-sixth.** The tripwire in
+  `test_overworld.gd` is raised to 26 and names him, rather than absorbing him.
+  **Yannick has been asked** whether the budget moves or Bram is temporary.
+- **His first tile put him behind one of his brother's trees**, and the tile was not
+  clear on the procedural map at all. The offset is now chosen by asking both worlds for
+  a prop-free tile — `region.props` alone does not know about the kit's trees, so the
+  check was the screenshot.
+- **Every `Villager` sheet in the 2D pack is already somebody**, so his placeholder face
+  is a man who trains with a weapon and reads as wrong on purpose. M3b settles it.
 
 ### F3 · The camera drops, and does not turn
 
