@@ -18,7 +18,7 @@ func _fight(sim: Sim) -> Fight:
 
 
 func _start(sim: Sim) -> Fight:
-	sim.submit(&"fight_began", {"opponent": "halgrave"})
+	sim.submit(&"fight_began", {"opponent": "harry"})
 	sim.advance(1)
 	return _fight(sim)
 
@@ -104,7 +104,7 @@ func test_a_fight_begins_with_the_two_of_them_apart() -> void:
 	var sim: Sim = Game.build()
 	var fight: Fight = _start(sim)
 	assert_true(fight.on(), "somebody is fighting")
-	assert_eq(fight.opponent, &"halgrave")
+	assert_eq(fight.opponent, &"harry")
 	assert_true(fight.apart_mm() > apart - CombatRules.walk_mm_per_step() * 2,
 		"and the opening is still there a frame in: %d mm" % fight.apart_mm())
 
@@ -249,7 +249,7 @@ func test_how_the_caller_chunks_its_steps_changes_nothing() -> void:
 	var one: Sim = Game.build()
 	var many: Sim = Game.build()
 	for sim: Sim in [one, many]:
-		sim.submit(&"fight_began", {"opponent": "halgrave"})
+		sim.submit(&"fight_began", {"opponent": "harry"})
 		sim.submit(&"fight_input", {"walk": 1})
 	one.advance(200)
 	for _i: int in 200:
@@ -529,11 +529,11 @@ func test_he_stops_when_you_go_down() -> void:
 
 func test_somebody_who_does_not_spare_you_kills_you() -> void:
 	# The other half of the same rule, and the default: anybody not written as sparing
-	# you finishes it. `halgrave` is not in `content/moves.json`, so he takes `_default`.
-	assert_false(CombatRules.spares(&"halgrave"), "the foreman is nobody's sparring partner")
+	# you finishes it. `harry` is not in `content/moves.json`, so he takes `_default`.
+	assert_false(CombatRules.spares(&"harry"), "the foreman is nobody's sparring partner")
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	sim.submit(&"fight_began", {"opponent": "halgrave"})
+	sim.submit(&"fight_began", {"opponent": "harry"})
 	sim.advance(1)
 	var fight: Fight = _fight(sim)
 	_take_it(sim, fight, 4000)

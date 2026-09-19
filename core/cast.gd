@@ -31,7 +31,7 @@ var names: PackedStringArray = PackedStringArray()
 ## Band -> the line anybody **says** in front of an answer at that standing.
 ##
 ## The spoken half of `dispositions`, which are narrated and belong to the greeting.
-## Every answer in this game is fixed, so asking Halgrave how many men the works has
+## Every answer in this game is fixed, so asking Harry how many men the works has
 ## killed produces the same sentence whether he trusts you or watched you steal. The
 ## facts should not move — they are the same facts. What moves is whether he is glad
 ## to tell you, and that is one sentence in front.

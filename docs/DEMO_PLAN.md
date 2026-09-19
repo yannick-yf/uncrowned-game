@@ -318,7 +318,7 @@ placement is a bet on the order of a generated list — and W0 has just proved t
 list changes when his brother works.
 
 **Existing behaviour:** `Region.resolve` matches a `feature` by **kind** and returns
-the first prop of that kind in the place. Halgrave stands at `FourneauUn` only
+the first prop of that kind in the place. Harry stands at `FourneauUn` only
 because it is first. The bake already carries `source_id` on all 74 delivered props.
 
 **Change:** a third anchor form, `{"place": …, "prop": "BureauPesee", "offset": …}`,
@@ -348,7 +348,7 @@ Owner: Claude, Yannick reviews the French. Estimate: 2–3 h. Depends on: A3.
 number the dispute turns on, and knows what it is for.
 
 **Existing behaviour to reuse, not rebuild:** `cinderworks:death_toll` already has
-**three** sources — Halgrave gives it freely, Sena counts it differently, Ivo says
+**three** sources — Harry gives it freely, Sena counts it differently, Ivo says
 the register is *« honnête et faux »*. Invariant 6's redundancy already holds.
 What this item does is make the demo's one conversation land: reviewed French,
 a line that stands on its own, and the fact legible as something to act on.

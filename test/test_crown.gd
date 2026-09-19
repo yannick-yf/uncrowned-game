@@ -9,7 +9,7 @@ extends TestCase
 ## face is one of three ways through the gate. High standing removes no ending; a
 ## player loyal all game can still turn, and Deposed at the crown's last rank is the
 ## throne reading, not a sixth ending. And the opening points two ways: the king's
-## argument is audible at the works in the first hour, in Halgrave's mouth.
+## argument is audible at the works in the first hour, in Harry's mouth.
 
 
 func _sim() -> Sim:
@@ -111,19 +111,19 @@ func test_the_gate_knows_your_face_at_the_last_rank_in_both_languages() -> void:
 # ------------------------------------------------------------- the opening ---
 
 func test_the_kings_argument_is_audible_at_the_works_in_the_first_hour() -> void:
-	# §5: one credible pro-works voice in the first hour, who is not a fool. Halgrave
+	# §5: one credible pro-works voice in the first hour, who is not a fool. Harry
 	# says it to anybody, among the first three things he offers, with the figures.
 	var sim: Sim = _sim()
 	var world := sim.store(&"world") as WorldState
 	var cast := sim.store(&"cast") as Cast
-	world.player_pos = Vector2(cast.get_npc(&"halgrave").tile) + Vector2(0.5, 0.5)
-	sim.submit(&"talk", {"npc": "halgrave"})
+	world.player_pos = Vector2(cast.get_npc(&"harry").tile) + Vector2(0.5, 0.5)
+	sim.submit(&"talk", {"npc": "harry"})
 	sim.advance(2)
 	var intents: Array[String] = []
 	for option: DialogueOption in world.options:
 		intents.append(String(option.intent))
 	assert_true(intents.has("ask_the_king"), "offered to a stranger who has done nothing: %s" % [intents])
-	var line: DialogueOption = DialogueRules.find(cast.get_npc(&"halgrave"), &"ask_the_king")
+	var line: DialogueOption = DialogueRules.find(cast.get_npc(&"harry"), &"ask_the_king")
 	assert_eq(line.costs, &"free", "and he is not ashamed of it")
 	assert_true(line.reply.contains("40") and line.reply.contains("4"), "with the figures the works can show")
 

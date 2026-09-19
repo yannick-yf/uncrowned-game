@@ -6,7 +6,7 @@ extends TestCase
 ## and the first place §5's argument is spoken by somebody who believes it.
 ##
 ## §5: *"Route C only works if his argument is real. Exposing a pantomime villain is
-## not a climax."* Halgrave is that argument at human scale — he gives you the
+## not a climax."* Harry is that argument at human scale — he gives you the
 ## number that damns Arthur **freely, to anyone**, because he is not ashamed of it
 ## and thinks the record matters. That is not decoration; it is why his line is the
 ## one source of the fact that nothing can gate shut.
@@ -38,7 +38,7 @@ func test_three_people_stand_in_the_works() -> void:
 	var sim: Sim = _world()
 	var region: Region = (sim.store(&"world") as WorldState).region()
 	var cast := sim.store(&"cast") as Cast
-	for who: StringName in [&"halgrave", &"sena", &"ivo"]:
+	for who: StringName in [&"harry", &"sena", &"ivo"]:
 		var npc: Npc = cast.get_npc(who)
 		assert_not_null(npc, "%s exists" % who)
 		assert_eq(region.zone_at(npc.tile), &"cinderworks", "%s stands in the works" % who)
@@ -47,7 +47,7 @@ func test_three_people_stand_in_the_works() -> void:
 
 func test_the_toll_has_three_sources_and_one_of_them_tells_anybody() -> void:
 	# Invariant 6, and characterisation doing the same job. Sena and Marsh both
-	# hold it back from somebody they mistrust; Halgrave does not, because he does
+	# hold it back from somebody they mistrust; Harry does not, because he does
 	# not think it is damning. That is what keeps the fact reachable however badly
 	# the player has behaved.
 	var cast := Cast.shared()
@@ -61,12 +61,12 @@ func test_the_toll_has_three_sources_and_one_of_them_tells_anybody() -> void:
 			if not option.asks_for_goodwill():
 				ungated.append(String(id))
 	assert_eq(sources.size(), 3, "three people know what the works cost: %s" % str(sources))
-	assert_eq(ungated, ["halgrave"], "and the foreman is the one who says it to anybody")
+	assert_eq(ungated, ["harry"], "and the foreman is the one who says it to anybody")
 
 
-func test_halgrave_gives_you_the_number_that_damns_the_king() -> void:
+func test_harry_gives_you_the_number_that_damns_the_king() -> void:
 	var sim: Sim = _world()
-	assert_true(_talk(sim, &"halgrave").has("ask_cost"), "he is asked what it cost")
+	assert_true(_talk(sim, &"harry").has("ask_cost"), "he is asked what it cost")
 	_say(sim, &"ask_cost")
 	assert_true(sim.facts.has(TOLL), "and he answers without being made to")
 	assert_true(Cast.shared().fact_descriptions[TOLL].contains("Arthur"),
@@ -81,7 +81,7 @@ func test_sena_needs_a_number_before_she_will_move() -> void:
 
 	sim.submit(&"end_talk")
 	sim.advance(2)
-	_talk(sim, &"halgrave")
+	_talk(sim, &"harry")
 	_say(sim, &"ask_cost")
 	sim.submit(&"end_talk")
 	sim.advance(2)
@@ -94,7 +94,7 @@ func test_turning_the_workers_is_a_thing_you_say() -> void:
 	var sim: Sim = _world()
 	var ticked := sim.store(&"worldtick") as WorldTick
 	var standing := sim.store(&"standing") as Standing
-	_talk(sim, &"halgrave")
+	_talk(sim, &"harry")
 	_say(sim, &"ask_cost")
 	sim.submit(&"end_talk")
 	sim.advance(2)
@@ -115,7 +115,7 @@ func test_nobody_at_the_works_hands_over_the_ledger() -> void:
 	# says and none of them can give it to you, so killing all three destroys no
 	# evidence — only the easy way of finding out it exists.
 	var cast := Cast.shared()
-	for who: StringName in [&"halgrave", &"sena", &"ivo"]:
+	for who: StringName in [&"harry", &"sena", &"ivo"]:
 		for option: DialogueOption in cast.get_npc(who).options:
 			assert_false(DocumentRules.is_document(option.teaches),
 				"%s hands over a document, which a death could then destroy" % who)

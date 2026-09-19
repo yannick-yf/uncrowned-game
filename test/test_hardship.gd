@@ -192,9 +192,9 @@ func test_breaking_and_building_both_cost_somebody_and_the_journal_says_who() ->
 	# Building it.
 	var steel: float = ticked.steel_output
 	var wood: float = ticked.held_ground
-	_exhaust_but(sim, &"halgrave", &"feed_forest")
-	assert_true(_offered(sim, &"halgrave").has("feed_forest"), "Halgrave can be asked")
-	_say(sim, &"halgrave", &"feed_forest")
+	_exhaust_but(sim, &"harry", &"feed_forest")
+	assert_true(_offered(sim, &"harry").has("feed_forest"), "Harry can be asked")
+	_say(sim, &"harry", &"feed_forest")
 	# Steel was already at 100 and the twelve are clamped at BASELINE, so the second
 	# direction *restores* rather than raising a full quantity fuller. The push is the
 	# player's all the same, and the belt moves whatever the furnaces read.
@@ -232,9 +232,9 @@ func test_breaking_and_building_both_cost_somebody_and_the_journal_says_who() ->
 func test_a_spoken_building_act_is_said_once() -> void:
 	# A question answered is a question spent, and an act is a question.
 	var sim: Sim = Game.build()
-	_exhaust_but(sim, &"halgrave", &"feed_forest")
-	_say(sim, &"halgrave", &"feed_forest")
-	assert_false(_offered(sim, &"halgrave").has("feed_forest"), "you cannot feed it the forest twice")
+	_exhaust_but(sim, &"harry", &"feed_forest")
+	_say(sim, &"harry", &"feed_forest")
+	assert_false(_offered(sim, &"harry").has("feed_forest"), "you cannot feed it the forest twice")
 
 
 func test_the_same_acts_leave_the_same_hardship_twice_over() -> void:
@@ -245,8 +245,8 @@ func test_the_same_acts_leave_the_same_hardship_twice_over() -> void:
 	for _run: int in 2:
 		var sim: Sim = Game.build()
 		_act_at(sim, _sites_of(sim, &"granary")[0])
-		_exhaust_but(sim, &"halgrave", &"deliver_labour")
-		_say(sim, &"halgrave", &"deliver_labour")
+		_exhaust_but(sim, &"harry", &"deliver_labour")
+		_say(sim, &"harry", &"deliver_labour")
 		fingerprints.append((sim.store(&"worldtick") as WorldTick).fingerprint())
 	assert_eq(fingerprints[0], fingerprints[1], "same acts, same world")
 	assert_true(fingerprints[0].find("wide_acres:50.00/50.00/70.00") >= 0,

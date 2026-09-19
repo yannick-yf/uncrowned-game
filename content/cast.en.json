@@ -17,7 +17,7 @@
     "cinderworks:ledger": "The Cinderworks ledger of what the furnaces cost in men, kept in the king's own hand, with the price set against the output.",
     "bank:debts": "The bank's book of what the crown owes and to whom. Nearly all of it is owed to one creditor.",
     "muster:signed_orders": "The orders to clear the villages, signed. The men who carried them out are named underneath.",
-    "cinderworks:death_toll": "The Cinderworks has killed 381 men in 11 years, by the ledger Halgrave keeps. Arthur was sent the count every year and kept sending for more stone.",
+    "cinderworks:death_toll": "The Cinderworks has killed 381 men in 11 years, by the ledger Harry keeps. Arthur was sent the count every year and kept sending for more stone.",
     "acres:razed_villages": "The Wide Acres estates stand on the ground of villages that were cleared to make them. The grants name every one, and Brindle is on the list.",
     "brindle:the_ground": "The farmland north of Brindle is Brindle, the same soil, ploughed over. Old Pell worked it before the burning and works it still.",
     "muster:how_the_king_fights": "Arthur trained with his own guard and has never changed his opening. He leads with the shield and counters left, and his officers have drilled against it for years.",
@@ -392,8 +392,8 @@
         }
       ]
     },
-    "halgrave": {
-      "name": "Foreman Halgrave",
+    "harry": {
+      "name": "Foreman Harry",
       "role": "Foreman",
       "zone": "overworld",
       "greeting": "Careful, the slag stays hot all day. This is the third biggest ironworks in the kingdom.",
@@ -404,7 +404,7 @@
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Halgrave stands between you and the furnaces and does not move."
+          "text": "Harry stands between you and the furnaces and does not move."
         }
       ],
       "options": [
@@ -483,7 +483,7 @@
         {
           "intent": "ask_toll",
           "text": "How many men has the works killed?",
-          "reply": "Halgrave will say 381. He is not lying. He only counts the men who die at the furnaces, not the ones who die at home afterwards.",
+          "reply": "Harry will say 381. He is not lying. He only counts the men who die at the furnaces, not the ones who die at home afterwards.",
           "teaches": "cinderworks:death_toll",
           "costs": "goodwill"
         },
@@ -1248,7 +1248,7 @@
     "wary": "%s watches you a moment longer than is comfortable, and waits.",
     "welcome": "%s is glad to see you, and does not trouble to hide it."
   },
-  "_reactions_note": "One line per person per band, NOT per question, so it has to work in front of every answer that person has. Halgrave first read 'Vous aurez le chiffre quand meme', which fits 'how many men has it killed' and not 'what do you make here'. Check a new one against all of that character's replies before keeping it. What somebody says in front of an answer, given how they regard you. The spoken half of dispositions, which are narrated and belong to the greeting. Shown once per conversation, on the first thing they tell you, because a man who says 'you pay first' four times in one exchange is a machine with a stuck key. The rule: it says what they will or will not GIVE you, never what they think of you. A neutral standing gets nothing and the line is exactly what it has always been, so nothing regresses. 'hated' is absent on purpose: at that standing there is no conversation at all.",
+  "_reactions_note": "One line per person per band, NOT per question, so it has to work in front of every answer that person has. Harry first read 'Vous aurez le chiffre quand meme', which fits 'how many men has it killed' and not 'what do you make here'. Check a new one against all of that character's replies before keeping it. What somebody says in front of an answer, given how they regard you. The spoken half of dispositions, which are narrated and belong to the greeting. Shown once per conversation, on the first thing they tell you, because a man who says 'you pay first' four times in one exchange is a machine with a stuck key. The rule: it says what they will or will not GIVE you, never what they think of you. A neutral standing gets nothing and the line is exactly what it has always been, so nothing regresses. 'hated' is absent on purpose: at that standing there is no conversation at all.",
   "reactions": {
     "unwelcome": "I will answer you, then you go.",
     "wary": "One question, no more.",

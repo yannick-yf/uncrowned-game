@@ -76,7 +76,7 @@ and 47 props from his town. This is a data inspection, not a new playability che
 
 Building IDs above come from the brother's
 [ironworks town data](../prototypes/brindle_3d/planning/ironworks-town.json);
-their story uses are proposals. Existing Halgrave/Sena/Ivo and ledger anchors in
+their story uses are proposals. Existing Harry/Sena/Ivo and ledger anchors in
 [places.json](../content/places.json) are not yet proof that those people or
 interactions stand at these particular buildings. The procedural fallback positions
 in that file are not the delivered 3D layout. Any later placement uses anchors.
@@ -142,7 +142,7 @@ audit, found:
   including learning the works' true toll and stopping the clearing.
 - [PlaceRules](../core/rules/place_rules.gd) recognizes Cinderworks ownership,
   the ledger's freeing act and the wage-settlement holding act.
-- [The French cast](../content/cast.fr.json) already contains Halgrave, Sena and
+- [The French cast](../content/cast.fr.json) already contains Harry, Sena and
   Ivo, their positions in the dispute and several spoken deeds. Their current
   writing/names are inputs to review, not automatically approved demo content.
 - [Screens](../view/screens.gd) already routes title/creation/play; QUICK_START

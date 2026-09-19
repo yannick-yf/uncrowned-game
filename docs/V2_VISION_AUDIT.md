@@ -268,7 +268,7 @@ it does not authorize adding graphics or editing his project from this lane.
 **Selected by Yannick: the Cinderworks, with a workers' dispute.** The earlier audit
 suggested the Wide Acres because it directly matches CornTown. The clarified
 one-month target led to the Cinderworks proposal, which Yannick accepted: its
-buildings/props are delivered, the opening already concerns it, and Halgrave/Sena/Ivo
+buildings/props are delivered, the opening already concerns it, and Harry/Sena/Ivo
 already have roles. This does not approve all current writing or names. The Wide
 Acres remains relevant to full v1. Workers' victory is now confirmed to stop
 production, so the existing cold-furnace effect is directly useful. The lost wages

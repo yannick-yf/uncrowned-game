@@ -48,7 +48,7 @@ const CASTING: Dictionary = {
 	# map, and M3b replaces every row of it with his brother's faces.
 	&"bram": "Samurai",
 	# The Cinderworks.
-	&"halgrave": "OldMan3",
+	&"harry": "OldMan3",
 	&"sena": "Villager3",
 	# Tom's is a placeholder for the same reason Bram's is, below: every `Villager` sheet
 	# in the pack is already somebody. M3b replaces the whole table with his brother's.

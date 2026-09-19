@@ -57,7 +57,7 @@ func test_nobody_important_stands_alone() -> void:
 func test_two_hops_reaches_further_than_one() -> void:
 	var web := Relations.shared()
 	assert_true(web.near(&"sena", 2).size() > web.near(&"sena", 1).size(),
-		"the interesting things are two hops out — Sena works for Halgrave, who buys from Wren")
+		"the interesting things are two hops out — Sena works for Harry, who buys from Wren")
 
 
 # ---------------------------------------------------------------- the packet ---

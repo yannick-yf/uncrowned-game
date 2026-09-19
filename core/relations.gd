@@ -47,7 +47,7 @@ func of(who: StringName) -> Array:
 
 
 ## One and two hops out, in a stable order. Two hops is where the interesting
-## things are — Sena works for Halgrave, who buys scrap from Wren — and three is
+## things are — Sena works for Harry, who buys scrap from Wren — and three is
 ## where it stops being about this person.
 func near(who: StringName, hops: int = 2) -> Array:
 	var seen: Dictionary = {who: true}

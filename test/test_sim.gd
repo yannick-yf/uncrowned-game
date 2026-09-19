@@ -103,17 +103,17 @@ func test_the_fact_base_counts_independent_sources() -> void:
 	var facts := FactBase.new()
 	assert_false(facts.has(&"the_ledger"), "unknown until sourced")
 
-	facts.add_source(&"the_ledger", &"halgrave")
+	facts.add_source(&"the_ledger", &"harry")
 	assert_true(facts.has(&"the_ledger"))
 	assert_eq(facts.source_count(&"the_ledger"), 1)
 	assert_false(facts.is_redundant(&"the_ledger"), "one source is not redundant")
 
-	facts.add_source(&"the_ledger", &"halgrave")
+	facts.add_source(&"the_ledger", &"harry")
 	assert_eq(facts.source_count(&"the_ledger"), 1, "the same source twice is still one")
 
 	facts.add_source(&"the_ledger", &"sena")
 	assert_true(facts.is_redundant(&"the_ledger"), "two independent sources")
-	assert_eq(facts.sources_of(&"the_ledger"), [&"halgrave", &"sena"] as Array[StringName],
+	assert_eq(facts.sources_of(&"the_ledger"), [&"harry", &"sena"] as Array[StringName],
 		"sorted, so anything hashing this is stable")
 
 	facts.remove_source(&"the_ledger", &"sena")
@@ -135,7 +135,7 @@ func test_replaying_the_log_rebuilds_the_world_exactly() -> void:
 	var sim := Sim.new(99)
 	sim.add_system(FoldingSystem.new())
 	sim.advance(3)
-	sim.submit(&"fact_learned", {"fact": "the_ledger", "source": "halgrave"})
+	sim.submit(&"fact_learned", {"fact": "the_ledger", "source": "harry"})
 	sim.advance(2)
 	sim.submit(&"fact_learned", {"fact": "the_ledger", "source": "sena"})
 	sim.submit(&"fact_learned", {"fact": "the_grants", "source": "nessa"})

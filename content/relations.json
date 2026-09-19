@@ -23,21 +23,21 @@
     },
     {
       "from": "sena",
-      "to": "halgrave",
+      "to": "harry",
       "kind": "works_for"
     },
     {
-      "from": "halgrave",
+      "from": "harry",
       "to": "sena",
       "kind": "employs"
     },
     {
       "from": "ivo",
-      "to": "halgrave",
+      "to": "harry",
       "kind": "works_for"
     },
     {
-      "from": "halgrave",
+      "from": "harry",
       "to": "ivo",
       "kind": "employs"
     },
@@ -188,11 +188,11 @@
     },
     {
       "from": "wren",
-      "to": "halgrave",
+      "to": "harry",
       "kind": "sells_to"
     },
     {
-      "from": "halgrave",
+      "from": "harry",
       "to": "wren",
       "kind": "buys_from"
     },

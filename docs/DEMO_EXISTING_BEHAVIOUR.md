@@ -88,7 +88,7 @@ rewrite. **Do not present six defining choices the demo cannot honour.**
 The Cinderworks dispute is **already written in French, with three voices and the
 redundancy invariant 6 asks for**:
 
-- **Contremaître Halgrave** — management. Gives the death toll (381 in 11 years)
+- **Contremaître Harry** — management. Gives the death toll (381 in 11 years)
   freely, keeps the register, and offers `settle_wage`.
 - **Sena** — a worker, injured at furnace four six years ago, paid eleven days'
   wages. Offers `ask_organise`: *« Je n'ai jamais eu de chiffre à leur donner.
@@ -97,7 +97,7 @@ redundancy invariant 6 asks for**:
   faux »*, because it counts the men who die at the furnaces and not those who die
   at home eighteen months later, coughing.
 
-**The fact `cinderworks:death_toll` has three sources** (Halgrave `ask_cost`, Sena
+**The fact `cinderworks:death_toll` has three sources** (Harry `ask_cost`, Sena
 `ask_toll`, Ivo `ask_true_count`). The evidence side of Y15 is largely built, and
 killing any one of the three leaves it reachable.
 
@@ -111,7 +111,7 @@ killing any one of the three leaves it reachable.
 |---|---|---|
 | **A — free the works** | Take the ledger at (305,220), then read it aloud inside the Cinderworks (`TellingSystem` → `document_read`, `PlaceRules.frees`) | The works goes **free**. The furnaces go **cold** and the entrance line changes — *this is the visible shutdown, and it renders today* |
 | **B — the workers' lever** | Sena's `ask_organise`, which requires the death toll | `i_turned_the_workers`: `steel_output −15`, `worker_morale −30`, `town_sentiment −10`, hardship `cinderworks +12`. **The works stays crown-held and the furnaces stay lit** |
-| **C — management** | Halgrave's `settle_wage`, which requires the **ledger** | `i_settled_the_wage`: `worker_morale +22`, `steel_output +8`, `crown_treasury −8`, hardship `brindle +10`, `cinderworks −12`. The works is **held** |
+| **C — management** | Harry's `settle_wage`, which requires the **ledger** | `i_settled_the_wage`: `worker_morale +22`, `steel_output +8`, `crown_treasury −8`, hardship `brindle +10`, `cinderworks −12`. The works is **held** |
 
 ### The four findings
 
@@ -174,7 +174,7 @@ Files: `core/places.gd`, `core/region.gd`, `test/test_anchors.gd`.
 is listed because without it every demo placement is a bet on prop order.
 
 **Existing behaviour:** `Region.resolve` matches a `feature` by **kind** and returns
-the *first* prop of that kind in the place. Halgrave stands at `FourneauUn` only
+the *first* prop of that kind in the place. Harry stands at `FourneauUn` only
 because it is first in the baked list; the bake already carries `source_id` on all
 74 delivered ironworks props.
 

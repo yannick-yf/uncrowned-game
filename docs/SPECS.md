@@ -73,7 +73,7 @@ is deliberate — see §6.
 | Name | Who they are | Where |
 |---|---|---|
 | **Wren** | Scavenger picking Brindle's ruins. Not from there; arrived after | Brindle |
-| ★ **Foreman Halgrave** | Runs the Cinderworks and believes in it. Keeps the death ledger, proudly | The Cinderworks |
+| ★ **Foreman Harry** | Runs the Cinderworks and believes in it. Keeps the death ledger, proudly | The Cinderworks |
 | **Sena** | Furnace worker, lost a hand, organising the others. Has copied ledger pages | The Cinderworks |
 | **Doctor Ivo Marsh** | The works' physician. Knows the true death count, including the unrecorded | The Cinderworks |
 | **Maddox** | Innkeeper. Knows everyone, believes nothing. The cheapest way into almost any thread | Harrowgate |
@@ -1098,7 +1098,7 @@ and it does not ask who moved it.
 
 **One credible pro-works voice in the first hour, who is not a fool.** §5's king's
 argument, below, exists in full and is audible only at Blackcairn. In v2 it is audible
-at the Cinderworks, a minute's walk from where the player wakes, in **Halgrave's**
+at the Cinderworks, a minute's walk from where the player wakes, in **Harry's**
 mouth: a man who keeps the death ledger because he thinks the record matters, who
 answers in figures, and who will tell anybody what the works has paid for — the road,
 the bread, the years added to a life — before anybody has read the ledger. He is ★,
@@ -1108,10 +1108,10 @@ ledger in one man, as §5 already gives to the king and to the church. He is not
 written as right. He is written as somebody a reasonable person could follow, in the
 first hour, before the case against him has been assembled.
 
-**Built 2026-09-13.** Halgrave's second question, offered to anybody and costing
+**Built 2026-09-13.** Harry's second question, offered to anybody and costing
 nothing: *Why does the king want more of this?* — a man here died at 40 and his
 children before him; now a road, bread in winter, 1 child in 40 lost instead of 1 in 4;
-he wants that everywhere, and so does Halgrave. The same figures as his first answer,
+he wants that everywhere, and so does Harry. The same figures as his first answer,
 which is what makes it an argument rather than a slogan. A test holds it among the
 first three things he offers a stranger, and another holds the fairy's forbidden list
 with *king*, *roi*, *Arthur*, *crown* and *couronne* on it.
@@ -1129,7 +1129,7 @@ says.
 > exposition, which §4 has forbidden since the first draft, and she would be picking a
 > side in a game whose thesis is that both are plays. A crown voice in the clearing —
 > the miracle is one, and the crown's voice belongs in the crown's world, which is the
-> works, one frame away. Making Halgrave sympathetic by making him doubt — a man who
+> works, one frame away. Making Harry sympathetic by making him doubt — a man who
 > half-believes is a fool with a ledger; the version that costs the player something
 > is the one who believes completely and can show you the figures.
 
@@ -1243,7 +1243,7 @@ changed region.
 > | Who | Why | Where |
 > |---|---|---|
 > | **Bram**, survivor of Brindle | The sparring partner, so the fight can be reached and retuned without playing the quest to it (`DEMO_TASKS.md` F2) | Brindle's crossroads |
-> | **Tom**, the unionist | The one person the demo's quest genuinely adds — the foreman and the worker it needs are already `halgrave` and `sena` (`QUEST_CINDERWORKS.md`) | The Cinderworks |
+> | **Tom**, the unionist | The one person the demo's quest genuinely adds — the foreman and the worker it needs are already `harry` and `sena` (`QUEST_CINDERWORKS.md`) | The Cinderworks |
 >
 > The number is a tripwire against the cast sprawling by degrees, not a law, and it is
 > still a tripwire: `test_townsfolk_are_not_cast` fails on the twenty-eighth. Passages
@@ -1296,7 +1296,7 @@ a sheet like everybody else. Do not let one acquire dialogue by degrees.
 
 | Name | Role | Holds |
 |---|---|---|
-| ★ **Foreman Halgrave** | Runs the works. Believes in them, completely | The death ledger. He keeps it because the crown requires it, and because he thinks the record matters. He is not hiding it — he is *proud* of the accounting |
+| ★ **Foreman Harry** | Runs the works. Believes in them, completely | The death ledger. He keeps it because the crown requires it, and because he thinks the record matters. He is not hiding it — he is *proud* of the accounting |
 | **Sena** | Furnace worker, lost a hand, organising the others | Copied pages of the ledger. Second source |
 | **Doctor Ivo Marsh** | The works' physician; signs the certificates | The true count, including the ones that never reached the ledger. Third source |
 
@@ -1621,9 +1621,9 @@ think ill of.
 |---|---|---|
 | Enforce the grants | Nessa, at the Wide Acres | the land grants |
 | Get the convoys moving | Garrick, in Harrowgate | — |
-| Deliver labour | Halgrave, at the Cinderworks | — |
-| Settle the wage | Halgrave | the death toll |
-| Feed it the forest | Halgrave | — |
+| Deliver labour | Harry, at the Cinderworks | — |
+| Settle the wage | Harry | the death toll |
+| Feed it the forest | Harry | — |
 | Pay the Muster | Odile, at the Muster | the pay fraud — and it goes when the fraud is public |
 | Feed the Muster | Odile | — |
 | Hand over the deserters | Ryse, at the Muster | where Kell is |
@@ -2454,7 +2454,7 @@ So the value is not spread across the cast — **it is concentrated entirely in 
 half of the world the authored line cannot see**. Today every question has exactly
 one written answer serving four materially different situations (71 questions, 284
 packets, 284 distinct fingerprints, 71 distinct replies). Characters whose voice is
-terse or numeric — Til at *"says as little as possible"*, Halgrave at *"answers with
+terse or numeric — Til at *"says as little as possible"*, Harry at *"answers with
 figures"* — reached 85–91% overlap, meaning there is one way to say it and it is
 already said. That is a reason to brief the reactive questions first and possibly
 never brief the rest.
@@ -2584,7 +2584,7 @@ usable. What passed:
   lack is *not* courage but a reason. Inverted again.
 - *"Je peux faire la pluie"* — *arrange bad weather* is what Til calls sinking a
   cargo. Read literally it is weather magic.
-- *"J'ai tué 381 hommes en 11 ans"* — the works killed them. Halgrave keeps the
+- *"J'ai tué 381 hommes en 11 ans"* — the works killed them. Harry keeps the
   count. Every figure correct, the agent wrong.
 
 The door checks figures, names, formatting and register, and all four of those lines
@@ -2628,7 +2628,7 @@ small enough to write by hand. Generation stays built, tested and switched off.
 
 ### Reactions: what replaced the model (built 2026-09-12)
 
-Every answer in this game is fixed. Ask Halgrave how many men the works has killed
+Every answer in this game is fixed. Ask Harry how many men the works has killed
 and the sentence is identical whether he trusts you, has never met you, or watched
 you take something off a stall. That is the 50%-against-74% divergence measured
 during the generation experiment, and **all of it lives in the first sentence.**
@@ -2637,7 +2637,7 @@ So the first sentence is written by hand. A `reactions` block in the cast sheets
 beside the `dispositions` block — which is the *narrated* version of the same idea
 and belongs to the greeting, where this one is **spoken** and belongs to the answer.
 
-| Standing | Halgrave, asked what the works makes |
+| Standing | Harry, asked what the works makes |
 |---|---|
 | unknown | *Du fer et de l'acier. Des rails, des plaques…* |
 | unwelcome | **Je ne cache rien, même à vous.** *Du fer et de l'acier…* |
@@ -2654,7 +2654,7 @@ and belongs to the greeting, where this one is **spoken** and belongs to the ans
    coming back acknowledges it again, because the thread is the conversation and the
    standing is the relationship.
 3. **One line per person per band, not per question** — so it has to work in front of
-   *every* answer that person has. Halgrave's first draft was *"Vous aurez le chiffre
+   *every* answer that person has. Harry's first draft was *"Vous aurez le chiffre
    quand même"*, which fits *how many men has it killed* and not *what do you make
    here*. Caught by reading all three side by side, and not checkable by machine:
    the note lives in the cast files where the next line will be written.
@@ -3693,7 +3693,7 @@ proposal — Yannick's to change — and the reasoning for it is under the table
 | **A** ✅ | **The wild without teeth** — delivered 2026-09-13 | Beasts out of the whole map; `TERRAIN_SLOWS_YOU` on and open country retuned to 0.65 on the measurement; `Navigation` given the least-watched path and the wild line measured with it; travellers drawn as a pack horse; Attunement's speed half (§4, §11, §13) | **Held:** road 57 s, wild 69 s, attuned wild 66 s, no blood on any; two `SLOW` tests assert the three relationships. The instrument had measured a 42%-road line as "the wild" since Phase 2 and is fixed |
 | **B** ✅ | **The second axis** — delivered 2026-09-13 | Hardship per town, at 50, pushed only by deeds; the ten building acts as spoken deeds with a cost each; `hardship_effects` on every deed that moves the kingdom, walked by test; eight faces as greetings; `hardship_is_high_here`; the journal's worse-off rows (§8, §9, §15) | **Held:** burn the stores and feed the works the forest in one run — the Wide Acres and Brindle both past the line, Pell's and Wren's greetings changed without naming the player, two journal rows with two different causes. 36 suites, 378 tests |
 | **C** ✅ | **Four places, two states** — delivered 2026-09-13 | `PlaceRules`; the state in `Allegiance` with `decided_at`, `held_until` and `flips`; freeing by reading the place's thing there or exposing the fraud, holding by the four spoken acts that need the same thing; the freeze enforced by not offering; the band kept for the borders, which now start crown-held; the free-state ground; the sign as a HUD line; the journal's changed-hands rows (§3, §4, §8, §13, §15) | **Held:** the grants read to the tenants free the Acres; a town at 90 cannot take them back for two days and then does; Nessa will not enforce them while the place is held and will after; a paid camp cannot be exposed for two days and then can; the sign reads loyal, freed, restored in turn. 37 suites, 391 tests |
-| **D** ✅ | **The crown as a play** — delivered 2026-09-13 | Rank from crown standing through `FactionRules.rank_from`, falling as well as rising, `rose`/`fell` announced, the last rank at 90; the service tally gone; `crown_rank_is_at_least_N` and three greetings that read it; Halgrave's argument as his second, free question; the throne reading in `EndRules` and the journal (§3, §5, §9, §11) | **Held:** a clerk after informing, a chamberlain after four crown acts, an officer again after one furnace; a stranger is offered the argument with its figures; Deposed at the last rank reads *crowned*, as a nobody *vacancy*, and a chamberlain who empties the vault still ruins the reign. 38 suites, 403 tests |
+| **D** ✅ | **The crown as a play** — delivered 2026-09-13 | Rank from crown standing through `FactionRules.rank_from`, falling as well as rising, `rose`/`fell` announced, the last rank at 90; the service tally gone; `crown_rank_is_at_least_N` and three greetings that read it; Harry's argument as his second, free question; the throne reading in `EndRules` and the journal (§3, §5, §9, §11) | **Held:** a clerk after informing, a chamberlain after four crown acts, an officer again after one furnace; a stranger is offered the argument with its figures; Deposed at the last rank reads *crowned*, as a nobody *vacancy*, and a chamberlain who empties the vault still ruins the reign. 38 suites, 403 tests |
 | **E** ✅ | **Blackcairn reads the kingdom** — delivered 2026-09-13 | `CastleRules`: wealth from treasury, steel and supply; instability from flips inside the freeze window, whoever caused them; the wall's extra guards and the dark keep; three townsfolk who speak of the castle; the journal's kingdom page (§4, §9, §13, §15) | **Held:** a building castle at the start, holding after one bad season, shuttered in a ruin; one flip uneasy, two a crisis, the same two a window later calm; Maddox and Peyre say so in both languages; the kingdom page carries no number. 39 suites, 412 tests |
 
 **Why this order.** A is a removal, and deleting before adding means every later
@@ -3957,7 +3957,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | **Counts are figures, not words**, in both languages | Prose convention, spelled out | A game about ledgers, death tolls and escort numbers should read like one, a figure lands where a spelled-out number reads past, and digits are language-neutral when the same content ships twice. The conversion had to be done by hand in the end: a regex cannot tell a count from an article, and French makes that worse because "un" is both — fifteen men became "1 homme" before it was caught |
 | 2026-09-12 | **Voice range is a rule, because ceilings cannot see uniformity** | Caps alone, as the first pass had | Cutting every coda left the whole cast speaking in six words: 40% of sentences four words or fewer, spread 3.6 to 10.2. Every line passed every cap and the cast still had one voice, hard-boiled pastiche instead of rueful pastiche. A test now fails if the shortest and longest voices are less than 7 words a sentence apart. Spread is now 3.6 to 27.0, deviation 5.9 against 1.6 |
 | 2026-09-12 | **A house style, machine-checked, and it doubles as the generation constraints** | Style by review; fixing it after the model exists | Measured: 53% of replies ended on a self-aware coda and Arthur's argument was twice the size of the dialogue box. One writer's tic applied twenty-four times is the same failure as a model's, and it is invisible line by line — only listing the closing sentences side by side shows it. A model will imitate the corpus, tics included, so the corpus had to be cleaned before it is ever used as an example |
-| 2026-09-12 | Each character gets **one concrete verbal habit that is not wit** | Distinguishing voices by what they say rather than how | Halgrave answers in figures, Sena in under a dozen words, Dray in orders, Pell repeats himself, Wren prices everything. Ivo and Mira keep the self-examining close because it is what their work is. Wit was the only register the whole cast had, and wit is the easiest thing for a model to over-supply |
+| 2026-09-12 | Each character gets **one concrete verbal habit that is not wit** | Distinguishing voices by what they say rather than how | Harry answers in figures, Sena in under a dozen words, Dray in orders, Pell repeats himself, Wren prices everything. Ivo and Mira keep the self-examining close because it is what their work is. Wit was the only register the whole cast had, and wit is the easiest thing for a model to over-supply |
 | 2026-09-12 | Arthur's argument is **six short beats** the player asks for, not one speech | One long reply, as written | It was 987 characters in a box that holds 420, so half of §5's case was never on screen. Split, the player assembles his argument by asking for it, which is also a better scene than being lectured |
 | 2026-09-12 | **The cast is complete: twenty-four named people across all eight zones**, every line written in French and English | Writing English first and translating; leaving towns empty until later | Six of §3's levers are now things you *say* — turn the workers, organise a withholding, recruit deserters, redirect a convoy, turn the lord, read a document out — which is what stops twenty-four people being lore |
 | 2026-09-12 | The Captain of the Guard is **Dray**; Arthur stands at `king_pos` and is the king you already walk up to | A separate NPC beside the king entity | Drawing him twice put a second king half a pixel behind the first. And nobody is stabbed mid-sentence now: contact damage and wildlife both stand down while a conversation is open, which is what makes Arthur a person you can speak to rather than a wall that hurts |
@@ -3965,14 +3965,14 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-12 | The relationship web is **ids only, in its own file** | Edges inside the cast sheets; edges in code | It needs no translation, which is the whole reason to keep it out of `cast.*.json` — and it lets an NPC be told who their neighbours are without any of it being written into their dialogue |
 | 2026-09-12 | The unwatched stall moved a second time, and is now verified against a **roused** watch | Checking it against a calm watch, as before | It has been displaced twice by the world filling up — out of the Wide Acres when the granaries got a watch, out of southern Saltmarch when Til and Mira arrived. Checking it at the calmest moment was how it stopped being true the first time |
 | 2026-09-12 | The Wide Acres and the Muster get their five, and Kell the Thornwood — **twelve of twenty-five now exist** | Writing all eighteen before playing any | Two more levers that are things you *say*: a withholding at the Acres, deserters recruited in the wood. Both need a reason the other person can repeat out loud — Pell will not move for a feeling and neither will eleven men hiding in a forest |
-| 2026-09-12 | **The unashamed one is the open source**, in every town | Picking the open source at random; gating everything | Halgrave, Nessa and Ryse each give away the fact that damns their side, because none of them thinks it needs hiding. Invariant 6 needs one source nothing can gate shut, and characterisation was already deciding which — so the two rules turn out to be the same rule. It is also why the game has no "good" informants: the people who talk are the ones who are not ashamed |
+| 2026-09-12 | **The unashamed one is the open source**, in every town | Picking the open source at random; gating everything | Harry, Nessa and Ryse each give away the fact that damns their side, because none of them thinks it needs hiding. Invariant 6 needs one source nothing can gate shut, and characterisation was already deciding which — so the two rules turn out to be the same rule. It is also why the game has no "good" informants: the people who talk are the ones who are not ashamed |
 | 2026-09-12 | A man hiding in a wood gets a fire | Leaving Kell in open forest | "He is out in the Thornwood" is otherwise an instruction to search a forest. The fire is the only landmark out there, it is what a deserter would have, and it doubles as a save point — one prop doing three jobs |
 | 2026-09-12 | An intent that is not being offered is not spoken | Speaking the line and teaching nothing, as it did | Choosing an unoffered intent read the reply aloud and taught nothing, because the verdict refused it and the line printed anyway — indistinguishable from a fact failing to register. A keyboard cannot reach one; a tool can, and did |
 | 2026-09-12 | Documents look like a book | Reusing the muster-rolls art, as it did | The five documents lay on the ground as pots and barrels, so the player walked up to some crockery and was told they had taken a ledger. Found by looking at the sprite rather than the code |
-| 2026-09-12 | **The king is Arthur.** The region is still unnamed | — | Q1, open since the first day. Nothing had needed it because nobody in the game had cause to say his name; from the Cinderworks onward they do — Halgrave says it while defending him |
+| 2026-09-12 | **The king is Arthur.** The region is still unnamed | — | Q1, open since the first day. Nothing had needed it because nobody in the game had cause to say his name; from the Cinderworks onward they do — Harry says it while defending him |
 | 2026-09-12 | **French is the default language.** The machine's language is not consulted | Defaulting to the OS language; English first | The game is authored in French and translated into English, not the other way round, because that is how it is played. One line to change the day that stops being true |
 | 2026-09-12 | **A spoken line can cause a deed** (`causes` on an option) | Levers only as acts at landmarks; a system per lever | §3 lists levers like "turn the workers" that are plainly things you *say*, and until now nothing in a conversation could cause anything — which is most of why a cast risked being lore. The rules layer still decides whether the line is offered; `causes` only names what saying it does |
-| 2026-09-12 | The Cinderworks' three: **Halgrave ★, Sena, Ivo Marsh**, and the death toll has three sources of which only Halgrave's is ungated | Sena or Marsh as the open source | §5 is explicit that exposing a pantomime villain is not a climax. Halgrave gives you the number that damns Arthur **freely, to anybody**, because he is not ashamed of it and thinks the record matters — so characterisation and invariant 6 are doing the same job, and the fact stays reachable however badly the player has behaved |
+| 2026-09-12 | The Cinderworks' three: **Harry ★, Sena, Ivo Marsh**, and the death toll has three sources of which only Harry's is ungated | Sena or Marsh as the open source | §5 is explicit that exposing a pantomime villain is not a climax. Harry gives you the number that damns Arthur **freely, to anybody**, because he is not ashamed of it and thinks the record matters — so characterisation and invariant 6 are doing the same job, and the fact stays reachable however badly the player has behaved |
 | 2026-09-12 | Every `causes` id is checked against the deed table by a test | Trusting the id typed in content | Sena's line said `turn_the_workers` and the deed is `i_turned_the_workers`, so choosing it ran a deed nobody had written: no error, no effect, the furnaces merrily alight. An id typed in content and never compared against anything is a lever that silently does nothing |
 | 2026-09-12 | Campfires **built**, twelve of them — one beside every place worth being and four on the road between | Beds in inns; one save point; saving anywhere | Recorded on 2026-09-12 and then not built for a day, which Yannick found by looking for them in play. They have to be common enough that reaching one is a plan rather than a pilgrimage: rare fires make death a punishment instead of a cost |
 | 2026-09-12 | The save file is the event log and nothing else; loading is replaying it | A snapshot of the world; both | Everything in the world is derived from the events, so there is no snapshot that can drift out of step with it — and loading is not a feature with its own bugs, it is the thing every replay test has exercised since Phase 0. The snapshot beside it stays the obvious optimisation when a long run gets slow to load: measure first |
@@ -4092,7 +4092,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **Taking the throne is a reading, not a sixth ending**: Deposed × high handprint × high crown standing, and it must show the hardship in the towns the player changed | A `crowned` predicate; an heir flag; reading rank instead of standing | A new predicate needs a new threshold and a page row and makes the throne a goal with a correct path. The reading is taken after Deposed fires from figures the journal already shows, and showing hardship the morning after is what stops it being a victory screen |
 | 2026-09-13 | **The entrance sign is a voice, not a readout** — propaganda in the place's own words, different for always-loyal, strengthened and freed | A status line at the gate; no sign | A readout flattens discovery and breaks "push the ambient, pull the attribution". A claim the player can doubt and later find false is the ambient register speaking |
 | 2026-09-13 | **Three phases of play are a description, never gates**, and phase 3 is available in minute one | Gating the confrontation on the world's state | Pillar 1. The phases say when a confrontation tends to go well, never when it is allowed |
-| 2026-09-13 | **The opening points two ways**: policy not malice, the fairy names no enemy, Halgrave's argument audible in the first hour | Softening the burning; a fairy who names the king; a doubting Halgrave | The village stays cleared — it is the counterexample the king names to your face. A fairy who names him is exposition and a side taken. A man who half-believes is a fool with a ledger; the one who believes completely and can show figures is the one who costs the player something |
+| 2026-09-13 | **The opening points two ways**: policy not malice, the fairy names no enemy, Harry's argument audible in the first hour | Softening the burning; a fairy who names the king; a doubting Harry | The village stays cleared — it is the counterexample the king names to your face. A fairy who names him is exposition and a side taken. A man who half-believes is a fool with a ledger; the one who believes completely and can show figures is the one who costs the player something |
 | 2026-09-13 | **Monsters are out of the whole map, and terrain speeds come back on** | Beasts in the forests only; keeping speeds off | The wild becomes slow and unwatched against a fast and watched road: the choice moves from "will I survive" to "will I be seen", which is the half the reputation system was built for. Blood asks a combat question the map should not be answering; time is the price the speed table was reasoned for |
 | 2026-09-13 | **Road travellers are kept**, never conversational, never named, drawn as traffic | Removing them with the beasts; making them people | They are how rumour physically travels; before them a story reached every town whichever way the player walked. Removing them removes rumour propagation, the point of the Thornwood and the reason the road ratio exists. If they read as fake it is a drawing problem |
 | 2026-09-13 | **The pack and the palette are locked for v2; a v3 art pass replaces both**, and the validator is what makes that safe | Swapping art during the systems rewrite | An art swap during a rewrite makes every visual bug ambiguous between the two. The four rules — one pack, a locked palette, the validator, one kit per place — are the wall a new pack has to clear, and the validator says immediately what it does not cover. Licence checked before anything is drawn |
@@ -4114,7 +4114,7 @@ authoring; Q28–Q34 are later phases and bookkeeping.
 | 2026-09-13 | **The service tally and `WORTH` are removed; rank is `FactionRules.rank_from(side, standing)`** | Keeping both numbers; reading the tally | Two numbers for one idea disagree, and the tally only rose. The deed table's faction effects already move the crown and the dispossessed on every act, so service was being counted twice. The store keeps only the last rank it saw, to announce a change |
 | 2026-09-13 | **A rank greeting comes after personal regard and after hardship** | Rank first | A man who watched you steal does not wave you through however the court styles you, and a place that is worse off says so before it says anything about your title. The gate still opens: greetings are what rank changes, not doors |
 | 2026-09-13 | **The throne is read by the ending system when Deposed fires and kept as `reign_reading`** | Reading it in the journal each time; a stored flag set by an act | Taken once, from standing at the moment the reign ends — the same moment `reign_ended` is stamped — so a replay reads the same throne. The journal only phrases it, and shows the morning after in words |
-| 2026-09-13 | **Halgrave's argument is his second question and costs nothing** | A new NPC for the crown's case; a reply gated on goodwill | §5 wants one credible voice in the first hour who is not a fool; Halgrave already had the figures and the belief. Second, so the cap of three offers it to a stranger; free, because he is not ashamed of it, which is what makes him credible |
+| 2026-09-13 | **Harry's argument is his second question and costs nothing** | A new NPC for the crown's case; a reply gated on goodwill | §5 wants one credible voice in the first hour who is not a fool; Harry already had the figures and the belief. Second, so the cap of three offers it to a stranger; free, because he is not ashamed of it, which is what makes him credible |
 | 2026-09-13 | **Wealth is the mean of treasury, steel and grain supply; building from 85, shuttered below 45** | Treasury alone; a stored prosperity figure | §4 names the three; the mean makes one bad season *holding* and a ruin *shuttered*. Building at the start is true — the king is building — and derived, so nothing new is stored |
 | 2026-09-13 | **Two flips inside one freeze window is a crisis; one is uneasy; both count whoever caused them** | A separate window; counting only the player's flips; a stored unrest figure | Recency is what makes it political: four towns in a week is a crisis and the same four over a season is policy, and the window is §8's, not a second one. To the men on the wall a flip is a flip, and a stamp that moved nothing is not one |
 | 2026-09-13 | **The castle's rich reading is a question Garrick answers, not a greeting** | A greeting, like the other two | The castle is rich from minute one, so a greeting on it never lifts and hides the speaker's disposition band — the coverage test caught it. Unstable and poor are false at the start and stay greetings |

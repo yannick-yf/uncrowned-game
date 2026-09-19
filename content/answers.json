@@ -6,17 +6,17 @@
   "_context_note": "Every fact carries why, not just what. 'the works has killed 381 men' leaves a player asking 381 of what and why does that matter; 'and Arthur reads the number every spring and orders the works made bigger' is the half that makes the first half mean something. A line can only be self-contained if the brief was.",
 
   "answers": {
-    "halgrave.ask_works": [
+    "harry.ask_works": [
       "the works makes iron and steel: rails, plates, tools, nails",
       "before the works, 1 child in 4 born here died every winter; now it is 1 in 40",
       "he believes the works is why the town is alive at all"
     ],
-    "halgrave.ask_cost": [
+    "harry.ask_cost": [
       "the works has killed 381 men in 11 years",
       "he writes the number down himself and sends it to King Arthur every spring",
       "Arthur reads it and orders the works made bigger, every year"
     ],
-    "halgrave.ask_ledger": [
+    "harry.ask_ledger": [
       "he keeps a book with every dead man's name and the date he died",
       "the crown asks him for the book each year, and he would keep it anyway",
       "his reason: if a thing kills 381 men, somebody should write it down"

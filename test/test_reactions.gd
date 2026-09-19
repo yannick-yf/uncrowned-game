@@ -128,20 +128,20 @@ func test_a_stranger_hears_exactly_what_the_game_always_said() -> void:
 	var sim: Sim = _world()
 	var world := sim.store(&"world") as WorldState
 	var cast := sim.store(&"cast") as Cast
-	_talk_to(sim, &"halgrave", 0.0)
+	_talk_to(sim, &"harry", 0.0)
 	assert_false(world.options.is_empty(), "he has something to be asked")
 	var asked: StringName = world.options[0].intent
-	var written: String = DialogueRules.find(cast.get_npc(&"halgrave"), asked).reply
+	var written: String = DialogueRules.find(cast.get_npc(&"harry"), asked).reply
 	assert_eq(_ask_first(sim), written, "word for word what was written")
 
 
 func test_a_man_who_watched_you_steal_answers_differently() -> void:
 	var written: Sim = _world()
-	_talk_to(written, &"halgrave", 0.0)
+	_talk_to(written, &"harry", 0.0)
 	var plain: String = _ask_first(written)
 
 	var sour: Sim = _world()
-	_talk_to(sour, &"halgrave", -45.0)
+	_talk_to(sour, &"harry", -45.0)
 	var cold: String = _ask_first(sour)
 
 	assert_ne(cold, plain, "the same question, and it does not open the same way")

@@ -297,7 +297,7 @@ Est. 2 h. Depends on: M1, Q1, and the naming review.
 
 **Drissa is Sena, and that was already the recorded decision** — SPECS §6's budget of 27
 names Tom as "the one person the demo's quest genuinely adds", because the foreman and
-the worker it needs are `halgrave` and `sena`. Her existing sheet makes the part better
+the worker it needs are `harry` and `sena`. Her existing sheet makes the part better
 than the draft did: a woman who left her hand in furnace four and still says the fires
 must not go out is a stronger argument for the works than somebody merely glad of the
 money.
@@ -569,7 +569,7 @@ Est. 2 h. Depends on: F5, Q4. *(Was F5.)*
 Tom's side: a foreman or the gate's guard. Drissa's side: **Tom**. The fight happens
 where the act happens, and its result decides whether the act goes through.
 
-**One person fewer than the quest doc assumes.** `Contremaître Halgrave` is already the
+**One person fewer than the quest doc assumes.** `Contremaître Harry` is already the
 works' foreman and `Sena` is already a worker there, so Tom's side has its opponent
 today and Drissa's role has a body. **Tom is the only new person the quest needs.** The
 naming review (`QUEST_CINDERWORKS.md` §4) decides whether Drissa *is* Sena or replaces

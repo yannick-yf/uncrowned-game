@@ -46,7 +46,7 @@ func test_the_packet_says_how_the_person_talks() -> void:
 	var voices := Voices.shared()
 	for npc: Npc in cast.named():
 		assert_true(voices.of(npc).length() > 0, "%s has no voice note" % npc.id)
-	assert_true(Context.build(&"halgrave", sim.store(&"world") as WorldState, cast,
+	assert_true(Context.build(&"harry", sim.store(&"world") as WorldState, cast,
 		sim.store(&"standing") as Standing, sim.store(&"worldtick") as WorldTick,
 		sim.facts, Relations.shared()).contains("VOICE:"), "and the packet carries it")
 
@@ -65,7 +65,7 @@ func test_the_packet_asks_for_facts_and_not_for_the_finished_sentence() -> void:
 	# serves every world the question can be asked in, and the written reply serves
 	# one. See `content/answers.json`.
 	var sim: Sim = _world()
-	var packet: String = _packet(sim, &"halgrave", &"ask_cost")
+	var packet: String = _packet(sim, &"harry", &"ask_cost")
 	assert_true(packet.contains("ASKED:"), "the question is in the brief")
 	assert_true(packet.contains("MUST BE TRUE: the works has killed 381 men in 11 years"),
 		"and the facts the answer has to contain")
@@ -78,7 +78,7 @@ func test_an_answer_with_no_facts_declared_is_not_written_at_all() -> void:
 	# option nobody has briefed is exactly as it was.
 	var sim: Sim = _world()
 	var answers := Answers.shared()
-	assert_true(answers.may_be_written(&"halgrave", &"ask_cost"), "this one is briefed")
+	assert_true(answers.may_be_written(&"harry", &"ask_cost"), "this one is briefed")
 	assert_false(answers.may_be_written(&"tovin", &"ask_muster"), "this one is not")
 	assert_true(_packet(sim, &"tovin", &"ask_muster").contains("MUST SAY:"),
 		"so the packet shows the written line and nothing may replace it")
@@ -130,11 +130,11 @@ func test_the_door_refuses_the_house_style_being_broken() -> void:
 func test_a_refused_line_leaves_the_written_one_standing() -> void:
 	var sim: Sim = _world()
 	var world := sim.store(&"world") as WorldState
-	_talk_to(sim, &"halgrave")
+	_talk_to(sim, &"harry")
 	var authored: String = world.current_line
 
 	sim.submit(&"phrased", {
-		"key": "anything", "for": "halgrave",
+		"key": "anything", "for": "harry",
 		"line": "Ask Dorian at the mill. He has the other book."})
 	sim.advance(2)
 	assert_eq(world.current_line, authored, "he says what he was written to say")
@@ -156,11 +156,11 @@ func test_a_given_line_is_spoken_and_remembered() -> void:
 	var sim: Sim = _world()
 	var world := sim.store(&"world") as WorldState
 	var book := sim.store(&"phrasebook") as Phrasebook
-	_talk_to(sim, &"halgrave")
+	_talk_to(sim, &"harry")
 
-	var key: String = _packet_key(sim, &"halgrave", &"")
+	var key: String = _packet_key(sim, &"harry", &"")
 	sim.submit(&"phrased", {
-		"key": key, "for": "halgrave",
+		"key": key, "for": "harry",
 		"line": "Careful. The slag is hot all day."})
 	sim.advance(2)
 	assert_eq(world.current_line, "Careful. The slag is hot all day.", "he says it")
@@ -172,11 +172,11 @@ func test_the_same_situation_gets_the_same_words() -> void:
 	# state is identical words, which is why §9 refused retrieval: a drifting packet
 	# is a drifting key and a cache that never hits.
 	var sim: Sim = _world()
-	var first: String = _packet_key(sim, &"halgrave", &"ask_cost")
-	var second: String = _packet_key(sim, &"halgrave", &"ask_cost")
+	var first: String = _packet_key(sim, &"harry", &"ask_cost")
+	var second: String = _packet_key(sim, &"harry", &"ask_cost")
 	assert_eq(second, first, "same world, same key")
 
-	var other: String = _packet_key(sim, &"halgrave", &"ask_works")
+	var other: String = _packet_key(sim, &"harry", &"ask_works")
 	assert_ne(other, first, "a different question is a different key")
 
 
@@ -186,9 +186,9 @@ func test_words_survive_being_saved_and_reloaded() -> void:
 	# model is ever asked twice for the same moment.
 	SaveFile.discard()
 	var sim: Sim = _world()
-	_talk_to(sim, &"halgrave")
-	var key: String = _packet_key(sim, &"halgrave", &"")
-	sim.submit(&"phrased", {"key": key, "for": "halgrave", "line": "The slag is hot."})
+	_talk_to(sim, &"harry")
+	var key: String = _packet_key(sim, &"harry", &"")
+	sim.submit(&"phrased", {"key": key, "for": "harry", "line": "The slag is hot."})
 	sim.advance(2)
 
 	var replayed: Sim = Game.replay(sim)
@@ -200,15 +200,15 @@ func test_words_survive_being_saved_and_reloaded() -> void:
 func test_a_late_line_is_kept_but_not_put_in_the_wrong_mouth() -> void:
 	var sim: Sim = _world()
 	var world := sim.store(&"world") as WorldState
-	_talk_to(sim, &"halgrave")
+	_talk_to(sim, &"harry")
 	sim.submit(&"end_talk")
 	sim.advance(2)
 	_talk_to(sim, &"sena")
 	var hers: String = world.current_line
 
-	sim.submit(&"phrased", {"key": "late", "for": "halgrave", "line": "The slag is hot."})
+	sim.submit(&"phrased", {"key": "late", "for": "harry", "line": "The slag is hot."})
 	sim.advance(2)
-	assert_eq(world.current_line, hers, "Sena does not say Halgrave's line")
+	assert_eq(world.current_line, hers, "Sena does not say Harry's line")
 	assert_eq((sim.store(&"phrasebook") as Phrasebook).recall("late"), "The slag is hot.",
 		"but it is kept for the next time he is asked")
 

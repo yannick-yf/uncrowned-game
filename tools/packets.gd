@@ -9,7 +9,7 @@ extends SceneTree
 ## from". One good packet proves nothing; the thin ones are the answer.
 ##
 ##   godot --headless --path . -s tools/packets.gd -- fr
-##   godot --headless --path . -s tools/packets.gd -- en halgrave,mira,pell
+##   godot --headless --path . -s tools/packets.gd -- en harry,mira,pell
 
 const SITUATIONS: Array[StringName] = [&"plain", &"welcome", &"unwelcome", &"hungry"]
 

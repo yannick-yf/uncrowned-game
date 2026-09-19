@@ -17,7 +17,7 @@
     "cinderworks:ledger": "Le registre des Forges, ce que les fours ont coûté en hommes, tenu de la main du roi, le prix inscrit en face du rendement.",
     "bank:debts": "Le livre de la banque : ce que la couronne doit, et à qui. Presque tout est dû à un seul créancier.",
     "muster:signed_orders": "Les ordres de raser les villages, signés. Les hommes qui les ont exécutés sont nommés en dessous.",
-    "cinderworks:death_toll": "Les Forges ont tué 381 hommes en 11 ans, d'après le registre tenu par Halgrave. On envoyait le compte à Arthur chaque année, et il continuait de demander plus de pierre.",
+    "cinderworks:death_toll": "Les Forges ont tué 381 hommes en 11 ans, d'après le registre tenu par Harry. On envoyait le compte à Arthur chaque année, et il continuait de demander plus de pierre.",
     "acres:razed_villages": "Les domaines des Grands Champs sont bâtis sur le sol de villages rasés pour les faire. Les actes les nomment tous, et Brindle est sur la liste.",
     "brindle:the_ground": "Les terres au nord de Brindle sont Brindle, la même terre, retournée. Le vieux Pell la travaillait avant l'incendie et la travaille encore.",
     "muster:how_the_king_fights": "Arthur s'est entraîné avec sa propre garde et n'a jamais changé son ouverture. Il attaque bouclier en avant et contre à gauche, et ses officiers s'exercent contre ça depuis des années.",
@@ -392,8 +392,8 @@
         }
       ]
     },
-    "halgrave": {
-      "name": "Contremaître Halgrave",
+    "harry": {
+      "name": "Contremaître Harry",
       "role": "Contremaître",
       "zone": "overworld",
       "greeting": "Attention, les déchets du four restent brûlants toute la journée. Ce sont les troisièmes forges du royaume.",
@@ -404,7 +404,7 @@
       "alt_greetings": [
         {
           "when": "they_think_ill_of_me",
-          "text": "Halgrave se place entre vous et les fours et ne bouge pas."
+          "text": "Harry se place entre vous et les fours et ne bouge pas."
         }
       ],
       "options": [
@@ -483,7 +483,7 @@
         {
           "intent": "ask_toll",
           "text": "Combien d'hommes les forges ont-elles tués ?",
-          "reply": "Halgrave dira 381. Il ne ment pas. Il compte seulement les hommes qui meurent aux fours, pas ceux qui meurent chez eux après.",
+          "reply": "Harry dira 381. Il ne ment pas. Il compte seulement les hommes qui meurent aux fours, pas ceux qui meurent chez eux après.",
           "teaches": "cinderworks:death_toll",
           "costs": "goodwill"
         },
@@ -1248,7 +1248,7 @@
     "wary": "%s vous regarde un instant de trop, et attend.",
     "welcome": "%s est content de vous voir, et ne prend pas la peine de le cacher."
   },
-  "_reactions_note": "One line per person per band, NOT per question, so it has to work in front of every answer that person has. Halgrave first read 'Vous aurez le chiffre quand meme', which fits 'how many men has it killed' and not 'what do you make here'. Check a new one against all of that character's replies before keeping it. What somebody says in front of an answer, given how they regard you. The spoken half of dispositions, which are narrated and belong to the greeting. Shown once per conversation, on the first thing they tell you, because a man who says 'you pay first' four times in one exchange is a machine with a stuck key. The rule: it says what they will or will not GIVE you, never what they think of you. A neutral standing gets nothing and the line is exactly what it has always been, so nothing regresses. 'hated' is absent on purpose: at that standing there is no conversation at all.",
+  "_reactions_note": "One line per person per band, NOT per question, so it has to work in front of every answer that person has. Harry first read 'Vous aurez le chiffre quand meme', which fits 'how many men has it killed' and not 'what do you make here'. Check a new one against all of that character's replies before keeping it. What somebody says in front of an answer, given how they regard you. The spoken half of dispositions, which are narrated and belong to the greeting. Shown once per conversation, on the first thing they tell you, because a man who says 'you pay first' four times in one exchange is a machine with a stuck key. The rule: it says what they will or will not GIVE you, never what they think of you. A neutral standing gets nothing and the line is exactly what it has always been, so nothing regresses. 'hated' is absent on purpose: at that standing there is no conversation at all.",
   "reactions": {
     "unwelcome": "Je vous réponds, et après vous partez.",
     "wary": "Une question, pas plus.",
