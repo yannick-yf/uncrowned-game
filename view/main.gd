@@ -62,6 +62,19 @@ var _debug_available: bool = false
 var _skipped_days: int = 0
 var _held_dir: Vector2i = Vector2i.ZERO
 var _fight: Fight = null
+## **How far into the fight's framing we are**, 0 at rest and 1 squared up. Eased once,
+## here, and read by two things that must not disagree: the 3D lens, which drops and
+## tightens by it, and the darkened edge of the screen, which comes up by it. Two
+## easings of the same idea in two files drift, and the drift is visible.
+var _fight_lens: float = 0.0
+## The screen's darkened edge — Yannick's, 2026-09-19: *« en termes de DA ça calibre
+## bien ce qu'est un combat »*. It costs no art and no geometry and it works on empty
+## ground, which the ring of onlookers in `docs/COMBAT.md` §6 cannot. **It is only a
+## picture**: the wall that stops the player leaving is `CombatRules.inside_arena`, in
+## the simulation, because a boundary drawn here is a boundary a replay would not have.
+var _ring: ColorRect = null
+## Set only by `UNCROWNED_FIGHT`, cleared on the first frame the 3D window exists.
+var _snap_lens: bool = false
 ## What the fight's keys were last frame, so one event is sent per **change** and not
 ## sixty a second. `_held_dir` does the same job for walking, and for the same reason.
 var _held_fight: Dictionary = {}
@@ -157,6 +170,19 @@ func _ready() -> void:
 		# Comma-separated, so two places freed at once photograph a crisis at the wall.
 		for zone: String in freed.split(","):
 			_mine.decide(StringName(zone.strip_edges()), FactionRules.OPPOSITION, _sim.tick)
+	# **`UNCROWNED_FIGHT=bram`** — squared up against somebody for the frame `shot.sh`
+	# takes, with the lens already dropped and the screen already darkened. The same
+	# gate and the same reason as the two above: `--headless` never draws, so the only
+	# way to see whether a fight *reads* is to photograph one, and twelve frames is not
+	# long enough for a camera that takes a second to move.
+	var squaring_up: String = OS.get_environment("UNCROWNED_FIGHT")
+	if OS.has_feature("debug") and squaring_up != "":
+		_sim.submit(&"fight_began", {"opponent": squaring_up.strip_edges()})
+		_sim.advance(1)
+		_fight_lens = 1.0
+		_snap_lens = true
+		_draw_ring()
+
 	# **`UNCROWNED_TOWN=cinderworks:9/7`** — a place's two numbers, set for the frame
 	# `shot.sh` takes, so an outcome can be looked at before there is a quest to play to
 	# it. `place:allegiance/richesse`, comma-separated for more than one. The same debug
@@ -198,6 +224,16 @@ func _frame(eye: Vector2) -> Dictionary:
 		"player": _draw_position(),
 		"facing": _world.player_facing,
 		"camera": eye,
+		"fight_lens": _fight_lens,
+		# Where the man in front of you is standing *this frame*. He is an NPC, and an
+		# NPC is drawn at his anchor in `content/places.json` — which is where he was
+		# before the two of you squared up, and is not where he is now. Handed over
+		# rather than looked up, like the towns above: the window is given the reading.
+		"fight": {} if _fight == null or not _fight.on() else {
+			"who": String(_fight.opponent),
+			"at": _fight.at_tiles(_fight.opponent_at_mm),
+			"facing": Vector2i(-_fight.toward, 0),
+		},
 		"tents": tents,
 		"crowd": _crowd_size(),
 		"free": {
@@ -320,11 +356,22 @@ func _process(delta: float) -> void:
 	_prompt.visible = not _journal_open
 	# Placed even while paused, so the first frame of a run that opens paused is not
 	# a view of the top-left corner of the map.
+	# Eased before the frame is built, so the lens and the ring see the same number on
+	# the same frame.
+	var squared_up: float = 1.0 if (_fight != null and _fight.on()) else 0.0
+	_fight_lens = lerpf(_fight_lens, squared_up, 1.0 - exp(-FIGHT_LENS_SETTLES * delta))
+	if absf(_fight_lens - squared_up) < 0.002:
+		_fight_lens = squared_up
+	_draw_ring()
+
 	var eye: Vector2 = _camera_at(delta)
 	if _three_d != null:
 		# The 3D lens does the following; this canvas stays put, so the overlays
 		# drawn at `-position` — the map, the pause — land on the screen.
 		position = Vector2.ZERO
+		if _snap_lens:
+			_snap_lens = false
+			_three_d.snap_framing(_fight_lens)
 		_three_d.sync(_frame(eye), delta)
 	else:
 		position = (get_viewport_rect().size * 0.5 - eye * float(TILE)).round()
@@ -418,6 +465,12 @@ func _read_input() -> void:
 	# a dialogue box would read the player's blows as menu choices, and walking would
 	# go out as `move_intent` instead of along the fight's own line.
 	if _fight != null and _fight.on():
+		# Escape still opens the pause menu, because a player must always be able to
+		# stop. **It is not a way out of the fight** — Yannick, 2026-09-19: no fleeing
+		# in the demo. Closing the menu puts you back in front of him.
+		if Input.is_action_just_pressed(&"back"):
+			_pause_menu()
+			return
 		_read_fight_input()
 		return
 	if not _held_fight.is_empty():
@@ -708,6 +761,22 @@ func _can_give_back() -> bool:
 ## matters on a map whose whole point is choosing a route. Kept small: more than a
 ## tile or two and the player stops being the thing you are looking at.
 const CAMERA_LOOKAHEAD: float = 1.6
+## How fast the fight's framing comes on and goes off. Slow enough to read as a camera
+## move and not a cut — which is the whole of the decision in `SPECS.md` §10.
+const FIGHT_LENS_SETTLES: float = 3.2
+## The darkened edge. No aspect correction on purpose: the shape follows the screen's,
+## so the *borders* close in rather than a circle being laid over the world. `0.42` is
+## where it starts and `1.02` is past the corners, so the corners never go fully black.
+const RING_SHADER: String = """
+shader_type canvas_item;
+render_mode unshaded;
+uniform float strength : hint_range(0.0, 1.0) = 0.0;
+void fragment() {
+	vec2 p = (UV - vec2(0.5)) * 2.0;
+	float d = smoothstep(0.42, 1.02, length(p));
+	COLOR = vec4(0.0, 0.0, 0.0, d * strength * 0.88);
+}
+"""
 ## Per second, as a share of the remaining distance. Fast enough that it never feels
 ## like dragging something, slow enough that changing your mind is visible.
 const CAMERA_CATCHES_UP: float = 7.0
@@ -722,11 +791,45 @@ var _camera_placed: bool = false
 ## rather than eased when the player has moved further than they could have walked —
 ## a death puts them back at a fire, and a camera that *travels* there sweeps the
 ## whole map and tells everybody where the fairies are.
+## **The arena, as a picture.** Built the first time a fight needs it and kept after —
+## one `ColorRect` and six lines of shader, which is the whole cost of the thing.
+##
+## It goes in front of the HUD's own children rather than over them, so the dialogue box
+## and the readouts stay legible; and it lives inside the HUD's `CanvasLayer`, so the map
+## and the pause panel take it with them when they take the screen.
+##
+## **`--headless` never draws**, so no test in this project can see this. It was checked
+## with `tools/shot.sh`, which is why that tool exists.
+func _draw_ring() -> void:
+	if _ring == null:
+		if _fight_lens <= 0.002:
+			return
+		_ring = ColorRect.new()
+		_ring.name = "Arena"
+		_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ring.set_anchors_preset(Control.PRESET_FULL_RECT)
+		var shader := Shader.new()
+		shader.code = RING_SHADER
+		var paint := ShaderMaterial.new()
+		paint.shader = shader
+		_ring.material = paint
+		_hud.add_child(_ring)
+		_hud.move_child(_ring, 0)
+	_ring.visible = _fight_lens > 0.002
+	if _ring.visible:
+		(_ring.material as ShaderMaterial).set_shader_parameter("strength", _fight_lens)
+
+
 func _camera_at(delta: float) -> Vector2:
 	var looking: Vector2 = Vector2(_world.player_dir)
 	if looking.length() > 0.01:
 		looking = looking.normalized()
 	var want: Vector2 = _draw_position() + looking * CAMERA_LOOKAHEAD
+	# A fight is framed on the arena and not on the player, so backing into the wall
+	# does not drag the picture with you. The lookahead goes too — during a fight the
+	# held direction is a step along the fight's line, not a way you are heading.
+	if _fight != null and _fight.on():
+		want = _fight.centre_tiles()
 	if not _camera_placed or _camera.distance_to(want) > TELEPORT_TILES:
 		_camera = want
 		_camera_placed = true
@@ -1300,6 +1403,12 @@ func _draw_hud() -> void:
 			rows.append("%d. %s" % [index + 1, _option_label(_world.options[index])])
 		rows.append(Text.of(&"prompt.exit", [_exit_slot()]))
 		_choices.text = "\n".join(rows)
+		_prompt.text = ""
+		return
+
+	# Nothing to press while a fight is on, and "E, talk to Bram" over the top of a man
+	# swinging at you reads as a bug.
+	if _fight != null and _fight.on():
 		_prompt.text = ""
 		return
 

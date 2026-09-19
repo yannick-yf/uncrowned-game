@@ -187,7 +187,25 @@ dont il a besoin sont tes images `left` et `right`, qui existent déjà.
 redessiner chaque personnage sous huit angles. C'est la plus grosse demande de dessin du
 projet, et on préfère te l'éviter.
 
-**Yannick a tranché le 19 septembre : le combat se passe sur place, sans coupure.**
+**Yannick a tranché le 19 septembre : le combat se passe sur place, sans coupure.** Et
+c'est construit — tu peux le voir toi-même :
+
+```bash
+UNCROWNED_FIGHT=bram tools/shot.sh /tmp/combat.png play 280,315
+```
+
+**Son idée, et elle est bonne.** Pendant que la caméra descend, **les bords de l'écran
+s'assombrissent**. Ça dessine une arène qui n'existe pas. Aucun décor, aucun dessin, et
+surtout : ça marche sur un terrain vide, dans un bois, n'importe où. On avait d'abord
+pensé à un cercle de gens qui regardent — mais il faut des gens, et il n'y en a pas
+toujours. Les spectateurs restent pour plus tard, en plus, là où il y en a vraiment.
+
+Pendant le combat on ne peut pas sortir de la zone : deux cases de chaque côté. C'est
+une règle du jeu, pas un effet d'image.
+
+**Ce sur quoi ton avis compte.** La force du noir, la vitesse à laquelle il arrive, et
+l'angle de la caméra (48° en exploration, 27° en combat). Tout ça se change en trois
+nombres. Regarde l'image et dis-moi.
 
 Donc concrètement, pour toi : **rien à redessiner.** La caméra garde son orientation,
 elle descend seulement. Le combat se déroule d'est en ouest, et il utilise tes images

@@ -297,7 +297,13 @@ place in his world, that is a question about a *picture*, and `--headless` never
 **The azimuth is deliberately not offered**, because his traveller's four facings are
 keyed to the world's axes and a turned camera draws every fighter looking the wrong way.
 
-**All five are gated on `OS.has_feature("debug")`**, so they are absent from a
+**`UNCROWNED_FIGHT=bram`** (2026-09-19) squares the player up against somebody for the
+frame `shot.sh` takes, with the lens already dropped and the screen already darkened.
+Same gate and same reason as the two above, plus one of its own: the picture is taken
+twelve frames in and the fight's camera takes about a second to move, so without this
+every photograph of a fight is a photograph of a camera halfway through moving.
+
+**All six are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

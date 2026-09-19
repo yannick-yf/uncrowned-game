@@ -152,3 +152,45 @@ static func opponent_hp() -> int:
 
 static func is_down(hp: int) -> bool:
 	return hp <= 0
+
+
+# ----------------------------------------------------------------- the ground ---
+#
+# F3, 2026-09-19. The fight stops being an invisible line and becomes two people
+# standing somewhere. Everything below converts between the two, and nothing else
+# in the project is allowed to know the conversion.
+
+## A tile is two metres (`BakeRules.METRES_PER_TILE`), which makes it two thousand
+## millimetres. Read from there rather than written here, because a fight that
+## disagreed with the map about how big a tile is would be wrong in a way no test of
+## the fight alone could see.
+static func mm_per_tile() -> float:
+	return BakeRules.METRES_PER_TILE * 1000.0
+
+
+static func tiles_of(mm: int) -> float:
+	return float(mm) / mm_per_tile()
+
+
+## How far from the middle of the fight either fighter may go.
+##
+## **A wall, not a warning** (Yannick, 2026-09-19: no fleeing in the demo). The fight
+## is bounded so that it has a shape the camera can frame and the screen's darkened
+## edge can mean something — and so that walking away is not a way out of a fight the
+## player started by saying so.
+static func arena_radius_mm() -> int:
+	return int(fighters().get("arena_radius_mm", 0))
+
+
+## The middle of the fight, on the fight's own line. The player starts at 0 and the
+## opponent at `start_apart_mm`, so the middle is halfway between them and **not** the
+## player's feet — an arena centred on the player would give him twice the room.
+static func arena_centre_mm() -> int:
+	return start_apart_mm() / 2
+
+
+## Wherever a fighter was trying to get to, this is where they end up.
+static func inside_arena(at_mm: int) -> int:
+	var centre: int = arena_centre_mm()
+	var radius: int = arena_radius_mm()
+	return clampi(at_mm, centre - radius, centre + radius)

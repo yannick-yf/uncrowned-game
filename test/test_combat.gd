@@ -359,3 +359,131 @@ func test_the_two_keys_are_bound() -> void:
 		assert_true(InputMap.action_get_events(action).size() > 0,
 			"%s has something bound to it" % action)
 
+
+# ------------------------------------------------- the fight stands somewhere (F3) ---
+#
+# Until F3 a fight moved two numbers and the player stood stock still in the world,
+# which is why there was nothing for a camera to frame. These check the join: the line
+# becomes ground, the ground is bounded, and only one hand moves the player.
+
+func _square_up(sim: Sim) -> Fight:
+	_stand_by(sim, &"bram")
+	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.advance(4)
+	return _fight(sim)
+
+
+func test_a_fight_happens_where_you_were_standing() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	_stand_by(sim, &"bram")
+	var stood_at: Vector2 = world.player_pos
+	var fight: Fight = _square_up(sim)
+
+	assert_eq(fight.origin_tiles, stood_at, "the arena is put down where you were")
+	assert_true(absi(fight.toward) == 1, "and it runs east or west, never north")
+	# The two profiles a fight needs are the two the traveller already has, and that is
+	# only true while the line is the world's east-west axis.
+	assert_eq(fight.at_tiles(0).y, stood_at.y, "nobody moves up or down the map")
+	assert_eq(fight.at_tiles(CombatRules.start_apart_mm()).y, stood_at.y, "neither of them")
+	assert_true(absf(fight.centre_tiles().x - stood_at.x) > 0.1,
+		"and the middle of it is between the two of you, not under your feet")
+
+
+func test_the_line_is_ground_under_the_players_feet() -> void:
+	# The whole of F3 in one assertion: move along the fight's line, move in the world.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	var began_at: Vector2 = world.player_pos
+	assert_eq(began_at, fight.origin_tiles, "you start where the arena was put down")
+
+	sim.submit(&"fight_input", {"walk": 1})
+	sim.advance(30)
+	assert_true(world.player_pos.x != began_at.x, "walking the line walks the world")
+	assert_eq(world.player_pos.y, began_at.y, "and only ever sideways")
+	assert_eq(world.player_pos, fight.at_tiles(fight.player_at_mm),
+		"the two agree to the millimetre, every step")
+	assert_eq(world.player_facing, Vector2i(fight.toward, 0),
+		"and you are looking at him, not at where you are walking")
+
+
+func test_you_cannot_walk_out_of_a_fight() -> void:
+	# **Yannick, 2026-09-19: no fleeing in the demo.** Backing away for ten seconds is
+	# not a way out of a fight you started by saying so.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	var centre: Vector2 = fight.centre_tiles()
+	var wall: float = fight.arena_tiles()
+
+	sim.submit(&"fight_input", {"walk": -1})
+	var furthest: float = 0.0
+	for _step: int in 600:
+		if not fight.on():
+			break
+		sim.advance(1)
+		furthest = maxf(furthest, absf(world.player_pos.x - centre.x))
+	assert_true(furthest <= wall + 0.001,
+		"the wall holds: %.2f tiles out of %.2f" % [furthest, wall])
+	assert_true(furthest > wall - 0.2,
+		"and it was actually reached, or this test proves nothing: %.2f" % furthest)
+	assert_true(fight.on() or fight.outcome != &"left",
+		"walking into the wall for ten seconds never ends the fight by leaving")
+
+
+func test_he_cannot_be_knocked_out_of_the_ring_either() -> void:
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	var low: int = CombatRules.arena_centre_mm() - CombatRules.arena_radius_mm()
+	var high: int = CombatRules.arena_centre_mm() + CombatRules.arena_radius_mm()
+	for _step: int in 1200:
+		if not fight.on():
+			break
+		_play(sim, fight, 1)
+		assert_true(fight.player_at_mm >= low and fight.player_at_mm <= high,
+			"the player stayed in: %d" % fight.player_at_mm)
+		assert_true(fight.opponent_at_mm >= low and fight.opponent_at_mm <= high,
+			"and so did he: %d" % fight.opponent_at_mm)
+
+
+func test_only_one_hand_moves_the_player() -> void:
+	# `MovementSystem` stands down while a fight is on, exactly as it does mid
+	# conversation. Two writers on one position is the bug `Sim.ticks_held` taught once
+	# already, and here it would show as the player sliding out of his own fight.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	_stand_by(sim, &"bram")
+	# Walking north *before* squaring up, and never letting go of the key.
+	sim.submit(&"move_intent", {"x": 0, "y": -1})
+	var fight: Fight = _square_up(sim)
+	var line_y: float = fight.origin_tiles.y
+	sim.advance(120)
+	assert_true(fight.on(), "still fighting")
+	assert_eq(world.player_pos.y, line_y,
+		"a key held down from before the fight does not drag you out of it")
+
+
+func test_the_camera_never_turns() -> void:
+	# The constraint the whole of `docs/COMBAT.md` §1 turns on, kept as a test because
+	# it is one number and forgetting it costs his brother eight drawings per character.
+	assert_eq(World3d.AZIMUTH_DEGREES, 0.0,
+		"the azimuth is the one camera value a fight may not touch")
+	assert_true(World3d.FIGHT_TILT_DEGREES < World3d.TILT_DEGREES,
+		"the lens drops for a fight: %.0f from %.0f"
+		% [World3d.FIGHT_TILT_DEGREES, World3d.TILT_DEGREES])
+	assert_true(World3d.FIGHT_TILT_DEGREES >= 20.0,
+		"but not so far that his buildings stand in front of it: %.0f"
+		% World3d.FIGHT_TILT_DEGREES)
+
+
+func test_the_arena_fits_in_the_frame() -> void:
+	# A wall the camera cannot see is a wall the player walks into for no visible
+	# reason. The lens is orthographic and `size` is its *height* in metres, so the
+	# width is that times the aspect — and the arena has to fit across it.
+	var across_tiles: float = CombatRules.tiles_of(CombatRules.arena_radius_mm() * 2)
+	var across_m: float = across_tiles * BakeRules.METRES_PER_TILE
+	var frame_m: float = World3d.FIGHT_SIZE_M * (16.0 / 9.0)
+	assert_true(across_m < frame_m,
+		"the arena is %.1f m across and the frame is %.1f m" % [across_m, frame_m])
+

@@ -37,6 +37,8 @@
     "walk_mm_per_step": 45,
     "reach_slack_mm": 250,
     "start_apart_mm": 2400,
-    "_why": "45 mm a step is 2.7 m a second, close to the world's own 2.5 tiles a second, so stepping into range inside a fight feels like walking outside one."
+    "_why": "45 mm a step is 2.7 m a second, close to the world's own 2.5 tiles a second, so stepping into range inside a fight feels like walking outside one.",
+    "arena_radius_mm": 4000,
+    "_arena_note": "How far from the middle of the fight either fighter may go, in mm. A tile is 2 m (BakeRules.METRES_PER_TILE), so 4000 is two tiles each way and four tiles across - which fits inside the fight camera’s frame with room to spare. Yannick, 2026-09-19: there is no fleeing in the demo, so this is a wall and not a warning."
   }
 }

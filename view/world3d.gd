@@ -24,6 +24,15 @@ extends Node3D
 ## workshop's `follow_camera` as the Brindle scene sets it.
 const TILT_DEGREES: float = 48.0
 const AZIMUTH_DEGREES: float = 0.0
+## **Where the lens goes for a fight** (F3, 2026-09-19; `SPECS.md` §10 as rewritten).
+## Nearly side-on and tight enough that two people fill the frame. **The azimuth is not
+## here and never will be**: the traveller's four facings are keyed to the world's axes,
+## so a camera that turned would draw every fighter looking the wrong way, and the fix
+## for that is eight drawn rotations per character — the largest art request in the
+## project. Because it never turns, a fight runs east-west and uses the `left` and
+## `right` frames his brother has already made.
+const FIGHT_TILT_DEGREES: float = 27.0
+const FIGHT_SIZE_M: float = 7.0
 const CAMERA_SIZE: float = 24.0
 const CAMERA_DISTANCE: float = 45.0
 ## The same easing as the 2D camera, so the two windows feel alike.
@@ -130,6 +139,14 @@ var _camera: Camera3D = null
 ## are; billboards are lifted along it so their feet stay on the ground however the
 ## sprite leans toward the lens — the workshop's `sprite_billboard.gd` trick.
 var _lens_up: Vector3 = Vector3.UP
+## The tilt the lens returns to when nobody is fighting — his 48°, or whatever
+## `UNCROWNED_LENS` asked for, so the debug tool still wins.
+var _rest_tilt: float = TILT_DEGREES
+## The opponent's walk cycle, kept the same way the player's is. One fight at a time,
+## so one phase.
+var _foe_last: Vector3 = Vector3.ZERO
+var _foe_placed: bool = false
+var _foe_phase: float = 0.0
 var _lens_offset: Vector3 = Vector3.UP
 var _focus: Vector3 = Vector3.ZERO
 var _focus_placed: bool = false
@@ -260,11 +277,8 @@ func _debug_lens() -> Vector2:
 
 func _build_camera() -> void:
 	var lens: Vector2 = _debug_lens()
-	var tilt: float = deg_to_rad(lens.x if lens.x > 0.0 else TILT_DEGREES)
-	var azimuth: float = deg_to_rad(AZIMUTH_DEGREES)
-	_lens_offset = Vector3(sin(azimuth) * cos(tilt), sin(tilt), cos(azimuth) * cos(tilt))
-	var forward: Vector3 = -_lens_offset
-	_lens_up = (Vector3.UP - forward * Vector3.UP.dot(forward)).normalized()
+	_rest_tilt = lens.x if lens.x > 0.0 else TILT_DEGREES
+	_aim_lens(0.0)
 	_camera = Camera3D.new()
 	_camera.name = "Lens"
 	_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
@@ -829,12 +843,13 @@ func _ground_height_at(x_m: float, z_m: float) -> float:
 func sync(frame: Dictionary, delta: float) -> void:
 	if _region == null or _sim == null:
 		return
+	_aim_lens(float(frame.get("fight_lens", 0.0)))
 	var world := _sim.store(&"world") as WorldState
 	var cast := _sim.store(&"cast") as Cast
 	var road := _sim.store(&"travellers") as Travellers
 	var folk := _sim.store(&"folk") as Folk
 	_sync_player(frame)
-	_sync_people(cast, world)
+	_sync_people(cast, world, frame.get("fight", {}) as Dictionary)
 	_sync_traffic(road, world)
 	_sync_folk(folk, world)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
@@ -842,7 +857,8 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
 	_sync_embers(frame)
 	_sync_light(frame, delta)
-	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2, delta)
+	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2,
+		float(frame.get("fight_lens", 0.0)), delta)
 
 
 ## The player: his traveller, walking when the simulation moves them — the cycle
@@ -867,9 +883,13 @@ func _sync_player(frame: Dictionary) -> void:
 	_foot_figure(_player, at)
 
 
-func _sync_people(cast: Cast, world: WorldState) -> void:
+## `fighting` is empty unless somebody is squared up with the player, in which case it
+## carries that one person's id, where they stand on the fight's line, and which way
+## they are looking. Everybody else is drawn at their anchor, as always.
+func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 	var present: Dictionary = {}
 	var fairy_seen: bool = false
+	var foe: StringName = StringName(String(fighting.get("who", "")))
 	for npc: Npc in cast.in_zone(world.current_zone):
 		if OpeningRules.is_gone(npc.id, _sim.facts):
 			continue
@@ -892,12 +912,32 @@ func _sync_people(cast: Cast, world: WorldState) -> void:
 			_idle(figure, Vector2i(0, 1))
 		# Footed every frame, not once: the ground under them is his and is built a
 		# frame after they are, and thirty-three figures are nothing.
-		_foot_figure(figure, npc.centre())
+		var stands_at: Vector2 = npc.centre()
+		if npc.id == foe:
+			stands_at = fighting.get("at", stands_at) as Vector2
+			_step_the_foe(figure, stands_at, fighting.get("facing", Vector2i(0, 1)) as Vector2i)
+		_foot_figure(figure, stands_at)
 		figure.visible = true
 	_fairy.visible = fairy_seen
 	for id: StringName in _people.keys():
 		if not present.has(id):
 			(_people[id] as Node3D).visible = false
+
+
+## The man in front of you: walking when the fight moves him, and always looking at
+## you. The cycle is driven by the ground he actually covers, the same rule the player
+## and the road's travellers are drawn by, so nothing about a fight animates on a timer.
+func _step_the_foe(figure: Node3D, at: Vector2, facing: Vector2i) -> void:
+	var feet: Vector3 = _feet_of(at)
+	var moved: float = Vector2(feet.x, feet.z).distance_to(
+		Vector2(_foe_last.x, _foe_last.z)) if _foe_placed else 0.0
+	_foe_last = feet
+	_foe_placed = true
+	if moved > 0.002:
+		_foe_phase = fposmod(_foe_phase + moved / WALK_CYCLE_M, 1.0)
+		_walk(figure, facing, _foe_phase)
+	else:
+		_idle(figure, facing)
 
 
 ## Traffic: his traveller walking the road, the cycle read off where they stand.
@@ -1080,15 +1120,42 @@ func _sync_embers(frame: Dictionary) -> void:
 			dot.pixel_size = 0.02 + (1.0 - life) * 0.02
 
 
+## **Where the lens is pointing from**, given how far into a fight we are: 0 is
+## exploration and 1 is squared up. The easing is not done here — `view/main.gd` owns
+## that one number, because the darkened edge of the screen has to come up on exactly
+## the same frame as the camera drops, and two easings of one idea drift visibly.
+##
+## Called at the top of `sync()` rather than with the camera at the bottom, so the
+## billboards placed in between are lifted along the lens they will actually be seen
+## through and not along last frame's.
+func _aim_lens(fight_lens: float) -> void:
+	var tilt: float = deg_to_rad(lerpf(_rest_tilt, FIGHT_TILT_DEGREES, clampf(fight_lens, 0.0, 1.0)))
+	var azimuth: float = deg_to_rad(AZIMUTH_DEGREES)
+	_lens_offset = Vector3(sin(azimuth) * cos(tilt), sin(tilt), cos(azimuth) * cos(tilt))
+	var forward: Vector3 = -_lens_offset
+	_lens_up = (Vector3.UP - forward * Vector3.UP.dot(forward)).normalized()
+
+
+## **Already squared up, on the first frame drawn.** For `shot.sh` and nothing else:
+## the picture is taken twelve frames in, and the lens takes about a second to drop, so
+## a photograph of a fight would otherwise always be a photograph of a camera halfway
+## through moving. Debug-gated at the caller.
+func snap_framing(fight_lens: float) -> void:
+	_aim_lens(fight_lens)
+	if _camera != null:
+		_camera.size = lerpf(_zoom, FIGHT_SIZE_M, clampf(fight_lens, 0.0, 1.0))
+
+
 ## The lens follows the same eased point the 2D camera does, handed over in tiles.
-func _sync_camera(eye_tiles: Vector2, delta: float) -> void:
+func _sync_camera(eye_tiles: Vector2, fight_lens: float, delta: float) -> void:
 	var want: Vector3 = _feet_of(eye_tiles)
 	if not _focus_placed or _focus.distance_to(want) > 12.0:
 		_focus = want
 		_focus_placed = true
 	else:
 		_focus = _focus.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
-	_camera.size = lerpf(_camera.size, _zoom, 1.0 - exp(-10.0 * delta))
+	var framing: float = lerpf(_zoom, FIGHT_SIZE_M, clampf(fight_lens, 0.0, 1.0))
+	_camera.size = lerpf(_camera.size, framing, 1.0 - exp(-10.0 * delta))
 	_camera.transform = Transform3D(Basis.looking_at(-_lens_offset, Vector3.UP),
 		_focus + _lens_offset * CAMERA_DISTANCE)
 

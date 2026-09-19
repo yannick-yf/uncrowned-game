@@ -61,7 +61,20 @@ func on_step(sim: Sim, _step: int) -> void:
 	_walk(fight)
 	_decide(fight)
 	_resolve(sim, fight, world)
+	_stand(fight, world)
 	_finish(sim, fight, world)
+
+
+## **The line becomes ground** (F3). Until this, a fight moved two numbers and the
+## player stood stock still in the world, which is why there was nothing for a camera to
+## frame. `MovementSystem` stands down while a fight is on, exactly as it does mid
+## conversation, so there is still only one hand on the player's position at a time.
+##
+## The facing is set from the side he is on rather than from the walk, because a fighter
+## backing away is still looking at the man in front of him.
+func _stand(fight: Fight, world: WorldState) -> void:
+	world.player_pos = fight.at_tiles(fight.player_at_mm)
+	world.player_facing = Vector2i(fight.toward, 0)
 
 
 # ------------------------------------------------------------------ the fight ---
@@ -74,7 +87,19 @@ func _begin(sim: Sim, fight: Fight, event: SimEvent) -> void:
 		return
 	var apart: int = CombatRules.start_apart_mm()
 	fight.opponent = who
-	fight.player_side = -1
+	# **Squaring up** (F3). The fight runs along the world's east-west axis, so the
+	# player keeps the ground they are standing on and the opponent is set down a stride
+	# and a bit away on whichever side he is already on. Neither of them teleports far,
+	# and the side is his own so the player is never spun round to face the other way.
+	var world := sim.store(&"world") as WorldState
+	var cast := sim.store(&"cast") as Cast
+	fight.origin_tiles = world.player_pos if world != null else Vector2.ZERO
+	fight.toward = 1
+	if cast != null:
+		var him: Npc = cast.get_npc(who)
+		if him != null and him.centre().x < fight.origin_tiles.x:
+			fight.toward = -1
+	fight.player_side = -fight.toward
 	fight.player_at_mm = 0
 	fight.opponent_at_mm = apart
 	fight.opponent_hp = CombatRules.opponent_hp()
@@ -140,9 +165,16 @@ func _walk(fight: Fight) -> void:
 		return
 	var step: int = CombatRules.walk_mm_per_step() * signi(fight.walking)
 	var wanted: int = fight.player_at_mm + step
-	# Never past him, and never further than the line allows.
+	# Never past him — two people cannot stand in the same millimetre.
 	var closest: int = fight.opponent_at_mm - CombatRules.slack_mm() * 2
-	fight.player_at_mm = mini(wanted, closest) if step > 0 else maxi(wanted, -CombatRules.start_apart_mm())
+	if step > 0:
+		wanted = mini(wanted, closest)
+	# **And never out of the arena** (F3). Yannick, 2026-09-19: there is no fleeing in
+	# the demo, so backing away far enough is not a way out of a fight you started by
+	# saying so. The wall is here, in the simulation, and not in the window: the window
+	# only darkens towards it, and a boundary drawn in the window would be a boundary a
+	# replay did not have.
+	fight.player_at_mm = CombatRules.inside_arena(wanted)
 
 
 ## The player swings when they press it; the opponent swings when he has waited long
@@ -170,7 +202,8 @@ func _decide(fight: Fight) -> void:
 		var toward: int = -1 if fight.opponent_at_mm > fight.player_at_mm else 1
 		var closest: int = fight.player_at_mm - toward * CombatRules.slack_mm() * 2
 		var wanted: int = fight.opponent_at_mm + CombatRules.walk_mm_per_step() * toward
-		fight.opponent_at_mm = maxi(wanted, closest) if toward < 0 else mini(wanted, closest)
+		wanted = maxi(wanted, closest) if toward < 0 else mini(wanted, closest)
+		fight.opponent_at_mm = CombatRules.inside_arena(wanted)
 		return
 	if fight.opponent_waited >= CombatRules.of(CombatRules.SWING, "startup"):
 		fight.opponent_move = CombatRules.SWING
@@ -206,11 +239,11 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 		fight.player_connected = true
 		fight.opponent_hp = maxi(fight.opponent_hp - damage, 0)
 		fight.opponent_stun = stun
-		fight.opponent_at_mm += back
+		fight.opponent_at_mm = CombatRules.inside_arena(fight.opponent_at_mm + back)
 	else:
 		fight.opponent_connected = true
 		fight.player_stun = stun
-		fight.player_at_mm -= back
+		fight.player_at_mm = CombatRules.inside_arena(fight.player_at_mm - back)
 		# One path for everything that can hurt you: the same one the king's touch
 		# uses, so death, the grace window and the respawn cannot drift apart.
 		world.hurt(damage, sim.step)

@@ -27,6 +27,12 @@ func on_step(sim: Sim, _step: int) -> void:
 	# You cannot walk away mid-sentence. Closing the conversation is an event.
 	if world.in_dialogue():
 		return
+	# And you cannot walk away mid-fight (F3). `CombatSystem` owns the player's position
+	# while a fight is on and writes it from the fight's own line every step — two hands
+	# on one position is the bug that `Sim.ticks_held` already taught us once.
+	var fight := sim.store(&"fight") as Fight
+	if fight != null and fight.on():
+		return
 	var traits := sim.store(&"traits") as Traits
 	var attuned: bool = traits != null and traits.is_attuned()
 	world.player_pos = MovementRules.step(

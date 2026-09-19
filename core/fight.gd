@@ -19,6 +19,16 @@ var opponent: StringName = NOBODY
 ## Which way along the line the player stands: -1 left of the opponent, +1 right.
 var player_side: int = -1
 
+## **Where the fight is happening** (F3). The line above is millimetres from nowhere
+## until these two say where nowhere is: `origin_tiles` is the tile the player stood on
+## when the fight began, and `toward` is +1 if the opponent is east of them and -1 if
+## west. World x = `origin_tiles.x + toward * tiles_of(at_mm)`, and y never changes —
+## the fight runs along the world's east-west axis because the camera's azimuth never
+## turns, so the only two profiles it needs are the `left` and `right` frames the
+## traveller already has.
+var origin_tiles: Vector2 = Vector2.ZERO
+var toward: int = 1
+
 var player_at_mm: int = 0
 var opponent_at_mm: int = 0
 var opponent_hp: int = 0
@@ -61,6 +71,23 @@ func apart_mm() -> int:
 	return absi(opponent_at_mm - player_at_mm)
 
 
+## Where a point on the fight's line stands in the world.
+func at_tiles(mm: int) -> Vector2:
+	return Vector2(origin_tiles.x + float(toward) * CombatRules.tiles_of(mm), origin_tiles.y)
+
+
+## The middle of the arena, which is what the camera frames and what the screen's
+## darkened edge is drawn around. Halfway between the two of them as they squared up,
+## never the player's feet.
+func centre_tiles() -> Vector2:
+	return at_tiles(CombatRules.arena_centre_mm())
+
+
+## How far out the wall is, in tiles, for whatever wants to draw it.
+func arena_tiles() -> float:
+	return CombatRules.tiles_of(CombatRules.arena_radius_mm())
+
+
 ## Can this fighter start something this frame? Not while frozen, not while stunned,
 ## and not in the middle of a move.
 func player_free() -> bool:
@@ -74,7 +101,7 @@ func opponent_free() -> bool:
 func fingerprint() -> String:
 	if not on():
 		return "none"
-	return "%s p=%d/%s@%d/s%d o=%d/%s@%d/s%d hp=%d f=%d %s" % [
+	return "%s p=%d/%s@%d/s%d o=%d/%s@%d/s%d hp=%d f=%d %s @%.4f,%.4f>%d" % [
 		String(opponent), player_at_mm, String(player_move), player_frame, player_stun,
 		opponent_at_mm, String(opponent_move), opponent_frame, opponent_stun,
-		opponent_hp, freeze, String(outcome)]
+		opponent_hp, freeze, String(outcome), origin_tiles.x, origin_tiles.y, toward]

@@ -327,3 +327,46 @@ him respawns the player at the clearing, because they have not rested yet. Wheth
 sparring should stop short of that is **F4's** question, which is where winning and
 losing are handled, not F2's.
 
+---
+
+## 8. F3 — the lens drops, and the screen closes in
+
+**Built 2026-09-19.** §6 found that the camera was the smaller half of the question and
+that the *place* was the problem: in a built-up quarter the roofs swallow the fight, and
+on open ground nothing frames it. The answer §6 proposed — Yakuza's ring of bystanders —
+has a weakness this document should have said plainly: **it needs people**, and it fails
+worst exactly where the second problem bites, on empty ground.
+
+**Yannick's answer is better and it is now the baseline.** As the lens drops, the borders
+of the screen darken. It needs nobody, costs no art and no geometry, works in a wood or
+on a moor, and — his argument, and the strongest one — it generalises to whatever the
+open world grows later, where a ring of townspeople never would. The onlookers survive as
+a layer on top, where there really are people, which is also the more honest fiction.
+
+### What is built
+
+| | |
+|---|---|
+| **The lens** | 48° → 27°, tighter (`FIGHT_SIZE_M = 7`), eased over about a second. **The azimuth is never touched** |
+| **The ring** | one `ColorRect` and six lines of shader, inside the HUD's layer so the map and the pause panel take it with them |
+| **One eased number** | `view/main.gd` owns `_fight_lens`; the lens and the ring both read it, because two easings of one idea drift visibly |
+| **The ground** | `Fight.origin_tiles` and `toward` turn the fight's line of millimetres into world tiles. The player's position is written from it every step |
+| **The wall** | `CombatRules.inside_arena` — two tiles either side of the middle, four tiles across, which fits the frame with room |
+| **One hand** | `MovementSystem` stands down while a fight is on, exactly as it does mid conversation |
+
+**The wall is in the simulation and the darkness is in the window.** That split is the
+whole of invariant 1 applied to this feature, and it is easy to get backwards: the
+obvious build draws a dark ring and stops the player at its edge, which puts a rule in
+the camera. A save here is the event log, so a boundary the window enforced is a boundary
+a replay would not have.
+
+### Two things it turned up
+
+- **The opponent was drawn at his anchor.** An NPC stands where `content/places.json`
+  puts him, which is where he was *before* squaring up — so he would have stood still on
+  screen while the fight moved him. The frame now carries where he is this step.
+- **`Escape` had stopped working during a fight**, because the fight's input branch
+  returned before the key was read. A player must always be able to pause. It opens the
+  pause menu, and that is not fleeing: **there is no fleeing in the demo** (Yannick,
+  2026-09-19), so `fight_left` stays an outcome that nothing in the game produces.
+

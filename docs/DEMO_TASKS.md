@@ -351,7 +351,7 @@ the fight and closes the conversation on the same step. Played end to end headle
 - **Every `Villager` sheet in the 2D pack is already somebody**, so his placeholder face
   is a man who trains with a weapon and reads as wrong on purpose. M3b settles it.
 
-### F3 · The camera drops, and does not turn
+### F3 · The camera drops, and does not turn — **built 2026-09-19**
 
 Est. 3 h. Depends on: F2. **Yannick ruled for the in-place arena on 2026-09-19**, so
 this is no longer a separate screen: `SPECS.md` §10 was rewritten and `docs/COMBAT.md`
@@ -362,9 +362,29 @@ traveller's four facings are keyed to the world's axes, so a turned camera draws
 fighter looking the wrong way. It eases in when the fight begins and back out when it
 ends. No load, no cut: same region, same simulation, same sprites.
 
+**And a darkened edge, Yannick's on 2026-09-19.** As the lens drops, the borders of the
+screen darken into an arena that is not there. It answers what the ring of onlookers in
+`docs/COMBAT.md` §6 could not: **it needs nobody**, so it works on empty ground, in a
+wood, anywhere — and it generalises to fights against whatever the open world grows
+later, which a ring of townspeople never would. The onlookers become a layer on top,
+where there really are people.
+
+**The wall is a rule, not a picture.** `CombatRules.inside_arena` bounds both fighters
+to two tiles either side of the middle, in the simulation — because a boundary drawn in
+the window is a boundary a replay would not have. **No fleeing in the demo** (Yannick):
+walking into it for ten seconds never ends a fight.
+
 **Check:** played. Strike in range, miss out of range, hold the button and gain nothing.
 Damage follows the fight's own cadence, not the frame rate. The camera returns to
-exactly where exploration left it.
+exactly where exploration left it. — ***met***: 7 more tests in `test/test_combat.gd`,
+and photographed with `UNCROWNED_FIGHT=bram tools/shot.sh`. The two stand in profile
+facing each other, which is the payoff of never turning the azimuth: those are the
+`left` and `right` frames his brother already drew.
+
+**What F3 turned up and fixed on the way:** the opponent was being drawn at his anchor
+in `content/places.json` — where he stood *before* squaring up — so he would never have
+moved on screen. And `Escape` had stopped working during a fight, which left the player
+unable to pause; it opens the pause menu now, which is not fleeing.
 
 ### F4 · Into the fight and back out
 
