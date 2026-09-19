@@ -555,17 +555,25 @@ func _yards(brief: Dictionary) -> void:
 		var yard: Dictionary = BakeRules.yard_of(row, centre)
 		var wall: Array = yard["wall"]
 		var gate: Array = yard["gate"]
+		# **A fence only goes where it actually closes something**, and that one rule
+		# covers two mistakes, both of them found by Yannick playing it.
+		#
 		# **Never across his street.** `place()` refuses to wall a road, and rightly — it
-		# is the rule that stops a curtain wall sealing the way in. But it still stands
-		# the piece, and a fence you walk through is worse than a wall you cannot see:
-		# one is a thing that fails to work, the other is a thing that is not there. So
-		# the road makes its own gap, and the gap is visible because the fence stops.
+		# is what stops a curtain wall sealing the only way in. But it still stands the
+		# piece, and a fence you walk through is worse than a wall you cannot see: one is
+		# a thing that fails, the other is a thing that is not there.
+		#
+		# **And never where the ground already stops you.** The yard's east side runs
+		# along his river, so ten of these were planted *in the water* — a palisade in a
+		# river, closing nothing, in front of a bank that was already impassable. It read
+		# as "the fences do not work" and as invisible walls at the same time, because
+		# what was stopping the player there was the water and not the fence.
 		var barred: int = 0
 		var opened: int = 0
 		for group: String in ["wall", "gate"]:
 			for tile: Variant in (yard[group] as Array):
 				var at: Vector2i = tile as Vector2i
-				if region.terrain_at(at) == Region.Terrain.ROAD:
+				if not region.is_passable(at) or region.terrain_at(at) == Region.Terrain.ROAD:
 					opened += 1
 					continue
 				place(kind, at, Vector2i.ONE)
@@ -586,8 +594,8 @@ func _yards(brief: Dictionary) -> void:
 			for at: Vector2i in open_tiles:
 				sum += at
 			points[ward] = {"at": sum / open_tiles.size(), "scaffold": true}
-		report.append("yard  %-12s %d fence tiles, %d open and warded by %s"
-			% [id, barred, open_tiles.size(), ward])
+		report.append("yard  %-12s %d fence tiles, %d left to his street and his river, %d warded by %s"
+			% [id, barred, opened, open_tiles.size(), ward])
 
 
 ## What the ground is next to a footprint — the street it stands on, usually.

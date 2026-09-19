@@ -970,3 +970,22 @@ func test_a_run_played_unkillable_replays_unkillable() -> void:
 		"the log carries it, so the rebuilt run is the run that was played")
 	assert_eq((replayed.store(&"world") as WorldState).player_hp,
 		(sim.store(&"world") as WorldState).player_hp, "and ends on the same health")
+
+
+func test_right_is_east_whichever_side_he_is_on() -> void:
+	# **Yannick played it and the controls were inverted.** The fight's own line counts
+	# millimetres *towards the opponent*, so a key mapped straight onto it moves the
+	# player the wrong way whenever the opponent stands west of them. `Fight.toward` is
+	# which way along the world that line runs, and it is what turns a key back into a
+	# direction on the screen.
+	#
+	# Held here as arithmetic rather than through the window, because the window cannot
+	# be reached from a test — but this is the line the window computes.
+	for toward: int in [1, -1]:
+		var pressing_right: int = 1
+		var along_the_line: int = pressing_right * toward
+		var world_x: float = float(toward) * CombatRules.tiles_of(
+			along_the_line * CombatRules.walk_mm_per_step())
+		assert_true(world_x > 0.0,
+			"pressing right moves you east with him on the %s: %+.3f"
+			% ["east" if toward > 0 else "west", world_x])

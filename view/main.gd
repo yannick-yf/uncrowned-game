@@ -634,15 +634,19 @@ func _skip_a_day() -> void:
 ## One event per change of what is held, which is `CombatSystem`'s contract and the
 ## reason a saved fight is a handful of rows rather than a recording of the keyboard.
 ##
-## Right is *toward him* and left is away. That holds while the fight has no picture;
-## when the camera drops (F3) the line becomes the world's east–west axis and this
-## reads the player's side instead of assuming it.
 func _read_fight_input() -> void:
 	var walk: int = 0
 	if Input.is_action_pressed(&"move_right"):
 		walk += 1
 	if Input.is_action_pressed(&"move_left"):
 		walk -= 1
+	# **Right is east and left is west, always** — and that was a bug until Yannick played
+	# it. The fight's own line counts millimetres *towards the opponent*, so pressing
+	# right moved the player left whenever the opponent stood west of them. The comment
+	# above used to promise F3 would fix it by reading the player's side instead of
+	# assuming it, and F3 never did. `Fight.toward` is which way along the world the line
+	# runs, so multiplying by it turns a key back into a direction on the screen.
+	walk *= _fight.toward
 	var want: Dictionary = {
 		"attack": Input.is_action_pressed(&"strike"),
 		"guard": Input.is_action_pressed(&"guard"),

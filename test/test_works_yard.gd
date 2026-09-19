@@ -132,3 +132,61 @@ func test_somebody_is_standing_in_it() -> void:
 			nearest = minf(nearest, npc.centre().distance_to(Vector2(at)))
 	assert_true(nearest < 8.0,
 		"a guard stands in the gateway, not across the works: %.1f tiles away" % nearest)
+
+
+# ------------------------------------------- what playing it found (2026-09-19) ---
+
+func test_no_fence_stands_where_it_closes_nothing() -> void:
+	# **Yannick played it and saw a palisade in the river.** The yard's east side runs
+	# along his water, and ten pieces were planted in it: closing nothing, in front of a
+	# bank that already stopped you. It read as *the fences do not work* and as invisible
+	# walls at once, because what was stopping the player there was the water.
+	#
+	# The same rule already kept them off his street. It now covers both: a fence goes
+	# where it closes something, or it does not go.
+	if not Places.baked():
+		debt("the yard is the baked world's")
+		return
+	var region: Region = Region.build_overworld()
+	var loose: PackedStringArray = PackedStringArray()
+	for prop: Dictionary in region.props:
+		if String(prop["kind"]) != "yard_fence":
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		if region.terrain_at(at) == Region.Terrain.WATER:
+			loose.append("%s stands in the river" % str(at))
+		if region.terrain_at(at) == Region.Terrain.ROAD:
+			loose.append("%s stands across his street" % str(at))
+	assert_eq(loose.size(), 0, "fences that close nothing:\n  %s" % "\n  ".join(loose))
+
+
+func test_the_people_the_demo_asks_you_to_find_can_be_seen() -> void:
+	# **This has cost two sessions now.** Bram stood behind one of his brother's trees,
+	# and Sena under his roofs — both reachable, both talked to by a test, and neither
+	# visible to a person playing. A prompt that says *E, talk to Sena* over a rooftop
+	# is worse than nobody being there.
+	#
+	# Scoped to the three the demo sends the player to look for. The older cast has
+	# people who stand inside buildings on purpose, and this is not a rule about them.
+	var cast := Cast.shared()
+	var region: Region = Region.build_overworld()
+	var covered: Dictionary = {}
+	for prop: Dictionary in region.props:
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop.get("size", Vector2i.ONE) as Vector2i
+		for dx: int in maxi(size.x, 1):
+			for dy: int in maxi(size.y, 1):
+				covered[at + Vector2i(dx, dy)] = String(prop["kind"])
+	for who: StringName in [&"bram", &"tom", &"sena"]:
+		var npc: Npc = cast.get_npc(who)
+		assert_not_null(npc, "%s exists" % who)
+		var at: Vector2i = Vector2i(npc.centre())
+		assert_false(covered.has(at),
+			"%s stands under a %s" % [who, covered.get(at, "")])
+		# And not shoulder to shoulder with one either: his roofs overhang their tile.
+		var crowded: int = 0
+		for dx: int in range(-1, 2):
+			for dy: int in range(-1, 2):
+				if covered.has(at + Vector2i(dx, dy)):
+					crowded += 1
+		assert_true(crowded == 0, "%s has %d things within a pace of them" % [who, crowded])
