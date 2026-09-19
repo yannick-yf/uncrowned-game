@@ -87,6 +87,9 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(CreationSystem.new())
 	systems.append(AllegianceSystem.new())
 	systems.append(TownSystem.new())
+	# After it, and that is not arbitrary: the outcome asks the town system to move the
+	# two numbers, so the thing that answers has to be in the list to hear it.
+	systems.append(OutcomeSystem.new())
 	systems.append(FolkSystem.new())
 	systems.append(KingdomSystem.new())
 	systems.append(CombatSystem.new())

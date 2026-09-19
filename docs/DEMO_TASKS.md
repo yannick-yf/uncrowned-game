@@ -385,7 +385,7 @@ and the second furnace has nothing left to offer. That fact is what Q5 reads.
 then the act is reachable in a test and not in play, which is the honest state: the gate
 is built and the thing that opens it is not.
 
-### Q5 · The outcome moves the two values, once
+### Q5 · The outcome moves the two values, once — **built 2026-09-19**
 
 Est. 2 h. Depends on: Q4, M1.
 
@@ -393,7 +393,25 @@ Tom: 6 → 3 and 4 → 1. Sena: 6 → 9 and 4 → 7. Applied once, as events, so
 replays to the same state.
 
 **Check:** both outcomes from a fresh run, then replay each log. No double
-application, no drift afterwards.
+application, no drift afterwards. — ***met, except the replay***, 5 tests in
+`test/test_cinderworks.gd`.
+
+`core/systems/outcome_system.gd` hears `works_act` and asks for three things: a step on
+each of the two values, and **rule 6's freeze**. It writes nothing itself — `TownSystem`
+is the only thing allowed to touch `TownState`, and it is reached the way everything
+reaches it, by an event. Both outcomes are exactly one `TownRules.STEP` on each value,
+which is not a coincidence: the step is what one act of the player's is worth, and this is
+one act of the player's.
+
+**Three days of the kingdom change nothing afterwards**, and there is a test that runs
+them.
+
+**The replay half is owed to F6**, and the test says so with a `DEBT` line rather than
+passing. Nothing writes `cinderworks:faced_them` into the log yet, so a test that wants to
+reach the act has to hand itself the fact — and a fact set by hand is not in the log, so a
+replay of that run does not do the act at all. An assertion that passed there would be
+measuring the test. When F6 gives the facing an event of its own, this becomes a real
+end-to-end replay and the debt goes.
 
 ### Q6 · What the works looks like, and what people say, after
 

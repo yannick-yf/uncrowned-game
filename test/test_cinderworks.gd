@@ -404,3 +404,84 @@ func test_the_act_has_a_prompt_in_both_languages() -> void:
 			var words: Dictionary = JSON.parse_string(
 				FileAccess.get_file_as_string("res://content/text.%s.json" % locale)) as Dictionary
 			assert_true(words.has(String(key)), "%s is written in %s" % [key, locale])
+
+
+# ------------------------------------------- the outcome moves the two values (Q5) ---
+#
+# §5 of the quest: putting the fires out takes the works from 6 and 4 to 3 and 1;
+# lighting them again takes it to 9 and 7. Both are one `TownRules.STEP` on each value,
+# which is not a coincidence — the step is what one act of the player's is worth.
+
+func _values(sim: Sim) -> Array[int]:
+	var towns := sim.store(&"towns") as TownState
+	return [towns.value_of(&"cinderworks", &"allegiance"),
+		towns.value_of(&"cinderworks", &"richesse")]
+
+
+func _act_on_the_works(side: StringName) -> Sim:
+	var sim: Sim = _world()
+	sim.facts.add_source(SiteRules.FACED, &"witnessed")
+	sim.facts.add_source(side, &"witnessed")
+	_at_a_furnace(sim)
+	_act(sim)
+	sim.advance(4)
+	return sim
+
+
+func test_the_works_starts_where_the_quest_says() -> void:
+	assert_eq(_values(_world()), [6, 4], "six and four, as QUEST_CINDERWORKS §1 has it")
+
+
+func test_putting_the_fires_out_takes_it_to_three_and_one() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	assert_eq(_values(_act_on_the_works(BROUGHT)), [3, 1], "Tom's outcome")
+
+
+func test_lighting_them_again_takes_it_to_nine_and_seven() -> void:
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	assert_eq(_values(_act_on_the_works(VOUCHED)), [9, 7], "Sena's outcome")
+
+
+func test_the_place_settles_and_stops_drifting_afterwards() -> void:
+	# **Rule 6's freeze.** The story is told: the crown stops redistributing into it, and
+	# a week of weather cannot undo what the player chose.
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _act_on_the_works(VOUCHED)
+	var towns := sim.store(&"towns") as TownState
+	assert_true(towns.is_settled(&"cinderworks"), "settled the moment it is resolved")
+	var after: Array[int] = _values(sim)
+	sim.advance(Sim.STEPS_PER_WORLD_TICK * 60 * 24 * 3)
+	assert_eq(_values(sim), after, "and three days of the kingdom change nothing")
+
+
+func test_it_is_applied_once_and_the_log_replays_to_it() -> void:
+	# The whole reason it goes through events: a save here is the log, so an outcome
+	# applied by a system writing straight into the store would replay to a different
+	# kingdom. And an outcome applied twice would move a place six instead of three.
+	if not Places.baked():
+		debt("the furnaces stand where his ironworks delivery puts them")
+		return
+	var sim: Sim = _act_on_the_works(BROUGHT)
+	var world := sim.store(&"world") as WorldState
+	for prop: Dictionary in world.region().props:
+		if String(prop["kind"]) == "kiln":
+			world.player_pos = Vector2(prop["at"] as Vector2i) + Vector2(0.5, 1.5)
+			_act(sim)
+	assert_eq(_values(sim), [3, 1], "every other furnace changes nothing")
+
+	# **And the replay half cannot honestly be proven yet.** This test hands itself
+	# `cinderworks:faced_them` directly, because nothing in the game writes it until F6
+	# wires the fight in. A fact set by hand is not in the log, so a replay of this run
+	# does not do the act at all — and an assertion that passed here would be measuring
+	# the test rather than the game.
+	#
+	# What *is* already proven: the outcome goes through events, and `test_sim`'s replay
+	# check covers every event the log holds. When F6 gives the facing an event of its
+	# own, this becomes a real end-to-end replay and the debt goes.
+	debt("Q5's replay waits on F6: nothing writes cinderworks:faced_them into the log yet")
