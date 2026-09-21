@@ -1,5 +1,10 @@
 # Uncrowned — Codex instructions
 
+> **Dormant, 2026-09-18.** Yannick works with Claude Code only for now, so nothing in
+> this file is assigned. It is kept because the working agreement it points at is
+> shared, and because Codex may return. **The lanes and the reserved-file list below are
+> out of date**; `CLAUDE.md` and `docs/SIMULATION_MODEL.md` are current.
+
 ## Read first, in this order
 
 1. Read `CLAUDE.md` in full. Its working agreement, architecture, twelve invariants,

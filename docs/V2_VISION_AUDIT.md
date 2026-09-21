@@ -1,5 +1,10 @@
 # Original v2 vision — specification audit and handoff
 
+> **Historical, 2026-09-18.** This remains the record of Yannick's decisions of
+> 2026-09-15 — the milestones, Cinderworks, the workers' dispute, Windows — and they
+> still hold. Its findings about the specification were answered by the redesign:
+> read [SIMULATION_MODEL.md](SIMULATION_MODEL.md).
+
 Date: 2026-09-15. Author: Codex. Requested by Yannick.
 
 ## Status and how to resume

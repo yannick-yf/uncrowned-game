@@ -1,5 +1,11 @@
 # What the demo's first two needs already do
 
+> **Superseded, 2026-09-18.** Its measurements hold — six dialogue options of ninety-three
+> read a trait, three of six traits are read by nothing — and they are what argued for the
+> redesign. Its keep/adapt/replace verdicts are replaced by
+> [SIMULATION_KEEP_OR_DROP.md](SIMULATION_KEEP_OR_DROP.md), and its five cards by
+> [DEMO_TASKS.md](DEMO_TASKS.md).
+
 Date: 2026-09-16. Author: Claude, for Yannick.
 
 ## Why this document exists

@@ -4,13 +4,30 @@ An open-world RPG about holding a king to account. The player can walk from Brin
 to Blackcairn within minutes of starting and attack the king, and will lose.
 Progress comes from power, knowledge and social access — never from a flag.
 
-**`docs/SPECS.md` is the source of truth.** Read it before designing anything. If
-the code and the spec disagree, one of them is wrong and Yannick decides which —
-do not silently pick.
+**Two sources of truth, and the newer one wins where they overlap.** `docs/SPECS.md`
+was the source of truth and still governs most of what the game is. **The simulation
+was redesigned on 2026-09-18**, and four documents now supersede it wherever they touch
+the same ground — the kingdom's quantities, the places' states, the deeds, the traits,
+the dialogue:
 
-**Precedence.** `SPECS.md` wins on *what the game is*. This file wins on *how we
-work* and *which phase we are in*. Neither overrules the other inside its own
-half; where a genuine conflict crosses the line, Yannick decides.
+| Read | For |
+|---|---|
+| `docs/SIMULATION_MODEL.md` | **What the simulation is.** Two values per place, two for the kingdom, the star, the look, the routines, where the player enters |
+| `docs/QUEST_CINDERWORKS.md` | The demo's quest, settled on paper |
+| `docs/SIMULATION_KEEP_OR_DROP.md` | What survives of the old simulation, component by component |
+| `docs/DEMO_TASKS.md` | The work, as 26 tasks with their checks |
+
+`docs/SIMULATION_AS_BUILT.md` records what the old simulation did, so that what is
+dropped is dropped on purpose and not by accident.
+
+**Reading order for a new session:** this file, then `docs/V3.md` (what the game is
+today, and the map it runs on), then `docs/SIMULATION_MODEL.md`, then only the section
+of `SPECS.md` the task actually needs. **Never read SPECS whole** — it is 4,000 lines
+and much of its simulation half is now superseded.
+
+**Precedence.** `SPECS.md` wins on *what the game is*, except where the four documents
+above supersede it. This file wins on *how we work* and *which phase we are in*. Where
+a genuine conflict crosses that line, Yannick decides — do not silently pick.
 
 ## The one architectural rule
 
@@ -87,9 +104,13 @@ content/   Cast sheets, facts, baked dialogue. Version controlled.
            places.json — where everything stands, as anchors. No .gd carries a position.
            bake_brief.json — what we propose on the 3D map where his data is silent.
            region.json — the baked world. Never edited: re-run tools/bake_region.gd.
-docs/      SPECS.md — the source of truth. V2.md — what the game is now, read this first.
-           MIGRATION_3D.md — how the world moves onto the 3D workshop, and who does what.
-           V1.md — what shipped the morning before v2.
+docs/      SIMULATION_MODEL.md — what the simulation is, since 2026-09-18.
+           QUEST_CINDERWORKS.md — the demo's quest. DEMO_TASKS.md — the work, as tasks.
+           SIMULATION_KEEP_OR_DROP.md — what survives of the old simulation.
+           SIMULATION_AS_BUILT.md — what the old simulation did, recorded before it goes.
+           V3.md — what the game is today. MIGRATION_3D.md — the map, and who does what.
+           SPECS.md — the old source of truth; superseded where the four above touch it.
+           V1.md, V2.md — what shipped on 2026-09-13.
   history/   Finished working logs. Never authoritative; kept for the reasoning.
 prototypes/  The Brindle 3D workshop: a separate Godot project, kept out of the game's
            import by `.gdignore`. His; open its own `project.godot`. Never edited by us.
@@ -261,30 +282,20 @@ here. A debug tool that is not written down is a debug tool that ships.
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
 > so you cannot walk anywhere while time passes, which is the whole point.
 
-## Testing switches — not debug tools, and on in every build for now
+## Testing switches — all three decided on 2026-09-18
 
-The 2D game's layers come off one by one while the 3D world is tested (Yannick,
-2026-09-14, MIGRATION_3D §9 decision 8). Each is one word, kept in the code beside what
-it switches and listed here so none is forgotten when the game is shown to anybody. A
-test that claims something only true while a switch is on says `OFF` in the run
-(`TestCase.off`) instead of failing or quietly passing. Never delete the layer: it is
-v2's tested work and the spec still argues for it; what a switch decides is what the
-game does *now*.
+They were three words that held 2D layers off while the 3D world was tested. Yannick
+has now said what becomes of each, and the removals are tasks in `docs/DEMO_TASKS.md`:
 
-**`Screens.QUICK_START` (2026-09-14).** The game opens straight into a fresh run with
-every trait at the floor: no title menu, no character creation. Yannick asked for it
-because both slowed every test launch. The two screens still exist, route and are
-tested; the constant is one word to flip when the game is shown to anybody. The
-screenshot harness names the screen it wants and is unaffected.
+| Switch | Decision |
+|---|---|
+| `Region.TERRAIN_SLOWS_YOU` | **The layer goes.** The speed table and its tests are removed — task **C4**. He found the wild's price in time useless walking his brother's map |
+| `Sound.MUSIC` | **The tables go** — they name the 2D pack's tracks, which the art rule now forbids anyway. Music returns one day with real tracks — task **C4** |
+| `Screens.QUICK_START` | **The switch goes, the screens stay.** The public build opens on character creation, because the demo does; the quick launch survives as a development path only — task **S2** |
 
-**`Region.TERRAIN_SLOWS_YOU = false` (2026-09-14).** The ground does not slow the
-walker: every terrain walks at the world's pace. Yannick found open country at 0.65 of
-2.5 tiles a second a crawl, and useless for now. §4's speed table stands and is tested
-as a table; the four tests that measure the wild's price in time say `OFF`.
-
-**`Sound.MUSIC = false` (2026-09-14).** No music. The ambience loops and the menu cues
-still play; the tracks are the 2D pack's. The tables stand and `test_assets` still
-checks the files exist.
+Until those tasks run the switches are as they were, and a test that claims what a
+switch turns off still says `OFF` in the run (`TestCase.off`) rather than failing or
+quietly passing.
 
 ## Effort discipline
 
@@ -296,17 +307,23 @@ what it would cost in time and tokens and ask first.
 
 ## Current phase
 
-**v1 was delivered on 2026-09-13, and v2 on the same day.** Phases 0–3 and 5–7 of v1,
-then v2's Phases A–E (SPECS §18). **Start at `docs/V2.md`** — two pages on what the
-game actually is now, what is built, what is deliberately inert, and what v2 does not
-have; `docs/V1.md` is the same for the morning before. Read them before `SPECS.md`,
-which is 4,000 lines and answers a different question.
+**The simulation is being rebuilt, simpler, and its design is settled** (2026-09-18).
+Start at `docs/SIMULATION_MODEL.md`. The work is `docs/DEMO_TASKS.md`: **26 tasks, one
+at a time, both suites green between them**, and **nothing is deleted until the demo
+runs on the new model** — the clean-up tasks are last on purpose.
 
-**v2 is delivered (2026-09-13).** It lives in `SPECS.md` — everything dated 2026-09-13
-and marked *built* — and the intent it was written from is `docs/history/V2_INTENT.md`.
-A: beasts out, terrain speeds on, the wild measured. B: hardship and the second
-direction. C: four places, two states. D: rank from standing and the throne reading.
-E: Blackcairn's two readings and the journal's kingdom page.
+**The target is a Windows-only public demo**: creation, the fairy, the ruined village,
+the walk to the ironworks, the workers-versus-management quest, combat, and a world
+that visibly changes with the choice. macOS was dropped on 2026-09-16, and the Windows
+test machine is still not identified — the one platform risk with no fallback.
+
+**The player's own status is not designed yet.** The model covers the simulation of
+*places*; Yannick will draft how the player influences it and what the player's status
+is, treating the player as a town with a status of the same shape.
+
+**What came before.** v1 and v2 shipped on 2026-09-13 (`docs/V1.md`, `docs/V2.md`,
+and everything in `SPECS.md` dated that day). Their simulation is what the redesign
+replaces; `docs/SIMULATION_AS_BUILT.md` records it.
 
 **v3: the game plays on the world baked from the Brindle 3D workshop** (decided
 2026-09-13; M1–M2, M3a and the M4 cut-over delivered by 2026-09-14). The workshop in

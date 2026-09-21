@@ -1,5 +1,10 @@
 # Public demo — Cinderworks work items
 
+> **Superseded, 2026-09-18.** Its 52 cards were written for the old simulation and are
+> replaced by [DEMO_TASKS.md](DEMO_TASKS.md). What is still live here: the capacity
+> table, the brother's B-items, and the shared visual checklist. Read
+> [SIMULATION_MODEL.md](SIMULATION_MODEL.md) before acting on anything below.
+
 Date: 2026-09-15. Planning draft by Codex for Yannick and his brother.
 
 ## What is agreed
