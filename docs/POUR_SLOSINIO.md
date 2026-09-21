@@ -294,3 +294,25 @@ UNCROWNED_TOWN=cinderworks:6/4 godot --path .   # l'aciérie qui va mal
 UNCROWNED_TOWN=cinderworks:3/1 godot --path .   # l'aciérie morte
 UNCROWNED_TOWN=cinderworks:9/7 godot --path .   # l'aciérie qui tourne
 ```
+
+## 10. La cour des fourneaux est faite de tes modules (2026-09-21)
+
+Le bake lit maintenant ton `assets/ironworks/catalog.json` — `size_m`, `front: +Z`,
+`ground_pivot`, tes formes de collision, et ta note `placement`. C'est elle qui a
+décidé la cour : `soubassement_2m` posé bout à bout à 2 m comme tu l'écris (*extrémités
+à X = ±1 m ; dupliquer pour prolonger*), `portail_cour` avec son passage de 2,6 m dans le
+mur ouest là où ta traverse des fourneaux quitte la rue, `enseigne_forge` à côté. Le mur
+part de la rive, suit ta ruelle du charbon au nord, la verge de ta rue de travail à
+l'ouest, passe sous l'avant-toit de ta halle de tri au sud, et revient à la rivière. Rien
+n'est bâti le long de l'eau : la rivière est le bord est. Le sol de la cour est ton
+matériau de chemin (`ironworks_path.tres`), à 62 % pour que ton bruit le morcelle.
+
+Deux choses pour toi, si tu veux :
+
+- Ton `MuretMinerai_03` (274, 50) est posé exactement sur une limite de case (z = 50 m
+  est un multiple de 2) et **n'arrête personne** dans la simulation : le centre d'aucune
+  case ne tombe dans ses blocs. Le mur de la cour ne compte donc pas sur lui. Un demi-
+  mètre plus au nord ou au sud, il fermerait une case.
+- Si un jour tu poses toi-même une cour autour des fourneaux dans ton atelier, le bake
+  la lira à ta place : les entrées `yards` de `content/bake_brief.json` sont notre
+  proposition et disparaissent le jour où tes données nomment la même chose.

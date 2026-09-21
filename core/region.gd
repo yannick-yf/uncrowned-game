@@ -146,6 +146,11 @@ var props: Array[Dictionary] = []
 ## a person's decision about you — and because a warded tile has to look walkable,
 ## since it is. See `WardRules`.
 var wards: Dictionary = {}
+## **The yards** (G2–G4, 2026-09-21): one row per yard the bake composed from his
+## catalogue — its place, its ward, the passage tile, the tile just inside it, and every
+## tile its floor covers — so the window can draw the threshold and a test can ask where
+## it is. Empty on the procedural map, which has no yard.
+var yards: Array[Dictionary] = []
 ## The places this region was built around — id -> centre — and their footprints.
 ## Set by whoever builds the region: the procedural builder from the statics above,
 ## the bake from the baked places. The kit and the zones read these and never a

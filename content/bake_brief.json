@@ -22,9 +22,32 @@
     {"terrain": "farmland", "place": "wide_acres", "radii_xz": [68, 48], "scaffold": true, "_why": "the fields around the farms, as the 2D map lays them"},
     {"terrain": "marsh", "place": "saltmarch", "radii_xz": [64, 44], "scaffold": true, "_why": "the marsh the port is named for"}
   ],
-  "_yards": "A yard closed with his own fence, and one gate in it (Q1, 2026-09-19). Offsets are tiles from the place's centre, x east and y south. A straight fence across open country is walked round, so a yard is a ring or it is nothing — the same shape the castle's curtain has. The pieces are his cloture_2m, which his own delivery already stands at the works, and the bake makes every tile under a prop impassable: the wall is drawn and the drawn thing is what stops you.",
+  "_catalogs": "His own asset catalogues, read by the bake (G1, 2026-09-21). A piece placed from one takes its footprint, its facing and what it stops from what he wrote — size_m, front +Z, ground_pivot, its collision shapes — never from a box or a tile. Paths are under prototypes/brindle_3d/.",
+  "catalogs": ["assets/ironworks/catalog.json"],
+  "_yards": "A yard is composed, not computed (G2–G4, 2026-09-21; it replaced a two-corner rectangle of tile-sized fence). Everything below is in HIS metres. A run lays one of his modules end marker to end marker from from_xz toward to_xz, as his own placement note says (extrémités à X = ±1 m, dupliquer pour prolonger); a run marked until: water stops on his bank. The gate is his portail_cour, its origin the middle of its 2.6 m passage: that tile stays open ground, warded, and a man stands on it. What each piece stops is what its own collision shapes cover. Two rules the bake enforces and reports: nothing stands in his river, and nothing crosses a road — a wall may run along a road's edge, and the one crossing is the gate.",
   "yards": [
-    {"place": "cinderworks", "kind": "yard_fence", "from": [4, -19], "to": [21, 5], "gate_side": "west", "gate_from": -6, "gate_to": -3, "_why": "the production yard. His homes sit at x -23..0 and his kilns at x +8..+16, so the fence runs at +4 and the quarter stays outside it. The gate faces the quarter, between the two rows of kilns, because that is the way a worker walks to them."}
+    {
+      "place": "cinderworks",
+      "ward": "cinderworks_gate",
+      "_why": "The furnace court, closed (docs/QUEST_CINDERWORKS.md §3), built from his own separation modules. It is the block his plan already draws: his work street (route ScierieAcierie) on the west, his charcoal lane (TraverseStockage, z 17) on the north, his finishing lane (TraverseFinition, z 56) beyond the south, and the river on the east with nothing built along it. Every run starts on a face of its neighbour and ends on one, or on his water; his own MuretMinerai_02 abuts the south wall from inside and his _03 lies a metre outside it, as the ore court he drew. The one way in is his portail_cour where his furnace traverse (TraverseFourneaux, z 32) leaves the street, between the two rows of furnaces, because that is the way a worker walks to them. Stone, not wood: his own walls at the works are soubassement_2m, and his wooden cloture_2m stands at the homes.",
+      "_rhythm": "The corners are butt joints, one arm to the outer face and the other against its inner face, so nothing overlaps and nothing is notched. The gate's 3.26 m breaks the 2 m rhythm once, which is why the two corners are handed opposite ways: west 19.37→31.37 (6), the gate, west 34.63→48.63 (7). A run toward the water lays whole modules until the next would stand in a tile the sim calls water, so the module rhythm is chosen to land the last one in the last dry tile: the north run from x 255.2 ends 0.8 m short of the water tile at 286; the south run from 254.8 ends 1.2 m short of it at 280, and that last strip is closed by the wall's own reach (CatalogRules.REACH_M). Both are the 2 m tile's tax at a riverbank and are said here so nobody hunts for them.",
+      "runs": [
+        {"id": "north", "piece": "soubassement_2m", "from_xz": [255.2, 19.57], "to_xz": [300, 19.57], "until": "water",
+         "_why": "the south edge of his charcoal lane, from the west wall's inner face to the riverbank; the furnaces' north faces are a metre inside it"},
+        {"id": "west_north", "piece": "soubassement_2m", "from_xz": [255, 19.37], "to_xz": [255, 31.37],
+         "_why": "the east verge of his work street, from the north wall's outer face down to the gate's north post: six modules exactly, the wall centred on its tile so a walker stops the same 0.8 m from the stone on either side"},
+        {"id": "west_south", "piece": "soubassement_2m", "from_xz": [255, 34.63], "to_xz": [255, 48.63],
+         "_why": "from the gate's south post down to the south wall's inner face: seven modules exactly, a metre off his fourth furnace"},
+        {"id": "south", "piece": "soubassement_2m", "from_xz": [254.8, 48.83], "to_xz": [300, 48.83], "until": "water",
+         "_why": "from the west wall's outer face to the riverbank, half a metre clear of his sorting hall's south eave; his MuretMinerai_02 runs into it from inside and his _03 stub lies a metre outside, by his finishing lane"}
+      ],
+      "gate": {"piece": "portail_cour", "xz": [255, 33], "yaw": 90,
+        "_why": "in the west wall where his TraverseFourneaux leaves the street; yaw 90 lays its 3.26 m along the wall line with its front, and its open leaves, toward the yard. Its posts' outer faces sit 0.08 m off the two wall ends"},
+      "pieces": [
+        {"id": "sign", "piece": "enseigne_forge", "xz": [254.6, 30.35], "yaw": -90,
+         "_why": "in front of the wall just north of the gate, its post 0.4 m from the north gatepost and its board hung toward the gate, face to the street, as his own note places a sign: à l'entrée d'une cour, façade vers +Z"}
+      ]
+    }
   ],
   "points": {
     "his_bridge": {"from_crossing": "PontMine", "_why": "retain the legacy mine bridge point at its delivered location"},
@@ -64,7 +87,7 @@
     "granary": "houses/storehouse.tscn", "workshop": "houses/storehouse.tscn",
     "well": "props/well.tscn", "barrels": "props/barrel_closed.tscn",
     "crates": "props/crate_single.tscn", "logs": "props/woodpile.tscn",
-    "fence": "modules/fence_2m.tscn", "yard_fence": "modules/fence_2m.tscn", "overgrowth": "plants/shrub_hazel.tscn"
+    "fence": "modules/fence_2m.tscn", "overgrowth": "plants/shrub_hazel.tscn"
   },
   "buildings": {
     "footprint_tiles": [2, 2],

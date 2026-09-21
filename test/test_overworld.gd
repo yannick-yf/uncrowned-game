@@ -242,9 +242,11 @@ func test_every_landmark_kind_has_art() -> void:
 	var art := Art.new()
 	for prop: Dictionary in _region.props:
 		var kind: StringName = prop["kind"] as StringName
-		if bool(prop.get("his", false)) and prop.has("scene"):
+		# A building his data stands, or a piece of his catalogue the bake placed (G1):
+		# either way his scene draws it, from the vendored copy.
+		if prop.has("scene") and (bool(prop.get("his", false)) or prop.has("piece")):
 			assert_true(ResourceLoader.exists(String(prop["scene"]).replace("res://", "res://view3d/workshop/")),
-				"his scene draws %s" % prop.get("source_id", kind))
+				"his scene draws %s" % prop.get("source_id", prop.get("piece", kind)))
 		else:
 			assert_true(art.can_draw(kind), "nothing knows how to draw a '%s'" % kind)
 

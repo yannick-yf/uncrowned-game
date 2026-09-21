@@ -185,6 +185,12 @@ checking a bake: `tools/workshop_geometry.gd` reads the copied ironworks collisi
 scenes and refuses stale copies. Only the build tool loads those nodes; core receives
 plain polygons. The bake hashes the town and river data and each used collision scene,
 and checks that the landscape's resolved crossings agree with the river layout.
+**Since 2026-09-21 (G1) the bake also reads his catalogues** — the brief's `catalogs`,
+today `assets/ironworks/catalog.json` — and every piece of his it places (the works'
+yard: `YardRules`, `CatalogRules`) is stood at his metres and yaw, blocks what its own
+collision shapes cover, and has its catalogue and its scene hashed into the bake. **Read
+his catalogue before placing anything of his**: its `placement` note is the only document
+that says how a piece is meant to be used, and the first yard was built without it.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
 commit checks. The current baked run prints **ten** DEBT lines for **six** claims and
 four OFF lines. Five claims are the map's and the brief's; the sixth is **his brother's

@@ -1255,6 +1255,45 @@
           }
         ]
       },
+      "gatekeeper": {
+        "name": "The works' gatekeeper",
+        "role": "Gatekeeper",
+        "greeting": "Yard's shut. The furnaces are for the people who work them, and you don't.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "You I know. You're not going in, and you're not stopping here either."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_gate",
+            "text": "What's in there?",
+            "reply": "Six furnaces, the ore sorting, the charcoal. Everything that burns or walks off. You look at it from the street.",
+            "repeatable": true
+          },
+          {
+            "intent": "ask_gate_who",
+            "tag": "Wits",
+            "text": "Who gets through, then?",
+            "reply": "The shift. And whoever the office answers for - the weighing house, over there, the door on the south side. Not me.",
+            "costs": "goodwill"
+          },
+          {
+            "intent": "ask_gate_vouched",
+            "text": "The office answers for me.",
+            "reply": "Then go through. Nobody touches the fires.",
+            "requires": "cinderworks:vouched_for"
+          },
+          {
+            "intent": "ask_gate_brought",
+            "text": "Tom's taking me in.",
+            "reply": "I never saw you go in. Be quick about it.",
+            "requires": "cinderworks:brought_through"
+          }
+        ],
+        "_p2": "placeholder wording, 2026-09-21 (G3): the words are Yannick's (P2). What must stay is the shape - he names what he keeps, he says who gets past him and points at the weighing office, and he acknowledges either key (vouched for, or brought through) without asking about a quest."
+      },
       "watchman": {
         "name": "A watchman",
         "role": "Watchman",

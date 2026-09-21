@@ -200,10 +200,11 @@ func _init() -> void:
 		&"barrels": [&"camp", Rect2i(0, 0, 48, 16)],
 		&"logs": [&"camp", Rect2i(16, 88, 32, 32)],
 		&"fence": [&"camp", Rect2i(0, 118, 48, 16)],
-		# The works' yard (Q1). Its own kind rather than `fence`, which the two windows
-		# make vanish when the Wide Acres turns free — the farm's fences coming down is
-		# that place's free state, and the ironworks' yard has nothing to do with it.
-		&"yard_fence": [&"camp", Rect2i(0, 118, 48, 16)],
+		# The works' yard is his `soubassement_2m` since 2026-09-21 (G2), a stone module
+		# the 2D pack has no picture of. The pack's fence stands for it in the flat look
+		# at the bake only, so that look does not show an invisible wall; the 3D window
+		# draws his own piece and never reads this row.
+		&"soubassement_2m": [&"camp", Rect2i(0, 118, 48, 16)],
 		&"produce": [&"house", Rect2i(240, 208, 64, 32)],
 		&"oven": [&"house", Rect2i(464, 176, 32, 48)],
 	}

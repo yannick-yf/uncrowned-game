@@ -1255,6 +1255,45 @@
           }
         ]
       },
+      "gatekeeper": {
+        "name": "Le portier des Forges",
+        "role": "Portier",
+        "greeting": "La cour est fermée. Les fourneaux, c'est pour ceux qui y travaillent, et vous n'y travaillez pas.",
+        "alt_greetings": [
+          {
+            "when": "they_think_ill_of_me",
+            "text": "Vous, je vous connais. Vous ne passez pas, et vous ne restez pas là non plus."
+          }
+        ],
+        "options": [
+          {
+            "intent": "ask_gate",
+            "text": "Qu'est-ce qu'il y a là-dedans ?",
+            "reply": "Six fourneaux, le tri du minerai, le charbon. Tout ce qui brûle ou se vole. Ça se regarde depuis la rue.",
+            "repeatable": true
+          },
+          {
+            "intent": "ask_gate_who",
+            "tag": "Wits",
+            "text": "Qui passe, alors ?",
+            "reply": "L'équipe. Et ceux pour qui le bureau répond : la pesée, là-bas, la porte au sud. Pas moi.",
+            "costs": "goodwill"
+          },
+          {
+            "intent": "ask_gate_vouched",
+            "text": "Le bureau répond pour moi.",
+            "reply": "Alors passez. Les feux, on n'y touche pas.",
+            "requires": "cinderworks:vouched_for"
+          },
+          {
+            "intent": "ask_gate_brought",
+            "text": "Tom m'emmène.",
+            "reply": "Je ne vous ai pas vu entrer. Faites vite.",
+            "requires": "cinderworks:brought_through"
+          }
+        ],
+        "_p2": "placeholder wording, 2026-09-21 (G3): the words are Yannick's (P2). What must stay is the shape - he names what he keeps, he says who gets past him and points at the weighing office, and he acknowledges either key (vouched for, or brought through) without asking about a quest."
+      },
       "watchman": {
         "name": "un homme du guet",
         "role": "Homme du guet",

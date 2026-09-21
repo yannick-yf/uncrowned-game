@@ -63,17 +63,42 @@ func _initialize() -> void:
 		push_error("missing workshop scenes; run tools/vendor_workshop.sh")
 		quit(1)
 		return
-	var first: RegionBake = _bake(geometry)
+	# **His catalogue, then the yards composed from it** (G1–G2, 2026-09-21). The brief
+	# names which of his catalogues the bake reads; every piece the yards place is one of
+	# their entries, stood at a place and a yaw in his metres, and the geometry tool
+	# extracts what his scene blocks at exactly that placement.
+	var brief: Dictionary = _json(BRIEF) as Dictionary
+	var catalog: Dictionary = {"assets": []}
+	var catalog_files: Array = brief.get("catalogs", []) as Array
+	for file: Variant in catalog_files:
+		if not FileAccess.file_exists(WORKSHOP + String(file)):
+			push_error("missing catalogue of his: %s" % (WORKSHOP + String(file)))
+			quit(1)
+			return
+		var one: Dictionary = _json(WORKSHOP + String(file)) as Dictionary
+		(catalog["assets"] as Array).append_array(one.get("assets", []) as Array)
+	var landscape: Dictionary = RegionBake.read_landscape()
+	var composed: Dictionary = RegionBake.compose_yards(landscape.get("meta", {}) as Dictionary,
+		landscape.get("heights", PackedFloat32Array()) as PackedFloat32Array,
+		landscape.get("waters", PackedFloat32Array()) as PackedFloat32Array, brief, catalog, geometry)
+	var pieces: Array = Geometry.pieces_with_collisions(composed["pieces"] as Array)
+	if pieces.size() != (composed["pieces"] as Array).size():
+		push_error("a piece of his catalogue could not be read; run tools/vendor_workshop.sh")
+		quit(1)
+		return
+	var first: RegionBake = _bake(geometry, pieces)
 	if first.region == null:
 		for line: String in first.report:
 			print(line)
 		quit(1)
 		return
-	var second: RegionBake = _bake(geometry)
+	var second: RegionBake = _bake(geometry, pieces)
 	var source: Dictionary = {}
 	for file: String in INPUTS:
 		source[file] = FileAccess.get_sha256(WORKSHOP + file)
-	for item: Dictionary in (town["buildings"] as Array) + (town["props"] as Array):
+	for file: Variant in catalog_files:
+		source[String(file)] = FileAccess.get_sha256(WORKSHOP + String(file))
+	for item: Dictionary in (town["buildings"] as Array) + (town["props"] as Array) + pieces:
 		var relative: String = String(item["scene"]).trim_prefix("res://")
 		source[relative] = FileAccess.get_sha256(WORKSHOP + relative)
 	source["content/bake_brief.json"] = FileAccess.get_sha256(BRIEF)
@@ -84,6 +109,8 @@ func _initialize() -> void:
 
 	print("bake_region — %d x %d tiles at %.1f m, origin (%.0f, %.0f) m\n" % [
 		first.width, first.height, first.metres_per_tile, first.origin_m.x, first.origin_m.y])
+	for line: String in (composed["report"] as Array):
+		print("  " + String(line))
 	for line: String in first.report:
 		print("  " + line)
 	print()
@@ -114,7 +141,7 @@ func _initialize() -> void:
 	quit(0)
 
 
-func _bake(town: Dictionary) -> RegionBake:
+func _bake(town: Dictionary, pieces: Array) -> RegionBake:
 	var landscape: Dictionary = RegionBake.read_landscape()
 	return RegionBake.bake(
 		landscape.get("meta", {}) as Dictionary,
@@ -127,6 +154,7 @@ func _bake(town: Dictionary) -> RegionBake:
 		_json(BRIEF) as Dictionary,
 		town,
 		_json(WORKSHOP + "planning/river-routes-v2.json") as Dictionary,
+		pieces,
 	)
 
 
