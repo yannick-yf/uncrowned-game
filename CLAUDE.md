@@ -489,13 +489,21 @@ without asking.
    opposite ("never in the overworld… side-on 2D"), and the reversal is recorded in
    place rather than quietly applied. The argument is `docs/COMBAT.md` §1 and §6.
 
-   **What is built:** the fight's rules, headless and tested —
-   `core/rules/combat_rules.gd`, `core/fight.gd`, `core/systems/combat_system.gd`,
-   `content/moves.json`, and the world clock held by `Sim.ticks_held`. They assume no
-   screen and no camera, which is why they could be built before the ruling.
+   **What is built, and the ruling owes nothing more (2026-09-21):** the fight's rules,
+   headless and tested — `core/rules/combat_rules.gd`, `core/fight.gd`,
+   `core/systems/combat_system.gd`, `content/moves.json`, and the world clock held by
+   `Sim.ticks_held` — plus everything the ruling asked for: the camera that drops and
+   never turns (F3), the two keys and the way in (F2), the way back out (F4), an
+   opponent who does something (F5), the fight's place in the quest (F6), and the
+   presentation a player reads it through — both healths, the wind-up, reach, an arena
+   floor and an ending with a beat (`view/fight_hud.gd`, H1–H5 of
+   `docs/DEMO_POLISH.md`). Nothing may assume a *separate screen* — that shape is wrong.
 
-   **What the ruling still owes:** the camera, the two keys, and a way into a fight.
-   Nothing may assume a *separate screen* any more — that shape is now wrong.
+   **It is a first version and not the design, and Yannick said so on 2026-09-21**,
+   having played it: *« Le système de combat on va le changer je pense. »* So do not
+   build depth onto what is there — more moves, weapons, stamina, a second opponent —
+   until he has said what it becomes. Fixing what is plainly broken in it is another
+   matter, and `docs/COMBAT.md` §12 lists what is known to be.
 
 **Retired, kept here so the history reads straight:**
 

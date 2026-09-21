@@ -253,7 +253,17 @@ that no hidden piece ever stood on ground the simulation refuses. 44 suites, 438
 
 ## Q — the quest
 
-### Q1 · The production area is closed — **built 2026-09-19**
+### Q1 · The production area is closed — **built 2026-09-19, rebuilt 2026-09-21**
+
+> **Read this before the paragraph below.** What Q1 first built was a computed rectangle
+> of a generic `fence_2m`, stamped one tile at a time on two corners, with a gap for a
+> gate and ten pieces standing in the river. Yannick rejected it on sight. It was rebuilt
+> in **G2–G3** out of his brother's own courtyard pieces — 39 `soubassement_2m`, his
+> `portail_cour` with the gatekeeper standing in its 2.6 m passage, his `enseigne_forge`
+> — and the bake now reads his `catalog.json` so every piece stands at his metres, turned
+> his way, blocking what its own collision shapes cover. The account is
+> `docs/DEMO_POLISH.md` §0, §1 and §6. **The ruling at the foot of this task still
+> stands: the gate is a man, not a lock.**
 
 Est. 2–3 h. Depends on: —. **Needs his brother's fence line, or ours from his pieces.**
 — *his: `modules/fence_2m.tscn`, which his own ironworks delivery already stands
