@@ -80,14 +80,14 @@ being played. **Everything a player reads it through is missing.**
 
 Two groups. **G depends on G1**; H is independent and can run in parallel.
 
-### G — the works, made of his own pieces
+### G — the works, made of his own pieces — **done 2026-09-21, see §6**
 
 | | Task | Depends |
 |---|---|---|
-| **G1** | **The bake reads his catalogue.** `catalog.json` becomes the source of truth for every piece of his the bake places: `size_m` → footprint in tiles, `front: +Z` → a rotation, `ground_pivot`, and `collision_shapes` → what actually blocks. Today the bake assumes 1×1 tiles and no facing. | — |
-| **G2** | **The boundary, rebuilt from his separation modules.** `soubassement_2m` where it meets stone and buildings, `cloture_2m` for the light runs, each duplicated end to end as his note says. It **follows the site**: it attaches to his buildings, uses the river as the east edge with no fence at all, and encloses the production ground rather than a rectangle. | G1 |
-| **G3** | **The gate is `portail_cour`**, one piece, with its 2.6 m carriage passage on his street. The `corpsdegarde` beside it, and the guard standing in the passage rather than in a gap — with lines of his own, not the bridge guard's. | G2 |
-| **G4** | **The threshold reads without a word.** The ground changes across it (his coal and packed earth inside, the quarter's outside), `enseigne_forge` at the gate, and the approach composed so a player walking up knows this is somewhere else. | G3 |
+| **G1** | **The bake reads his catalogue.** `catalog.json` becomes the source of truth for every piece of his the bake places: `size_m` → footprint in tiles, `front: +Z` → a rotation, `ground_pivot`, and `collision_shapes` → what actually blocks. Today the bake assumes 1×1 tiles and no facing. *Done: `core/rules/catalog_rules.gd`, `tools/workshop_geometry.gd`.* | — |
+| **G2** | **The boundary, rebuilt from his separation modules.** `soubassement_2m` where it meets stone and buildings, `cloture_2m` for the light runs, each duplicated end to end as his note says. It **follows the site**: it attaches to his buildings, uses the river as the east edge with no fence at all, and encloses the production ground rather than a rectangle. *Done: `core/rules/yard_rules.gd`, the brief's `yards`. All stone — see §6 for why no `cloture_2m`.* | G1 |
+| **G3** | **The gate is `portail_cour`**, one piece, with its 2.6 m carriage passage on his street. The `corpsdegarde` beside it, and the guard standing in the passage rather than in a gap — with lines of his own, not the bridge guard's. *Done, without the `corpsdegarde` — see §6.* | G2 |
+| **G4** | **The threshold reads without a word.** The ground changes across it (his coal and packed earth inside, the quarter's outside), `enseigne_forge` at the gate, and the approach composed so a player walking up knows this is somewhere else. *Done: `view/yard_floor.gd`, TOWN under the yard in the sim.* | G3 |
 
 ### H — the fight, presentable
 
@@ -208,6 +208,61 @@ paste it in.
 > wind-up, a clean hit, a blocked hit, and the moment of winning.
 
 ---
+
+## 6. What G1–G4 became, 2026-09-21
+
+**The mechanism.** `CatalogRules` reads one of his catalogue entries — footprint from
+`size_m` turned by a yaw, `+Z` as the front, `ground_pivot`, modules at his 2 m
+end-marker pitch — and `blocked_tiles` takes what a piece stops from its own collision
+shapes, extracted by `tools/workshop_geometry.gd` from his scene at the placement asked
+for, never from a box. `YardRules` composes a yard from **runs** (a module from here to
+there, in his metres; a run toward the water stops on the last tile the sim calls dry; a
+module is dropped where one of his own walls already stands), one **gate** whose origin
+is its passage, and single **pieces**. The brief names the catalogues the bake reads and
+describes the yard; the bake refuses a piece in his river or across a road, and refuses a
+yard that does not close. `Region.yards` records each yard's passage and floor.
+
+**The yard.** The furnace court is the block his own plan draws: the east verge of his
+work street, the south edge of his charcoal lane, a line under his sorting hall's eave
+along his finishing lane, and the river as the east edge with nothing on it. 39
+`soubassement_2m`, one `portail_cour` where his furnace traverse leaves the street, one
+`enseigne_forge` beside it, and the works' gatekeeper in the passage (placeholder lines,
+`_p2`). Inside, the ground is the works' — TOWN in the sim, his packed-earth path
+material in the window, a tile off his water, mottled by his own shader's noise.
+
+**Three decisions that differ from the prompt, and why.**
+
+- **Stone throughout, no `cloture_2m`.** His own walls at the works are `soubassement_2m`
+  (the ore court, the charcoal pens) and his wooden fences stand at the homes. A wooden
+  run on the furnace court would have been the one piece there not of the works.
+- **No `corpsdegarde`.** It is a 7 × 8 m two-storey royal-city building, 10.5 m tall,
+  beside a 0.68 m wall on a factory street. His works has no building of that scale or
+  family; standing one there would have been the mixed-hand mistake the whole task is
+  about. His `bureau_pesee` — the weighing office, Sena's — already stands at the court's
+  south-west corner and is what the gatekeeper points at.
+- **The wall is axis-aligned.** His works is a grid ("ordered factory grid with separate
+  work courts", his own description); his lanes and his buildings are on it. The yard
+  follows his lanes, not a diagonal of ours.
+
+**The tile's tax, said plainly.** A tile is 2 m and his wall 0.4 m: a walker stops 0.8 m
+from the stone on either side of the west wall, and at each riverbank end the last
+module stands 0.8–1.2 m short of the sim's first water tile, the strip closed by the
+wall's reach (`CatalogRules.REACH_M`). Both are written in the brief's `_rhythm` note.
+
+**What the first frames showed and what changed** (the frames are in
+`docs/frames/yard/`, `before_*` and `yard_*`):
+
+1. The floor as a full plate read as a slab — the one thing that said "another hand".
+   It is now at 0.62 alpha and his path shader's grain breaks it into trampled earth.
+2. The flood fill painted every dry tile of his jagged bank, including a spit north of
+   the wall: a checkerboard down the river. The floor now stops a tile off his water.
+3. A flat 2 m quad pinned at its corners diverged from his mesh on the curved bank —
+   grass came through the middle of every tile in a lattice. The plate is cut at 0.5 m,
+   as his own `ground_path.gd` samples at 0.45.
+
+**Found and not fixed.** His `MuretMinerai_03` (274, 50) lies exactly on a tile boundary
+and blocks nothing in the sim; the yard's south wall does not rely on it. And the sign is
+small at the game's lens — legible up close, a post from afar; it is his piece at his size.
 
 ## 5. What is deliberately not in here
 
