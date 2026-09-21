@@ -33,6 +33,47 @@ static func town_with_collisions(town: Dictionary) -> Dictionary:
 	return out
 
 
+## The same, for pieces of his catalogue that *we* place (G1, 2026-09-21): each
+## placement names his scene, where it stands in his metres and how it is turned, and
+## comes back with the collision polygons his scene carries at that placement — so the
+## bake blocks what his shapes block and not a box round them. Refuses a stale copy,
+## as above. Returns the placements, or an empty array when a scene cannot be read.
+static func pieces_with_collisions(pieces: Array) -> Array:
+	var out: Array = []
+	var loaded: Dictionary = {}
+	for raw: Variant in pieces:
+		var piece: Dictionary = (raw as Dictionary).duplicate(true)
+		var path: String = String(piece["scene"])
+		var copied: String = path.replace("res://", "res://view3d/workshop/")
+		if not loaded.has(copied):
+			var source: String = path.replace("res://", RegionBake.WORKSHOP)
+			if not FileAccess.file_exists(source):
+				push_error("no such scene of his: %s" % source)
+				return []
+			var expected: String = FileAccess.get_file_as_string(source)
+			for folder: String in FOLDERS:
+				expected = expected.replace("res://%s/" % folder, "res://view3d/workshop/%s/" % folder)
+			if not FileAccess.file_exists(copied) or FileAccess.get_file_as_string(copied) != expected:
+				push_error("stale workshop scene %s; run tools/vendor_workshop.sh" % source)
+				return []
+			loaded[copied] = load(copied) as PackedScene
+		var scene: PackedScene = loaded[copied] as PackedScene
+		if scene == null:
+			return []
+		var root: Node3D = scene.instantiate() as Node3D
+		var xz: Vector2 = piece["xz"] as Vector2
+		var placement := Transform3D(Basis(Vector3.UP, deg_to_rad(float(piece.get("yaw", 0.0)))),
+			Vector3(xz.x, float(piece.get("lift", 0.0)), xz.y))
+		var polygons: Array = []
+		if not _collect(root, placement, polygons):
+			root.free()
+			return []
+		piece["obstacles"] = polygons
+		root.free()
+		out.append(piece)
+	return out
+
+
 static func _collect(node: Node, parent: Transform3D, polygons: Array) -> bool:
 	var transform: Transform3D = parent * (node as Node3D).transform if node is Node3D else parent
 	if node is CollisionShape3D and not (node as CollisionShape3D).disabled:

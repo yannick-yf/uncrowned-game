@@ -21,8 +21,10 @@
     "road_muster_junction": [150, 120],
     "road_climb": [112, 96],
     "road_last_stop": [78, 44],
-    "ferry": [52, 150]
+    "ferry": [52, 150],
+    "cinderworks_gate": [245, 167]
   },
+  "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the tile the old guard stood on, so the gatekeeper resolves on both worlds.",
   "cast": {
     "fairy": {"point": "clearing", "offset": [0, -1]},
     "maddox": {"place": "harrowgate", "offset": [-2, -2]},
@@ -58,8 +60,8 @@
   "strangers": [
     {"kind": "trader", "place": "cairnwell", "offset": [-2, -1]},
     {"kind": "guard", "point": "bridge", "offset": [0, 0], "_why": "2026-09-15: stand on the delivered diagonal deck, not beside its parapet"},
-    {"kind": "guard", "place": "cinderworks", "offset": [4, -5],
-      "_why": "2026-09-19 (Q1): the man in the yard gate. His street runs through the wall and a wall never closes a road, so the way in is open ground with somebody standing in it — see WardRules. He is the gate, and choosing a side is what gets you past him (Q3)."},
+    {"kind": "gatekeeper", "point": "cinderworks_gate", "offset": [0, 0],
+      "_why": "2026-09-21 (G3): the man in the passage of his portail_cour, with lines of his own rather than the bridge guard's. Anchored on the gate's point, so wherever the brief puts the gate he stands in it. The passage is open ground with somebody standing in it — see WardRules — and choosing a side is what gets you past him (Q3)."},
     {"kind": "watchman", "place": "cinderworks", "feature": "kiln", "offset": [2, 3]},
     {"kind": "watchman", "place": "cinderworks", "feature": "kiln", "offset": [2, 6]},
     {"kind": "watchman", "place": "wide_acres", "offset": [5, 3]},

@@ -224,10 +224,18 @@ var _marks: Array[Sprite3D] = []
 var _embers: Array[Dictionary] = []
 var _dot: Texture2D = null
 
+## **The threshold** (G4, 2026-09-21): his packed earth over a yard's floor, so the
+## ground changes where the wall does. The geometry is `YardFloor`'s; the material is
+## his `ironworks_path.tres`, the ground his own paths at the works are drawn with.
+const HIS_FLOOR_MATERIAL: String = "res://view3d/workshop/materials/ironworks_path.tres"
+var _floors: Array[MeshInstance3D] = []
+
 var chunk_count: int = 0
 var water_triangles: int = 0
 var his_props_skipped: int = 0
 var his_kit_count: int = 0
+## Pieces of his catalogue the bake placed — the yard's walls, gate and sign (G1–G3).
+var catalog_count: int = 0
 var block_count: int = 0
 var wall_count: int = 0
 
@@ -258,6 +266,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_build_ground()
 		_build_water()
 	_build_props()
+	_build_floors()
 	_build_walls()
 	_build_fairy()
 	_build_embers()
@@ -423,6 +432,7 @@ func _hide_his_guides() -> void:
 func _refoot() -> void:
 	for entry: Dictionary in _props:
 		_stand(entry)
+	_build_floors()
 
 
 func _build_light() -> void:
@@ -600,6 +610,17 @@ func _build_props() -> void:
 		if kind == &"townsfolk":
 			entry["node"] = _figure()
 			entry["figure"] = true
+		elif _his != null and prop.has("scene") and prop.has("xz"):
+			# A piece of his catalogue the bake placed (G1): his scene from the vendored
+			# copy, stood where the brief put it in his metres and turned as the brief
+			# turned it — never by tile, never by our footprint.
+			var piece: Node3D = _catalog_piece(String(prop["scene"]))
+			if piece != null:
+				piece.rotation.y = deg_to_rad(float(prop.get("yaw", 0.0)))
+				entry["node"] = piece
+				entry["placed"] = true
+				entry["lift"] = float(prop.get("lift", 0.0))
+				catalog_count += 1
 		elif _his != null and _kit_library.has(String(kind)):
 			var piece: Node3D = _his_piece(kind)
 			if piece != null:
@@ -627,8 +648,36 @@ func _stand(entry: Dictionary) -> void:
 	var node: Node3D = entry["node"] as Node3D
 	if bool(entry["figure"]):
 		_foot_figure(node, Vector2(prop["at"] as Vector2i) + Vector2(0.5, 1.0))
+	elif bool(entry.get("placed", false)):
+		# His catalogue's origin is the ground under the piece's centre: it stands on his
+		# relief exactly where the brief says, in his metres.
+		var xz: Vector2 = prop["xz"] as Vector2
+		node.position = Vector3(xz.x, height_at(xz.x, xz.y) + float(entry["lift"]), xz.y)
 	else:
 		node.position = _feet_of(_prop_centre(prop)) + Vector3.UP * float(entry["lift"])
+
+
+## One of his catalogue's scenes, from the vendored copy, or null when the copy lacks it.
+func _catalog_piece(scene_path: String) -> Node3D:
+	var copied: String = scene_path.replace("res://", "res://view3d/workshop/")
+	if not _his_pieces.has(copied):
+		_his_pieces[copied] = load(copied) as PackedScene if ResourceLoader.exists(copied) else null
+	var scene: PackedScene = _his_pieces[copied] as PackedScene
+	return scene.instantiate() as Node3D if scene != null else null
+
+
+## The yards' floors (G4), rebuilt whenever his terrain is, because they stand on it.
+func _build_floors() -> void:
+	for old: MeshInstance3D in _floors:
+		old.queue_free()
+	_floors.clear()
+	if _his == null or _region.yards.is_empty() or not ResourceLoader.exists(HIS_FLOOR_MATERIAL):
+		return
+	var material: Material = load(HIS_FLOOR_MATERIAL) as Material
+	if material != null:
+		var water: Callable = func(tile: Vector2i) -> bool:
+			return _region.in_bounds(tile) and Art.is_water(_region.terrain_at(tile))
+		_floors = YardFloor.build(_region.yards, material, height_at, water, _origin_m, _metres_per_tile, self)
 
 
 ## One of his library pieces for a kind, or null when the copy lacks it.

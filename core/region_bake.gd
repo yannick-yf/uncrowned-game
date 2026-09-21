@@ -17,7 +17,8 @@ extends RefCounted
 ## His buildings stand as walls under a prop; the ironworks uses collision polygons
 ## extracted by the build tool, so open halls are not closed by their roof bounds. Then **the kit**: every place marked scaffold gets its ground,
 ## streets, landmarks and scenery from `Region.scaffold_place`; a place of his gets the
-## same only if his data stands no building in it. Last, the border is closed.
+## same only if his data stands no building in it. Then the brief's yards, composed
+## from his own catalogue (`compose_yards`, G1–G4, 2026-09-21). Last, the border is closed.
 ##
 ## Uses only the public face of `Region` — `set_terrain`, `terrain_at`, `is_passable`,
 ## `in_bounds`, `zone_at`, `props`, `sites`, `footprints`, `bake_zones` and the
@@ -97,6 +98,7 @@ static func bake(
 	brief: Dictionary,
 	town: Dictionary = {},
 	routes: Dictionary = {},
+	yard_pieces: Array = [],
 ) -> RegionBake:
 	var out := RegionBake.new()
 	var samples: int = int(landscape.get("grid_size", 0))
@@ -130,11 +132,11 @@ static func bake(
 	out._ironworks(town)
 	out._kit(brief)
 	out._thin_footprints(brief)
-	# After the thinning, never before it: a yard is a ring one tile thick, and the
-	# thinning exists to open the outer ring of a footprint. It leaves 1x1 pieces alone
-	# today, but a yard opened by a rule meant for cottages would be a hole nobody could
-	# see and nobody would look for.
-	out._yards(brief)
+	# After the thinning, never before it: the thinning exists to open the outer ring of
+	# a kit footprint, and a wall of his modules opened by a rule meant for cottages would
+	# be a hole nobody could see and nobody would look for. After the roads too, because a
+	# piece may stand along a road and never across one.
+	out._yards(brief, yard_pieces)
 	out._border()
 	out._summarise()
 	return out
@@ -531,71 +533,220 @@ func _thin_footprints(brief: Dictionary) -> void:
 	report.append("footprints: %d wall tiles opened around pieces of his library" % opened)
 
 
-## **The brief's yards: a fence in a ring, with one way in** (Q1, 2026-09-19).
+## How many tiles a yard may hold before the bake decides it is not a yard but a leak.
+const YARD_FLOOR_CAP: int = 2000
+
+
+## **The brief's yards as placements of his pieces, before anything is baked** (G1–G2,
+## 2026-09-21). Static and file-free: the tool hands it his landscape (so a run can stop
+## at his water), the brief, his catalogue and his town with its collision polygons (so
+## a module is dropped where his own wall already stands), and gets back placements the
+## geometry tool can extract shapes for. `{"pieces": [...], "report": [...]}`.
+static func compose_yards(landscape: Dictionary, heights: PackedFloat32Array,
+		waters: PackedFloat32Array, brief: Dictionary, catalog: Dictionary, town: Dictionary) -> Dictionary:
+	var out: Dictionary = {"pieces": [] as Array[Dictionary], "report": [] as Array[String]}
+	var samples: int = int(landscape.get("grid_size", 0))
+	var extent: float = float(landscape.get("extent_m", 0.0))
+	if samples < 2 or extent <= 0.0:
+		return out
+	var metres: float = extent / float(samples - 1)
+	var origin := Vector2(-extent * 0.5, -extent * 0.5)
+	var wet: Callable = func(point: Vector2) -> bool:
+		return BakeRules.wet_at(point.x, point.y, heights, waters, samples, origin, metres)
+	var his: Array = []
+	for item: Dictionary in (town.get("buildings", []) as Array) + (town.get("props", []) as Array):
+		for polygon: Variant in (item.get("obstacles", []) as Array):
+			his.append(polygon)
+	for raw: Variant in (brief.get("yards", []) as Array):
+		var yard: Dictionary = raw as Dictionary
+		var composed: Dictionary = YardRules.compose(yard, catalog, wet, his)
+		for piece: Dictionary in (composed["pieces"] as Array):
+			piece["yard"] = String(yard.get("place", ""))
+			(out["pieces"] as Array).append(piece)
+		(out["report"] as Array).append_array(composed["report"] as Array)
+	return out
+
+
+## **The yards: his pieces, standing where the brief composed them** (G2–G4, 2026-09-21).
 ##
-## The geometry is `BakeRules.yard_of`, shared with the procedural map so that a quest
-## written against this gate finds it on both worlds. The pieces are **his** —
-## `cloture_2m`, which his own ironworks delivery already stands elsewhere on the same
-## site — and `place()` makes every tile under a prop impassable, so the thing that
-## stops the player is a thing he can see.
+## `pieces` are `compose_yards`' placements, each carrying the collision polygons the
+## build tool extracted from his own scene at that placement. What a piece stops is
+## `CatalogRules.blocked_tiles` — his shapes, never a box — and every tile it stops
+## becomes WALL under a prop the window draws, so what stops the player is what they see.
 ##
-## **The gate is barred, and that is a debt rather than a design.** His library has one
-## module in it, `fence_2m`, and no gate: a shut gate can only be drawn as more fence.
-## The tiles are still recorded apart, as the point `works_gate`, because Q3 opens them
-## and a gate you cannot name is a gate nobody can open.
-func _yards(brief: Dictionary) -> void:
+## Three rules, each of which cost a session before it was a rule:
+## - **Never in the river.** A piece whose shapes reach his water is refused, by name.
+## - **Along a road, never across one.** A piece may take a road tile at the road's
+##   edge — along some axis one neighbour is road and the other is not — so a wall can
+##   run along his street's verge. A tile with road on both sides of it is a crossing,
+##   and a crossing is the gate's job: the gate's origin is its passage, open ground,
+##   warded, with a man standing on it.
+## - **The yard closes, or the report says where it does not.** A walk from just inside
+##   the passage may not reach just outside it except through it.
+##
+## The floor is every tile that walk reaches, and the ground changes under it (G4): open
+## ground inside becomes TOWN — the 2D window already draws the works' TOWN as cinder —
+## and the whole plate, walls and his buildings included, is recorded for the 3D window
+## to lay his packed earth over.
+func _yards(brief: Dictionary, pieces: Array) -> void:
+	var by_yard: Dictionary = {}
+	for raw: Variant in pieces:
+		var piece: Dictionary = raw as Dictionary
+		var key: String = String(piece.get("yard", ""))
+		if not by_yard.has(key):
+			by_yard[key] = []
+		(by_yard[key] as Array).append(piece)
 	for entry: Variant in (brief.get("yards", []) as Array):
 		var row: Dictionary = entry as Dictionary
 		var id := StringName(String(row.get("place", "")))
 		if not places.has(id):
 			report.append("yard  %-12s no such place, skipped" % id)
 			continue
-		var centre: Vector2i = (places[id] as Dictionary)["centre"] as Vector2i
-		var kind := StringName(String(row.get("kind", "fence")))
-		var yard: Dictionary = BakeRules.yard_of(row, centre)
-		var wall: Array = yard["wall"]
-		var gate: Array = yard["gate"]
-		# **A fence only goes where it actually closes something**, and that one rule
-		# covers two mistakes, both of them found by Yannick playing it.
-		#
-		# **Never across his street.** `place()` refuses to wall a road, and rightly — it
-		# is what stops a curtain wall sealing the only way in. But it still stands the
-		# piece, and a fence you walk through is worse than a wall you cannot see: one is
-		# a thing that fails, the other is a thing that is not there.
-		#
-		# **And never where the ground already stops you.** The yard's east side runs
-		# along his river, so ten of these were planted *in the water* — a palisade in a
-		# river, closing nothing, in front of a bank that was already impassable. It read
-		# as "the fences do not work" and as invisible walls at the same time, because
-		# what was stopping the player there was the water and not the fence.
-		var barred: int = 0
-		var opened: int = 0
-		for group: String in ["wall", "gate"]:
-			for tile: Variant in (yard[group] as Array):
-				var at: Vector2i = tile as Vector2i
-				if not region.is_passable(at) or region.terrain_at(at) == Region.Terrain.ROAD:
-					opened += 1
+		var ward := StringName(String(row.get("ward", "%s_gate" % id)))
+		var passage: Vector2i = Region.NOWHERE
+		var inside_seed: Vector2i = Region.NOWHERE
+		var outside_seed: Vector2i = Region.NOWHERE
+		var stood: Dictionary = {}
+		var refused: int = 0
+		for raw: Variant in (by_yard.get(String(id), []) as Array):
+			var piece: Dictionary = raw as Dictionary
+			var xz: Vector2 = piece["xz"] as Vector2
+			var yaw: float = float(piece["yaw"])
+			var role := StringName(String(piece["role"]))
+			var origin: Vector2i = BakeRules.tile_for(xz.x, xz.y, origin_m, metres_per_tile)
+			var blocked: Array[Vector2i] = CatalogRules.blocked_tiles(piece.get("obstacles", []) as Array,
+				Region.NOWHERE if role == YardRules.ROLE_GATE else origin, origin_m, metres_per_tile)
+			var wet: Vector2i = Region.NOWHERE
+			var crossing: Vector2i = Region.NOWHERE
+			for tile: Vector2i in blocked:
+				if not region.in_bounds(tile):
 					continue
-				place(kind, at, Vector2i.ONE)
-				barred += 1
-		# **The way in is whatever is left open**, and somebody stands in it. His street
-		# makes most of that gap and the brief's gate the rest; both are warded, because
-		# a guard who only watches half a gateway is a guard you walk round.
-		var ward := StringName("%s_gate" % id)
-		var open_tiles: Array[Vector2i] = []
-		for group: String in ["wall", "gate"]:
-			for tile: Variant in (yard[group] as Array):
-				var at: Vector2i = tile as Vector2i
-				if region.is_passable(at):
-					open_tiles.append(at)
-					region.wards[at] = ward
-		if not open_tiles.is_empty():
-			var sum := Vector2i.ZERO
-			for at: Vector2i in open_tiles:
-				sum += at
-			points[ward] = {"at": sum / open_tiles.size(), "scaffold": true}
-		report.append("yard  %-12s %d fence tiles, %d left to his street and his river, %d warded by %s"
-			% [id, barred, opened, open_tiles.size(), ward])
+				var here: Region.Terrain = region.terrain_at(tile)
+				if here == Region.Terrain.WATER or here == Region.Terrain.SEA:
+					wet = tile
+				elif here == Region.Terrain.ROAD and not _road_edge(tile):
+					crossing = tile
+			if wet != Region.NOWHERE:
+				report.append("YARD %s: %s %s at (%.1f, %.1f) m REFUSED, it stands in his river at %s"
+					% [id, piece["id"], piece["piece"], xz.x, xz.y, wet])
+				refused += 1
+				continue
+			if crossing != Region.NOWHERE:
+				report.append("YARD %s: %s %s at (%.1f, %.1f) m REFUSED, it would cross his road at %s"
+					% [id, piece["id"], piece["piece"], xz.x, xz.y, crossing])
+				refused += 1
+				continue
+			var first: Vector2i = origin
+			var last: Vector2i = origin
+			for tile: Vector2i in blocked:
+				if not region.in_bounds(tile):
+					continue
+				first = first.min(tile)
+				last = last.max(tile)
+				if region.is_passable(tile):
+					region.set_terrain(tile, Region.Terrain.WALL)
+			var prop: Dictionary = {"kind": StringName(String(piece["piece"])), "at": first,
+				"size": last - first + Vector2i.ONE, "xz": xz, "yaw": yaw, "scene": String(piece["scene"]),
+				"piece": String(piece["piece"]), "role": String(role), "yard": String(id),
+				"lift": float(piece.get("lift", 0.0))}
+			region.props.append(prop)
+			stood[String(piece["piece"])] = int(stood.get(String(piece["piece"]), 0)) + 1
+			if role == YardRules.ROLE_GATE:
+				passage = origin
+				var front: Vector2 = CatalogRules.to_world(Vector2(0.0, 1.0), Vector2.ZERO, yaw)
+				var step := Vector2i(roundi(front.x), roundi(front.y))
+				inside_seed = origin + step
+				outside_seed = origin - step
+		var counts := PackedStringArray()
+		for piece_id: String in stood.keys():
+			counts.append("%d × %s" % [stood[piece_id], piece_id])
+		report.append("yard  %-12s %s stand from his catalogue%s" % [id, ", ".join(counts),
+			", %d REFUSED" % refused if refused > 0 else ""])
+		if passage == Region.NOWHERE:
+			report.append("YARD %s: no gate stood, so nothing is warded and the yard is not a yard" % id)
+			continue
+		if not region.is_passable(passage):
+			report.append("YARD %s: the gate's passage %s is not open ground" % [id, passage])
+		region.wards[passage] = ward
+		points[ward] = {"at": passage, "scaffold": true}
+		var walk: Dictionary = _enclosed(inside_seed, passage, outside_seed)
+		# **The floor stops a tile short of his water.** The walk reaches every dry tile
+		# of his jagged bank — a spit of it ran five tiles north past the wall's end — and
+		# painting those drew a checkerboard of squares down the river. A tile is the
+		# works' ground only if no water touches it, corners included; the bank stays his.
+		var floor: Array[Vector2i] = []
+		var laid: int = 0
+		for tile: Vector2i in (walk["inside"] as Dictionary).keys():
+			if _touches_water(tile):
+				continue
+			floor.append(tile)
+			match region.terrain_at(tile):
+				Region.Terrain.WILD, Region.Terrain.CLEARED, Region.Terrain.FOREST:
+					region.set_terrain(tile, Region.Terrain.TOWN)
+					laid += 1
+		floor.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+			return a.y < b.y or (a.y == b.y and a.x < b.x))
+		region.yards.append({"place": String(id), "ward": String(ward), "passage": passage,
+			"inside": inside_seed, "floor": floor})
+		if bool(walk["leaked"]):
+			report.append("YARD %s: NOT CLOSED — a walk from inside the passage %s gets out without it (%d tiles reached)"
+				% [id, passage, (walk["inside"] as Dictionary).size()])
+		else:
+			report.append("yard  %-12s closed: passage %s warded by %s, %d tiles of floor, %d of them turned to cinder"
+				% [id, passage, ward, floor.size(), laid])
+
+
+## Whether any of a tile's eight neighbours is his water.
+func _touches_water(tile: Vector2i) -> bool:
+	for dx: int in range(-1, 2):
+		for dy: int in range(-1, 2):
+			var next: Vector2i = tile + Vector2i(dx, dy)
+			if not region.in_bounds(next):
+				continue
+			var here: Region.Terrain = region.terrain_at(next)
+			if here == Region.Terrain.WATER or here == Region.Terrain.SEA or here == Region.Terrain.FORD:
+				return true
+	return false
+
+
+## Whether a road tile is at the road's edge: along one axis or the other, exactly one
+## of its two neighbours is road. A wall may stand on such a tile and the road stays a
+## road, one tile narrower; a tile with road on both sides is the road itself.
+func _road_edge(tile: Vector2i) -> bool:
+	var road: Array[bool] = []
+	for step: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+		var next: Vector2i = tile + step
+		road.append(region.in_bounds(next) and region.terrain_at(next) == Region.Terrain.ROAD)
+	return road[0] != road[1] or road[2] != road[3]
+
+
+## The walk that decides whether a yard is closed: from just inside the passage, over
+## open ground, never through the passage itself. `inside` is every tile reached and
+## `leaked` whether the walk got out — to the tile just outside the passage, or past any
+## size a yard could be.
+func _enclosed(seed: Vector2i, passage: Vector2i, outside: Vector2i) -> Dictionary:
+	var inside: Dictionary = {}
+	var leaked: bool = false
+	if not region.in_bounds(seed) or not region.is_passable(seed):
+		return {"inside": inside, "leaked": true}
+	inside[seed] = true
+	var queue: Array[Vector2i] = [seed]
+	while not queue.is_empty() and inside.size() < YARD_FLOOR_CAP:
+		var at: Vector2i = queue.pop_back()
+		for step: Vector2i in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+			var next: Vector2i = at + step
+			if inside.has(next) or next == passage or not region.in_bounds(next):
+				continue
+			if next == outside:
+				leaked = true
+				continue
+			if not region.is_passable(next):
+				continue
+			inside[next] = true
+			queue.append(next)
+	if inside.size() >= YARD_FLOOR_CAP:
+		leaked = true
+	return {"inside": inside, "leaked": leaked}
 
 
 ## What the ground is next to a footprint — the street it stands on, usually.
@@ -726,6 +877,15 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		return a.y < b.y or (a.y == b.y and a.x < b.x))
 	for tile: Vector2i in warded:
 		wards_out.append({"at": [tile.x, tile.y], "ward": String(region.wards[tile])})
+	var yards_out: Array = []
+	for yard: Dictionary in region.yards:
+		var floor_out: Array = []
+		for tile: Vector2i in (yard["floor"] as Array):
+			floor_out.append([tile.x, tile.y])
+		yards_out.append({"place": String(yard["place"]), "ward": String(yard["ward"]),
+			"passage": [(yard["passage"] as Vector2i).x, (yard["passage"] as Vector2i).y],
+			"inside": [(yard["inside"] as Vector2i).x, (yard["inside"] as Vector2i).y],
+			"floor": floor_out})
 	var props_out: Array = []
 	for prop: Dictionary in region.props:
 		var out: Dictionary = {"kind": String(prop["kind"]),
@@ -735,9 +895,15 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 			out["solid"] = bool(prop["solid"])
 		if bool(prop.get("his", false)):
 			out["his"] = true
-		for key: String in ["source_id", "scene", "place"]:
+		for key: String in ["source_id", "scene", "place", "piece", "role", "yard"]:
 			if prop.has(key):
 				out[key] = prop[key]
+		# A piece of his catalogue we placed (G1): where it stands in his metres, how it
+		# is turned, and how far its origin sits above the ground.
+		if prop.has("xz"):
+			out["xz"] = [(prop["xz"] as Vector2).x, (prop["xz"] as Vector2).y]
+			out["yaw"] = float(prop.get("yaw", 0.0))
+			out["lift"] = float(prop.get("lift", 0.0))
 		props_out.append(out)
 	var trunk_out: Array = []
 	for id: StringName in trunk:
@@ -767,6 +933,7 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		"crossings": crossings_out,
 		"props": props_out,
 		"wards": wards_out,
+		"yards": yards_out,
 		"rows": rows,
 	}
 
@@ -800,10 +967,23 @@ static func read(data: Dictionary) -> Region:
 			out["solid"] = bool(prop["solid"])
 		if bool(prop.get("his", false)):
 			out["his"] = true
-		for key: String in ["source_id", "scene", "place"]:
+		for key: String in ["source_id", "scene", "place", "piece", "role", "yard"]:
 			if prop.has(key):
 				out[key] = prop[key]
+		if prop.has("xz"):
+			var xz: Array = prop["xz"] as Array
+			out["xz"] = Vector2(float(xz[0]), float(xz[1]))
+			out["yaw"] = float(prop.get("yaw", 0.0))
+			out["lift"] = float(prop.get("lift", 0.0))
 		region.props.append(out)
+	for entry: Variant in (data.get("yards", []) as Array):
+		var row: Dictionary = entry as Dictionary
+		var floor: Array[Vector2i] = []
+		for pair: Variant in (row.get("floor", []) as Array):
+			floor.append(_pair(pair))
+		region.yards.append({"place": String(row.get("place", "")), "ward": String(row.get("ward", "")),
+			"passage": _pair(row.get("passage", [-1, -1])), "inside": _pair(row.get("inside", [-1, -1])),
+			"floor": floor})
 	return region
 
 

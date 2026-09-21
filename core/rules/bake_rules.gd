@@ -91,46 +91,21 @@ static func decode_row(text: String, width: int) -> PackedByteArray:
 	return out
 
 
-## **A closed yard, and the one gap in it** (Q1, 2026-09-19). Pure, and shared by the
-## two worlds: the bake stands his fence on these tiles for the baked map and
-## `Region` stands the same ones for the procedural map, so a quest written against a
-## gate finds the gate on both.
+## Whether a point of his ground is under his water **as the simulation will see it**:
+## the sample of the tile the point falls in, exactly as `terrain_for` reads it through
+## `RegionBake._ground`. Not bilinear — a bilinear read pulled a wet corner sample into a
+## tile the sim calls dry and refused to lay a wall there, so a run stopped a tile short
+## of the bank and the yard stood open. A run of wall laid toward the river stops on the
+## last tile the sim will let a walker stand on, which is the only bank there is.
 ##
-## **A ring, never a line.** A fence drawn straight across open country is walked round
-## in four seconds, which is how the castle's curtain came to be a ring and not a
-## frontage. So an entry gives two corners and the wall is their perimeter.
-##
-## `from` and `to` are tile offsets from the place's centre, x east and y south.
-## `gate_side` is which wall the gap is in and `gate_from`/`gate_to` are its run along
-## that wall, in the same offsets.
-##
-## Returns the wall tiles and the gate tiles apart, because the gate is a thing the
-## quest opens and the wall is not.
-static func yard_of(entry: Dictionary, centre: Vector2i) -> Dictionary:
-	var from: Array = entry.get("from", []) as Array
-	var to: Array = entry.get("to", []) as Array
-	if from.size() != 2 or to.size() != 2:
-		return {"wall": [] as Array[Vector2i], "gate": [] as Array[Vector2i]}
-	var lo := Vector2i(mini(int(from[0]), int(to[0])), mini(int(from[1]), int(to[1])))
-	var hi := Vector2i(maxi(int(from[0]), int(to[0])), maxi(int(from[1]), int(to[1])))
-	var side: String = String(entry.get("gate_side", ""))
-	var gate_lo: int = int(entry.get("gate_from", 1))
-	var gate_hi: int = int(entry.get("gate_to", 0))
-
-	var wall: Array[Vector2i] = []
-	var gate: Array[Vector2i] = []
-	for x: int in range(lo.x, hi.x + 1):
-		for y: int in range(lo.y, hi.y + 1):
-			if x != lo.x and x != hi.x and y != lo.y and y != hi.y:
-				continue
-			var along: int = y if (side == "west" or side == "east") else x
-			var on_that_side: bool = (side == "west" and x == lo.x) \
-				or (side == "east" and x == hi.x) \
-				or (side == "north" and y == lo.y) \
-				or (side == "south" and y == hi.y)
-			var tile: Vector2i = centre + Vector2i(x, y)
-			if on_that_side and along >= gate_lo and along <= gate_hi:
-				gate.append(tile)
-			else:
-				wall.append(tile)
-	return {"wall": wall, "gate": gate}
+## (`yard_of`, the two-corner rectangle the first yard was computed from, was retired on
+## 2026-09-21: a yard is now composed from his catalogue — `YardRules`.)
+static func wet_at(x_m: float, z_m: float, heights: PackedFloat32Array, waters: PackedFloat32Array,
+		samples: int, origin_m: Vector2, metres_per_tile: float = METRES_PER_TILE) -> bool:
+	if samples < 2 or heights.size() != samples * samples or waters.size() != heights.size():
+		return false
+	var tile: Vector2i = tile_for(x_m, z_m, origin_m, metres_per_tile)
+	if tile.x < 0 or tile.y < 0 or tile.x >= samples - 1 or tile.y >= samples - 1:
+		return false
+	var i: int = tile.y * samples + tile.x
+	return waters[i] > heights[i] + WATER_DEPTH
