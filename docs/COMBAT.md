@@ -507,3 +507,105 @@ sheet grows a ninth animation, so that nobody ships the placeholder over real wo
 **What would replace it is three frames**: an attack, a guard, a flinch — `left` and
 `right` only, because the camera never turns. It is in `docs/POUR_SLOSINIO.md` §8.
 
+---
+
+## 12. H — the fight, presentable
+
+**Built 2026-09-21.** Yannick played F5 and said it looked like five minutes of work: he
+could not see the opponent's health, and *« les collisions ne sont pas optimales »*.
+`docs/DEMO_POLISH.md` §2 listed seven things a player reads a fight through and none of
+them existed. This is what was built for each, what was measured, and the two places the
+picture proved the simulation wrong.
+
+### What is drawn, and where it is decided
+
+Everything below is a **picture of what the simulation already knows**: a line on the
+ground, a ring filling, a spark, a flash — the same kind of thing as the darkened edge of
+the screen. Nothing of his library is imitated and nothing of ours pretends to be his. The
+*timing* of every mark is a pure function in `CombatRules`; the *look* is the window's.
+
+| | Where | What |
+|---|---|---|
+| **Health, and his name** (H1) | `view/fight_hud.gd` | Ten pips a side, remaining health anchored at the outer edge so both bars drain toward the middle; a pip lost in the last half second stays lit in ember first. Gold is yours and ember is his — and the ground uses the same two. The keys along the bottom. It comes up with the lens and goes with it |
+| **A hit, a guard, a whiff** (H2) | `world3d.gd`, `fight_hud.gd`, `Sound.CUES` | A hit: the struck figure flashes white and bruises red (a shader of ours, §12 below), is *shoved* off its foot mark for the hitstop and eases back — so the freeze both share is felt as an impact — sparks, a jolt of the lens, a `-2` in the striker's colour hung over the one who took it, a sound. A guard: a sage line braced in front of you while the key is down, white and thick through the blockstun, the pose held rather than flinching, `-1 paré`. A whiff: the swipe goes out and touches nothing, `raté` over the one who swung, a quieter sound. `blow_missed` is derived for it |
+| **The tell** (H3) | `CombatRules.telegraph_at`, `pose_of` | A ring at the attacker's feet fills from **frame 0** of the wind-up to the frame before the blow is out, its colour going from his to white; the figure itself warms toward its colour on the same clock; the cocked arm now comes back on frame 0 rather than halfway. The heavy blow's ring is the larger, so which of the two is coming reads before either is near |
+| **Reach, and a floor** (H4) | `world3d.gd` | A mark under each fighter's feet the size of the pushbox — the two touch exactly when they cannot get closer. Your reach as a gold arc toward him, bright when he is inside it. His two reaches as ember arcs toward you, the heavy one thin and far, the short one thick and near, so the band between them can be stood in. On the frames a blow is out, a **swipe** from the fighter to the end of the reach, so a blow that lands is seen touching and one that misses is seen missing. Under all of it a darkened stadium the arena's size, laid on his terrain point by point, with a rim that glows where somebody is against the wall |
+| **The beat** (H5) | `Fight.settling`, `CombatSystem` | Decided on the frame of the last blow, over `settle_steps` later (100, a row in `moves.json`). Through it: both stand where the blow left them, the loser sinks and dims and stays in the hurt pose, the rim takes the winner's colour, the banner says who is down, the clock is held and no key does anything. `fight_decided` is derived on the first frame and `fight_ended` on the last |
+
+**A shader of ours on his figure.** His `traveler_sprite.gdshader` writes the sheet's
+colour straight into `ALBEDO`, so `modulate` does nothing to it and a hit could not be
+shown on the man who took it. `World3d.FIGHTER_SHADER` is his shader — his billboard
+trick, his rule for what is background — with `flash`, `flash_colour` and `tint` added.
+His file is not touched; the two fighters wear ours for the length of a fight and his
+again after, which `test_the_window_stands_on_his_ground` checks.
+
+### Two things the picture proved the simulation wrong about
+
+1. **The pushbox.** Two fighters could stand 500 mm apart — twice the reach slack, which
+   the comment called *the pushbox by another name*. His traveller is drawn **1.1 m wide
+   at the head**. Two of them at 500 mm were one figure with two pairs of feet, which is
+   what "the collisions are not right" looked like. `pushbox_mm` is its own row now,
+   **900**, and stays inside every reach in the file, so who can hit whom from where is
+   unchanged; a file without the row keeps the old relation.
+2. **Where a killed player wakes.** `WorldState.hurt` respawns on the frame it kills, and
+   `_stand` then wrote the arena back over the respawn every step until the fight was put
+   down — so a player killed by Harry in the village woke up **in the ring, at full
+   health**. `test_somebody_who_does_not_spare_you_kills_you` never saw it, because a new
+   game already starts at the clearing. The felling blow is now *recorded* on the frame it
+   lands (`Fight.owed_damage`) and *paid* at `_end`, softened or not — which is also what
+   lets the beat show you down where you fell. A test fights Harry away from the clearing.
+
+### Measured, before and after
+
+Played by `tools/play_fight.gd` against Bram with the scripted hands in
+`tools/fight_player.gd`, before the change and after. The balance did not move except
+where the pushbox moves it, and the pushbox does not move who can hit whom:
+
+| Player | Before | After |
+|---|---|---|
+| `stand` | lost, 349 frames, 5 swings taken | lost, 457 frames (the beat is 100 of them), 5 swings taken |
+| `guard` | lost, 734 frames, 10 chipped through the guard | lost, 842 frames, 10 chipped |
+| `competent` | won, 315 frames, 7 of 10 left, 5 strikes landed, 3 blows blocked | won, 423 frames, 7 of 10 left, 5 landed, 3 blocked |
+
+And the number that answers the collisions question: **every one of his swings landed
+at 2,410–2,450 mm of a 2,450 reach, and every one of the player's strikes at 1,515–1,550
+of 1,550.** Both fighters stop at the edge of their own reach, so every blow in a played
+fight lands from as far away as it possibly can — from an unarmed figure whose fist,
+drawn, reached about a metre. The thrust was lengthened (`FIGHT_THRUST_TILES`, 0.45)
+and the swipe draws the reach itself; that closes the gap for the strike, and for the
+heavy blow it *shows* the gap rather than hiding it.
+
+### The frames
+
+`docs/frames/fight/`: `standoff.png`, `windup.png` (his heavy blow at frame ~21 of 28),
+`clean_hit.png` (the frame after it lands, `-2`, the shove, the swipe), `blocked_hit.png`
+(the same frame guarded: the white line, `-1 paré`, one pip), `winning.png` (the beat,
+sixty frames in). Taken with `UNCROWNED_FIGHT=bram:44`, `bram:44:guard`,
+`bram:360:competent`.
+
+### What is still open, in order
+
+- **His blows come out through hitstun.** Hit him at frame 8 of his jab and the jab still
+  lands at 18. This is F1's fix for the infinite working as designed — a player who kept
+  hitting never gave him the frames a blow needs — but it reads as a man punching through
+  a hit in the face. The telegraph ring keeps filling while he flashes, so at least the
+  player sees the blow is still coming. The alternatives — a guard of his own, or armour
+  only on the second half of a wind-up — are a design conversation for Yannick.
+- **A pure dodger stalemates.** Backstep every heavy blow and never guard, and in a
+  hundred seconds he whiffs 87 times and nobody lands anything: the backstep carries you
+  1,260 mm out, and by the time you have walked back he is free again and swinging at the
+  edge of his range. A dodge that cannot be converted is safe and useless. Shorter travel
+  is the obvious knob, and it was tried for the record and put back: at `travel_mm` 60 or
+  70 the dodger **wins in 395 frames with 9 of 10 left**, and the other three players do
+  not change by a frame. The invulnerable frames still cover the whole heavy blow at
+  either number. It is balance and therefore Yannick's; the row is one edit.
+- **The heavy blow's reach is a weapon's, on a figure with no weapon.** 2,200 mm is
+  load-bearing — the band between his two blows has to be wider than the ground the
+  player crosses while he decides, or the heavy blow is never thrown — so the number is
+  right for the fight and wrong for the drawing. The swipe makes it honest; only his
+  brother can make it true, with a drawn staff or club, and that is the ask.
+- **Nobody has heard the sounds.** Six cues were chosen from the pack by their measured
+  attack and length on a machine with no speakers. If a whiff sounds like a jump, it is
+  one row in `Sound.CUES`.
+- **The eight frames are still ours and still crude.** §11 stands.
+

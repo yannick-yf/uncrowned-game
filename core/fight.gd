@@ -57,6 +57,12 @@ var walking: int = 0
 var player_connected: bool = false
 var opponent_connected: bool = false
 
+## **Whether the last blow the player took was on their guard**, so the frames of stun
+## that follow can be shown as blockstun — braced behind the guard — and not as the
+## flinch of a clean hit. The window cannot tell the two stuns apart otherwise, and a
+## player who guarded a blow and was drawn flinching would ask what the guard was for.
+var player_guarded: bool = false
+
 ## How long the opponent has been standing free, so his next blow is his own decision
 ## and not a coin. Nothing in a fight is random.
 var opponent_waited: int = 0
@@ -75,12 +81,34 @@ var asked_by: StringName = &""
 var player_felled: bool = false
 
 ## Why it ended, for the journal and for whoever asked for the fight: `&"won"`,
-## `&"lost"`, `&"left"`, or `&""` while it is still going.
+## `&"lost"`, `&"left"`, or `&""` while it is still going. **Set the frame it is
+## decided**, which since the beat (H5) is `settle_steps` before it is over.
 var outcome: StringName = &""
+
+## **The beat** (H5, 2026-09-21). Frames left in which the fight is decided but not
+## yet over: somebody is down, both stand where the last blow left them, the world's
+## clock is still held and nothing the player presses does anything. It counts down
+## from `CombatRules.settle_steps()` and `_end` runs when it reaches nothing. Before
+## it, winning and losing happened in one frame and the world came straight back.
+var settling: int = 0
+
+## **What the felling blow is still owed.** A blow that fells the player is *recorded*
+## on the frame it lands and *paid* when the beat is over — as one point left standing
+## if the opponent spares you, as the death it was if he does not. Holding it is what
+## lets the picture show you down in the arena for the beat, rather than already awake
+## at the last fire: `WorldState.hurt` respawns on the spot, and the first build's
+## `_stand` then overwrote the respawn with the arena every step, so a player killed
+## away from the clearing woke up in the ring at full health.
+var owed_damage: int = 0
 
 
 func on() -> bool:
 	return opponent != NOBODY
+
+
+## Decided but not over: the beat between the last blow and the world returning.
+func settled() -> bool:
+	return on() and settling > 0
 
 
 func apart_mm() -> int:
@@ -117,8 +145,8 @@ func opponent_free() -> bool:
 func fingerprint() -> String:
 	if not on():
 		return "none"
-	return "%s p=%d/%s@%d/s%d o=%d/%s@%d/s%d hp=%d f=%d %s @%.4f,%.4f>%d fell=%s" % [
+	return "%s p=%d/%s@%d/s%d o=%d/%s@%d/s%d hp=%d f=%d %s @%.4f,%.4f>%d fell=%s beat=%d owed=%d g=%s" % [
 		String(opponent), player_at_mm, String(player_move), player_frame, player_stun,
 		opponent_at_mm, String(opponent_move), opponent_frame, opponent_stun,
 		opponent_hp, freeze, String(outcome), origin_tiles.x, origin_tiles.y, toward,
-		player_felled]
+		player_felled, settling, owed_damage, player_guarded]

@@ -78,6 +78,20 @@ var _snap_lens: bool = false
 ## What the fight's keys were last frame, so one event is sent per **change** and not
 ## sixty a second. `_held_dir` does the same job for walking, and for the same reason.
 var _held_fight: Dictionary = {}
+## **The fight on the flat of the screen** (H1): both healths, the opponent's name, the
+## numbers, the banner, the keys. Fed once a frame from the same reading the 3D window
+## gets, so the two cannot disagree about who is winning.
+var _fight_hud: FightHud = null
+## How far along the log this screen has read, so the fight's events — a blow landing,
+## a blow missing, the fight decided — are each handed to the window and the HUD **once**,
+## on the frame after they happen, and never re-read. Reset when a run is rebuilt,
+## because a replayed log would otherwise replay every blow as a spark at once.
+var _seen_events: int = 0
+var _fresh_blows: Array = []
+## **For a photograph only.** `UNCROWNED_FIGHT=bram:40` asks for frame 40 of a fight,
+## and the simulation would otherwise run twelve frames further before the picture is
+## taken. Set by that gate, debug only, and nowhere else.
+var _held_for_shot: bool = false
 var _real_seconds: float = 0.0
 var _render_from: Vector2 = Vector2.ZERO
 var _render_to: Vector2 = Vector2.ZERO
@@ -147,6 +161,9 @@ func _ready() -> void:
 	_standing = _sim.store(&"standing") as Standing
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
+	_seen_events = _sim.events.size()
+	_fight_hud = FightHud.new()
+	_hud.add_child(_fight_hud)
 	# Which of this screen's own overlays to open before the first frame, for the
 	# screenshot tool. `screens.gd` routes all three of these here, so there is one
 	# variable naming every screen in the game rather than one per overlay.
@@ -178,12 +195,26 @@ func _ready() -> void:
 	var squaring_up: String = OS.get_environment("UNCROWNED_FIGHT")
 	if OS.has_feature("debug") and squaring_up != "":
 		# `bram` squares up; `bram:40` squares up and runs forty steps first, so a
-		# wind-up or a blow can be photographed rather than only a stand-off.
+		# wind-up or a blow can be photographed rather than only a stand-off; and
+		# `bram:60:guard` runs those steps with one of `FightPlayer`'s hands on the keys
+		# — `stand`, `guard`, `competent`, `dodger` — so a blocked blow or the moment of
+		# winning can be photographed too. Only the last ten steps' events are fresh —
+		# a hitstop and a little — so a picture taken anywhere in a blow's freeze carries
+		# that blow's spark and number and not every blow's; and when a picture is being
+		# taken the simulation is held on that frame, or the twelve frames before the
+		# shutter would carry the fight past what was asked for.
 		var parts: PackedStringArray = squaring_up.strip_edges().split(":")
 		_sim.submit(&"fight_began", {"opponent": parts[0]})
 		_sim.advance(1)
-		if parts.size() > 1 and parts[1].is_valid_int():
-			_sim.advance(maxi(parts[1].to_int(), 0))
+		var steps: int = maxi(parts[1].to_int(), 0) if parts.size() > 1 and parts[1].is_valid_int() else 0
+		var hands: FightPlayer = FightPlayer.new(StringName(parts[2])) if parts.size() > 2 else null
+		for i: int in steps:
+			if hands != null:
+				hands.play(_sim, _fight)
+			if i == steps - 10:
+				_seen_events = _sim.events.size()
+			_sim.advance(1)
+		_held_for_shot = steps > 0 and not OS.get_environment("UNCROWNED_SHOT").is_empty()
 		_fight_lens = 1.0
 		_snap_lens = true
 		_draw_ring()
@@ -227,6 +258,128 @@ func _ready() -> void:
 			_three_d.build(_world.region(), landscape, _art, _sim)
 
 
+## **The fight, as one reading** (F3, then the H group). Empty unless somebody is
+## squared up with the player; otherwise everything the window and the HUD draw the
+## fight from — who, where each of them stands on the fight's line and in the world,
+## what each is doing this frame, how far apart they are and how far each can reach,
+## the arena, the freeze, the beat. Built here, once, so the two pictures cannot
+## disagree with each other or with the simulation.
+##
+## The man in front of you is an NPC, and an NPC is drawn at his anchor in
+## `content/places.json` — which is where he was *before* the two of you squared up, and
+## is not where he is now. Handed over rather than looked up, like the towns: the window
+## is given the reading. His brother has drawn no blow and no guard — eight animations,
+## idle and walk in four directions — so the only thing that can read as a wind-up is
+## the figure he already made, moved, and the marks the window draws around it.
+func _fight_frame() -> Dictionary:
+	if _fight == null or not _fight.on():
+		return {}
+	var him: Npc = _cast.get_npc(_fight.opponent) if _cast != null else null
+	return {
+		"who": String(_fight.opponent),
+		"his_name": him.display_name if him != null else String(_fight.opponent).capitalize(),
+		"at": _fight.at_tiles(_fight.opponent_at_mm),
+		"my_at": _fight.at_tiles(_fight.player_at_mm),
+		"facing": Vector2i(-_fight.toward, 0),
+		"toward": _fight.toward,
+		"his_move": String(_fight.opponent_move),
+		"his_frame": _fight.opponent_frame,
+		"my_move": String(_fight.player_move),
+		"my_frame": _fight.player_frame,
+		"my_stun": _fight.player_stun,
+		"his_stun": _fight.opponent_stun,
+		"my_connected": _fight.player_connected,
+		"his_connected": _fight.opponent_connected,
+		"guarding": _fight.pressing_guard and _fight.player_move == &"",
+		# Braced behind the guard through the stun a guarded blow leaves, rather than
+		# flinching from it — the window draws the two stuns differently.
+		"blockstun": _fight.player_stun > 0 and _fight.player_guarded,
+		"freeze": _fight.freeze,
+		"settling": _fight.settling,
+		"settle_steps": CombatRules.settle_steps(),
+		"outcome": String(_fight.outcome),
+		"felled": _fight.player_felled,
+		"his_down": CombatRules.is_down(_fight.opponent_hp),
+		"apart_mm": _fight.apart_mm(),
+		"my_reach_mm": CombatRules.of(CombatRules.STRIKE, "reach_mm") + CombatRules.slack_mm(),
+		"his_jab_mm": CombatRules.of(CombatRules.JAB, "reach_mm") + CombatRules.slack_mm(),
+		"his_swing_mm": CombatRules.of(CombatRules.SWING, "reach_mm") + CombatRules.slack_mm(),
+		"pushbox_tiles": CombatRules.tiles_of(CombatRules.pushbox_mm()),
+		"centre": _fight.centre_tiles(),
+		"radius_tiles": _fight.arena_tiles(),
+		"my_hp": _world.player_hp,
+		"my_max": WorldState.MAX_HP,
+		"his_hp": _fight.opponent_hp,
+		"his_max": CombatRules.hp_of(_fight.opponent),
+	}
+
+
+## The fight's events since the last frame this screen drew, read once off the log and
+## never again — see `_seen_events`. Each row is the event's data plus its `type`, and a
+## screen point `at` over whoever the blow was about, for the HUD to hang a number on.
+func _fresh_fight_events() -> Array:
+	var fresh: Array = []
+	var total: int = _sim.events.size()
+	for k: int in range(_seen_events, total):
+		var event: SimEvent = _sim.events.at(k)
+		if event.type != &"blow_landed" and event.type != &"blow_missed" \
+				and event.type != &"fight_decided" and event.type != &"fight_ended":
+			continue
+		var row: Dictionary = event.data.duplicate()
+		row["type"] = String(event.type)
+		fresh.append(row)
+	_seen_events = total
+	return fresh
+
+
+## Where on the screen each fresh blow is about, for the HUD: over the one who took a
+## landed blow, over the one who swung a missed one. Asked of the window once it has
+## placed its camera for this frame; (-1, -1) on the flat view, and the HUD makes do.
+func _place_blows(fresh: Array) -> Array:
+	var placed: Array = []
+	for row: Variant in fresh:
+		var blow: Dictionary = (row as Dictionary).duplicate()
+		blow["at"] = Vector2(-1.0, -1.0)
+		if _three_d != null and _fight != null and _fight.on():
+			var by_me: bool = String(blow.get("by", "")) == "player"
+			var about_him: bool = by_me if String(blow.get("type", "")) == "blow_landed" else not by_me
+			var tiles: Vector2 = _fight.at_tiles(_fight.opponent_at_mm if about_him else _fight.player_at_mm)
+			blow["at"] = _three_d.screen_of(tiles, 1.9)
+		placed.append(blow)
+	return placed
+
+
+## What a blow sounds like, by what it was. The cues are the pack's; see `Sound.CUES`.
+func _sound_the_fight(fresh: Array) -> void:
+	for row: Variant in fresh:
+		var blow: Dictionary = row as Dictionary
+		match String(blow.get("type", "")):
+			"blow_landed":
+				if bool(blow.get("guarded", false)):
+					Sound.cue(&"blocked")
+				elif bool(blow.get("felled", false)):
+					Sound.cue(&"felled")
+				else:
+					Sound.cue(&"hit")
+			"blow_missed":
+				Sound.cue(&"whiff")
+			"fight_decided":
+				if String(blow.get("how", "")) == "won":
+					Sound.cue(&"fight_won")
+				elif CombatRules.spares(StringName(String(blow.get("opponent", "")))):
+					# A man who does not spare you kills you, and the death has its own jingle.
+					Sound.cue(&"fight_lost")
+
+
+## What the HUD's fight layer needs, this frame: the fight's reading and the lens.
+func _fight_reading() -> Dictionary:
+	var reading: Dictionary = _fight_frame()
+	reading["lens"] = _fight_lens
+	reading["on"] = not reading.is_empty() and _fight != null and _fight.on()
+	reading["blows"] = _place_blows(_fresh_blows)
+	return reading
+
+
 ## What the 3D window needs to place things this frame, read from the same stores this
 ## screen draws from. Built here so the rules the 2D drawing applies — tents from
 ## army strength, the crowd from the deserters, the free-state kits, the castle's
@@ -244,23 +397,10 @@ func _frame(eye: Vector2) -> Dictionary:
 		# NPC is drawn at his anchor in `content/places.json` — which is where he was
 		# before the two of you squared up, and is not where he is now. Handed over
 		# rather than looked up, like the towns above: the window is given the reading.
-		"fight": {} if _fight == null or not _fight.on() else {
-			"who": String(_fight.opponent),
-			"at": _fight.at_tiles(_fight.opponent_at_mm),
-			"facing": Vector2i(-_fight.toward, 0),
-			# What each of them is doing this frame, so the window can *show* it. His
-			# brother has drawn no blow and no guard — eight animations, idle and walk
-			# in four directions — so the only thing that can read as a wind-up is the
-			# figure he already made, moved.
-			"toward": _fight.toward,
-			"his_move": String(_fight.opponent_move),
-			"his_frame": _fight.opponent_frame,
-			"my_move": String(_fight.player_move),
-			"my_frame": _fight.player_frame,
-			"my_stun": _fight.player_stun,
-			"his_stun": _fight.opponent_stun,
-			"guarding": _fight.pressing_guard and _fight.player_move == &"",
-		},
+		"fight": _fight_frame(),
+		# The fight's events since the last frame drawn — a blow landing, missing, the
+		# fight decided — each handed over once. See `_seen_events`.
+		"blows": _fresh_blows,
 		"tents": tents,
 		"crowd": _crowd_size(),
 		"free": {
@@ -366,9 +506,13 @@ func _process(delta: float) -> void:
 		_accumulator += delta
 		while _accumulator >= _seconds_per_step:
 			_accumulator -= _seconds_per_step
+			if _held_for_shot:
+				break
 			_render_from = _world.player_pos
 			_sim.advance(1)
 			_render_to = _world.player_pos
+		_fresh_blows = _fresh_fight_events()
+		_sound_the_fight(_fresh_blows)
 		_draw_hud()
 		_draw_journal()
 		_listen()
@@ -390,6 +534,9 @@ func _process(delta: float) -> void:
 	if absf(_fight_lens - squared_up) < 0.002:
 		_fight_lens = squared_up
 	_draw_ring()
+	# The exploration readout steps aside for the fight's own: two lines of small text
+	# over two bars of pips is neither.
+	_info.visible = _info.visible and _fight_lens < 0.5
 
 	var eye: Vector2 = _camera_at(delta)
 	if _three_d != null:
@@ -402,6 +549,13 @@ func _process(delta: float) -> void:
 		_three_d.sync(_frame(eye), delta)
 	else:
 		position = (get_viewport_rect().size * 0.5 - eye * float(TILE)).round()
+	# After the window has placed its camera, so a number hung over a fighter is hung
+	# where the fighter is drawn this frame and not where the camera was last frame.
+	if _fight_hud != null:
+		_fight_hud.present(_fight_reading(), delta)
+	# Handed over once. The pause branch above does not read the log, and the same
+	# blow fed to the HUD sixty times a second would hang sixty numbers on him.
+	_fresh_blows = []
 	queue_redraw()
 
 
@@ -777,6 +931,8 @@ func _reload() -> void:
 	_sounded_take = -1
 	_sounded_theft = -1
 	_sounded_line = ""
+	_seen_events = _sim.events.size()
+	_fresh_blows = []
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 

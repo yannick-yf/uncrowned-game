@@ -91,13 +91,18 @@ Two groups. **G depends on G1**; H is independent and can run in parallel.
 
 ### H — the fight, presentable
 
+> **Built 2026-09-21**, all five, and recorded in `docs/COMBAT.md` §12 with the frames.
+> Two things the presentation proved the simulation wrong about were changed there and
+> nowhere else — how close two fighters may stand, and where a killed player wakes up —
+> and both are rows in `content/moves.json` or bugs, not balance.
+
 | | Task | Depends |
 |---|---|---|
-| **H1** | **Both fighters' health on screen**, the opponent named. It appears when the fight does and goes with it. | — |
-| **H2** | **A hit reads as a hit.** Clean hit, blocked hit and whiff are three different things to look at: colour, shake, particle, sound. Hitstop already exists and should be felt rather than merely present. | — |
-| **H3** | **The telegraph you can read.** The wind-up must announce itself at the frame it starts — the research says 28 frames and a human needs 16 of them. The lean is not enough. | — |
-| **H4** | **Spacing made legible**, and the arena given a floor. The player must be able to see when they are in reach and where the boundary is, without a tutorial. | — |
-| **H5** | **An ending with a beat.** Winning and losing each get a moment before the world comes back. | H1 |
+| **H1** | **Both fighters' health on screen**, the opponent named. It appears when the fight does and goes with it. ✅ `view/fight_hud.gd` | — |
+| **H2** | **A hit reads as a hit.** Clean hit, blocked hit and whiff are three different things to look at: colour, shake, particle, sound. Hitstop already exists and should be felt rather than merely present. ✅ | — |
+| **H3** | **The telegraph you can read.** The wind-up must announce itself at the frame it starts — the research says 28 frames and a human needs 16 of them. The lean is not enough. ✅ `CombatRules.telegraph_at` | — |
+| **H4** | **Spacing made legible**, and the arena given a floor. The player must be able to see when they are in reach and where the boundary is, without a tutorial. ✅ and a pushbox of 900 mm | — |
+| **H5** | **An ending with a beat.** Winning and losing each get a moment before the world comes back. ✅ `Fight.settling` | H1 |
 
 ---
 

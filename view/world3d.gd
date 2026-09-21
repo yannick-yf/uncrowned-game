@@ -38,6 +38,12 @@ const FIGHT_TILT_DEGREES: float = 27.0
 ## and nothing else, so until his brother draws an attack and a guard the only honest
 ## tell is the figure he did draw, moved. The timing of it is `CombatRules.lunge_at`.
 const FIGHT_LUNGE_TILES: float = 0.30
+## **The blow goes further out than the wind-up goes back** (H4, 2026-09-21). Every
+## blow in a played fight lands at the very edge of its reach — the player's at
+## 1,520–1,550 mm of 1,550, his at 2,410–2,450 of 2,450 — and at 0.30 tiles his fist
+## stopped a metre short of the man it had just hit. The draw-back stays small so the
+## figure stays on its foot mark; the thrust is half again as far.
+const FIGHT_THRUST_TILES: float = 0.45
 ## And how far he sinks, in metres. A blow is a gather and a release, and the gather is
 ## the half of it a person reads first.
 ##
@@ -47,6 +53,78 @@ const FIGHT_LUNGE_TILES: float = 0.30
 ## figure stretched to sell a movement stops being pixel art.
 const FIGHT_DIP_M: float = 0.15
 const FIGHT_SIZE_M: float = 7.0
+
+## **The fight, drawn** (H group, 2026-09-21). Everything under these constants is a
+## mark of ours and reads as one — a line on the ground, a ring filling, a spark, a
+## flash — and none of it is a thing of his library or a thing pretending to be. It is
+## the same kind of thing as the darkened edge of the screen: a picture of what the
+## simulation already knows, drawn against numbers `CombatRules` decides.
+##
+## How far the arena's floor reaches either side of the fight's line, in tiles. The
+## wall is only along the line (`CombatRules.inside_arena`); the depth is the floor's
+## shape and nothing more.
+const ARENA_DEPTH_TILES: float = 1.35
+## Marks float this far above his ground so they neither z-fight with it nor hover.
+const MARK_LIFT_M: float = 0.06
+## The telegraph ring at a fighter's feet, in metres, and the height a blow's swipe is
+## drawn at — about the hip of a 1.53 m figure.
+const TELEGRAPH_RADIUS_M: float = 0.62
+const SWIPE_HEIGHT_M: float = 0.85
+const SWIPE_THICKNESS_M: float = 0.16
+## How far the fighter who was hit is drawn shoved, in tiles, on the frame the blow
+## lands, easing back over the hitstop — so the freeze both share is *felt* as an
+## impact rather than seen as a pause.
+const FIGHT_SHOVE_TILES: float = 0.16
+## The lens jolts this far, in metres, on a clean hit, and settles in a third of a second.
+const SHAKE_M: float = 0.09
+const SHAKE_SECONDS: float = 0.32
+## Sparks kept in a pool; a burst uses a handful and they live a third of a second.
+const SPARK_POOL: int = 36
+const SPARK_SECONDS: float = 0.5
+## How far the fighter who is down sinks over the beat, in metres. Small, for the same
+## reason as `FIGHT_DIP_M`: a sprite has no knees, and a figure lowered far reads as one
+## sinking into the ground rather than one going down.
+const KO_SINK_M: float = 0.42
+## How long a hit's white flash and its bruise-red tint stay on the figure, in seconds.
+const FLASH_SECONDS: float = 0.22
+const BRUISE_SECONDS: float = 0.45
+## The marks' colours are the HUD's, so what the ground says and what the bars say
+## read as one voice: gold is yours, ember is his, sage is a guard, ink is neutral.
+const MARK_MINE: Color = Color(1.0, 0.847, 0.443)
+const MARK_HIS: Color = Color(1.0, 0.42, 0.28)
+const MARK_GUARD: Color = Color(0.694, 0.851, 0.804)
+const MARK_INK: Color = Color(0.94, 0.93, 0.88)
+
+## **A flash on his figure, in a shader of ours.** His `traveler_sprite.gdshader` puts
+## the sheet's colour straight into `ALBEDO`, so `modulate` does nothing to it and a hit
+## could not be shown on the man who took it. This is his shader — his billboard trick,
+## his rule for what is background — with three uniforms added: `flash` lerps the figure
+## toward `flash_colour` on the frame a blow lands, and `tint` multiplies it for the
+## bruise after and the dimming of a fighter who is down. His file is not touched; two
+## fighters wear this for the length of a fight and his material again after.
+const FIGHTER_SHADER: String = """
+shader_type spatial;
+render_mode unshaded, cull_disabled;
+uniform sampler2D sprite_sheet : source_color, filter_nearest, repeat_disable;
+uniform float flash : hint_range(0.0, 1.0) = 0.0;
+uniform vec3 flash_colour : source_color = vec3(1.0, 1.0, 1.0);
+uniform vec3 tint : source_color = vec3(1.0, 1.0, 1.0);
+
+void vertex() {
+	vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0] * scale.x, INV_VIEW_MATRIX[1] * scale.y, INV_VIEW_MATRIX[2] * scale.z, MODEL_MATRIX[3]);
+}
+
+void fragment() {
+	vec4 ink = texture(sprite_sheet, UV);
+	float high = max(ink.r, max(ink.g, ink.b));
+	float low = min(ink.r, min(ink.g, ink.b));
+	if (ink.a < 0.5 || (high > 0.35 && (high - low) / max(high, 0.001) < 0.22)) { discard; }
+	ALBEDO = mix(ink.rgb * tint, flash_colour, flash);
+	ALPHA = ink.a;
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
+}
+"""
 const CAMERA_SIZE: float = 24.0
 const CAMERA_DISTANCE: float = 45.0
 ## The same easing as the 2D camera, so the two windows feel alike.
@@ -170,6 +248,30 @@ var _rest_tilt: float = TILT_DEGREES
 var _foe_last: Vector3 = Vector3.ZERO
 var _foe_placed: bool = false
 var _foe_phase: float = 0.0
+## **The fight's picture** (H group). The arena's floor and its marks, the sparks, and
+## what the two fighters wear for the length of it. All of it is built the first time a
+## fight needs it and hidden after; nothing here is asked of the simulation.
+var _arena: Node3D = null
+var _arena_floor: MeshInstance3D = null
+var _arena_floor_at: Vector2 = Vector2(INF, INF)
+var _arena_marks: MeshInstance3D = null
+var _arena_mesh: ImmediateMesh = null
+var _mark_material: StandardMaterial3D = null
+var _sparks: Array[Sprite3D] = []
+var _spark_state: Array[Dictionary] = []
+var _spark_next: int = 0
+## The window's own clock, in seconds of frames drawn. Every effect below is a function
+## of it and of the simulation's state, never of a timer of its own.
+var _now: float = 0.0
+## Per fighter — `&"mine"` and `&"his"` — when they were last hit and how, for the
+## flash and the bruise; and the shader material each wears while fighting.
+var _struck: Dictionary = {}
+var _fight_paint: Dictionary = {}
+var _fighting_was: bool = false
+var _shake_at: float = -10.0
+var _shake_amp: float = 0.0
+## Who was shoved by the last blow, which way, and for how many frames of hitstop.
+var _shove: Dictionary = {}
 var _lens_offset: Vector3 = Vector3.UP
 var _focus: Vector3 = Vector3.ZERO
 var _focus_placed: bool = false
@@ -912,12 +1014,17 @@ func sync(frame: Dictionary, delta: float) -> void:
 	if _region == null or _sim == null:
 		return
 	_aim_lens(float(frame.get("fight_lens", 0.0)))
+	_now += delta
 	var world := _sim.store(&"world") as WorldState
 	var cast := _sim.store(&"cast") as Cast
 	var road := _sim.store(&"travellers") as Travellers
 	var folk := _sim.store(&"folk") as Folk
+	# The blows land before the figures are placed, so the frame a blow lands is the
+	# frame its shove, its flash and its spark are drawn.
+	_take_blows(frame.get("fight", {}) as Dictionary, frame.get("blows", []) as Array)
 	_sync_player(frame)
 	_sync_people(cast, world, frame.get("fight", {}) as Dictionary)
+	_sync_fight(frame.get("fight", {}) as Dictionary, float(frame.get("fight_lens", 0.0)))
 	_sync_traffic(road, world)
 	_sync_folk(folk, world)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
@@ -953,7 +1060,9 @@ func _sync_player(frame: Dictionary) -> void:
 	# The lunge is added to where he is *drawn* and not to where he is: the walk cycle is
 	# driven by ground covered, and a blow that made his feet turn over would read as a
 	# man walking on the spot.
-	_foot_figure(_player, at + Vector2(_lunge_of(fighting, true), 0.0), _dip_of(fighting, true))
+	_foot_figure(_player, at + Vector2(_lunge_of(fighting, true) + _shove_of(fighting, true), 0.0),
+		_dip_of(fighting, true))
+	_wear_fight_paint(_player, true, fighting)
 
 
 ## `fighting` is empty unless somebody is squared up with the player, in which case it
@@ -990,10 +1099,14 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			stands_at = fighting.get("at", stands_at) as Vector2
 			_step_the_foe(figure, stands_at,
 				fighting.get("facing", Vector2i(0, 1)) as Vector2i, fighting)
-			stands_at += Vector2(_lunge_of(fighting, false), 0.0)
+			stands_at += Vector2(_lunge_of(fighting, false) + _shove_of(fighting, false), 0.0)
 			_foot_figure(figure, stands_at, _dip_of(fighting, false))
+			_wear_fight_paint(figure, false, fighting)
 			figure.visible = true
 			continue
+		if figure.material_override != _figure_material and _figure_material != null:
+			# The man you fought last time takes his own material back.
+			figure.material_override = _figure_material
 		_foot_figure(figure, stands_at)
 		figure.visible = true
 	_fairy.visible = fairy_seen
@@ -1030,6 +1143,15 @@ func _fight_pose(figure: Node3D, fighting: Dictionary, mine: bool, facing: Vecto
 	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
 	var stunned: int = int(fighting.get("my_stun" if mine else "his_stun", 0))
 	var guarding: bool = mine and bool(fighting.get("guarding", false))
+	# A blow taken on the guard leaves stun too, and it is shown braced, not flinching:
+	# the guard is what you did, and the picture should say it worked.
+	if mine and bool(fighting.get("blockstun", false)):
+		stunned = 0
+		guarding = true
+	# **Down stays down** (H5). The beat outlasts the last blow's stun, and a man who
+	# stood back up before the world came back would say he had not lost.
+	if bool(fighting.get("felled" if mine else "his_down", false)):
+		stunned = maxi(stunned, 1)
 	var pose: StringName = CombatRules.pose_of(move, at_frame, stunned, guarding)
 	if pose == &"":
 		return false
@@ -1055,19 +1177,27 @@ func _lunge_of(fighting: Dictionary, mine: bool) -> float:
 	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
 	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
 	var shape: float = CombatRules.lunge_at(move, at_frame)
-	if mine and move == &"" and bool(fighting.get("guarding", false)):
+	if mine and move == &"" and (bool(fighting.get("guarding", false)) or bool(fighting.get("blockstun", false))):
 		shape = CombatRules.guard_lean()
-	return shape * FIGHT_LUNGE_TILES * forward
+	# Back is short and forward is long: the wind-up keeps him on his foot mark, and the
+	# blow is thrown far enough to be seen reaching the man it lands on.
+	return shape * (FIGHT_THRUST_TILES if shape > 0.0 else FIGHT_LUNGE_TILES) * forward
 
 
 ## **How low he is carried this frame.** The other half of the tell, and the half a
 ## person reads first: he gathers through the wind-up and comes up as the blow goes out.
+## A fighter who is down sinks a little further over the beat, and stays there.
 func _dip_of(fighting: Dictionary, mine: bool) -> float:
 	if fighting.is_empty():
 		return 0.0
 	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
 	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
-	if mine and move == &"" and bool(fighting.get("guarding", false)):
+	if bool(fighting.get("felled" if mine else "his_down", false)):
+		var beat: int = int(fighting.get("settle_steps", 1))
+		var left: int = int(fighting.get("settling", 0))
+		var through: float = 1.0 - float(left) / float(maxi(beat, 1))
+		return (KO_SINK_M / FIGHT_DIP_M) * minf(through * 2.5, 1.0)
+	if mine and move == &"" and (bool(fighting.get("guarding", false)) or bool(fighting.get("blockstun", false))):
 		return CombatRules.guard_dip()
 	return CombatRules.dip_at(move, at_frame)
 
@@ -1288,8 +1418,496 @@ func _sync_camera(eye_tiles: Vector2, fight_lens: float, delta: float) -> void:
 		_focus = _focus.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
 	var framing: float = lerpf(_zoom, FIGHT_SIZE_M, clampf(fight_lens, 0.0, 1.0))
 	_camera.size = lerpf(_camera.size, framing, 1.0 - exp(-10.0 * delta))
+	# **The jolt of a hit** (H2): a decaying wobble of the lens on the frame a blow
+	# lands, in the lens's own plane so the ground never appears to tilt. A function of
+	# the window's clock and nothing random — the same hit jolts the same way twice.
+	var jolt: Vector3 = Vector3.ZERO
+	var since: float = _now - _shake_at
+	if since >= 0.0 and since < SHAKE_SECONDS and _shake_amp > 0.0:
+		var ease_out: float = 1.0 - since / SHAKE_SECONDS
+		var strength: float = _shake_amp * ease_out * ease_out
+		var right: Vector3 = _lens_up.cross(-_lens_offset).normalized()
+		jolt = right * sin(since * 71.0) * strength + _lens_up * cos(since * 53.0) * strength * 0.55
 	_camera.transform = Transform3D(Basis.looking_at(-_lens_offset, Vector3.UP),
-		_focus + _lens_offset * CAMERA_DISTANCE)
+		_focus + jolt + _lens_offset * CAMERA_DISTANCE)
+
+
+# ----------------------------------------------------------------- the fight ---
+#
+# H group, 2026-09-21. The simulation of the fight was sound and nothing a player reads
+# it through existed: no health, no tell, no reach, no floor, no beat. Everything below
+# is a picture of what `Fight` and `CombatRules` already say, drawn once a frame from
+# the reading `main.gd` hands over, and it writes nothing back.
+
+## The blows this frame brought — `blow_landed`, `blow_missed`, `fight_decided` — read
+## off the log by `main.gd` since the last frame drawn. Each becomes a shove, a flash,
+## a spark, a jolt, or nothing, according to what it was.
+func _take_blows(fighting: Dictionary, blows: Array) -> void:
+	if fighting.is_empty() or blows.is_empty():
+		return
+	if _arena == null:
+		# A blow on the fight's first drawn frame — a photograph asks for exactly that —
+		# needs the spark pool the arena carries before the arena has been laid.
+		_build_arena()
+	var toward: int = int(fighting.get("toward", 1))
+	for row: Variant in blows:
+		var blow: Dictionary = row as Dictionary
+		var kind: StringName = StringName(String(blow.get("type", "")))
+		var by_me: bool = String(blow.get("by", "")) == "player"
+		var move := StringName(String(blow.get("move", "")))
+		if kind == &"blow_landed":
+			var guarded: bool = bool(blow.get("guarded", false))
+			var heavy: bool = int(blow.get("damage", 0)) >= 2 and not guarded
+			var target: StringName = &"his" if by_me else &"mine"
+			_struck[target] = {"at": _now, "guarded": guarded}
+			# Shoved away from the man who hit them, for the hitstop the blow has.
+			_shove = {"who": target, "dir": float(toward if by_me else -toward),
+				"frames": maxi(CombatRules.hitstop(move), 1)}
+			var between: Vector3 = _between(fighting, by_me)
+			if guarded:
+				_spark_burst(between, MARK_GUARD, 6, 1.6)
+				_shake_at = _now
+				_shake_amp = SHAKE_M * 0.3
+			else:
+				_spark_burst(between, MARK_INK, 10 if heavy else 7, 2.6 if heavy else 2.0)
+				_spark_burst(between, MARK_MINE if by_me else MARK_HIS, 5, 1.4)
+				_shake_at = _now
+				_shake_amp = SHAKE_M * (1.0 if heavy else 0.6)
+		elif kind == &"fight_decided":
+			_shake_at = _now
+			_shake_amp = SHAKE_M * 0.5
+
+
+## Where a blow meets: at the defender's near edge, hip high, on the fight's line.
+func _between(fighting: Dictionary, by_me: bool) -> Vector3:
+	var toward: int = int(fighting.get("toward", 1))
+	var defender: Vector2 = (fighting.get("at", Vector2.ZERO) as Vector2) if by_me \
+		else (fighting.get("my_at", Vector2.ZERO) as Vector2)
+	var pushback: float = float(toward if by_me else -toward) * 0.22
+	return _ground(defender - Vector2(pushback, 0.0), SWIPE_HEIGHT_M)
+
+
+## How far the fighter who was just hit is drawn shoved, in tiles: the whole of
+## `FIGHT_SHOVE_TILES` on the frame the blow lands, and back to nothing as the hitstop
+## runs out. Drawn and not simulated — the knockback the simulation applies is where
+## they *are*; this is the impact being felt.
+func _shove_of(fighting: Dictionary, mine: bool) -> float:
+	if fighting.is_empty() or _shove.is_empty():
+		return 0.0
+	if (_shove["who"] as StringName) != (&"mine" if mine else &"his"):
+		return 0.0
+	var freeze: int = int(fighting.get("freeze", 0))
+	if freeze <= 0:
+		return 0.0
+	return float(_shove["dir"]) * FIGHT_SHOVE_TILES * float(freeze) / float(int(_shove["frames"]))
+
+
+## The two fighters wear a shader of ours for the length of the fight, and his again
+## after: it is what lets a hit show on the man who took it.
+func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary) -> void:
+	var sprite := figure as AnimatedSprite3D
+	if sprite == null or _figure_material == null:
+		return
+	if fighting.is_empty():
+		if sprite.material_override != _figure_material:
+			sprite.material_override = _figure_material
+		return
+	var who: StringName = &"mine" if mine else &"his"
+	var paint: ShaderMaterial = _fight_paint_for(who)
+	if sprite.material_override != paint:
+		sprite.material_override = paint
+	var flash: float = 0.0
+	var tint: Color = Color.WHITE
+	var struck: Dictionary = _struck.get(who, {}) as Dictionary
+	if not struck.is_empty():
+		var since: float = _now - float(struck["at"])
+		var guarded: bool = bool(struck["guarded"])
+		if since < FLASH_SECONDS:
+			flash = (1.0 - since / FLASH_SECONDS) * (0.55 if guarded else 0.95)
+			paint.set_shader_parameter("flash_colour", MARK_GUARD if guarded else Color.WHITE)
+		if not guarded and since < BRUISE_SECONDS:
+			var bruise: float = 1.0 - since / BRUISE_SECONDS
+			tint = Color.WHITE.lerp(Color(1.0, 0.55, 0.5), bruise * 0.7)
+	# **The wind-up shows on the body too** (H3): the figure warms toward its own colour
+	# as the blow nears release — his toward ember, yours toward gold — on the same clock
+	# as the ring at his feet. A second tell, on the thing the eye is already on.
+	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
+	var through: float = CombatRules.telegraph_at(move, int(fighting.get("my_frame" if mine else "his_frame", 0)))
+	if through >= 0.0 and flash < 0.05:
+		flash = 0.12 + 0.30 * through
+		paint.set_shader_parameter("flash_colour", MARK_MINE if mine else MARK_HIS)
+	if bool(fighting.get("felled" if mine else "his_down", false)):
+		tint = tint * Color(0.5, 0.45, 0.45)
+	paint.set_shader_parameter("flash", flash)
+	paint.set_shader_parameter("tint", Vector3(tint.r, tint.g, tint.b))
+
+
+func _fight_paint_for(who: StringName) -> ShaderMaterial:
+	if _fight_paint.has(who):
+		return _fight_paint[who] as ShaderMaterial
+	var shader := Shader.new()
+	shader.code = FIGHTER_SHADER
+	var paint := ShaderMaterial.new()
+	paint.shader = shader
+	var his := _figure_material as ShaderMaterial
+	if his != null:
+		paint.set_shader_parameter("sprite_sheet", his.get_shader_parameter("sprite_sheet"))
+	paint.set_shader_parameter("flash", 0.0)
+	paint.set_shader_parameter("flash_colour", Color.WHITE)
+	paint.set_shader_parameter("tint", Vector3.ONE)
+	_fight_paint[who] = paint
+	return paint
+
+
+## The arena and its marks, once a frame while somebody is fighting; hidden otherwise.
+func _sync_fight(fighting: Dictionary, fight_lens: float) -> void:
+	var fighting_now: bool = not fighting.is_empty()
+	if fighting_now and not _fighting_was:
+		_struck = {}
+		_shove = {}
+	_fighting_was = fighting_now
+	if _arena == null:
+		if not fighting_now and fight_lens <= 0.002:
+			return
+		_build_arena()
+	_arena.visible = fighting_now or fight_lens > 0.002
+	if _arena_floor != null:
+		_arena_floor.visible = fighting_now
+	if fighting_now:
+		var centre: Vector2 = fighting.get("centre", Vector2.ZERO) as Vector2
+		var radius: float = float(fighting.get("radius_tiles", 2.0))
+		if centre.distance_to(_arena_floor_at) > 0.01:
+			_lay_floor(centre, radius)
+		_draw_marks(fighting)
+	elif _arena_mesh != null:
+		_arena_mesh.clear_surfaces()
+	_sync_sparks()
+
+
+func _build_arena() -> void:
+	_arena = Node3D.new()
+	_arena.name = "Arena"
+	add_child(_arena)
+	_mark_material = StandardMaterial3D.new()
+	_mark_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_mark_material.vertex_color_use_as_albedo = true
+	_mark_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	_mark_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	_mark_material.no_depth_test = false
+	_mark_material.render_priority = 2
+	_arena_floor = MeshInstance3D.new()
+	_arena_floor.name = "Floor"
+	_arena_floor.material_override = _mark_material
+	_arena.add_child(_arena_floor)
+	_arena_mesh = ImmediateMesh.new()
+	_arena_marks = MeshInstance3D.new()
+	_arena_marks.name = "Marks"
+	_arena_marks.mesh = _arena_mesh
+	_arena_marks.material_override = _mark_material
+	_arena.add_child(_arena_marks)
+	for i: int in SPARK_POOL:
+		var spark: Sprite3D = _dot_sprite()
+		spark.name = "Spark_%d" % i
+		spark.visible = false
+		spark.render_priority = 3
+		_arena.add_child(spark)
+		_sparks.append(spark)
+		_spark_state.append({})
+
+
+## **The floor** (H4): the fight's ground, darkened, in the stadium shape of a line
+## with a wall at each end — laid on his terrain point by point so it lies on a slope
+## as it lies on the flat. It says where the fight is; the rim drawn over it says where
+## it stops. Rebuilt only when the arena moves, which is once a fight.
+func _lay_floor(centre: Vector2, radius: float) -> void:
+	_arena_floor_at = centre
+	var vertices := PackedVector3Array()
+	var colours := PackedColorArray()
+	var indices := PackedInt32Array()
+	var fill := Color(0.02, 0.02, 0.03, 0.30)
+	var rings: int = 4
+	var around: int = 44
+	vertices.append(_ground(centre, MARK_LIFT_M * 0.5))
+	colours.append(fill)
+	for ring: int in range(1, rings + 1):
+		var share: float = float(ring) / float(rings)
+		for k: int in around:
+			var angle: float = TAU * float(k) / float(around)
+			var edge: Vector2 = _stadium_point(angle, radius, ARENA_DEPTH_TILES)
+			vertices.append(_ground(centre + edge * share, MARK_LIFT_M * 0.5))
+			colours.append(Color(fill.r, fill.g, fill.b, fill.a * (1.0 if ring < rings else 0.55)))
+	for k: int in around:
+		indices.append_array(PackedInt32Array([0, 1 + (k + 1) % around, 1 + k]))
+	for ring: int in range(1, rings):
+		var inner: int = 1 + (ring - 1) * around
+		var outer: int = 1 + ring * around
+		for k: int in around:
+			var a: int = inner + k
+			var b: int = inner + (k + 1) % around
+			var c: int = outer + k
+			var d: int = outer + (k + 1) % around
+			indices.append_array(PackedInt32Array([a, d, c, a, b, d]))
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_COLOR] = colours
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	_arena_floor.mesh = mesh
+
+
+## A point on a stadium — a rectangle with round ends — of half-length `radius` along
+## the fight's line and half-depth `depth` across it, in tiles from its centre.
+func _stadium_point(angle: float, radius: float, depth: float) -> Vector2:
+	var straight: float = maxf(radius - depth, 0.0)
+	var unit := Vector2(cos(angle), sin(angle))
+	return Vector2(unit.x * depth + signf(unit.x) * straight, unit.y * depth)
+
+
+## **The marks** (H3, H4): the rim and its two walls, a mark under each fighter's feet
+## the size of the pushbox, each fighter's reach as an arc on the ground toward the
+## other, the ring that fills through a wind-up, and the swipe of a blow that is out.
+## Redrawn every frame from the reading, into one mesh.
+func _draw_marks(fighting: Dictionary) -> void:
+	_arena_mesh.clear_surfaces()
+	_arena_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var centre: Vector2 = fighting.get("centre", Vector2.ZERO) as Vector2
+	var radius: float = float(fighting.get("radius_tiles", 2.0))
+	var toward: int = int(fighting.get("toward", 1))
+	var me: Vector2 = fighting.get("my_at", Vector2.ZERO) as Vector2
+	var him: Vector2 = fighting.get("at", Vector2.ZERO) as Vector2
+	var apart: int = int(fighting.get("apart_mm", 0))
+	var foot: float = float(fighting.get("pushbox_tiles", 0.45)) * 0.5
+	var settling: bool = int(fighting.get("settling", 0)) > 0
+
+	# The rim, and the two walls brighter — brighter still when somebody is against one.
+	# Through the beat the rim takes the winner's colour: gold when he is down, ember
+	# when you are, so the ring itself says how it went before a word is read.
+	var rim_tone: Color = MARK_INK
+	if settling:
+		rim_tone = MARK_MINE if String(fighting.get("outcome", "")) == "won" else MARK_HIS
+	var rim := Color(rim_tone.r, rim_tone.g, rim_tone.b, 0.55 if settling else 0.28)
+	_ring(centre, radius, ARENA_DEPTH_TILES, 0.07 if settling else 0.05, rim)
+	for side: int in [-1, 1]:
+		var wall_x: float = centre.x + float(side) * radius
+		var near: float = minf(absf(me.x - wall_x), absf(him.x - wall_x))
+		var glow: float = clampf(1.0 - near / 0.6, 0.0, 1.0)
+		var wall := Color(rim_tone.r, rim_tone.g, rim_tone.b, 0.45 + 0.5 * glow)
+		_arc(Vector2(wall_x - float(side) * ARENA_DEPTH_TILES, centre.y), ARENA_DEPTH_TILES,
+			(-70.0 if side > 0 else 110.0), (70.0 if side > 0 else 250.0), 0.09 + 0.06 * glow, wall, 18)
+
+	# **The guard, visible while it is up** (H2): a line braced in front of you, sage,
+	# hip to shoulder; white and thick through the stun a blow on it leaves, so a guarded
+	# hit and a clean one are two different pictures and not one pip's difference.
+	var guarding: bool = bool(fighting.get("guarding", false))
+	var blockstun: bool = bool(fighting.get("blockstun", false))
+	if guarding or blockstun:
+		var ahead: Vector2 = me + Vector2(float(toward) * 0.36, 0.0)
+		var foot_point: Vector3 = _ground(ahead, 0.55)
+		var shoulder: Vector3 = foot_point + Vector3.UP * 0.75
+		var tone := Color(1.0, 1.0, 1.0, 0.95) if blockstun else Color(MARK_GUARD.r, MARK_GUARD.g, MARK_GUARD.b, 0.8)
+		var half := Vector3(float(toward) * (0.11 if blockstun else 0.06), 0.0, 0.0)
+		_quad(foot_point - half, foot_point + half, shoulder + half, shoulder - half, tone, tone)
+
+	# Feet: where each of them *is*, which is what every reach is measured from.
+	var mine := Color(MARK_MINE.r, MARK_MINE.g, MARK_MINE.b, 0.85)
+	var his := Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.85)
+	_ring(me, foot, foot * 0.72, 0.045, mine)
+	_ring(him, foot, foot * 0.72, 0.045, his)
+
+	if not settling:
+		# Reach, as an arc toward the other. Yours brightens when he is inside it — the
+		# whole of spacing in one glance. His two: the heavy blow's, thin and far; the
+		# short one's, thicker and near, so the band between them can be seen and stood in.
+		var my_reach: float = CombatRules.tiles_of(int(fighting.get("my_reach_mm", 0)))
+		var can_hit: bool = apart <= int(fighting.get("my_reach_mm", 0))
+		var face_him: float = 0.0 if toward > 0 else 180.0
+		var my_arc := Color(MARK_MINE.r, MARK_MINE.g, MARK_MINE.b, 0.95 if can_hit else 0.38)
+		_arc(me, my_reach, face_him - 52.0, face_him + 52.0, 0.075 if can_hit else 0.045, my_arc, 26)
+		var face_me: float = 180.0 - face_him
+		var swing: int = int(fighting.get("his_swing_mm", 0))
+		var jab: int = int(fighting.get("his_jab_mm", 0))
+		var in_swing: bool = apart <= swing
+		var in_jab: bool = apart <= jab
+		var swing_arc := Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.75 if in_swing else 0.30)
+		var jab_arc := Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.95 if in_jab else 0.35)
+		_arc(him, CombatRules.tiles_of(swing), face_me - 46.0, face_me + 46.0, 0.045 if in_swing else 0.03, swing_arc, 26)
+		_arc(him, CombatRules.tiles_of(jab), face_me - 56.0, face_me + 56.0, 0.08 if in_jab else 0.05, jab_arc, 26)
+
+		# The telegraph: a ring at the feet of whoever is winding up, filling from the
+		# frame the wind-up starts to the frame the blow is out. `CombatRules.telegraph_at`
+		# is the clock; this is only the picture. His is ember, yours gold.
+		_telegraph(him, StringName(String(fighting.get("his_move", ""))), int(fighting.get("his_frame", 0)), MARK_HIS)
+		_telegraph(me, StringName(String(fighting.get("my_move", ""))), int(fighting.get("my_frame", 0)), MARK_MINE)
+
+	# The swipe: the blow itself, drawn out to where it reaches, on the frames it is out
+	# and fading through the recovery — so a blow that lands is seen touching, and a blow
+	# that misses is seen missing.
+	_swipe(me, StringName(String(fighting.get("my_move", ""))), int(fighting.get("my_frame", 0)),
+		float(toward), bool(fighting.get("my_connected", false)), MARK_MINE)
+	_swipe(him, StringName(String(fighting.get("his_move", ""))), int(fighting.get("his_frame", 0)),
+		float(-toward), bool(fighting.get("his_connected", false)), MARK_HIS)
+	_arena_mesh.surface_end()
+
+
+func _telegraph(feet: Vector2, move: StringName, frame: int, colour: Color) -> void:
+	var through: float = CombatRules.telegraph_at(move, frame)
+	var radius: float = TELEGRAPH_RADIUS_M / _metres_per_tile
+	if through < 0.0:
+		if move != &"" and CombatRules.is_attack(move) and CombatRules.is_active(move, frame):
+			# Out: the ring is full and white for the frames the blow is live.
+			_arc(feet, radius, 0.0, 360.0, 0.11, Color(1.0, 1.0, 1.0, 0.95), 32)
+		return
+	# The heavy blow's ring is the bigger, from its first frame, so which of the two is
+	# coming can be told before either is close to landing.
+	var heavy: bool = CombatRules.of(move, "startup") >= 24
+	radius *= 1.4 if heavy else 1.0
+	var faint := Color(colour.r, colour.g, colour.b, 0.35)
+	_arc(feet, radius, 0.0, 360.0, 0.05, faint, 32)
+	# The filling arc goes from the fighter's colour toward white as the blow nears, and
+	# thickens: what is about to land should be the brightest thing on the ground.
+	var lit: Color = colour.lerp(Color.WHITE, through * 0.6)
+	lit.a = 0.8 + 0.2 * through
+	_arc(feet, radius, -90.0, -90.0 + 360.0 * maxf(through, 0.04), 0.11 + 0.07 * through, lit, 32)
+
+
+func _swipe(feet: Vector2, move: StringName, frame: int, forward: float, connected: bool, colour: Color) -> void:
+	if move == &"" or not CombatRules.is_attack(move) or CombatRules.is_winding_up(move, frame):
+		return
+	var live: bool = CombatRules.is_active(move, frame)
+	var strength: float = 1.0 if live else CombatRules.lunge_at(move, frame) * 0.7
+	if strength <= 0.02:
+		return
+	var reach: float = CombatRules.tiles_of(CombatRules.of(move, "reach_mm") + CombatRules.slack_mm())
+	var from: Vector3 = _ground(feet, SWIPE_HEIGHT_M) + Vector3(forward * 0.25 * _metres_per_tile, 0.0, 0.0)
+	var to: Vector3 = _ground(feet + Vector2(forward * reach, 0.0), SWIPE_HEIGHT_M)
+	to.y = from.y
+	var tone: Color = Color(1.0, 1.0, 1.0, 0.9) if (live and connected) else Color(colour.r, colour.g, colour.b, 0.75 * strength)
+	var thickness: float = SWIPE_THICKNESS_M * (1.0 if live else 0.6)
+	# A ribbon standing up in the fight's plane, thick where it starts and tapering.
+	var up: Vector3 = Vector3.UP * thickness * 0.5
+	_quad(from - up, from + up, to + up * 0.35, to - up * 0.35, tone,
+		Color(tone.r, tone.g, tone.b, tone.a * 0.25))
+
+
+## A ring on the ground: an ellipse of half-width `rx` along the line and `rz` across it.
+func _ring(centre: Vector2, rx: float, rz: float, thickness_m: float, colour: Color, steps: int = 40) -> void:
+	var points := PackedVector3Array()
+	for k: int in steps + 1:
+		var angle: float = TAU * float(k) / float(steps)
+		points.append(_ground(centre + Vector2(cos(angle) * rx, sin(angle) * rz), MARK_LIFT_M))
+	_ribbon(points, thickness_m, colour)
+
+
+## An arc on the ground, degrees from `from` to `to`, 0 being east along the line.
+func _arc(centre: Vector2, radius: float, from: float, to: float, thickness_m: float, colour: Color, steps: int = 24) -> void:
+	var points := PackedVector3Array()
+	for k: int in steps + 1:
+		var angle: float = deg_to_rad(lerpf(from, to, float(k) / float(steps)))
+		points.append(_ground(centre + Vector2(cos(angle), sin(angle)) * radius, MARK_LIFT_M))
+	_ribbon(points, thickness_m, colour)
+
+
+## A flat ribbon along a polyline, `thickness_m` wide in the ground plane.
+func _ribbon(points: PackedVector3Array, thickness_m: float, colour: Color) -> void:
+	if points.size() < 2:
+		return
+	var half: float = thickness_m * 0.5
+	for i: int in points.size() - 1:
+		var a: Vector3 = points[i]
+		var b: Vector3 = points[i + 1]
+		var along := Vector3(b.x - a.x, 0.0, b.z - a.z)
+		if along.length_squared() < 0.000001:
+			continue
+		var side: Vector3 = along.normalized().cross(Vector3.UP) * half
+		_quad(a - side, a + side, b + side, b - side, colour, colour)
+
+
+func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, near: Color, far: Color) -> void:
+	_arena_mesh.surface_set_color(near)
+	_arena_mesh.surface_add_vertex(a)
+	_arena_mesh.surface_set_color(near)
+	_arena_mesh.surface_add_vertex(b)
+	_arena_mesh.surface_set_color(far)
+	_arena_mesh.surface_add_vertex(c)
+	_arena_mesh.surface_set_color(near)
+	_arena_mesh.surface_add_vertex(a)
+	_arena_mesh.surface_set_color(far)
+	_arena_mesh.surface_add_vertex(c)
+	_arena_mesh.surface_set_color(far)
+	_arena_mesh.surface_add_vertex(d)
+
+
+## A point on his ground at a tile position, lifted `lift` metres.
+func _ground(at_tiles: Vector2, lift: float) -> Vector3:
+	var metres: Vector2 = _origin_m + at_tiles * _metres_per_tile
+	return Vector3(metres.x, height_at(metres.x, metres.y) + lift, metres.y)
+
+
+## Sparks: a handful of dots thrown from where a blow met, on fixed directions — the
+## golden angle, so no two go the same way and no coin is tossed — falling and fading.
+func _spark_burst(at: Vector3, colour: Color, count: int, speed: float) -> void:
+	if _sparks.is_empty():
+		return
+	for i: int in count:
+		var index: int = _spark_next % _sparks.size()
+		_spark_next += 1
+		var angle: float = float(_spark_next) * 2.399963
+		var direction := Vector3(cos(angle), 0.55 + 0.45 * absf(sin(angle * 1.7)), sin(angle) * 0.5).normalized()
+		_spark_state[index] = {"born": _now, "from": at, "dir": direction * speed * (0.7 + 0.3 * fposmod(angle, 1.0)), "colour": colour}
+		_sparks[index].visible = true
+
+
+func _sync_sparks() -> void:
+	for i: int in _sparks.size():
+		var state: Dictionary = _spark_state[i]
+		var spark: Sprite3D = _sparks[i]
+		if state.is_empty():
+			spark.visible = false
+			continue
+		var age: float = _now - float(state["born"])
+		if age > SPARK_SECONDS:
+			_spark_state[i] = {}
+			spark.visible = false
+			continue
+		var life: float = age / SPARK_SECONDS
+		var velocity: Vector3 = state["dir"] as Vector3
+		spark.position = (state["from"] as Vector3) + velocity * age + Vector3.DOWN * 4.0 * age * age
+		var colour: Color = state["colour"] as Color
+		spark.modulate = Color(colour.r, colour.g, colour.b, (1.0 - life) * (1.0 - life))
+		spark.pixel_size = 0.028 * (1.0 - life * 0.6)
+		spark.visible = true
+
+
+## Where a point over the ground lands on the screen, for the HUD to hang a word on.
+## In the viewport's own pixels, so a figure and the number it just lost line up.
+func screen_of(at_tiles: Vector2, height_m: float) -> Vector2:
+	if _camera == null:
+		return Vector2(-1.0, -1.0)
+	var point: Vector3 = _ground(at_tiles, height_m)
+	if _camera.is_position_behind(point):
+		return Vector2(-1.0, -1.0)
+	return _camera.unproject_position(point)
+
+
+## For the suite: is the fight's picture up, and how many sparks are in the air.
+func arena_shown() -> bool:
+	return _arena != null and _arena.visible and _arena_floor != null and _arena_floor.visible
+
+
+func sparks_alive() -> int:
+	var alive: int = 0
+	for state: Dictionary in _spark_state:
+		if not state.is_empty():
+			alive += 1
+	return alive
+
+
+func fighters_wear_our_paint() -> bool:
+	var sprite := _player as AnimatedSprite3D
+	return sprite != null and sprite.material_override != null \
+		and sprite.material_override != _figure_material
 
 
 # ------------------------------------------------------------------ counting ---

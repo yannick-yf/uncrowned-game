@@ -340,11 +340,19 @@ place in his world, that is a question about a *picture*, and `--headless` never
 **The azimuth is deliberately not offered**, because his traveller's four facings are
 keyed to the world's axes and a turned camera draws every fighter looking the wrong way.
 
-**`UNCROWNED_FIGHT=bram`** (2026-09-19) squares the player up against somebody for the
-frame `shot.sh` takes, with the lens already dropped and the screen already darkened.
-Same gate and same reason as the two above, plus one of its own: the picture is taken
-twelve frames in and the fight's camera takes about a second to move, so without this
-every photograph of a fight is a photograph of a camera halfway through moving.
+**`UNCROWNED_FIGHT=bram[:steps[:policy]]`** (2026-09-19, extended 2026-09-21) squares
+the player up against somebody for the frame `shot.sh` takes, with the lens already
+dropped and the screen already darkened. Same gate and same reason as the two above,
+plus one of its own: the picture is taken twelve frames in and the fight's camera takes
+about a second to move, so without this every photograph of a fight is a photograph of a
+camera halfway through moving. `bram:44` runs forty-four steps first, so a wind-up or a
+blow can be photographed; `bram:44:guard` runs them with one of `tools/fight_player.gd`'s
+scripted hands on the keys — `stand`, `guard`, `competent`, `dodger` — so a guarded blow
+or the moment of winning can be. **When a picture is being taken the simulation is held
+on the frame asked for**, or the twelve frames before the shutter would carry the fight
+past it; and only the last ten steps' events are fresh, so the picture carries one blow's
+spark and number and not every blow's. `godot --headless --path . -s tools/play_fight.gd
+-- stand 200` prints the trace that says which step is which.
 
 **All seven are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed

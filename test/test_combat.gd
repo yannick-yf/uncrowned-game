@@ -341,11 +341,22 @@ func test_the_fight_you_talked_your_way_into_replays() -> void:
 	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
 	sim.advance(4)
 	var fight: Fight = _fight(sim)
-	_play(sim, fight, 400)
+	# **Played to the end, on purpose.** `_stand_by` puts the player beside Bram by
+	# writing their position, which is not in the log, so the arena's origin differs
+	# between the two runs and a fingerprint taken mid-fight compares two different
+	# places. It used to be taken at 400 frames and pass because the fight was over by
+	# 315 — so it compared "none" with "none". The beat (H5) made a 400-frame fight
+	# still be on, and showed that. Now the fight ends first, and the *events* it made
+	# are compared as well, which is the thing replay actually promises.
+	_play(sim, fight, 4000)
+	assert_false(fight.on(), "the fight was played out")
 
 	var replayed: Sim = Game.replay(sim)
 	assert_eq((replayed.store(&"fight") as Fight).fingerprint(), fight.fingerprint(),
 		"the same fight, rebuilt from the conversation alone")
+	assert_eq((replayed.store(&"fight") as Fight).outcome, fight.outcome, "and the same result")
+	assert_eq(replayed.events.of_type(&"blow_landed").size(),
+		sim.events.of_type(&"blow_landed").size(), "and every blow that landed, landed again")
 	assert_eq((replayed.store(&"world") as WorldState).player_hp,
 		(sim.store(&"world") as WorldState).player_hp, "and the same wounds")
 
@@ -894,14 +905,17 @@ func test_nothing_that_is_not_a_blow_lunges() -> void:
 
 
 func test_which_pose_a_fighter_is_in() -> void:
-	# Three drawn poses and no fourth: the wind-up has none of its own on purpose,
-	# because what tells you a blow is coming is the lean and the gather, and a drawn
-	# frame that snapped on at the *start* of a wind-up would say "now" far too early.
+	# **The wind-up announces itself on the frame it starts** (H3, 2026-09-21). This
+	# test used to assert the opposite — that frame 0 of a wind-up drew nothing, because
+	# "a fist that cocks instantly is a twitch" — and that was asserting the wrong thing:
+	# `docs/COMBAT.md` §2 gives the player 28 frames to read his heavy blow and a human
+	# needs 16 of them, so a tell that began on frame 14 left two frames to act on.
+	# Yannick played it and could not see the blows coming. The arm comes back on frame 0.
 	var startup: int = CombatRules.of(CombatRules.STRIKE, "startup")
-	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, 0, 0, false), &"",
-		"the first frame of a wind-up is nothing: a fist that cocks instantly is a twitch")
+	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, 0, 0, false), &"ready",
+		"the first frame of a wind-up already shows the arm coming back")
 	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, startup - 1, 0, false), &"ready",
-		"the arm comes back over the second half of it")
+		"and it stays back until the blow is out")
 	assert_eq(CombatRules.pose_of(CombatRules.STRIKE, startup, 0, false), &"attack",
 		"and the drawn blow snaps out on the frame the blow does")
 	assert_eq(CombatRules.pose_of(&"", 0, 0, true), &"guard", "a guard is a pose")
@@ -910,6 +924,200 @@ func test_which_pose_a_fighter_is_in() -> void:
 	assert_eq(CombatRules.pose_of(&"", 0, 6, false), &"hurt", "and being hit beats everything")
 	assert_eq(CombatRules.pose_of(CombatRules.BACKSTEP, 5, 0, false), &"",
 		"a backstep has no drawing; it is the only move that moves you instead")
+
+
+# ------------------------------------------------------- seen, and felt (H group) ---
+#
+# 2026-09-21. Yannick played the fight and said it looked like five minutes of work: no
+# health on screen, a wind-up nobody could read, a hit that looked like a miss, an
+# invisible wall, and an ending that happened in one frame. The picture is the window's
+# and cannot be tested headless; what *can* be is every rule the picture is drawn
+# against, and the two things the presentation proved the simulation wrong about — how
+# close two fighters may stand, and where a killed player wakes up.
+
+func test_the_wind_up_announces_itself_on_its_first_frame() -> void:
+	# `telegraph_at` is the tell's clock. Whatever the window draws — a ring filling, a
+	# figure warming — it draws against this, so *when* a blow can be read is the fight's
+	# to decide and the camera's only to show.
+	var startup: int = CombatRules.of(CombatRules.SWING, "startup")
+	assert_eq(CombatRules.telegraph_at(CombatRules.SWING, 0), 0.0,
+		"the tell begins on the frame the wind-up does")
+	assert_eq(CombatRules.telegraph_at(CombatRules.SWING, startup - 1), 1.0,
+		"and is full on the frame before the blow is out")
+	assert_true(CombatRules.telegraph_at(CombatRules.SWING, 10) > CombatRules.telegraph_at(CombatRules.SWING, 5),
+		"filling as it goes")
+	assert_eq(CombatRules.telegraph_at(CombatRules.SWING, startup), -1.0,
+		"and gone once the blow is out — the swipe is the picture then")
+	assert_eq(CombatRules.telegraph_at(&"", 0), -1.0, "nobody standing still is telegraphing")
+	assert_eq(CombatRules.telegraph_at(CombatRules.BACKSTEP, 2), -1.0,
+		"and a backstep is not a blow, so it has no tell")
+	# The relation §2 is built on: a human needs 16 frames, so the tell has to be on
+	# screen for at least that long before the short blow lands.
+	const REACTION: int = 16
+	assert_true(CombatRules.of(CombatRules.JAB, "startup") >= REACTION,
+		"the short blow's tell is up for a human's reaction: %d frames" % CombatRules.of(CombatRules.JAB, "startup"))
+	assert_eq(CombatRules.pose_of(CombatRules.SWING, 0, 0, false), &"ready",
+		"and the arm is already back on that first frame")
+
+
+func test_a_blow_that_finds_nobody_says_so() -> void:
+	# A whiff is a thing to look at, so it is a thing the fight announces. Swung from
+	# where they start, the player's blow reaches nothing.
+	var sim: Sim = Game.build()
+	var fight: Fight = _start(sim)
+	sim.submit(&"fight_input", {"attack": true})
+	sim.advance(CombatRules.length(CombatRules.STRIKE) + 2)
+	sim.submit(&"fight_input", {"attack": false})
+	var missed: Array[SimEvent] = sim.events.of_type(&"blow_missed")
+	assert_eq(missed.size(), 1, "one swing at nothing, one miss announced")
+	assert_eq(String(missed[0].data.get("by", "")), "player", "and it says whose")
+	assert_eq(String(missed[0].data.get("move", "")), "strike", "and which blow")
+	assert_true(int(missed[0].data.get("apart_mm", 0)) > CombatRules.of(CombatRules.STRIKE, "reach_mm"),
+		"and how far short it fell: %d mm" % int(missed[0].data.get("apart_mm", 0)))
+	# And a blow that lands says where from, so the window can draw it reaching.
+	_play(sim, fight, 400)
+	var landed: Array[SimEvent] = sim.events.of_type(&"blow_landed")
+	assert_true(landed.size() > 0, "something landed in four hundred frames")
+	for event: SimEvent in landed:
+		var move := StringName(String(event.data.get("move", "")))
+		var apart: int = int(event.data.get("apart_mm", -1))
+		assert_true(apart >= 0 and apart <= CombatRules.of(move, "reach_mm") + CombatRules.slack_mm(),
+			"%s landed from %d mm, inside its %d" % [String(move), apart, CombatRules.of(move, "reach_mm") + CombatRules.slack_mm()])
+
+
+func test_the_two_of_them_cannot_stand_inside_the_same_metre() -> void:
+	# **The presentation proved the simulation wrong here** (H4). His traveller is drawn
+	# 1.1 m wide at the head, and the pushbox let two of them stand 500 mm apart: one
+	# figure with two pairs of feet, which is what "the collisions are not right" looked
+	# like. The pushbox is its own row now, and it holds every frame of a played fight.
+	var pushbox: int = CombatRules.pushbox_mm()
+	assert_true(pushbox >= 900, "two heads a metre wide do not overlap: %d mm" % pushbox)
+	assert_true(pushbox < CombatRules.of(CombatRules.JAB, "reach_mm") + CombatRules.slack_mm(),
+		"and the short blow still reaches from as close as you can stand")
+	assert_true(pushbox < CombatRules.of(CombatRules.STRIKE, "reach_mm") + CombatRules.slack_mm(),
+		"and so does yours")
+	# Walked straight into him and held there — the competent player stops at the edge
+	# of its reach and would never touch the pushbox, so this one keeps walking.
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	sim.submit(&"fight_input", {"walk": 1})
+	var closest: int = 99999
+	for _step: int in 900:
+		if not fight.on():
+			break
+		sim.advance(1)
+		closest = mini(closest, fight.apart_mm())
+	assert_true(closest >= pushbox, "they never stood closer than the pushbox: %d mm" % closest)
+	assert_true(closest < pushbox + CombatRules.walk_mm_per_step() * 2,
+		"and the pushbox was actually reached, or this proves nothing: %d mm" % closest)
+
+
+func test_a_guarded_blow_is_remembered_as_guarded() -> void:
+	# So the window can draw blockstun braced and hitstun flinching. The two are the
+	# same counter in the store, and the picture needs to know which.
+	var sim: Sim = Game.build()
+	var fight: Fight = _square_up(sim)
+	sim.submit(&"fight_input", {"guard": true})
+	var guarded_seen: bool = false
+	for _step: int in 600:
+		sim.advance(1)
+		if fight.player_stun > 0:
+			assert_true(fight.player_guarded, "the stun a guarded blow leaves is remembered as a guard's")
+			guarded_seen = true
+			break
+	assert_true(guarded_seen, "he hit the guard at all")
+	var bare: Sim = Game.build()
+	var open: Fight = _square_up(bare)
+	for _step: int in 600:
+		bare.advance(1)
+		if open.player_stun > 0:
+			assert_false(open.player_guarded, "and a clean hit's stun is not")
+			return
+	fail("he never hit the standing player")
+
+
+func test_the_fight_holds_a_beat_before_the_world_comes_back() -> void:
+	# **H5.** Winning and losing used to happen in one frame: the last blow landed and
+	# the camera was already on its way up. Now the fight is *decided* on that frame and
+	# *over* `settle_steps` later — somebody down, both where the blow left them, the
+	# clock still held, and no key doing anything.
+	var beat: int = CombatRules.settle_steps()
+	assert_true(beat >= 60, "the beat is long enough to read: %d frames" % beat)
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fight: Fight = _square_up(sim)
+	var held: Dictionary = {}
+	var decided_on: int = -1
+	for _step: int in 4000:
+		if fight.outcome != &"":
+			decided_on = sim.step
+			break
+		var want: Dictionary = _wants(fight)
+		if want != held:
+			sim.submit(&"fight_input", want)
+			held = want
+		sim.advance(1)
+	assert_true(decided_on > 0, "the fight was decided")
+	assert_true(fight.on(), "and still on: the beat")
+	assert_true(fight.settled(), "decided but not over")
+	assert_eq(fight.outcome, &"won", "you won it")
+	assert_eq(sim.events.of_type(&"fight_decided").size(), 1, "said once, the frame it was decided")
+	assert_eq(sim.events.of_type(&"fight_ended").size(), 0, "and not yet handed back")
+
+	# Through the beat: nothing the player presses does anything, nobody moves, the
+	# clock stands, and he stays down.
+	var tick: int = sim.tick
+	var his_hp: int = fight.opponent_hp
+	var stood_at: int = fight.player_at_mm
+	var he_stood_at: int = fight.opponent_at_mm
+	sim.submit(&"fight_input", {"walk": 1, "attack": true, "guard": false, "evade": true})
+	var frames: int = 0
+	while fight.on() and frames < beat + 40:
+		sim.advance(1)
+		frames += 1
+		assert_eq(sim.tick, tick, "the clock stands through the beat, frame %d" % frames)
+	assert_false(fight.on(), "and then it is over")
+	# The felling blow's hitstop plays out first — both frozen for the impact, as for
+	# every other blow — and the beat counts from the frame after it.
+	var freeze: int = CombatRules.hitstop(CombatRules.STRIKE)
+	assert_true(frames >= beat and frames <= beat + freeze + 1,
+		"the beat and the last blow's freeze: %d frames for a beat of %d and a hitstop of %d" % [frames, beat, freeze])
+	assert_eq(fight.player_at_mm, stood_at, "you stood where the last blow left you")
+	assert_eq(fight.opponent_at_mm, he_stood_at, "and so did he")
+	assert_true(CombatRules.is_down(his_hp), "down the whole time")
+	assert_eq(sim.events.of_type(&"fight_ended").size(), 1, "one result, handed back at the end of the beat")
+	assert_eq(fight.player_move, &"", "the keys pressed through the beat started nothing")
+	sim.advance(Sim.STEPS_PER_WORLD_TICK * 2)
+	assert_true(sim.tick > tick, "and the world runs again")
+
+
+func test_a_player_killed_in_the_ring_wakes_at_the_fire_and_not_in_the_ring() -> void:
+	# **A bug the beat found.** `WorldState.hurt` respawns on the frame it kills, and
+	# `_stand` then wrote the arena back over the respawn every step until the fight was
+	# put down — so a player killed away from the clearing woke up in the ring, whole.
+	# `test_somebody_who_does_not_spare_you_kills_you` never saw it because a new game
+	# already starts at the clearing. Here the fight is somewhere else.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	var ring: Vector2 = world.player_pos
+	assert_true(ring.distance_to(world.region().clearing_centre()) > 10.0, "the ring is not the clearing")
+	sim.submit(&"fight_began", {"opponent": "harry"})
+	sim.advance(1)
+	var fight: Fight = _fight(sim)
+	var hp_before: int = world.player_hp
+	_take_it(sim, fight, 4000)
+	assert_eq(fight.outcome, &"lost")
+	assert_eq(world.deaths, 1, "he killed you")
+	assert_eq(world.player_hp, WorldState.MAX_HP, "and you woke whole, as the checkpoint rule says")
+	assert_true(world.player_pos.distance_to(world.region().clearing_centre()) < 2.0,
+		"at the clearing, %.1f tiles from it, and not %.1f tiles from the ring"
+		% [world.player_pos.distance_to(world.region().clearing_centre()), world.player_pos.distance_to(ring)])
+	# And the felling blow was paid once: every blow announced is a blow taken, the
+	# killing one included.
+	var announced: int = sim.events.of_type(&"blow_landed").size()
+	assert_eq(world.touches_taken, announced, "one touch per blow, the last one included")
+	assert_true(hp_before - announced * 2 <= 0, "and it took what it took")
 
 
 func test_the_six_frames_we_drew_are_there() -> void:

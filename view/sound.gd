@@ -94,6 +94,18 @@ const CUES: Dictionary = {
 	&"rested": "Jingles/Success1.wav",
 	&"died": "Jingles/GameOver.wav",
 	&"seen": "Sounds/Alert/Alert.wav",
+	# **The fight** (H2, 2026-09-21): a clean hit, a hit that fells somebody, a blow on a
+	# raised guard, a blow that finds nobody, and the two ways it ends. Chosen by their
+	# measured attack and length — the sharpest, fullest hit in the pack for a hit; the
+	# dull short one for a guard; the shortest, quietest for a whiff — and **not yet
+	# heard by anybody**, because the machine this was built on has no speakers. If a
+	# whiff sounds like a jump, this is the row.
+	&"hit": "Sounds/Hit & Impact/Hit7.wav",
+	&"felled": "Sounds/Hit & Impact/Hit2.wav",
+	&"blocked": "Sounds/Hit & Impact/Impact.wav",
+	&"whiff": "Sounds/Jump & Bounce/Jump.wav",
+	&"fight_won": "Jingles/Success2.wav",
+	&"fight_lost": "Jingles/GameOver2.wav",
 }
 
 ## Loud enough to be there and quiet enough to be talked over. The music sits well

@@ -29,7 +29,7 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 			_input(fight, event)
 		&"fight_left":
 			if fight.on():
-				_end(sim, fight, &"left")
+				_end(sim, fight, &"left", sim.store(&"world") as WorldState)
 
 
 func on_step(sim: Sim, _step: int) -> void:
@@ -55,8 +55,22 @@ func on_step(sim: Sim, _step: int) -> void:
 		fight.freeze -= 1
 		return
 
-	_advance_move(fight, true)
-	_advance_move(fight, false)
+	# **The beat** (H5). Decided, not over: the blows already thrown finish — the
+	# winner's arm comes back, the loser's stun runs out — and nothing new starts. No
+	# walking, no deciding, no resolving, and no key does anything. The clock is still
+	# held, because `on()` is still true. Then `_end`, exactly as before.
+	if fight.settling > 0:
+		_advance_move(sim, fight, true)
+		_advance_move(sim, fight, false)
+		_count_down(fight)
+		_stand(fight, world)
+		fight.settling -= 1
+		if fight.settling <= 0:
+			_end(sim, fight, fight.outcome, world)
+		return
+
+	_advance_move(sim, fight, true)
+	_advance_move(sim, fight, false)
 	_count_down(fight)
 	_travel(fight)
 	_walk(fight)
@@ -117,8 +131,11 @@ func _begin(sim: Sim, fight: Fight, event: SimEvent) -> void:
 	fight.walking = 0
 	fight.player_connected = false
 	fight.opponent_connected = false
+	fight.player_guarded = false
 	fight.opponent_waited = 0
 	fight.player_felled = false
+	fight.settling = 0
+	fight.owed_damage = 0
 	fight.asked_by = StringName(String(event.data.get("asked_by", "")))
 	fight.outcome = &""
 	sim.derive(&"fight_ready", {"opponent": String(who), "apart_mm": apart})
@@ -139,11 +156,25 @@ func _input(fight: Fight, event: SimEvent) -> void:
 
 
 ## A move runs its frames whatever else happens; nothing interrupts it but a blow.
-func _advance_move(fight: Fight, is_player: bool) -> void:
+##
+## **A blow that found nobody says so** (H2). The frame a blow's last active frame
+## passes with nothing connected, `blow_missed` is derived — so a whiff is a thing the
+## window can show and a played fight can count, the same as a hit. It is decided here,
+## where the frames turn over, because a miss is not an event that happens on a frame
+## but the *absence* of one across three, and only the counter knows when they are up.
+func _advance_move(sim: Sim, fight: Fight, is_player: bool) -> void:
 	var move: StringName = fight.player_move if is_player else fight.opponent_move
 	if move == &"":
 		return
-	var frame: int = (fight.player_frame if is_player else fight.opponent_frame) + 1
+	var was: int = fight.player_frame if is_player else fight.opponent_frame
+	var frame: int = was + 1
+	var connected: bool = fight.player_connected if is_player else fight.opponent_connected
+	if CombatRules.is_attack(move) and not connected \
+			and CombatRules.is_active(move, was) and not CombatRules.is_active(move, frame):
+		sim.derive(&"blow_missed", {
+			"by": "player" if is_player else String(fight.opponent),
+			"move": String(move), "apart_mm": fight.apart_mm(),
+		})
 	if frame >= CombatRules.length(move):
 		if is_player:
 			fight.player_move = &""
@@ -186,8 +217,9 @@ func _walk(fight: Fight) -> void:
 		return
 	var step: int = CombatRules.walk_mm_per_step() * signi(fight.walking)
 	var wanted: int = fight.player_at_mm + step
-	# Never past him — two people cannot stand in the same millimetre.
-	var closest: int = fight.opponent_at_mm - CombatRules.slack_mm() * 2
+	# Never past him — two people cannot stand in the same millimetre, nor, since H4,
+	# inside the same metre: his figure is drawn a metre wide.
+	var closest: int = fight.opponent_at_mm - CombatRules.pushbox_mm()
 	if step > 0:
 		wanted = mini(wanted, closest)
 	# **And never out of the arena** (F3). Yannick, 2026-09-19: there is no fleeing in
@@ -231,7 +263,7 @@ func _decide(fight: Fight) -> void:
 	var in_reach: bool = CombatRules.reaches(fight.opponent_at_mm, fight.player_at_mm, CombatRules.SWING)
 	if not in_reach:
 		var toward: int = -1 if fight.opponent_at_mm > fight.player_at_mm else 1
-		var closest: int = fight.player_at_mm - toward * CombatRules.slack_mm() * 2
+		var closest: int = fight.player_at_mm - toward * CombatRules.pushbox_mm()
 		var wanted: int = fight.opponent_at_mm + CombatRules.walk_mm_per_step() * toward
 		wanted = maxi(wanted, closest) if toward < 0 else mini(wanted, closest)
 		fight.opponent_at_mm = CombatRules.inside_arena(wanted)
@@ -277,6 +309,7 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 	var damage: int = CombatRules.damage_through(move, guarding)
 	var stun: int = CombatRules.stun_from(move, guarding)
 	var back: int = CombatRules.knockback_from(move, guarding)
+	var apart: int = fight.apart_mm()
 
 	if by_player:
 		fight.player_connected = true
@@ -286,22 +319,28 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 	else:
 		fight.opponent_connected = true
 		fight.player_stun = stun
+		fight.player_guarded = guarding
 		fight.player_at_mm = CombatRules.inside_arena(fight.player_at_mm - back)
-		# **Down is down, whether or not he finishes it.** Recorded before the damage is
-		# softened, so losing to a man who spares you is still losing.
+		# **Down is down, whether or not he finishes it.** Recorded on the frame the
+		# blow lands, so losing to a man who spares you is still losing — and **paid
+		# when the beat is over** (`_end`), softened or not. Paying it here put a killed
+		# player at the last fire on the frame of the blow, with `_stand` then dragging
+		# them back into the arena every step until the fight was put down: a player
+		# killed away from the clearing woke up in the ring, whole. See `Fight.owed_damage`.
 		if world.player_hp - damage <= 0:
 			fight.player_felled = true
-			if CombatRules.spares(fight.opponent):
-				damage = maxi(world.player_hp - 1, 0)
-		# One path for everything that can hurt you: the same one the king's touch
-		# uses, so death, the grace window and the respawn cannot drift apart.
-		# No grace: a fight's spacing is its frame data, not a timer. See `hurt`.
-		world.hurt(damage, sim.step, false)
+			fight.owed_damage = damage
+		else:
+			# One path for everything that can hurt you: the same one the king's touch
+			# uses, so death, the grace window and the respawn cannot drift apart.
+			# No grace: a fight's spacing is its frame data, not a timer. See `hurt`.
+			world.hurt(damage, sim.step, false)
 	fight.freeze = CombatRules.hitstop(move)
 	sim.derive(&"blow_landed", {
 		"by": "player" if by_player else String(fight.opponent),
 		"move": String(move), "damage": damage, "guarded": guarding,
 		"opponent_hp": fight.opponent_hp, "player_hp": world.player_hp,
+		"apart_mm": apart, "felled": fight.player_felled or CombatRules.is_down(fight.opponent_hp),
 	})
 
 
@@ -311,14 +350,26 @@ func _try(sim: Sim, fight: Fight, world: WorldState, by_player: bool) -> void:
 ## counter, and still in hitstun — three conditions that were each true for other
 ## reasons and none of which held when the opponent spared you. `Fight.player_felled` is
 ## set by the blow that did it, which is the only place that knows.
-func _finish(sim: Sim, fight: Fight, _world: WorldState) -> void:
+func _finish(sim: Sim, fight: Fight, world: WorldState) -> void:
 	if CombatRules.is_down(fight.opponent_hp):
-		_end(sim, fight, &"won")
+		_decided(sim, fight, world, &"won")
 	elif fight.player_felled:
-		_end(sim, fight, &"lost")
+		_decided(sim, fight, world, &"lost")
 
 
-func _end(sim: Sim, fight: Fight, how: StringName) -> void:
+## **Decided.** The outcome is known on this frame and said once, as `fight_decided`,
+## for whoever is drawing the fight; the fight itself stays on for the beat and hands
+## its one result back at the end of it. With `settle_steps` at zero the beat is
+## nothing and this is `_end` on the same frame, as it was before H5.
+func _decided(sim: Sim, fight: Fight, world: WorldState, how: StringName) -> void:
+	fight.outcome = how
+	fight.settling = CombatRules.settle_steps()
+	sim.derive(&"fight_decided", {"opponent": String(fight.opponent), "how": String(how)})
+	if fight.settling <= 0:
+		_end(sim, fight, how, world)
+
+
+func _end(sim: Sim, fight: Fight, how: StringName, world: WorldState = null) -> void:
 	var who: StringName = fight.opponent
 	fight.outcome = how
 	var fight_asked_by: StringName = fight.asked_by
@@ -328,6 +379,18 @@ func _end(sim: Sim, fight: Fight, how: StringName) -> void:
 	fight.pressing_attack = false
 	fight.pressing_guard = false
 	fight.walking = 0
+	fight.settling = 0
+	# **The felling blow, paid.** One point left standing if he spares you — Bram says
+	# so in his own line — or the whole of it, down the one path everything that hurts
+	# you takes, if he does not: the death, the count, the respawn at the last fire. Paid
+	# now and not on the frame it landed, so that the beat shows you down where you
+	# fell, and so that `_stand` has stopped writing your position before `hurt` sets it.
+	if fight.player_felled and world != null:
+		var owed: int = fight.owed_damage
+		if CombatRules.spares(who):
+			owed = maxi(world.player_hp - 1, 0)
+		world.hurt(owed, sim.step, false)
+	fight.owed_damage = 0
 	# **The hold is not released here**, though it is tempting. `on_step` sets it from
 	# the store at the top of every step and the tick is checked at the bottom of the
 	# same one, so clearing it in the middle lets the world tick on the frame the last

@@ -144,6 +144,44 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(region.is_passable(tile),
 			"%s can be hidden because it never stopped anybody" % tile)
 
+	# **The fight's picture** (H group, 2026-09-21): the arena's floor and marks come up
+	# with a fight, the two fighters wear our flash shader for its length, a blow throws
+	# sparks, and all of it goes when the fight does — his material back on both.
+	var foe := Vector2(283.5, 315.5)
+	var fight_frame: Dictionary = {
+		"player": Vector2(281.5, 315.5), "facing": Vector2i(1, 0), "camera": Vector2(282.5, 315.5),
+		"fight_lens": 1.0, "towns": {}, "free": {}, "escort": 0, "extra_guards": 0, "witnesses": [],
+		"fight": {
+			"who": "bram", "his_name": "Bram", "at": foe, "my_at": Vector2(281.5, 315.5),
+			"facing": Vector2i(-1, 0), "toward": 1, "his_move": "swing", "his_frame": 10,
+			"my_move": "", "my_frame": 0, "my_stun": 0, "his_stun": 0, "my_connected": false,
+			"his_connected": false, "guarding": true, "blockstun": false, "freeze": 0,
+			"settling": 0, "settle_steps": 100, "outcome": "", "felled": false, "his_down": false,
+			"apart_mm": 2000, "my_reach_mm": 1550, "his_jab_mm": 1550, "his_swing_mm": 2450,
+			"pushbox_tiles": 0.45, "centre": Vector2(282.5, 315.5), "radius_tiles": 2.0,
+			"my_hp": 10, "my_max": 10, "his_hp": 10, "his_max": 10,
+		},
+		"blows": [],
+	}
+	window.sync(fight_frame, 1.0 / 60.0)
+	assert_true(window.arena_shown(), "the arena has a floor while somebody is fighting")
+	if window.figures_are_his():
+		assert_true(window.fighters_wear_our_paint(), "and the fighters wear the shader a hit can show on")
+	var landed: Dictionary = fight_frame.duplicate(true)
+	landed["blows"] = [{"type": "blow_landed", "by": "bram", "move": "swing", "damage": 2, "guarded": false}]
+	(landed["fight"] as Dictionary)["freeze"] = 8
+	window.sync(landed, 1.0 / 60.0)
+	assert_true(window.sparks_alive() > 0, "a blow that lands throws sparks: %d" % window.sparks_alive())
+	var over: Dictionary = fight_frame.duplicate(true)
+	over["fight"] = {}
+	over["fight_lens"] = 0.0
+	over["blows"] = []
+	for _i: int in 40:
+		window.sync(over, 1.0 / 60.0)
+	assert_false(window.arena_shown(), "and the floor goes with the fight")
+	assert_eq(window.sparks_alive(), 0, "the sparks have burnt out")
+	assert_false(window.fighters_wear_our_paint(), "and his material is back on the player")
+
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()
 

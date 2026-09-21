@@ -177,28 +177,42 @@ static func dip_at(move: StringName, frame: int) -> float:
 	return 0.0
 
 
-## **Which of the three drawn poses a fighter is in**, or `&""` for none of them —
+## **Which of the drawn poses a fighter is in**, or `&""` for none of them —
 ## standing or walking, as the rest of the game draws people.
 ##
-## **The wind-up has its own drawing since the second pass**, and it is the one that was
-## missing. Without it the twenty-eight frames a blow takes to arrive showed nothing but
-## a lean, and Yannick played it and said the animation was very slight. Now the arm
-## comes back on `ready` and snaps out on `attack`: a cocked arm is what a person reads,
-## and it costs one more frame of his pixels.
+## **The wind-up announces itself on the frame it starts** (H3, 2026-09-21). The second
+## pass held the cocked arm back until the second half of the wind-up, on the argument
+## that a fist that cocks instantly reads as a twitch. Played, that argument lost: §2
+## gives the player 28 frames to read the heavy blow and a human needs 16 of them, and
+## a tell that only began on frame 14 left two frames to act on. The arm comes back on
+## frame 0 now, and the telegraph beside it (`telegraph_at`) fills from the same frame.
 static func pose_of(move: StringName, frame: int, stunned: int, guarding: bool) -> StringName:
 	if stunned > 0:
 		return &"hurt"
 	if is_attack(move):
 		if frame >= of(move, "startup"):
 			return &"attack"
-		# Not from the first frame: a fist that cocks instantly reads as a twitch. It
-		# comes back over the second half of the wind-up, which is also when the lean is
-		# deepest.
-		if frame >= of(move, "startup") / 2:
-			return &"ready"
+		return &"ready"
 	if guarding and move == &"":
 		return &"guard"
 	return &""
+
+
+## **How far through its wind-up a blow is**, 0.0 on the frame it starts and 1.0 on the
+## frame before it is out — or **−1.0 when nothing is winding up**, so the window can
+## tell "no telegraph" from "a telegraph just begun" without a second question.
+##
+## This is the telegraph's clock, and it is a rule and not a picture because the whole
+## of `docs/COMBAT.md` §2 is a promise about *when* a blow can be read: 28 frames for
+## the heavy one, 18 for the short one, and the player needs 16. Whatever the window
+## draws to say "a blow is coming" — a ring filling, a figure drawn back — it draws it
+## against this number, so the moment a tell begins is the fight's to decide and can be
+## tested with nothing on screen.
+static func telegraph_at(move: StringName, frame: int) -> float:
+	if move == &"" or not is_attack(move) or not is_winding_up(move, frame):
+		return -1.0
+	var startup: int = maxi(of(move, "startup"), 1)
+	return float(frame) / float(maxi(startup - 1, 1))
 
 
 ## How far a fighter leans away while holding a guard. Small: it is a stance, not a move.
@@ -222,6 +236,21 @@ static func reaches(attacker_mm: int, defender_mm: int, move: StringName) -> boo
 
 static func slack_mm() -> int:
 	return int(fighters().get("reach_slack_mm", 0))
+
+
+## **How close two fighters may stand**, centre to centre. Its own number since H4:
+## it was twice the slack, 500 mm, and his traveller is drawn 1.1 m wide at the head —
+## so two of them at 500 mm were one figure with two pairs of feet, which is what
+## "the collisions are not right" looked like. A file without the row keeps the old
+## relation, so nothing of the fight's history reads differently.
+static func pushbox_mm() -> int:
+	return int(fighters().get("pushbox_mm", slack_mm() * 2))
+
+
+## **The beat** (H5): frames between the blow that decides a fight and the world
+## coming back. Zero means what it did before — over on the frame it is decided.
+static func settle_steps() -> int:
+	return int(fighters().get("settle_steps", 0))
 
 
 static func walk_mm_per_step() -> int:
