@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/coastal_rock_surface.gdshader" id="1_u375h"]
+[ext_resource type="Texture2D" path="res://assets/brindle/painted_cliff.png" id="2_xx465"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_u375h")
+shader_parameter/painted_texture = ExtResource("2_xx465")
+shader_parameter/painted_scale = 0.035
+shader_parameter/facet_strength = 0.45
+shader_parameter/wet_base_enabled = true
+shader_parameter/wet_height_m = 0.65
+shader_parameter/wet_darkening = 0.24

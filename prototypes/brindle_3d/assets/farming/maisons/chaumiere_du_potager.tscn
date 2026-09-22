@@ -1,0 +1,143 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_psdfx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_stone.res" id="2_6q76e"]
+[ext_resource type="Material" path="res://assets/farming/materials/pale_plaster.tres" id="3_vqwc5"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_pale_plaster.res" id="4_848bp"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_fwrud"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_dark_wood.res" id="6_rpuqb"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="7_cos6f"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_wood.res" id="8_msi1j"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark.tres" id="9_ycxkd"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_dark.res" id="10_ergbh"]
+[ext_resource type="Material" path="res://assets/farming/materials/glass.tres" id="11_ajpmr"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_glass.res" id="12_uuh83"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="13_e5l4j"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_iron.res" id="14_6y2ov"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="15_e4b5y"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_thatch.res" id="16_qake0"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="17_u85co"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/chaumiere_du_potager_Merged_thatch_dark.res" id="18_2x06i"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oo8a8"]
+size = Vector3(5.55, 0.24, 4.95)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6s1ee"]
+size = Vector3(5.4, 2.41, 4.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3t6mn"]
+size = Vector3(0.34, 0.21, 0.34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fistm"]
+size = Vector3(0.16, 1.98, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7yivx"]
+size = Vector3(0.34, 0.21, 0.34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0qnoi"]
+size = Vector3(0.16, 1.98, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dlpvx"]
+size = Vector3(1.45, 0.11, 0.42)
+
+[node name="ChaumiereDuPotager" type="Node3D" unique_id=1026986625]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "chaumiere_du_potager"
+metadata/family = "maisons"
+metadata/label = "Chaumière du potager"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "porche_latéral"
+
+[node name="FootingCollision" type="StaticBody3D" parent="." unique_id=754006249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@2" type="CollisionShape3D" parent="FootingCollision" unique_id=1041898691]
+shape = SubResource("BoxShape3D_oo8a8")
+
+[node name="WallCoreCollision" type="StaticBody3D" parent="." unique_id=1404316084]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.445, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@3" type="CollisionShape3D" parent="WallCoreCollision" unique_id=485058436]
+shape = SubResource("BoxShape3D_6s1ee")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1793232913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.08, 3.48)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=1402129865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.08, 2.68)
+
+[node name="PorchFootCollision" type="StaticBody3D" parent="." unique_id=276113553]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.465, 0.105, 3.6899998)
+collision_mask = 0
+
+[node name="@CollisionShape3D@4" type="CollisionShape3D" parent="PorchFootCollision" unique_id=1348282851]
+shape = SubResource("BoxShape3D_3t6mn")
+
+[node name="PorchPostCollision" type="StaticBody3D" parent="." unique_id=717308411]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.465, 1.19, 3.6899998)
+collision_mask = 0
+
+[node name="@CollisionShape3D@5" type="CollisionShape3D" parent="PorchPostCollision" unique_id=996376156]
+shape = SubResource("BoxShape3D_fistm")
+
+[node name="@StaticBody3D@6" type="StaticBody3D" parent="." unique_id=129201038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.365, 0.105, 3.6899998)
+collision_mask = 0
+
+[node name="@CollisionShape3D@7" type="CollisionShape3D" parent="@StaticBody3D@6" unique_id=1711807684]
+shape = SubResource("BoxShape3D_7yivx")
+
+[node name="@StaticBody3D@8" type="StaticBody3D" parent="." unique_id=885795930]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.365, 1.19, 3.6899998)
+collision_mask = 0
+
+[node name="@CollisionShape3D@9" type="CollisionShape3D" parent="@StaticBody3D@8" unique_id=564516704]
+shape = SubResource("BoxShape3D_0qnoi")
+
+[node name="BenchSeatCollision" type="StaticBody3D" parent="." unique_id=188585822]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.47, 2.85)
+collision_mask = 0
+
+[node name="@CollisionShape3D@10" type="CollisionShape3D" parent="BenchSeatCollision" unique_id=1235198705]
+shape = SubResource("BoxShape3D_dlpvx")
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=1918866241]
+material_override = ExtResource("1_psdfx")
+mesh = ExtResource("2_6q76e")
+
+[node name="MergedPalePlaster" type="MeshInstance3D" parent="." unique_id=1232227654]
+material_override = ExtResource("3_vqwc5")
+mesh = ExtResource("4_848bp")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=691339864]
+material_override = ExtResource("5_fwrud")
+mesh = ExtResource("6_rpuqb")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=481488806]
+material_override = ExtResource("7_cos6f")
+mesh = ExtResource("8_msi1j")
+
+[node name="MergedDark" type="MeshInstance3D" parent="." unique_id=1823985065]
+material_override = ExtResource("9_ycxkd")
+mesh = ExtResource("10_ergbh")
+
+[node name="MergedGlass" type="MeshInstance3D" parent="." unique_id=763141198]
+material_override = ExtResource("11_ajpmr")
+mesh = ExtResource("12_uuh83")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=462452834]
+material_override = ExtResource("13_e5l4j")
+mesh = ExtResource("14_6y2ov")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=1350565938]
+material_override = ExtResource("15_e4b5y")
+mesh = ExtResource("16_qake0")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=897834554]
+material_override = ExtResource("17_u85co")
+mesh = ExtResource("18_2x06i")

@@ -1,0 +1,62 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="1_qo81e"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/tonneaux_de_ferme_Merged_wood.res" id="2_aeg1c"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="3_xfyg0"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/tonneaux_de_ferme_Merged_iron.res" id="4_00qo0"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_kaosp"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/tonneaux_de_ferme_Merged_dark_wood.res" id="6_g0nl4"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_g6gdd"]
+height = 0.93
+radius = 0.355
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jafn2"]
+height = 0.7812
+radius = 0.2982
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_00176"]
+height = 0.6045
+radius = 0.23075
+
+[node name="TonneauxDeFerme" type="Node3D" unique_id=564066557]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "tonneaux_de_ferme"
+metadata/family = "stockage"
+metadata/label = "Trois tonneaux de ferme"
+metadata/purpose = "Réserves de cidre, eau ou provisions, à cerclages de fer."
+metadata/placement = "Sur sol sec, de préférence sous auvent ; groupe de trois contenants distincts."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="BarrelCollision" type="StaticBody3D" parent="." unique_id=1328545615]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37, 0.465, -0.23)
+collision_mask = 0
+
+[node name="@CollisionShape3D@209" type="CollisionShape3D" parent="BarrelCollision" unique_id=251620134]
+shape = SubResource("CylinderShape3D_g6gdd")
+
+[node name="@StaticBody3D@210" type="StaticBody3D" parent="." unique_id=2108043517]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.3906, -0.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@211" type="CollisionShape3D" parent="@StaticBody3D@210" unique_id=2034730578]
+shape = SubResource("CylinderShape3D_jafn2")
+
+[node name="@StaticBody3D@212" type="StaticBody3D" parent="." unique_id=1698414249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.30225, 0.38)
+collision_mask = 0
+
+[node name="@CollisionShape3D@213" type="CollisionShape3D" parent="@StaticBody3D@212" unique_id=1988072594]
+shape = SubResource("CylinderShape3D_00176")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1565258860]
+material_override = ExtResource("1_qo81e")
+mesh = ExtResource("2_aeg1c")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=2126195216]
+material_override = ExtResource("3_xfyg0")
+mesh = ExtResource("4_00qo0")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=463284385]
+material_override = ExtResource("5_kaosp")
+mesh = ExtResource("6_g0nl4")

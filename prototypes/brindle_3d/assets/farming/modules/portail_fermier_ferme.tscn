@@ -1,0 +1,75 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_rfwvh"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/portail_fermier_ferme_Merged_dark_wood.res" id="2_ewoor"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_ys73m"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/portail_fermier_ferme_Merged_wood.res" id="4_n7tuc"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="5_e0c8j"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/portail_fermier_ferme_Merged_iron.res" id="6_nuke3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d4rqj"]
+size = Vector3(0.22, 1.47, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vu1fn"]
+size = Vector3(0.96, 1.16, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_br3sj"]
+size = Vector3(0.22, 1.47, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dqdrd"]
+size = Vector3(0.96, 1.16, 0.15)
+
+[node name="PortailFermierFerme" type="Node3D" unique_id=272016675]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "portail_fermier_ferme"
+metadata/family = "modules"
+metadata/label = "Portail fermier fermé"
+metadata/purpose = "Portail de ferme à deux vantaux de bois, avec pivots en fer."
+metadata/placement = "Ouverture utile de 2,02 m ; passage orienté sur Z ; les vantaux ouverts longent les poteaux."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="GatePostCollision" type="StaticBody3D" parent="." unique_id=600590785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.12, 0.735, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@197" type="CollisionShape3D" parent="GatePostCollision" unique_id=1262514652]
+shape = SubResource("BoxShape3D_d4rqj")
+
+[node name="GateLeafCollision" type="StaticBody3D" parent="." unique_id=221303447]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51, 0.68, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@198" type="CollisionShape3D" parent="GateLeafCollision" unique_id=624110266]
+shape = SubResource("BoxShape3D_vu1fn")
+
+[node name="@StaticBody3D@199" type="StaticBody3D" parent="." unique_id=1537155621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.12, 0.735, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@200" type="CollisionShape3D" parent="@StaticBody3D@199" unique_id=1076952529]
+shape = SubResource("BoxShape3D_br3sj")
+
+[node name="@StaticBody3D@201" type="StaticBody3D" parent="." unique_id=1925629888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.51, 0.68, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@202" type="CollisionShape3D" parent="@StaticBody3D@201" unique_id=48346852]
+shape = SubResource("BoxShape3D_dqdrd")
+
+[node name="ConnectorStart" type="Marker3D" parent="." unique_id=829102957]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.12, 0, 0)
+
+[node name="ConnectorEnd" type="Marker3D" parent="." unique_id=588142420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.12, 0, 0)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1401275739]
+material_override = ExtResource("1_rfwvh")
+mesh = ExtResource("2_ewoor")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1201847992]
+material_override = ExtResource("3_ys73m")
+mesh = ExtResource("4_n7tuc")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=837280558]
+material_override = ExtResource("5_e0c8j")
+mesh = ExtResource("6_nuke3")

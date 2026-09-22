@@ -6,6 +6,10 @@ uniform vec4 shallow_color : source_color = vec4(.085,.32,.40,1);
 uniform vec4 foam_color : source_color = vec4(.80,.88,.76,1);
 uniform float wave_height = .025;
 uniform float wave_speed = .7;
+// Default remains the authored water. The farm's runtime light profile uses a
+// private material copy and softens only its local river's low-angle highlight.
+uniform float farming_light_balance : hint_range(0.0, 1.0) = 0.0;
+uniform vec4 farming_light_bounds = vec4(-268.0, -54.0, -94.0, 130.0);
 varying vec3 world;
 float hash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 float noise(vec2 p) {
@@ -30,6 +34,8 @@ void fragment() {
     // Quiet river margins have occasional broken foam, not a continuous pale rim.
     float edge=(1.-smoothstep(.0,.045,COLOR.r))*smoothstep(.55,.83,noise(a*.8))*.19;
     ALBEDO=mix(col,foam_color.rgb,max(edge,sparkle));
-    ROUGHNESS=.34;
-    SPECULAR=.5;
+    vec2 outside = max(max(farming_light_bounds.xy-world.xz, world.xz-farming_light_bounds.zw), vec2(0.0));
+    float local_balance = farming_light_balance * (1.0-smoothstep(0.0, 12.0, length(outside)));
+    ROUGHNESS=mix(.34, .62, local_balance);
+    SPECULAR=mix(.5, .24, local_balance);
 }

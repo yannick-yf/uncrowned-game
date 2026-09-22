@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="1_u5lx6"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/echelle_droite_de_recolte_Merged_wood.res" id="2_i3wgt"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="3_pxrl7"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/echelle_droite_de_recolte_Merged_iron.res" id="4_2eapf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oyad6"]
+size = Vector3(0.86, 3.1, 0.11)
+
+[node name="EchelleDroiteDeRecolte" type="Node3D" unique_id=1878628658]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "echelle_droite_de_recolte"
+metadata/family = "accessoires"
+metadata/label = "Échelle droite de récolte"
+metadata/purpose = "Échelle de récolte en frêne, à barreaux traversants."
+metadata/placement = "Appuyer la tête contre un tronc ou un mur ; cette pièce est décorative, sans escalade automatique."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="LeaningLadderCollision" type="StaticBody3D" parent="." unique_id=1708291712]
+transform = Transform3D(1, 0, 0, 0, 0.9765635, 0.21522945, 0, -0.21522945, 0.9765635, 0, 1.55, 0.135)
+collision_mask = 0
+
+[node name="@CollisionShape3D@219" type="CollisionShape3D" parent="LeaningLadderCollision" unique_id=1879452165]
+shape = SubResource("BoxShape3D_oyad6")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1310549951]
+material_override = ExtResource("1_u5lx6")
+mesh = ExtResource("2_i3wgt")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=782011512]
+material_override = ExtResource("3_pxrl7")
+mesh = ExtResource("4_2eapf")

@@ -1,0 +1,313 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_sfdu2"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_stone.res" id="2_s7mt2"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="3_pod63"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_dark_wood.res" id="4_bkt4f"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="5_ro7wu"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_wood.res" id="6_1frn6"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="7_uwd5a"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_thatch.res" id="8_yvvbl"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="9_yrofb"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_thatch_dark.res" id="10_v7jwl"]
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="11_d12yh"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_straw.res" id="12_owpco"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="13_v22b0"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grange_traversante_Merged_rope.res" id="14_yvl56"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3hkdd"]
+size = Vector3(0.54, 0.42, 0.54)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2tkmx"]
+size = Vector3(0.24, 3.75, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ylrkf"]
+size = Vector3(0.54, 0.42, 0.54)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6yhfx"]
+size = Vector3(0.24, 3.75, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pe5l7"]
+size = Vector3(0.54, 0.42, 0.54)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i0i8i"]
+size = Vector3(0.24, 3.75, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_47jkl"]
+size = Vector3(0.2, 1.2, 10.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1g55a"]
+size = Vector3(0.54, 0.42, 0.54)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dh1ba"]
+size = Vector3(0.24, 3.75, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4lpo4"]
+size = Vector3(0.54, 0.42, 0.54)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_irc0i"]
+size = Vector3(0.24, 3.75, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qjpk3"]
+size = Vector3(0.54, 0.42, 0.54)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k7ghl"]
+size = Vector3(0.24, 3.75, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eti81"]
+size = Vector3(0.2, 1.2, 10.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_45828"]
+size = Vector3(1.55, 0.18, 7.128)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hxwpw"]
+size = Vector3(1.35, 0.75, 1.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_exko7"]
+size = Vector3(1.35, 0.75, 1.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kc15q"]
+size = Vector3(1.55, 0.18, 7.128)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jy6ak"]
+size = Vector3(1.35, 0.75, 1.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jqsti"]
+size = Vector3(1.35, 0.75, 1.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5xhks"]
+size = Vector3(2.1, 3.25, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pkpn1"]
+size = Vector3(2.1, 3.25, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ovwnp"]
+size = Vector3(2.1, 3.25, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lf6fw"]
+size = Vector3(2.1, 3.25, 0.16)
+
+[node name="GrangeTraversante" type="Node3D" unique_id=1466632648]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "grange_traversante"
+metadata/family = "agricole"
+metadata/label = "Grange traversante à charrettes"
+metadata/purpose = "Stockage couvert avec nef centrale réellement praticable."
+metadata/placement = "Terrain sec; maintenir libre l'axe Entrance–Exit et son passage de 3,2 m minimum."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "open_barn"
+metadata/aisle_clear_width_m = 3.2
+metadata/aisle_clear_height_m = 3.3
+
+[node name="BarnStoneFeetCollision" type="StaticBody3D" parent="." unique_id=2130811906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.21, -5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@87" type="CollisionShape3D" parent="BarnStoneFeetCollision" unique_id=1575684983]
+shape = SubResource("BoxShape3D_3hkdd")
+
+[node name="BarnPostsCollision" type="StaticBody3D" parent="." unique_id=1550962029]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6, 2.225, -5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@88" type="CollisionShape3D" parent="BarnPostsCollision" unique_id=1940417403]
+shape = SubResource("BoxShape3D_2tkmx")
+
+[node name="@StaticBody3D@89" type="StaticBody3D" parent="." unique_id=1101003470]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.21, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@90" type="CollisionShape3D" parent="@StaticBody3D@89" unique_id=1984032407]
+shape = SubResource("BoxShape3D_ylrkf")
+
+[node name="@StaticBody3D@91" type="StaticBody3D" parent="." unique_id=105802732]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6, 2.225, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@92" type="CollisionShape3D" parent="@StaticBody3D@91" unique_id=1250450703]
+shape = SubResource("BoxShape3D_6yhfx")
+
+[node name="@StaticBody3D@93" type="StaticBody3D" parent="." unique_id=1576200468]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.21, 5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@94" type="CollisionShape3D" parent="@StaticBody3D@93" unique_id=1063398365]
+shape = SubResource("BoxShape3D_pe5l7")
+
+[node name="@StaticBody3D@95" type="StaticBody3D" parent="." unique_id=1686358478]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.6, 2.225, 5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@96" type="CollisionShape3D" parent="@StaticBody3D@95" unique_id=1760868819]
+shape = SubResource("BoxShape3D_i0i8i")
+
+[node name="BarnLowSideWallCollision" type="StaticBody3D" parent="." unique_id=126281755]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.6, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@97" type="CollisionShape3D" parent="BarnLowSideWallCollision" unique_id=217070947]
+shape = SubResource("BoxShape3D_47jkl")
+
+[node name="@StaticBody3D@98" type="StaticBody3D" parent="." unique_id=1442436244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.21, -5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@99" type="CollisionShape3D" parent="@StaticBody3D@98" unique_id=402590518]
+shape = SubResource("BoxShape3D_1g55a")
+
+[node name="@StaticBody3D@100" type="StaticBody3D" parent="." unique_id=383409979]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.6, 2.225, -5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@101" type="CollisionShape3D" parent="@StaticBody3D@100" unique_id=1356959667]
+shape = SubResource("BoxShape3D_dh1ba")
+
+[node name="@StaticBody3D@102" type="StaticBody3D" parent="." unique_id=1367468903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.21, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@103" type="CollisionShape3D" parent="@StaticBody3D@102" unique_id=1878785322]
+shape = SubResource("BoxShape3D_4lpo4")
+
+[node name="@StaticBody3D@104" type="StaticBody3D" parent="." unique_id=291409823]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.6, 2.225, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@105" type="CollisionShape3D" parent="@StaticBody3D@104" unique_id=498762354]
+shape = SubResource("BoxShape3D_irc0i")
+
+[node name="@StaticBody3D@106" type="StaticBody3D" parent="." unique_id=1051203784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.21, 5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@107" type="CollisionShape3D" parent="@StaticBody3D@106" unique_id=2123615882]
+shape = SubResource("BoxShape3D_qjpk3")
+
+[node name="@StaticBody3D@108" type="StaticBody3D" parent="." unique_id=1307349281]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.6, 2.225, 5.4)
+collision_mask = 0
+
+[node name="@CollisionShape3D@109" type="CollisionShape3D" parent="@StaticBody3D@108" unique_id=1765886946]
+shape = SubResource("BoxShape3D_k7ghl")
+
+[node name="@StaticBody3D@110" type="StaticBody3D" parent="." unique_id=877665424]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.6, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@111" type="CollisionShape3D" parent="@StaticBody3D@110" unique_id=1274918259]
+shape = SubResource("BoxShape3D_eti81")
+
+[node name="RaisedStorageDeckCollision" type="StaticBody3D" parent="." unique_id=1593208719]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0.09, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@112" type="CollisionShape3D" parent="RaisedStorageDeckCollision" unique_id=193418571]
+shape = SubResource("BoxShape3D_45828")
+
+[node name="LooseHayCollision" type="StaticBody3D" parent="." unique_id=381460912]
+transform = Transform3D(0.99820054, 0, -0.059964005, 0, 1, 0, 0.059964005, 0, 0.99820054, -3.6, 0.57, -2.484)
+collision_mask = 0
+
+[node name="@CollisionShape3D@113" type="CollisionShape3D" parent="LooseHayCollision" unique_id=225287089]
+shape = SubResource("BoxShape3D_hxwpw")
+
+[node name="@StaticBody3D@114" type="StaticBody3D" parent="." unique_id=277275134]
+transform = Transform3D(0.99820054, 0, -0.059964005, 0, 1, 0, 0.059964005, 0, 0.99820054, -3.6, 0.57, 1.08)
+collision_mask = 0
+
+[node name="@CollisionShape3D@115" type="CollisionShape3D" parent="@StaticBody3D@114" unique_id=882237837]
+shape = SubResource("BoxShape3D_exko7")
+
+[node name="@StaticBody3D@116" type="StaticBody3D" parent="." unique_id=166728320]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0.09, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@117" type="CollisionShape3D" parent="@StaticBody3D@116" unique_id=1692552980]
+shape = SubResource("BoxShape3D_kc15q")
+
+[node name="@StaticBody3D@118" type="StaticBody3D" parent="." unique_id=342971246]
+transform = Transform3D(0.99820054, 0, 0.059964005, 0, 1, 0, -0.059964005, 0, 0.99820054, 3.6, 0.57, -2.484)
+collision_mask = 0
+
+[node name="@CollisionShape3D@119" type="CollisionShape3D" parent="@StaticBody3D@118" unique_id=223569066]
+shape = SubResource("BoxShape3D_jy6ak")
+
+[node name="@StaticBody3D@120" type="StaticBody3D" parent="." unique_id=534507841]
+transform = Transform3D(0.99820054, 0, 0.059964005, 0, 1, 0, -0.059964005, 0, 0.99820054, 3.6, 0.57, 1.08)
+collision_mask = 0
+
+[node name="@CollisionShape3D@121" type="CollisionShape3D" parent="@StaticBody3D@120" unique_id=1780737469]
+shape = SubResource("BoxShape3D_jqsti")
+
+[node name="FoldedBarnDoorCollision" type="StaticBody3D" parent="." unique_id=2117729565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.95, 1.625, -5.53)
+collision_mask = 0
+
+[node name="@CollisionShape3D@122" type="CollisionShape3D" parent="FoldedBarnDoorCollision" unique_id=995181137]
+shape = SubResource("BoxShape3D_5xhks")
+
+[node name="@StaticBody3D@123" type="StaticBody3D" parent="." unique_id=1448740310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.95, 1.625, 5.53)
+collision_mask = 0
+
+[node name="@CollisionShape3D@124" type="CollisionShape3D" parent="@StaticBody3D@123" unique_id=1131639338]
+shape = SubResource("BoxShape3D_pkpn1")
+
+[node name="@StaticBody3D@125" type="StaticBody3D" parent="." unique_id=178139509]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.95, 1.625, -5.53)
+collision_mask = 0
+
+[node name="@CollisionShape3D@126" type="CollisionShape3D" parent="@StaticBody3D@125" unique_id=1578314249]
+shape = SubResource("BoxShape3D_ovwnp")
+
+[node name="@StaticBody3D@127" type="StaticBody3D" parent="." unique_id=683655003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.95, 1.625, 5.53)
+collision_mask = 0
+
+[node name="@CollisionShape3D@128" type="CollisionShape3D" parent="@StaticBody3D@127" unique_id=313098853]
+shape = SubResource("BoxShape3D_lf6fw")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1640507795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.4)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=988636103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.4)
+
+[node name="Exit" type="Marker3D" parent="." unique_id=784907398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.4)
+
+[node name="AisleStart" type="Marker3D" parent="." unique_id=765777525]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.4)
+
+[node name="AisleEnd" type="Marker3D" parent="." unique_id=1178329943]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.4)
+
+[node name="AisleCenter" type="Marker3D" parent="." unique_id=335105485]
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=91864748]
+material_override = ExtResource("1_sfdu2")
+mesh = ExtResource("2_s7mt2")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1303769637]
+material_override = ExtResource("3_pod63")
+mesh = ExtResource("4_bkt4f")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1936106504]
+material_override = ExtResource("5_ro7wu")
+mesh = ExtResource("6_1frn6")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=398577781]
+material_override = ExtResource("7_uwd5a")
+mesh = ExtResource("8_yvvbl")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=521020813]
+material_override = ExtResource("9_yrofb")
+mesh = ExtResource("10_v7jwl")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=85807910]
+material_override = ExtResource("11_d12yh")
+mesh = ExtResource("12_owpco")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=1560183526]
+material_override = ExtResource("13_v22b0")
+mesh = ExtResource("14_yvl56")

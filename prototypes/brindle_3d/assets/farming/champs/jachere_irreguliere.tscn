@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/earth.tres" id="1_oqavv"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/jachere_irreguliere_Merged_earth.res" id="2_nw0s0"]
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="3_nny3g"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/jachere_irreguliere_Merged_straw.res" id="4_8bvi1"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf_light.tres" id="5_amstc"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/jachere_irreguliere_Merged_leaf_light.res" id="6_yb0dm"]
+[ext_resource type="Material" path="res://assets/farming/materials/linen.tres" id="7_fdp87"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/jachere_irreguliere_Merged_linen.res" id="8_0ktxl"]
+
+[node name="JachereIrreguliere" type="Node3D" unique_id=1703439244]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "jachere_irreguliere"
+metadata/family = "champs"
+metadata/label = "Jachère et chaumes irréguliers"
+metadata/purpose = "Parcelle récoltée, chaumes courts et herbes clairsemées."
+metadata/placement = "Terrain plat ; utile entre verger, chemin et champs actifs."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-3.2, -2.1], [-1.2, -2.5], [1.4, -2.3], [3.1, -1.2], [2.7, 1.25], [0.65, 2.6], [-1.7, 2.2], [-3.0, 0.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+
+[node name="MergedEarth" type="MeshInstance3D" parent="." unique_id=265736286]
+material_override = ExtResource("1_oqavv")
+mesh = ExtResource("2_nw0s0")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=1105895696]
+material_override = ExtResource("3_nny3g")
+mesh = ExtResource("4_8bvi1")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="." unique_id=1156843533]
+material_override = ExtResource("5_amstc")
+mesh = ExtResource("6_yb0dm")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="." unique_id=933042855]
+material_override = ExtResource("7_fdp87")
+mesh = ExtResource("8_0ktxl")

@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_byjax"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/cloture_rustique_4m_Merged_dark_wood.res" id="2_fuuti"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_kh8r3"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/cloture_rustique_4m_Merged_wood.res" id="4_tdqwb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jht7w"]
+size = Vector3(0.16, 1.28, 2.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_smuad"]
+size = Vector3(0.16, 1.28, 2.15)
+
+[node name="ClotureRustique4m" type="Node3D" unique_id=351081735]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="FenceCollision" type="StaticBody3D" parent="." unique_id=2106031454]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1, 0.64, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@191" type="CollisionShape3D" parent="FenceCollision" unique_id=1475009814]
+shape = SubResource("BoxShape3D_jht7w")
+
+[node name="@StaticBody3D@192" type="StaticBody3D" parent="." unique_id=808378146]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1, 0.64, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@193" type="CollisionShape3D" parent="@StaticBody3D@192" unique_id=1497625643]
+shape = SubResource("BoxShape3D_smuad")
+
+[node name="ConnectorStart" type="Marker3D" parent="." unique_id=1784571418]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="ConnectorEnd" type="Marker3D" parent="." unique_id=1191778399]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=67497434]
+material_override = ExtResource("1_byjax")
+mesh = ExtResource("2_fuuti")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1603797148]
+material_override = ExtResource("3_kh8r3")
+mesh = ExtResource("4_tdqwb")

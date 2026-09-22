@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="1_xrs7r"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/araire_de_bois_Merged_wood.res" id="2_b7rw8"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="3_lx7jx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/araire_de_bois_Merged_dark_wood.res" id="4_1ll4s"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="5_kmp85"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/araire_de_bois_Merged_iron.res" id="6_gv6hf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5jdve"]
+size = Vector3(0.33, 0.33, 0.92)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a2pa7"]
+size = Vector3(0.2, 0.22, 2.18)
+
+[node name="AraireDeBois" type="Node3D" unique_id=1053350160]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "araire_de_bois"
+metadata/family = "accessoires"
+metadata/label = "Araire de bois à soc ferré"
+metadata/purpose = "Outil de labour à long age, deux mancherons et sabot renforcé."
+metadata/placement = "Poser à côté d'une parcelle labourée ou d'un attelage ; aucune mécanique de culture intégrée."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="ShareBodyCollision" type="StaticBody3D" parent="." unique_id=74161187]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0.11)
+collision_mask = 0
+
+[node name="@CollisionShape3D@222" type="CollisionShape3D" parent="ShareBodyCollision" unique_id=1277974004]
+shape = SubResource("BoxShape3D_5jdve")
+
+[node name="LongAgeCollision" type="StaticBody3D" parent="." unique_id=30084070]
+transform = Transform3D(1, 0, 0, 0, 0.9784459, 0.20650342, 0, -0.20650342, 0.9784459, 0, 0.54, 0.69)
+collision_mask = 0
+
+[node name="@CollisionShape3D@223" type="CollisionShape3D" parent="LongAgeCollision" unique_id=1766875862]
+shape = SubResource("BoxShape3D_a2pa7")
+
+[node name="TowPoint" type="Marker3D" parent="." unique_id=936300527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.9)
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1160245174]
+material_override = ExtResource("1_xrs7r")
+mesh = ExtResource("2_b7rw8")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1633288643]
+material_override = ExtResource("3_lx7jx")
+mesh = ExtResource("4_1ll4s")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=752378050]
+material_override = ExtResource("5_kmp85")
+mesh = ExtResource("6_gv6hf")

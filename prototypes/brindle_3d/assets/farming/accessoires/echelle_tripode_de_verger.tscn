@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="1_8txfg"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/echelle_tripode_de_verger_Merged_wood.res" id="2_n6ii3"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="3_q335v"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/echelle_tripode_de_verger_Merged_iron.res" id="4_5ksy5"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_jg7ob"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/echelle_tripode_de_verger_Merged_dark_wood.res" id="6_l2mc4"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="7_xbjub"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/echelle_tripode_de_verger_Merged_rope.res" id="8_4kkuy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0l52i"]
+size = Vector3(0.87, 1.12, 1.76)
+
+[node name="EchelleTripodeDeVerger" type="Node3D" unique_id=692324476]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "echelle_tripode_de_verger"
+metadata/family = "accessoires"
+metadata/label = "Échelle tripode de verger"
+metadata/purpose = "Échelle de récolte en frêne, à barreaux traversants."
+metadata/placement = "Tripode autonome, ouvert au sol."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="LadderBaseCollision" type="StaticBody3D" parent="." unique_id=1226968970]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56, -0.3)
+collision_mask = 0
+
+[node name="@CollisionShape3D@220" type="CollisionShape3D" parent="LadderBaseCollision" unique_id=448570421]
+shape = SubResource("BoxShape3D_0l52i")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=431316572]
+material_override = ExtResource("1_8txfg")
+mesh = ExtResource("2_n6ii3")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=1336287060]
+material_override = ExtResource("3_q335v")
+mesh = ExtResource("4_5ksy5")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=276571401]
+material_override = ExtResource("5_jg7ob")
+mesh = ExtResource("6_l2mc4")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=323785850]
+material_override = ExtResource("7_xbjub")
+mesh = ExtResource("8_4kkuy")

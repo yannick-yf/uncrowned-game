@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_5gv12"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_dark_wood.res" id="2_auycx"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_2h5iq"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_wood.res" id="4_xuntb"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="5_w3114"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_iron.res" id="6_73mj8"]
+[ext_resource type="Material" path="res://assets/farming/materials/linen.tres" id="7_mam4q"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_linen.res" id="8_ykitx"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="9_kjh3f"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_rope.res" id="10_x60s5"]
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="11_ibsjh"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_straw.res" id="12_homig"]
+[ext_resource type="Material" path="res://assets/farming/materials/grain.tres" id="13_61bxo"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_chargee_Merged_grain.res" id="14_3um06"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n6cw5"]
+size = Vector3(1.58, 1.36, 2.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_r0v5f"]
+size = Vector3(0.12, 0.14, 1.56)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_flftt"]
+size = Vector3(0.12, 0.14, 1.56)
+
+[node name="CharretteDeRecolteChargee" type="Node3D" unique_id=1484102121]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "charrette_de_recolte_chargee"
+metadata/family = "accessoires"
+metadata/label = "Charrette de récolte chargée"
+metadata/purpose = "Transport des sacs et des gerbes ; roues pleines à rayons et timon jumelé."
+metadata/placement = "Sur chemin sec ou sous grange ; le timon indique l'avant +Z."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="CartBodyCollision" type="StaticBody3D" parent="." unique_id=124915201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@186" type="CollisionShape3D" parent="CartBodyCollision" unique_id=668590813]
+shape = SubResource("BoxShape3D_n6cw5")
+
+[node name="CartShaftCollision" type="StaticBody3D" parent="." unique_id=1477760758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47, 0.58, 1.87)
+collision_mask = 0
+
+[node name="@CollisionShape3D@187" type="CollisionShape3D" parent="CartShaftCollision" unique_id=540076915]
+shape = SubResource("BoxShape3D_r0v5f")
+
+[node name="@StaticBody3D@188" type="StaticBody3D" parent="." unique_id=641963487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47, 0.58, 1.87)
+collision_mask = 0
+
+[node name="@CollisionShape3D@189" type="CollisionShape3D" parent="@StaticBody3D@188" unique_id=1721455252]
+shape = SubResource("BoxShape3D_flftt")
+
+[node name="TowPoint" type="Marker3D" parent="." unique_id=708113531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 2.65)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1513446909]
+material_override = ExtResource("1_5gv12")
+mesh = ExtResource("2_auycx")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=389138355]
+material_override = ExtResource("3_2h5iq")
+mesh = ExtResource("4_xuntb")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=1416008917]
+material_override = ExtResource("5_w3114")
+mesh = ExtResource("6_73mj8")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="." unique_id=1352075357]
+material_override = ExtResource("7_mam4q")
+mesh = ExtResource("8_ykitx")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=1000268983]
+material_override = ExtResource("9_kjh3f")
+mesh = ExtResource("10_x60s5")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=2106054019]
+material_override = ExtResource("11_ibsjh")
+mesh = ExtResource("12_homig")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="." unique_id=1113770967]
+material_override = ExtResource("13_61bxo")
+mesh = ExtResource("14_3um06")

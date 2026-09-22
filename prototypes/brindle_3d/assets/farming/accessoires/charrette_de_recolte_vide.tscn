@@ -1,0 +1,62 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_pmcnx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_vide_Merged_dark_wood.res" id="2_unkvl"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_swahb"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_vide_Merged_wood.res" id="4_c5qjd"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="5_2mk4m"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/charrette_de_recolte_vide_Merged_iron.res" id="6_ipef4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_22gse"]
+size = Vector3(1.58, 1.36, 2.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vco34"]
+size = Vector3(0.12, 0.14, 1.56)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pmof4"]
+size = Vector3(0.12, 0.14, 1.56)
+
+[node name="CharretteDeRecolteVide" type="Node3D" unique_id=16014081]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "charrette_de_recolte_vide"
+metadata/family = "accessoires"
+metadata/label = "Charrette de récolte vide"
+metadata/purpose = "Transport des sacs et des gerbes ; roues pleines à rayons et timon jumelé."
+metadata/placement = "Sur chemin sec ou sous grange ; le timon indique l'avant +Z."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="CartBodyCollision" type="StaticBody3D" parent="." unique_id=426764745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@182" type="CollisionShape3D" parent="CartBodyCollision" unique_id=2127080516]
+shape = SubResource("BoxShape3D_22gse")
+
+[node name="CartShaftCollision" type="StaticBody3D" parent="." unique_id=2136054972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47, 0.58, 1.87)
+collision_mask = 0
+
+[node name="@CollisionShape3D@183" type="CollisionShape3D" parent="CartShaftCollision" unique_id=351883878]
+shape = SubResource("BoxShape3D_vco34")
+
+[node name="@StaticBody3D@184" type="StaticBody3D" parent="." unique_id=1263415112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47, 0.58, 1.87)
+collision_mask = 0
+
+[node name="@CollisionShape3D@185" type="CollisionShape3D" parent="@StaticBody3D@184" unique_id=856323871]
+shape = SubResource("BoxShape3D_pmof4")
+
+[node name="TowPoint" type="Marker3D" parent="." unique_id=1976860945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 2.65)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1580381763]
+material_override = ExtResource("1_pmcnx")
+mesh = ExtResource("2_unkvl")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=891253985]
+material_override = ExtResource("3_swahb")
+mesh = ExtResource("4_c5qjd")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=619888468]
+material_override = ExtResource("5_2mk4m")
+mesh = ExtResource("6_ipef4")

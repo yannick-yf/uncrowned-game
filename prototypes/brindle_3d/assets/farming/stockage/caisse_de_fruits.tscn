@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_6qv44"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_de_fruits_Merged_dark_wood.res" id="2_4dyy5"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_es0jf"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_de_fruits_Merged_wood.res" id="4_srp7n"]
+[ext_resource type="Material" path="res://assets/farming/materials/apple.tres" id="5_5m1h8"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_de_fruits_Merged_apple.res" id="6_r0acv"]
+[ext_resource type="Material" path="res://assets/farming/materials/bark.tres" id="7_2fyxx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_de_fruits_Merged_bark.res" id="8_4p6mj"]
+[ext_resource type="Material" path="res://assets/farming/materials/pear.tres" id="9_ehmib"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_de_fruits_Merged_pear.res" id="10_qp8sk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ow381"]
+size = Vector3(0.9, 0.52, 0.65)
+
+[node name="CaisseDeFruits" type="Node3D" unique_id=296588089]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "caisse_de_fruits"
+metadata/family = "stockage"
+metadata/label = "Caisse de fruits"
+metadata/purpose = "Caisse ajourée à poignées évidées pour trier les récoltes."
+metadata/placement = "Empilable ; dimensions 0,90 × 0,65 m, pivot sous le fond."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="CrateCollision" type="StaticBody3D" parent="." unique_id=1539477788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@218" type="CollisionShape3D" parent="CrateCollision" unique_id=329741846]
+shape = SubResource("BoxShape3D_ow381")
+
+[node name="StackTop" type="Marker3D" parent="." unique_id=790824298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=11055122]
+material_override = ExtResource("1_6qv44")
+mesh = ExtResource("2_4dyy5")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=690638995]
+material_override = ExtResource("3_es0jf")
+mesh = ExtResource("4_srp7n")
+
+[node name="MergedApple" type="MeshInstance3D" parent="." unique_id=1690839933]
+material_override = ExtResource("5_5m1h8")
+mesh = ExtResource("6_r0acv")
+
+[node name="MergedBark" type="MeshInstance3D" parent="." unique_id=422149757]
+material_override = ExtResource("7_2fyxx")
+mesh = ExtResource("8_4p6mj")
+
+[node name="MergedPear" type="MeshInstance3D" parent="." unique_id=380684520]
+material_override = ExtResource("9_ehmib")
+mesh = ExtResource("10_qp8sk")

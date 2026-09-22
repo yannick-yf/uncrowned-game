@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/farming_surface.gdshader" id="1_hkdvo"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_hkdvo")
+shader_parameter/tint = Color(0.2901961, 0.38039216, 0.35686275, 1)
+shader_parameter/surface_kind = 3
+shader_parameter/roughness = 0.94

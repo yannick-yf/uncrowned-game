@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_rxccw"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_ouverte_en_bois_Merged_dark_wood.res" id="2_68hqy"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_wrvpn"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/caisse_ouverte_en_bois_Merged_wood.res" id="4_earth"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5t5tu"]
+size = Vector3(0.9, 0.52, 0.65)
+
+[node name="CaisseOuverteEnBois" type="Node3D" unique_id=1849654118]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "caisse_ouverte_en_bois"
+metadata/family = "stockage"
+metadata/label = "Caisse ouverte en bois"
+metadata/purpose = "Caisse ajourée à poignées évidées pour trier les récoltes."
+metadata/placement = "Empilable ; dimensions 0,90 × 0,65 m, pivot sous le fond."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="CrateCollision" type="StaticBody3D" parent="." unique_id=1531959788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@217" type="CollisionShape3D" parent="CrateCollision" unique_id=672547790]
+shape = SubResource("BoxShape3D_5t5tu")
+
+[node name="StackTop" type="Marker3D" parent="." unique_id=902918154]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=213711378]
+material_override = ExtResource("1_rxccw")
+mesh = ExtResource("2_68hqy")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=675337676]
+material_override = ExtResource("3_wrvpn")
+mesh = ExtResource("4_earth")

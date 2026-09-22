@@ -1,4 +1,7 @@
 shader_type spatial;
+#include "res://shaders/coastal_granite.gdshaderinc"
+uniform bool coastal_enabled = false;
+uniform sampler2D coastal_control : filter_linear, repeat_disable;
 uniform sampler2D ground_noise : filter_linear_mipmap, repeat_enable;
 uniform sampler2D painted_rock : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec4 grass_dark : source_color = vec4(0.20,0.29,0.15,1);
@@ -26,6 +29,9 @@ uniform sampler2D sawmill_ground_mask : filter_linear, repeat_disable;
 uniform vec4 sawmill_bounds = vec4(198.,-210.,80.,105.);
 uniform sampler2D royal_ground_mask : filter_linear, repeat_disable;
 uniform bool royal_mask_enabled = false;
+uniform bool farming_mask_enabled = false;
+uniform sampler2D farming_ground_mask : filter_linear, repeat_disable;
+uniform vec4 farming_bounds = vec4(-268.,-54.,174.,184.);
 varying vec3 world;
 varying vec3 world_normal;
 float noise(vec2 p) { return texture(ground_noise,p*0.021).r; }
@@ -105,6 +111,41 @@ void fragment() {
         vec3 courtyard=mix(vec3(.26,.254,.222),vec3(.37,.351,.296),noise(p*2.));
         col=mix(col,earth,smoothstep(.10,.9,mask.r-(grain-.5)*.16)*inside);
         col=mix(col,courtyard,smoothstep(.10,.9,mask.g)*inside);
+    }
+    if (farming_mask_enabled) {
+        vec2 uv=(world.xz-farming_bounds.xy)/farming_bounds.zw;
+        float inside=step(0.,uv.x)*step(0.,uv.y)*step(uv.x,1.)*step(uv.y,1.);
+        float fade=smoothstep(0.,.04,uv.x)*smoothstep(0.,.04,uv.y)*(1.-smoothstep(.96,1.,uv.x))*(1.-smoothstep(.96,1.,uv.y));
+        vec3 farm_use=texture(farming_ground_mask,clamp(uv,vec2(0.),vec2(1.))).rgb;
+        float wear=farm_use.r;
+        vec3 meadow=mix(vec3(.265,.337,.145),vec3(.36,.423,.211),noise(p*.45));
+        col=mix(col,meadow,fade*.36*(1.-COLOR.r)*(1.-COLOR.b*.65));
+        vec3 earth=mix(vec3(.225,.172,.110),vec3(.34,.271,.181),noise(p*.65));
+        earth*=.94+grain*.12;
+        earth*=1.-farm_use.g*.19;
+        earth=mix(earth,earth*1.055,farm_use.b*.45);
+        col=mix(col,earth,smoothstep(.13,.89,wear-(grain-.5)*.20)*inside);
+    }
+    if (coastal_enabled) {
+        vec3 coast_mask=texture(coastal_control,(world.xz+vec2(384.0))/768.0).rgb;
+        // Derivatives must be evaluated outside the spatial mask branch;
+        // otherwise adjacent fragment quads can leave dark seams at its edge.
+        vec3 painted=texture(painted_rock,world.yz*.035).rgb*weights.x+texture(painted_rock,world.xz*.035).rgb*weights.y+texture(painted_rock,world.xy*.035).rgb*weights.z;
+        vec3 granite=coastal_granite(world,normalize(world_normal),painted);
+        vec3 relief_normal=coastal_relief_normal(VERTEX,NORMAL,dot(painted,vec3(.2126,.7152,.0722))*.4);
+        if (coast_mask.r>0.001) {
+            granite*=mix(.57,1.0,smoothstep(.2,3.6,world.y));
+            float face=max(COLOR.r,smoothstep(.2,.65,length(world_normal.xz)));
+            vec3 heath=mix(grass_dark.rgb,grass_light.rgb,patches)*vec3(.94,.99,1.0);
+            vec3 shore=mix(heath,granite,face);
+            float beach=smoothstep(-.3,.5,world.y)*(1.0-smoothstep(4.0,12.0,world.y));
+            vec3 pebbles=mix(granite,vec3(.39,.352,.266)*(.9+grain*.15),coast_mask.g);
+            shore=mix(shore,pebbles,beach*(1.-face*.3));
+            col=mix(col,shore,coast_mask.r);
+            NORMAL=normalize(mix(NORMAL,relief_normal,coast_mask.r*face));
+        }
+        vec3 trail=mix(vec3(.255,.221,.165),vec3(.38,.333,.241),noise(p*1.2))*(.92+grain*.16);
+        col=mix(col,trail,coast_mask.b*.88);
     }
     ALBEDO=col;
     ROUGHNESS=.96;

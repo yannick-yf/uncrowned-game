@@ -1,0 +1,105 @@
+{
+  "adapter": "NVIDIA GeForce RTX 5080",
+  "passes": [
+    {
+      "draw_calls": 3528.0,
+      "median_frame_ms": 8.362,
+      "median_gpu_ms": 5.347,
+      "p95_frame_ms": 11.196,
+      "rocks": true,
+      "view": "south"
+    },
+    {
+      "draw_calls": 3455.0,
+      "median_frame_ms": 8.423,
+      "median_gpu_ms": 5.624,
+      "p95_frame_ms": 11.083,
+      "rocks": false,
+      "view": "south"
+    },
+    {
+      "draw_calls": 3528.0,
+      "median_frame_ms": 8.239,
+      "median_gpu_ms": 5.074,
+      "p95_frame_ms": 11.025,
+      "rocks": true,
+      "view": "south"
+    },
+    {
+      "draw_calls": 3455.0,
+      "median_frame_ms": 8.057,
+      "median_gpu_ms": 5.588,
+      "p95_frame_ms": 11.298,
+      "rocks": false,
+      "view": "south"
+    },
+    {
+      "draw_calls": 867.0,
+      "median_frame_ms": 5.098,
+      "median_gpu_ms": 1.543,
+      "p95_frame_ms": 7.386,
+      "rocks": true,
+      "view": "cove"
+    },
+    {
+      "draw_calls": 816.0,
+      "median_frame_ms": 4.993,
+      "median_gpu_ms": 1.522,
+      "p95_frame_ms": 7.537,
+      "rocks": false,
+      "view": "cove"
+    },
+    {
+      "draw_calls": 867.0,
+      "median_frame_ms": 4.995,
+      "median_gpu_ms": 1.542,
+      "p95_frame_ms": 7.758,
+      "rocks": true,
+      "view": "cove"
+    },
+    {
+      "draw_calls": 816.0,
+      "median_frame_ms": 5.058,
+      "median_gpu_ms": 1.522,
+      "p95_frame_ms": 6.898,
+      "rocks": false,
+      "view": "cove"
+    },
+    {
+      "draw_calls": 2250.0,
+      "median_frame_ms": 5.476,
+      "median_gpu_ms": 1.8,
+      "p95_frame_ms": 9.474,
+      "rocks": true,
+      "view": "west"
+    },
+    {
+      "draw_calls": 2149.0,
+      "median_frame_ms": 5.379,
+      "median_gpu_ms": 1.797,
+      "p95_frame_ms": 9.795,
+      "rocks": false,
+      "view": "west"
+    },
+    {
+      "draw_calls": 2250.0,
+      "median_frame_ms": 5.735,
+      "median_gpu_ms": 1.799,
+      "p95_frame_ms": 9.543,
+      "rocks": true,
+      "view": "west"
+    },
+    {
+      "draw_calls": 2149.0,
+      "median_frame_ms": 5.526,
+      "median_gpu_ms": 1.796,
+      "p95_frame_ms": 9.37,
+      "rocks": false,
+      "view": "west"
+    }
+  ],
+  "renderer": "forward_plus",
+  "samples_per_pass": 180,
+  "scope": "Same continuous coast terrain; rock dressing and outer sea backdrop visible/hidden. Other editor windows may remain open.",
+  "viewport": "(1440, 900)"
+}

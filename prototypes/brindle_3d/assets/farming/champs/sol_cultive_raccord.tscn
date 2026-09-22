@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/earth.tres" id="1_xkk6g"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/sol_cultive_raccord_Merged_earth.res" id="2_en7p1"]
+
+[node name="SolCultiveRaccord" type="Node3D" unique_id=1684920002]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "sol_cultive_raccord"
+metadata/family = "champs"
+metadata/label = "Raccord de terre irrégulier"
+metadata/purpose = "Petit sol meuble pour les angles, les abords du puits et les entrées de champs."
+metadata/placement = "Surface plane ; superposition limitée au bord, hauteur de sol 4 cm."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-1.4, -0.75], [-0.4, -1.25], [1.35, -0.8], [1.5, 0.4], [0.3, 1.05], [-1.25, 0.6]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+
+[node name="MergedEarth" type="MeshInstance3D" parent="." unique_id=1126693969]
+material_override = ExtResource("1_xkk6g")
+mesh = ExtResource("2_en7p1")

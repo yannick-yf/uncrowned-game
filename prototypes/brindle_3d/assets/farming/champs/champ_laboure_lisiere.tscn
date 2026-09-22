@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/earth.tres" id="1_gco2x"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/champ_laboure_lisiere_Merged_earth.res" id="2_oocyr"]
+
+[node name="ChampLaboureLisiere" type="Node3D" unique_id=244788712]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_laboure_lisiere"
+metadata/family = "champs"
+metadata/label = "Champ labouré de lisière"
+metadata/purpose = "Sillons de terre fraîche dans une parcelle organique prête à semer."
+metadata/placement = "Terrasse plane ; conserver une bande herbeuse entre la parcelle et l'eau."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-5.0, -2.8], [-2.0, -3.5], [1.6, -3.2], [4.65, -1.9], [3.75, -0.3], [3.2, 1.2], [2.0, 3.0], [-1.9, 3.2], [-4.3, 2.2]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+
+[node name="MergedEarth" type="MeshInstance3D" parent="." unique_id=540836227]
+material_override = ExtResource("1_gco2x")
+mesh = ExtResource("2_oocyr")
