@@ -1,6 +1,11 @@
 # The demo, as tasks
 
-Date: 2026-09-18. The specs turned into work. **Nothing is started.**
+Date: 2026-09-18, and three groups added on 2026-09-23. The specs turned into work.
+
+**J, K and W are new and nothing in them is started.** They come from two designs
+settled that day — [the player model](PLAYER_MODEL.md) and [combat's second
+design](COMBAT_V2.md) — and they are the consequence of one idea Yannick returned to:
+**you can kill everyone**. M, P, Q and F are built; their entries say so.
 
 Reads from: [the simulation model](SIMULATION_MODEL.md) · [the Cinderworks
 quest](QUEST_CINDERWORKS.md) · [what we keep](SIMULATION_KEEP_OR_DROP.md) ·
@@ -694,6 +699,238 @@ to each person, because `_talk` does and forty other tests only care what somebo
 a position written into the store is not in the log, so the replay walked from the wrong
 field. Then it steered by eye and wedged itself in the first doorway. It follows
 `Navigation.path` now, and it walks every step.
+
+---
+
+## J — the player's own simulation
+
+**New, 2026-09-23.** Reads from [the player model](PLAYER_MODEL.md), which is the piece
+`SIMULATION_MODEL.md` left open. The places are simulated; the player is not, and every
+consequence of *you can kill everyone* lands here rather than in the fight.
+
+### J1 · The purse
+
+Est. 2 h. Depends on: —.
+
+One integer for the player's gold, moved only through the event log and rebuilt by
+replay like every other store. `SPECS` §12's currency and nothing more: no prices, no
+market, no items. It exists now because the fight needs somewhere for a dead man's gold
+to go, not because v1 spends it.
+
+**Check:** a run that earns and spends and then replays its log lands on the same
+number; a purse cannot go below zero.
+
+### J2 · A deed moves the town, not the person
+
+Est. 3 h. Depends on: —.
+
+`Deeds` and `DeedRules` shift a faction and a witness's regard today. They shift the
+standing of **the place the deed happened in** instead. A deed nobody saw moves nothing,
+which `RumourSystem` already decides — so stealing stays a choice about where and when
+rather than a slider.
+
+**Check:** a theft in the Cinderworks moves the Cinderworks and no other town; the same
+theft unwitnessed moves nothing; both suites green.
+
+### J3 · The scale's two ends
+
+Est. 2 h. Depends on: J2.
+
+A theft is about **−10**, killing somebody innocent about **−80** (Yannick,
+2026-09-23). Which forces the deeds table to know what *innocent* means: somebody who
+drew on you first is a different deed from a bystander.
+
+**Check:** both numbers, written out in a test; and killing an opponent who attacked
+first costs less than killing a bystander, with the two named in one test so the
+distinction cannot quietly disappear.
+
+### J4 · Blackcairn reads the mean
+
+Est. 1 h. Depends on: J2.
+
+One pure function. The royal city's regard for the player is the mean of every town's
+standing, **including the towns never visited**, which sit at neutral and pull it
+toward zero. No place → place propagation: the player travels the same star the kingdom
+does (`SIMULATION_MODEL.md` §3, guardrail 1).
+
+**Check:** hated in one town and liked in four arrives positive; mildly disliked in all
+five arrives lower than that. Two tests with the numbers written out, because the
+second result is the counter-intuitive one and it is the design working.
+
+### J5 · Dialogue reads the town
+
+Est. 1 h. Depends on: J2.
+
+`DialogueSystem` reads `with_person`; it reads the town's standing instead. **That is
+the whole of what standing does in v1** — no hostile watch, no prices, no closed doors.
+
+**Check:** the `they_think_ill_of_me` greeting fires on a town's standing and not on a
+person's; a frame of it, because a greeting that silently never fires is invisible to
+the suite.
+
+### J6 · The journal shows what you did and what it cost
+
+Est. 3 h. Depends on: J2.
+
+The standings, and beside them the acts that moved them — saving somebody, killing
+somebody (Yannick, 2026-09-23). Not a new machine: `core/journal.gd` already keeps one
+chronological list carrying facts rather than phrasing, and every deed that moves a
+standing is already an event in it. This is the reading.
+
+**Check:** a frame of the page after a theft and after a killing, with the number and
+its cause on the same screen. A town that hates you and will not say why is a bug.
+
+---
+
+## K — combat, second version
+
+**New, 2026-09-23.** Reads from [the combat design](COMBAT_V2.md). It replaces the
+fighting-game system, which was not broken — it was the wrong game for *you can kill
+everyone*. `docs/COMBAT.md` stays as the record of what was built and why it went.
+
+### K1 · A fight on the world grid, turn by turn
+
+Est. 6 h. Depends on: —.
+
+`core/fight.gd`'s millimetre line becomes tiles of the world grid, and
+`CombatSystem`'s sixty steps a second becomes turns. Everyone acts once per round in a
+fixed order and **whoever started the fight acts first** — there is no initiative roll
+because there are no dice. The world clock stays held (`Sim.ticks_held`).
+
+**One event per turn**, which is fewer events than the first design rather than more.
+
+**Check:** a fight of twenty turns is twenty events; the same log replays to the same
+tiles; the fourteen combat tests that survive stay in the fast suite and it stays fast.
+
+### K2 · Move and act, and the three actions
+
+Est. 4 h. Depends on: K1.
+
+Strike, guard, wait. **Fixed damage, no dice.** Reach is one tile, diagonals included,
+because the game's movement is 8-way. All of balance stays **one small table** — the
+rule worth keeping from the first design.
+
+**Open, and Yannick's:** move **and** act in a turn, or move **or** act. The first plays
+faster; the second makes position a real cost. One line either way.
+
+**Check:** editing the table alone changes the outcome of a scripted fight; a test plays
+the same five turns twice and gets the same result to the tile.
+
+### K3 · Killing, and fleeing
+
+Est. 4 h. Depends on: K1, J2.
+
+Anybody can be attacked, from the world or from a conversation, and nothing checks who
+they are. A killed person is **gone** through `OpeningRules.is_gone`, which reads a fact
+rather than keeping a flag in step — written for the fairy, reused for Tom. A wounded
+NPC spends its turn moving away and leaves the fight once it is out of reach. A body
+carries its gold.
+
+**Check:** kill one of the quest's people and the quest still finishes by another route
+(invariant 6, proved against a real death rather than structurally); attack the works'
+people and they flee rather than die in place; the standing moves by J3's numbers.
+
+### K4 · The picture, adapted
+
+Est. 3 h. Depends on: K1.
+
+The camera that drops and never turns stays. The ring is **softened and stops being a
+boundary** — nothing prevents the player leaving or an enemy fleeing, which is this
+map's oldest rule applied once more. Both healths, the damage numbers, the hit flash,
+the sparks and the ending's beat are kept as they are.
+
+**Check:** four frames — a turn being taken, a blow landing, somebody fleeing, the end
+— and in one of them the player walks out of a fight that is still going.
+
+### K5 · Four more frames: attack and guard, north and south
+
+Est. 3 h. Depends on: —.
+
+`tools/draw_fight_frames.gd` built eight from his brother's own pixels, under Yannick's
+explicit exception. Four more, from the up and down walk frames his brother drew.
+Yannick chose this over accepting a side-on blow (2026-09-23).
+
+**Open, and it comes from his own playtest.** He found the first animation too slight
+because **the wind-up had no drawing**, and the wind-up is the half of a blow a player
+reads. It is drawn left and right only. An attack thrown north with a wind-up drawn west
+breaks the telegraph exactly where the new frames are used. Either the wind-up is drawn
+north and south too — **eight new frames, not four** — or the telegraph for those two
+facings falls back to the ring at the feet, which already exists and already works.
+
+**Check:** the sheet holds them all; a frame of a blow struck north; and
+`test_his_brother_has_not_drawn_a_blow` still fails the day his own sheet grows an
+attack, which is the day this tool and this exception are deleted.
+
+### K6 · The first design comes out
+
+Est. 2 h. Depends on: K1–K4.
+
+`CombatRules`' frame data, the millimetre line, the sixty-steps system, the frame counts
+in `content/moves.json`, and the tests that assert them. Last, like every deletion in
+this list.
+
+**Check:** both suites green with none of it; the fast suite no slower than it was with
+it.
+
+---
+
+## W — the wild, and the demo's road
+
+**New, 2026-09-23.** Monsters live in the forest and never in the towns (Yannick). This
+is the group that makes the demo's walk a journey instead of a corridor, and it is where
+the demo's funnel lives — made of wolves, never of walls.
+
+### W1 · A wolf
+
+Est. 3 h. Depends on: K1, K2.
+
+Hit points, one damage number, a reach, and one rule for what it does on its turn. That
+is the whole of a monster, and it is why turn-based makes them cheap enough to have.
+
+**Check:** a wolf fights, kills, and can be killed; the same fight played twice comes
+out the same.
+
+### W2 · Wolves on the roads, never in the towns
+
+Est. 3 h. Depends on: W1.
+
+Where they stand is **content, not code**, the same discipline the routines already
+follow. The road to the works is plainly the safe one; the others are where the wolves
+are.
+
+**No gate anywhere in `core/`** (`PLAYER_MODEL.md` §8). A check that asks *have you
+finished the tutorial* is invariant 4 broken, in a demo or out of one.
+
+**Check:** a walk from Brindle to the works meets wolves and survives at the demo's
+numbers; **nothing refuses to let the player walk anywhere**; a frame of the road that
+shows why a first-time player takes it.
+
+### W3 · The tutorial fight
+
+Est. 3 h. Depends on: K1–K4.
+
+The first fight, against something that cannot kill a beginner in two turns. What it
+must teach, and in how many turns, is open.
+
+**Check:** somebody who has never played finishes it without being told the keys. That
+is **S4's tester**, not a test — a suite cannot see whether a person understood.
+
+### W4 · The funnel comes out in one change
+
+Est. 1 h. Depends on: W2.
+
+Written the day W2 is written, never afterwards. Taking the demo's constraint out must
+be an afternoon and not an excavation.
+
+**Check:** the change exists and is named; applied, the player can walk to Blackcairn in
+minute one and Pillar 1 is whole again.
+
+---
+
+> **C3 is unblocked.** *Delete the deeds, the documents, the factions and the old
+> quests* depends on Q1–Q6, and all six are built. Yannick confirmed the factions go on
+> 2026-09-23. It stays where it is — deletions are last — but J2 and J3 rewire what C3
+> then removes, so the two are read together.
 
 ---
 

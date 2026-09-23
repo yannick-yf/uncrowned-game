@@ -15,7 +15,7 @@ the dialogue:
 | `docs/SIMULATION_MODEL.md` | **What the simulation is.** Two values per place, two for the kingdom, the star, the look, the routines, where the player enters |
 | `docs/QUEST_CINDERWORKS.md` | The demo's quest, settled on paper |
 | `docs/SIMULATION_KEEP_OR_DROP.md` | What survives of the old simulation, component by component |
-| `docs/DEMO_TASKS.md` | The work, as 26 tasks with their checks |
+| `docs/DEMO_TASKS.md` | The work, as 47 tasks with their checks |
 
 `docs/SIMULATION_AS_BUILT.md` records what the old simulation did, so that what is
 dropped is dropped on purpose and not by accident.
@@ -393,7 +393,7 @@ what it would cost in time and tokens and ask first.
 ## Current phase
 
 **The simulation is being rebuilt, simpler, and its design is settled** (2026-09-18).
-Start at `docs/SIMULATION_MODEL.md`. The work is `docs/DEMO_TASKS.md`: **26 tasks, one
+Start at `docs/SIMULATION_MODEL.md`. The work is `docs/DEMO_TASKS.md`: **47 tasks, one
 at a time, both suites green between them**, and **nothing is deleted until the demo
 runs on the new model** — the clean-up tasks are last on purpose.
 
