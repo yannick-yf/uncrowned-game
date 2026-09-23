@@ -33,7 +33,7 @@ something you decide, and something that moves with what happens.
 |---|---|---|---|
 | **Allégeance** | The side the player *chose*. Visible to everyone | `core/allegiance.gd`, `side` — **exists** | Only when the player says so. Never drifts |
 | **Standing, per town** | What each place thinks of the player | `core/standing.gd`, `by_town` — **exists** | By deeds done there, and only by deeds |
-| **Richesse** | What the player holds and carries | **new — see §6** | By taking, buying, being given, losing |
+| **Richesse** | **The gold the player has.** One number | **new — see §6** | By earning, taking, being given, spending |
 
 The first two were already written with the right split, in September:
 
@@ -51,20 +51,39 @@ C3; `by_town` and `side` are what this model keeps.
 `by_person` goes too. A witness's opinion diverging from their neighbours' was a good
 idea and it is not this model's: a deed moves the town it happened in.
 
-**Richesse is Yannick's addition of 2026-09-23** and it is not money: it is *what you
-have on you*. A player in good boots carrying three silver candlesticks reads
-differently in a poor town than a player in rags. It changes how a place perceives the
-player; it does not change what a place thinks of them. **Standing is earned, richesse
-is displayed.**
+**Richesse is money, and nothing more** (Yannick, 2026-09-23). It is how much gold the
+player has. `SPECS` §12 already settles the currency — *"Currency: gold. The king's is
+in the bank — one of the six pillars."* — so this adds a purse, not an economy.
+
+It is deliberately the simplest of the three: one integer, and a town reads which band
+it falls in.
+
+> **What richesse is *not*, so the line stays clear.** `SPECS` §12 also says
+> *"equipment matters mechanically in combat, for the player and the opponent, and is
+> visible to NPCs (feeding appearance, §8)"*. **Appearance is a separate thing** — what
+> the player is wearing and carrying — and it is not in this model. Richesse is the
+> purse; appearance is the picture. Conflating them was an error in this document's
+> first draft.
 
 ## 3. What moves the town's standing
 
 One rule, the one the code already states: **a change names who is offended and who is
 impressed.** A deed never only costs.
 
-The scale is the existing one, −100 to +100, and Yannick's worked example sets the
-order of magnitude: a theft is about **−10** in the town it happened in. Ten thefts in
-one place make you hated there and nowhere else.
+The scale is the existing one, −100 to +100, and Yannick's two worked examples set it
+end to end (2026-09-23):
+
+| Deed | In the town where it happened |
+|---|---|
+| A theft | about **−10** |
+| **Killing somebody innocent** | about **−80** |
+
+That gap is the design. Ten thefts and you are hated in one town; **one murder and you
+are nearly there in a single afternoon**. It also says something true about the game:
+the player who takes things is a nuisance, and the player who kills is something else.
+
+What "innocent" means is a question the deeds table answers, not this document —
+killing somebody who drew on you first is not the same deed.
 
 **Witnessing is what makes a deed count.** A deed nobody saw moves nothing. That is
 already how `RumourSystem` works, and it makes stealing a choice about *where and when*
@@ -113,30 +132,39 @@ Explicitly **not** in v1:
 
 ## 6. Richesse — the one part that needs building
 
-There is **no inventory in the codebase**. `WorldState.documents` holds evidence and
-nothing else; `Allegiance.owner_of` records which faction holds which *zone*, not what
-the player carries. Money does not exist (`SPECS` §12).
+**Money does not exist in the codebase.** `SPECS` §12 names the currency and leaves
+everything else as TBD, and no store holds a coin today. So richesse is the only piece
+of this model that is new work rather than a rewiring of what is there.
 
-So richesse is the only piece of this model that is new work rather than a rewiring of
-what is there. What it needs, at its smallest:
+It is small, because it is one number:
 
 | | |
 |---|---|
-| A store | what the player holds, append-and-remove, rebuilt by replay like every other |
-| A worth | one number per thing, so a town can read a total rather than a list |
-| A reading | the band a town perceives — *destitute / plain / comfortable / rich* |
-| A source | things to hold: what a wolf's den has, what a body has, what a theft takes |
+| **A purse** | one integer on the player, moved only through the event log like everything else |
+| **A reading** | which band the number falls in — *destitute / plain / comfortable / rich* |
+| **A source** | somewhere for gold to come from and go to: what a body has, what a theft takes, what a quest pays |
 
-**Open:** whether what the player *wears* counts differently from what they *carry* in
-a sack. Yannick's phrasing — *ce que le joueur détient et porte* — suggests both, and
-the simplest honest v1 is one total with no distinction.
+**The bands' thresholds are open** and Yannick will set them once there is gold to
+count. Nothing else in the model waits on them: the purse can be built and filled
+before anybody decides what counts as rich.
+
+**What richesse does is deliberately not answered here.** In v1 standing changes what
+people say (§5); richesse changes how a place *perceives* the player, which is the
+same channel and a later decision. It is modelled now because the combat design needs
+somewhere for a dead man's gold to go, not because v1 spends it.
 
 ## 7. Still open
 
-1. **What a thing is worth**, and the four bands' thresholds. Numbers, once there is
-   something to hold.
-2. **How the journal shows it.** Yannick has settled *that* it appears there
-   (2026-09-23); the shape is a later question, and a small one.
+1. **The four richesse bands' thresholds.** How much gold is *comfortable*. Numbers,
+   once there is gold to count, and nothing waits on them.
+2. **What richesse does to a place's perception**, beyond existing (§6).
+
+**Settled since the first draft:** the journal shows the standings **and a log of the
+player's key acts** — saving somebody, killing somebody, and their like (Yannick,
+2026-09-23). That log is not a new machine: `core/journal.gd` already keeps one
+chronological list carrying facts rather than phrasing, and every deed that moves a
+standing is already an event in it. What it needs is a page that reads *what you did
+and what it cost you*, side by side, so the number and its cause are never separated.
 
 ## 8. The demo funnels the player, and Pillar 1 does not move
 

@@ -125,7 +125,10 @@ changes what people say to you and nothing else — **no hostile watch, decided
 2026-09-23**. A town that hates you talks to you differently; it does not hunt you.
 
 **What the dead leave behind** is the natural source for the player's richesse, and
-the two designs meet here: a body has what it carried.
+the two designs meet here: a body has the gold it carried. That is also why killing is
+worth designing carefully rather than forbidding — it pays, and it costs about −80 of
+a town's regard when it was murder (`PLAYER_MODEL.md` §3). The player weighs one
+against the other, which is the whole point of letting them do it.
 
 ## 6. Monsters
 
