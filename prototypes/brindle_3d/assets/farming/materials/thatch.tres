@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/farming_surface.gdshader" id="1_yapin"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_yapin")
+shader_parameter/tint = Color(0.7176471, 0.5921569, 0.30588236, 1)
+shader_parameter/surface_kind = 2
+shader_parameter/roughness = 0.94

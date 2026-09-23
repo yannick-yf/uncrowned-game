@@ -1,0 +1,93 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_yj4ex"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_stone.res" id="2_e8riv"]
+[ext_resource type="Material" path="res://assets/farming/materials/water.tres" id="3_4nkw7"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_water.res" id="4_a83yk"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_28eix"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_dark_wood.res" id="6_gntmo"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="7_1r8mc"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_wood.res" id="8_klytc"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="9_wy3aq"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_rope.res" id="10_dm335"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="11_vwgnm"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_iron.res" id="12_bycvn"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="13_w7edh"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_thatch.res" id="14_dmqyr"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="15_lag05"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/puits_couvert_de_chaume_Merged_thatch_dark.res" id="16_j3ijh"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1gt51"]
+height = 1.17
+radius = 0.98
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yriva"]
+size = Vector3(0.2, 2.55, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rkkiw"]
+size = Vector3(0.2, 2.55, 0.22)
+
+[node name="PuitsCouvertDeChaume" type="Node3D" unique_id=765960128]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "puits_couvert_de_chaume"
+metadata/family = "accessoires"
+metadata/label = "Puits couvert de chaume"
+metadata/purpose = "Point d'eau de cour, avec margelle, treuil et seau."
+metadata/placement = "Sur terrain horizontal ; réserver 1,2 m de passage autour de la margelle."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="WellRimCollision" type="StaticBody3D" parent="." unique_id=848328171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.585, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@178" type="CollisionShape3D" parent="WellRimCollision" unique_id=2074449472]
+shape = SubResource("CylinderShape3D_1gt51")
+
+[node name="UprightsCollision" type="StaticBody3D" parent="." unique_id=832249040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.11, 1.275, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@179" type="CollisionShape3D" parent="UprightsCollision" unique_id=315127280]
+shape = SubResource("BoxShape3D_yriva")
+
+[node name="@StaticBody3D@180" type="StaticBody3D" parent="." unique_id=928765254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11, 1.275, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@181" type="CollisionShape3D" parent="@StaticBody3D@180" unique_id=1194076856]
+shape = SubResource("BoxShape3D_rkkiw")
+
+[node name="UsePoint" type="Marker3D" parent="." unique_id=1143072901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.45)
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=1504901421]
+material_override = ExtResource("1_yj4ex")
+mesh = ExtResource("2_e8riv")
+
+[node name="MergedWater" type="MeshInstance3D" parent="." unique_id=1368835569]
+material_override = ExtResource("3_4nkw7")
+mesh = ExtResource("4_a83yk")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=524865764]
+material_override = ExtResource("5_28eix")
+mesh = ExtResource("6_gntmo")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1953742734]
+material_override = ExtResource("7_1r8mc")
+mesh = ExtResource("8_klytc")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=1943336611]
+material_override = ExtResource("9_wy3aq")
+mesh = ExtResource("10_dm335")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=2122216998]
+material_override = ExtResource("11_vwgnm")
+mesh = ExtResource("12_bycvn")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=1981428159]
+material_override = ExtResource("13_w7edh")
+mesh = ExtResource("14_dmqyr")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=1641851243]
+material_override = ExtResource("15_lag05")
+mesh = ExtResource("16_j3ijh")

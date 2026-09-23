@@ -1,0 +1,6776 @@
+{
+  "bounds_xz": [
+    -268.0,
+    -54.0,
+    174.0,
+    184.0
+  ],
+  "buildings": [
+    {
+      "access_width_m": 1.3,
+      "altitude": 31.084,
+      "approach_end_xz": [
+        -191.188352671474,
+        25.041994183771
+      ],
+      "asset": "chaumiere_du_potager",
+      "bounds_center_m": [
+        0.0,
+        2.58000016212463,
+        0.550435781478882
+      ],
+      "door_approaches": [
+        [
+          [
+            -185.12962962963,
+            26.1481481481481
+          ],
+          [
+            -190.089545190948,
+            27.3983944300663
+          ],
+          [
+            -190.512163452689,
+            26.4920866430296
+          ],
+          [
+            -191.188352671474,
+            25.041994183771
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -190.469901626515,
+        26.5827174217333
+      ],
+      "group": "Habitations",
+      "id": "ChaumierePotager",
+      "scene": "res://assets/farming/maisons/chaumiere_du_potager.tscn",
+      "size_m": [
+        6.31454515457153,
+        5.16000032424927,
+        6.720871925354
+      ],
+      "threshold_xz": [
+        -191.365852341405,
+        24.6613449132156
+      ],
+      "xz": [
+        -192.0,
+        22.0
+      ],
+      "yaw": 25.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 30.562,
+      "approach_end_xz": [
+        -193.648409758699,
+        52.8491468990902
+      ],
+      "asset": "maison_a_appentis",
+      "bounds_center_m": [
+        0.143237590789795,
+        2.87750005722046,
+        0.00999975204467773
+      ],
+      "door_approaches": [
+        [
+          [
+            -189.579752978736,
+            52.0651202923877
+          ],
+          [
+            -191.05830354366,
+            53.0757518302341
+          ],
+          [
+            -192.054498241752,
+            52.9885960874864
+          ],
+          [
+            -193.648409758699,
+            52.8491468990902
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -191.954878771943,
+        52.9973116617612
+      ],
+      "group": "Habitations",
+      "id": "MaisonAppentis",
+      "scene": "res://assets/farming/maisons/maison_a_appentis.tscn",
+      "secondary_accesses": [
+        {
+          "approach_end_xz": [
+            -194.293245085886,
+            48.5164586101856
+          ],
+          "entrance_front_xz": [
+            -192.500094629321,
+            48.6733389471313
+          ],
+          "id": "Remise",
+          "local_xz": [
+            2.71,
+            2.06
+          ],
+          "points_xz": [
+            [
+              -190.971508782742,
+              48.1647066802544
+            ],
+            [
+              -191.843772503516,
+              48.7307596927605
+            ],
+            [
+              -192.69933356894,
+              48.6559077985818
+            ],
+            [
+              -194.293245085886,
+              48.5164586101856
+            ]
+          ],
+          "threshold_xz": [
+            -194.711646859085,
+            48.4798531982315
+          ],
+          "width_m": 1.2
+        }
+      ],
+      "size_m": [
+        8.4154052734375,
+        5.75500011444092,
+        6.44000005722046
+      ],
+      "threshold_xz": [
+        -194.066811531897,
+        52.8125414871361
+      ],
+      "xz": [
+        -197.0,
+        51.0
+      ],
+      "yaw": 85.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 31.084,
+      "approach_end_xz": [
+        -152.75,
+        25.15
+      ],
+      "asset": "longere_des_moissons",
+      "bounds_center_m": [
+        0.0,
+        2.79999971389771,
+        0.0988078117370605
+      ],
+      "door_approaches": [
+        [
+          [
+            -154.782878294506,
+            29.0472807540081
+          ],
+          [
+            -152.75,
+            27.75
+          ],
+          [
+            -152.75,
+            26.75
+          ],
+          [
+            -152.75,
+            25.15
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -152.75,
+        26.85
+      ],
+      "group": "Habitations",
+      "id": "LongereMoissons",
+      "scene": "res://assets/farming/maisons/longere_des_moissons.tscn",
+      "size_m": [
+        10.9400005340576,
+        5.60999965667725,
+        6.02238368988037
+      ],
+      "threshold_xz": [
+        -152.75,
+        24.73
+      ],
+      "xz": [
+        -151.0,
+        22.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 30.454,
+      "approach_end_xz": [
+        -150.481228037778,
+        53.9704093385977
+      ],
+      "asset": "ferme_en_l",
+      "bounds_center_m": [
+        -0.570903301239014,
+        2.98000025749207,
+        0.804999828338623
+      ],
+      "door_approaches": [
+        [
+          [
+            -157.838541841496,
+            51.6891007351213
+          ],
+          [
+            -150.355020594538,
+            53.2546513602505
+          ],
+          [
+            -150.396669050807,
+            53.4908514931051
+          ],
+          [
+            -150.481228037778,
+            53.9704093385977
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -150.186026135744,
+        52.2962361584769
+      ],
+      "group": "Habitations",
+      "id": "FermeEnL",
+      "scene": "res://assets/farming/maisons/ferme_en_l.tscn",
+      "size_m": [
+        9.86441802978516,
+        5.96000051498413,
+        9.43000030517578
+      ],
+      "threshold_xz": [
+        -150.554160272398,
+        54.3840285948628
+      ],
+      "xz": [
+        -150.0,
+        57.0
+      ],
+      "yaw": 170.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 30.238,
+      "approach_end_xz": [
+        -181.691002494885,
+        66.5646292846113
+      ],
+      "asset": "maison_du_verger",
+      "bounds_center_m": [
+        0.0411028861999512,
+        3.27749991416931,
+        -0.0482001304626465
+      ],
+      "door_approaches": [
+        [
+          [
+            -176.086642601892,
+            65.2332725906565
+          ],
+          [
+            -181.159807419627,
+            64.5821822750184
+          ],
+          [
+            -181.335101794462,
+            65.236389788184
+          ],
+          [
+            -181.691002494885,
+            66.5646292846113
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -181.251010118211,
+        64.9225553799199
+      ],
+      "group": "Habitations",
+      "id": "MaisonVerger",
+      "scene": "res://assets/farming/maisons/maison_du_verger.tscn",
+      "size_m": [
+        8.11616897583008,
+        6.55499982833862,
+        7.02360010147095
+      ],
+      "threshold_xz": [
+        -181.799706493828,
+        66.9703181316527
+      ],
+      "xz": [
+        -184.0,
+        69.0
+      ],
+      "yaw": 165.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 30.256,
+      "approach_end_xz": [
+        -167.200515357441,
+        64.5170667094656
+      ],
+      "asset": "logis_a_auvent",
+      "bounds_center_m": [
+        0.0,
+        2.9524998664856,
+        0.639885663986206
+      ],
+      "door_approaches": [
+        [
+          [
+            -167.058540414982,
+            60.8692442739546
+          ],
+          [
+            -167.427120288585,
+            61.9269604944271
+          ],
+          [
+            -167.339964545837,
+            62.9231551925188
+          ],
+          [
+            -167.200515357441,
+            64.5170667094656
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -167.348680120112,
+        62.8235357227097
+      ],
+      "group": "Habitations",
+      "id": "LogisAuvent",
+      "scene": "res://assets/farming/maisons/logis_a_auvent.tscn",
+      "size_m": [
+        7.51378059387207,
+        5.90499973297119,
+        7.49977159500122
+      ],
+      "threshold_xz": [
+        -167.163909945487,
+        64.9354684826642
+      ],
+      "xz": [
+        -168.0,
+        68.0
+      ],
+      "yaw": 185.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 30.832,
+      "approach_end_xz": [
+        -148.35,
+        36.75
+      ],
+      "asset": "maison_a_pignon_decale",
+      "bounds_center_m": [
+        0.0113677978515625,
+        2.9300000667572,
+        0.132649898529053
+      ],
+      "door_approaches": [
+        [
+          [
+            -154.306515956799,
+            35.5360710834925
+          ],
+          [
+            -150.95,
+            36.75
+          ],
+          [
+            -149.95,
+            36.75
+          ],
+          [
+            -148.35,
+            36.75
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -150.05,
+        36.75
+      ],
+      "group": "Habitations",
+      "id": "MaisonPignon",
+      "scene": "res://assets/farming/maisons/maison_a_pignon_decale.tscn",
+      "size_m": [
+        6.67260456085205,
+        5.8600001335144,
+        6.45530033111572
+      ],
+      "threshold_xz": [
+        -147.93,
+        36.75
+      ],
+      "xz": [
+        -145.0,
+        36.0
+      ],
+      "yaw": -90.0
+    },
+    {
+      "access_width_m": 1.3,
+      "altitude": 31.426,
+      "approach_end_xz": [
+        -190.23367252968,
+        8.10807520764483
+      ],
+      "asset": "logis_des_journaliers",
+      "bounds_center_m": [
+        0.0,
+        3.11500024795532,
+        1.02499985694885
+      ],
+      "door_approaches": [
+        [
+          [
+            -190.247634371527,
+            12.6022754647853
+          ],
+          [
+            -189.560743012414,
+            10.6194823559964
+          ],
+          [
+            -189.819562057516,
+            9.65355652970734
+          ],
+          [
+            -190.23367252968,
+            8.10807520764483
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -189.793680153006,
+        9.75014911233625
+      ],
+      "group": "Habitations",
+      "id": "LogisJournaliers",
+      "scene": "res://assets/farming/maisons/logis_des_journaliers.tscn",
+      "size_m": [
+        7.70976877212524,
+        6.23000049591064,
+        8.67000007629395
+      ],
+      "threshold_xz": [
+        -190.342376528624,
+        7.70238636060342
+      ],
+      "xz": [
+        -193.0,
+        3.0
+      ],
+      "yaw": 15.0
+    },
+    {
+      "access_width_m": 3.0,
+      "altitude": 31.21,
+      "approach_end_xz": [
+        -173.0,
+        20.4
+      ],
+      "asset": "grange_traversante",
+      "bounds_center_m": [
+        0.0,
+        3.63000011444092,
+        0.0
+      ],
+      "door_approaches": [
+        [
+          [
+            -173.0,
+            22.8
+          ],
+          [
+            -173.0,
+            22.2
+          ],
+          [
+            -173.0,
+            21.606
+          ],
+          [
+            -173.0,
+            20.4
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -173.0,
+        22.8
+      ],
+      "group": "PlaceDuPuits",
+      "id": "GrandeGrange",
+      "scene": "res://assets/farming/agricole/grange_traversante.tscn",
+      "size_m": [
+        10.0923252105713,
+        7.26000022888184,
+        11.6199998855591
+      ],
+      "threshold_xz": [
+        -173.0,
+        20.4
+      ],
+      "xz": [
+        -173.0,
+        15.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "access_width_m": 3.0,
+      "altitude": 31.426,
+      "approach_end_xz": [
+        -137.145897151162,
+        6.18755522675393
+      ],
+      "asset": "grange_a_foin_ouverte",
+      "bounds_center_m": [
+        0.0,
+        2.95500016212463,
+        0.0
+      ],
+      "door_approaches": [
+        [
+          [
+            -141.297931982669,
+            13.7153425643777
+          ],
+          [
+            -136.472967633895,
+            8.6989623751055
+          ],
+          [
+            -136.731786678998,
+            7.73303654881644
+          ],
+          [
+            -137.145897151162,
+            6.18755522675393
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -136.524731442916,
+        8.50577720984769
+      ],
+      "group": "CourDesRecoltes",
+      "id": "GrangeRecoltes",
+      "scene": "res://assets/farming/agricole/grange_a_foin_ouverte.tscn",
+      "size_m": [
+        8.29258918762207,
+        5.91000032424927,
+        7.4200005531311
+      ],
+      "threshold_xz": [
+        -137.145897151162,
+        6.18755522675393
+      ],
+      "xz": [
+        -138.0,
+        3.0
+      ],
+      "yaw": 15.0
+    },
+    {
+      "access_width_m": 1.6,
+      "altitude": 31.156,
+      "approach_end_xz": [
+        -133.468691083528,
+        20.58
+      ],
+      "asset": "grenier_sur_piliers",
+      "bounds_center_m": [
+        0.0,
+        3.11500024795532,
+        0.87749981880188
+      ],
+      "door_approaches": [
+        [
+          [
+            -137.331183833519,
+            21.8720437049911
+          ],
+          [
+            -135.720357133367,
+            21.88
+          ],
+          [
+            -134.854331729583,
+            21.38
+          ],
+          [
+            -133.468691083528,
+            20.58
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -134.940934269961,
+        21.43
+      ],
+      "group": "CourDesRecoltes",
+      "id": "GrenierSec",
+      "scene": "res://assets/farming/agricole/grenier_sur_piliers.tscn",
+      "size_m": [
+        5.28384208679199,
+        6.23000049591064,
+        7.17500019073486
+      ],
+      "threshold_xz": [
+        -132.866803427898,
+        20.2325
+      ],
+      "xz": [
+        -129.0,
+        18.0
+      ],
+      "yaw": -60.0
+    },
+    {
+      "access_width_m": 1.5,
+      "altitude": 30.904,
+      "approach_end_xz": [
+        -130.4,
+        32.0
+      ],
+      "asset": "reserve_a_grain_octogonale",
+      "bounds_center_m": [
+        0.0,
+        3.22000002861023,
+        0.0529699325561523
+      ],
+      "door_approaches": [
+        [
+          [
+            -136.709438144281,
+            31.9607891761661
+          ],
+          [
+            -133.0,
+            32.0
+          ],
+          [
+            -132.0,
+            32.0
+          ],
+          [
+            -130.4,
+            32.0
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -132.1,
+        32.0
+      ],
+      "group": "CourDesRecoltes",
+      "id": "ReserveGrains",
+      "scene": "res://assets/farming/agricole/reserve_a_grain_octogonale.tscn",
+      "size_m": [
+        4.60000038146973,
+        6.44000005722046,
+        4.70594024658203
+      ],
+      "threshold_xz": [
+        -129.98,
+        32.0
+      ],
+      "xz": [
+        -128.0,
+        32.0
+      ],
+      "yaw": -90.0
+    },
+    {
+      "access_width_m": 1.6,
+      "altitude": 30.0,
+      "approach_end_xz": [
+        -207.45,
+        38.9
+      ],
+      "asset": "moulin_a_grain_hydraulique",
+      "bounds_center_m": [
+        -0.198268890380859,
+        4.35500001907349,
+        0.185463428497314
+      ],
+      "door_approaches": [
+        [
+          [
+            -207.45,
+            41.2
+          ],
+          [
+            -207.45,
+            40.625
+          ],
+          [
+            -207.45,
+            40.05575
+          ],
+          [
+            -207.45,
+            38.9
+          ]
+        ]
+      ],
+      "entrance_front_xz": [
+        -207.45,
+        40.6
+      ],
+      "group": "RiveDuMoulin",
+      "id": "MoulinDesPres",
+      "scene": "res://assets/farming/hydraulique/moulin_a_grain_hydraulique.tscn",
+      "secondary_accesses": [
+        {
+          "approach_end_xz": [
+            -204.2,
+            36.78
+          ],
+          "entrance_front_xz": [
+            -204.2,
+            38.58
+          ],
+          "id": "Remise",
+          "local_xz": [
+            4.8,
+            2.36
+          ],
+          "points_xz": [
+            [
+              -200.545947325645,
+              43.6786743419064
+            ],
+            [
+              -204.2,
+              39.38
+            ],
+            [
+              -204.2,
+              38.38
+            ],
+            [
+              -204.2,
+              36.78
+            ]
+          ],
+          "route_id": "RueDuMarche",
+          "threshold_xz": [
+            -204.2,
+            36.36
+          ],
+          "width_m": 1.2
+        }
+      ],
+      "size_m": [
+        12.5334625244141,
+        8.71000003814697,
+        11.5709266662598
+      ],
+      "threshold_xz": [
+        -207.45,
+        38.48
+      ],
+      "xz": [
+        -209.0,
+        34.0
+      ],
+      "yaw": 0.0
+    }
+  ],
+  "door_aprons": [
+    {
+      "id": "ChaumierePotager",
+      "points_xz": [
+        [
+          -192.007459687629,
+          24.7619233068752
+        ],
+        [
+          -190.876387569408,
+          24.2344957162228
+        ],
+        [
+          -189.877601584269,
+          25.6996655206791
+        ],
+        [
+          -191.527081756676,
+          26.4688307570472
+        ]
+      ]
+    },
+    {
+      "id": "MaisonAppentis",
+      "points_xz": [
+        [
+          -194.300511761028,
+          53.4184789450508
+        ],
+        [
+          -194.191741394079,
+          52.1752279618323
+        ],
+        [
+          -192.423474129993,
+          52.0428388279865
+        ],
+        [
+          -192.582097581794,
+          53.8559131785135
+        ]
+      ]
+    },
+    {
+      "id": "MaisonAppentis_Remise",
+      "points_xz": [
+        [
+          -194.913369509447,
+          49.0644966556744
+        ],
+        [
+          -194.80878261815,
+          47.8690630179644
+        ],
+        [
+          -193.229068908451,
+          47.8265824884217
+        ],
+        [
+          -193.365031867138,
+          49.3806462174448
+        ]
+      ]
+    },
+    {
+      "id": "LongereMoissons",
+      "points_xz": [
+        [
+          -153.374,
+          24.55
+        ],
+        [
+          -152.126,
+          24.55
+        ],
+        [
+          -151.84,
+          26.3
+        ],
+        [
+          -153.66,
+          26.3
+        ]
+      ]
+    },
+    {
+      "id": "FermeEnL",
+      "points_xz": [
+        [
+          -149.970896906499,
+          54.6696504532691
+        ],
+        [
+          -151.199936982258,
+          54.4529375275408
+        ],
+        [
+          -151.177707688702,
+          52.6798605809567
+        ],
+        [
+          -149.38535757822,
+          52.9959002643105
+        ]
+      ]
+    },
+    {
+      "id": "MaisonVerger",
+      "points_xz": [
+        [
+          -181.243556206342,
+          67.3056878645287
+        ],
+        [
+          -182.449031637551,
+          66.9826816962407
+        ],
+        [
+          -182.27235309494,
+          65.2182892533356
+        ],
+        [
+          -180.514368091094,
+          65.6893399154222
+        ]
+      ]
+    },
+    {
+      "id": "LogisAuvent",
+      "points_xz": [
+        [
+          -166.526596420183,
+          65.0603983448461
+        ],
+        [
+          -167.769847403402,
+          65.1691687117952
+        ],
+        [
+          -168.207281636864,
+          63.4507545325605
+        ],
+        [
+          -166.394207286337,
+          63.2921310807598
+        ]
+      ]
+    },
+    {
+      "id": "MaisonPignon",
+      "points_xz": [
+        [
+          -147.75,
+          36.126
+        ],
+        [
+          -147.75,
+          37.374
+        ],
+        [
+          -149.5,
+          37.66
+        ],
+        [
+          -149.5,
+          35.84
+        ]
+      ]
+    },
+    {
+      "id": "LogisJournaliers",
+      "points_xz": [
+        [
+          -190.991701672346,
+          7.69002279601536
+        ],
+        [
+          -189.786226241138,
+          7.36701662772742
+        ],
+        [
+          -189.05703812589,
+          8.98336457683397
+        ],
+        [
+          -190.815023129736,
+          9.45441523892055
+        ]
+      ]
+    },
+    {
+      "id": "GrandeGrange",
+      "points_xz": [
+        [
+          -174.44,
+          20.22
+        ],
+        [
+          -171.56,
+          20.22
+        ],
+        [
+          -170.9,
+          21.55
+        ],
+        [
+          -175.1,
+          21.55
+        ]
+      ]
+    },
+    {
+      "id": "GrangeRecoltes",
+      "points_xz": [
+        [
+          -138.583417769136,
+          6.38638800296952
+        ],
+        [
+          -135.801551389424,
+          5.64098915307426
+        ],
+        [
+          -134.819811014087,
+          6.75484993227106
+        ],
+        [
+          -138.876699484501,
+          7.84188992170165
+        ]
+      ]
+    },
+    {
+      "id": "GrenierSec",
+      "points_xz": [
+        [
+          -133.008316314838,
+          19.4273924898936
+        ],
+        [
+          -132.240316314838,
+          20.7576075101065
+        ],
+        [
+          -133.90462029788,
+          22.1249484522386
+        ],
+        [
+          -135.02462029788,
+          20.1850515477614
+        ]
+      ]
+    },
+    {
+      "id": "ReserveGrains",
+      "points_xz": [
+        [
+          -129.8,
+          31.28
+        ],
+        [
+          -129.8,
+          32.72
+        ],
+        [
+          -131.55,
+          33.05
+        ],
+        [
+          -131.55,
+          30.95
+        ]
+      ]
+    },
+    {
+      "id": "MoulinDesPres",
+      "points_xz": [
+        [
+          -208.218,
+          38.3
+        ],
+        [
+          -206.682,
+          38.3
+        ],
+        [
+          -206.33,
+          40.05
+        ],
+        [
+          -208.57,
+          40.05
+        ]
+      ]
+    },
+    {
+      "id": "MoulinDesPres_Remise",
+      "points_xz": [
+        [
+          -204.8,
+          36.21
+        ],
+        [
+          -203.6,
+          36.21
+        ],
+        [
+          -203.42,
+          37.78
+        ],
+        [
+          -204.98,
+          37.78
+        ]
+      ]
+    }
+  ],
+  "dressing": [
+    {
+      "altitude": 30.8500003814697,
+      "id": "EtalPommes",
+      "kind": "stall",
+      "xz": [
+        -185.0,
+        32.0
+      ],
+      "yaw": 30.0
+    },
+    {
+      "altitude": 31.0305233001709,
+      "id": "EtalGrain",
+      "kind": "stall",
+      "xz": [
+        -162.0,
+        24.0
+      ],
+      "yaw": -25.0
+    },
+    {
+      "altitude": 30.8500003814697,
+      "id": "EtalLegumes",
+      "kind": "stall",
+      "xz": [
+        -163.0,
+        38.0
+      ],
+      "yaw": -90.0
+    },
+    {
+      "altitude": 30.8500003814697,
+      "id": "BancPuits",
+      "kind": "bench",
+      "xz": [
+        -178.0,
+        34.0
+      ],
+      "yaw": 80.0
+    },
+    {
+      "altitude": 30.8500003814697,
+      "id": "BancPlace",
+      "kind": "bench",
+      "xz": [
+        -170.0,
+        30.0
+      ],
+      "yaw": 165.0
+    },
+    {
+      "altitude": 30.1149101257324,
+      "id": "BancVerger",
+      "kind": "bench",
+      "xz": [
+        -140.0,
+        78.0
+      ],
+      "yaw": 10.0
+    },
+    {
+      "altitude": 30.5455150604248,
+      "id": "BancMoulin",
+      "kind": "bench",
+      "xz": [
+        -214.0,
+        44.0
+      ],
+      "yaw": 25.0
+    },
+    {
+      "altitude": 30.9324808120728,
+      "id": "PanneauEntree",
+      "kind": "sign",
+      "xz": [
+        -123.0,
+        47.0
+      ],
+      "yaw": 80.0
+    },
+    {
+      "altitude": 30.6590938568115,
+      "id": "PanneauPont",
+      "kind": "sign",
+      "xz": [
+        -231.0,
+        63.0
+      ],
+      "yaw": -50.0
+    },
+    {
+      "altitude": 30.6520004272461,
+      "id": "PanneauPlace",
+      "kind": "sign",
+      "xz": [
+        -160.0,
+        46.0
+      ],
+      "yaw": 35.0
+    },
+    {
+      "altitude": 31.25,
+      "id": "VanneIrrigation",
+      "kind": "sluice",
+      "xz": [
+        -216.0,
+        -14.0
+      ],
+      "yaw": 90.0
+    }
+  ],
+  "fields": [
+    {
+      "asset": "champ_ble_rive_concave",
+      "id": "BleRiveOuest",
+      "scale": [
+        1.6,
+        1.55
+      ],
+      "xz": [
+        -247.0,
+        23.0
+      ],
+      "yaw": -12.0
+    },
+    {
+      "asset": "champ_ble_rive_concave",
+      "id": "BleDesPres",
+      "scale": [
+        1.8,
+        1.65
+      ],
+      "xz": [
+        -248.0,
+        44.0
+      ],
+      "yaw": 14.0
+    },
+    {
+      "asset": "champ_ble_rive_concave",
+      "id": "BleGrandMeandre",
+      "scale": [
+        1.65,
+        1.55
+      ],
+      "xz": [
+        -232.0,
+        78.0
+      ],
+      "yaw": -25.0
+    },
+    {
+      "asset": "champ_ble_rive_concave",
+      "id": "BleDuSud",
+      "scale": [
+        1.7,
+        1.5
+      ],
+      "xz": [
+        -207.0,
+        94.0
+      ],
+      "yaw": -18.0
+    },
+    {
+      "asset": "champ_ble_rive_concave",
+      "cultivation_level": 33.4,
+      "id": "BleHaut",
+      "scale": [
+        1.5,
+        1.5
+      ],
+      "xz": [
+        -184.0,
+        -27.0
+      ],
+      "yaw": -5.0
+    },
+    {
+      "asset": "champ_ble_rive_concave",
+      "cultivation_level": 33.4,
+      "id": "BleEst",
+      "scale": [
+        1.65,
+        1.4
+      ],
+      "xz": [
+        -157.0,
+        -30.0
+      ],
+      "yaw": 15.0
+    },
+    {
+      "asset": "champ_legumes_boucle",
+      "id": "PotagerMaison",
+      "scale": [
+        0.8,
+        0.9
+      ],
+      "xz": [
+        -188.0,
+        36.0
+      ],
+      "yaw": 20.0
+    },
+    {
+      "asset": "champ_legumes_boucle",
+      "id": "PotagerEst",
+      "scale": [
+        1.3,
+        1.4
+      ],
+      "xz": [
+        -130.0,
+        59.0
+      ],
+      "yaw": -15.0
+    },
+    {
+      "asset": "champ_legumes_boucle",
+      "id": "PotagerSud",
+      "scale": [
+        1.5,
+        1.3
+      ],
+      "xz": [
+        -150.0,
+        84.0
+      ],
+      "yaw": -20.0
+    },
+    {
+      "asset": "champ_laboure_lisiere",
+      "id": "LaboursOuest",
+      "scale": [
+        1.6,
+        1.5
+      ],
+      "xz": [
+        -256.0,
+        80.0
+      ],
+      "yaw": 25.0
+    },
+    {
+      "asset": "champ_laboure_lisiere",
+      "cultivation_level": 31.55,
+      "id": "LaboursHaut",
+      "scale": [
+        0.85,
+        1.3
+      ],
+      "xz": [
+        -213.0,
+        -5.0
+      ],
+      "yaw": -5.0
+    },
+    {
+      "asset": "jachere_irreguliere",
+      "id": "JachereSud",
+      "scale": [
+        1.4,
+        1.3
+      ],
+      "xz": [
+        -169.0,
+        89.0
+      ],
+      "yaw": -8.0
+    }
+  ],
+  "focus_xz": [
+    -179.0,
+    39.0
+  ],
+  "greenery": [
+    {
+      "id": "BouleauRive00",
+      "scale": 1.89,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -239.0,
+        -45.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "id": "BouleauRive01",
+      "scale": 2.11,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -225.0,
+        -48.0
+      ],
+      "yaw": 47.0
+    },
+    {
+      "id": "BouleauRive02",
+      "scale": 2.32,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -242.0,
+        -36.0
+      ],
+      "yaw": 94.0
+    },
+    {
+      "id": "BouleauRive03",
+      "scale": 1.89,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -220.0,
+        -37.0
+      ],
+      "yaw": 141.0
+    },
+    {
+      "id": "BouleauRive04",
+      "scale": 2.11,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -226.0,
+        -32.0
+      ],
+      "yaw": 188.0
+    },
+    {
+      "id": "BouleauRive05",
+      "scale": 2.32,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -237.0,
+        -21.0
+      ],
+      "yaw": 235.0
+    },
+    {
+      "id": "BouleauRive06",
+      "scale": 1.89,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -206.0,
+        -21.0
+      ],
+      "yaw": 282.0
+    },
+    {
+      "id": "BouleauRive07",
+      "scale": 2.11,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -150.0,
+        -21.0
+      ],
+      "yaw": 329.0
+    },
+    {
+      "id": "BouleauRive08",
+      "scale": 2.32,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -108.0,
+        10.0
+      ],
+      "yaw": 16.0
+    },
+    {
+      "id": "BouleauRive09",
+      "scale": 1.89,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -104.0,
+        62.0
+      ],
+      "yaw": 63.0
+    },
+    {
+      "id": "BouleauRive10",
+      "scale": 2.11,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -134.0,
+        104.0
+      ],
+      "yaw": 110.0
+    },
+    {
+      "id": "BouleauRive11",
+      "scale": 2.32,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -165.0,
+        108.0
+      ],
+      "yaw": 157.0
+    },
+    {
+      "id": "BouleauRive12",
+      "scale": 1.89,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -202.0,
+        84.0
+      ],
+      "yaw": 204.0
+    },
+    {
+      "id": "BouleauRive13",
+      "scale": 2.11,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -231.0,
+        55.0
+      ],
+      "yaw": 251.0
+    },
+    {
+      "id": "BouleauRive14",
+      "scale": 2.32,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -239.0,
+        88.0
+      ],
+      "yaw": 298.0
+    },
+    {
+      "id": "BouleauRive15",
+      "scale": 1.89,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -257.0,
+        7.0
+      ],
+      "yaw": 345.0
+    },
+    {
+      "id": "Lisiere00_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -197.0,
+        28.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "id": "Lisiere00_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -198.958,
+        28.879
+      ],
+      "yaw": 59.0
+    },
+    {
+      "id": "Lisiere00_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -197.863,
+        26.406
+      ],
+      "yaw": 118.0
+    },
+    {
+      "id": "Lisiere00_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -196.84,
+        29.504
+      ],
+      "yaw": 177.0
+    },
+    {
+      "id": "Lisiere00_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -200.168,
+        27.625
+      ],
+      "yaw": 236.0
+    },
+    {
+      "id": "Lisiere01_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -197.149,
+        16.989
+      ],
+      "yaw": 37.0
+    },
+    {
+      "id": "Lisiere01_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -197.727,
+        14.922
+      ],
+      "yaw": 96.0
+    },
+    {
+      "id": "Lisiere01_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -195.444,
+        16.372
+      ],
+      "yaw": 155.0
+    },
+    {
+      "id": "Lisiere01_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -198.66,
+        16.924
+      ],
+      "yaw": 214.0
+    },
+    {
+      "id": "Lisiere01_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -196.307,
+        13.912
+      ],
+      "yaw": 273.0
+    },
+    {
+      "id": "Lisiere02_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -153.956,
+        15.706
+      ],
+      "yaw": 74.0
+    },
+    {
+      "id": "Lisiere02_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -151.826,
+        15.441
+      ],
+      "yaw": 133.0
+    },
+    {
+      "id": "Lisiere02_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -153.599,
+        17.483
+      ],
+      "yaw": 192.0
+    },
+    {
+      "id": "Lisiere02_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -153.667,
+        14.221
+      ],
+      "yaw": 251.0
+    },
+    {
+      "id": "Lisiere02_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -151.038,
+        16.996
+      ],
+      "yaw": 310.0
+    },
+    {
+      "id": "Lisiere03_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -155.567,
+        26.099
+      ],
+      "yaw": 111.0
+    },
+    {
+      "id": "Lisiere03_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -155.622,
+        28.244
+      ],
+      "yaw": 170.0
+    },
+    {
+      "id": "Lisiere03_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -157.378,
+        26.187
+      ],
+      "yaw": 229.0
+    },
+    {
+      "id": "Lisiere03_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -154.141,
+        26.605
+      ],
+      "yaw": 288.0
+    },
+    {
+      "id": "Lisiere03_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -157.276,
+        28.792
+      ],
+      "yaw": 347.0
+    },
+    {
+      "id": "Lisiere04_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -156.173,
+        57.562
+      ],
+      "yaw": 148.0
+    },
+    {
+      "id": "Lisiere04_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -158.286,
+        57.189
+      ],
+      "yaw": 207.0
+    },
+    {
+      "id": "Lisiere04_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -155.991,
+        55.758
+      ],
+      "yaw": 266.0
+    },
+    {
+      "id": "Lisiere04_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -156.886,
+        58.897
+      ],
+      "yaw": 325.0
+    },
+    {
+      "id": "Lisiere04_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -158.582,
+        55.472
+      ],
+      "yaw": 24.0
+    },
+    {
+      "id": "Lisiere05_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -157.679,
+        67.734
+      ],
+      "yaw": 185.0
+    },
+    {
+      "id": "Lisiere05_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -156.996,
+        65.7
+      ],
+      "yaw": 244.0
+    },
+    {
+      "id": "Lisiere05_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -155.922,
+        68.182
+      ],
+      "yaw": 303.0
+    },
+    {
+      "id": "Lisiere05_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -158.892,
+        66.831
+      ],
+      "yaw": 2.0
+    },
+    {
+      "id": "Lisiere05_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -155.253,
+        65.662
+      ],
+      "yaw": 61.0
+    },
+    {
+      "id": "Lisiere06_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -187.625,
+        63.22
+      ],
+      "yaw": 222.0
+    },
+    {
+      "id": "Lisiere06_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -185.715,
+        64.198
+      ],
+      "yaw": 281.0
+    },
+    {
+      "id": "Lisiere06_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -188.33,
+        64.89
+      ],
+      "yaw": 340.0
+    },
+    {
+      "id": "Lisiere06_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -186.552,
+        62.154
+      ],
+      "yaw": 39.0
+    },
+    {
+      "id": "Lisiere06_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -185.937,
+        65.926
+      ],
+      "yaw": 98.0
+    },
+    {
+      "id": "Lisiere07_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -178.135,
+        72.498
+      ],
+      "yaw": 259.0
+    },
+    {
+      "id": "Lisiere07_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -179.386,
+        74.241
+      ],
+      "yaw": 318.0
+    },
+    {
+      "id": "Lisiere07_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -179.683,
+        71.553
+      ],
+      "yaw": 17.0
+    },
+    {
+      "id": "Lisiere07_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -177.241,
+        73.718
+      ],
+      "yaw": 76.0
+    },
+    {
+      "id": "Lisiere07_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -181.063,
+        73.765
+      ],
+      "yaw": 135.0
+    },
+    {
+      "id": "Lisiere08_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -198.632,
+        56.93
+      ],
+      "yaw": 296.0
+    },
+    {
+      "id": "Lisiere08_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -200.17,
+        55.433
+      ],
+      "yaw": 355.0
+    },
+    {
+      "id": "Lisiere08_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -197.468,
+        55.54
+      ],
+      "yaw": 54.0
+    },
+    {
+      "id": "Lisiere08_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -199.971,
+        57.633
+      ],
+      "yaw": 113.0
+    },
+    {
+      "id": "Lisiere08_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -199.45,
+        53.846
+      ],
+      "yaw": 172.0
+    },
+    {
+      "id": "Lisiere09_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -189.974,
+        48.226
+      ],
+      "yaw": 333.0
+    },
+    {
+      "id": "Lisiere09_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -188.266,
+        46.927
+      ],
+      "yaw": 32.0
+    },
+    {
+      "id": "Lisiere09_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -188.773,
+        49.584
+      ],
+      "yaw": 91.0
+    },
+    {
+      "id": "Lisiere09_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -190.47,
+        46.797
+      ],
+      "yaw": 150.0
+    },
+    {
+      "id": "Lisiere09_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -186.804,
+        47.875
+      ],
+      "yaw": 209.0
+    },
+    {
+      "id": "Lisiere10_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -188.079,
+        -2.997
+      ],
+      "yaw": 10.0
+    },
+    {
+      "id": "Lisiere10_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -187.048,
+        -1.114
+      ],
+      "yaw": 69.0
+    },
+    {
+      "id": "Lisiere10_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -189.6,
+        -2.011
+      ],
+      "yaw": 128.0
+    },
+    {
+      "id": "Lisiere10_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -186.591,
+        -3.275
+      ],
+      "yaw": 187.0
+    },
+    {
+      "id": "Lisiere10_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -188.203,
+        0.191
+      ],
+      "yaw": 246.0
+    },
+    {
+      "id": "Lisiere11_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -134.002,
+        5.07
+      ],
+      "yaw": 47.0
+    },
+    {
+      "id": "Lisiere11_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -136.017,
+        5.809
+      ],
+      "yaw": 106.0
+    },
+    {
+      "id": "Lisiere11_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -134.751,
+        3.419
+      ],
+      "yaw": 165.0
+    },
+    {
+      "id": "Lisiere11_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -133.948,
+        6.582
+      ],
+      "yaw": 224.0
+    },
+    {
+      "id": "Lisiere11_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -137.136,
+        4.473
+      ],
+      "yaw": 283.0
+    },
+    {
+      "id": "Lisiere12_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -132.218,
+        37.976
+      ],
+      "yaw": 84.0
+    },
+    {
+      "id": "Lisiere12_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -132.649,
+        35.874
+      ],
+      "yaw": 143.0
+    },
+    {
+      "id": "Lisiere12_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -130.474,
+        37.481
+      ],
+      "yaw": 202.0
+    },
+    {
+      "id": "Lisiere12_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -133.721,
+        37.805
+      ],
+      "yaw": 261.0
+    },
+    {
+      "id": "Lisiere12_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -131.162,
+        34.966
+      ],
+      "yaw": 320.0
+    },
+    {
+      "id": "Lisiere13_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -203.933,
+        36.639
+      ],
+      "yaw": 121.0
+    },
+    {
+      "id": "Lisiere13_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -201.79,
+        36.525
+      ],
+      "yaw": 180.0
+    },
+    {
+      "id": "Lisiere13_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -203.702,
+        38.438
+      ],
+      "yaw": 239.0
+    },
+    {
+      "id": "Lisiere13_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -203.54,
+        35.178
+      ],
+      "yaw": 298.0
+    },
+    {
+      "id": "Lisiere13_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -201.113,
+        38.131
+      ],
+      "yaw": 357.0
+    },
+    {
+      "id": "Lisiere14_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -225.505,
+        27.131
+      ],
+      "yaw": 158.0
+    },
+    {
+      "id": "Lisiere14_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -225.711,
+        29.267
+      ],
+      "yaw": 217.0
+    },
+    {
+      "id": "Lisiere14_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -227.317,
+        27.092
+      ],
+      "yaw": 276.0
+    },
+    {
+      "id": "Lisiere14_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -224.118,
+        27.737
+      ],
+      "yaw": 335.0
+    },
+    {
+      "id": "Lisiere14_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -227.399,
+        29.698
+      ],
+      "yaw": 34.0
+    },
+    {
+      "id": "Lisiere15_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -230.214,
+        41.619
+      ],
+      "yaw": 195.0
+    },
+    {
+      "id": "Lisiere15_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -232.296,
+        41.098
+      ],
+      "yaw": 254.0
+    },
+    {
+      "id": "Lisiere15_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -229.906,
+        39.832
+      ],
+      "yaw": 313.0
+    },
+    {
+      "id": "Lisiere15_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -231.02,
+        42.9
+      ],
+      "yaw": 12.0
+    },
+    {
+      "id": "Lisiere15_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -232.471,
+        39.364
+      ],
+      "yaw": 71.0
+    },
+    {
+      "id": "Lisiere16_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -223.729,
+        65.685
+      ],
+      "yaw": 232.0
+    },
+    {
+      "id": "Lisiere16_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -222.904,
+        63.704
+      ],
+      "yaw": 291.0
+    },
+    {
+      "id": "Lisiere16_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -222.008,
+        66.255
+      ],
+      "yaw": 350.0
+    },
+    {
+      "id": "Lisiere16_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -224.876,
+        64.698
+      ],
+      "yaw": 49.0
+    },
+    {
+      "id": "Lisiere16_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -221.164,
+        63.789
+      ],
+      "yaw": 108.0
+    },
+    {
+      "id": "Lisiere17_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -201.569,
+        80.178
+      ],
+      "yaw": 269.0
+    },
+    {
+      "id": "Lisiere17_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -199.732,
+        81.288
+      ],
+      "yaw": 328.0
+    },
+    {
+      "id": "Lisiere17_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -202.389,
+        81.794
+      ],
+      "yaw": 27.0
+    },
+    {
+      "id": "Lisiere17_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -200.423,
+        79.19
+      ],
+      "yaw": 86.0
+    },
+    {
+      "id": "Lisiere17_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -200.075,
+        82.996
+      ],
+      "yaw": 145.0
+    },
+    {
+      "id": "Lisiere18_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -163.102,
+        93.56
+      ],
+      "yaw": 306.0
+    },
+    {
+      "id": "Lisiere18_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -164.473,
+        95.211
+      ],
+      "yaw": 5.0
+    },
+    {
+      "id": "Lisiere18_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -164.579,
+        92.508
+      ],
+      "yaw": 64.0
+    },
+    {
+      "id": "Lisiere18_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -162.296,
+        94.84
+      ],
+      "yaw": 123.0
+    },
+    {
+      "id": "Lisiere18_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -166.111,
+        94.618
+      ],
+      "yaw": 182.0
+    },
+    {
+      "id": "Lisiere19_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -121.698,
+        56.953
+      ],
+      "yaw": 343.0
+    },
+    {
+      "id": "Lisiere19_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -123.127,
+        55.352
+      ],
+      "yaw": 42.0
+    },
+    {
+      "id": "Lisiere19_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -120.439,
+        55.649
+      ],
+      "yaw": 101.0
+    },
+    {
+      "id": "Lisiere19_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -123.084,
+        57.56
+      ],
+      "yaw": 160.0
+    },
+    {
+      "id": "Lisiere19_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -122.297,
+        53.82
+      ],
+      "yaw": 219.0
+    },
+    {
+      "id": "Lisiere20_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -120.988,
+        92.157
+      ],
+      "yaw": 20.0
+    },
+    {
+      "id": "Lisiere20_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -119.192,
+        90.982
+      ],
+      "yaw": 79.0
+    },
+    {
+      "id": "Lisiere20_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -119.885,
+        93.596
+      ],
+      "yaw": 138.0
+    },
+    {
+      "id": "Lisiere20_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -121.382,
+        90.696
+      ],
+      "yaw": 197.0
+    },
+    {
+      "id": "Lisiere20_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -117.8,
+        92.03
+      ],
+      "yaw": 256.0
+    },
+    {
+      "id": "Lisiere21_0",
+      "scale": 0.7,
+      "scene": "res://prototype_3d/assets/library/plants/shrub_hazel.tscn",
+      "xz": [
+        -180.008,
+        -21.0
+      ],
+      "yaw": 57.0
+    },
+    {
+      "id": "Lisiere21_1",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -179.113,
+        -19.05
+      ],
+      "yaw": 116.0
+    },
+    {
+      "id": "Lisiere21_2",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "xz": [
+        -181.595,
+        -20.124
+      ],
+      "yaw": 175.0
+    },
+    {
+      "id": "Lisiere21_3",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "xz": [
+        -178.505,
+        -21.173
+      ],
+      "yaw": 234.0
+    },
+    {
+      "id": "Lisiere21_4",
+      "scale": 0.9,
+      "scene": "res://prototype_3d/assets/library/plants/fern_fan.tscn",
+      "xz": [
+        -180.357,
+        -17.829
+      ],
+      "yaw": 293.0
+    },
+    {
+      "id": "BouleauJardin0",
+      "scale": 1.8,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -182.0,
+        49.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "id": "BouleauJardin1",
+      "scale": 1.95,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -159.0,
+        5.0
+      ],
+      "yaw": 61.0
+    },
+    {
+      "id": "BouleauJardin2",
+      "scale": 2.1,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -158.0,
+        76.0
+      ],
+      "yaw": 122.0
+    },
+    {
+      "id": "BouleauJardin3",
+      "scale": 1.8,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -181.0,
+        7.0
+      ],
+      "yaw": 183.0
+    },
+    {
+      "id": "BouleauJardin4",
+      "scale": 1.95,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -202.0,
+        65.0
+      ],
+      "yaw": 244.0
+    },
+    {
+      "id": "BouleauJardin5",
+      "scale": 2.1,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -162.0,
+        53.0
+      ],
+      "yaw": 305.0
+    },
+    {
+      "id": "BouleauJardin6",
+      "scale": 1.8,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -132.0,
+        9.0
+      ],
+      "yaw": 366.0
+    },
+    {
+      "id": "BouleauPrairieOuest",
+      "scale": 1.65,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -232.0,
+        7.0
+      ],
+      "yaw": 32.0
+    },
+    {
+      "id": "BouleauLisiereNord",
+      "scale": 1.55,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -179.0,
+        -9.0
+      ],
+      "yaw": 118.0
+    },
+    {
+      "id": "BouleauCourNordEst",
+      "scale": 1.6,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -147.0,
+        -1.0
+      ],
+      "yaw": 246.0
+    },
+    {
+      "id": "BouleauEntreeEst",
+      "scale": 1.75,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -117.0,
+        30.0
+      ],
+      "yaw": 73.0
+    },
+    {
+      "id": "BouleauJardinRive",
+      "scale": 1.55,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -206.0,
+        73.0
+      ],
+      "yaw": 204.0
+    },
+    {
+      "id": "BouleauPrairieSud",
+      "scale": 1.8,
+      "scene": "res://prototype_3d/assets/library/trees/birch_twin.tscn",
+      "xz": [
+        -192.0,
+        118.0
+      ],
+      "yaw": 311.0
+    }
+  ],
+  "ground_areas": [
+    {
+      "id": "PlaceDuPuits",
+      "points_xz": [
+        [
+          -181.0,
+          31.0
+        ],
+        [
+          -177.0,
+          29.0
+        ],
+        [
+          -170.0,
+          28.5
+        ],
+        [
+          -165.5,
+          31.0
+        ],
+        [
+          -165.8,
+          39.0
+        ],
+        [
+          -168.0,
+          43.5
+        ],
+        [
+          -176.0,
+          44.0
+        ],
+        [
+          -183.0,
+          41.0
+        ],
+        [
+          -184.0,
+          36.0
+        ]
+      ],
+      "wear": 235.0
+    },
+    {
+      "id": "CourRecoltes",
+      "points_xz": [
+        [
+          -143.5,
+          10.5
+        ],
+        [
+          -139.0,
+          9.0
+        ],
+        [
+          -133.0,
+          11.0
+        ],
+        [
+          -132.5,
+          15.5
+        ],
+        [
+          -135.0,
+          18.5
+        ],
+        [
+          -140.5,
+          18.0
+        ],
+        [
+          -144.0,
+          14.5
+        ]
+      ],
+      "wear": 229.0
+    },
+    {
+      "id": "CourMoulin",
+      "points_xz": [
+        [
+          -210.9,
+          38.8
+        ],
+        [
+          -205.3,
+          39.1
+        ],
+        [
+          -203.8,
+          41.8
+        ],
+        [
+          -205.5,
+          44.0
+        ],
+        [
+          -210.5,
+          43.4
+        ],
+        [
+          -211.7,
+          41.3
+        ]
+      ],
+      "wear": 231.0
+    }
+  ],
+  "intent": "Dry inhabited terrace, readable well square, agricultural courts, an undershot grain mill on a bypass, irrigated fields and three connected crossings. Original art workshop only; no NPC or story changes.",
+  "meadow_clearings": [
+    {
+      "id": "PlaceDuPuits",
+      "radii": [
+        11.7,
+        10.0
+      ],
+      "xz": [
+        -173.5,
+        35.0
+      ]
+    },
+    {
+      "id": "CourDeChargement",
+      "radii": [
+        6.5,
+        6.5
+      ],
+      "xz": [
+        -138.0,
+        14.0
+      ]
+    },
+    {
+      "id": "CourMoulin",
+      "radii": [
+        4.7,
+        3.7
+      ],
+      "xz": [
+        -209.0,
+        42.0
+      ]
+    }
+  ],
+  "meadow_patches": [
+    {
+      "count": 42.0,
+      "id": "Berge_RuisseauDesPres_0_G",
+      "radii": [
+        7.7,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921000.0,
+      "xz": [
+        -224.7,
+        -35.0
+      ],
+      "yaw": 90.0
+    },
+    {
+      "count": 42.0,
+      "id": "Berge_RuisseauDesPres_0_D",
+      "radii": [
+        7.7,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921137.0,
+      "xz": [
+        -235.3,
+        -35.0
+      ],
+      "yaw": 90.0
+    },
+    {
+      "count": 52.0,
+      "id": "Berge_RuisseauDesPres_1_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921274.0,
+      "xz": [
+        -222.84,
+        -20.71
+      ],
+      "yaw": 76.8
+    },
+    {
+      "count": 52.0,
+      "id": "Berge_RuisseauDesPres_1_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921411.0,
+      "xz": [
+        -233.16,
+        -18.29
+      ],
+      "yaw": 76.8
+    },
+    {
+      "count": 57.0,
+      "id": "Berge_RuisseauDesPres_2_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921548.0,
+      "xz": [
+        -220.21,
+        -1.78
+      ],
+      "yaw": 87.0
+    },
+    {
+      "count": 57.0,
+      "id": "Berge_RuisseauDesPres_2_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921685.0,
+      "xz": [
+        -230.79,
+        -1.22
+      ],
+      "yaw": 87.0
+    },
+    {
+      "count": 33.0,
+      "id": "Berge_RuisseauDesPres_3_G",
+      "radii": [
+        6.05,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921822.0,
+      "xz": [
+        -219.7,
+        13.5
+      ],
+      "yaw": 90.0
+    },
+    {
+      "count": 33.0,
+      "id": "Berge_RuisseauDesPres_3_D",
+      "radii": [
+        6.05,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 921959.0,
+      "xz": [
+        -230.3,
+        13.5
+      ],
+      "yaw": 90.0
+    },
+    {
+      "count": 48.0,
+      "id": "Berge_RuisseauDesPres_4_G",
+      "radii": [
+        8.8684835231284,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922096.0,
+      "xz": [
+        -220.74,
+        27.66
+      ],
+      "yaw": 97.1
+    },
+    {
+      "count": 48.0,
+      "id": "Berge_RuisseauDesPres_4_D",
+      "radii": [
+        8.8684835231284,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922233.0,
+      "xz": [
+        -231.26,
+        26.34
+      ],
+      "yaw": 97.1
+    },
+    {
+      "count": 55.0,
+      "id": "Berge_RuisseauDesPres_5_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922370.0,
+      "xz": [
+        -220.27,
+        43.13
+      ],
+      "yaw": 80.5
+    },
+    {
+      "count": 55.0,
+      "id": "Berge_RuisseauDesPres_5_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922507.0,
+      "xz": [
+        -230.73,
+        44.87
+      ],
+      "yaw": 80.5
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_6_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922644.0,
+      "xz": [
+        -215.12,
+        60.44
+      ],
+      "yaw": 67.2
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_6_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922781.0,
+      "xz": [
+        -224.88,
+        64.56
+      ],
+      "yaw": 67.2
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_7_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 922918.0,
+      "xz": [
+        -203.99,
+        75.53
+      ],
+      "yaw": 41.4
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_7_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923055.0,
+      "xz": [
+        -211.01,
+        83.47
+      ],
+      "yaw": 41.4
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_8_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923192.0,
+      "xz": [
+        -184.37,
+        87.65
+      ],
+      "yaw": 23.7
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_8_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923329.0,
+      "xz": [
+        -188.63,
+        97.35
+      ],
+      "yaw": 23.7
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_9_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923466.0,
+      "xz": [
+        -156.7,
+        102.5
+      ],
+      "yaw": 31.8
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_9_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923603.0,
+      "xz": [
+        -162.3,
+        111.5
+      ],
+      "yaw": 31.8
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RuisseauDesPres_10_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923740.0,
+      "xz": [
+        -124.5,
+        123.63
+      ],
+      "yaw": 34.4
+    },
+    {
+      "count": 31.0,
+      "id": "Berge_RigoleDesVergers_0_G",
+      "radii": [
+        5.7421685799008,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 923877.0,
+      "xz": [
+        -222.35,
+        -17.0
+      ],
+      "yaw": -16.7
+    },
+    {
+      "count": 31.0,
+      "id": "Berge_RigoleDesVergers_0_D",
+      "radii": [
+        5.7421685799008,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924014.0,
+      "xz": [
+        -219.65,
+        -8.0
+      ],
+      "yaw": -16.7
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_1_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924151.0,
+      "xz": [
+        -206.16,
+        -20.15
+      ],
+      "yaw": -8.1
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_1_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924288.0,
+      "xz": [
+        -204.84,
+        -10.85
+      ],
+      "yaw": -8.1
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_2_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924425.0,
+      "xz": [
+        -181.82,
+        -21.2
+      ],
+      "yaw": 2.2
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_2_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924562.0,
+      "xz": [
+        -182.18,
+        -11.8
+      ],
+      "yaw": 2.2
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_3_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924699.0,
+      "xz": [
+        -154.48,
+        -17.59
+      ],
+      "yaw": 12.5
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_3_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924836.0,
+      "xz": [
+        -156.52,
+        -8.41
+      ],
+      "yaw": 12.5
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_4_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 924973.0,
+      "xz": [
+        -127.63,
+        -7.06
+      ],
+      "yaw": 30.3
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_4_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925110.0,
+      "xz": [
+        -132.37,
+        1.06
+      ],
+      "yaw": 30.3
+    },
+    {
+      "count": 59.0,
+      "id": "Berge_RigoleDesVergers_5_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925247.0,
+      "xz": [
+        -109.71,
+        11.09
+      ],
+      "yaw": 66.0
+    },
+    {
+      "count": 59.0,
+      "id": "Berge_RigoleDesVergers_5_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925384.0,
+      "xz": [
+        -118.29,
+        14.91
+      ],
+      "yaw": 66.0
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_6_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925521.0,
+      "xz": [
+        -115.2,
+        32.79
+      ],
+      "yaw": 92.6
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_7_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925658.0,
+      "xz": [
+        -118.12,
+        56.11
+      ],
+      "yaw": 100.9
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_8_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925795.0,
+      "xz": [
+        -118.99,
+        83.94
+      ],
+      "yaw": 121.3
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_8_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 925932.0,
+      "xz": [
+        -127.01,
+        79.06
+      ],
+      "yaw": 121.3
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_9_G",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926069.0,
+      "xz": [
+        -133.56,
+        107.07
+      ],
+      "yaw": 123.1
+    },
+    {
+      "count": 60.0,
+      "id": "Berge_RigoleDesVergers_9_D",
+      "radii": [
+        9.0,
+        2.4
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926206.0,
+      "xz": [
+        -141.44,
+        101.93
+      ],
+      "yaw": 123.1
+    },
+    {
+      "count": 90.0,
+      "id": "TouffesPrairie00",
+      "radii": [
+        4.0,
+        7.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926343.0,
+      "xz": [
+        -202.0,
+        11.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "count": 45.0,
+      "id": "TouffesPrairie01",
+      "radii": [
+        3.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926480.0,
+      "xz": [
+        -185.0,
+        12.0
+      ],
+      "yaw": 67.0
+    },
+    {
+      "count": 65.0,
+      "id": "TouffesPrairie02",
+      "radii": [
+        4.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926617.0,
+      "xz": [
+        -180.0,
+        0.0
+      ],
+      "yaw": 134.0
+    },
+    {
+      "count": 35.0,
+      "id": "TouffesPrairie03",
+      "radii": [
+        3.0,
+        2.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926754.0,
+      "xz": [
+        -178.0,
+        25.0
+      ],
+      "yaw": 21.0
+    },
+    {
+      "count": 65.0,
+      "id": "TouffesPrairie04",
+      "radii": [
+        3.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 926891.0,
+      "xz": [
+        -201.0,
+        24.0
+      ],
+      "yaw": 88.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie05",
+      "radii": [
+        3.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927028.0,
+      "xz": [
+        -199.0,
+        38.0
+      ],
+      "yaw": 155.0
+    },
+    {
+      "count": 55.0,
+      "id": "TouffesPrairie06",
+      "radii": [
+        4.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927165.0,
+      "xz": [
+        -191.0,
+        14.0
+      ],
+      "yaw": 42.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie07",
+      "radii": [
+        4.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927302.0,
+      "xz": [
+        -195.0,
+        61.0
+      ],
+      "yaw": 109.0
+    },
+    {
+      "count": 75.0,
+      "id": "TouffesPrairie08",
+      "radii": [
+        4.0,
+        5.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927439.0,
+      "xz": [
+        -204.0,
+        68.0
+      ],
+      "yaw": 176.0
+    },
+    {
+      "count": 65.0,
+      "id": "TouffesPrairie09",
+      "radii": [
+        3.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927576.0,
+      "xz": [
+        -189.0,
+        80.0
+      ],
+      "yaw": 63.0
+    },
+    {
+      "count": 75.0,
+      "id": "TouffesPrairie10",
+      "radii": [
+        5.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927713.0,
+      "xz": [
+        -174.0,
+        77.0
+      ],
+      "yaw": 130.0
+    },
+    {
+      "count": 85.0,
+      "id": "TouffesPrairie11",
+      "radii": [
+        5.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927850.0,
+      "xz": [
+        -156.0,
+        73.0
+      ],
+      "yaw": 17.0
+    },
+    {
+      "count": 80.0,
+      "id": "TouffesPrairie12",
+      "radii": [
+        4.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 927987.0,
+      "xz": [
+        -161.0,
+        57.0
+      ],
+      "yaw": 84.0
+    },
+    {
+      "count": 55.0,
+      "id": "TouffesPrairie13",
+      "radii": [
+        4.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928124.0,
+      "xz": [
+        -147.0,
+        69.0
+      ],
+      "yaw": 151.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie14",
+      "radii": [
+        4.0,
+        2.3
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928261.0,
+      "xz": [
+        -139.0,
+        51.0
+      ],
+      "yaw": 38.0
+    },
+    {
+      "count": 35.0,
+      "id": "TouffesPrairie15",
+      "radii": [
+        2.5,
+        2.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928398.0,
+      "xz": [
+        -133.0,
+        43.0
+      ],
+      "yaw": 105.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie16",
+      "radii": [
+        4.0,
+        5.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928535.0,
+      "xz": [
+        -150.0,
+        9.0
+      ],
+      "yaw": 172.0
+    },
+    {
+      "count": 35.0,
+      "id": "TouffesPrairie17",
+      "radii": [
+        3.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928672.0,
+      "xz": [
+        -154.0,
+        32.0
+      ],
+      "yaw": 59.0
+    },
+    {
+      "count": 55.0,
+      "id": "TouffesPrairie18",
+      "radii": [
+        3.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928809.0,
+      "xz": [
+        -125.0,
+        9.0
+      ],
+      "yaw": 126.0
+    },
+    {
+      "count": 65.0,
+      "id": "TouffesPrairie19",
+      "radii": [
+        4.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 928946.0,
+      "xz": [
+        -159.0,
+        -4.0
+      ],
+      "yaw": 13.0
+    },
+    {
+      "count": 80.0,
+      "id": "TouffesPrairie20",
+      "radii": [
+        5.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929083.0,
+      "xz": [
+        -179.0,
+        -12.0
+      ],
+      "yaw": 80.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie21",
+      "radii": [
+        3.0,
+        5.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929220.0,
+      "xz": [
+        -122.0,
+        80.0
+      ],
+      "yaw": 147.0
+    },
+    {
+      "count": 80.0,
+      "id": "TouffesPrairie22",
+      "radii": [
+        5.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929357.0,
+      "xz": [
+        -195.0,
+        115.0
+      ],
+      "yaw": 34.0
+    },
+    {
+      "count": 65.0,
+      "id": "TouffesPrairie23",
+      "radii": [
+        5.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929494.0,
+      "xz": [
+        -225.0,
+        109.0
+      ],
+      "yaw": 101.0
+    },
+    {
+      "count": 75.0,
+      "id": "TouffesPrairie24",
+      "radii": [
+        7.0,
+        2.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929631.0,
+      "xz": [
+        -249.0,
+        10.0
+      ],
+      "yaw": 168.0
+    },
+    {
+      "count": 90.0,
+      "id": "TouffesPrairie25",
+      "radii": [
+        6.0,
+        3.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929768.0,
+      "xz": [
+        -250.0,
+        58.0
+      ],
+      "yaw": 55.0
+    },
+    {
+      "count": 65.0,
+      "id": "TouffesPrairie26",
+      "radii": [
+        6.0,
+        2.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 929905.0,
+      "xz": [
+        -239.0,
+        91.0
+      ],
+      "yaw": 122.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie27",
+      "radii": [
+        3.0,
+        4.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 930042.0,
+      "xz": [
+        -195.0,
+        94.0
+      ],
+      "yaw": 9.0
+    },
+    {
+      "count": 70.0,
+      "id": "TouffesPrairie28",
+      "radii": [
+        3.0,
+        7.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 930179.0,
+      "xz": [
+        -175.0,
+        -35.0
+      ],
+      "yaw": 76.0
+    },
+    {
+      "count": 60.0,
+      "id": "TouffesPrairie29",
+      "radii": [
+        3.0,
+        6.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 930316.0,
+      "xz": [
+        -142.0,
+        -31.0
+      ],
+      "yaw": 143.0
+    },
+    {
+      "count": 55.0,
+      "id": "TouffesPrairie30",
+      "radii": [
+        2.0,
+        6.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 930453.0,
+      "xz": [
+        -217.0,
+        3.0
+      ],
+      "yaw": 30.0
+    },
+    {
+      "count": 45.0,
+      "id": "TouffesPrairie31",
+      "radii": [
+        2.0,
+        5.0
+      ],
+      "scale_range": [
+        0.58,
+        1.03
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/grass_meadow.tscn",
+      "seed": 930590.0,
+      "xz": [
+        -163.0,
+        87.0
+      ],
+      "yaw": 97.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites00",
+      "radii": [
+        2.0,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 930727.0,
+      "xz": [
+        -200.0,
+        14.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites01",
+      "radii": [
+        1.7,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 930864.0,
+      "xz": [
+        -188.0,
+        13.0
+      ],
+      "yaw": 23.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites02",
+      "radii": [
+        2.0,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931001.0,
+      "xz": [
+        -202.0,
+        41.0
+      ],
+      "yaw": 46.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites03",
+      "radii": [
+        2.0,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931138.0,
+      "xz": [
+        -195.0,
+        62.0
+      ],
+      "yaw": 69.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites04",
+      "radii": [
+        3.0,
+        1.5
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931275.0,
+      "xz": [
+        -174.0,
+        77.0
+      ],
+      "yaw": 92.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites05",
+      "radii": [
+        2.0,
+        1.6
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931412.0,
+      "xz": [
+        -140.0,
+        52.0
+      ],
+      "yaw": 115.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites06",
+      "radii": [
+        2.0,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931549.0,
+      "xz": [
+        -150.0,
+        9.0
+      ],
+      "yaw": 138.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites07",
+      "radii": [
+        2.0,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931686.0,
+      "xz": [
+        -178.0,
+        -12.0
+      ],
+      "yaw": 161.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites08",
+      "radii": [
+        2.0,
+        2.0
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931823.0,
+      "xz": [
+        -121.0,
+        81.0
+      ],
+      "yaw": 184.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites09",
+      "radii": [
+        2.0,
+        1.5
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 931960.0,
+      "xz": [
+        -226.0,
+        109.0
+      ],
+      "yaw": 207.0
+    },
+    {
+      "count": 4.0,
+      "id": "Marguerites10",
+      "radii": [
+        3.0,
+        1.6
+      ],
+      "scale_range": [
+        0.55,
+        0.85
+      ],
+      "scene": "res://prototype_3d/assets/library/plants/flowers_daisy.tscn",
+      "seed": 932097.0,
+      "xz": [
+        -249.0,
+        59.0
+      ],
+      "yaw": 230.0
+    }
+  ],
+  "orchard_blocks": [
+    {
+      "columns": 3.0,
+      "id": "PommeraieEst",
+      "origin_xz": [
+        -127.0,
+        84.0
+      ],
+      "rows": 3.0,
+      "spacing": [
+        5.8,
+        5.6
+      ],
+      "yaw": -16.0
+    },
+    {
+      "columns": 4.0,
+      "id": "VergersSud",
+      "origin_xz": [
+        -233.0,
+        111.0
+      ],
+      "rows": 2.0,
+      "spacing": [
+        5.8,
+        6.0
+      ],
+      "yaw": 10.0
+    },
+    {
+      "columns": 3.0,
+      "id": "PommeraieNord",
+      "origin_xz": [
+        -170.0,
+        -7.0
+      ],
+      "rows": 2.0,
+      "spacing": [
+        5.5,
+        5.8
+      ],
+      "yaw": 8.0
+    },
+    {
+      "columns": 3.0,
+      "id": "JardinLogis",
+      "origin_xz": [
+        -196.0,
+        79.0
+      ],
+      "rows": 1.0,
+      "spacing": [
+        5.5,
+        5.5
+      ],
+      "yaw": -12.0
+    }
+  ],
+  "orchards": [
+    {
+      "id": "PommeraieEst",
+      "trees": [
+        {
+          "asset": "pommier_etale",
+          "scale": 0.86,
+          "xz": [
+            -127.096473074536,
+            84.3364415935784
+          ],
+          "yaw": 0.0
+        },
+        {
+          "asset": "pommier_jeune",
+          "scale": 0.93,
+          "xz": [
+            -121.547420118682,
+            85.203041098947
+          ],
+          "yaw": 71.0
+        },
+        {
+          "asset": "pommier_penche",
+          "scale": 1.0,
+          "xz": [
+            -115.656685250935,
+            87.602245776141
+          ],
+          "yaw": 142.0
+        },
+        {
+          "asset": "poirier_fuseau",
+          "scale": 1.07,
+          "xz": [
+            -128.610405752854,
+            89.0321535178924
+          ],
+          "yaw": 213.0
+        },
+        {
+          "asset": "poirier_ancien",
+          "scale": 0.86,
+          "xz": [
+            -123.132685671124,
+            91.2418626589356
+          ],
+          "yaw": 284.0
+        },
+        {
+          "asset": "pommier_etale",
+          "scale": 0.93,
+          "xz": [
+            -117.056370301045,
+            92.4003607571822
+          ],
+          "yaw": 355.0
+        },
+        {
+          "asset": "pommier_jeune",
+          "scale": 1.0,
+          "xz": [
+            -130.411990505782,
+            94.9134056325407
+          ],
+          "yaw": 66.0
+        },
+        {
+          "asset": "pommier_penche",
+          "scale": 1.07,
+          "xz": [
+            -124.380856015709,
+            96.2029502796378
+          ],
+          "yaw": 137.0
+        },
+        {
+          "asset": "poirier_fuseau",
+          "scale": 0.86,
+          "xz": [
+            -118.818404961218,
+            98.1518339208806
+          ],
+          "yaw": 208.0
+        }
+      ]
+    },
+    {
+      "id": "VergersSud",
+      "trees": [
+        {
+          "asset": "pommier_jeune",
+          "scale": 0.86,
+          "xz": [
+            -232.718555976287,
+            111.142396894005
+          ],
+          "yaw": 37.0
+        },
+        {
+          "asset": "pommier_penche",
+          "scale": 0.93,
+          "xz": [
+            -227.611148258863,
+            109.81749554844
+          ],
+          "yaw": 108.0
+        },
+        {
+          "asset": "poirier_fuseau",
+          "scale": 1.0,
+          "xz": [
+            -221.408653007819,
+            109.224069126662
+          ],
+          "yaw": 179.0
+        },
+        {
+          "asset": "poirier_ancien",
+          "scale": 1.07,
+          "xz": [
+            -215.791206105644,
+            107.667419885009
+          ],
+          "yaw": 250.0
+        },
+        {
+          "asset": "pommier_etale",
+          "scale": 0.86,
+          "xz": [
+            -232.186996677142,
+            117.271711213853
+          ],
+          "yaw": 321.0
+        },
+        {
+          "asset": "pommier_jeune",
+          "scale": 0.93,
+          "xz": [
+            -226.057246016952,
+            115.528013301176
+          ],
+          "yaw": 32.0
+        },
+        {
+          "asset": "pommier_penche",
+          "scale": 1.0,
+          "xz": [
+            -220.513352943623,
+            115.242211839902
+          ],
+          "yaw": 103.0
+        },
+        {
+          "asset": "poirier_fuseau",
+          "scale": 1.07,
+          "xz": [
+            -215.079296051221,
+            113.577270659968
+          ],
+          "yaw": 174.0
+        }
+      ]
+    },
+    {
+      "id": "PommeraieNord",
+      "trees": [
+        {
+          "asset": "pommier_penche",
+          "scale": 0.86,
+          "xz": [
+            -169.750136293962,
+            -7.18219884622506
+          ],
+          "yaw": 74.0
+        },
+        {
+          "asset": "poirier_fuseau",
+          "scale": 0.93,
+          "xz": [
+            -164.622717144563,
+            -7.65547035727738
+          ],
+          "yaw": 145.0
+        },
+        {
+          "asset": "poirier_ancien",
+          "scale": 1.0,
+          "xz": [
+            -159.275756656106,
+            -8.55861959218218
+          ],
+          "yaw": 216.0
+        },
+        {
+          "asset": "pommier_etale",
+          "scale": 1.07,
+          "xz": [
+            -168.898290386191,
+            -1.29627105096685
+          ],
+          "yaw": 287.0
+        },
+        {
+          "asset": "pommier_jeune",
+          "scale": 0.86,
+          "xz": [
+            -163.96276469357,
+            -1.94314981405493
+          ],
+          "yaw": 358.0
+        },
+        {
+          "asset": "pommier_penche",
+          "scale": 0.93,
+          "xz": [
+            -158.315880176221,
+            -2.88234966618745
+          ],
+          "yaw": 69.0
+        }
+      ]
+    },
+    {
+      "id": "JardinLogis",
+      "trees": [
+        {
+          "asset": "poirier_fuseau",
+          "scale": 0.86,
+          "xz": [
+            -195.886548285957,
+            78.6698765749922
+          ],
+          "yaw": 111.0
+        },
+        {
+          "asset": "poirier_ancien",
+          "scale": 0.93,
+          "xz": [
+            -190.497269956108,
+            80.513208749637
+          ],
+          "yaw": 182.0
+        },
+        {
+          "asset": "pommier_etale",
+          "scale": 1.0,
+          "xz": [
+            -185.46751567666,
+            80.9127287447353
+          ],
+          "yaw": 253.0
+        }
+      ]
+    }
+  ],
+  "paths": [
+    {
+      "id": "RueDuMarche",
+      "points_xz": [
+        [
+          -96.0,
+          44.0
+        ],
+        [
+          -125.0,
+          44.0
+        ],
+        [
+          -137.0,
+          44.0
+        ],
+        [
+          -157.0,
+          43.0
+        ],
+        [
+          -168.0,
+          44.0
+        ],
+        [
+          -180.0,
+          44.0
+        ],
+        [
+          -193.0,
+          42.0
+        ],
+        [
+          -202.0,
+          45.0
+        ],
+        [
+          -208.0,
+          59.0
+        ],
+        [
+          -212.0,
+          59.0
+        ],
+        [
+          -221.5,
+          59.0
+        ],
+        [
+          -239.0,
+          59.0
+        ]
+      ],
+      "style": "cart_lane",
+      "width_m": 3.6
+    },
+    {
+      "id": "RueHaute",
+      "points_xz": [
+        [
+          -188.0,
+          13.0
+        ],
+        [
+          -185.0,
+          22.0
+        ],
+        [
+          -183.0,
+          28.0
+        ],
+        [
+          -162.0,
+          27.0
+        ],
+        [
+          -154.0,
+          30.0
+        ],
+        [
+          -155.0,
+          38.0
+        ],
+        [
+          -157.0,
+          43.0
+        ]
+      ],
+      "style": "lane",
+      "width_m": 2.2
+    },
+    {
+      "id": "RueDesVergers",
+      "points_xz": [
+        [
+          -193.0,
+          42.0
+        ],
+        [
+          -187.0,
+          57.0
+        ],
+        [
+          -178.0,
+          59.0
+        ],
+        [
+          -158.0,
+          61.0
+        ],
+        [
+          -158.0,
+          50.0
+        ],
+        [
+          -157.0,
+          43.0
+        ]
+      ],
+      "style": "lane",
+      "width_m": 2.3
+    },
+    {
+      "id": "CourDesRecoltes",
+      "points_xz": [
+        [
+          -166.0,
+          27.0
+        ],
+        [
+          -166.0,
+          19.0
+        ],
+        [
+          -164.0,
+          12.0
+        ],
+        [
+          -151.0,
+          10.0
+        ],
+        [
+          -141.0,
+          14.0
+        ],
+        [
+          -137.0,
+          24.0
+        ],
+        [
+          -137.0,
+          44.0
+        ]
+      ],
+      "style": "cart_lane",
+      "width_m": 3.0
+    },
+    {
+      "id": "CourDuMoulin",
+      "points_xz": [
+        [
+          -202.0,
+          45.0
+        ],
+        [
+          -206.5,
+          43.5
+        ],
+        [
+          -207.45,
+          41.2
+        ]
+      ],
+      "style": "cart_lane",
+      "width_m": 2.7
+    },
+    {
+      "id": "BoucleDesMoissons",
+      "points_xz": [
+        [
+          -239.0,
+          59.0
+        ],
+        [
+          -251.0,
+          67.0
+        ],
+        [
+          -244.0,
+          83.0
+        ],
+        [
+          -226.0,
+          97.0
+        ],
+        [
+          -207.0,
+          105.0
+        ],
+        [
+          -190.0,
+          107.0
+        ],
+        [
+          -182.5,
+          94.0
+        ],
+        [
+          -174.0,
+          80.0
+        ],
+        [
+          -176.0,
+          72.0
+        ],
+        [
+          -176.0,
+          64.0
+        ],
+        [
+          -175.0,
+          59.3
+        ]
+      ],
+      "style": "field_track",
+      "width_m": 2.7
+    },
+    {
+      "id": "SentierDesPommiers",
+      "points_xz": [
+        [
+          -158.0,
+          61.0
+        ],
+        [
+          -145.0,
+          74.0
+        ],
+        [
+          -131.0,
+          80.0
+        ],
+        [
+          -121.0,
+          65.0
+        ],
+        [
+          -123.0,
+          55.0
+        ],
+        [
+          -125.0,
+          44.0
+        ]
+      ],
+      "style": "footpath",
+      "width_m": 1.55
+    },
+    {
+      "id": "SentierDuBief",
+      "points_xz": [
+        [
+          -188.0,
+          13.0
+        ],
+        [
+          -201.0,
+          10.0
+        ],
+        [
+          -205.0,
+          3.0
+        ],
+        [
+          -207.0,
+          -8.0
+        ],
+        [
+          -212.0,
+          -11.0
+        ]
+      ],
+      "style": "footpath",
+      "width_m": 1.3
+    },
+    {
+      "id": "AccesGrange",
+      "points_xz": [
+        [
+          -173.0,
+          27.0
+        ],
+        [
+          -173.0,
+          22.0
+        ]
+      ],
+      "style": "cart_lane",
+      "width_m": 3.0
+    },
+    {
+      "id": "TourDuPuitsEst",
+      "points_xz": [
+        [
+          -166.0,
+          27.0
+        ],
+        [
+          -167.0,
+          34.0
+        ],
+        [
+          -168.0,
+          44.0
+        ]
+      ],
+      "style": "lane",
+      "width_m": 2.4
+    },
+    {
+      "id": "TourDuPuitsOuest",
+      "points_xz": [
+        [
+          -180.0,
+          28.0
+        ],
+        [
+          -181.0,
+          34.0
+        ],
+        [
+          -180.0,
+          44.0
+        ]
+      ],
+      "style": "lane",
+      "width_m": 2.4
+    },
+    {
+      "id": "AccesArriereGrange",
+      "points_xz": [
+        [
+          -164.0,
+          12.0
+        ],
+        [
+          -162.0,
+          6.0
+        ],
+        [
+          -166.0,
+          3.5
+        ],
+        [
+          -173.0,
+          4.0
+        ],
+        [
+          -173.0,
+          9.6
+        ]
+      ],
+      "style": "cart_lane",
+      "width_m": 2.8
+    },
+    {
+      "id": "Entree_ChaumierePotager",
+      "paint_end_xz": [
+        -191.365852341405,
+        24.6613449132156
+      ],
+      "points_xz": [
+        [
+          -185.12962962963,
+          26.1481481481481
+        ],
+        [
+          -190.089545190948,
+          27.3983944300663
+        ],
+        [
+          -190.512163452689,
+          26.4920866430296
+        ],
+        [
+          -191.188352671474,
+          25.041994183771
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_MaisonAppentis",
+      "paint_end_xz": [
+        -194.066811531897,
+        52.8125414871361
+      ],
+      "points_xz": [
+        [
+          -189.579752978736,
+          52.0651202923877
+        ],
+        [
+          -191.05830354366,
+          53.0757518302341
+        ],
+        [
+          -192.054498241752,
+          52.9885960874864
+        ],
+        [
+          -193.648409758699,
+          52.8491468990902
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_MaisonAppentis_Remise",
+      "paint_end_xz": [
+        -194.711646859085,
+        48.4798531982315
+      ],
+      "points_xz": [
+        [
+          -190.971508782742,
+          48.1647066802544
+        ],
+        [
+          -191.843772503516,
+          48.7307596927605
+        ],
+        [
+          -192.69933356894,
+          48.6559077985818
+        ],
+        [
+          -194.293245085886,
+          48.5164586101856
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.2
+    },
+    {
+      "id": "Entree_LongereMoissons",
+      "paint_end_xz": [
+        -152.75,
+        24.73
+      ],
+      "points_xz": [
+        [
+          -154.782878294506,
+          29.0472807540081
+        ],
+        [
+          -152.75,
+          27.75
+        ],
+        [
+          -152.75,
+          26.75
+        ],
+        [
+          -152.75,
+          25.15
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_FermeEnL",
+      "paint_end_xz": [
+        -150.554160272398,
+        54.3840285948628
+      ],
+      "points_xz": [
+        [
+          -157.838541841496,
+          51.6891007351213
+        ],
+        [
+          -150.355020594538,
+          53.2546513602505
+        ],
+        [
+          -150.396669050807,
+          53.4908514931051
+        ],
+        [
+          -150.481228037778,
+          53.9704093385977
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_MaisonVerger",
+      "paint_end_xz": [
+        -181.799706493828,
+        66.9703181316527
+      ],
+      "points_xz": [
+        [
+          -176.086642601892,
+          65.2332725906565
+        ],
+        [
+          -181.159807419627,
+          64.5821822750184
+        ],
+        [
+          -181.335101794462,
+          65.236389788184
+        ],
+        [
+          -181.691002494885,
+          66.5646292846113
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_LogisAuvent",
+      "paint_end_xz": [
+        -167.163909945487,
+        64.9354684826642
+      ],
+      "points_xz": [
+        [
+          -167.058540414982,
+          60.8692442739546
+        ],
+        [
+          -167.427120288585,
+          61.9269604944271
+        ],
+        [
+          -167.339964545837,
+          62.9231551925188
+        ],
+        [
+          -167.200515357441,
+          64.5170667094656
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_MaisonPignon",
+      "paint_end_xz": [
+        -147.93,
+        36.75
+      ],
+      "points_xz": [
+        [
+          -154.306515956799,
+          35.5360710834925
+        ],
+        [
+          -150.95,
+          36.75
+        ],
+        [
+          -149.95,
+          36.75
+        ],
+        [
+          -148.35,
+          36.75
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_LogisJournaliers",
+      "paint_end_xz": [
+        -190.342376528624,
+        7.70238636060342
+      ],
+      "points_xz": [
+        [
+          -190.247634371527,
+          12.6022754647853
+        ],
+        [
+          -189.560743012414,
+          10.6194823559964
+        ],
+        [
+          -189.819562057516,
+          9.65355652970734
+        ],
+        [
+          -190.23367252968,
+          8.10807520764483
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.3
+    },
+    {
+      "id": "Entree_GrandeGrange",
+      "paint_end_xz": [
+        -173.0,
+        20.4
+      ],
+      "points_xz": [
+        [
+          -173.0,
+          22.8
+        ],
+        [
+          -173.0,
+          22.2
+        ],
+        [
+          -173.0,
+          21.606
+        ],
+        [
+          -173.0,
+          20.4
+        ]
+      ],
+      "style": "door",
+      "width_m": 3.0
+    },
+    {
+      "id": "Entree_GrangeRecoltes",
+      "paint_end_xz": [
+        -137.145897151162,
+        6.18755522675393
+      ],
+      "points_xz": [
+        [
+          -141.297931982669,
+          13.7153425643777
+        ],
+        [
+          -136.472967633895,
+          8.6989623751055
+        ],
+        [
+          -136.731786678998,
+          7.73303654881644
+        ],
+        [
+          -137.145897151162,
+          6.18755522675393
+        ]
+      ],
+      "style": "door",
+      "width_m": 3.0
+    },
+    {
+      "id": "Entree_GrenierSec",
+      "paint_end_xz": [
+        -132.866803427898,
+        20.2325
+      ],
+      "points_xz": [
+        [
+          -137.331183833519,
+          21.8720437049911
+        ],
+        [
+          -135.720357133367,
+          21.88
+        ],
+        [
+          -134.854331729583,
+          21.38
+        ],
+        [
+          -133.468691083528,
+          20.58
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.6
+    },
+    {
+      "id": "Entree_ReserveGrains",
+      "paint_end_xz": [
+        -129.98,
+        32.0
+      ],
+      "points_xz": [
+        [
+          -136.709438144281,
+          31.9607891761661
+        ],
+        [
+          -133.0,
+          32.0
+        ],
+        [
+          -132.0,
+          32.0
+        ],
+        [
+          -130.4,
+          32.0
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.5
+    },
+    {
+      "id": "Entree_MoulinDesPres",
+      "paint_end_xz": [
+        -207.45,
+        38.48
+      ],
+      "points_xz": [
+        [
+          -207.45,
+          41.2
+        ],
+        [
+          -207.45,
+          40.625
+        ],
+        [
+          -207.45,
+          40.05575
+        ],
+        [
+          -207.45,
+          38.9
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.6
+    },
+    {
+      "id": "Entree_MoulinDesPres_Remise",
+      "paint_end_xz": [
+        -204.2,
+        36.36
+      ],
+      "points_xz": [
+        [
+          -200.545947325645,
+          43.6786743419064
+        ],
+        [
+          -204.2,
+          39.38
+        ],
+        [
+          -204.2,
+          38.38
+        ],
+        [
+          -204.2,
+          36.78
+        ]
+      ],
+      "style": "door",
+      "width_m": 1.2
+    }
+  ],
+  "props": [
+    {
+      "altitude": 30.8500003814697,
+      "asset": "puits_couvert_de_chaume",
+      "group": "PlaceDuPuits",
+      "id": "PuitsCentral",
+      "xz": [
+        -174.0,
+        35.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 31.2274627685547,
+      "asset": "charrette_de_recolte_vide",
+      "group": "CourDesRecoltes",
+      "id": "CharretteGrange",
+      "xz": [
+        -136.0,
+        14.0
+      ],
+      "yaw": 80.0
+    },
+    {
+      "altitude": 30.7743999481201,
+      "asset": "charrette_de_recolte_chargee",
+      "group": "RiveDuMoulin",
+      "id": "CharretteMoulin",
+      "xz": [
+        -200.0,
+        39.2
+      ],
+      "yaw": -15.0
+    },
+    {
+      "altitude": 31.1566815376282,
+      "asset": "sacs_de_recolte",
+      "group": "CourDesRecoltes",
+      "id": "SacsGrenier",
+      "xz": [
+        -132.9,
+        16.4
+      ],
+      "yaw": 15.0
+    },
+    {
+      "altitude": 30.1063297271728,
+      "asset": "sacs_de_recolte",
+      "group": "RiveDuMoulin",
+      "id": "SacsMoulin",
+      "xz": [
+        -210.2,
+        39.7
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 31.2088193893433,
+      "asset": "tonneaux_de_ferme",
+      "group": "PlaceDuPuits",
+      "id": "TonneauxGrange",
+      "xz": [
+        -178.0,
+        21.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 30.5620002746582,
+      "asset": "ratelier_outils_agricoles",
+      "group": "CourDesRecoltes",
+      "id": "OutilsPotager",
+      "xz": [
+        -135.0,
+        51.0
+      ],
+      "yaw": -80.0
+    },
+    {
+      "altitude": 30.9078149795532,
+      "asset": "araire_de_bois",
+      "group": "ChampsOuest",
+      "id": "AraireRepos",
+      "xz": [
+        -241.0,
+        32.0
+      ],
+      "yaw": 25.0
+    },
+    {
+      "altitude": 30.3181209564209,
+      "asset": "faisceau_gerbes",
+      "group": "ChampsOuest",
+      "id": "GerbesOuest",
+      "xz": [
+        -252.0,
+        60.0
+      ],
+      "yaw": 20.0
+    },
+    {
+      "altitude": 31.4001522064209,
+      "asset": "faisceau_gerbes",
+      "group": "CourDesRecoltes",
+      "id": "GerbesCour",
+      "xz": [
+        -139.0,
+        9.0
+      ],
+      "yaw": -15.0
+    },
+    {
+      "altitude": 30.8500003814697,
+      "asset": "auge_en_pierre",
+      "group": "PlaceDuPuits",
+      "id": "AugePlace",
+      "xz": [
+        -184.0,
+        39.0
+      ],
+      "yaw": -15.0
+    },
+    {
+      "altitude": 30.8538017272949,
+      "asset": "caisse_de_fruits",
+      "group": "PlaceDuPuits",
+      "id": "PommesMarche",
+      "xz": [
+        -162.0,
+        30.0
+      ],
+      "yaw": -15.0
+    },
+    {
+      "altitude": 30.1626968383789,
+      "asset": "echelle_tripode_de_verger",
+      "group": "Vergers",
+      "id": "EchelleVerger",
+      "xz": [
+        -126.0,
+        68.0
+      ],
+      "yaw": 45.0
+    },
+    {
+      "altitude": 30.1486959457397,
+      "asset": "panier_de_pommes",
+      "group": "Vergers",
+      "id": "PaniersVerger",
+      "xz": [
+        -127.0,
+        67.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 33.5147323608398,
+      "asset": "panier_de_poires",
+      "group": "Vergers",
+      "id": "PoiresRive",
+      "xz": [
+        -218.0,
+        114.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 31.4003753662109,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin00",
+      "xz": [
+        -254.0,
+        14.0
+      ],
+      "yaw": 10.0
+    },
+    {
+      "altitude": 31.290594291687,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin01",
+      "xz": [
+        -250.0,
+        13.3
+      ],
+      "yaw": 10.0
+    },
+    {
+      "altitude": 31.1933708190918,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin02",
+      "xz": [
+        -256.0,
+        22.0
+      ],
+      "yaw": 90.0
+    },
+    {
+      "altitude": 30.4258785247803,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin03",
+      "xz": [
+        -255.0,
+        54.0
+      ],
+      "yaw": 5.0
+    },
+    {
+      "altitude": 30.439769744873,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin04",
+      "xz": [
+        -251.0,
+        54.0
+      ],
+      "yaw": 5.0
+    },
+    {
+      "altitude": 30.1015424728394,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin05",
+      "xz": [
+        -240.0,
+        83.0
+      ],
+      "yaw": 25.0
+    },
+    {
+      "altitude": 30.3537229537964,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin06",
+      "xz": [
+        -236.4,
+        84.7
+      ],
+      "yaw": 25.0
+    },
+    {
+      "altitude": 31.5373115539551,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin07",
+      "xz": [
+        -212.0,
+        99.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 31.4022722244263,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin08",
+      "xz": [
+        -208.0,
+        99.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "altitude": 33.5655422210693,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin09",
+      "xz": [
+        -230.0,
+        117.0
+      ],
+      "yaw": 5.0
+    },
+    {
+      "altitude": 33.6119270324707,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin10",
+      "xz": [
+        -226.0,
+        117.0
+      ],
+      "yaw": 5.0
+    },
+    {
+      "altitude": 33.2248821258545,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin11",
+      "xz": [
+        -111.0,
+        84.0
+      ],
+      "yaw": 90.0
+    },
+    {
+      "altitude": 34.4738826751709,
+      "asset": "cloture_rustique_4m",
+      "group": "Jardins",
+      "id": "ClotureJardin12",
+      "xz": [
+        -111.0,
+        88.0
+      ],
+      "yaw": 90.0
+    }
+  ],
+  "spawn_xz": [
+    -163.0,
+    43.0
+  ],
+  "terrain": {
+    "access_pads": [
+      {
+        "altitude": 30.38,
+        "blend": 1.8,
+        "id": "RampePorcheMoulin",
+        "outline": "Rectangle",
+        "size": [
+          4.2,
+          2.0
+        ],
+        "slope": [
+          0.0,
+          0.32
+        ],
+        "xz": [
+          -207.5,
+          41.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.36,
+        "blend": 2.0,
+        "id": "AccesAnnexeMoulin",
+        "outline": "Rectangle",
+        "size": [
+          2.6,
+          2.0
+        ],
+        "slope": [
+          0.0,
+          0.24
+        ],
+        "xz": [
+          -203.5,
+          39.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.06,
+        "blend": 0.8,
+        "id": "PalierPorcheMoulin",
+        "outline": "Rectangle",
+        "size": [
+          5.0,
+          2.0
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -207.5,
+          39.0
+        ],
+        "yaw": 0.0
+      }
+    ],
+    "bridges": [
+      {
+        "altitude": 31.05,
+        "id": "PontDesMoissons",
+        "length_m": 12.0,
+        "scene": "res://assets/bridges/bois/pont_charretier_bois_12m.tscn",
+        "width_m": 3.4,
+        "xz": [
+          -221.5,
+          59.0
+        ],
+        "yaw": 90.0
+      },
+      {
+        "altitude": 30.0,
+        "id": "PontDesVergers",
+        "length_m": 12.0,
+        "scene": "res://assets/bridges/bois/pont_charretier_bois_12m.tscn",
+        "width_m": 3.4,
+        "xz": [
+          -182.5,
+          94.0
+        ],
+        "yaw": -30.0
+      },
+      {
+        "altitude": 31.15,
+        "id": "PontEntreeVillage",
+        "length_m": 12.0,
+        "scene": "res://assets/bridges/bois/pont_charretier_bois_12m.tscn",
+        "width_m": 3.4,
+        "xz": [
+          -111.0,
+          44.0
+        ],
+        "yaw": 90.0
+      }
+    ],
+    "dry_areas": [
+      {
+        "altitude": 30.0,
+        "blend": 0.5,
+        "id": "CorpsMoulin",
+        "size": [
+          9.6,
+          9.2
+        ],
+        "xz": [
+          -207.8,
+          34.0
+        ],
+        "yaw": 0.0
+      }
+    ],
+    "foundation_pads": [
+      {
+        "altitude": 31.084,
+        "blend": 3.5,
+        "id": "Assise_ChaumierePotager",
+        "outline": "Rectangle",
+        "size": [
+          8.31454515457153,
+          8.720871925354
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -191.767375786832,
+          22.4988642350179
+        ],
+        "yaw": 25.0
+      },
+      {
+        "altitude": 30.562,
+        "blend": 3.5,
+        "id": "Assise_MaisonAppentis",
+        "outline": "Rectangle",
+        "size": [
+          10.4154052734375,
+          8.44000005722046
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -196.977554321416,
+          50.8581790073045
+        ],
+        "yaw": 85.0
+      },
+      {
+        "altitude": 31.084,
+        "blend": 3.5,
+        "id": "Assise_LongereMoissons",
+        "outline": "Rectangle",
+        "size": [
+          12.9400005340576,
+          8.02238368988037
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -151.0,
+          22.0988078117371
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.454,
+        "blend": 3.5,
+        "id": "Assise_FermeEnL",
+        "outline": "Rectangle",
+        "size": [
+          11.8644180297852,
+          11.4300003051758
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -149.297983249506,
+          56.3063662457628
+        ],
+        "yaw": 170.0
+      },
+      {
+        "altitude": 30.238,
+        "blend": 3.5,
+        "id": "Assise_MaisonVerger",
+        "outline": "Rectangle",
+        "size": [
+          10.1161689758301,
+          9.02360010147095
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -184.052177451056,
+          69.0359195410871
+        ],
+        "yaw": 165.0
+      },
+      {
+        "altitude": 30.256,
+        "blend": 3.5,
+        "id": "Assise_LogisAuvent",
+        "outline": "Rectangle",
+        "size": [
+          9.51378059387207,
+          9.49977159500122
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -168.055769710318,
+          67.362549294152
+        ],
+        "yaw": 185.0
+      },
+      {
+        "altitude": 30.832,
+        "blend": 3.5,
+        "id": "Assise_MaisonPignon",
+        "outline": "Rectangle",
+        "size": [
+          8.67260456085205,
+          8.45530033111572
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -145.132649898529,
+          36.0113677978516
+        ],
+        "yaw": -90.0
+      },
+      {
+        "altitude": 31.426,
+        "blend": 3.5,
+        "id": "Assise_LogisJournaliers",
+        "outline": "Rectangle",
+        "size": [
+          9.70976877212524,
+          10.670000076294
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -192.734710515794,
+          3.9900738337695
+        ],
+        "yaw": 15.0
+      },
+      {
+        "altitude": 31.21,
+        "blend": 3.5,
+        "id": "Assise_GrandeGrange",
+        "outline": "Rectangle",
+        "size": [
+          12.0923252105713,
+          13.6199998855591
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -173.0,
+          15.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 31.426,
+        "blend": 3.5,
+        "id": "Assise_GrangeRecoltes",
+        "outline": "Rectangle",
+        "size": [
+          10.2925891876221,
+          9.4200005531311
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -138.0,
+          3.0
+        ],
+        "yaw": 15.0
+      },
+      {
+        "altitude": 31.156,
+        "blend": 3.5,
+        "id": "Assise_GrenierSec",
+        "outline": "Rectangle",
+        "size": [
+          7.28384208679199,
+          9.17500019073486
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -129.759937134899,
+          18.4387499094009
+        ],
+        "yaw": -60.0
+      },
+      {
+        "altitude": 30.904,
+        "blend": 3.5,
+        "id": "Assise_ReserveGrains",
+        "outline": "Rectangle",
+        "size": [
+          6.60000038146973,
+          6.70594024658203
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -128.052969932556,
+          32.0
+        ],
+        "yaw": -90.0
+      },
+      {
+        "altitude": 35.075,
+        "blend": 10.0,
+        "id": "RampeRouteEst0",
+        "outline": "Rectangle",
+        "size": [
+          7.0,
+          29.7946881279124
+        ],
+        "slope": [
+          0.0,
+          0.28760174738807
+        ],
+        "xz": [
+          -90.5,
+          42.0
+        ],
+        "yaw": 98.4269690214807
+      },
+      {
+        "altitude": 41.0,
+        "blend": 10.0,
+        "id": "RampeRouteEst1",
+        "outline": "Rectangle",
+        "size": [
+          7.0,
+          18.6554944214035
+        ],
+        "slope": [
+          0.0,
+          0.247593784236069
+        ],
+        "xz": [
+          -69.5,
+          37.0
+        ],
+        "yaw": 111.801409486352
+      },
+      {
+        "altitude": 44.352,
+        "blend": 10.0,
+        "id": "RampeRouteEst2",
+        "outline": "Rectangle",
+        "size": [
+          7.0,
+          19.964249196573
+        ],
+        "slope": [
+          0.0,
+          0.15483058959847
+        ],
+        "xz": [
+          -54.0,
+          30.5
+        ],
+        "yaw": 113.629377730657
+      },
+      {
+        "altitude": 30.6465,
+        "blend": 10.0,
+        "id": "CheminBasDesMoissons0",
+        "outline": "Rectangle",
+        "size": [
+          6.0,
+          25.3035085019828
+        ],
+        "slope": [
+          0.0,
+          0.0660863217547846
+        ],
+        "xz": [
+          -235.0,
+          90.0
+        ],
+        "yaw": 52.1250163489018
+      },
+      {
+        "altitude": 31.35,
+        "blend": 10.0,
+        "id": "CheminBasDesMoissons1",
+        "outline": "Rectangle",
+        "size": [
+          6.0,
+          23.1155281280883
+        ],
+        "slope": [
+          0.0,
+          -0.00485071250072655
+        ],
+        "xz": [
+          -216.5,
+          101.0
+        ],
+        "yaw": 67.1663458220824
+      },
+      {
+        "altitude": 30.75,
+        "blend": 10.0,
+        "id": "CheminBasDesMoissons2",
+        "outline": "Rectangle",
+        "size": [
+          6.0,
+          19.6172427686237
+        ],
+        "slope": [
+          0.0,
+          -0.0642626861620685
+        ],
+        "xz": [
+          -198.5,
+          106.0
+        ],
+        "yaw": 83.2901631922431
+      },
+      {
+        "altitude": 30.38,
+        "blend": 1.8,
+        "id": "RampePorcheMoulin",
+        "outline": "Rectangle",
+        "size": [
+          4.2,
+          2.0
+        ],
+        "slope": [
+          0.0,
+          0.32
+        ],
+        "xz": [
+          -207.5,
+          41.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.36,
+        "blend": 2.0,
+        "id": "AccesAnnexeMoulin",
+        "outline": "Rectangle",
+        "size": [
+          2.6,
+          2.0
+        ],
+        "slope": [
+          0.0,
+          0.24
+        ],
+        "xz": [
+          -203.5,
+          39.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.06,
+        "blend": 0.8,
+        "id": "PalierPorcheMoulin",
+        "outline": "Rectangle",
+        "size": [
+          5.0,
+          2.0
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -207.5,
+          39.0
+        ],
+        "yaw": 0.0
+      }
+    ],
+    "graded_paths": [
+      {
+        "blend": 10.0,
+        "id": "RampeRouteEst",
+        "profile_xzy": [
+          [
+            -104.0,
+            44.0,
+            31.15
+          ],
+          [
+            -77.0,
+            40.0,
+            39.0
+          ],
+          [
+            -62.0,
+            34.0,
+            43.0
+          ],
+          [
+            -46.0,
+            27.0,
+            45.704
+          ]
+        ],
+        "width": 7.0
+      },
+      {
+        "blend": 10.0,
+        "id": "CheminBasDesMoissons",
+        "profile_xzy": [
+          [
+            -244.0,
+            83.0,
+            29.893
+          ],
+          [
+            -226.0,
+            97.0,
+            31.4
+          ],
+          [
+            -207.0,
+            105.0,
+            31.3
+          ],
+          [
+            -190.0,
+            107.0,
+            30.2
+          ]
+        ],
+        "width": 6.0
+      }
+    ],
+    "pads": [
+      {
+        "altitude": 30.85,
+        "blend": 18.0,
+        "id": "TerrasseHabitee",
+        "outline": "Ellipse",
+        "size": [
+          90.0,
+          88.0
+        ],
+        "slope": [
+          0.0,
+          -0.018
+        ],
+        "xz": [
+          -173.0,
+          35.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.85,
+        "blend": 5.0,
+        "id": "PlaceDuPuits",
+        "outline": "Ellipse",
+        "size": [
+          25.0,
+          23.0
+        ],
+        "slope": [
+          0.0,
+          0.0
+        ],
+        "xz": [
+          -174.0,
+          35.0
+        ],
+        "yaw": 0.0
+      },
+      {
+        "altitude": 30.5,
+        "blend": 17.0,
+        "id": "PlaineDesMoissons",
+        "outline": "Ellipse",
+        "size": [
+          30.0,
+          78.0
+        ],
+        "slope": [
+          0.0,
+          -0.02
+        ],
+        "xz": [
+          -245.0,
+          52.0
+        ],
+        "yaw": -10.0
+      },
+      {
+        "altitude": 33.4,
+        "blend": 13.0,
+        "id": "Champ_BleHaut",
+        "outline": "Rectangle",
+        "size": [
+          16.5500011444092,
+          13.9249997138977
+        ],
+        "slope": [
+          0.0,
+          -0.03
+        ],
+        "xz": [
+          -184.0,
+          -27.0
+        ],
+        "yaw": -5.0
+      },
+      {
+        "altitude": 33.4,
+        "blend": 13.0,
+        "id": "Champ_BleEst",
+        "outline": "Rectangle",
+        "size": [
+          18.0050012588501,
+          13.1299997329712
+        ],
+        "slope": [
+          0.0,
+          -0.03
+        ],
+        "xz": [
+          -157.0,
+          -30.0
+        ],
+        "yaw": 15.0
+      },
+      {
+        "altitude": 31.55,
+        "blend": 13.0,
+        "id": "Champ_LaboursHaut",
+        "outline": "Rectangle",
+        "size": [
+          10.2024996757507,
+          10.7099997520447
+        ],
+        "slope": [
+          0.0,
+          -0.03
+        ],
+        "xz": [
+          -213.0,
+          -5.0
+        ],
+        "yaw": -5.0
+      }
+    ],
+    "watercourses": [
+      {
+        "blend": 24.0,
+        "depth": 0.8,
+        "half_width": 2.4,
+        "id": "RuisseauDesPres",
+        "points_xzy": [
+          [
+            -230.0,
+            -42.0,
+            35.8
+          ],
+          [
+            -230.0,
+            -28.0,
+            33.8
+          ],
+          [
+            -226.0,
+            -11.0,
+            32.5
+          ],
+          [
+            -225.0,
+            8.0,
+            31.3
+          ],
+          [
+            -225.0,
+            19.0,
+            30.6
+          ],
+          [
+            -227.0,
+            35.0,
+            30.35
+          ],
+          [
+            -224.0,
+            53.0,
+            30.1
+          ],
+          [
+            -216.0,
+            72.0,
+            29.5
+          ],
+          [
+            -199.0,
+            87.0,
+            29.0
+          ],
+          [
+            -174.0,
+            98.0,
+            28.5
+          ],
+          [
+            -145.0,
+            116.0,
+            27.9
+          ],
+          [
+            -110.0,
+            140.0,
+            27.5
+          ]
+        ]
+      },
+      {
+        "blend": 3.0,
+        "depth": 0.48,
+        "half_width": 0.84,
+        "half_widths": [
+          2.0,
+          2.0,
+          1.7,
+          0.84,
+          0.84,
+          1.7,
+          2.0,
+          2.4
+        ],
+        "id": "BiefDuMoulin",
+        "points_xzy": [
+          [
+            -225.0,
+            19.0,
+            30.6
+          ],
+          [
+            -219.0,
+            23.0,
+            30.53
+          ],
+          [
+            -213.83,
+            28.4,
+            30.48
+          ],
+          [
+            -213.83,
+            30.2,
+            30.48
+          ],
+          [
+            -213.83,
+            37.8,
+            30.48
+          ],
+          [
+            -213.83,
+            39.6,
+            30.48
+          ],
+          [
+            -219.0,
+            47.0,
+            30.3
+          ],
+          [
+            -224.0,
+            53.0,
+            30.1
+          ]
+        ],
+        "smooth": false
+      },
+      {
+        "blend": 16.0,
+        "depth": 0.5,
+        "half_width": 1.8,
+        "id": "RigoleDesVergers",
+        "points_xzy": [
+          [
+            -226.0,
+            -11.0,
+            32.5
+          ],
+          [
+            -216.0,
+            -14.0,
+            31.8
+          ],
+          [
+            -195.0,
+            -17.0,
+            31.6
+          ],
+          [
+            -169.0,
+            -16.0,
+            31.4
+          ],
+          [
+            -142.0,
+            -10.0,
+            31.15
+          ],
+          [
+            -118.0,
+            4.0,
+            30.8
+          ],
+          [
+            -110.0,
+            22.0,
+            30.5
+          ],
+          [
+            -111.0,
+            44.0,
+            30.2
+          ],
+          [
+            -116.0,
+            70.0,
+            29.9
+          ],
+          [
+            -130.0,
+            93.0,
+            29.05
+          ],
+          [
+            -145.0,
+            116.0,
+            27.9
+          ]
+        ]
+      }
+    ]
+  },
+  "version": 1.0
+}

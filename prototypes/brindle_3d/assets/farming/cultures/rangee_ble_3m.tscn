@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="1_hkem0"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/rangee_ble_3m_Merged_straw.res" id="2_t7t2t"]
+[ext_resource type="Material" path="res://assets/farming/materials/grain.tres" id="3_isvpv"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/rangee_ble_3m_Merged_grain.res" id="4_qn0cg"]
+
+[node name="RangeeBle3m" type="Node3D" unique_id=1506690101]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "rangee_ble_3m"
+metadata/family = "cultures"
+metadata/label = "Rangée de blé de 3 mètres"
+metadata/purpose = "Module doré pour prolonger les sillons des champs."
+metadata/placement = "Terrain plat ; aligner les pivots tous les 3 m suivant X."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+
+[node name="RaccordGauche" type="Marker3D" parent="." unique_id=285388835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+
+[node name="RaccordDroit" type="Marker3D" parent="." unique_id=576998809]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0)
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=582221921]
+material_override = ExtResource("1_hkem0")
+mesh = ExtResource("2_t7t2t")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="." unique_id=530455485]
+material_override = ExtResource("3_isvpv")
+mesh = ExtResource("4_qn0cg")

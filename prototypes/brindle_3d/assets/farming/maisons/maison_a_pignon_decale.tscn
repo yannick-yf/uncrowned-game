@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_pjiqv"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_stone.res" id="2_r4xg8"]
+[ext_resource type="Material" path="res://assets/farming/materials/pale_plaster.tres" id="3_44wv8"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_pale_plaster.res" id="4_h07bs"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_334ek"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_dark_wood.res" id="6_qyftg"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="7_rbtpw"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_wood.res" id="8_3l6ha"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark.tres" id="9_x8kxi"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_dark.res" id="10_gonyn"]
+[ext_resource type="Material" path="res://assets/farming/materials/glass.tres" id="11_60e6e"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_glass.res" id="12_lp04k"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="13_sgakt"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_iron.res" id="14_1pr65"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="15_hwf82"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_thatch.res" id="16_5xy1n"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="17_es62h"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_a_pignon_decale_Merged_thatch_dark.res" id="18_0iafl"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m8v1w"]
+size = Vector3(5.95, 0.24, 5.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7x0jn"]
+size = Vector3(5.8, 2.88, 5.3)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8yn2v"]
+height = 0.81
+radius = 0.324
+
+[node name="MaisonAPignonDecale" type="Node3D" unique_id=2012733110]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "maison_a_pignon_decale"
+metadata/family = "maisons"
+metadata/label = "Maison au pignon décalé"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "faîtage_décalé"
+
+[node name="FootingCollision" type="StaticBody3D" parent="." unique_id=1014067666]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@42" type="CollisionShape3D" parent="FootingCollision" unique_id=1324302444]
+shape = SubResource("BoxShape3D_m8v1w")
+
+[node name="WallCoreCollision" type="StaticBody3D" parent="." unique_id=512966482]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@43" type="CollisionShape3D" parent="WallCoreCollision" unique_id=700634393]
+shape = SubResource("BoxShape3D_7x0jn")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1744090829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.08, 3.73)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=479010600]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 0.08, 2.93)
+
+[node name="BarrelCollision" type="StaticBody3D" parent="." unique_id=62690471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.18, 0.405, 3.03)
+collision_mask = 0
+
+[node name="@CollisionShape3D@44" type="CollisionShape3D" parent="BarrelCollision" unique_id=1265843919]
+shape = SubResource("CylinderShape3D_8yn2v")
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=891277616]
+material_override = ExtResource("1_pjiqv")
+mesh = ExtResource("2_r4xg8")
+
+[node name="MergedPalePlaster" type="MeshInstance3D" parent="." unique_id=446089628]
+material_override = ExtResource("3_44wv8")
+mesh = ExtResource("4_h07bs")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1838567394]
+material_override = ExtResource("5_334ek")
+mesh = ExtResource("6_qyftg")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1396980009]
+material_override = ExtResource("7_rbtpw")
+mesh = ExtResource("8_3l6ha")
+
+[node name="MergedDark" type="MeshInstance3D" parent="." unique_id=2079525290]
+material_override = ExtResource("9_x8kxi")
+mesh = ExtResource("10_gonyn")
+
+[node name="MergedGlass" type="MeshInstance3D" parent="." unique_id=1938544155]
+material_override = ExtResource("11_60e6e")
+mesh = ExtResource("12_lp04k")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=1615859134]
+material_override = ExtResource("13_sgakt")
+mesh = ExtResource("14_1pr65")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=301204173]
+material_override = ExtResource("15_hwf82")
+mesh = ExtResource("16_5xy1n")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=894364089]
+material_override = ExtResource("17_es62h")
+mesh = ExtResource("18_0iafl")

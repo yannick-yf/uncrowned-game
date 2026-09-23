@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/farming_surface.gdshader" id="1_ed3ui"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ed3ui")
+shader_parameter/tint = Color(0.7607843, 0.6392157, 0.34117648, 1)
+shader_parameter/surface_kind = 2
+shader_parameter/roughness = 0.94

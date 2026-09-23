@@ -22,6 +22,7 @@ signal rebuilt
 @export var grass_material: Material = preload("res://materials/brindle_landscape.tres")
 @export var water_material: Material = preload("res://materials/brindle_water.tres")
 @export var mine_cutout := Rect2()
+@export var coastline_enabled: bool = true
 @export_tool_button("Recharger le relief") var reload_button: Callable = rebuild_ground
 
 var _pending: bool = false
@@ -33,6 +34,7 @@ var _flow: PackedFloat32Array
 var _meta: Dictionary = {}
 var chunk_count: int = 0
 var water_triangle_count: int = 0
+var _farming_layout: Dictionary = {}
 
 func _ready() -> void:
 	add_to_group("world_terrain")
@@ -59,6 +61,15 @@ func rebuild_ground() -> void:
 		push_error("Données de relief incomplètes. Relancer tools/build_landscape.py.")
 		return
 	_apply_godot_relief_tools()
+	if grass_material is ShaderMaterial:
+		(grass_material as ShaderMaterial).set_shader_parameter("coastal_enabled",coastline_enabled)
+		if coastline_enabled and ResourceLoader.exists("res://assets/coastline/coastal_control.png"):
+			(grass_material as ShaderMaterial).set_shader_parameter("coastal_control",load("res://assets/coastline/coastal_control.png"))
+	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/farming_village/ground_wear.png"):
+		var farm: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://planning/farming-town.json"))
+		(grass_material as ShaderMaterial).set_shader_parameter("farming_ground_mask",load("res://assets/farming_village/ground_wear.png"))
+		(grass_material as ShaderMaterial).set_shader_parameter("farming_bounds",Vector4(farm.bounds_xz[0],farm.bounds_xz[1],farm.bounds_xz[2],farm.bounds_xz[3]))
+		(grass_material as ShaderMaterial).set_shader_parameter("farming_mask_enabled",true)
 	if grass_material is ShaderMaterial and ResourceLoader.exists("res://assets/landscape/royal_ground_mask.png"):
 		(grass_material as ShaderMaterial).set_shader_parameter("royal_ground_mask",load("res://assets/landscape/royal_ground_mask.png"))
 		(grass_material as ShaderMaterial).set_shader_parameter("royal_mask_enabled",true)
@@ -112,7 +123,13 @@ func _apply_godot_relief_tools() -> void:
 	if stamps.get_node_or_null("Royal_CourChateau")!=null:
 		var royal: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://planning/royal-city.json"))
 		preload("res://scripts/royal_ascent.gd").grade(_height,_n,royal.ramp_xyz)
+	if FileAccess.file_exists("res://planning/farming-town.json"):
+		var farm: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://planning/farming-town.json"))
+		_farming_layout=preload("res://scripts/farming_terrain.gd").prepare_query(farm)
+		preload("res://scripts/farming_terrain.gd").apply(_height,_water,_paint,_flow,_n,farm)
 	_apply_bridge_approaches()
+	if coastline_enabled and FileAccess.file_exists("res://assets/coastline/terrain_edits.f32"):
+		preload("res://scripts/coastal_terrain.gd").apply(_height,_n)
 	# Repaint slopes after editing a terrace; retain the original sand and bank channels.
 	for z: int in _n:
 		for x: int in _n:
@@ -294,7 +311,10 @@ func height_at_world(x: float, z: float) -> float:
 	return _sample(_height, x, z)
 
 func water_at_world(x: float, z: float) -> float:
-	return _sample(_water, x, z)
+	var fallback: float=_sample(_water,x,z)
+	if not _farming_layout.is_empty():
+		return preload("res://scripts/farming_terrain.gd").water_at_world(x,z,_farming_layout,fallback)
+	return fallback
 
 func surface_height_at_world(x: float,z: float) -> float:
 	if _height.is_empty(): return 0

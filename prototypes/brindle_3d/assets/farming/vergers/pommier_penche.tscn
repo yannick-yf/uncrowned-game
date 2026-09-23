@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/bark.tres" id="1_q5lxe"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/pommier_penche_Merged_bark.res" id="2_cxfqq"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf.tres" id="3_fbv23"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/pommier_penche_Merged_leaf.res" id="4_vb1dr"]
+[ext_resource type="Material" path="res://assets/farming/materials/apple.tres" id="5_y0pq3"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/pommier_penche_Merged_apple.res" id="6_mc4xp"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf_light.tres" id="7_7kpan"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/pommier_penche_Merged_leaf_light.res" id="8_wb40d"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jm1cv"]
+height = 1.9
+radius = 0.4345435
+
+[node name="PommierPenche" type="Node3D" unique_id=633314319]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "pommier_penche"
+metadata/family = "vergers"
+metadata/label = "Vieux pommier penché"
+metadata/purpose = "Arbre fruitier aux branches visibles et fruits cueillables visuellement."
+metadata/placement = "Pivot au pied du tronc ; collider uniquement sur le tronc, couronne traversable."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = false
+metadata/canopy_walk_through = true
+metadata/trunk_solid = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/collision_policy = "one cylinder per trunk; no canopy collision"
+metadata/fruit_species = "apple"
+
+[node name="TroncCollision" type="StaticBody3D" parent="." unique_id=2012210404]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.225, 0.95, 0.053999998)
+collision_mask = 0
+
+[node name="@CollisionShape3D@227" type="CollisionShape3D" parent="TroncCollision" unique_id=2017323890]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="PiedFruitier" type="Marker3D" parent="." unique_id=650326934]
+
+[node name="MergedBark" type="MeshInstance3D" parent="." unique_id=369348694]
+material_override = ExtResource("1_q5lxe")
+mesh = ExtResource("2_cxfqq")
+
+[node name="MergedLeaf" type="MeshInstance3D" parent="." unique_id=747395278]
+material_override = ExtResource("3_fbv23")
+mesh = ExtResource("4_vb1dr")
+
+[node name="MergedApple" type="MeshInstance3D" parent="." unique_id=1188513272]
+material_override = ExtResource("5_y0pq3")
+mesh = ExtResource("6_mc4xp")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="." unique_id=630517511]
+material_override = ExtResource("7_7kpan")
+mesh = ExtResource("8_wb40d")

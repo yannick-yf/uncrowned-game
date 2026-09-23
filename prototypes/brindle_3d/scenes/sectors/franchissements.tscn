@@ -253,7 +253,7 @@ width_m = 4.0
 material_override = ExtResource("6_10h1v")
 cast_shadow = 0
 script = ExtResource("7_8ikgb")
-points = PackedVector2Array(-170, 40, -125, 44, -77, 40, -46, 27, -10, 9, 3, -5)
+points = PackedVector2Array(-96, 44, -77, 40, -46, 27, -10, 9, 3, -5)
 width_m = 3.5
 
 [node name="GrandeRouteAcierie" type="MeshInstance3D" parent="Chemins" unique_id=345323524]

@@ -1,0 +1,3351 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/chaumiere_du_potager.tscn" id="1_t3qu8"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/maison_a_appentis.tscn" id="2_w6w4k"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/longere_des_moissons.tscn" id="3_40qui"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/ferme_en_l.tscn" id="4_uoyb2"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/maison_du_verger.tscn" id="5_xbvof"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/logis_a_auvent.tscn" id="6_6b3nu"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/maison_a_pignon_decale.tscn" id="7_gtsk5"]
+[ext_resource type="PackedScene" path="res://assets/farming/maisons/logis_des_journaliers.tscn" id="8_t68pn"]
+[ext_resource type="PackedScene" path="res://assets/farming/agricole/grange_traversante.tscn" id="9_tr44g"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/puits_couvert_de_chaume.tscn" id="10_brklk"]
+[ext_resource type="PackedScene" path="res://assets/farming/stockage/tonneaux_de_ferme.tscn" id="11_oqsbg"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/auge_en_pierre.tscn" id="12_xclfw"]
+[ext_resource type="PackedScene" path="res://assets/farming/stockage/caisse_de_fruits.tscn" id="13_hy5sk"]
+[ext_resource type="PackedScene" path="res://assets/farming/agricole/grange_a_foin_ouverte.tscn" id="14_o8x86"]
+[ext_resource type="PackedScene" path="res://assets/farming/agricole/grenier_sur_piliers.tscn" id="15_p00cg"]
+[ext_resource type="PackedScene" path="res://assets/farming/agricole/reserve_a_grain_octogonale.tscn" id="16_52xwh"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/charrette_de_recolte_vide.tscn" id="17_3gq17"]
+[ext_resource type="PackedScene" path="res://assets/farming/stockage/sacs_de_recolte.tscn" id="18_t528c"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/ratelier_outils_agricoles.tscn" id="19_m7tde"]
+[ext_resource type="PackedScene" path="res://assets/farming/recoltes/faisceau_gerbes.tscn" id="20_uuglu"]
+[ext_resource type="PackedScene" path="res://assets/farming/hydraulique/moulin_a_grain_hydraulique.tscn" id="21_56icc"]
+[ext_resource type="Script" path="res://scripts/farming_mill.gd" id="22_6pmvv"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/charrette_de_recolte_chargee.tscn" id="23_23vfo"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/araire_de_bois.tscn" id="24_8qotf"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/echelle_tripode_de_verger.tscn" id="25_5ttoy"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/panier_de_pommes.tscn" id="26_j10ds"]
+[ext_resource type="PackedScene" path="res://assets/farming/accessoires/panier_de_poires.tscn" id="27_dyv68"]
+[ext_resource type="Material" path="res://assets/farming/materials/bark.tres" id="28_q3xl4"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_0.res" id="29_qdv52"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf.tres" id="30_jf0er"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_1.res" id="31_qimbo"]
+[ext_resource type="Material" path="res://assets/farming/materials/apple.tres" id="32_ft5yl"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_2.res" id="33_porew"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf_light.tres" id="34_dfjbu"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_3.res" id="35_86x3l"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_4.res" id="36_uodb6"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_5.res" id="37_ojqcm"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_6.res" id="38_hp4vx"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_7.res" id="39_4cp5h"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_8.res" id="40_qaqov"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_9.res" id="41_08v0b"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_10.res" id="42_ohjj7"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_11.res" id="43_lw6uc"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_12.res" id="44_san8a"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_13.res" id="45_astde"]
+[ext_resource type="Material" path="res://assets/farming/materials/pear.tres" id="46_mgph5"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_14.res" id="47_wvi6b"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_15.res" id="48_r2yv8"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_16.res" id="49_mhwr4"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_17.res" id="50_7rhdw"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_18.res" id="51_v5tlp"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieEst_multimesh_19.res" id="52_6jncy"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_0.res" id="53_01xxu"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_1.res" id="54_2utse"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_2.res" id="55_6xk3u"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_3.res" id="56_obfsn"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_4.res" id="57_uht4l"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_5.res" id="58_lhhq0"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_6.res" id="59_bw3n5"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_7.res" id="60_htfag"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_8.res" id="61_um6vj"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_9.res" id="62_otx5w"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_10.res" id="63_u8v4s"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_11.res" id="64_16hqy"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_12.res" id="65_nsdpw"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_13.res" id="66_7ylux"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_14.res" id="67_uioaf"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_15.res" id="68_4vmlg"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_16.res" id="69_t1nc7"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_17.res" id="70_4fkcp"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_18.res" id="71_un56i"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/VergersSud_multimesh_19.res" id="72_i0tqk"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_0.res" id="73_730nu"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_1.res" id="74_h4u20"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_2.res" id="75_wwrms"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_3.res" id="76_ivd6u"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_4.res" id="77_ymw6s"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_5.res" id="78_hmqyp"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_6.res" id="79_1egwv"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_7.res" id="80_2gps8"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_8.res" id="81_4kp06"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_9.res" id="82_4v04s"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_10.res" id="83_bgd22"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_11.res" id="84_j0niw"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_12.res" id="85_4x5mk"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_13.res" id="86_11tar"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_14.res" id="87_t2dq2"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_15.res" id="88_vkfbb"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_16.res" id="89_mpo0k"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_17.res" id="90_ay1ak"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_18.res" id="91_ep7j6"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/PommeraieNord_multimesh_19.res" id="92_svjlk"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_0.res" id="93_t55hl"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_1.res" id="94_l5jux"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_2.res" id="95_uev4w"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_3.res" id="96_tnosr"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_4.res" id="97_ca7mq"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_5.res" id="98_boxop"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_6.res" id="99_d35js"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_7.res" id="100_huhcu"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_8.res" id="101_st06x"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_9.res" id="102_ctlr0"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_10.res" id="103_2o663"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/JardinLogis_multimesh_11.res" id="104_xee0w"]
+[ext_resource type="PackedScene" path="res://assets/farming/modules/cloture_rustique_4m.tscn" id="105_52xwh"]
+[ext_resource type="PackedScene" path="res://assets/bridges/bois/pont_charretier_bois_12m.tscn" id="105_o6qg0"]
+[ext_resource type="Script" path="res://scripts/ground_path.gd" id="106_pp377"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="107_1wfqn"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_dark_wood.res" id="108_qvi8j"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="109_lrmb2"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_iron.res" id="110_12jsj"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="111_kw8wi"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_wood.res" id="112_uclxq"]
+[ext_resource type="Material" path="res://assets/farming/materials/linen.tres" id="113_l4qp7"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_linen.res" id="114_4w5t5"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="115_rnk60"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_rope.res" id="116_lousi"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_apple.res" id="117_7d3le"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_bark.res" id="118_tsflr"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_pear.res" id="119_jiwe2"]
+[ext_resource type="Material" path="res://assets/farming/materials/clay.tres" id="120_u2kx6"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_clay.res" id="121_xnvap"]
+[ext_resource type="Material" path="res://assets/farming/materials/vegetable.tres" id="122_bgg7b"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_vegetable.res" id="123_8ehi1"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_leaf_light.res" id="124_p422h"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark.tres" id="125_34og2"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_dark.res" id="126_ymdna"]
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="127_347os"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/furniture_Merged_stone.res" id="128_47s45"]
+[ext_resource type="Material" path="res://assets/farming/materials/earth.tres" id="129_nfcf4"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleRiveOuest_0.res" id="130_2eoj3"]
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="131_0qtci"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleRiveOuest_1.res" id="132_kcr8t"]
+[ext_resource type="Material" path="res://assets/farming/materials/grain.tres" id="133_yeh8k"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleRiveOuest_2.res" id="134_nrjtu"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleDesPres_0.res" id="135_ix731"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleDesPres_1.res" id="136_1ci5e"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleDesPres_2.res" id="137_pybyy"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleGrandMeandre_0.res" id="138_j5wp8"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleGrandMeandre_1.res" id="139_5vfmn"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleGrandMeandre_2.res" id="140_6o1eo"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleDuSud_0.res" id="141_43qri"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleDuSud_1.res" id="142_3qtka"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleDuSud_2.res" id="143_tdxkb"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleHaut_0.res" id="144_cf4kq"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleHaut_1.res" id="145_3ecmi"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleHaut_2.res" id="146_3unje"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleEst_0.res" id="147_cajfx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleEst_1.res" id="148_c5g15"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/BleEst_2.res" id="149_kan64"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerMaison_0.res" id="150_apsod"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerMaison_1.res" id="151_au218"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerMaison_2.res" id="152_ycgo4"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerMaison_3.res" id="153_11hc4"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerEst_0.res" id="154_823nx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerEst_1.res" id="155_lpesb"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerEst_2.res" id="156_u33il"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerEst_3.res" id="157_u273e"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerSud_0.res" id="158_vswb2"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerSud_1.res" id="159_giunv"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerSud_2.res" id="160_ucgwf"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/PotagerSud_3.res" id="161_6idgp"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/LaboursOuest_0.res" id="162_2jmgc"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/LaboursHaut_0.res" id="163_i3sa8"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/JachereSud_0.res" id="164_c70td"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/JachereSud_1.res" id="165_808kc"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/JachereSud_2.res" id="166_yfw4t"]
+[ext_resource type="ArrayMesh" path="res://assets/farming_village/meshes/JachereSud_3.res" id="167_gt6ci"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_plants.tres" id="168_p00cg"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_fern_fan_00_e1755b9251.res" id="169_52xwh"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_flowers_daisy_00_2d1b0d69a8.res" id="170_3gq17"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_grass_meadow_00_4b65b1284e.res" id="171_t528c"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_grass_meadow_01_41a8474809.res" id="172_m7tde"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_wood.tres" id="173_uuglu"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_shrub_hazel_00_b76e119d6b.res" id="174_56icc"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_leaves_light.tres" id="175_6pmvv"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_shrub_hazel_01_df7553c7f0.res" id="176_23vfo"]
+[ext_resource type="Material" path="res://prototype_3d/materials/library_bark_birch.tres" id="177_8qotf"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_birch_twin_00_643ce508a3.res" id="178_5ttoy"]
+[ext_resource type="Material" path="res://prototype_3d/materials/styled_dark.tres" id="179_j10ds"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_birch_twin_01_3b2c1f85f5.res" id="180_dyv68"]
+[ext_resource type="MultiMesh" path="res://assets/farming_village/meshes/greenery_birch_twin_02_a9db9145f0.res" id="181_q3xl4"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8rfmd"]
+height = 2.15
+radius = 0.22
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jvmx5"]
+height = 1.95
+radius = 0.13
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_jm1cv"]
+height = 1.9
+radius = 0.4345435
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_vje55"]
+height = 2.15
+radius = 0.17
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_sv1sj"]
+height = 2.05
+radius = 0.25
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_52xwh"]
+size = Vector3(0.105, 2.58, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3gq17"]
+size = Vector3(0.105, 2.35, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t528c"]
+size = Vector3(0.105, 2.58, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m7tde"]
+size = Vector3(0.105, 2.35, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uuglu"]
+size = Vector3(2.24, 0.12, 0.72)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_56icc"]
+size = Vector3(0.105, 2.58, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6pmvv"]
+size = Vector3(0.105, 2.35, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23vfo"]
+size = Vector3(0.105, 2.58, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8qotf"]
+size = Vector3(0.105, 2.35, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ttoy"]
+size = Vector3(2.24, 0.12, 0.72)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j10ds"]
+size = Vector3(0.105, 2.58, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dyv68"]
+size = Vector3(0.105, 2.35, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q3xl4"]
+size = Vector3(0.105, 2.58, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qdv52"]
+size = Vector3(0.105, 2.35, 0.105)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jf0er"]
+size = Vector3(2.34, 0.12, 0.72)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qimbo"]
+size = Vector3(0.32, 0.19, 0.49)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ft5yl"]
+size = Vector3(0.17, 1.92, 0.23)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_porew"]
+size = Vector3(0.32, 0.19, 0.49)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dfjbu"]
+size = Vector3(0.17, 1.92, 0.23)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ka8fw"]
+height = 2.8
+radius = 0.47
+
+[node name="VillageFermier" type="Node3D" unique_id=982631694]
+metadata/layout_source = "res://planning/farming-town.json"
+metadata/farm_field_count = 12
+metadata/farm_fruit_tree_count = 26
+metadata/farm_orchard_multimesh_count = 72
+metadata/farm_greenery_count = 3539
+metadata/farm_birch_count = 27
+
+[node name="Habitations" type="Node3D" parent="." unique_id=886483328]
+
+[node name="ChaumierePotager" type="Node3D" parent="Habitations" unique_id=1026986625 instance=ExtResource("1_t3qu8")]
+transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -192, 31.084, 22)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "chaumiere_du_potager"
+metadata/family = "maisons"
+metadata/label = "Chaumière du potager"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "porche_latéral"
+metadata/farm_layout_id = "ChaumierePotager"
+
+[node name="MaisonAppentis" type="Node3D" parent="Habitations" unique_id=270919640 instance=ExtResource("2_w6w4k")]
+transform = Transform3D(0.087155804, 0, 0.9961947, 0, 1, 0, -0.9961947, 0, 0.087155804, -197, 30.562, 51)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "maison_a_appentis"
+metadata/family = "maisons"
+metadata/label = "Maison à appentis"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "appentis_de_bois"
+metadata/farm_layout_id = "MaisonAppentis"
+
+[node name="LongereMoissons" type="Node3D" parent="Habitations" unique_id=1464512934 instance=ExtResource("3_40qui")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -151, 31.084, 22)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "longere_des_moissons"
+metadata/family = "maisons"
+metadata/label = "Longère des moissons"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "longère_transversale"
+metadata/farm_layout_id = "LongereMoissons"
+
+[node name="FermeEnL" type="Node3D" parent="Habitations" unique_id=20171214 instance=ExtResource("4_uoyb2")]
+transform = Transform3D(-0.9848077, 0, 0.1736483, 0, 1, 0, -0.1736483, 0, -0.9848077, -150, 30.454, 57)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "ferme_en_l"
+metadata/family = "maisons"
+metadata/label = "Ferme en L"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "plan_en_L"
+metadata/farm_layout_id = "FermeEnL"
+
+[node name="MaisonVerger" type="Node3D" parent="Habitations" unique_id=488585792 instance=ExtResource("5_xbvof")]
+transform = Transform3D(-0.9659258, 0, 0.25881913, 0, 1, 0, -0.25881913, 0, -0.9659258, -184, 30.238, 69)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "maison_du_verger"
+metadata/family = "maisons"
+metadata/label = "Maison du verger"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "deux_volumes_étagés"
+metadata/farm_layout_id = "MaisonVerger"
+
+[node name="LogisAuvent" type="Node3D" parent="Habitations" unique_id=1696565902 instance=ExtResource("6_6b3nu")]
+transform = Transform3D(-0.9961947, 0, -0.08715581, 0, 1, 0, 0.08715581, 0, -0.9961947, -168, 30.256, 68)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "logis_a_auvent"
+metadata/family = "maisons"
+metadata/label = "Logis à auvent"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "galerie_de_façade"
+metadata/farm_layout_id = "LogisAuvent"
+
+[node name="MaisonPignon" type="Node3D" parent="Habitations" unique_id=2012733110 instance=ExtResource("7_gtsk5")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -145, 30.832, 36)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "maison_a_pignon_decale"
+metadata/family = "maisons"
+metadata/label = "Maison au pignon décalé"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "faîtage_décalé"
+metadata/farm_layout_id = "MaisonPignon"
+
+[node name="LogisJournaliers" type="Node3D" parent="Habitations" unique_id=419283770 instance=ExtResource("8_t68pn")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -193, 31.426, 3)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "logis_des_journaliers"
+metadata/family = "maisons"
+metadata/label = "Logis des journaliers"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "porche_en_avancée"
+metadata/farm_layout_id = "LogisJournaliers"
+
+[node name="PlaceDuPuits" type="Node3D" parent="." unique_id=869081173]
+
+[node name="GrandeGrange" type="Node3D" parent="PlaceDuPuits" unique_id=1466632648 instance=ExtResource("9_tr44g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -173, 31.21, 15)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "grange_traversante"
+metadata/family = "agricole"
+metadata/label = "Grange traversante à charrettes"
+metadata/purpose = "Stockage couvert avec nef centrale réellement praticable."
+metadata/placement = "Terrain sec; maintenir libre l'axe Entrance–Exit et son passage de 3,2 m minimum."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "open_barn"
+metadata/aisle_clear_width_m = 3.2
+metadata/aisle_clear_height_m = 3.3
+metadata/farm_layout_id = "GrandeGrange"
+
+[node name="PuitsCentral" type="Node3D" parent="PlaceDuPuits" unique_id=765960128 instance=ExtResource("10_brklk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -174, 30.85, 35)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "puits_couvert_de_chaume"
+metadata/family = "accessoires"
+metadata/label = "Puits couvert de chaume"
+metadata/purpose = "Point d'eau de cour, avec margelle, treuil et seau."
+metadata/placement = "Sur terrain horizontal ; réserver 1,2 m de passage autour de la margelle."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "PuitsCentral"
+
+[node name="TonneauxGrange" type="Node3D" parent="PlaceDuPuits" unique_id=564066557 instance=ExtResource("11_oqsbg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -178, 31.20882, 21)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "tonneaux_de_ferme"
+metadata/family = "stockage"
+metadata/label = "Trois tonneaux de ferme"
+metadata/purpose = "Réserves de cidre, eau ou provisions, à cerclages de fer."
+metadata/placement = "Sur sol sec, de préférence sous auvent ; groupe de trois contenants distincts."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "TonneauxGrange"
+
+[node name="AugePlace" type="Node3D" parent="PlaceDuPuits" unique_id=779892722 instance=ExtResource("12_xclfw")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -184, 30.85, 39)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "auge_en_pierre"
+metadata/family = "accessoires"
+metadata/label = "Auge en pierre et eau"
+metadata/purpose = "Abreuvoir évidé, alimentable par une gouttière de bois."
+metadata/placement = "Placer au bord d'une cour ou d'un pré, sur un sol horizontal ; l'eau est contenue dans l'auge."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "AugePlace"
+
+[node name="PommesMarche" type="Node3D" parent="PlaceDuPuits" unique_id=296588089 instance=ExtResource("13_hy5sk")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -162, 30.853802, 30)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "caisse_de_fruits"
+metadata/family = "stockage"
+metadata/label = "Caisse de fruits"
+metadata/purpose = "Caisse ajourée à poignées évidées pour trier les récoltes."
+metadata/placement = "Empilable ; dimensions 0,90 × 0,65 m, pivot sous le fond."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "PommesMarche"
+
+[node name="CourDesRecoltes" type="Node3D" parent="." unique_id=746738547]
+
+[node name="GrangeRecoltes" type="Node3D" parent="CourDesRecoltes" unique_id=478197650 instance=ExtResource("14_o8x86")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -138, 31.426, 3)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "grange_a_foin_ouverte"
+metadata/family = "agricole"
+metadata/label = "Grange ouverte à foin"
+metadata/purpose = "Stockage couvert avec nef centrale réellement praticable."
+metadata/placement = "Terrain sec; maintenir libre l'axe Entrance–Exit et son passage de 3,2 m minimum."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "open_barn"
+metadata/aisle_clear_width_m = 3.4
+metadata/aisle_clear_height_m = 2.75
+metadata/farm_layout_id = "GrangeRecoltes"
+
+[node name="GrenierSec" type="Node3D" parent="CourDesRecoltes" unique_id=121848548 instance=ExtResource("15_p00cg")]
+transform = Transform3D(0.49999997, 0, -0.86602545, 0, 1, 0, 0.86602545, 0, 0.49999997, -129, 31.156, 18)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "grenier_sur_piliers"
+metadata/family = "agricole"
+metadata/label = "Grenier sur piliers de pierre"
+metadata/purpose = "Grenier sec et ventilé, surélevé pour limiter l'humidité et l'accès des rongeurs."
+metadata/placement = "Sur sol sec près des champs; entrée +Z par escalier de 1,3 m."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "raised_granary"
+metadata/farm_layout_id = "GrenierSec"
+
+[node name="ReserveGrains" type="Node3D" parent="CourDesRecoltes" unique_id=1200269213 instance=ExtResource("16_52xwh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -128, 30.904, 32)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "reserve_a_grain_octogonale"
+metadata/family = "agricole"
+metadata/label = "Réserve à grain octogonale"
+metadata/purpose = "Petit silo de charpente à cuve sèche, protégé par une toiture conique en chaume."
+metadata/placement = "À placer à proximité d'une grange; stockage médiéval en bois, pas de silo métallique."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "wood_grain_store"
+metadata/farm_layout_id = "ReserveGrains"
+
+[node name="CharretteGrange" type="Node3D" parent="CourDesRecoltes" unique_id=16014081 instance=ExtResource("17_3gq17")]
+transform = Transform3D(0.17364822, 0, 0.9848077, 0, 1, 0, -0.9848077, 0, 0.17364822, -136, 31.227463, 14)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "charrette_de_recolte_vide"
+metadata/family = "accessoires"
+metadata/label = "Charrette de récolte vide"
+metadata/purpose = "Transport des sacs et des gerbes ; roues pleines à rayons et timon jumelé."
+metadata/placement = "Sur chemin sec ou sous grange ; le timon indique l'avant +Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "CharretteGrange"
+
+[node name="SacsGrenier" type="Node3D" parent="CourDesRecoltes" unique_id=753420761 instance=ExtResource("18_t528c")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -132.9, 31.156681, 16.4)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "sacs_de_recolte"
+metadata/family = "stockage"
+metadata/label = "Sacs de récolte sur caillebotis"
+metadata/purpose = "Quatre sacs de toile noués, tenus hors de la terre humide."
+metadata/placement = "À proximité du grenier ou de l'entrée du moulin, sur une surface plane."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "SacsGrenier"
+
+[node name="OutilsPotager" type="Node3D" parent="CourDesRecoltes" unique_id=1534844854 instance=ExtResource("19_m7tde")]
+transform = Transform3D(0.17364822, 0, -0.9848077, 0, 1, 0, 0.9848077, 0, 0.17364822, -135, 30.562, 51)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "ratelier_outils_agricoles"
+metadata/family = "accessoires"
+metadata/label = "Râtelier d'outils agricoles"
+metadata/purpose = "Rangement couvert d'une houe, d'une fourche, d'une bêche et d'un râteau."
+metadata/placement = "Adossable à une grange, outils visibles depuis +Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "OutilsPotager"
+
+[node name="GerbesCour" type="Node3D" parent="CourDesRecoltes" unique_id=1654012816 instance=ExtResource("20_uuglu")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -139, 31.400152, 9)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "faisceau_gerbes"
+metadata/family = "recoltes"
+metadata/label = "Faisceau de six gerbes"
+metadata/purpose = "Gerbes disposées en petit groupe de séchage après moisson."
+metadata/placement = "Terrain sec ; laisser le passage aux charrettes."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/farm_layout_id = "GerbesCour"
+
+[node name="RiveDuMoulin" type="Node3D" parent="." unique_id=1523700170]
+
+[node name="MoulinDesPres" type="Node3D" parent="RiveDuMoulin" unique_id=1773930648 instance=ExtResource("21_56icc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -209, 30, 34)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "moulin_a_grain_hydraulique"
+metadata/family = "hydraulique"
+metadata/label = "Moulin à grain et roue de plaine"
+metadata/purpose = "Moulin rural à roue en dessous; canal porteur, axe et volume de meunerie cohérents."
+metadata/placement = "Canal longitudinal sur le côté -X; raccorder WaterIn vers l'amont et WaterOut vers l'aval, cote locale 0,48 m. Le bâtiment et ses fondations restent hors du cours principal."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "grain_watermill"
+metadata/wheel_axis = "X"
+metadata/wheel_radius_m = 2.05
+metadata/channel_water_level_m = 0.48
+metadata/channel_clear_width_m = 1.68
+metadata/wheel_visual_path = "Wheel"
+metadata/farm_layout_id = "MoulinDesPres"
+
+[node name="AnimationRoue" type="Node3D" parent="RiveDuMoulin/MoulinDesPres" unique_id=397182040]
+script = ExtResource("22_6pmvv")
+
+[node name="CharretteMoulin" type="Node3D" parent="RiveDuMoulin" unique_id=1484102121 instance=ExtResource("23_23vfo")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -200, 30.7744, 39.2)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "charrette_de_recolte_chargee"
+metadata/family = "accessoires"
+metadata/label = "Charrette de récolte chargée"
+metadata/purpose = "Transport des sacs et des gerbes ; roues pleines à rayons et timon jumelé."
+metadata/placement = "Sur chemin sec ou sous grange ; le timon indique l'avant +Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "CharretteMoulin"
+
+[node name="SacsMoulin" type="Node3D" parent="RiveDuMoulin" unique_id=2134582307 instance=ExtResource("18_t528c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -210.2, 30.106329, 39.7)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "sacs_de_recolte"
+metadata/family = "stockage"
+metadata/label = "Sacs de récolte sur caillebotis"
+metadata/purpose = "Quatre sacs de toile noués, tenus hors de la terre humide."
+metadata/placement = "À proximité du grenier ou de l'entrée du moulin, sur une surface plane."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "SacsMoulin"
+
+[node name="ChampsOuest" type="Node3D" parent="." unique_id=1358384823]
+
+[node name="AraireRepos" type="Node3D" parent="ChampsOuest" unique_id=1053350160 instance=ExtResource("24_8qotf")]
+transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -241, 30.907814, 32)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "araire_de_bois"
+metadata/family = "accessoires"
+metadata/label = "Araire de bois à soc ferré"
+metadata/purpose = "Outil de labour à long age, deux mancherons et sabot renforcé."
+metadata/placement = "Poser à côté d'une parcelle labourée ou d'un attelage ; aucune mécanique de culture intégrée."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "AraireRepos"
+
+[node name="GerbesOuest" type="Node3D" parent="ChampsOuest" unique_id=52488037 instance=ExtResource("20_uuglu")]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, -252, 30.318121, 60)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "faisceau_gerbes"
+metadata/family = "recoltes"
+metadata/label = "Faisceau de six gerbes"
+metadata/purpose = "Gerbes disposées en petit groupe de séchage après moisson."
+metadata/placement = "Terrain sec ; laisser le passage aux charrettes."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/farm_layout_id = "GerbesOuest"
+
+[node name="Vergers" type="Node3D" parent="." unique_id=1764713190]
+metadata/placement_mode = "MultiMesh transforms baked from individual terrain samples"
+
+[node name="EchelleVerger" type="Node3D" parent="Vergers" unique_id=692324476 instance=ExtResource("25_5ttoy")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -126, 30.162697, 68)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "echelle_tripode_de_verger"
+metadata/family = "accessoires"
+metadata/label = "Échelle tripode de verger"
+metadata/purpose = "Échelle de récolte en frêne, à barreaux traversants."
+metadata/placement = "Tripode autonome, ouvert au sol."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "EchelleVerger"
+
+[node name="PaniersVerger" type="Node3D" parent="Vergers" unique_id=927525052 instance=ExtResource("26_j10ds")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -127, 30.148697, 67)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "panier_de_pommes"
+metadata/family = "accessoires"
+metadata/label = "Panier de pommes"
+metadata/purpose = "Panier tressé de récolte, rempli de fruits sculptés."
+metadata/placement = "Au pied d'un arbre fruitier, sur une table ou près d'une échelle."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "PaniersVerger"
+
+[node name="PoiresRive" type="Node3D" parent="Vergers" unique_id=1783205442 instance=ExtResource("27_dyv68")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -218, 33.514732, 114)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "panier_de_poires"
+metadata/family = "accessoires"
+metadata/label = "Panier de poires"
+metadata/purpose = "Panier tressé de récolte, rempli de fruits sculptés."
+metadata/placement = "Au pied d'un arbre fruitier, sur une table ou près d'une échelle."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "PoiresRive"
+
+[node name="PommeraieEst" type="Node3D" parent="Vergers" unique_id=2066123807]
+metadata/layout_id = "PommeraieEst"
+metadata/placement_mode = "shared_mesh_multimeshes"
+metadata/canopy_walk_through = true
+metadata/trunk_solid = true
+metadata/tree_count = 9
+
+[node name="pommier_etale_0_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=1414931681]
+transform = Transform3D(0.86, 0, 0, 0, 0.86, 0, 0, 0, 0.86, -127.09647, 29.452326, 84.33644)
+metadata/source_asset = "pommier_etale"
+metadata/authored_xz = [-127.09647, 84.33644]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_etale_0_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=2036616794]
+transform = Transform3D(0.86, 0, 0, 0, 0.86, 0, 0, 0, 0.86, -127.09647, 30.376825, 84.33644)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/pommier_etale_0_Tronc_0" unique_id=1094682338]
+shape = SubResource("CylinderShape3D_8rfmd")
+
+[node name="pommier_jeune_1_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=746599567]
+transform = Transform3D(0.30277836, 0, 0.87933224, 0, 0.93, 0, -0.87933224, 0, 0.30277836, -121.54742, 29.612015, 85.20304)
+metadata/source_asset = "pommier_jeune"
+metadata/authored_xz = [-121.54742, 85.20304]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_jeune_1_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=1844773186]
+transform = Transform3D(0.30277836, 0, 0.87933224, 0, 0.93, 0, -0.87933224, 0, 0.30277836, -121.54742, 30.518764, 85.20304)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/pommier_jeune_1_Tronc_0" unique_id=966325254]
+shape = SubResource("CylinderShape3D_jvmx5")
+
+[node name="pommier_penche_2_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=2060003331]
+transform = Transform3D(-0.7880108, 0, 0.61566144, 0, 1, 0, -0.61566144, 0, -0.7880108, -115.656685, 32.09014, 87.60225)
+metadata/source_asset = "pommier_penche"
+metadata/authored_xz = [-115.656685, 87.60225]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_penche_2_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=1339272048]
+transform = Transform3D(-0.7880108, 0, 0.61566144, 0, 1, 0, -0.61566144, 0, -0.7880108, -115.80074, 33.040142, 87.42117)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/pommier_penche_2_Tronc_0" unique_id=682503622]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="poirier_fuseau_3_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=779329860]
+transform = Transform3D(-0.8973776, 0, -0.58276373, 0, 1.07, 0, 0.58276373, 0, -0.8973776, -128.61041, 28.872747, 89.03215)
+metadata/source_asset = "poirier_fuseau"
+metadata/authored_xz = [-128.61041, 89.03215]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_fuseau_3_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=1453417722]
+transform = Transform3D(-0.8973776, 0, -0.58276373, 0, 1.07, 0, 0.58276373, 0, -0.8973776, -128.61041, 30.022997, 89.03215)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/poirier_fuseau_3_Tronc_0" unique_id=1738162760]
+shape = SubResource("CylinderShape3D_vje55")
+
+[node name="poirier_ancien_4_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=1578837159]
+transform = Transform3D(0.20805287, 0, -0.83445436, 0, 0.86, 0, 0.83445436, 0, 0.20805287, -123.13268, 30.045805, 91.24186)
+metadata/source_asset = "poirier_ancien"
+metadata/authored_xz = [-123.13268, 91.24186]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_ancien_4_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=879785070]
+transform = Transform3D(0.20805287, 0, -0.83445436, 0, 0.86, 0, 0.83445436, 0, 0.20805287, -123.13268, 30.927305, 91.24186)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/poirier_ancien_4_Tronc_0" unique_id=635057083]
+shape = SubResource("CylinderShape3D_sv1sj")
+
+[node name="pommier_etale_5_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=1493150731]
+transform = Transform3D(0.9264611, 0, -0.081054665, 0, 0.93, 0, 0.081054665, 0, 0.9264611, -117.05637, 33.131657, 92.40036)
+metadata/source_asset = "pommier_etale"
+metadata/authored_xz = [-117.05637, 92.40036]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_etale_5_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=2095779971]
+transform = Transform3D(0.9264611, 0, -0.081054665, 0, 0.93, 0, 0.081054665, 0, 0.9264611, -117.05637, 34.131405, 92.40036)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/pommier_etale_5_Tronc_0" unique_id=821610439]
+shape = SubResource("CylinderShape3D_8rfmd")
+
+[node name="pommier_jeune_6_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=21339261]
+transform = Transform3D(0.4067366, 0, 0.9135455, 0, 1, 0, -0.9135455, 0, 0.4067366, -130.41199, 28.580318, 94.91341)
+metadata/source_asset = "pommier_jeune"
+metadata/authored_xz = [-130.41199, 94.91341]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_jeune_6_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=1476618051]
+transform = Transform3D(0.4067366, 0, 0.9135455, 0, 1, 0, -0.9135455, 0, 0.4067366, -130.41199, 29.555319, 94.91341)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/pommier_jeune_6_Tronc_0" unique_id=1333218486]
+shape = SubResource("CylinderShape3D_jvmx5")
+
+[node name="pommier_penche_7_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=1599135383]
+transform = Transform3D(-0.78254855, 0, 0.72973824, 0, 1.07, 0, -0.72973824, 0, -0.78254855, -124.38086, 30.867392, 96.20295)
+metadata/source_asset = "pommier_penche"
+metadata/authored_xz = [-124.38086, 96.20295]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_penche_7_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=1702749684]
+transform = Transform3D(-0.78254855, 0, 0.72973824, 0, 1.07, 0, -0.72973824, 0, -0.78254855, -124.517525, 31.883892, 95.9965)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/pommier_penche_7_Tronc_0" unique_id=1798837973]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="poirier_fuseau_8_Emplacement" type="Marker3D" parent="Vergers/PommeraieEst" unique_id=1735637117]
+transform = Transform3D(-0.759335, 0, -0.4037455, 0, 0.86, 0, 0.4037455, 0, -0.759335, -118.818405, 33.96877, 98.15183)
+metadata/source_asset = "poirier_fuseau"
+metadata/authored_xz = [-118.818405, 98.15183]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_fuseau_8_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieEst" unique_id=581465926]
+transform = Transform3D(-0.759335, 0, -0.4037455, 0, 0.86, 0, 0.4037455, 0, -0.759335, -118.818405, 34.89327, 98.15183)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieEst/poirier_fuseau_8_Tronc_0" unique_id=959067606]
+shape = SubResource("CylinderShape3D_vje55")
+
+[node name="pommier_etale_MergedBark_0" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1876214114]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("29_qdv52")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_bark.res"
+
+[node name="pommier_etale_MergedLeaf_1" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1614832741]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("31_qimbo")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf.res"
+
+[node name="pommier_etale_MergedApple_2" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=761967397]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("33_porew")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_apple.res"
+
+[node name="pommier_etale_MergedLeafLight_3" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=2045608974]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("35_86x3l")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf_light.res"
+
+[node name="pommier_jeune_MergedBark_4" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1729974361]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("36_uodb6")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_bark.res"
+
+[node name="pommier_jeune_MergedLeaf_5" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=122912009]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("37_ojqcm")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_leaf.res"
+
+[node name="pommier_jeune_MergedApple_6" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=958682801]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("38_hp4vx")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_apple.res"
+
+[node name="pommier_jeune_MergedLeafLight_7" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1661862486]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("39_4cp5h")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_leaf_light.res"
+
+[node name="pommier_penche_MergedBark_8" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=946261005]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("40_qaqov")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_bark.res"
+
+[node name="pommier_penche_MergedLeaf_9" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1560882791]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("41_08v0b")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_leaf.res"
+
+[node name="pommier_penche_MergedApple_10" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1931534261]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("42_ohjj7")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_apple.res"
+
+[node name="pommier_penche_MergedLeafLight_11" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=937085346]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("43_lw6uc")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_leaf_light.res"
+
+[node name="poirier_fuseau_MergedBark_12" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=80427535]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("44_san8a")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_bark.res"
+
+[node name="poirier_fuseau_MergedLeaf_13" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=92587492]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("45_astde")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf.res"
+
+[node name="poirier_fuseau_MergedPear_14" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=860255134]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("47_wvi6b")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_pear.res"
+
+[node name="poirier_fuseau_MergedLeafLight_15" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=39065756]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("48_r2yv8")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf_light.res"
+
+[node name="poirier_ancien_MergedBark_16" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=200043216]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("49_mhwr4")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_bark.res"
+
+[node name="poirier_ancien_MergedLeaf_17" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1243567457]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("50_7rhdw")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf.res"
+
+[node name="poirier_ancien_MergedPear_18" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1402607178]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("51_v5tlp")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_pear.res"
+
+[node name="poirier_ancien_MergedLeafLight_19" type="MultiMeshInstance3D" parent="Vergers/PommeraieEst" unique_id=1830823713]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("52_6jncy")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf_light.res"
+
+[node name="VergersSud" type="Node3D" parent="Vergers" unique_id=1790831494]
+metadata/layout_id = "VergersSud"
+metadata/placement_mode = "shared_mesh_multimeshes"
+metadata/canopy_walk_through = true
+metadata/trunk_solid = true
+metadata/tree_count = 8
+
+[node name="pommier_jeune_0_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=492717781]
+transform = Transform3D(0.6868266, 0, 0.5175609, 0, 0.86, 0, -0.5175609, 0, 0.6868266, -232.71855, 33.326992, 111.142395)
+metadata/source_asset = "pommier_jeune"
+metadata/authored_xz = [-232.71855, 111.142395]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_jeune_0_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1418566571]
+transform = Transform3D(0.6868266, 0, 0.5175609, 0, 0.86, 0, -0.5175609, 0, 0.6868266, -232.71855, 34.165493, 111.142395)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/pommier_jeune_0_Tronc_0" unique_id=1172811897]
+shape = SubResource("CylinderShape3D_jvmx5")
+
+[node name="pommier_penche_1_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=186545182]
+transform = Transform3D(-0.28738585, 0, 0.88448256, 0, 0.93, 0, -0.88448256, 0, -0.28738585, -227.61115, 33.433685, 109.8175)
+metadata/source_asset = "pommier_penche"
+metadata/authored_xz = [-227.61115, 109.8175]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_penche_1_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1799934529]
+transform = Transform3D(-0.28738585, 0, 0.88448256, 0, 0.93, 0, -0.88448256, 0, -0.28738585, -227.62805, 34.317184, 109.60297)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/pommier_penche_1_Tronc_0" unique_id=2134032132]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="poirier_fuseau_2_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=31871195]
+transform = Transform3D(-0.9998477, 0, 0.017452458, 0, 1, 0, -0.017452458, 0, -0.9998477, -221.40865, 32.998775, 109.22407)
+metadata/source_asset = "poirier_fuseau"
+metadata/authored_xz = [-221.40865, 109.22407]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_fuseau_2_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1263602858]
+transform = Transform3D(-0.9998477, 0, 0.017452458, 0, 1, 0, -0.017452458, 0, -0.9998477, -221.40865, 34.073776, 109.22407)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/poirier_fuseau_2_Tronc_0" unique_id=2052952560]
+shape = SubResource("CylinderShape3D_vje55")
+
+[node name="poirier_ancien_3_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=624556203]
+transform = Transform3D(-0.3659615, 0, -1.0054712, 0, 1.07, 0, 1.0054712, 0, -0.3659615, -215.7912, 31.800117, 107.66742)
+metadata/source_asset = "poirier_ancien"
+metadata/authored_xz = [-215.7912, 107.66742]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_ancien_3_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=7929218]
+transform = Transform3D(-0.3659615, 0, -1.0054712, 0, 1.07, 0, 1.0054712, 0, -0.3659615, -215.7912, 32.896866, 107.66742)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/poirier_ancien_3_Tronc_0" unique_id=782468366]
+shape = SubResource("CylinderShape3D_sv1sj")
+
+[node name="pommier_etale_4_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=425642377]
+transform = Transform3D(0.66834563, 0, -0.54121536, 0, 0.86, 0, 0.54121536, 0, 0.66834563, -232.187, 33.51565, 117.27171)
+metadata/source_asset = "pommier_etale"
+metadata/authored_xz = [-232.187, 117.27171]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_etale_4_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1233924551]
+transform = Transform3D(0.66834563, 0, -0.54121536, 0, 0.86, 0, 0.54121536, 0, 0.66834563, -232.187, 34.44015, 117.27171)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/pommier_etale_4_Tronc_0" unique_id=791355050]
+shape = SubResource("CylinderShape3D_8rfmd")
+
+[node name="pommier_jeune_5_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=959159971]
+transform = Transform3D(0.7886847, 0, 0.4928249, 0, 0.93, 0, -0.4928249, 0, 0.7886847, -226.05725, 33.652473, 115.528015)
+metadata/source_asset = "pommier_jeune"
+metadata/authored_xz = [-226.05725, 115.528015]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_jeune_5_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1861619974]
+transform = Transform3D(0.7886847, 0, 0.4928249, 0, 0.93, 0, -0.4928249, 0, 0.7886847, -226.05725, 34.559223, 115.528015)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/pommier_jeune_5_Tronc_0" unique_id=1448152117]
+shape = SubResource("CylinderShape3D_jvmx5")
+
+[node name="pommier_penche_6_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=897023940]
+transform = Transform3D(-0.224951, 0, 0.97437006, 0, 1, 0, -0.97437006, 0, -0.224951, -220.51335, 33.644592, 115.24221)
+metadata/source_asset = "pommier_penche"
+metadata/authored_xz = [-220.51335, 115.24221]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_penche_6_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1772491102]
+transform = Transform3D(-0.224951, 0, 0.97437006, 0, 1, 0, -0.97437006, 0, -0.224951, -220.51135, 34.594593, 115.010826)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/pommier_penche_6_Tronc_0" unique_id=33643635]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="poirier_fuseau_7_Emplacement" type="Marker3D" parent="Vergers/VergersSud" unique_id=1861841355]
+transform = Transform3D(-1.0641385, 0, 0.11184549, 0, 1.07, 0, -0.11184549, 0, -1.0641385, -215.0793, 32.94409, 113.57727)
+metadata/source_asset = "poirier_fuseau"
+metadata/authored_xz = [-215.0793, 113.57727]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_fuseau_7_Tronc_0" type="StaticBody3D" parent="Vergers/VergersSud" unique_id=1696763920]
+transform = Transform3D(-1.0641385, 0, 0.11184549, 0, 1.07, 0, -0.11184549, 0, -1.0641385, -215.0793, 34.09434, 113.57727)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/VergersSud/poirier_fuseau_7_Tronc_0" unique_id=1833096686]
+shape = SubResource("CylinderShape3D_vje55")
+
+[node name="pommier_jeune_MergedBark_0" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=814684567]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("53_01xxu")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_bark.res"
+
+[node name="pommier_jeune_MergedLeaf_1" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1302335976]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("54_2utse")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_leaf.res"
+
+[node name="pommier_jeune_MergedApple_2" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=275682748]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("55_6xk3u")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_apple.res"
+
+[node name="pommier_jeune_MergedLeafLight_3" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1690338948]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("56_obfsn")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_leaf_light.res"
+
+[node name="pommier_penche_MergedBark_4" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1268075082]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("57_uht4l")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_bark.res"
+
+[node name="pommier_penche_MergedLeaf_5" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1272012171]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("58_lhhq0")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_leaf.res"
+
+[node name="pommier_penche_MergedApple_6" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=657950213]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("59_bw3n5")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_apple.res"
+
+[node name="pommier_penche_MergedLeafLight_7" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=514477137]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("60_htfag")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_leaf_light.res"
+
+[node name="poirier_fuseau_MergedBark_8" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1020186328]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("61_um6vj")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_bark.res"
+
+[node name="poirier_fuseau_MergedLeaf_9" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1317927316]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("62_otx5w")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf.res"
+
+[node name="poirier_fuseau_MergedPear_10" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1305110169]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("63_u8v4s")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_pear.res"
+
+[node name="poirier_fuseau_MergedLeafLight_11" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1716137940]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("64_16hqy")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf_light.res"
+
+[node name="poirier_ancien_MergedBark_12" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1691952498]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("65_nsdpw")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_bark.res"
+
+[node name="poirier_ancien_MergedLeaf_13" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=919231930]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("66_7ylux")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf.res"
+
+[node name="poirier_ancien_MergedPear_14" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=321721546]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("67_uioaf")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_pear.res"
+
+[node name="poirier_ancien_MergedLeafLight_15" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1876437115]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("68_4vmlg")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf_light.res"
+
+[node name="pommier_etale_MergedBark_16" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1382416832]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("69_t1nc7")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_bark.res"
+
+[node name="pommier_etale_MergedLeaf_17" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=200368768]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("70_4fkcp")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf.res"
+
+[node name="pommier_etale_MergedApple_18" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1221068309]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("71_un56i")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_apple.res"
+
+[node name="pommier_etale_MergedLeafLight_19" type="MultiMeshInstance3D" parent="Vergers/VergersSud" unique_id=1774421431]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("72_i0tqk")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf_light.res"
+
+[node name="PommeraieNord" type="Node3D" parent="Vergers" unique_id=680410914]
+metadata/layout_id = "PommeraieNord"
+metadata/placement_mode = "shared_mesh_multimeshes"
+metadata/canopy_walk_through = true
+metadata/trunk_solid = true
+metadata/tree_count = 6
+
+[node name="pommier_penche_0_Emplacement" type="Marker3D" parent="Vergers/PommeraieNord" unique_id=580366420]
+transform = Transform3D(0.23704816, 0, 0.8266851, 0, 0.86, 0, -0.8266851, 0, 0.23704816, -169.75014, 31.69796, -7.182199)
+metadata/source_asset = "pommier_penche"
+metadata/authored_xz = [-169.75014, -7.182199]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_penche_0_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieNord" unique_id=1002785077]
+transform = Transform3D(0.23704816, 0, 0.8266851, 0, 0.86, 0, -0.8266851, 0, 0.23704816, -169.65216, 32.51496, -7.3554025)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieNord/pommier_penche_0_Tronc_0" unique_id=634952922]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="poirier_fuseau_1_Emplacement" type="Marker3D" parent="Vergers/PommeraieNord" unique_id=737820693]
+transform = Transform3D(-0.76181144, 0, 0.5334261, 0, 0.93, 0, -0.5334261, 0, -0.76181144, -164.62271, 31.628593, -7.6554704)
+metadata/source_asset = "poirier_fuseau"
+metadata/authored_xz = [-164.62271, -7.6554704]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_fuseau_1_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieNord" unique_id=2101609950]
+transform = Transform3D(-0.76181144, 0, 0.5334261, 0, 0.93, 0, -0.5334261, 0, -0.76181144, -164.62271, 32.62834, -7.6554704)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieNord/poirier_fuseau_1_Tronc_0" unique_id=359789112]
+shape = SubResource("CylinderShape3D_vje55")
+
+[node name="poirier_ancien_2_Emplacement" type="Marker3D" parent="Vergers/PommeraieNord" unique_id=953145803]
+transform = Transform3D(-0.80901694, 0, -0.58778536, 0, 1, 0, 0.58778536, 0, -0.80901694, -159.27576, 31.72363, -8.5586195)
+metadata/source_asset = "poirier_ancien"
+metadata/authored_xz = [-159.27576, -8.5586195]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_ancien_2_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieNord" unique_id=1221241058]
+transform = Transform3D(-0.80901694, 0, -0.58778536, 0, 1, 0, 0.58778536, 0, -0.80901694, -159.27576, 32.74863, -8.5586195)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieNord/poirier_ancien_2_Tronc_0" unique_id=1769520976]
+shape = SubResource("CylinderShape3D_sv1sj")
+
+[node name="pommier_etale_3_Emplacement" type="Marker3D" parent="Vergers/PommeraieNord" unique_id=824725700]
+transform = Transform3D(0.3128375, 0, -1.0232463, 0, 1.07, 0, 1.0232463, 0, 0.3128375, -168.89828, 31.503334, -1.2962711)
+metadata/source_asset = "pommier_etale"
+metadata/authored_xz = [-168.89828, -1.2962711]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_etale_3_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieNord" unique_id=129907032]
+transform = Transform3D(0.3128375, 0, -1.0232463, 0, 1.07, 0, 1.0232463, 0, 0.3128375, -168.89828, 32.653584, -1.2962711)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieNord/pommier_etale_3_Tronc_0" unique_id=732360208]
+shape = SubResource("CylinderShape3D_8rfmd")
+
+[node name="pommier_jeune_4_Emplacement" type="Marker3D" parent="Vergers/PommeraieNord" unique_id=793339967]
+transform = Transform3D(0.85947615, 0, -0.030013656, 0, 0.86, 0, 0.030013656, 0, 0.85947615, -163.96277, 31.514977, -1.9431498)
+metadata/source_asset = "pommier_jeune"
+metadata/authored_xz = [-163.96277, -1.9431498]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_jeune_4_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieNord" unique_id=294799581]
+transform = Transform3D(0.85947615, 0, -0.030013656, 0, 0.86, 0, 0.030013656, 0, 0.85947615, -163.96277, 32.353477, -1.9431498)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieNord/pommier_jeune_4_Tronc_0" unique_id=1598401359]
+shape = SubResource("CylinderShape3D_jvmx5")
+
+[node name="pommier_penche_5_Emplacement" type="Marker3D" parent="Vergers/PommeraieNord" unique_id=930394454]
+transform = Transform3D(0.33328223, 0, 0.8682298, 0, 0.93, 0, -0.8682298, 0, 0.33328223, -158.31589, 31.531883, -2.8823497)
+metadata/source_asset = "pommier_penche"
+metadata/authored_xz = [-158.31589, -2.8823497]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_penche_5_Tronc_0" type="StaticBody3D" parent="Vergers/PommeraieNord" unique_id=77049554]
+transform = Transform3D(0.33328223, 0, 0.8682298, 0, 0.93, 0, -0.8682298, 0, 0.33328223, -158.19402, 32.415382, -3.0597043)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/PommeraieNord/pommier_penche_5_Tronc_0" unique_id=1812103640]
+shape = SubResource("CylinderShape3D_jm1cv")
+
+[node name="pommier_penche_MergedBark_0" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1907682249]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("73_730nu")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_bark.res"
+
+[node name="pommier_penche_MergedLeaf_1" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1987912406]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("74_h4u20")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_leaf.res"
+
+[node name="pommier_penche_MergedApple_2" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=2061611611]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("75_wwrms")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_apple.res"
+
+[node name="pommier_penche_MergedLeafLight_3" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1159586603]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("76_ivd6u")
+metadata/instances = 2
+metadata/source_mesh = "res://assets/farming/meshes/pommier_penche_Merged_leaf_light.res"
+
+[node name="poirier_fuseau_MergedBark_4" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=368081509]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("77_ymw6s")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_bark.res"
+
+[node name="poirier_fuseau_MergedLeaf_5" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1972666296]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("78_hmqyp")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf.res"
+
+[node name="poirier_fuseau_MergedPear_6" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=850187464]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("79_1egwv")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_pear.res"
+
+[node name="poirier_fuseau_MergedLeafLight_7" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1723499709]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("80_2gps8")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf_light.res"
+
+[node name="poirier_ancien_MergedBark_8" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1876853882]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("81_4kp06")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_bark.res"
+
+[node name="poirier_ancien_MergedLeaf_9" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=163872516]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("82_4v04s")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf.res"
+
+[node name="poirier_ancien_MergedPear_10" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1383182819]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("83_bgd22")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_pear.res"
+
+[node name="poirier_ancien_MergedLeafLight_11" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1441002637]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("84_j0niw")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf_light.res"
+
+[node name="pommier_etale_MergedBark_12" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1042700063]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("85_4x5mk")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_bark.res"
+
+[node name="pommier_etale_MergedLeaf_13" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=887963523]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("86_11tar")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf.res"
+
+[node name="pommier_etale_MergedApple_14" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1582007100]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("87_t2dq2")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_apple.res"
+
+[node name="pommier_etale_MergedLeafLight_15" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1407600515]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("88_vkfbb")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf_light.res"
+
+[node name="pommier_jeune_MergedBark_16" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1211145241]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("89_mpo0k")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_bark.res"
+
+[node name="pommier_jeune_MergedLeaf_17" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=19861953]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("90_ay1ak")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_leaf.res"
+
+[node name="pommier_jeune_MergedApple_18" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=1201569695]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("91_ep7j6")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_apple.res"
+
+[node name="pommier_jeune_MergedLeafLight_19" type="MultiMeshInstance3D" parent="Vergers/PommeraieNord" unique_id=612459630]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("92_svjlk")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_jeune_Merged_leaf_light.res"
+
+[node name="JardinLogis" type="Node3D" parent="Vergers" unique_id=1440609217]
+metadata/layout_id = "JardinLogis"
+metadata/placement_mode = "shared_mesh_multimeshes"
+metadata/canopy_walk_through = true
+metadata/trunk_solid = true
+metadata/tree_count = 3
+
+[node name="poirier_fuseau_0_Emplacement" type="Marker3D" parent="Vergers/JardinLogis" unique_id=2057411553]
+transform = Transform3D(-0.30819646, 0, 0.8028792, 0, 0.86, 0, -0.8028792, 0, -0.30819646, -195.88655, 29.98768, 78.669876)
+metadata/source_asset = "poirier_fuseau"
+metadata/authored_xz = [-195.88655, 78.669876]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_fuseau_0_Tronc_0" type="StaticBody3D" parent="Vergers/JardinLogis" unique_id=1460873591]
+transform = Transform3D(-0.30819646, 0, 0.8028792, 0, 0.86, 0, -0.8028792, 0, -0.30819646, -195.88655, 30.91218, 78.669876)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/JardinLogis/poirier_fuseau_0_Tronc_0" unique_id=1682834118]
+shape = SubResource("CylinderShape3D_vje55")
+
+[node name="poirier_ancien_1_Emplacement" type="Marker3D" parent="Vergers/JardinLogis" unique_id=119699899]
+transform = Transform3D(-0.92943347, 0, -0.03245643, 0, 0.93, 0, 0.03245643, 0, -0.92943347, -190.49727, 29.978159, 80.51321)
+metadata/source_asset = "poirier_ancien"
+metadata/authored_xz = [-190.49727, 80.51321]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="poirier_ancien_1_Tronc_0" type="StaticBody3D" parent="Vergers/JardinLogis" unique_id=1420323221]
+transform = Transform3D(-0.92943347, 0, -0.03245643, 0, 0.93, 0, 0.03245643, 0, -0.92943347, -190.49727, 30.93141, 80.51321)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/JardinLogis/poirier_ancien_1_Tronc_0" unique_id=952349092]
+shape = SubResource("CylinderShape3D_sv1sj")
+
+[node name="pommier_etale_2_Emplacement" type="Marker3D" parent="Vergers/JardinLogis" unique_id=27936377]
+transform = Transform3D(-0.2923719, 0, -0.95630467, 0, 1, 0, 0.95630467, 0, -0.2923719, -185.46751, 30.03977, 80.91273)
+metadata/source_asset = "pommier_etale"
+metadata/authored_xz = [-185.46751, 80.91273]
+metadata/editing = "Edit planning layout then regenerate; this marker does not move MultiMesh instances"
+
+[node name="pommier_etale_2_Tronc_0" type="StaticBody3D" parent="Vergers/JardinLogis" unique_id=1604773370]
+transform = Transform3D(-0.2923719, 0, -0.95630467, 0, 1, 0, 0.95630467, 0, -0.2923719, -185.46751, 31.11477, 80.91273)
+collision_mask = 0
+metadata/collision_policy = "source trunk only"
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Vergers/JardinLogis/pommier_etale_2_Tronc_0" unique_id=888406913]
+shape = SubResource("CylinderShape3D_8rfmd")
+
+[node name="poirier_fuseau_MergedBark_0" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=559297871]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("93_t55hl")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_bark.res"
+
+[node name="poirier_fuseau_MergedLeaf_1" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=640151108]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("94_l5jux")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf.res"
+
+[node name="poirier_fuseau_MergedPear_2" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=2075369578]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("95_uev4w")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_pear.res"
+
+[node name="poirier_fuseau_MergedLeafLight_3" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=480826115]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("96_tnosr")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_fuseau_Merged_leaf_light.res"
+
+[node name="poirier_ancien_MergedBark_4" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=1597701676]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("97_ca7mq")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_bark.res"
+
+[node name="poirier_ancien_MergedLeaf_5" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=807670300]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("98_boxop")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf.res"
+
+[node name="poirier_ancien_MergedPear_6" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=1752181885]
+material_override = ExtResource("46_mgph5")
+multimesh = ExtResource("99_d35js")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_pear.res"
+
+[node name="poirier_ancien_MergedLeafLight_7" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=436347600]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("100_huhcu")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/poirier_ancien_Merged_leaf_light.res"
+
+[node name="pommier_etale_MergedBark_8" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=747953672]
+material_override = ExtResource("28_q3xl4")
+multimesh = ExtResource("101_st06x")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_bark.res"
+
+[node name="pommier_etale_MergedLeaf_9" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=1062098358]
+material_override = ExtResource("30_jf0er")
+multimesh = ExtResource("102_ctlr0")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf.res"
+
+[node name="pommier_etale_MergedApple_10" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=1396132403]
+material_override = ExtResource("32_ft5yl")
+multimesh = ExtResource("103_2o663")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_apple.res"
+
+[node name="pommier_etale_MergedLeafLight_11" type="MultiMeshInstance3D" parent="Vergers/JardinLogis" unique_id=1898864349]
+material_override = ExtResource("34_dfjbu")
+multimesh = ExtResource("104_xee0w")
+metadata/instances = 1
+metadata/source_mesh = "res://assets/farming/meshes/pommier_etale_Merged_leaf_light.res"
+
+[node name="Jardins" type="Node3D" parent="." unique_id=1490069163]
+
+[node name="ClotureJardin00" type="Node3D" parent="Jardins" unique_id=351081735 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.9848077, 0, 0.17364818, 0, 1, 0, -0.17364818, 0, 0.9848077, -254, 31.400375, 14)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin00"
+
+[node name="ClotureJardin01" type="Node3D" parent="Jardins" unique_id=1638316497 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.9848077, 0, 0.17364818, 0, 1, 0, -0.17364818, 0, 0.9848077, -250, 31.290594, 13.3)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin01"
+
+[node name="ClotureJardin02" type="Node3D" parent="Jardins" unique_id=1218561359 instance=ExtResource("105_52xwh")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -256, 31.19337, 22)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin02"
+
+[node name="ClotureJardin03" type="Node3D" parent="Jardins" unique_id=1963874176 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.9961947, 0, 0.08715574, 0, 1, 0, -0.08715574, 0, 0.9961947, -255, 30.425879, 54)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin03"
+
+[node name="ClotureJardin04" type="Node3D" parent="Jardins" unique_id=35462533 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.9961947, 0, 0.08715574, 0, 1, 0, -0.08715574, 0, 0.9961947, -251, 30.43977, 54)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin04"
+
+[node name="ClotureJardin05" type="Node3D" parent="Jardins" unique_id=772073397 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -240, 30.101543, 83)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin05"
+
+[node name="ClotureJardin06" type="Node3D" parent="Jardins" unique_id=126723712 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -236.4, 30.353724, 84.7)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin06"
+
+[node name="ClotureJardin07" type="Node3D" parent="Jardins" unique_id=226694342 instance=ExtResource("105_52xwh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -212, 31.537312, 99)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin07"
+
+[node name="ClotureJardin08" type="Node3D" parent="Jardins" unique_id=1300734323 instance=ExtResource("105_52xwh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -208, 31.402271, 99)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin08"
+
+[node name="ClotureJardin09" type="Node3D" parent="Jardins" unique_id=1759913689 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.9961947, 0, 0.08715574, 0, 1, 0, -0.08715574, 0, 0.9961947, -230, 33.565544, 117)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin09"
+
+[node name="ClotureJardin10" type="Node3D" parent="Jardins" unique_id=1939309458 instance=ExtResource("105_52xwh")]
+transform = Transform3D(0.9961947, 0, 0.08715574, 0, 1, 0, -0.08715574, 0, 0.9961947, -226, 33.611927, 117)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin10"
+
+[node name="ClotureJardin11" type="Node3D" parent="Jardins" unique_id=1618373501 instance=ExtResource("105_52xwh")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -111, 33.224884, 84)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin11"
+
+[node name="ClotureJardin12" type="Node3D" parent="Jardins" unique_id=2143765017 instance=ExtResource("105_52xwh")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -111, 34.473885, 88)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_4m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 4 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+metadata/farm_layout_id = "ClotureJardin12"
+
+[node name="Ponts" type="Node3D" parent="." unique_id=451587712]
+
+[node name="PontDesMoissons" type="Node3D" parent="Ponts" unique_id=27828781 instance=ExtResource("105_o6qg0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -221.5, 31.05, 59)
+metadata/asset_id = "pont_charretier_bois_12m"
+metadata/family = "bois"
+metadata/label = "Pont de transport en bois · 12 m"
+metadata/purpose = "Tablier de madriers, ferrures et chevalets contreventés. Passage large pour les charrettes de minerai ou de bois."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 12.0
+metadata/clear_width_m = 3.4
+metadata/farm_bridge = true
+
+[node name="PontDesVergers" type="Node3D" parent="Ponts" unique_id=1830571512 instance=ExtResource("105_o6qg0")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -182.5, 30, 94)
+metadata/asset_id = "pont_charretier_bois_12m"
+metadata/family = "bois"
+metadata/label = "Pont de transport en bois · 12 m"
+metadata/purpose = "Tablier de madriers, ferrures et chevalets contreventés. Passage large pour les charrettes de minerai ou de bois."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 12.0
+metadata/clear_width_m = 3.4
+metadata/farm_bridge = true
+
+[node name="PontEntreeVillage" type="Node3D" parent="Ponts" unique_id=1148891993 instance=ExtResource("105_o6qg0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -111, 31.15, 44)
+metadata/asset_id = "pont_charretier_bois_12m"
+metadata/family = "bois"
+metadata/label = "Pont de transport en bois · 12 m"
+metadata/purpose = "Tablier de madriers, ferrures et chevalets contreventés. Passage large pour les charrettes de minerai ou de bois."
+metadata/placement = "Raccorder les deux repères Entry / Exit aux berges ; enterrer les pieds et culées jusqu’au lit."
+metadata/length_m = 12.0
+metadata/clear_width_m = 3.4
+metadata/farm_bridge = true
+
+[node name="Chemins" type="Node3D" parent="." unique_id=355953377]
+
+[node name="RueDuMarche" type="MeshInstance3D" parent="Chemins" unique_id=635657969]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-96, 44, -125, 44, -137, 44, -157, 43, -168, 44, -180, 44, -193, 42, -202, 45, -208, 59, -212, 59, -221.5, 59, -239, 59)
+width_m = 3.6
+
+[node name="RueHaute" type="MeshInstance3D" parent="Chemins" unique_id=1805478150]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-188, 13, -185, 22, -183, 28, -162, 27, -154, 30, -155, 38, -157, 43)
+width_m = 2.2
+
+[node name="RueDesVergers" type="MeshInstance3D" parent="Chemins" unique_id=1349317241]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-193, 42, -187, 57, -178, 59, -158, 61, -158, 50, -157, 43)
+width_m = 2.3
+
+[node name="CourDesRecoltes" type="MeshInstance3D" parent="Chemins" unique_id=1651478205]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-166, 27, -166, 19, -164, 12, -151, 10, -141, 14, -137, 24, -137, 44)
+
+[node name="CourDuMoulin" type="MeshInstance3D" parent="Chemins" unique_id=1701451091]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-202, 45, -206.5, 43.5, -207.45, 41.2)
+width_m = 2.7
+
+[node name="BoucleDesMoissons" type="MeshInstance3D" parent="Chemins" unique_id=235121395]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-239, 59, -251, 67, -244, 83, -226, 97, -207, 105, -190, 107, -182.5, 94, -174, 80, -176, 72, -176, 64, -175, 59.3)
+width_m = 2.7
+
+[node name="SentierDesPommiers" type="MeshInstance3D" parent="Chemins" unique_id=680420380]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-158, 61, -145, 74, -131, 80, -121, 65, -123, 55, -125, 44)
+width_m = 1.55
+
+[node name="SentierDuBief" type="MeshInstance3D" parent="Chemins" unique_id=1649418848]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-188, 13, -201, 10, -205, 3, -207, -8, -212, -11)
+width_m = 1.3
+
+[node name="AccesGrange" type="MeshInstance3D" parent="Chemins" unique_id=1123048742]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-173, 27, -173, 22)
+
+[node name="TourDuPuitsEst" type="MeshInstance3D" parent="Chemins" unique_id=1569429732]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-166, 27, -167, 34, -168, 44)
+width_m = 2.4
+
+[node name="TourDuPuitsOuest" type="MeshInstance3D" parent="Chemins" unique_id=1661097776]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-180, 28, -181, 34, -180, 44)
+width_m = 2.4
+
+[node name="AccesArriereGrange" type="MeshInstance3D" parent="Chemins" unique_id=1506680256]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-164, 12, -162, 6, -166, 3.5, -173, 4, -173, 9.6)
+width_m = 2.8
+
+[node name="Entree_ChaumierePotager" type="MeshInstance3D" parent="Chemins" unique_id=1204802414]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-185.12962, 26.148148, -190.08954, 27.398394, -190.51216, 26.492086, -191.18835, 25.041994)
+width_m = 1.3
+
+[node name="Entree_MaisonAppentis" type="MeshInstance3D" parent="Chemins" unique_id=1444664281]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-189.57976, 52.06512, -191.0583, 53.075752, -192.0545, 52.988598, -193.6484, 52.849148)
+width_m = 1.3
+
+[node name="Entree_MaisonAppentis_Remise" type="MeshInstance3D" parent="Chemins" unique_id=284687490]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-190.97151, 48.164707, -191.84377, 48.73076, -192.69934, 48.655907, -194.29324, 48.51646)
+width_m = 1.2
+
+[node name="Entree_LongereMoissons" type="MeshInstance3D" parent="Chemins" unique_id=2102161867]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-154.78288, 29.047281, -152.75, 27.75, -152.75, 26.75, -152.75, 25.15)
+width_m = 1.3
+
+[node name="Entree_FermeEnL" type="MeshInstance3D" parent="Chemins" unique_id=1422431197]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-157.83855, 51.689102, -150.35503, 53.25465, -150.39667, 53.490852, -150.48123, 53.97041)
+width_m = 1.3
+
+[node name="Entree_MaisonVerger" type="MeshInstance3D" parent="Chemins" unique_id=1181605435]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-176.08664, 65.23328, -181.1598, 64.582184, -181.3351, 65.23639, -181.69101, 66.56463)
+width_m = 1.3
+
+[node name="Entree_LogisAuvent" type="MeshInstance3D" parent="Chemins" unique_id=56267799]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-167.05855, 60.869244, -167.42712, 61.92696, -167.33997, 62.923157, -167.20052, 64.51707)
+width_m = 1.3
+
+[node name="Entree_MaisonPignon" type="MeshInstance3D" parent="Chemins" unique_id=1896260061]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-154.30652, 35.53607, -150.95, 36.75, -149.95, 36.75, -148.35, 36.75)
+width_m = 1.3
+
+[node name="Entree_LogisJournaliers" type="MeshInstance3D" parent="Chemins" unique_id=2029616359]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-190.24763, 12.602276, -189.56075, 10.619482, -189.81956, 9.653557, -190.23367, 8.108075)
+width_m = 1.3
+
+[node name="Entree_GrandeGrange" type="MeshInstance3D" parent="Chemins" unique_id=890019294]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-173, 22.8, -173, 22.2, -173, 21.606, -173, 20.4)
+
+[node name="Entree_GrangeRecoltes" type="MeshInstance3D" parent="Chemins" unique_id=1340430752]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-141.29793, 13.7153425, -136.47296, 8.698962, -136.73178, 7.7330365, -137.1459, 6.1875553)
+
+[node name="Entree_GrenierSec" type="MeshInstance3D" parent="Chemins" unique_id=38793198]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-137.33118, 21.872044, -135.72035, 21.88, -134.85432, 21.38, -133.46869, 20.58)
+width_m = 1.6
+
+[node name="Entree_ReserveGrains" type="MeshInstance3D" parent="Chemins" unique_id=1259335693]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-136.70944, 31.960789, -133, 32, -132, 32, -130.4, 32)
+width_m = 1.5
+
+[node name="Entree_MoulinDesPres" type="MeshInstance3D" parent="Chemins" unique_id=1192971251]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-207.45, 41.2, -207.45, 40.625, -207.45, 40.05575, -207.45, 38.9)
+width_m = 1.6
+
+[node name="Entree_MoulinDesPres_Remise" type="MeshInstance3D" parent="Chemins" unique_id=1923402178]
+visible = false
+script = ExtResource("106_pp377")
+points = PackedVector2Array(-200.54594, 43.678673, -204.2, 39.38, -204.2, 38.38, -204.2, 36.78)
+width_m = 1.2
+
+[node name="Mobilier" type="Node3D" parent="." unique_id=1236995995]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "MobilierVillageFermier"
+metadata/family = "village"
+metadata/label = "Village furniture"
+metadata/purpose = "Market, rest and orientation"
+metadata/placement = "Authored layout"
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="EtalPommes_OakUprightCollision" type="StaticBody3D" parent="Mobilier" unique_id=195754179]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -186.4079, 32.14, 31.981462)
+collision_mask = 0
+
+[node name="@CollisionShape3D@2" type="CollisionShape3D" parent="Mobilier/EtalPommes_OakUprightCollision" unique_id=1452535943]
+shape = SubResource("BoxShape3D_52xwh")
+
+[node name="@StaticBody3D@3" type="StaticBody3D" parent="Mobilier" unique_id=617628980]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -185.7179, 32.025, 33.17658)
+collision_mask = 0
+
+[node name="@CollisionShape3D@4" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@3" unique_id=1150722286]
+shape = SubResource("BoxShape3D_3gq17")
+
+[node name="@StaticBody3D@5" type="StaticBody3D" parent="Mobilier" unique_id=25066004]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -184.3121, 32.14, 30.771461)
+collision_mask = 0
+
+[node name="@CollisionShape3D@6" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@5" unique_id=1973303763]
+shape = SubResource("BoxShape3D_t528c")
+
+[node name="@StaticBody3D@7" type="StaticBody3D" parent="Mobilier" unique_id=834556801]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -183.62212, 32.025, 31.966578)
+collision_mask = 0
+
+[node name="@CollisionShape3D@8" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@7" unique_id=1025913555]
+shape = SubResource("BoxShape3D_m7tde")
+
+[node name="EtalPommes_CounterBodyCollision" type="StaticBody3D" parent="Mobilier" unique_id=1276466965]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -184.845, 31.76, 32.268467)
+collision_mask = 0
+
+[node name="@CollisionShape3D@9" type="CollisionShape3D" parent="Mobilier/EtalPommes_CounterBodyCollision" unique_id=2013482729]
+shape = SubResource("BoxShape3D_uuglu")
+
+[node name="EtalGrain_OakUprightCollision" type="StaticBody3D" parent="Mobilier" unique_id=481767129]
+transform = Transform3D(0.90630776, 0, -0.42261827, 0, 1, 0, 0.42261827, 0, 0.90630776, -162.79234, 32.320522, 22.83609)
+collision_mask = 0
+
+[node name="@CollisionShape3D@10" type="CollisionShape3D" parent="Mobilier/EtalGrain_OakUprightCollision" unique_id=446436954]
+shape = SubResource("BoxShape3D_56icc")
+
+[node name="@StaticBody3D@11" type="StaticBody3D" parent="Mobilier" unique_id=1441556315]
+transform = Transform3D(0.90630776, 0, -0.42261827, 0, 1, 0, 0.42261827, 0, 0.90630776, -163.37556, 32.205524, 24.086796)
+collision_mask = 0
+
+[node name="@CollisionShape3D@12" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@11" unique_id=1731916286]
+shape = SubResource("BoxShape3D_6pmvv")
+
+[node name="@StaticBody3D@13" type="StaticBody3D" parent="Mobilier" unique_id=1170210159]
+transform = Transform3D(0.90630776, 0, -0.42261827, 0, 1, 0, 0.42261827, 0, 0.90630776, -160.59908, 32.320522, 23.858826)
+collision_mask = 0
+
+[node name="@CollisionShape3D@14" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@13" unique_id=1485364330]
+shape = SubResource("BoxShape3D_23vfo")
+
+[node name="@StaticBody3D@15" type="StaticBody3D" parent="Mobilier" unique_id=59812134]
+transform = Transform3D(0.90630776, 0, -0.42261827, 0, 1, 0, 0.42261827, 0, 0.90630776, -161.1823, 32.205524, 25.109531)
+collision_mask = 0
+
+[node name="@CollisionShape3D@16" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@15" unique_id=1263958152]
+shape = SubResource("BoxShape3D_8qotf")
+
+[node name="EtalGrain_CounterBodyCollision" type="StaticBody3D" parent="Mobilier" unique_id=57508835]
+transform = Transform3D(0.90630776, 0, -0.42261827, 0, 1, 0, 0.42261827, 0, 0.90630776, -162.13101, 31.940523, 24.280956)
+collision_mask = 0
+
+[node name="@CollisionShape3D@17" type="CollisionShape3D" parent="Mobilier/EtalGrain_CounterBodyCollision" unique_id=1353819758]
+shape = SubResource("BoxShape3D_5ttoy")
+
+[node name="EtalLegumes_OakUprightCollision" type="StaticBody3D" parent="Mobilier" unique_id=1336377918]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -162.28, 32.14, 36.74)
+collision_mask = 0
+
+[node name="@CollisionShape3D@18" type="CollisionShape3D" parent="Mobilier/EtalLegumes_OakUprightCollision" unique_id=1254862634]
+shape = SubResource("BoxShape3D_j10ds")
+
+[node name="@StaticBody3D@19" type="StaticBody3D" parent="Mobilier" unique_id=1544824910]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -163.66, 32.025, 36.74)
+collision_mask = 0
+
+[node name="@CollisionShape3D@20" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@19" unique_id=1774092015]
+shape = SubResource("BoxShape3D_dyv68")
+
+[node name="@StaticBody3D@21" type="StaticBody3D" parent="Mobilier" unique_id=153802026]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -162.28, 32.14, 39.26)
+collision_mask = 0
+
+[node name="@CollisionShape3D@22" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@21" unique_id=1347194318]
+shape = SubResource("BoxShape3D_q3xl4")
+
+[node name="@StaticBody3D@23" type="StaticBody3D" parent="Mobilier" unique_id=372453275]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -163.66, 32.025, 39.26)
+collision_mask = 0
+
+[node name="@CollisionShape3D@24" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@23" unique_id=1734621469]
+shape = SubResource("BoxShape3D_qdv52")
+
+[node name="EtalLegumes_CounterBodyCollision" type="StaticBody3D" parent="Mobilier" unique_id=1280524293]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -163.31, 31.76, 38)
+collision_mask = 0
+
+[node name="@CollisionShape3D@25" type="CollisionShape3D" parent="Mobilier/EtalLegumes_CounterBodyCollision" unique_id=23653347]
+shape = SubResource("BoxShape3D_jf0er")
+
+[node name="VanneIrrigation_SluiceFootCollision" type="StaticBody3D" parent="Mobilier" unique_id=659920912]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -216, 31.345, -13.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@26" type="CollisionShape3D" parent="Mobilier/VanneIrrigation_SluiceFootCollision" unique_id=1323464150]
+shape = SubResource("BoxShape3D_qimbo")
+
+[node name="VanneIrrigation_GuidePostCollision" type="StaticBody3D" parent="Mobilier" unique_id=1730377722]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -216, 32.4, -13.1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@27" type="CollisionShape3D" parent="Mobilier/VanneIrrigation_GuidePostCollision" unique_id=1576837853]
+shape = SubResource("BoxShape3D_ft5yl")
+
+[node name="@StaticBody3D@28" type="StaticBody3D" parent="Mobilier" unique_id=1270618519]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -216, 31.345, -14.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@29" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@28" unique_id=276001084]
+shape = SubResource("BoxShape3D_porew")
+
+[node name="@StaticBody3D@30" type="StaticBody3D" parent="Mobilier" unique_id=1587503702]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -216, 32.4, -14.9)
+collision_mask = 0
+
+[node name="@CollisionShape3D@31" type="CollisionShape3D" parent="Mobilier/@StaticBody3D@30" unique_id=828711865]
+shape = SubResource("BoxShape3D_dfjbu")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="Mobilier" unique_id=103286353]
+material_override = ExtResource("107_1wfqn")
+mesh = ExtResource("108_qvi8j")
+
+[node name="MergedIron" type="MeshInstance3D" parent="Mobilier" unique_id=225505831]
+material_override = ExtResource("109_lrmb2")
+mesh = ExtResource("110_12jsj")
+
+[node name="MergedWood" type="MeshInstance3D" parent="Mobilier" unique_id=1727099198]
+material_override = ExtResource("111_kw8wi")
+mesh = ExtResource("112_uclxq")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="Mobilier" unique_id=1747213585]
+material_override = ExtResource("113_l4qp7")
+mesh = ExtResource("114_4w5t5")
+
+[node name="MergedRope" type="MeshInstance3D" parent="Mobilier" unique_id=1314185051]
+material_override = ExtResource("115_rnk60")
+mesh = ExtResource("116_lousi")
+
+[node name="MergedApple" type="MeshInstance3D" parent="Mobilier" unique_id=146101363]
+material_override = ExtResource("32_ft5yl")
+mesh = ExtResource("117_7d3le")
+
+[node name="MergedBark" type="MeshInstance3D" parent="Mobilier" unique_id=768765468]
+material_override = ExtResource("28_q3xl4")
+mesh = ExtResource("118_tsflr")
+
+[node name="MergedPear" type="MeshInstance3D" parent="Mobilier" unique_id=171062608]
+material_override = ExtResource("46_mgph5")
+mesh = ExtResource("119_jiwe2")
+
+[node name="MergedClay" type="MeshInstance3D" parent="Mobilier" unique_id=1862667103]
+material_override = ExtResource("120_u2kx6")
+mesh = ExtResource("121_xnvap")
+
+[node name="MergedVegetable" type="MeshInstance3D" parent="Mobilier" unique_id=1356391442]
+material_override = ExtResource("122_bgg7b")
+mesh = ExtResource("123_8ehi1")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="Mobilier" unique_id=2114758251]
+material_override = ExtResource("34_dfjbu")
+mesh = ExtResource("124_p422h")
+
+[node name="MergedDark" type="MeshInstance3D" parent="Mobilier" unique_id=11372649]
+material_override = ExtResource("125_34og2")
+mesh = ExtResource("126_ymdna")
+
+[node name="MergedStone" type="MeshInstance3D" parent="Mobilier" unique_id=336858265]
+material_override = ExtResource("127_347os")
+mesh = ExtResource("128_47s45")
+
+[node name="Cultures" type="Node3D" parent="." unique_id=1214399333]
+metadata/placement_mode = "vertex heights baked from terrain; regenerate after terrain edits"
+
+[node name="BleRiveOuest" type="Node3D" parent="Cultures" unique_id=1363635592]
+transform = Transform3D(1.5650362, 0, -0.32226312, 0, 1, 0, 0.33265874, 0, 1.5161288, -247, 31.064243, 23)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_ble_rive_concave"
+metadata/family = "champs"
+metadata/label = "Champ de blé à rive concave"
+metadata/purpose = "Parcelle de blé mûr, ouverte autour d'une courbe de rivière."
+metadata/placement = "Poser sur une terrasse sèche ; le creux du bord est se tourne vers la rivière."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.9, -3.6], [-2.4, -4.0], [1.2, -3.85], [4.8, -3.1], [4.15, -1.35], [2.95, 0.2], [3.5, 2.0], [4.3, 3.3], [0.75, 3.95], [-3.6, 3.4], [-4.75, 1.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "BleRiveOuest"
+metadata/source_asset = "champ_ble_rive_concave"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-247.0, 23.0]
+metadata/authored_yaw_degrees = -12.0
+metadata/authored_scale_xz = [1.6, 1.55]
+metadata/terrain_sample_count = 10427
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/BleRiveOuest" unique_id=808606271]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("130_2eoj3")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/BleRiveOuest" unique_id=1363985391]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("132_kcr8t")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="Cultures/BleRiveOuest" unique_id=227730678]
+material_override = ExtResource("133_yeh8k")
+mesh = ExtResource("134_nrjtu")
+
+[node name="BleDesPres" type="Node3D" parent="Cultures" unique_id=603621495]
+transform = Transform3D(1.7465323, 0, 0.39917114, 0, 1, 0, -0.4354594, 0, 1.6009879, -248, 30.64715, 44)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_ble_rive_concave"
+metadata/family = "champs"
+metadata/label = "Champ de blé à rive concave"
+metadata/purpose = "Parcelle de blé mûr, ouverte autour d'une courbe de rivière."
+metadata/placement = "Poser sur une terrasse sèche ; le creux du bord est se tourne vers la rivière."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.9, -3.6], [-2.4, -4.0], [1.2, -3.85], [4.8, -3.1], [4.15, -1.35], [2.95, 0.2], [3.5, 2.0], [4.3, 3.3], [0.75, 3.95], [-3.6, 3.4], [-4.75, 1.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "BleDesPres"
+metadata/source_asset = "champ_ble_rive_concave"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-248.0, 44.0]
+metadata/authored_yaw_degrees = 14.0
+metadata/authored_scale_xz = [1.8, 1.65]
+metadata/terrain_sample_count = 10649
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/BleDesPres" unique_id=916329662]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("135_ix731")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/BleDesPres" unique_id=1859608680]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("136_1ci5e")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="Cultures/BleDesPres" unique_id=213401221]
+material_override = ExtResource("133_yeh8k")
+mesh = ExtResource("137_pybyy")
+
+[node name="BleGrandMeandre" type="Node3D" parent="Cultures" unique_id=587364531]
+transform = Transform3D(1.4954078, 0, -0.6550583, 0, 1, 0, 0.69732016, 0, 1.4047769, -232, 30.278395, 78)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_ble_rive_concave"
+metadata/family = "champs"
+metadata/label = "Champ de blé à rive concave"
+metadata/purpose = "Parcelle de blé mûr, ouverte autour d'une courbe de rivière."
+metadata/placement = "Poser sur une terrasse sèche ; le creux du bord est se tourne vers la rivière."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.9, -3.6], [-2.4, -4.0], [1.2, -3.85], [4.8, -3.1], [4.15, -1.35], [2.95, 0.2], [3.5, 2.0], [4.3, 3.3], [0.75, 3.95], [-3.6, 3.4], [-4.75, 1.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "BleGrandMeandre"
+metadata/source_asset = "champ_ble_rive_concave"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-232.0, 78.0]
+metadata/authored_yaw_degrees = -25.0
+metadata/authored_scale_xz = [1.65, 1.55]
+metadata/terrain_sample_count = 10441
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/BleGrandMeandre" unique_id=1868429899]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("138_j5wp8")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/BleGrandMeandre" unique_id=442843592]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("139_5vfmn")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="Cultures/BleGrandMeandre" unique_id=1999623671]
+material_override = ExtResource("133_yeh8k")
+mesh = ExtResource("140_6o1eo")
+
+[node name="BleDuSud" type="Node3D" parent="Cultures" unique_id=1951719811]
+transform = Transform3D(1.6167961, 0, -0.4635255, 0, 1, 0, 0.52532893, 0, 1.4265848, -207, 30.872562, 94)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_ble_rive_concave"
+metadata/family = "champs"
+metadata/label = "Champ de blé à rive concave"
+metadata/purpose = "Parcelle de blé mûr, ouverte autour d'une courbe de rivière."
+metadata/placement = "Poser sur une terrasse sèche ; le creux du bord est se tourne vers la rivière."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.9, -3.6], [-2.4, -4.0], [1.2, -3.85], [4.8, -3.1], [4.15, -1.35], [2.95, 0.2], [3.5, 2.0], [4.3, 3.3], [0.75, 3.95], [-3.6, 3.4], [-4.75, 1.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "BleDuSud"
+metadata/source_asset = "champ_ble_rive_concave"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-207.0, 94.0]
+metadata/authored_yaw_degrees = -18.0
+metadata/authored_scale_xz = [1.7, 1.5]
+metadata/terrain_sample_count = 10387
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/BleDuSud" unique_id=2139651408]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("141_43qri")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/BleDuSud" unique_id=1073207738]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("142_3qtka")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="Cultures/BleDuSud" unique_id=1770619596]
+material_override = ExtResource("133_yeh8k")
+mesh = ExtResource("143_tdxkb")
+
+[node name="BleHaut" type="Node3D" parent="Cultures" unique_id=218926108]
+transform = Transform3D(1.494292, 0, -0.13073361, 0, 1, 0, 0.13073361, 0, 1.494292, -184, 33.11944, -27)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_ble_rive_concave"
+metadata/family = "champs"
+metadata/label = "Champ de blé à rive concave"
+metadata/purpose = "Parcelle de blé mûr, ouverte autour d'une courbe de rivière."
+metadata/placement = "Poser sur une terrasse sèche ; le creux du bord est se tourne vers la rivière."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.9, -3.6], [-2.4, -4.0], [1.2, -3.85], [4.8, -3.1], [4.15, -1.35], [2.95, 0.2], [3.5, 2.0], [4.3, 3.3], [0.75, 3.95], [-3.6, 3.4], [-4.75, 1.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "BleHaut"
+metadata/source_asset = "champ_ble_rive_concave"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-184.0, -27.0]
+metadata/authored_yaw_degrees = -5.0
+metadata/authored_scale_xz = [1.5, 1.5]
+metadata/terrain_sample_count = 10351
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/BleHaut" unique_id=276190026]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("144_cf4kq")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/BleHaut" unique_id=1791071481]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("145_3ecmi")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="Cultures/BleHaut" unique_id=1921192148]
+material_override = ExtResource("133_yeh8k")
+mesh = ExtResource("146_3unje")
+
+[node name="BleEst" type="Node3D" parent="Cultures" unique_id=382152148]
+transform = Transform3D(1.5937775, 0, 0.36234665, 0, 1, 0, -0.42705142, 0, 1.3522961, -157, 33.4, -30)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_ble_rive_concave"
+metadata/family = "champs"
+metadata/label = "Champ de blé à rive concave"
+metadata/purpose = "Parcelle de blé mûr, ouverte autour d'une courbe de rivière."
+metadata/placement = "Poser sur une terrasse sèche ; le creux du bord est se tourne vers la rivière."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.9, -3.6], [-2.4, -4.0], [1.2, -3.85], [4.8, -3.1], [4.15, -1.35], [2.95, 0.2], [3.5, 2.0], [4.3, 3.3], [0.75, 3.95], [-3.6, 3.4], [-4.75, 1.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "BleEst"
+metadata/source_asset = "champ_ble_rive_concave"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-157.0, -30.0]
+metadata/authored_yaw_degrees = 15.0
+metadata/authored_scale_xz = [1.65, 1.4]
+metadata/terrain_sample_count = 10323
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/BleEst" unique_id=300279405]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("147_cajfx")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/BleEst" unique_id=799324522]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("148_c5g15")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="Cultures/BleEst" unique_id=1232017782]
+material_override = ExtResource("133_yeh8k")
+mesh = ExtResource("149_kan64")
+
+[node name="PotagerMaison" type="Node3D" parent="Cultures" unique_id=1552991727]
+transform = Transform3D(0.7517541, 0, 0.3078181, 0, 1, 0, -0.2736161, 0, 0.84572333, -188, 30.846476, 36)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_legumes_boucle"
+metadata/family = "champs"
+metadata/label = "Potager arrondi du méandre"
+metadata/purpose = "Choux et poireaux répartis en planches cultivées avec une allée centrale."
+metadata/placement = "Terrain sec et plat ; allée centrale de 1,2 m, ouverte sur +Z et -Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.15, -2.75], [-1.5, -3.3], [1.5, -2.9], [3.8, -1.65], [4.15, 0.35], [2.6, 2.45], [0.1, 3.1], [-2.2, 2.8], [-3.65, 1.1]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/central_aisle_width_m = 1.2
+metadata/layout_id = "PotagerMaison"
+metadata/source_asset = "champ_legumes_boucle"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-188.0, 36.0]
+metadata/authored_yaw_degrees = 20.0
+metadata/authored_scale_xz = [0.8, 0.9]
+metadata/terrain_sample_count = 2472
+
+[node name="EntreePotager" type="Marker3D" parent="Cultures/PotagerMaison" unique_id=483856629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 3.1)
+
+[node name="SortiePotager" type="Marker3D" parent="Cultures/PotagerMaison" unique_id=147589541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -3.1)
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/PotagerMaison" unique_id=399251806]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("150_apsod")
+
+[node name="MergedVegetable" type="MeshInstance3D" parent="Cultures/PotagerMaison" unique_id=1939281278]
+material_override = ExtResource("122_bgg7b")
+mesh = ExtResource("151_au218")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="Cultures/PotagerMaison" unique_id=1610036]
+material_override = ExtResource("34_dfjbu")
+mesh = ExtResource("152_ycgo4")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="Cultures/PotagerMaison" unique_id=152396959]
+material_override = ExtResource("113_l4qp7")
+mesh = ExtResource("153_11hc4")
+
+[node name="PotagerEst" type="Node3D" parent="Cultures" unique_id=198477553]
+transform = Transform3D(1.2557036, 0, -0.36234665, 0, 1, 0, 0.33646473, 0, 1.3522961, -130, 30.36607, 59)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_legumes_boucle"
+metadata/family = "champs"
+metadata/label = "Potager arrondi du méandre"
+metadata/purpose = "Choux et poireaux répartis en planches cultivées avec une allée centrale."
+metadata/placement = "Terrain sec et plat ; allée centrale de 1,2 m, ouverte sur +Z et -Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.15, -2.75], [-1.5, -3.3], [1.5, -2.9], [3.8, -1.65], [4.15, 0.35], [2.6, 2.45], [0.1, 3.1], [-2.2, 2.8], [-3.65, 1.1]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/central_aisle_width_m = 1.2
+metadata/layout_id = "PotagerEst"
+metadata/source_asset = "champ_legumes_boucle"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-130.0, 59.0]
+metadata/authored_yaw_degrees = -15.0
+metadata/authored_scale_xz = [1.3, 1.4]
+metadata/terrain_sample_count = 3502
+
+[node name="EntreePotager" type="Marker3D" parent="Cultures/PotagerEst" unique_id=1259399444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 3.1)
+
+[node name="SortiePotager" type="Marker3D" parent="Cultures/PotagerEst" unique_id=297643048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -3.1)
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/PotagerEst" unique_id=407040565]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("154_823nx")
+
+[node name="MergedVegetable" type="MeshInstance3D" parent="Cultures/PotagerEst" unique_id=1813584896]
+material_override = ExtResource("122_bgg7b")
+mesh = ExtResource("155_lpesb")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="Cultures/PotagerEst" unique_id=372120999]
+material_override = ExtResource("34_dfjbu")
+mesh = ExtResource("156_u33il")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="Cultures/PotagerEst" unique_id=136006352]
+material_override = ExtResource("113_l4qp7")
+mesh = ExtResource("157_u273e")
+
+[node name="PotagerSud" type="Node3D" parent="Cultures" unique_id=1407957765]
+transform = Transform3D(1.409539, 0, -0.44462615, 0, 1, 0, 0.5130302, 0, 1.2216004, -150, 30.354662, 84)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_legumes_boucle"
+metadata/family = "champs"
+metadata/label = "Potager arrondi du méandre"
+metadata/purpose = "Choux et poireaux répartis en planches cultivées avec une allée centrale."
+metadata/placement = "Terrain sec et plat ; allée centrale de 1,2 m, ouverte sur +Z et -Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.15, -2.75], [-1.5, -3.3], [1.5, -2.9], [3.8, -1.65], [4.15, 0.35], [2.6, 2.45], [0.1, 3.1], [-2.2, 2.8], [-3.65, 1.1]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/central_aisle_width_m = 1.2
+metadata/layout_id = "PotagerSud"
+metadata/source_asset = "champ_legumes_boucle"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-150.0, 84.0]
+metadata/authored_yaw_degrees = -20.0
+metadata/authored_scale_xz = [1.5, 1.3]
+metadata/terrain_sample_count = 3327
+
+[node name="EntreePotager" type="Marker3D" parent="Cultures/PotagerSud" unique_id=264592747]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 3.1)
+
+[node name="SortiePotager" type="Marker3D" parent="Cultures/PotagerSud" unique_id=198702285]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -3.1)
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/PotagerSud" unique_id=42460870]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("158_vswb2")
+
+[node name="MergedVegetable" type="MeshInstance3D" parent="Cultures/PotagerSud" unique_id=934159983]
+material_override = ExtResource("122_bgg7b")
+mesh = ExtResource("159_giunv")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="Cultures/PotagerSud" unique_id=719202555]
+material_override = ExtResource("34_dfjbu")
+mesh = ExtResource("160_ucgwf")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="Cultures/PotagerSud" unique_id=171106189]
+material_override = ExtResource("113_l4qp7")
+mesh = ExtResource("161_6idgp")
+
+[node name="LaboursOuest" type="Node3D" parent="Cultures" unique_id=244788712]
+transform = Transform3D(1.4500924, 0, 0.6339274, 0, 1, 0, -0.67618924, 0, 1.3594617, -256, 29.910305, 80)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_laboure_lisiere"
+metadata/family = "champs"
+metadata/label = "Champ labouré de lisière"
+metadata/purpose = "Sillons de terre fraîche dans une parcelle organique prête à semer."
+metadata/placement = "Terrasse plane ; conserver une bande herbeuse entre la parcelle et l'eau."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-5.0, -2.8], [-2.0, -3.5], [1.6, -3.2], [4.65, -1.9], [3.75, -0.3], [3.2, 1.2], [2.0, 3.0], [-1.9, 3.2], [-4.3, 2.2]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "LaboursOuest"
+metadata/source_asset = "champ_laboure_lisiere"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-256.0, 80.0]
+metadata/authored_yaw_degrees = 25.0
+metadata/authored_scale_xz = [1.6, 1.5]
+metadata/terrain_sample_count = 3011
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/LaboursOuest" unique_id=540836227]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("162_2jmgc")
+
+[node name="LaboursHaut" type="Node3D" parent="Cultures" unique_id=737050473]
+transform = Transform3D(0.8467655, 0, -0.113302454, 0, 1, 0, 0.07408238, 0, 1.2950531, -213, 31.55, -5)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_laboure_lisiere"
+metadata/family = "champs"
+metadata/label = "Champ labouré de lisière"
+metadata/purpose = "Sillons de terre fraîche dans une parcelle organique prête à semer."
+metadata/placement = "Terrasse plane ; conserver une bande herbeuse entre la parcelle et l'eau."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-5.0, -2.8], [-2.0, -3.5], [1.6, -3.2], [4.65, -1.9], [3.75, -0.3], [3.2, 1.2], [2.0, 3.0], [-1.9, 3.2], [-4.3, 2.2]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "LaboursHaut"
+metadata/source_asset = "champ_laboure_lisiere"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-213.0, -5.0]
+metadata/authored_yaw_degrees = -5.0
+metadata/authored_scale_xz = [0.85, 1.3]
+metadata/terrain_sample_count = 2375
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/LaboursHaut" unique_id=622312620]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("163_i3sa8")
+
+[node name="JachereSud" type="Node3D" parent="Cultures" unique_id=1703439244]
+transform = Transform3D(1.3863753, 0, -0.18092503, 0, 1, 0, 0.19484234, 0, 1.2873484, -169, 30.01714, 89)
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "jachere_irreguliere"
+metadata/family = "champs"
+metadata/label = "Jachère et chaumes irréguliers"
+metadata/purpose = "Parcelle récoltée, chaumes courts et herbes clairsemées."
+metadata/placement = "Terrain plat ; utile entre verger, chemin et champs actifs."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = true
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-3.2, -2.1], [-1.2, -2.5], [1.4, -2.3], [3.1, -1.2], [2.7, 1.25], [0.65, 2.6], [-1.7, 2.2], [-3.0, 0.8]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/layout_id = "JachereSud"
+metadata/source_asset = "jachere_irreguliere"
+metadata/terrain_conformed = true
+metadata/terrain_height_baked = true
+metadata/placement_mode = "baked_mesh_vertices"
+metadata/baked_ground_offset_m = 0.0
+metadata/soil_sampling_edge_m = 0.85
+metadata/soil_surface_lift_m = 0.045
+metadata/authored_xz = [-169.0, 89.0]
+metadata/authored_yaw_degrees = -8.0
+metadata/authored_scale_xz = [1.4, 1.3]
+metadata/terrain_sample_count = 1502
+
+[node name="MergedEarth" type="MeshInstance3D" parent="Cultures/JachereSud" unique_id=265736286]
+material_override = ExtResource("129_nfcf4")
+mesh = ExtResource("164_c70td")
+
+[node name="MergedStraw" type="MeshInstance3D" parent="Cultures/JachereSud" unique_id=1105895696]
+material_override = ExtResource("131_0qtci")
+mesh = ExtResource("165_808kc")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="Cultures/JachereSud" unique_id=1156843533]
+material_override = ExtResource("34_dfjbu")
+mesh = ExtResource("166_yfw4t")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="Cultures/JachereSud" unique_id=933042855]
+material_override = ExtResource("113_l4qp7")
+mesh = ExtResource("167_gt6ci")
+
+[node name="Verdure" type="Node3D" parent="." unique_id=606340325]
+metadata/placement_source = "res://planning/farming-town.json:greenery"
+metadata/placement_policy = "Authored dry points outside path clearance and building footprints"
+metadata/authored_count = 139
+metadata/accepted_count = 3539
+metadata/birch_count = 27
+metadata/rejected_counts = {
+"building": 29,
+"field": 107,
+"invalid": 0,
+"path": 417,
+"slope": 65,
+"water": 147,
+"yard": 38
+}
+metadata/rejected_entries = Array[Dictionary]([{
+"id": "BouleauRive12",
+"reason": "water"
+}, {
+"id": "BouleauRive14",
+"reason": "path"
+}, {
+"id": "Lisiere03_1",
+"reason": "path"
+}, {
+"id": "Lisiere03_2",
+"reason": "path"
+}, {
+"id": "Lisiere03_4",
+"reason": "path"
+}, {
+"id": "Lisiere04_0",
+"reason": "path"
+}, {
+"id": "Lisiere04_1",
+"reason": "path"
+}, {
+"id": "Lisiere04_2",
+"reason": "path"
+}, {
+"id": "Lisiere04_3",
+"reason": "path"
+}, {
+"id": "Lisiere04_4",
+"reason": "path"
+}, {
+"id": "Lisiere05_4",
+"reason": "path"
+}, {
+"id": "Lisiere06_1",
+"reason": "building"
+}, {
+"id": "Lisiere06_4",
+"reason": "building"
+}, {
+"id": "Lisiere07_2",
+"reason": "building"
+}, {
+"id": "Lisiere07_3",
+"reason": "path"
+}, {
+"id": "Lisiere07_4",
+"reason": "building"
+}, {
+"id": "Lisiere08_1",
+"reason": "building"
+}, {
+"id": "Lisiere08_2",
+"reason": "building"
+}, {
+"id": "Lisiere08_4",
+"reason": "building"
+}, {
+"id": "Lisiere09_0",
+"reason": "path"
+}, {
+"id": "Lisiere09_2",
+"reason": "path"
+}, {
+"id": "Lisiere09_3",
+"reason": "path"
+}, {
+"id": "Lisiere10_2",
+"reason": "building"
+}, {
+"id": "Lisiere11_0",
+"reason": "building"
+}, {
+"id": "Lisiere11_1",
+"reason": "path"
+}, {
+"id": "Lisiere11_2",
+"reason": "building"
+}, {
+"id": "Lisiere11_3",
+"reason": "building"
+}, {
+"id": "Lisiere11_4",
+"reason": "path"
+}, {
+"id": "Lisiere12_4",
+"reason": "building"
+}, {
+"id": "Lisiere13_0",
+"reason": "path"
+}, {
+"id": "Lisiere13_2",
+"reason": "path"
+}, {
+"id": "Lisiere13_3",
+"reason": "building"
+}, {
+"id": "Lisiere14_0",
+"reason": "water"
+}, {
+"id": "Lisiere14_1",
+"reason": "water"
+}, {
+"id": "Lisiere14_2",
+"reason": "water"
+}, {
+"id": "Lisiere14_3",
+"reason": "water"
+}, {
+"id": "Lisiere14_4",
+"reason": "water"
+}, {
+"id": "Lisiere16_1",
+"reason": "water"
+}, {
+"id": "Lisiere16_4",
+"reason": "water"
+}, {
+"id": "Lisiere17_2",
+"reason": "water"
+}, {
+"id": "Lisiere17_4",
+"reason": "water"
+}, {
+"id": "Lisiere19_0",
+"reason": "path"
+}, {
+"id": "Lisiere19_1",
+"reason": "path"
+}, {
+"id": "Lisiere19_3",
+"reason": "path"
+}, {
+"id": "Lisiere19_4",
+"reason": "path"
+}, {
+"id": "Lisiere21_4",
+"reason": "water"
+}])
+metadata/multimesh_count = 9
+metadata/meadow_instances = {
+"flowers_daisy": 28,
+"grass_meadow": 3418
+}
+
+[node name="BouleauRive00_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=45264680]
+transform = Transform3D(1.89, 0, 0, 0, 1.89, 0, 0, 0, 1.89, -239, 39.204796, -45)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive00_Tronc_0" unique_id=2074059179]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive00" type="Marker3D" parent="Verdure" unique_id=321970100]
+transform = Transform3D(1.89, 0, 0, 0, 1.89, 0, 0, 0, 1.89, -239, 36.558796, -45)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive01_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=414923500]
+transform = Transform3D(1.4390165, 0, 1.5431563, 0, 2.11, 0, -1.5431563, 0, 1.4390165, -225, 39.78831, -48)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive01_Tronc_0" unique_id=225297783]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive01" type="Marker3D" parent="Verdure" unique_id=1688176342]
+transform = Transform3D(1.4390165, 0, 1.5431563, 0, 2.11, 0, -1.5431563, 0, 1.4390165, -225, 36.834312, -48)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive02_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=93080460]
+transform = Transform3D(-0.16183503, 0, 2.3143487, 0, 2.32, 0, -2.3143487, 0, -0.16183503, -242, 38.069687, -36)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive02_Tronc_0" unique_id=714779966]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive02" type="Marker3D" parent="Verdure" unique_id=343290658]
+transform = Transform3D(-0.16183503, 0, 2.3143487, 0, 2.32, 0, -2.3143487, 0, -0.16183503, -242, 34.821686, -36)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive03_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1688660959]
+transform = Transform3D(-1.4688057, 0, 1.1894157, 0, 1.89, 0, -1.1894157, 0, -1.4688057, -220, 38.221943, -37)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive03_Tronc_0" unique_id=1928165979]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive03" type="Marker3D" parent="Verdure" unique_id=938509166]
+transform = Transform3D(-1.4688057, 0, 1.1894157, 0, 1.89, 0, -1.1894157, 0, -1.4688057, -220, 35.575943, -37)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive04_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1682558607]
+transform = Transform3D(-2.0894654, 0, -0.29365525, 0, 2.11, 0, 0.29365525, 0, -2.0894654, -226, 37.754257, -32)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive04_Tronc_0" unique_id=1602774392]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive04" type="Marker3D" parent="Verdure" unique_id=162215195]
+transform = Transform3D(-2.0894654, 0, -0.29365525, 0, 2.11, 0, 0.29365525, 0, -2.0894654, -226, 34.80026, -32)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive05_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=129512034]
+transform = Transform3D(-1.3306971, 0, -1.9004328, 0, 2.32, 0, 1.9004328, 0, -1.3306971, -237, 36.073467, -21)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive05_Tronc_0" unique_id=1976718601]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive05" type="Marker3D" parent="Verdure" unique_id=871503662]
+transform = Transform3D(-1.3306971, 0, -1.9004328, 0, 2.32, 0, 1.9004328, 0, -1.3306971, -237, 32.825466, -21)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive06_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1013732931]
+transform = Transform3D(0.39295268, 0, -1.848699, 0, 1.89, 0, 1.848699, 0, 0.39295268, -206, 35.054287, -21)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive06_Tronc_0" unique_id=1391820597]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive06" type="Marker3D" parent="Verdure" unique_id=2052124230]
+transform = Transform3D(0.39295268, 0, -1.848699, 0, 1.89, 0, 1.848699, 0, 0.39295268, -206, 32.408287, -21)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive07_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1010851428]
+transform = Transform3D(1.8086228, 0, -1.0867304, 0, 2.11, 0, 1.0867304, 0, 1.8086228, -150, 35.81764, -21)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive07_Tronc_0" unique_id=113080726]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive07" type="Marker3D" parent="Verdure" unique_id=1368556274]
+transform = Transform3D(1.8086228, 0, -1.0867304, 0, 2.11, 0, 1.0867304, 0, 1.8086228, -150, 32.86364, -21)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive08_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1032068165]
+transform = Transform3D(2.230127, 0, 0.6394786, 0, 2.32, 0, -0.6394786, 0, 2.230127, -108, 35.02587, 10)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive08_Tronc_0" unique_id=134632184]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive08" type="Marker3D" parent="Verdure" unique_id=659910332]
+transform = Transform3D(2.230127, 0, 0.6394786, 0, 2.32, 0, -0.6394786, 0, 2.230127, -108, 31.77787, 10)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive09_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=352530969]
+transform = Transform3D(0.85804206, 0, 1.6840023, 0, 1.89, 0, -1.6840023, 0, 0.85804206, -104, 35.833733, 62)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive09_Tronc_0" unique_id=1882102797]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive09" type="Marker3D" parent="Verdure" unique_id=733890891]
+transform = Transform3D(0.85804206, 0, 1.6840023, 0, 1.89, 0, -1.6840023, 0, 0.85804206, -104, 33.187733, 62)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive10_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=307034852]
+transform = Transform3D(-0.7216624, 0, 1.9827514, 0, 2.11, 0, -1.9827514, 0, -0.7216624, -134, 31.763027, 104)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive10_Tronc_0" unique_id=1832390358]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive10" type="Marker3D" parent="Verdure" unique_id=1212613376]
+transform = Transform3D(-0.7216624, 0, 1.9827514, 0, 2.11, 0, -1.9827514, 0, -0.7216624, -134, 28.809027, 104)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive11_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=2143158432]
+transform = Transform3D(-2.1355712, 0, 0.9064962, 0, 2.32, 0, -0.9064962, 0, -2.1355712, -165, 31.942137, 108)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive11_Tronc_0" unique_id=1301759415]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive11" type="Marker3D" parent="Verdure" unique_id=851507488]
+transform = Transform3D(-2.1355712, 0, 0.9064962, 0, 2.32, 0, -0.9064962, 0, -2.1355712, -165, 28.694138, 108)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive13_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=830432860]
+transform = Transform3D(-0.6869488, 0, -1.995044, 0, 2.11, 0, 1.995044, 0, -0.6869488, -231, 33.868366, 55)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive13_Tronc_0" unique_id=202010244]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive13" type="Marker3D" parent="Verdure" unique_id=606640710]
+transform = Transform3D(-0.6869488, 0, -1.995044, 0, 2.11, 0, 1.995044, 0, -0.6869488, -231, 30.914368, 55)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauRive15_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1131557663]
+transform = Transform3D(1.8255999, 0, -0.4891676, 0, 1.89, 0, 0.4891676, 0, 1.8255999, -257, 34.74345, 7)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauRive15_Tronc_0" unique_id=1457350398]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauRive15" type="Marker3D" parent="Verdure" unique_id=1062403838]
+transform = Transform3D(1.8255999, 0, -0.4891676, 0, 1.89, 0, 0.4891676, 0, 1.8255999, -257, 32.09745, 7)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere00_0" type="Marker3D" parent="Verdure" unique_id=191961845]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, -197, 30.99717, 28)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere00_1" type="Marker3D" parent="Verdure" unique_id=583593465]
+transform = Transform3D(0.46353427, 0, 0.7714506, 0, 0.9, 0, -0.7714506, 0, 0.46353427, -198.958, 30.960178, 28.879)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere00_2" type="Marker3D" parent="Verdure" unique_id=651311096]
+transform = Transform3D(-0.4225244, 0, 0.79465276, 0, 0.9, 0, -0.79465276, 0, -0.4225244, -197.863, 31.011593, 26.406)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere00_3" type="Marker3D" parent="Verdure" unique_id=1758112939]
+transform = Transform3D(-0.8987665, 0, 0.047102444, 0, 0.9, 0, -0.047102444, 0, -0.8987665, -196.84, 30.963778, 29.504)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere00_4" type="Marker3D" parent="Verdure" unique_id=1956170449]
+transform = Transform3D(-0.5032736, 0, -0.7461338, 0, 0.9, 0, 0.7461338, 0, -0.5032736, -200.168, 30.98275, 27.625)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere01_0" type="Marker3D" parent="Verdure" unique_id=35901565]
+transform = Transform3D(0.5590449, 0, 0.4212705, 0, 0.7, 0, -0.4212705, 0, 0.5590449, -197.149, 31.164846, 16.989)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere01_1" type="Marker3D" parent="Verdure" unique_id=1129546518]
+transform = Transform3D(-0.09407566, 0, 0.8950697, 0, 0.9, 0, -0.8950697, 0, -0.09407566, -197.727, 31.215595, 14.922)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere01_2" type="Marker3D" parent="Verdure" unique_id=1910366830]
+transform = Transform3D(-0.815677, 0, 0.3803565, 0, 0.9, 0, -0.3803565, 0, -0.815677, -195.444, 31.170525, 16.372)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere01_3" type="Marker3D" parent="Verdure" unique_id=683886236]
+transform = Transform3D(-0.74613374, 0, -0.50327367, 0, 0.9, 0, 0.50327367, 0, -0.74613374, -198.66, 31.17246, 16.924)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere01_4" type="Marker3D" parent="Verdure" unique_id=688129879]
+transform = Transform3D(0.047102533, 0, -0.8987665, 0, 0.9, 0, 0.8987665, 0, 0.047102533, -196.307, 31.235338, 13.912)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere02_0" type="Marker3D" parent="Verdure" unique_id=1765946036]
+transform = Transform3D(0.19294617, 0, 0.67288315, 0, 0.7, 0, -0.67288315, 0, 0.19294617, -153.956, 31.164394, 15.706)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere02_1" type="Marker3D" parent="Verdure" unique_id=326845471]
+transform = Transform3D(-0.61379844, 0, 0.6582183, 0, 0.9, 0, -0.6582183, 0, -0.61379844, -151.826, 31.174274, 15.441)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere02_2" type="Marker3D" parent="Verdure" unique_id=1273427978]
+transform = Transform3D(-0.88033277, 0, -0.1871206, 0, 0.9, 0, 0.1871206, 0, -0.88033277, -153.599, 31.102047, 17.483)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere02_3" type="Marker3D" parent="Verdure" unique_id=1679170658]
+transform = Transform3D(-0.29301134, 0, -0.8509667, 0, 0.9, 0, 0.8509667, 0, -0.29301134, -153.667, 31.21976, 14.221)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere02_4" type="Marker3D" parent="Verdure" unique_id=1137915340]
+transform = Transform3D(0.57850873, 0, -0.68944, 0, 0.9, 0, 0.68944, 0, 0.57850873, -151.038, 31.118921, 16.996)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere03_0" type="Marker3D" parent="Verdure" unique_id=253047845]
+transform = Transform3D(-0.25085756, 0, 0.65350634, 0, 0.7, 0, -0.65350634, 0, -0.25085756, -155.567, 31.081007, 26.099)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere03_3" type="Marker3D" parent="Verdure" unique_id=1797884577]
+transform = Transform3D(0.2781154, 0, -0.85595083, 0, 0.9, 0, 0.85595083, 0, 0.2781154, -154.141, 31.065708, 26.605)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere05_0" type="Marker3D" parent="Verdure" unique_id=1581939181]
+transform = Transform3D(-0.6973363, 0, -0.061009068, 0, 0.7, 0, 0.061009068, 0, -0.6973363, -157.679, 30.260788, 67.734)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere05_1" type="Marker3D" parent="Verdure" unique_id=1392619035]
+transform = Transform3D(-0.39453387, 0, -0.80891466, 0, 0.9, 0, 0.80891466, 0, -0.39453387, -156.996, 30.298347, 65.7)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere05_2" type="Marker3D" parent="Verdure" unique_id=1021841407]
+transform = Transform3D(0.4901752, 0, -0.7548034, 0, 0.9, 0, 0.7548034, 0, 0.4901752, -155.922, 30.252724, 68.182)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere05_3" type="Marker3D" parent="Verdure" unique_id=2105641996]
+transform = Transform3D(0.89945173, 0, 0.031409547, 0, 0.9, 0, -0.031409547, 0, 0.89945173, -158.892, 30.277039, 66.831)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere06_0" type="Marker3D" parent="Verdure" unique_id=822498685]
+transform = Transform3D(-0.5202014, 0, -0.46839142, 0, 0.7, 0, 0.46839142, 0, -0.5202014, -187.625, 30.25773, 63.22)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere06_2" type="Marker3D" parent="Verdure" unique_id=625616892]
+transform = Transform3D(0.8457233, 0, -0.30781832, 0, 0.9, 0, 0.30781832, 0, 0.8457233, -188.33, 30.241447, 64.89)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere06_3" type="Marker3D" parent="Verdure" unique_id=503813366]
+transform = Transform3D(0.6994313, 0, 0.5663883, 0, 0.9, 0, -0.5663883, 0, 0.6994313, -186.552, 30.292234, 62.154)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere07_0" type="Marker3D" parent="Verdure" unique_id=2065623215]
+transform = Transform3D(-0.13356619, 0, -0.68713903, 0, 0.7, 0, 0.68713903, 0, -0.13356619, -178.135, 30.210669, 72.498)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere07_1" type="Marker3D" parent="Verdure" unique_id=1026175184]
+transform = Transform3D(0.6688304, 0, -0.6022175, 0, 0.9, 0, 0.6022175, 0, 0.6688304, -179.386, 30.21623, 74.241)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere08_0" type="Marker3D" parent="Verdure" unique_id=1704618999]
+transform = Transform3D(0.3068597, 0, -0.6291559, 0, 0.7, 0, 0.6291559, 0, 0.3068597, -198.632, 30.57409, 56.93)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere08_3" type="Marker3D" parent="Verdure" unique_id=1359058600]
+transform = Transform3D(-0.35165802, 0, 0.8284544, 0, 0.9, 0, -0.8284544, 0, -0.35165802, -199.971, 30.58688, 57.633)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere09_1" type="Marker3D" parent="Verdure" unique_id=1692530489]
+transform = Transform3D(0.76324326, 0, 0.47692734, 0, 0.9, 0, -0.47692734, 0, 0.76324326, -188.266, 30.633844, 46.927)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere09_4" type="Marker3D" parent="Verdure" unique_id=1570945535]
+transform = Transform3D(-0.78715765, 0, -0.4363287, 0, 0.9, 0, 0.4363287, 0, -0.78715765, -186.804, 30.61934, 47.875)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere10_0" type="Marker3D" parent="Verdure" unique_id=505444972]
+transform = Transform3D(0.6893654, 0, 0.12155373, 0, 0.7, 0, -0.12155373, 0, 0.6893654, -188.079, 31.47082, -2.997)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere10_1" type="Marker3D" parent="Verdure" unique_id=2015339076]
+transform = Transform3D(0.32253116, 0, 0.84022236, 0, 0.9, 0, -0.84022236, 0, 0.32253116, -187.048, 31.472967, -1.114)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere10_3" type="Marker3D" parent="Verdure" unique_id=1838495318]
+transform = Transform3D(-0.89329153, 0, -0.10968251, 0, 0.9, 0, 0.10968251, 0, -0.89329153, -186.591, 31.520182, -3.275)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere10_4" type="Marker3D" parent="Verdure" unique_id=915003337]
+transform = Transform3D(-0.36606297, 0, -0.8221909, 0, 0.9, 0, 0.8221909, 0, -0.36606297, -188.203, 31.431746, 0.191)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere12_0" type="Marker3D" parent="Verdure" unique_id=889295342]
+transform = Transform3D(0.073169895, 0, 0.6961653, 0, 0.7, 0, -0.6961653, 0, 0.073169895, -132.218, 30.81138, 37.976)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere12_1" type="Marker3D" parent="Verdure" unique_id=1462638291]
+transform = Transform3D(-0.71877193, 0, 0.5416336, 0, 0.9, 0, -0.5416336, 0, -0.71877193, -132.649, 30.879763, 35.874)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere12_2" type="Marker3D" parent="Verdure" unique_id=1667037654]
+transform = Transform3D(-0.8344654, 0, -0.33714595, 0, 0.9, 0, 0.33714595, 0, -0.8344654, -130.474, 30.832706, 37.481)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere12_3" type="Marker3D" parent="Verdure" unique_id=1805923265]
+transform = Transform3D(-0.14079106, 0, -0.8889195, 0, 0.9, 0, 0.8889195, 0, -0.14079106, -133.721, 30.818748, 37.805)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere13_1" type="Marker3D" parent="Verdure" unique_id=1223304336]
+transform = Transform3D(-0.9, 0, -7.86805e-08, 0, 0.9, 0, 7.86805e-08, 0, -0.9, -201.79, 30.650068, 36.525)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere13_4" type="Marker3D" parent="Verdure" unique_id=2052059326]
+transform = Transform3D(0.8987665, 0, -0.047102366, 0, 0.9, 0, 0.047102366, 0, 0.8987665, -201.113, 30.46083, 38.131)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere15_0" type="Marker3D" parent="Verdure" unique_id=1925043899]
+transform = Transform3D(-0.67614806, 0, -0.18117335, 0, 0.7, 0, 0.18117335, 0, -0.67614806, -230.214, 30.608269, 41.619)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere15_1" type="Marker3D" parent="Verdure" unique_id=1896004843]
+transform = Transform3D(-0.24807349, 0, -0.86513555, 0, 0.9, 0, 0.86513555, 0, -0.24807349, -232.296, 30.993563, 41.098)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere15_2" type="Marker3D" parent="Verdure" unique_id=1599575811]
+transform = Transform3D(0.6137985, 0, -0.65821826, 0, 0.9, 0, 0.65821826, 0, 0.6137985, -229.906, 30.484077, 39.832)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere15_3" type="Marker3D" parent="Verdure" unique_id=881098772]
+transform = Transform3D(0.8803328, 0, 0.18712053, 0, 0.9, 0, -0.18712053, 0, 0.8803328, -231.02, 30.783762, 42.9)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere15_4" type="Marker3D" parent="Verdure" unique_id=1736587719]
+transform = Transform3D(0.2930113, 0, 0.8509667, 0, 0.9, 0, -0.8509667, 0, 0.2930113, -232.471, 30.959663, 39.364)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere16_0" type="Marker3D" parent="Verdure" unique_id=1958308137]
+transform = Transform3D(-0.43096304, 0, -0.5516075, 0, 0.7, 0, 0.5516075, 0, -0.43096304, -223.729, 30.083525, 65.685)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere16_2" type="Marker3D" parent="Verdure" unique_id=109674822]
+transform = Transform3D(0.88632697, 0, -0.15628317, 0, 0.9, 0, 0.15628317, 0, 0.88632697, -222.008, 29.738674, 66.255)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere16_3" type="Marker3D" parent="Verdure" unique_id=72281574]
+transform = Transform3D(0.5904531, 0, 0.67923856, 0, 0.9, 0, -0.67923856, 0, 0.5904531, -224.876, 30.268423, 64.698)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere17_0" type="Marker3D" parent="Verdure" unique_id=1675879568]
+transform = Transform3D(-0.012216607, 0, -0.6998934, 0, 0.7, 0, 0.6998934, 0, -0.012216607, -201.569, 29.580229, 80.178)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere17_1" type="Marker3D" parent="Verdure" unique_id=1314869142]
+transform = Transform3D(0.76324326, 0, -0.47692734, 0, 0.9, 0, 0.47692734, 0, 0.76324326, -199.732, 29.540298, 81.288)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere17_3" type="Marker3D" parent="Verdure" unique_id=1199515916]
+transform = Transform3D(0.06278086, 0, 0.89780766, 0, 0.9, 0, -0.89780766, 0, 0.06278086, -200.423, 29.783667, 79.19)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere18_0" type="Marker3D" parent="Verdure" unique_id=1737771631]
+transform = Transform3D(0.41144955, 0, -0.56631196, 0, 0.7, 0, 0.56631196, 0, 0.41144955, -163.102, 29.999485, 93.56)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere18_1" type="Marker3D" parent="Verdure" unique_id=984703529]
+transform = Transform3D(0.8965752, 0, 0.07844016, 0, 0.9, 0, -0.07844016, 0, 0.8965752, -164.473, 29.489231, 95.211)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere18_2" type="Marker3D" parent="Verdure" unique_id=859599234]
+transform = Transform3D(0.39453402, 0, 0.8089146, 0, 0.9, 0, -0.8089146, 0, 0.39453402, -164.579, 29.99266, 92.508)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere18_3" type="Marker3D" parent="Verdure" unique_id=396290115]
+transform = Transform3D(-0.49017513, 0, 0.7548035, 0, 0.9, 0, -0.7548035, 0, -0.49017513, -162.296, 29.853373, 94.84)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere18_4" type="Marker3D" parent="Verdure" unique_id=1927712711]
+transform = Transform3D(-0.89945173, 0, -0.031409446, 0, 0.9, 0, 0.031409446, 0, -0.89945173, -166.111, 29.419239, 94.618)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere19_2" type="Marker3D" parent="Verdure" unique_id=911989137]
+transform = Transform3D(-0.17172812, 0, 0.88346446, 0, 0.9, 0, -0.88346446, 0, -0.17172812, -120.439, 30.459908, 55.649)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere20_0" type="Marker3D" parent="Verdure" unique_id=2662206]
+transform = Transform3D(0.6577848, 0, 0.23941408, 0, 0.7, 0, -0.23941408, 0, 0.6577848, -120.988, 31.157654, 92.157)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere20_1" type="Marker3D" parent="Verdure" unique_id=907771810]
+transform = Transform3D(0.17172804, 0, 0.88346446, 0, 0.9, 0, -0.88346446, 0, 0.17172804, -119.192, 31.58418, 90.982)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere20_2" type="Marker3D" parent="Verdure" unique_id=883324882]
+transform = Transform3D(-0.66883034, 0, 0.60221756, 0, 0.9, 0, -0.60221756, 0, -0.66883034, -119.885, 32.182167, 93.596)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere20_3" type="Marker3D" parent="Verdure" unique_id=1429787319]
+transform = Transform3D(-0.86067426, 0, -0.2631346, 0, 0.9, 0, 0.2631346, 0, -0.86067426, -121.382, 30.571806, 90.696)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere20_4" type="Marker3D" parent="Verdure" unique_id=1119577322]
+transform = Transform3D(-0.21772973, 0, -0.87326616, 0, 0.9, 0, 0.87326616, 0, -0.21772973, -117.8, 32.620575, 92.03)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/fern_fan.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere21_0" type="Marker3D" parent="Verdure" unique_id=1254774450]
+transform = Transform3D(0.38124728, 0, 0.5870694, 0, 0.7, 0, -0.5870694, 0, 0.38124728, -180.008, 32.04143, -21)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/shrub_hazel.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere21_1" type="Marker3D" parent="Verdure" unique_id=133551087]
+transform = Transform3D(-0.394534, 0, 0.8089146, 0, 0.9, 0, -0.8089146, 0, -0.394534, -179.113, 31.491043, -19.05)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere21_2" type="Marker3D" parent="Verdure" unique_id=1881827176]
+transform = Transform3D(-0.8965752, 0, 0.07844008, 0, 0.9, 0, -0.07844008, 0, -0.8965752, -181.595, 31.829178, -20.124)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/flowers_daisy.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="Lisiere21_3" type="Marker3D" parent="Verdure" unique_id=1271529527]
+transform = Transform3D(-0.52900654, 0, -0.7281154, 0, 0.9, 0, 0.7281154, 0, -0.52900654, -178.505, 32.073246, -21.173)
+metadata/source_scene = "res://prototype_3d/assets/library/plants/grass_meadow.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin0_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1872544905]
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -182, 33.145096, 49)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin0_Tronc_0" unique_id=643779726]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin0" type="Marker3D" parent="Verdure" unique_id=1547658422]
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -182, 30.625095, 49)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin1_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1472890581]
+transform = Transform3D(0.9453787, 0, 1.7055085, 0, 1.95, 0, -1.7055085, 0, 0.9453787, -159, 34.12, 5)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin1_Tronc_0" unique_id=944332261]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin1" type="Marker3D" parent="Verdure" unique_id=609902165]
+transform = Transform3D(0.9453787, 0, 1.7055085, 0, 1.95, 0, -1.7055085, 0, 0.9453787, -159, 31.39, 5)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin2_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=595069225]
+transform = Transform3D(-1.1128305, 0, 1.7809008, 0, 2.1, 0, -1.7809008, 0, -1.1128305, -158, 33.052, 76)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin2_Tronc_0" unique_id=379348874]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin2" type="Marker3D" parent="Verdure" unique_id=2141570296]
+transform = Transform3D(-1.1128305, 0, 1.7809008, 0, 2.1, 0, -1.7809008, 0, -1.1128305, -158, 30.112, 76)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin3_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1275273099]
+transform = Transform3D(-1.797533, 0, -0.09420477, 0, 1.8, 0, 0.09420477, 0, -1.797533, -181, 33.84433, 7)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin3_Tronc_0" unique_id=600650610]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin3" type="Marker3D" parent="Verdure" unique_id=225465506]
+transform = Transform3D(-1.797533, 0, -0.09420477, 0, 1.8, 0, 0.09420477, 0, -1.797533, -181, 31.32433, 7)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin4_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1792041970]
+transform = Transform3D(-0.8548234, 0, -1.7526486, 0, 1.95, 0, 1.7526486, 0, -0.8548234, -202, 33.041912, 65)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin4_Tronc_0" unique_id=687801853]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin4" type="Marker3D" parent="Verdure" unique_id=2094340041]
+transform = Transform3D(-0.8548234, 0, -1.7526486, 0, 1.95, 0, 1.7526486, 0, -0.8548234, -202, 30.311913, 65)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin5_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=2045656956]
+transform = Transform3D(1.2045102, 0, -1.7202194, 0, 2.1, 0, 1.7202194, 0, 1.2045102, -162, 33.466, 53)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin5_Tronc_0" unique_id=890935999]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin5" type="Marker3D" parent="Verdure" unique_id=2114234364]
+transform = Transform3D(1.2045102, 0, -1.7202194, 0, 2.1, 0, 1.7202194, 0, 1.2045102, -162, 30.526001, 53)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardin6_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=155549129]
+transform = Transform3D(1.7901394, 0, 0.18815134, 0, 1.8, 0, -0.18815134, 0, 1.7901394, -132, 33.743855, 9)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardin6_Tronc_0" unique_id=780992614]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardin6" type="Marker3D" parent="Verdure" unique_id=1009523950]
+transform = Transform3D(1.7901394, 0, 0.18815134, 0, 1.8, 0, -0.18815134, 0, 1.7901394, -132, 31.223854, 9)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauPrairieOuest_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=124131458]
+transform = Transform3D(1.3992794, 0, 0.87436676, 0, 1.65, 0, -0.87436676, 0, 1.3992794, -232, 33.745514, 7)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauPrairieOuest_Tronc_0" unique_id=1953512515]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauPrairieOuest" type="Marker3D" parent="Verdure" unique_id=1764975388]
+transform = Transform3D(1.3992794, 0, 0.87436676, 0, 1.65, 0, -0.87436676, 0, 1.3992794, -232, 31.435513, 7)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauLisiereNord_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1805774052]
+transform = Transform3D(-0.7276809, 0, 1.3685687, 0, 1.55, 0, -1.3685687, 0, -0.7276809, -179, 33.945137, -9)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauLisiereNord_Tronc_0" unique_id=1275671508]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauLisiereNord" type="Marker3D" parent="Verdure" unique_id=1043484180]
+transform = Transform3D(-0.7276809, 0, 1.3685687, 0, 1.55, 0, -1.3685687, 0, -0.7276809, -179, 31.775139, -9)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauCourNordEst_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=1482006099]
+transform = Transform3D(-0.65077865, 0, -1.4616727, 0, 1.6, 0, 1.4616727, 0, -0.65077865, -147, 33.716167, -1)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauCourNordEst_Tronc_0" unique_id=141802951]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauCourNordEst" type="Marker3D" parent="Verdure" unique_id=686666124]
+transform = Transform3D(-0.65077865, 0, -1.4616727, 0, 1.6, 0, 1.4616727, 0, -0.65077865, -147, 31.476166, -1)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauEntreeEst_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=947279513]
+transform = Transform3D(0.5116504, 0, 1.6735334, 0, 1.75, 0, -1.6735334, 0, 0.5116504, -117, 33.478283, 30)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauEntreeEst_Tronc_0" unique_id=821614778]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauEntreeEst" type="Marker3D" parent="Verdure" unique_id=2139637341]
+transform = Transform3D(0.5116504, 0, 1.6735334, 0, 1.75, 0, -1.6735334, 0, 0.5116504, -117, 31.028284, 30)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauJardinRive_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=149910356]
+transform = Transform3D(-1.4159954, 0, -0.6304419, 0, 1.55, 0, 0.6304419, 0, -1.4159954, -206, 32.251125, 73)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauJardinRive_Tronc_0" unique_id=539526755]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauJardinRive" type="Marker3D" parent="Verdure" unique_id=600554811]
+transform = Transform3D(-1.4159954, 0, -0.6304419, 0, 1.55, 0, 0.6304419, 0, -1.4159954, -206, 30.081125, 73)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="BouleauPrairieSud_Tronc_0" type="StaticBody3D" parent="Verdure" unique_id=923504369]
+transform = Transform3D(1.1809059, 0, -1.3584775, 0, 1.8, 0, 1.3584775, 0, 1.1809059, -192, 36.9142, 118)
+collision_mask = 0
+
+[node name="FormeTronc" type="CollisionShape3D" parent="Verdure/BouleauPrairieSud_Tronc_0" unique_id=1754806984]
+shape = SubResource("CylinderShape3D_ka8fw")
+
+[node name="BouleauPrairieSud" type="Marker3D" parent="Verdure" unique_id=1442055044]
+transform = Transform3D(1.1809059, 0, -1.3584775, 0, 1.8, 0, 1.3584775, 0, 1.1809059, -192, 34.3942, 118)
+metadata/source_scene = "res://prototype_3d/assets/library/trees/birch_twin.tscn"
+metadata/editing = "Move the plan entry and regenerate; this marker does not control saved MultiMesh transforms"
+
+[node name="GreeneryFernFan00E1755b9251" type="MultiMeshInstance3D" parent="Verdure" unique_id=320604077]
+material_override = ExtResource("168_p00cg")
+multimesh = ExtResource("169_52xwh")
+metadata/instances = 9
+metadata/source_mesh = "res://prototype_3d/assets/library/plants/meshes/fern_fan_00.res"
+
+[node name="GreeneryFlowersDaisy002d1b0d69a8" type="MultiMeshInstance3D" parent="Verdure" unique_id=995834795]
+material_override = ExtResource("168_p00cg")
+multimesh = ExtResource("170_3gq17")
+metadata/instances = 40
+metadata/source_mesh = "res://prototype_3d/assets/library/plants/meshes/flowers_daisy_00.res"
+
+[node name="GreeneryGrassMeadow004b65b1284e" type="MultiMeshInstance3D" parent="Verdure" unique_id=315283161]
+material_override = ExtResource("168_p00cg")
+multimesh = ExtResource("171_t528c")
+metadata/instances = 3447
+metadata/source_mesh = "res://prototype_3d/assets/library/plants/meshes/grass_meadow_00.res"
+
+[node name="GreeneryGrassMeadow0141a8474809" type="MultiMeshInstance3D" parent="Verdure" unique_id=1363740519]
+material_override = ExtResource("168_p00cg")
+multimesh = ExtResource("172_m7tde")
+metadata/instances = 3447
+metadata/source_mesh = "res://prototype_3d/assets/library/plants/meshes/grass_meadow_01.res"
+
+[node name="GreeneryShrubHazel00B76e119d6b" type="MultiMeshInstance3D" parent="Verdure" unique_id=1733681586]
+material_override = ExtResource("173_uuglu")
+multimesh = ExtResource("174_56icc")
+metadata/instances = 16
+metadata/source_mesh = "res://prototype_3d/assets/library/plants/meshes/shrub_hazel_00.res"
+
+[node name="GreeneryShrubHazel01Df7553c7f0" type="MultiMeshInstance3D" parent="Verdure" unique_id=847759134]
+material_override = ExtResource("175_6pmvv")
+multimesh = ExtResource("176_23vfo")
+metadata/instances = 16
+metadata/source_mesh = "res://prototype_3d/assets/library/plants/meshes/shrub_hazel_01.res"
+
+[node name="GreeneryBirchTwin00643Ce508a3" type="MultiMeshInstance3D" parent="Verdure" unique_id=261440673]
+material_override = ExtResource("177_8qotf")
+multimesh = ExtResource("178_5ttoy")
+metadata/instances = 27
+metadata/source_mesh = "res://prototype_3d/assets/library/trees/meshes/birch_twin_00.res"
+
+[node name="GreeneryBirchTwin013b2c1f85f5" type="MultiMeshInstance3D" parent="Verdure" unique_id=48741054]
+material_override = ExtResource("179_j10ds")
+multimesh = ExtResource("180_dyv68")
+metadata/instances = 27
+metadata/source_mesh = "res://prototype_3d/assets/library/trees/meshes/birch_twin_01.res"
+
+[node name="GreeneryBirchTwin02A9Db9145f0" type="MultiMeshInstance3D" parent="Verdure" unique_id=1343777374]
+material_override = ExtResource("175_6pmvv")
+multimesh = ExtResource("181_q3xl4")
+metadata/instances = 27
+metadata/source_mesh = "res://prototype_3d/assets/library/trees/meshes/birch_twin_02.res"

@@ -1,0 +1,70 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_tjdjw"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/reserve_a_grain_octogonale_Merged_stone.res" id="2_ttxgf"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_v54jo"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/reserve_a_grain_octogonale_Merged_wood.res" id="4_po7dw"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_bspfr"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/reserve_a_grain_octogonale_Merged_dark_wood.res" id="6_tfr0y"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="7_4mihj"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/reserve_a_grain_octogonale_Merged_thatch.res" id="8_u6k1h"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="9_h7ogg"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/reserve_a_grain_octogonale_Merged_thatch_dark.res" id="10_1at4w"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4bk28"]
+height = 0.36
+radius = 2.08
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qcgrj"]
+height = 3.85
+radius = 1.87
+
+[node name="ReserveAGrainOctogonale" type="Node3D" unique_id=1200269213]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "reserve_a_grain_octogonale"
+metadata/family = "agricole"
+metadata/label = "Réserve à grain octogonale"
+metadata/purpose = "Petit silo de charpente à cuve sèche, protégé par une toiture conique en chaume."
+metadata/placement = "À placer à proximité d'une grange; stockage médiéval en bois, pas de silo métallique."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "wood_grain_store"
+
+[node name="StorageFootingCollision" type="StaticBody3D" parent="." unique_id=1125914469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@155" type="CollisionShape3D" parent="StorageFootingCollision" unique_id=978434584]
+shape = SubResource("CylinderShape3D_4bk28")
+
+[node name="DryGrainBinCollision" type="StaticBody3D" parent="." unique_id=1566054928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.27, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@156" type="CollisionShape3D" parent="DryGrainBinCollision" unique_id=2131689853]
+shape = SubResource("CylinderShape3D_qcgrj")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=322648900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.7)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=552558541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.98)
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=656278012]
+material_override = ExtResource("1_tjdjw")
+mesh = ExtResource("2_ttxgf")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1074200795]
+material_override = ExtResource("3_v54jo")
+mesh = ExtResource("4_po7dw")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1192376101]
+material_override = ExtResource("5_bspfr")
+mesh = ExtResource("6_tfr0y")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=754066577]
+material_override = ExtResource("7_4mihj")
+mesh = ExtResource("8_u6k1h")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=15141865]
+material_override = ExtResource("9_h7ogg")
+mesh = ExtResource("10_1at4w")

@@ -55,7 +55,20 @@
         25,
         35
       ],
-      "reason": "Plaine agricole près de l'eau ; bâtiments sur une terrasse, champs plus bas."
+      "reason": "Plaine agricole près de l'eau ; bâtiments sur une terrasse, champs plus bas.",
+      "built_scene": "res://scenes/sectors/village_fermier.tscn",
+      "built_focus_xz": [
+        -179,
+        39
+      ],
+      "built_bounds_xz": [
+        -268,
+        -54,
+        174,
+        184
+      ],
+      "built_buildings": 13,
+      "layout_source": "farming-town.json"
     },
     {
       "id": "village_scierie",
@@ -530,14 +543,15 @@
     }
   ],
   "notes": [
-    "Disposition confirmée par Yannick et son frère. Brindle, aciérie, scierie et cité royale construits dans l’atelier graphique ; village fermier encore réservé.",
+    "Disposition confirmée par Yannick et son frère. Brindle, aciérie, scierie, cité royale et village fermier construits dans l’atelier graphique.",
     "Les cours d'eau traversant une enveloppe de village devront être réservés dans son plan local ; les bâtiments seront placés sur les berges adaptées.",
     "L'affluent de l'aciérie rejoint la rivière principale après le secteur agricole et ne se jette pas dans le lac.",
     "Le terrain suit ces profils descendants. assets/landscape/landscape.json contient les courbes interpolées, les raccords aux berges et les hauteurs réelles des centres de sites.",
     "Les emprises incluent des circulations et espaces libres ; elles ne sont pas des blocs de bâtiments pleins.",
     "Les chemins et franchissements restent à mesurer dans une maquette jouable.",
     "Aucun PNJ, dialogue, élément d'histoire ou position de personnage n'est défini ici.",
-    "2026-09-14: widened natural valleys, terrain-matched water levels, five connected crossings and graded bridge landings. Detailed sources: river-layout-v2.json and river-routes-v2.json."
+    "2026-09-14: widened natural valleys, terrain-matched water levels, five connected crossings and graded bridge landings. Detailed sources: river-layout-v2.json and river-routes-v2.json.",
+    "2026-09-21: farming village laid out with local terraces, mill bypass, irrigation channel, 12 crop fields, four orchards and three bridges. Detailed source: farming-town.json."
   ],
   "river_layout_source": "river-layout-v2.json",
   "routes_source": "river-routes-v2.json"

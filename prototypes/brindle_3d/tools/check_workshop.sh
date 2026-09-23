@@ -65,6 +65,46 @@ if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || 
   exit 1
 fi
 
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_farming.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'FARMING_CHECK PASS' "$LOG"; then
+  echo "FAILED: farming asset kit verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_farming_terrain.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'FARMING_TERRAIN_CHECK PASS' "$LOG"; then
+  echo "FAILED: farming valley terrain and water verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_farming_town.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'FARMING_TOWN_CHECK PASS' "$LOG"; then
+  echo "FAILED: farming village layout and traversal verification"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_farming_atmosphere.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'FARMING_ATMOSPHERE_CHECK PASS' "$LOG"; then
+  echo "FAILED: farming light region, camera and material restoration"
+  exit 1
+fi
+
+"$GODOT" --headless --path "$WORKSHOP" --fixed-fps 60 --script res://tools/verify_coastline.gd >"$LOG" 2>&1
+CODE=$?
+cat "$LOG"
+if [[ $CODE -ne 0 ]] || grep -qE 'SCRIPT ERROR|(^|[[:space:]])ERROR:' "$LOG" || ! grep -q 'COASTLINE_CHECK PASS' "$LOG"; then
+  echo "FAILED: coastline continuity, hydrology and playable access"
+  exit 1
+fi
+
 "$GODOT" --headless --path "$WORKSHOP" --script res://tools/verify_workshop.gd >"$LOG" 2>&1
 CODE=$?
 cat "$LOG"

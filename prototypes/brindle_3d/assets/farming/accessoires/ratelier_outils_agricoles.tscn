@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_1y43w"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/ratelier_outils_agricoles_Merged_dark_wood.res" id="2_pov7t"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_3ha42"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/ratelier_outils_agricoles_Merged_wood.res" id="4_636qg"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="5_5bwnc"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/ratelier_outils_agricoles_Merged_iron.res" id="6_fqi31"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="7_560k0"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/ratelier_outils_agricoles_Merged_thatch.res" id="8_106o4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1gdxb"]
+size = Vector3(2.06, 1.94, 0.63)
+
+[node name="RatelierOutilsAgricoles" type="Node3D" unique_id=1534844854]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "ratelier_outils_agricoles"
+metadata/family = "accessoires"
+metadata/label = "Râtelier d'outils agricoles"
+metadata/purpose = "Rangement couvert d'une houe, d'une fourche, d'une bêche et d'un râteau."
+metadata/placement = "Adossable à une grange, outils visibles depuis +Z."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="ToolRackCollision" type="StaticBody3D" parent="." unique_id=477814127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.97, 0.045)
+collision_mask = 0
+
+[node name="@CollisionShape3D@221" type="CollisionShape3D" parent="ToolRackCollision" unique_id=937309583]
+shape = SubResource("BoxShape3D_1gdxb")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1907963653]
+material_override = ExtResource("1_1y43w")
+mesh = ExtResource("2_pov7t")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=916988996]
+material_override = ExtResource("3_3ha42")
+mesh = ExtResource("4_636qg")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=1504865222]
+material_override = ExtResource("5_5bwnc")
+mesh = ExtResource("6_fqi31")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=166885991]
+material_override = ExtResource("7_560k0")
+mesh = ExtResource("8_106o4")

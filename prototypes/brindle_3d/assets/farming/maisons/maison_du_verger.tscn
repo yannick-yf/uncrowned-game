@@ -1,0 +1,124 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_lundg"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_stone.res" id="2_018dw"]
+[ext_resource type="Material" path="res://assets/farming/materials/pale_plaster.tres" id="3_iogl4"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_pale_plaster.res" id="4_lfsyv"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_7vcy5"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_dark_wood.res" id="6_20wxg"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="7_ylix1"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_wood.res" id="8_06djf"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark.tres" id="9_5ld2x"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_dark.res" id="10_hdxl3"]
+[ext_resource type="Material" path="res://assets/farming/materials/glass.tres" id="11_45ux3"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_glass.res" id="12_wl8fp"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="13_7yu31"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_iron.res" id="14_3y740"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="15_tx2ls"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_thatch.res" id="16_5qsy2"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="17_ksgse"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/maison_du_verger_Merged_thatch_dark.res" id="18_4plu3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nfe7x"]
+size = Vector3(4.85, 0.24, 5.55)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6lpg3"]
+size = Vector3(4.7, 3.41, 5.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_21iik"]
+size = Vector3(2.9, 0.24, 4.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0670"]
+size = Vector3(2.75, 2.16, 4.45)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_a05f8"]
+height = 0.72
+radius = 0.288
+
+[node name="MaisonDuVerger" type="Node3D" unique_id=488585792]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "maison_du_verger"
+metadata/family = "maisons"
+metadata/label = "Maison du verger"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "deux_volumes_étagés"
+
+[node name="FootingCollision" type="StaticBody3D" parent="." unique_id=1916178681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.12, -0.45)
+collision_mask = 0
+
+[node name="@CollisionShape3D@26" type="CollisionShape3D" parent="FootingCollision" unique_id=512199586]
+shape = SubResource("BoxShape3D_nfe7x")
+
+[node name="WallCoreCollision" type="StaticBody3D" parent="." unique_id=1827817983]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.945, -0.45)
+collision_mask = 0
+
+[node name="@CollisionShape3D@27" type="CollisionShape3D" parent="WallCoreCollision" unique_id=1321762013]
+shape = SubResource("BoxShape3D_6lpg3")
+
+[node name="@StaticBody3D@28" type="StaticBody3D" parent="." unique_id=128411680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.26, 0.12, 0.6)
+collision_mask = 0
+
+[node name="@CollisionShape3D@29" type="CollisionShape3D" parent="@StaticBody3D@28" unique_id=915166939]
+shape = SubResource("BoxShape3D_21iik")
+
+[node name="@StaticBody3D@30" type="StaticBody3D" parent="." unique_id=80799147]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.26, 1.32, 0.6)
+collision_mask = 0
+
+[node name="@CollisionShape3D@31" type="CollisionShape3D" parent="@StaticBody3D@30" unique_id=277699718]
+shape = SubResource("BoxShape3D_a0670")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=976085530]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0.08, 3.33)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=1592299542]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0.08, 2.53)
+
+[node name="BarrelCollision" type="StaticBody3D" parent="." unique_id=625329602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.25, 0.36, 3.17)
+collision_mask = 0
+
+[node name="@CollisionShape3D@32" type="CollisionShape3D" parent="BarrelCollision" unique_id=316999969]
+shape = SubResource("CylinderShape3D_a05f8")
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=184952671]
+material_override = ExtResource("1_lundg")
+mesh = ExtResource("2_018dw")
+
+[node name="MergedPalePlaster" type="MeshInstance3D" parent="." unique_id=1510193615]
+material_override = ExtResource("3_iogl4")
+mesh = ExtResource("4_lfsyv")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=286232767]
+material_override = ExtResource("5_7vcy5")
+mesh = ExtResource("6_20wxg")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1291123469]
+material_override = ExtResource("7_ylix1")
+mesh = ExtResource("8_06djf")
+
+[node name="MergedDark" type="MeshInstance3D" parent="." unique_id=1214319038]
+material_override = ExtResource("9_5ld2x")
+mesh = ExtResource("10_hdxl3")
+
+[node name="MergedGlass" type="MeshInstance3D" parent="." unique_id=989321467]
+material_override = ExtResource("11_45ux3")
+mesh = ExtResource("12_wl8fp")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=1230627805]
+material_override = ExtResource("13_7yu31")
+mesh = ExtResource("14_3y740")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=1424915791]
+material_override = ExtResource("15_tx2ls")
+mesh = ExtResource("16_5qsy2")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=1967531690]
+material_override = ExtResource("17_ksgse")
+mesh = ExtResource("18_4plu3")

@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="1_livuk"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/faisceau_gerbes_Merged_straw.res" id="2_ndo3o"]
+[ext_resource type="Material" path="res://assets/farming/materials/grain.tres" id="3_bb0gh"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/faisceau_gerbes_Merged_grain.res" id="4_eht6c"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="5_e8w1m"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/faisceau_gerbes_Merged_rope.res" id="6_tjors"]
+
+[node name="FaisceauGerbes" type="Node3D" unique_id=1654012816]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "faisceau_gerbes"
+metadata/family = "recoltes"
+metadata/label = "Faisceau de six gerbes"
+metadata/purpose = "Gerbes disposées en petit groupe de séchage après moisson."
+metadata/placement = "Terrain sec ; laisser le passage aux charrettes."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=910476379]
+material_override = ExtResource("1_livuk")
+mesh = ExtResource("2_ndo3o")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="." unique_id=1325680896]
+material_override = ExtResource("3_bb0gh")
+mesh = ExtResource("4_eht6c")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=1404486305]
+material_override = ExtResource("5_e8w1m")
+mesh = ExtResource("6_tjors")

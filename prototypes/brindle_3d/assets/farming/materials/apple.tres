@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/farming_surface.gdshader" id="1_pbr6e"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_pbr6e")
+shader_parameter/tint = Color(0.6745098, 0.28627452, 0.21176471, 1)
+shader_parameter/surface_kind = 8
+shader_parameter/roughness = 0.94

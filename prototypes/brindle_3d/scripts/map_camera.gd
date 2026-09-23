@@ -106,6 +106,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			_ground.call("toggle_guides")
 		elif event.keycode == KEY_B:
 			set_view(Vector2(175,255),90,49,-12)
+		elif event.keycode == KEY_L:
+			set_view(Vector2(175,321),138,31,-10)
 		elif event.keycode == KEY_M:
 			set_view(Vector2(308,80),62,27,-70)
 		elif event.keycode == KEY_I:
@@ -114,6 +116,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			set_view(Vector2(-177,-232),230,38,-18)
 		elif event.keycode == KEY_T:
 			set_view(Vector2(237,-159),98,48,24)
+		elif event.keycode == KEY_V:
+			var farm: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://planning/farming-town.json"))
+			set_view(Vector2(farm.focus_xz[0],farm.focus_xz[1]),142,48,-22)
 		elif event.keycode == KEY_P:
 			var bridges: Node3D=get_node_or_null("../Decor/Franchissements/Ponts")
 			if bridges!=null and bridges.get_child_count()>0:

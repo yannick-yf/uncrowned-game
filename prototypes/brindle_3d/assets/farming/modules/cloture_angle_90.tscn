@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_rrffg"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/cloture_angle_90_Merged_dark_wood.res" id="2_n5jhl"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_unada"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/cloture_angle_90_Merged_wood.res" id="4_t3oml"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wh256"]
+size = Vector3(0.16, 1.28, 2.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1yxgy"]
+size = Vector3(0.16, 1.28, 2.15)
+
+[node name="ClotureAngle90" type="Node3D" unique_id=714065738]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_angle_90"
+metadata/family = "modules"
+metadata/label = "Angle de clôture à 90°"
+metadata/purpose = "Retour de deux travées pour cour, potager ou pré."
+metadata/placement = "Deux branches de 2 m, connecteurs à leurs extrémités ; rotation libre sur Y."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="FenceCollision" type="StaticBody3D" parent="." unique_id=612080986]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1, 0.64, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@194" type="CollisionShape3D" parent="FenceCollision" unique_id=843003526]
+shape = SubResource("BoxShape3D_wh256")
+
+[node name="@StaticBody3D@195" type="StaticBody3D" parent="." unique_id=973844565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, 1)
+collision_mask = 0
+
+[node name="@CollisionShape3D@196" type="CollisionShape3D" parent="@StaticBody3D@195" unique_id=851929287]
+shape = SubResource("BoxShape3D_1yxgy")
+
+[node name="ConnectorStart" type="Marker3D" parent="." unique_id=1091412023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="ConnectorEnd" type="Marker3D" parent="." unique_id=1300397521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=273081379]
+material_override = ExtResource("1_rrffg")
+mesh = ExtResource("2_n5jhl")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=737001785]
+material_override = ExtResource("3_unada")
+mesh = ExtResource("4_t3oml")

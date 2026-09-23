@@ -1,0 +1,171 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_h5fn3"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_stone.res" id="2_mpifr"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="3_nck5a"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_dark_wood.res" id="4_ntpui"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="5_cr6dl"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_wood.res" id="6_20ldp"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="7_a5i7u"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_thatch.res" id="8_2fimd"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="9_8swh3"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_thatch_dark.res" id="10_q1lic"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark.tres" id="11_88eb2"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_dark.res" id="12_1bsk3"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="13_erct7"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/grenier_sur_piliers_Merged_iron.res" id="14_070sc"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_84smb"]
+height = 0.86
+radius = 0.25
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ham4h"]
+height = 0.86
+radius = 0.25
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_87xqb"]
+height = 0.86
+radius = 0.25
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_edag3"]
+height = 0.86
+radius = 0.25
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_wnjo3"]
+height = 0.86
+radius = 0.25
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_yf4m6"]
+height = 0.86
+radius = 0.25
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2lyxv"]
+size = Vector3(4.6, 0.26, 4.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_birw8"]
+size = Vector3(4.5, 0.24, 4.75)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aduga"]
+size = Vector3(4.35, 2.31, 4.6)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_a0v0y"]
+points = PackedVector3Array(-0.65, -0.06, 2.485, -0.65, -0.06, 4.795, -0.65, 0, 4.795, -0.65, 1.23, 2.815, -0.65, 1.23, 2.485, 0.65, -0.06, 2.485, 0.65, -0.06, 4.795, 0.65, 0, 4.795, 0.65, 1.23, 2.815, 0.65, 1.23, 2.485)
+
+[node name="GrenierSurPiliers" type="Node3D" unique_id=121848548]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "grenier_sur_piliers"
+metadata/family = "agricole"
+metadata/label = "Grenier sur piliers de pierre"
+metadata/purpose = "Grenier sec et ventilé, surélevé pour limiter l'humidité et l'accès des rongeurs."
+metadata/placement = "Sur sol sec près des champs; entrée +Z par escalier de 1,3 m."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "raised_granary"
+
+[node name="StaddleStoneCollision" type="StaticBody3D" parent="." unique_id=74611172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.43, -2)
+collision_mask = 0
+
+[node name="@CollisionShape3D@2" type="CollisionShape3D" parent="StaddleStoneCollision" unique_id=1793829494]
+shape = SubResource("CylinderShape3D_84smb")
+
+[node name="@StaticBody3D@3" type="StaticBody3D" parent="." unique_id=177614588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.43, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@4" type="CollisionShape3D" parent="@StaticBody3D@3" unique_id=2136868375]
+shape = SubResource("CylinderShape3D_ham4h")
+
+[node name="@StaticBody3D@5" type="StaticBody3D" parent="." unique_id=531916474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.43, 2)
+collision_mask = 0
+
+[node name="@CollisionShape3D@6" type="CollisionShape3D" parent="@StaticBody3D@5" unique_id=222260447]
+shape = SubResource("CylinderShape3D_87xqb")
+
+[node name="@StaticBody3D@7" type="StaticBody3D" parent="." unique_id=1302152355]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.43, -2)
+collision_mask = 0
+
+[node name="@CollisionShape3D@8" type="CollisionShape3D" parent="@StaticBody3D@7" unique_id=1130215461]
+shape = SubResource("CylinderShape3D_edag3")
+
+[node name="@StaticBody3D@9" type="StaticBody3D" parent="." unique_id=552698931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.43, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@10" type="CollisionShape3D" parent="@StaticBody3D@9" unique_id=2135192012]
+shape = SubResource("CylinderShape3D_wnjo3")
+
+[node name="@StaticBody3D@11" type="StaticBody3D" parent="." unique_id=1249269424]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.43, 2)
+collision_mask = 0
+
+[node name="@CollisionShape3D@12" type="CollisionShape3D" parent="@StaticBody3D@11" unique_id=443493712]
+shape = SubResource("CylinderShape3D_yf4m6")
+
+[node name="GranaryFloorCollision" type="StaticBody3D" parent="." unique_id=1941978333]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.06, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@13" type="CollisionShape3D" parent="GranaryFloorCollision" unique_id=922152407]
+shape = SubResource("BoxShape3D_2lyxv")
+
+[node name="FootingCollision" type="StaticBody3D" parent="." unique_id=1561950732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.29, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@14" type="CollisionShape3D" parent="FootingCollision" unique_id=1632274084]
+shape = SubResource("BoxShape3D_birw8")
+
+[node name="WallCoreCollision" type="StaticBody3D" parent="." unique_id=233467806]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.565, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@15" type="CollisionShape3D" parent="WallCoreCollision" unique_id=243328646]
+shape = SubResource("BoxShape3D_aduga")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=1921689537]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.16)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=1323269437]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 2.5800002)
+
+[node name="StepSlopeCollision" type="StaticBody3D" parent="." unique_id=504631853]
+collision_mask = 0
+
+[node name="@CollisionShape3D@16" type="CollisionShape3D" parent="StepSlopeCollision" unique_id=1997778201]
+shape = SubResource("ConvexPolygonShape3D_a0v0y")
+
+[node name="StairFoot" type="Marker3D" parent="." unique_id=1813218774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.16)
+
+[node name="StairBase" type="Marker3D" parent="." unique_id=2037560366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.465)
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=2017020374]
+material_override = ExtResource("1_h5fn3")
+mesh = ExtResource("2_mpifr")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1975918959]
+material_override = ExtResource("3_nck5a")
+mesh = ExtResource("4_ntpui")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1492073773]
+material_override = ExtResource("5_cr6dl")
+mesh = ExtResource("6_20ldp")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=1197074369]
+material_override = ExtResource("7_a5i7u")
+mesh = ExtResource("8_2fimd")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=1925685976]
+material_override = ExtResource("9_8swh3")
+mesh = ExtResource("10_q1lic")
+
+[node name="MergedDark" type="MeshInstance3D" parent="." unique_id=607414913]
+material_override = ExtResource("11_88eb2")
+mesh = ExtResource("12_1bsk3")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=1318335514]
+material_override = ExtResource("13_erct7")
+mesh = ExtResource("14_070sc")

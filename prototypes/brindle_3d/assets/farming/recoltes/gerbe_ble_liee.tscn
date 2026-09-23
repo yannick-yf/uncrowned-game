@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="1_pcxkp"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/gerbe_ble_liee_Merged_straw.res" id="2_d3flr"]
+[ext_resource type="Material" path="res://assets/farming/materials/grain.tres" id="3_2ha3e"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/gerbe_ble_liee_Merged_grain.res" id="4_oitbf"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="5_s1x33"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/gerbe_ble_liee_Merged_rope.res" id="6_lfs3a"]
+
+[node name="GerbeBleLiee" type="Node3D" unique_id=1913863527]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "gerbe_ble_liee"
+metadata/family = "recoltes"
+metadata/label = "Gerbe de blé liée"
+metadata/purpose = "Gerbe verticale resserrée par une corde de chanvre."
+metadata/placement = "Pivot au sol ; accessoire traversable pour la récolte et les charrettes."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=509387633]
+material_override = ExtResource("1_pcxkp")
+mesh = ExtResource("2_d3flr")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="." unique_id=1397849392]
+material_override = ExtResource("3_2ha3e")
+mesh = ExtResource("4_oitbf")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=1285483115]
+material_override = ExtResource("5_s1x33")
+mesh = ExtResource("6_lfs3a")
