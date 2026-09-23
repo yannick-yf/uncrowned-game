@@ -1,5 +1,11 @@
 # Demo — shared walkthrough and next sessions
 
+> **Measurements out of date, 2026-09-18.** Every tile and distance below was measured
+> against his ironworks **version 3**; his v4 landed on 2026-09-17 and moved sixteen of
+> twenty-seven buildings. The route legs and the gap register still read true; the
+> building tiles do not. The demo's own locations are now settled in
+> [QUEST_CINDERWORKS.md](QUEST_CINDERWORKS.md).
+
 Date: 2026-09-15. Prepared for Yannick and slosinio.
 
 **Status: measured 2026-09-16; not walked by a person, not reviewed by slosinio.**
