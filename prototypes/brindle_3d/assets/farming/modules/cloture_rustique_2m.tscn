@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_eht8a"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/cloture_rustique_2m_Merged_dark_wood.res" id="2_tdsve"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_p7qah"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/cloture_rustique_2m_Merged_wood.res" id="4_4l8iy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5am0v"]
+size = Vector3(0.16, 1.28, 2.15)
+
+[node name="ClotureRustique2m" type="Node3D" unique_id=592002964]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "cloture_rustique_2m"
+metadata/family = "modules"
+metadata/label = "Clôture rustique de 2 m"
+metadata/purpose = "Clôture de prairie et bordure de cultures, à deux lisses et contreventement."
+metadata/placement = "Emboîter les marqueurs ConnectorStart et ConnectorEnd ; longueur mesurée entre axes des poteaux."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="FenceCollision" type="StaticBody3D" parent="." unique_id=977607989]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.64, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@190" type="CollisionShape3D" parent="FenceCollision" unique_id=474087204]
+shape = SubResource("BoxShape3D_5am0v")
+
+[node name="ConnectorStart" type="Marker3D" parent="." unique_id=1310831400]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="ConnectorEnd" type="Marker3D" parent="." unique_id=859801407]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=1238777288]
+material_override = ExtResource("1_eht8a")
+mesh = ExtResource("2_tdsve")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=1267044944]
+material_override = ExtResource("3_p7qah")
+mesh = ExtResource("4_4l8iy")

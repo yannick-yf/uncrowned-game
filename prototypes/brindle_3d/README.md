@@ -24,7 +24,8 @@ godot --path prototypes/brindle_3d
 
 On Windows, `Ouvrir-editeur.cmd` and `Lancer-map.cmd` accept the `GODOT` environment
 variable, then look for Godot on the Desktop or on PATH. Python is only needed
-to regenerate the regional height data, not to open, edit or play the project.
+for offline regeneration of terrain data and masks, not to open, edit or play
+the project.
 
 | Control | Character preview | Free map view, entered with Tab |
 |---|---|---|
@@ -33,7 +34,8 @@ to regenerate the regional height data, not to open, edit or play the project.
 | Middle drag | Orbit | Orbit and tilt |
 | Right drag | — | Pan |
 | R | Return to Brindle spawn | Show whole map |
-| B / I / T / C / M / F | — | Brindle / ironworks / sawmill / royal city / mine / lake |
+| B / I / T / C / V / M / F | — | Brindle / ironworks / sawmill / royal city / farming village / mine / lake |
+| L | — | Southern cliffs and coastline |
 | Tab | Switch to map | Return to character |
 
 ![Playable preview](apercus/brindle-ruines-variees-en-jeu.png)
@@ -47,12 +49,26 @@ To inspect the mountain capital, use **Ouvrir-ville-chateau.cmd**, or press **C*
 in the free map camera. See [Royal city and castle](planning/Ville-royale.md) for
 its districts, 44 original assets, moat levels and editable ascent profile.
 
+To inspect the farming settlement, use **Ouvrir-village-fermier.cmd**, or press
+**V** in the free map camera. See [Farming village](planning/Village-fermier.md)
+for its agricultural districts, mill bypass, fields, orchards and rebuilding steps.
+**Ouvrir-ambiance-fermiere.cmd** opens its golden-morning orchard lighting, local
+volumetric mist, drifting leaves and dust. The same atmosphere is active when
+visiting the farm normally; its controls and GPU timing command are in the guide.
+
+To inspect the Breton-inspired shores, use **Ouvrir-littoral-breton.cmd**, or press
+**L** in the free map camera. The launcher places the character at XZ **(140, 305)**;
+press **Tab** to explore the headland trail and descent to Brindle's cove. See
+[Breton-inspired coastline](planning/Littoral-breton.md) for the protected estuary,
+editable profiles, granite assets and reconstruction/checking commands.
+
 ## What is included
 
 - Northern/eastern mountains, river valleys, a lake, tributaries and west/south sea.
   The lake surface is 40 m, its central bed 33 m; the highest terrain is about 208 m.
 - Working positions for Brindle, farming, sawmill and steel villages, and a city
-  with a castle. Brindle, the ironworks, the sawmill, the royal city and the mine now have detailed construction.
+  with a castle. Brindle, the farming village, the ironworks, the sawmill, the royal
+  city and the mine now have detailed construction.
 - Brindle: five ruined houses, a ruined barn, a well, yards, nine curved routes,
   602 woodland trees and seven individual detail trees. The northern forest has
   another 295 trees.
@@ -64,6 +80,13 @@ its districts, 44 original assets, moat levels and editable ascent profile.
 - Mountain capital: a high keep, palace and upper court; 34 distinct town/service
   buildings; district streets, market, chapel, ramparts, a walkable ascent, fed
   moats and a seventh bridge.
+- Farming village: eight distinct houses, two barns, two grain stores and a
+  watermill; well square, agricultural courts, 12 fields, 26 fruit trees, a mill
+  bypass, an irrigation branch and three connected timber crossings.
+- Breton-inspired coast: approximately 1.361 km along the existing west and south
+  shores, seven coves, granite formations, southern cliffs reaching about 66.7 m
+  and two accessible coastal trails. Sparse height edits retain the regional source
+  data, shared terrain/collision grid and protected river outlet.
 - The existing Brindle traveler spritesheet and directional walking animations,
   a camera and physical movement for assessing scale, slopes and access.
 - Saved editable scenes, shaders, imported source models and offline reconstruction
@@ -90,11 +113,25 @@ The static burned village is a visual state for review, not a new story event.
 
 ## Edit and rebuild
 
+The **farming village library** contains 54 native modular prefabs, including eight
+distinct houses, agricultural buildings, a watermill, rural props, organic fields
+and fruit orchards. Open `Ouvrir-catalogue-fermier.cmd` or run
+`scenes/catalogue_fermier.tscn` (F6) to inspect them. See the
+[farming kit guide](planning/Village-fermier-assets.md) for placement and rebuilding.
+The kit is also composed into the regional map as `scenes/sectors/village_fermier.tscn`.
+Its editable settlement plan, terrain-conforming fields and shared orchard batches
+are documented in [Farming village](planning/Village-fermier.md). The catalogue
+remains available for inspecting individual pieces independently of the map.
+
 | Guide / data | Purpose |
 |---|---|
 | [Editing Brindle](planning/Travailler-Brindle-dans-Godot.md) | Sector scenes, terrain stamps, paths and vegetation |
 | [Ruin variants](planning/Maisons-en-ruines.md) | Six collapse recipes, collision shapes, fire and smoke |
 | [Working geography](planning/Proposition-geographique.md) | Coordinates, elevations, water and reserved settlements |
+| [Farming village](planning/Village-fermier.md) | Placed farming settlement, water, paths and rebuilding |
+| [Breton-inspired coastline](planning/Littoral-breton.md) | Coastal profiles, protected estuary, trails, granite dressing and checks |
+| `planning/coastline.json` | Cove positions, sparse terrain preparation, trail elevations and rock budgets |
+| `planning/farming-town.json` | Farming placements, cultivation, orchard blocks and local earthworks |
 | `planning/geographie-v1.json` | Regional geography source |
 | `planning/assets-brindle-utilises.json` | Imported scenery resource paths |
 | `planning/personnage-brindle.json` | Character source paths and original hashes |

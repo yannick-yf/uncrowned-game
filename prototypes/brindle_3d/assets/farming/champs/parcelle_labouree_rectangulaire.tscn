@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/earth.tres" id="1_ielja"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/parcelle_labouree_rectangulaire_Merged_earth.res" id="2_c7hri"]
+
+[node name="ParcelleLaboureeRectangulaire" type="Node3D" unique_id=1936917485]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "parcelle_labouree_rectangulaire"
+metadata/family = "champs"
+metadata/label = "Parcelle labourée 4 × 4 m"
+metadata/purpose = "Module de remplissage pour agrandir les champs."
+metadata/placement = "Aligner les raccords ; laisser des passages entre les blocs de cultures."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-2.0, -2.0], [2.0, -2.0], [2.0, 2.0], [-2.0, 2.0]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+
+[node name="RaccordParcelle" type="Marker3D" parent="." unique_id=864531810]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="RaccordParcelle2" type="Marker3D" parent="." unique_id=877102536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
+[node name="RaccordParcelle3" type="Marker3D" parent="." unique_id=2099038901]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="RaccordParcelle4" type="Marker3D" parent="." unique_id=659237864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="MergedEarth" type="MeshInstance3D" parent="." unique_id=1423249579]
+material_override = ExtResource("1_ielja")
+mesh = ExtResource("2_c7hri")

@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/leaf_light.tres" id="1_fptnl"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/rangee_poireaux_3m_Merged_leaf_light.res" id="2_hc1hc"]
+[ext_resource type="Material" path="res://assets/farming/materials/linen.tres" id="3_tfat5"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/rangee_poireaux_3m_Merged_linen.res" id="4_0bn2h"]
+
+[node name="RangeePoireaux3m" type="Node3D" unique_id=527116182]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "rangee_poireaux_3m"
+metadata/family = "cultures"
+metadata/label = "Rangée de poireaux de 3 mètres"
+metadata/purpose = "Légumes à feuilles longues, lisibles en vue de jeu."
+metadata/placement = "Terrain plat ; espacer les rangs de 55 cm."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+
+[node name="RaccordGauche" type="Marker3D" parent="." unique_id=881053443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+
+[node name="RaccordDroit" type="Marker3D" parent="." unique_id=1954533398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0)
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="." unique_id=1416071227]
+material_override = ExtResource("1_fptnl")
+mesh = ExtResource("2_hc1hc")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="." unique_id=1499423025]
+material_override = ExtResource("3_tfat5")
+mesh = ExtResource("4_0bn2h")

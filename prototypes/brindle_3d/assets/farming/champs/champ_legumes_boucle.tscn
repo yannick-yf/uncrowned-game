@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/earth.tres" id="1_eg6gr"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/champ_legumes_boucle_Merged_earth.res" id="2_xv5x2"]
+[ext_resource type="Material" path="res://assets/farming/materials/vegetable.tres" id="3_opnea"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/champ_legumes_boucle_Merged_vegetable.res" id="4_0jasy"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf_light.tres" id="5_opjal"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/champ_legumes_boucle_Merged_leaf_light.res" id="6_fmfb4"]
+[ext_resource type="Material" path="res://assets/farming/materials/linen.tres" id="7_wg4ai"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/champ_legumes_boucle_Merged_linen.res" id="8_eeeun"]
+
+[node name="ChampLegumesBoucle" type="Node3D" unique_id=1552991727]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "champ_legumes_boucle"
+metadata/family = "champs"
+metadata/label = "Potager arrondi du méandre"
+metadata/purpose = "Choux et poireaux répartis en planches cultivées avec une allée centrale."
+metadata/placement = "Terrain sec et plat ; allée centrale de 1,2 m, ouverte sur +Z et -Z."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/outline_xz = [[-4.15, -2.75], [-1.5, -3.3], [1.5, -2.9], [3.8, -1.65], [4.15, 0.35], [2.6, 2.45], [0.1, 3.1], [-2.2, 2.8], [-3.65, 1.1]]
+metadata/placement_surface = "flat or terraced; does not sculpt terrain"
+metadata/central_aisle_width_m = 1.2
+
+[node name="EntreePotager" type="Marker3D" parent="." unique_id=483856629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 3.1)
+
+[node name="SortiePotager" type="Marker3D" parent="." unique_id=147589541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -3.1)
+
+[node name="MergedEarth" type="MeshInstance3D" parent="." unique_id=399251806]
+material_override = ExtResource("1_eg6gr")
+mesh = ExtResource("2_xv5x2")
+
+[node name="MergedVegetable" type="MeshInstance3D" parent="." unique_id=1939281278]
+material_override = ExtResource("3_opnea")
+mesh = ExtResource("4_0jasy")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="." unique_id=1610036]
+material_override = ExtResource("5_opjal")
+mesh = ExtResource("6_fmfb4")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="." unique_id=152396959]
+material_override = ExtResource("7_wg4ai")
+mesh = ExtResource("8_eeeun")

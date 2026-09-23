@@ -1,0 +1,143 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_7hbpv"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_stone.res" id="2_5qlra"]
+[ext_resource type="Material" path="res://assets/farming/materials/pale_plaster.tres" id="3_try6o"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_pale_plaster.res" id="4_5h6yu"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="5_ud6tg"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_dark_wood.res" id="6_x04dw"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="7_lcfv1"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_wood.res" id="8_8yi36"]
+[ext_resource type="Material" path="res://assets/farming/materials/dark.tres" id="9_2pxtf"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_dark.res" id="10_srrfg"]
+[ext_resource type="Material" path="res://assets/farming/materials/glass.tres" id="11_8mery"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_glass.res" id="12_eem6y"]
+[ext_resource type="Material" path="res://assets/farming/materials/iron.tres" id="13_4qmim"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_iron.res" id="14_07a3h"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch.tres" id="15_fp1f4"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_thatch.res" id="16_7e1sy"]
+[ext_resource type="Material" path="res://assets/farming/materials/thatch_dark.tres" id="17_w4fev"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/logis_a_auvent_Merged_thatch_dark.res" id="18_4ishj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hh4y6"]
+size = Vector3(6.75, 0.24, 5.55)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dngcv"]
+size = Vector3(6.6, 2.63, 5.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1orjq"]
+size = Vector3(0.34, 0.21, 0.34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2mjhy"]
+size = Vector3(0.16, 2.1499999, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c0rlx"]
+size = Vector3(0.34, 0.21, 0.34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pbogb"]
+size = Vector3(0.16, 2.1499999, 0.16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8ypsm"]
+size = Vector3(1.7, 0.11, 0.42)
+
+[node name="LogisAAuvent" type="Node3D" unique_id=1696565902]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "logis_a_auvent"
+metadata/family = "maisons"
+metadata/label = "Logis à auvent"
+metadata/purpose = "Habitation rurale extérieure fermée, à disposer dans le quartier habité."
+metadata/placement = "Entrée +Z, sol sec et presque plat; ménager 1,2 m devant le repère Entrance."
+metadata/source = "Original Uncrowned farming kit"
+metadata/building_kind = "rural_house"
+metadata/building_design = "galerie_de_façade"
+
+[node name="FootingCollision" type="StaticBody3D" parent="." unique_id=253919884]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@33" type="CollisionShape3D" parent="FootingCollision" unique_id=369997085]
+shape = SubResource("BoxShape3D_hh4y6")
+
+[node name="WallCoreCollision" type="StaticBody3D" parent="." unique_id=282116276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.555, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@34" type="CollisionShape3D" parent="WallCoreCollision" unique_id=1064368051]
+shape = SubResource("BoxShape3D_dngcv")
+
+[node name="Entrance" type="Marker3D" parent="." unique_id=2086420635]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.08, 3.78)
+
+[node name="DoorFace" type="Marker3D" parent="." unique_id=391614922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.08, 2.98)
+
+[node name="PorchFootCollision" type="StaticBody3D" parent="." unique_id=288704050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.965, 0.105, 4.175)
+collision_mask = 0
+
+[node name="@CollisionShape3D@35" type="CollisionShape3D" parent="PorchFootCollision" unique_id=1164321768]
+shape = SubResource("BoxShape3D_1orjq")
+
+[node name="PorchPostCollision" type="StaticBody3D" parent="." unique_id=969023556]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -2.965, 1.275, 4.175)
+collision_mask = 0
+
+[node name="@CollisionShape3D@36" type="CollisionShape3D" parent="PorchPostCollision" unique_id=639985048]
+shape = SubResource("BoxShape3D_2mjhy")
+
+[node name="@StaticBody3D@37" type="StaticBody3D" parent="." unique_id=325333563]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.965, 0.105, 4.175)
+collision_mask = 0
+
+[node name="@CollisionShape3D@38" type="CollisionShape3D" parent="@StaticBody3D@37" unique_id=785572893]
+shape = SubResource("BoxShape3D_c0rlx")
+
+[node name="@StaticBody3D@39" type="StaticBody3D" parent="." unique_id=331672428]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.965, 1.275, 4.175)
+collision_mask = 0
+
+[node name="@CollisionShape3D@40" type="CollisionShape3D" parent="@StaticBody3D@39" unique_id=1095245715]
+shape = SubResource("BoxShape3D_pbogb")
+
+[node name="BenchSeatCollision" type="StaticBody3D" parent="." unique_id=521826296]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.55, 0.47, 3.23)
+collision_mask = 0
+
+[node name="@CollisionShape3D@41" type="CollisionShape3D" parent="BenchSeatCollision" unique_id=926483341]
+shape = SubResource("BoxShape3D_8ypsm")
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=548782251]
+material_override = ExtResource("1_7hbpv")
+mesh = ExtResource("2_5qlra")
+
+[node name="MergedPalePlaster" type="MeshInstance3D" parent="." unique_id=1957212606]
+material_override = ExtResource("3_try6o")
+mesh = ExtResource("4_5h6yu")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=788412505]
+material_override = ExtResource("5_ud6tg")
+mesh = ExtResource("6_x04dw")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=135271406]
+material_override = ExtResource("7_lcfv1")
+mesh = ExtResource("8_8yi36")
+
+[node name="MergedDark" type="MeshInstance3D" parent="." unique_id=408719219]
+material_override = ExtResource("9_2pxtf")
+mesh = ExtResource("10_srrfg")
+
+[node name="MergedGlass" type="MeshInstance3D" parent="." unique_id=741887506]
+material_override = ExtResource("11_8mery")
+mesh = ExtResource("12_eem6y")
+
+[node name="MergedIron" type="MeshInstance3D" parent="." unique_id=54555374]
+material_override = ExtResource("13_4qmim")
+mesh = ExtResource("14_07a3h")
+
+[node name="MergedThatch" type="MeshInstance3D" parent="." unique_id=823381509]
+material_override = ExtResource("15_fp1f4")
+mesh = ExtResource("16_7e1sy")
+
+[node name="MergedThatchDark" type="MeshInstance3D" parent="." unique_id=952890607]
+material_override = ExtResource("17_w4fev")
+mesh = ExtResource("18_4ishj")

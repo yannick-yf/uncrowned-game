@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/dark_wood.tres" id="1_ut0fo"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/sacs_de_recolte_Merged_dark_wood.res" id="2_h250i"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="3_5bwd1"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/sacs_de_recolte_Merged_wood.res" id="4_o3jk2"]
+[ext_resource type="Material" path="res://assets/farming/materials/linen.tres" id="5_cl3nf"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/sacs_de_recolte_Merged_linen.res" id="6_rly0x"]
+[ext_resource type="Material" path="res://assets/farming/materials/rope.tres" id="7_tfx84"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/sacs_de_recolte_Merged_rope.res" id="8_p31f8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cdmqf"]
+size = Vector3(1.18, 0.82, 0.97)
+
+[node name="SacsDeRecolte" type="Node3D" unique_id=753420761]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "sacs_de_recolte"
+metadata/family = "stockage"
+metadata/label = "Sacs de récolte sur caillebotis"
+metadata/purpose = "Quatre sacs de toile noués, tenus hors de la terre humide."
+metadata/placement = "À proximité du grenier ou de l'entrée du moulin, sur une surface plane."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="SackGroupCollision" type="StaticBody3D" parent="." unique_id=224248942]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@214" type="CollisionShape3D" parent="SackGroupCollision" unique_id=1333280883]
+shape = SubResource("BoxShape3D_cdmqf")
+
+[node name="MergedDarkWood" type="MeshInstance3D" parent="." unique_id=705246746]
+material_override = ExtResource("1_ut0fo")
+mesh = ExtResource("2_h250i")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=2042377790]
+material_override = ExtResource("3_5bwd1")
+mesh = ExtResource("4_o3jk2")
+
+[node name="MergedLinen" type="MeshInstance3D" parent="." unique_id=63229262]
+material_override = ExtResource("5_cl3nf")
+mesh = ExtResource("6_rly0x")
+
+[node name="MergedRope" type="MeshInstance3D" parent="." unique_id=1069009786]
+material_override = ExtResource("7_tfx84")
+mesh = ExtResource("8_p31f8")

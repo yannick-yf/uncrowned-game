@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_xfh08"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/auge_en_pierre_Merged_stone.res" id="2_3p1br"]
+[ext_resource type="Material" path="res://assets/farming/materials/water.tres" id="3_tbb08"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/auge_en_pierre_Merged_water.res" id="4_klq6h"]
+[ext_resource type="Material" path="res://assets/farming/materials/wood.tres" id="5_nj46n"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/auge_en_pierre_Merged_wood.res" id="6_pkp2b"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jgjkf"]
+size = Vector3(2.09, 0.75, 0.92)
+
+[node name="AugeEnPierre" type="Node3D" unique_id=779892722]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "auge_en_pierre"
+metadata/family = "accessoires"
+metadata/label = "Auge en pierre et eau"
+metadata/purpose = "Abreuvoir évidé, alimentable par une gouttière de bois."
+metadata/placement = "Placer au bord d'une cour ou d'un pré, sur un sol horizontal ; l'eau est contenue dans l'auge."
+metadata/source = "Original Uncrowned farming kit"
+
+[node name="StoneTroughCollision" type="StaticBody3D" parent="." unique_id=684963716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@224" type="CollisionShape3D" parent="StoneTroughCollision" unique_id=681563958]
+shape = SubResource("BoxShape3D_jgjkf")
+
+[node name="WaterInlet" type="Marker3D" parent="." unique_id=1605909904]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76, -0.43)
+
+[node name="UsePoint" type="Marker3D" parent="." unique_id=577612396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=2011009677]
+material_override = ExtResource("1_xfh08")
+mesh = ExtResource("2_3p1br")
+
+[node name="MergedWater" type="MeshInstance3D" parent="." unique_id=797608430]
+material_override = ExtResource("3_tbb08")
+mesh = ExtResource("4_klq6h")
+
+[node name="MergedWood" type="MeshInstance3D" parent="." unique_id=930209596]
+material_override = ExtResource("5_nj46n")
+mesh = ExtResource("6_pkp2b")

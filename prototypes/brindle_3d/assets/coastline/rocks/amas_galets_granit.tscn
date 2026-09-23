@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/coastline/meshes/amas_galets_granit.res" id="1_nhjah"]
+
+[node name="AmasGaletsGranit" type="Node3D" unique_id=655075576]
+metadata/asset_id = "amas_galets_granit"
+metadata/label = "Amas de galets de granite"
+metadata/source = "Original Uncrowned coastal granite kit"
+metadata/ground_pivot = true
+metadata/triangle_count = 384
+
+[node name="Granite" type="MeshInstance3D" parent="." unique_id=1196893099]
+mesh = ExtResource("1_nhjah")

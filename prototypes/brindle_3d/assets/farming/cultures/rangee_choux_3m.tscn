@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/vegetable.tres" id="1_dnbpj"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/rangee_choux_3m_Merged_vegetable.res" id="2_gbjkg"]
+
+[node name="RangeeChoux3m" type="Node3D" unique_id=965373954]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "rangee_choux_3m"
+metadata/family = "cultures"
+metadata/label = "Rangée de choux de 3 mètres"
+metadata/purpose = "Six choux aux feuilles épaisses pour le potager."
+metadata/placement = "Terrain plat ; espacement de plantation de 50 cm."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+
+[node name="RaccordGauche" type="Marker3D" parent="." unique_id=929271845]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+
+[node name="RaccordDroit" type="Marker3D" parent="." unique_id=594600252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0)
+
+[node name="MergedVegetable" type="MeshInstance3D" parent="." unique_id=85291644]
+material_override = ExtResource("1_dnbpj")
+mesh = ExtResource("2_gbjkg")

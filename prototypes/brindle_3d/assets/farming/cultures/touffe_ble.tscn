@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/straw.tres" id="1_fx4lb"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/touffe_ble_Merged_straw.res" id="2_rap2j"]
+[ext_resource type="Material" path="res://assets/farming/materials/grain.tres" id="3_5i8xj"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/touffe_ble_Merged_grain.res" id="4_vb7vr"]
+
+[node name="TouffeBle" type="Node3D" unique_id=894061411]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "touffe_ble"
+metadata/family = "cultures"
+metadata/label = "Touffe de blé"
+metadata/purpose = "Petite touffe pour les lisières courbes et les trous entre modules."
+metadata/placement = "Pivot au sol ; varier rotation et échelle entre 0,85 et 1,1."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+
+[node name="MergedStraw" type="MeshInstance3D" parent="." unique_id=461631632]
+material_override = ExtResource("1_fx4lb")
+mesh = ExtResource("2_rap2j")
+
+[node name="MergedGrain" type="MeshInstance3D" parent="." unique_id=1626076482]
+material_override = ExtResource("3_5i8xj")
+mesh = ExtResource("4_vb7vr")

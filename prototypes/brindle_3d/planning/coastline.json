@@ -1,0 +1,328 @@
+{
+  "revision": 1,
+  "seed": 64217,
+  "description": "Existing west and south shoreline only. High granite headlands south of Brindle, alternating coves and a protected southwest estuary.",
+  "extent_m": 768.0,
+  "sea_level_m": 0.0,
+  "landward_blend_m": [
+    29.0,
+    55.0
+  ],
+  "seaward_blend_m": [
+    -15.0,
+    -5.0
+  ],
+  "priority_center_xz": [
+    178.0,
+    344.0
+  ],
+  "priority_radius_m": 125.0,
+  "priority_cliff_height_m": 58.0,
+  "coves": [
+    {
+      "id": "AnseDuNordOuest",
+      "near_xz": [
+        -330.0,
+        -272.0
+      ],
+      "radius_m": 31.0,
+      "inset_m": 4.0,
+      "sand": 0.35,
+      "along_m": 112.068
+    },
+    {
+      "id": "CriqueDesGranit",
+      "near_xz": [
+        -330.0,
+        -97.0
+      ],
+      "radius_m": 42.0,
+      "inset_m": 7.0,
+      "sand": 0.25,
+      "along_m": 287.354
+    },
+    {
+      "id": "AnseDesPres",
+      "near_xz": [
+        -344.0,
+        51.0
+      ],
+      "radius_m": 37.0,
+      "inset_m": 5.0,
+      "sand": 0.8,
+      "along_m": 436.313
+    },
+    {
+      "id": "CriqueSudOuest",
+      "near_xz": [
+        -160.0,
+        337.0
+      ],
+      "radius_m": 24.0,
+      "inset_m": 3.0,
+      "sand": 0.65,
+      "along_m": 805.05
+    },
+    {
+      "id": "AnseBasseDuSud",
+      "near_xz": [
+        -34.0,
+        335.0
+      ],
+      "radius_m": 33.0,
+      "inset_m": 6.0,
+      "sand": 0.9,
+      "along_m": 934.797
+    },
+    {
+      "id": "CriqueDeBrindle",
+      "near_xz": [
+        84.0,
+        328.0
+      ],
+      "radius_m": 34.0,
+      "inset_m": 5.0,
+      "sand": 0.75,
+      "along_m": 1055.742
+    },
+    {
+      "id": "CriqueDuLevant",
+      "near_xz": [
+        284.0,
+        329.0
+      ],
+      "radius_m": 22.0,
+      "inset_m": 4.0,
+      "sand": 0.25,
+      "along_m": 1258.891
+    }
+  ],
+  "protected_estuary": {
+    "points_xz": [
+      [
+        -211.0,
+        288.0
+      ],
+      [
+        -215.557,
+        311.579
+      ],
+      [
+        -225.0,
+        350.0
+      ]
+    ],
+    "clear_half_width_m": 32.0,
+    "blend_m": 20.0
+  },
+  "protected_anchors": [
+    {
+      "id": "CheminSudBrindle",
+      "xz": [
+        140.0,
+        305.0
+      ],
+      "radius_m": 4.5,
+      "blend_m": 4.0,
+      "kind": "graded_junction"
+    },
+    {
+      "id": "MaisonDuSud",
+      "xz": [
+        166.0,
+        282.0
+      ],
+      "radius_m": 12.0,
+      "blend_m": 5.0
+    },
+    {
+      "id": "Grange",
+      "xz": [
+        143.0,
+        270.0
+      ],
+      "radius_m": 13.0,
+      "blend_m": 5.0
+    },
+    {
+      "id": "CourSud",
+      "xz": [
+        190.0,
+        286.0
+      ],
+      "radius_m": 7.0,
+      "blend_m": 5.0
+    }
+  ],
+  "protected_paths": [
+    {
+      "points_xz": [
+        [
+          159,
+          272
+        ],
+        [
+          154,
+          283
+        ],
+        [
+          147,
+          294
+        ],
+        [
+          140,
+          305
+        ]
+      ],
+      "clear_half_width_m": 3.6,
+      "blend_m": 4.0
+    }
+  ],
+  "trails": [
+    {
+      "id": "SentierDesCaps",
+      "width_m": 3.6,
+      "blend_m": 4.0,
+      "profile_xzy": [
+        [
+          140,
+          305,
+          25.124
+        ],
+        [
+          151,
+          308,
+          29
+        ],
+        [
+          163,
+          313,
+          34
+        ],
+        [
+          175,
+          320,
+          40
+        ],
+        [
+          189,
+          327,
+          44
+        ],
+        [
+          207,
+          331,
+          46
+        ]
+      ]
+    },
+    {
+      "id": "DescenteDeLaCrique",
+      "width_m": 3.8,
+      "blend_m": 4.2,
+      "profile_xzy": [
+        [
+          140,
+          305,
+          25.124
+        ],
+        [
+          116,
+          296,
+          24
+        ],
+        [
+          94,
+          297,
+          20
+        ],
+        [
+          73,
+          299,
+          15
+        ],
+        [
+          66,
+          307,
+          12
+        ],
+        [
+          65,
+          310,
+          11
+        ],
+        [
+          68,
+          312,
+          10
+        ],
+        [
+          80,
+          312,
+          7
+        ],
+        [
+          94,
+          316,
+          4.5
+        ],
+        [
+          97,
+          319,
+          2.9
+        ],
+        [
+          98,
+          322,
+          1.8
+        ],
+        [
+          96,
+          325,
+          1.5
+        ]
+      ]
+    }
+  ],
+  "review_spawn_xz": [
+    140.0,
+    305.0
+  ],
+  "rock_budget": {
+    "maximum_instances": 1000,
+    "batch_length_m": 80.0,
+    "collision_budget": 110
+  },
+  "source_grid_size": 385,
+  "coast_length_m": 1361.745,
+  "terrain_edit_count": 22206,
+  "terrain_edit_bytes": 266472,
+  "new_height_range_m": [
+    -24.0,
+    231.629
+  ],
+  "approach_grading": [
+    {
+      "id": "RaccordBrindle",
+      "width_m": 3.8,
+      "blend_m": 3.0,
+      "profile_xzy": [
+        [
+          154,
+          283,
+          24.888
+        ],
+        [
+          147,
+          294,
+          27.5
+        ],
+        [
+          140,
+          305,
+          25.124
+        ]
+      ]
+    }
+  ]
+}

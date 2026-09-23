@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/stone.tres" id="1_j24ed"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/canal_de_moulin_5m_Merged_stone.res" id="2_ijuxo"]
+[ext_resource type="Material" path="res://assets/farming/materials/water.tres" id="3_f6ao1"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/canal_de_moulin_5m_Merged_water.res" id="4_tdpbx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yifvq"]
+size = Vector3(2.08, 0.17, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b7nas"]
+size = Vector3(0.2, 0.64, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_moheo"]
+size = Vector3(0.2, 0.64, 5)
+
+[node name="CanalDeMoulin5m" type="Node3D" unique_id=223098857]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "canal_de_moulin_5m"
+metadata/family = "hydraulique"
+metadata/label = "Canal de moulin modulaire de 5 m"
+metadata/purpose = "Bief maçonné ouvert aux deux extrémités, avec lame d'eau soutenue."
+metadata/placement = "Raccorder WaterIn et WaterOut (0;0,48;−2,5/+2,5). Largeur d'eau 1,68 m, encombrement avec margelles 2,16 m; garder les niveaux entre modules."
+metadata/source = "Original Uncrowned farming kit"
+metadata/channel_water_level_m = 0.48
+metadata/channel_clear_width_m = 1.68
+
+[node name="ChannelBedCollision" type="StaticBody3D" parent="." unique_id=1297714363]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.085, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@174" type="CollisionShape3D" parent="ChannelBedCollision" unique_id=900890071]
+shape = SubResource("BoxShape3D_yifvq")
+
+[node name="ChannelWallCollision" type="StaticBody3D" parent="." unique_id=846293462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.94, 0.32, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@175" type="CollisionShape3D" parent="ChannelWallCollision" unique_id=609315220]
+shape = SubResource("BoxShape3D_b7nas")
+
+[node name="@StaticBody3D@176" type="StaticBody3D" parent="." unique_id=1746833247]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.94, 0.32, 0)
+collision_mask = 0
+
+[node name="@CollisionShape3D@177" type="CollisionShape3D" parent="@StaticBody3D@176" unique_id=161094227]
+shape = SubResource("BoxShape3D_moheo")
+
+[node name="WaterIn" type="Marker3D" parent="." unique_id=1143966645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, -2.5)
+
+[node name="WaterOut" type="Marker3D" parent="." unique_id=1210006706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 2.5)
+
+[node name="MergedStone" type="MeshInstance3D" parent="." unique_id=636123526]
+material_override = ExtResource("1_j24ed")
+mesh = ExtResource("2_ijuxo")
+
+[node name="MergedWater" type="MeshInstance3D" parent="." unique_id=372424344]
+material_override = ExtResource("3_f6ao1")
+mesh = ExtResource("4_tdpbx")

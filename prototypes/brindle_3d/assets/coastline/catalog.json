@@ -1,0 +1,179 @@
+{
+  "assets": [
+    {
+      "bounds_center_m": [
+        -0.114467620849609,
+        1.35228896141052,
+        0.0340750217437744
+      ],
+      "bounds_min_m": [
+        -2.37818145751953,
+        0.0,
+        -1.71390748023987
+      ],
+      "collision_shapes": 1,
+      "ground_pivot": true,
+      "id": "bloc_granit_erode",
+      "label": "Bloc de granite érodé",
+      "material": "res://assets/coastline/materials/coastal_granite.tres",
+      "mesh": "res://assets/coastline/meshes/bloc_granit_erode.res",
+      "mesh_instances": 1,
+      "purpose": "Bloc large aux épaules coupées, pour les hauts de grève et pieds de falaise.",
+      "scene": "res://assets/coastline/rocks/bloc_granit_erode.tscn",
+      "size_m": [
+        4.52742767333984,
+        2.70457792282104,
+        3.49596500396729
+      ],
+      "surfaces": 1,
+      "triangles": 120
+    },
+    {
+      "bounds_center_m": [
+        0.0480912923812866,
+        1.76236164569855,
+        -0.0899724960327148
+      ],
+      "bounds_min_m": [
+        -1.98944199085236,
+        0.0,
+        -1.53904008865356
+      ],
+      "collision_shapes": 1,
+      "ground_pivot": true,
+      "id": "bloc_granit_oblique",
+      "label": "Bloc de granite oblique",
+      "material": "res://assets/coastline/materials/coastal_granite.tres",
+      "mesh": "res://assets/coastline/meshes/bloc_granit_oblique.res",
+      "mesh_instances": 1,
+      "purpose": "Fracture inclinée et sommet tronqué ; silhouette haute et dissymétrique.",
+      "scene": "res://assets/coastline/rocks/bloc_granit_oblique.tscn",
+      "size_m": [
+        4.07506656646729,
+        3.52472329139709,
+        2.8981351852417
+      ],
+      "surfaces": 1,
+      "triangles": 144
+    },
+    {
+      "bounds_center_m": [
+        -0.0678906440734863,
+        0.547171413898468,
+        0.0167101621627808
+      ],
+      "bounds_min_m": [
+        -2.99044227600098,
+        0.0,
+        -1.79593777656555
+      ],
+      "collision_shapes": 3,
+      "ground_pivot": true,
+      "id": "dalle_granit_etagee",
+      "label": "Dalle de granite à gradins",
+      "material": "res://assets/coastline/materials/coastal_granite.tres",
+      "mesh": "res://assets/coastline/meshes/dalle_granit_etagee.res",
+      "mesh_instances": 1,
+      "purpose": "Trois dalles jointées par fractures horizontales, pour un estran bas et rocheux.",
+      "scene": "res://assets/coastline/rocks/dalle_granit_etagee.tscn",
+      "size_m": [
+        5.84510326385498,
+        1.09434282779694,
+        3.62529587745667
+      ],
+      "surfaces": 1,
+      "triangles": 216
+    },
+    {
+      "bounds_center_m": [
+        -0.026411771774292,
+        1.79232513904572,
+        0.0205309391021729
+      ],
+      "bounds_min_m": [
+        -2.66912508010864,
+        0.0,
+        -1.75775575637817
+      ],
+      "collision_shapes": 2,
+      "ground_pivot": true,
+      "id": "rocher_granit_fendu",
+      "label": "Rocher de granite fendu",
+      "material": "res://assets/coastline/materials/coastal_granite.tres",
+      "mesh": "res://assets/coastline/meshes/rocher_granit_fendu.res",
+      "mesh_instances": 1,
+      "purpose": "Deux masses réellement séparées par une faille irrégulière, avec deux colliders distincts.",
+      "scene": "res://assets/coastline/rocks/rocher_granit_fendu.tscn",
+      "size_m": [
+        5.2854266166687,
+        3.58465027809143,
+        3.55657339096069
+      ],
+      "surfaces": 1,
+      "triangles": 160
+    },
+    {
+      "bounds_center_m": [
+        -0.168025493621826,
+        5.23720264434814,
+        -0.0224039554595947
+      ],
+      "bounds_min_m": [
+        -2.58163166046143,
+        0.0,
+        -1.95126676559448
+      ],
+      "collision_shapes": 2,
+      "ground_pivot": true,
+      "id": "aiguille_maritime",
+      "label": "Aiguille maritime de granite",
+      "material": "res://assets/coastline/materials/coastal_granite.tres",
+      "mesh": "res://assets/coastline/meshes/aiguille_maritime.res",
+      "mesh_instances": 1,
+      "purpose": "Repère littoral élancé avec contrefort détaché et sommet biseauté ; à employer avec parcimonie.",
+      "scene": "res://assets/coastline/rocks/aiguille_maritime.tscn",
+      "size_m": [
+        4.8272123336792,
+        10.4744052886963,
+        3.85772562026978
+      ],
+      "surfaces": 1,
+      "triangles": 312
+    },
+    {
+      "bounds_center_m": [
+        0.0127741098403931,
+        0.300089567899704,
+        -0.0391495227813721
+      ],
+      "bounds_min_m": [
+        -1.495161652565,
+        0.0,
+        -1.35322785377502
+      ],
+      "collision_shapes": 0,
+      "ground_pivot": true,
+      "id": "amas_galets_granit",
+      "label": "Amas de galets de granite",
+      "material": "res://assets/coastline/materials/coastal_granite.tres",
+      "mesh": "res://assets/coastline/meshes/amas_galets_granit.res",
+      "mesh_instances": 1,
+      "purpose": "Huit galets anguleux aplatis, réunis dans un seul mesh sans collision pour décorer la grève.",
+      "scene": "res://assets/coastline/rocks/amas_galets_granit.tscn",
+      "size_m": [
+        3.01587152481079,
+        0.600179135799408,
+        2.6281566619873
+      ],
+      "surfaces": 1,
+      "triangles": 384
+    }
+  ],
+  "material": "res://assets/coastline/materials/coastal_granite.tres",
+  "optimization": "One indexed compressed ArrayMesh and one shared material per asset; direct mesh paths for MultiMesh placement. Optional simple convex colliders in the scenes; pebbles have no collider.",
+  "origin": "ground centre; minimum mesh Y=0",
+  "provenance": "Original native Godot geometry authored for Uncrowned; no downloaded meshes or raster textures.",
+  "style": "Painted coastal granite: angular eroded masses, fracture faces, low shore stacks and granite shingle",
+  "units": "metres",
+  "version": 1
+}

@@ -1,0 +1,138 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/farming/materials/bark.tres" id="1_q7elx"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/verger_aligne_6arbres_Merged_bark.res" id="2_lwyhc"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf.tres" id="3_p40b4"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/verger_aligne_6arbres_Merged_leaf.res" id="4_svexj"]
+[ext_resource type="Material" path="res://assets/farming/materials/apple.tres" id="5_g5utp"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/verger_aligne_6arbres_Merged_apple.res" id="6_ik4ot"]
+[ext_resource type="Material" path="res://assets/farming/materials/leaf_light.tres" id="7_p2v2m"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/verger_aligne_6arbres_Merged_leaf_light.res" id="8_14cog"]
+[ext_resource type="Material" path="res://assets/farming/materials/pear.tres" id="9_xj8lv"]
+[ext_resource type="ArrayMesh" path="res://assets/farming/meshes/verger_aligne_6arbres_Merged_pear.res" id="10_i7hid"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_rogg4"]
+height = 1.7845
+radius = 0.1826
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_eemld"]
+height = 1.6185
+radius = 0.1079
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_vy4m7"]
+height = 1.7845
+radius = 0.1826
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bmh80"]
+height = 1.7845
+radius = 0.1411
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4kq1b"]
+height = 1.7845
+radius = 0.1411
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hhbdl"]
+height = 1.7845
+radius = 0.1411
+
+[node name="VergerAligne6Arbres" type="Node3D" unique_id=1208706309]
+metadata/art_direction = "farming_valley_2026_09_21"
+metadata/asset_id = "verger_aligne_6arbres"
+metadata/family = "vergers"
+metadata/label = "Verger de six arbres alignés"
+metadata/purpose = "Deux rangs de trois fruitiers, avec une large allée pour la récolte."
+metadata/placement = "Terrain plat ; allée centrale suivant X, 3 m libres entre les couronnes."
+metadata/source = "Original Uncrowned farming kit"
+metadata/ground_conforming = false
+metadata/walk_through = false
+metadata/canopy_walk_through = true
+metadata/trunk_solid = true
+metadata/geometry_policy = "merged surfaces per material; no per-stalk nodes"
+metadata/minimum_trunk_spacing_m = 5.1
+metadata/central_aisle_clearance_m = 3.0
+
+[node name="TroncCollision" type="StaticBody3D" parent="." unique_id=581988414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 0.89225, -3.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@230" type="CollisionShape3D" parent="TroncCollision" unique_id=910911678]
+shape = SubResource("CylinderShape3D_rogg4")
+
+[node name="PiedFruitier" type="Marker3D" parent="." unique_id=44952592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 0, -3.15)
+
+[node name="@StaticBody3D@231" type="StaticBody3D" parent="." unique_id=1283996794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.80925, -3.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@232" type="CollisionShape3D" parent="@StaticBody3D@231" unique_id=537976840]
+shape = SubResource("CylinderShape3D_eemld")
+
+[node name="PiedFruitier2" type="Marker3D" parent="." unique_id=1014535387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.15)
+
+[node name="@StaticBody3D@233" type="StaticBody3D" parent="." unique_id=1881223483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1, 0.89225, -3.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@234" type="CollisionShape3D" parent="@StaticBody3D@233" unique_id=799475577]
+shape = SubResource("CylinderShape3D_vy4m7")
+
+[node name="PiedFruitier3" type="Marker3D" parent="." unique_id=1984953202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1, 0, -3.15)
+
+[node name="@StaticBody3D@235" type="StaticBody3D" parent="." unique_id=1947565139]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 0.89225, 3.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@236" type="CollisionShape3D" parent="@StaticBody3D@235" unique_id=163617171]
+shape = SubResource("CylinderShape3D_bmh80")
+
+[node name="PiedFruitier4" type="Marker3D" parent="." unique_id=225179431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1, 0, 3.15)
+
+[node name="@StaticBody3D@237" type="StaticBody3D" parent="." unique_id=169965729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.89225, 3.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@238" type="CollisionShape3D" parent="@StaticBody3D@237" unique_id=1728912095]
+shape = SubResource("CylinderShape3D_4kq1b")
+
+[node name="PiedFruitier5" type="Marker3D" parent="." unique_id=1006783838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.15)
+
+[node name="@StaticBody3D@239" type="StaticBody3D" parent="." unique_id=963851314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1, 0.89225, 3.15)
+collision_mask = 0
+
+[node name="@CollisionShape3D@240" type="CollisionShape3D" parent="@StaticBody3D@239" unique_id=309896031]
+shape = SubResource("CylinderShape3D_hhbdl")
+
+[node name="PiedFruitier6" type="Marker3D" parent="." unique_id=1573281056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1, 0, 3.15)
+
+[node name="EntreeAllee" type="Marker3D" parent="." unique_id=842589788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4, 0, 0)
+
+[node name="SortieAllee" type="Marker3D" parent="." unique_id=172654970]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4, 0, 0)
+
+[node name="MergedBark" type="MeshInstance3D" parent="." unique_id=1166669614]
+material_override = ExtResource("1_q7elx")
+mesh = ExtResource("2_lwyhc")
+
+[node name="MergedLeaf" type="MeshInstance3D" parent="." unique_id=1982846401]
+material_override = ExtResource("3_p40b4")
+mesh = ExtResource("4_svexj")
+
+[node name="MergedApple" type="MeshInstance3D" parent="." unique_id=2119750722]
+material_override = ExtResource("5_g5utp")
+mesh = ExtResource("6_ik4ot")
+
+[node name="MergedLeafLight" type="MeshInstance3D" parent="." unique_id=845065900]
+material_override = ExtResource("7_p2v2m")
+mesh = ExtResource("8_14cog")
+
+[node name="MergedPear" type="MeshInstance3D" parent="." unique_id=1504745874]
+material_override = ExtResource("9_xj8lv")
+mesh = ExtResource("10_i7hid")

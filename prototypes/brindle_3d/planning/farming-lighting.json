@@ -1,0 +1,23 @@
+{
+  "description": "Golden morning, cool open shadows and a light orchard haze. Camera-driven blend within the farming region only.",
+  "review_spawn_xz": [-131.0, 80.0],
+  "sun_rotation_degrees": [-31.0, -52.0, 0.0],
+  "sun_color": "ffe3b7",
+  "sun_energy": 1.35,
+  "sun_angular_distance": 1.4,
+  "sun_fog_energy": 3.2,
+  "ambient_color": "bfd2df",
+  "ambient_energy": 0.58,
+  "sky_color": "c5d5d3",
+  "ao_radius_m": 1.2,
+  "ao_intensity": 1.18,
+  "fog_density": 0.0055,
+  "fog_height_m": 8.0,
+  "fog_padding_m": 8.0,
+  "fog_anisotropy": 0.32,
+  "fog_volume_size": 160,
+  "fog_volume_depth": 128,
+  "region_blend_margin_m": 32.0,
+  "overview_fade_begin_m": 210.0,
+  "overview_fade_end_m": 340.0
+}
