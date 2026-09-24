@@ -822,7 +822,7 @@ store, so nothing is kept and nothing can drift. The numbers, written out:
 
 **Checked:** 4 new tests. 55 suites, 604 tests, 0 failed on both worlds.
 
-### J5 · Dialogue reads the town
+### J5 · Dialogue reads the town — **built 2026-09-24**
 
 Est. 1 h. Depends on: J2.
 
@@ -832,6 +832,30 @@ the whole of what standing does in v1** — no hostile watch, no prices, no clos
 **Check:** the `they_think_ill_of_me` greeting fires on a town's standing and not on a
 person's; a frame of it, because a greeting that silently never fires is invisible to
 the suite.
+
+**Delivered 2026-09-24. The one replacement in this group**, and deliberate: everything
+else was built beside the old model, this reads the new number instead of the old one.
+`DialogueSystem` asks `PlayerRules.regard_in()` for the town the player is standing in —
+the same place the speaker is, because you have to be within `Game.TALK_REACH` to talk at
+all. **The HUD moved with it**, to the same function: `StandingRules`' own docstring says
+why — *"the HUD saying 'wary' while a trader refuses to serve you would be a lie the
+player cannot audit"* — and two readings of one idea is how that lie gets written.
+
+Cairnwell and Blackcairn carry no standing, so a conversation there takes **J4's mean**.
+Brindle and the road read neutral: a ruin has nobody in it to have an opinion.
+
+**Photographed**, both halves, with a new debug tool — `UNCROWNED_TALK=maddox[:standing]`,
+listed in `CLAUDE.md`. At neutral Maddox opens with *« Vous êtes venu à pied »* and the
+HUD reads *Harrowgate, inconnu*; at −45 he opens with *« Maddox ne vous rend pas votre
+salut »* and the HUD reads *Harrowgate, indésirable*. Same person, same tile, one number.
+
+**One consequence of J3's scale, and it is the design**: a theft is −10 and
+`StandingRules.UNWELCOME` is −20, so **one theft no longer shuts a door — two do.**
+§3 says the player who takes things is a nuisance. The first one is still legible the
+first time: it carries the town from `unknown` to `wary`, which the HUD says out loud.
+
+**Checked:** 3 new tests; four existing ones updated where the reading deliberately
+moved (below). 55 suites, 607 tests, 0 failed on both worlds.
 
 ### J6 · The journal shows what you did and what it cost
 

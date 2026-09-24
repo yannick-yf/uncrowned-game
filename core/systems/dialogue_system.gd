@@ -16,11 +16,17 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var standing := sim.store(&"standing") as Standing
 	var conditions: Dictionary = DialogueRules.conditions(
 		world, ticked, standing, sim.store(&"allegiance") as Allegiance, sim.tick)
-	# Whose opinion is being asked is a property of the conversation, not of the
-	# world, so it is added per conversation rather than computed in the rules
-	# layer — which has no way of knowing who you walked up to.
-	var who: StringName = StringName(event.data.get("npc", String(world.talking_to)))
-	var regard: float = standing.with_person(who) if standing != null else 0.0
+	# **What the place thinks of you, not what the person does** (J5,
+	# `docs/PLAYER_MODEL.md` §5). The town is the unit of account: a deed moved the
+	# place it happened in, and this is the whole of what standing does in v1 — it
+	# changes what people say to you. No hostile watch, no prices, no closed doors.
+	#
+	# It is the town the player is *standing in* rather than the one the speaker comes
+	# from, and those are the same place whenever a conversation can happen at all —
+	# you have to be within `Game.TALK_REACH` of somebody to talk to them. Reading the
+	# player's own ground is what lets the HUD show the same word off the same number.
+	var here: StringName = world.region().zone_at(world.player_tile())
+	var regard: float = PlayerRules.regard_in(sim.store(&"player") as PlayerState, here)
 	conditions[&"they_think_ill_of_me"] = StandingRules.is_unwelcome(regard)
 	conditions[&"they_think_well_of_me"] = StandingRules.is_welcome(regard)
 

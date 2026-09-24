@@ -289,6 +289,63 @@ func test_a_player_nobody_has_heard_of_arrives_at_neutral() -> void:
 		"five towns at neutral average to neutral")
 
 
+# ----------------------------------------- what standing does, and all it does ---
+
+func _greeting(sim: Sim, who: StringName) -> String:
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = _beside(sim, who)
+	sim.submit(&"talk", {"npc": String(who)})
+	sim.advance(2)
+	var line: String = world.current_line
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	return line
+
+
+func test_the_greeting_fires_on_the_town_and_not_on_the_person() -> void:
+	# J5, and the whole of what standing does in v1 (§5): **it changes what people say
+	# to you.** Both halves are asserted here, because only the pair of them says the
+	# reading moved rather than merely still working.
+	var town: Sim = Game.build()
+	var plain: String = _greeting(town, &"maddox")
+	(town.store(&"player") as PlayerState).standing[&"harrowgate"] = StandingRules.UNWELCOME - 1.0
+	assert_ne(_greeting(town, &"maddox"), plain,
+		"Harrowgate has turned on you and Maddox does not greet you as a stranger")
+
+	var person: Sim = Game.build()
+	assert_eq(_greeting(person, &"maddox"), plain, "the same world, the same hello")
+	(person.store(&"standing") as Standing).shift_person(&"maddox", StandingRules.HATED - 1.0)
+	assert_eq(_greeting(person, &"maddox"), plain,
+		"and what one man privately thinks of you no longer changes a word of it")
+
+
+func test_a_town_that_has_had_enough_of_you_still_holds_a_conversation() -> void:
+	# §5's explicit *not* list: no hostile towns, no closed doors. A watch does not
+	# attack on sight at any standing, and the worst a place can do is talk to you
+	# coldly — which keeps the demo from punishing a player who experiments.
+	var sim: Sim = Game.build()
+	(sim.store(&"player") as PlayerState).standing[&"harrowgate"] = PlayerState.WORST
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = _beside(sim, &"maddox")
+	sim.submit(&"talk", {"npc": "maddox"})
+	sim.advance(2)
+	assert_true(world.in_dialogue(), "he is standing there talking to you")
+	assert_ne(world.current_line, "", "and he said something")
+
+
+func test_the_kingdoms_two_places_hear_the_mean() -> void:
+	# Cairnwell and Blackcairn carry no standing of their own — together they are the
+	# kingdom (M1) — so the reading a conversation takes there is J4's mean.
+	var sim: Sim = Game.build()
+	var player := sim.store(&"player") as PlayerState
+	for town: StringName in player.towns():
+		player.standing[town] = -30.0
+	assert_eq(PlayerRules.regard_in(player, &"cairnwell"), -30.0, "the capital hears it")
+	assert_eq(PlayerRules.regard_in(player, &"blackcairn"), -30.0, "and so does the castle")
+	assert_eq(PlayerRules.regard_in(player, &"brindle"), PlayerState.NEUTRAL,
+		"and a ruin with nobody in it has no opinion either way")
+
+
 # ------------------------------------------------------------------- the log ---
 
 func test_nothing_writes_a_standing_except_a_deed_in_the_log() -> void:

@@ -360,7 +360,16 @@ past it; and only the last ten steps' events are fresh, so the picture carries o
 spark and number and not every blow's. `godot --headless --path . -s tools/play_fight.gd
 -- stand 200` prints the trace that says which step is which.
 
-**All seven are gated on `OS.has_feature("debug")`**, so they are absent from a
+**`UNCROWNED_TALK=maddox[:standing]`** (2026-09-24) stands the player in front of
+somebody, mid-greeting, for the frame `shot.sh` takes, and sets the standing of the town
+they are both in to the number after the colon. Same gate and same reason as the three
+above, plus its own: **what a town's opinion does in v1 is change what people say to
+you** (J5, `docs/PLAYER_MODEL.md` §5), and a greeting that silently never fires is
+precisely what `--headless` cannot see — it was added the day the reading moved from the
+person to the town, to photograph both halves. Like `UNCROWNED_TOWN` it writes the store
+directly and is therefore **one frame for one photograph, not a save-able state**.
+
+**All eight are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

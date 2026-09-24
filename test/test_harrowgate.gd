@@ -95,29 +95,39 @@ func test_nobody_greets_a_thief_the_way_they_greet_a_stranger() -> void:
 	# something each *line* opted into, so silence was the default and four of the
 	# five named cast had never opted in. Writing more lines would not have fixed
 	# that; it would have postponed it until the next NPC.
+	#
+	# (Those two numbers are the old model's, and the bug they describe is the reason
+	# this test exists. What the band is read off changed in J5; the rule did not.)
+	# **Read off the town since J5** (`docs/PLAYER_MODEL.md` §5): the band comes from
+	# what the place both of you are standing in thinks of you, not from a ledger kept
+	# per face. So the player stands in Harrowgate and Harrowgate's opinion is what
+	# moves — the claim is unchanged, and it is still every named person in the game.
 	var sim: Sim = Game.build()
-	var standing := sim.store(&"standing") as Standing
+	var player := sim.store(&"player") as PlayerState
 	var world := sim.store(&"world") as WorldState
 	var cast := sim.store(&"cast") as Cast
+	world.player_pos = in_town(&"harrowgate")
+	assert_true(player.has_standing(world.region().zone_at(world.player_tile())),
+		"the player is standing in a town that has an opinion")
 
 	for id: StringName in cast.npcs.keys():
 		var npc: Npc = cast.get_npc(id)
-		standing.by_person[id] = Standing.NEUTRAL
+		player.standing[&"harrowgate"] = PlayerState.NEUTRAL
 		var plain: Array = _conversation(sim, world, id)
 
-		standing.by_person[id] = StandingRules.UNWELCOME - 1.0
+		player.standing[&"harrowgate"] = StandingRules.UNWELCOME - 1.0
 		assert_ne(_conversation(sim, world, id), plain,
-			"%s opens the same way for somebody they think ill of" % npc.display_name)
+			"%s opens the same way for somebody the town thinks ill of" % npc.display_name)
 
-		standing.by_person[id] = StandingRules.HATED - 1.0
+		player.standing[&"harrowgate"] = StandingRules.HATED - 1.0
 		var done: Array = _conversation(sim, world, id)
 		assert_eq((done[1] as Array).size(), 0,
-			"%s will still hold a conversation with somebody they hate" % npc.display_name)
+			"%s will still hold a conversation with somebody the town hates" % npc.display_name)
 
-		standing.by_person[id] = StandingRules.WELCOME + 1.0
+		player.standing[&"harrowgate"] = StandingRules.WELCOME + 1.0
 		assert_ne(_conversation(sim, world, id), plain,
-			"%s opens the same way for somebody they are glad to see" % npc.display_name)
-		standing.by_person[id] = Standing.NEUTRAL
+			"%s opens the same way for somebody the town is glad to see" % npc.display_name)
+		player.standing[&"harrowgate"] = PlayerState.NEUTRAL
 
 
 ## The line and the options, as the player would get them.

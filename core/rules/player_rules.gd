@@ -99,6 +99,31 @@ static func is_a_killing(deed: StringName) -> bool:
 ## - Mildly disliked everywhere arrives **worse** than being loathed in one place.
 ##   Consistency matters more than any single act, which is the right shape for a game
 ##   about a reign.
+## **The kingdom's own two places** (M1): Cairnwell and Blackcairn carry no standing of
+## their own because together they *are* the kingdom, and the kingdom hears the mean.
+const THE_KINGDOM: Array[StringName] = [&"cairnwell", &"blackcairn"]
+
+
+## What the place the player is standing in thinks of them — the one reading, which
+## dialogue and the HUD both take (J5).
+##
+## One function and not two, on purpose. `StandingRules`' own docstring says why: *"The
+## HUD saying 'wary' while a trader refuses to serve you would be a lie the player
+## cannot audit."* A second reading of the same idea is how that lie gets written.
+##
+## Somewhere with nobody in it to have an opinion — Brindle the ruin, the King's Road,
+## the Thornwood — reads neutral, which is what a place with no standing to report
+## says. That is not the same as a low one, and no line fires on it.
+static func regard_in(player: PlayerState, town: StringName) -> float:
+	if player == null:
+		return PlayerState.NEUTRAL
+	if player.has_standing(town):
+		return player.standing_in(town)
+	if THE_KINGDOM.has(town):
+		return at_blackcairn(player)
+	return PlayerState.NEUTRAL
+
+
 static func at_blackcairn(player: PlayerState) -> float:
 	if player == null:
 		return PlayerState.NEUTRAL

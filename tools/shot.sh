@@ -13,6 +13,9 @@
 #                                             the same, flat
 #   UNCROWNED_WORLD=procedural tools/shot.sh out.png play 150,174
 #                                             the 2D map v1 and v2 were built on
+#   UNCROWNED_TALK=maddox:-45 tools/shot.sh out.png play
+#                                             in front of somebody, mid-greeting, in a
+#                                             town that thinks that much of you (J5)
 #
 # The check that "zero script errors" is not. Looking at the output is cheap, and
 # every bug the first two nights shipped would have been caught by one of these.

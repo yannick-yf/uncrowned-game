@@ -49,6 +49,8 @@ var _world: WorldState = null
 var _cast: Cast = null
 var _ticked: WorldTick = null
 var _standing: Standing = null
+## The player's own store (J1–J6): the purse, and what each town thinks of them.
+var _player: PlayerState = null
 var _road: Travellers = null
 var _book: Phrasebook = null
 ## Whatever chooses words, if anything does. The default asks nothing, so the game
@@ -159,6 +161,7 @@ func _ready() -> void:
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
 	_standing = _sim.store(&"standing") as Standing
+	_player = _sim.store(&"player") as PlayerState
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
 	_seen_events = _sim.events.size()
@@ -245,6 +248,33 @@ func _ready() -> void:
 		# front of cold furnaces — a picture of the debug tool rather than of the game.
 		# An hour is what the population is matched on.
 		_sim.advance(Sim.STEPS_PER_WORLD_TICK * 61)
+
+	# **`UNCROWNED_TALK=maddox:-45`** — standing in front of somebody, mid-greeting, for
+	# the frame `shot.sh` takes, with the standing of the town you are both in set to
+	# the number after the colon.
+	#
+	# The same gate and the same reason as the four above, plus one of its own: what a
+	# town's opinion *does* in v1 is change what people say to you (J5,
+	# `docs/PLAYER_MODEL.md` §5), and **a greeting that silently never fires is exactly
+	# what `--headless` cannot see**. Like `UNCROWNED_TOWN` it writes the store
+	# directly, so it is one frame for one photograph and not a state that can be saved.
+	var greeting: String = OS.get_environment("UNCROWNED_TALK")
+	if _debug_available and greeting != "" and _cast != null:
+		var halves: PackedStringArray = greeting.strip_edges().split(":")
+		var npc: Npc = _cast.get_npc(StringName(halves[0].strip_edges()))
+		if npc == null:
+			push_warning("UNCROWNED_TALK: nobody called '%s'" % halves[0])
+		else:
+			# A stride south of him, so the two figures do not stand in one tile.
+			_world.player_pos = npc.centre() + Vector2(0.0, 1.2)
+			var here: StringName = _world.region().zone_at(_world.player_tile())
+			if halves.size() > 1 and _player != null and _player.has_standing(here):
+				_player.standing[here] = clampf(
+					float(halves[1]), PlayerState.WORST, PlayerState.BEST)
+			elif halves.size() > 1:
+				push_warning("UNCROWNED_TALK: %s carries no standing" % here)
+			_sim.submit(&"talk", {"npc": String(npc.id)})
+			_sim.advance(2)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
@@ -921,6 +951,7 @@ func _reload() -> void:
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
+	_player = _sim.store(&"player") as PlayerState
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
 	_mine = _sim.store(&"allegiance") as Allegiance
@@ -1570,16 +1601,23 @@ func _place_name() -> String:
 ## baseline is what makes the change legible; a readout that only appears once
 ## something has gone wrong gives the player nothing to compare it against.
 ##
-## It says how you are regarded. It never says why, and it never moves at the
-## moment of the act — it moves when the story gets here, which may be days after
-## you left. Push the ambient, pull the attribution.
+## It says how you are regarded. It never says why. **Since J5 it moves at the moment
+## of the act**, in the town the act was done in, because that is what the new model
+## says a standing is: the story still travels and the player's reputation does not
+## travel with it. Push the ambient, pull the attribution — the journal is still the
+## only thing that answers *why*.
+##
+## It reads `PlayerRules.regard_in`, which is the same function `DialogueSystem` asks.
+## One reading, one number: the HUD saying *wary* while everyone greets you as a
+## stranger would be a lie the player cannot audit.
 func _regard() -> String:
-	if _standing == null:
+	if _player == null:
 		return ""
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
 	if zone == &"":
 		return ""
-	return Text.of(&"hud.regard", [Text.of(StringName("regard.%s" % StandingRules.word_for(_standing.in_town(zone))))])
+	return Text.of(&"hud.regard", [Text.of(StringName("regard.%s"
+		% StandingRules.word_for(PlayerRules.regard_in(_player, zone))))])
 
 
 func _draw_hud() -> void:
