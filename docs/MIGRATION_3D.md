@@ -526,6 +526,62 @@ a machine that refuses the borrowed thing. Rewritten for the 3D world:
    still argues for them; what is decided is what the game does *now*, on his map, at
    his pace.
 
+## 9b. The vendoring's one real defect, and the four ways out — open, 2026-09-24
+
+**Found by Yannick, who could not launch the game from Godot after his brother's third
+delivery.** The game ran from a terminal and the editor refused it, which is the shape of
+a fault in what the editor loads rather than in what the simulation does.
+
+### What is actually wrong
+
+His merged meshes — the farming village's orchards, and the greenery that pulls his
+library — are saved as **compressed binary resources**. Their header is `RSCC`, and
+inside them each dependency is written as an absolute path in *his* project:
+`res://assets/farming/meshes/pommier_etale_Merged_bark.res`.
+
+`tools/vendor_workshop.gd` repoints `res://<folder>/` to `res://view3d/workshop/<folder>/`
+**in text files only** — `.tscn`, `.tres`, `.gd`, `.json` and their kin. A path sealed
+inside a compressed binary is out of its reach, and no amount of text substitution will
+ever get at it. Those references therefore point at a folder that does not exist in our
+project, while the very files they want sit copied a few folders away.
+
+The measurement, on 2026-09-24: **412 errors at launch**, every one of them from three
+sectors — the farming village, its greenery, and the coastline.
+
+> **And a second thing this found, which is ours and worse.** It went unnoticed for days
+> because `tools/shot.sh` ends its Godot line with `>/dev/null 2>&1`. Every check run
+> through that script reports nothing, however loudly the game complains. A frame was
+> taken, the frame looked right, and four hundred errors scrolled past into nowhere.
+> **Never read a suite's or a tool's silence as health when the tool discards stderr.**
+
+### What was done, and it is a patch
+
+The copied map plate no longer carries `VillageFermier`, `FarmingAtmosphere` or
+`CoastlineDecor` (`SECTORS_WE_DO_NOT_VISIT` in the vendoring tool). Errors went from
+412 to **0**, and the demo lost nothing: it never walks to any of them.
+
+**Yannick named the limit of this himself, immediately:** *"on peut pour le moment
+enlever le village mais quand on va merge sur main on va rencontrer le même problème"*.
+He is right. The patch holds until his brother's next delivery puts a compressed
+reference in a sector the demo *does* visit, and then it holds no longer.
+
+### The four ways out, none of them free
+
+| | What it is | What it costs |
+|---|---|---|
+| **1. Vendor to the project root** | Copy his folders to the paths his resources already expect — `res://assets/farming/`, `res://scenes/`, `res://scripts/` — so nothing needs repointing at all | `res://assets/` is the approved 2D pack's folder and §8's art rule says so; `tools/asset_validator.gd` would have to learn which subfolders are his. It is the **only option that makes every future delivery work unchanged** |
+| **2. A resource pack** | Export his project as a `.pck` and `ProjectSettings.load_resource_pack()` it, so his files appear at their own `res://` paths | **Runtime only.** The editor would still not resolve them, so opening the project stays red — and that is exactly the thing Yannick could not do |
+| **3. Re-save through Godot** | A headless pass that loads each resource *inside his project*, where its paths resolve, and re-saves it into our layout with the dependencies remapped | A real tool to write, run on every delivery, and keep correct. It also rewrites his data, which we have never done |
+| **4. Ask his brother** | His merge tool could embed the meshes in the multimesh rather than reference them, or save them uncompressed and relative | Costs us nothing and costs him a little. **The cheapest fix by far if he is willing**, and the only one that removes the defect at its source |
+
+**The recommendation is 4 first, then 1.** Ask him — it is one change in his own tooling
+and it makes the problem go away for everybody. If the answer is no, option 1 is the one
+that scales, and it needs Yannick to relax §8's folder rule, which is his to relax.
+
+**Until then, the sector list is the seam**: a delivery that puts a compressed reference
+in Brindle, the ironworks or the road between them cannot be patched by dropping a
+sector, because those are sectors the demo *does* visit.
+
 ## 10. Where this leaves the documents
 
 - **SPECS §13** carries the new direction as of today, dated, with the old rule kept

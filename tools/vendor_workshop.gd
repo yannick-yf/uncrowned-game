@@ -26,6 +26,26 @@ const FOLDERS: Array[String] = [
 	"assets", "materials", "planning", "prototype_3d", "scenes", "scripts", "shaders",
 ]
 const SKIP_DIRS: Array[String] = [".godot", "__pycache__", "verification-output"]
+
+## **Sectors of his world the copied map plate does not carry** (2026-09-24).
+##
+## Not art direction and not a judgement on his work: it is the only answer we have to a
+## defect in *this* tool. His merged meshes are **compressed binary resources** (their
+## header is `RSCC`), and inside them the dependencies are written as `res://assets/...`
+## — his project's root. This tool repoints paths in text files and cannot reach inside a
+## compressed binary, so those references stay pointing at a folder that does not exist
+## here. The game then prints **four hundred and sixty errors** at launch and Godot's
+## editor refuses to play it, while the meshes themselves sit copied and unreachable a
+## few folders away.
+##
+## Everything listed here is a sector the demo never walks to, so dropping it costs the
+## player nothing today. **It is a patch and not a repair**, and Yannick said so first:
+## the same defect returns with his next delivery, and the real answers are written in
+## `docs/MIGRATION_3D.md` — none of them is free and all of them are his to choose.
+const SECTORS_WE_DO_NOT_VISIT: Array[String] = [
+	"VillageFermier", "FarmingAtmosphere", "CoastlineDecor",
+]
+const MAP_PLATE: String = "scenes/map_plate.tscn"
 const TEXT_EXTENSIONS: Array[String] = ["tscn", "tres", "gd", "gdshader", "import", "json", "txt", "cfg"]
 
 var _copied: int = 0
@@ -73,6 +93,8 @@ func _copy_file(from: String, to: String) -> void:
 	if TEXT_EXTENSIONS.has(from.get_extension()):
 		var text: String = bytes.get_string_from_utf8()
 		var rewritten: String = _repoint(text)
+		if from.ends_with(MAP_PLATE):
+			rewritten = _drop_sectors(rewritten)
 		if rewritten != text:
 			_rewritten += 1
 		bytes = rewritten.to_utf8_buffer()
@@ -94,6 +116,38 @@ func _repoint(text: String) -> String:
 	for folder: String in FOLDERS:
 		out = out.replace("res://%s/" % folder, "%s%s/" % [TARGET, folder])
 	return out
+
+
+## Take the sectors above out of the plate, and then any `ext_resource` nothing else
+## names. Line by line rather than by regular expression, because a `.tscn` is a flat
+## list of blocks and a block runs until the next `[`.
+func _drop_sectors(text: String) -> String:
+	var lines: PackedStringArray = text.split("\n")
+	var kept: PackedStringArray = PackedStringArray()
+	var dropping: bool = false
+	for line: String in lines:
+		if line.begins_with("["):
+			dropping = false
+			if line.begins_with("[node name=\""):
+				var name: String = line.get_slice("\"", 1)
+				dropping = SECTORS_WE_DO_NOT_VISIT.has(name)
+			elif line.begins_with("[editable path=\""):
+				# A marker for a node that is no longer here; Godot complains about it.
+				var at: String = line.get_slice("\"", 1)
+				dropping = SECTORS_WE_DO_NOT_VISIT.has(at.get_slice("/", at.get_slice_count("/") - 1))
+		if not dropping:
+			kept.append(line)
+	# An `ext_resource` whose id is now named nowhere is dead weight, and Godot warns
+	# about it. Checked against the text as it stands *after* the nodes have gone.
+	var body: String = "\n".join(kept)
+	var out: PackedStringArray = PackedStringArray()
+	for line: String in kept:
+		if line.begins_with("[ext_resource "):
+			var id: String = line.get_slice("id=\"", 1).get_slice("\"", 0)
+			if id != "" and body.count("\"%s\"" % id) <= 1:
+				continue
+		out.append(line)
+	return "\n".join(out)
 
 
 func _remove_tree(path: String) -> void:
