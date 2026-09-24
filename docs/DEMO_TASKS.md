@@ -733,7 +733,7 @@ thresholds and they are Yannick's numbers. Nothing waits on them.
 
 **Checked:** 5 new tests. 54 suites, 585 tests, 0 failed on both worlds.
 
-### J2 · A deed moves the town, not the person
+### J2 · A deed moves the town, not the person — **built 2026-09-24**
 
 Est. 3 h. Depends on: —.
 
@@ -744,6 +744,22 @@ rather than a slider.
 
 **Check:** a theft in the Cinderworks moves the Cinderworks and no other town; the same
 theft unwitnessed moves nothing; both suites green.
+
+**Delivered 2026-09-24, beside the old model and not on top of it** (rule 4). The
+player's standing is a new dictionary on `core/player_state.gd`, for the same five
+places `TownState` carries and read from the same file, so the two can never disagree
+about which places exist. `PlayerSystem` listens for **`deed_witnessed`** — which
+`Deeds` derives only when somebody saw it — and moves the town the deed names, once,
+and no other. `core/rules/player_rules.gd` is the new table's seam; its numbers are
+still `DeedRules`' until **J3**.
+
+`DeedRules`' factions and witnesses still move, and `RumourSystem` still carries a
+story into `Standing.by_town` as it arrives. All of that goes with **C3**, not here:
+`test_factions`, `test_deeds` and `test_rumour` are untouched and green.
+
+**Checked:** 9 new tests, plus three assertions in `test_journeys`' replay test, where
+the walk to the stall is in the log and a replay can be proved. 55 suites, 594 tests,
+0 failed on both worlds.
 
 ### J3 · The scale's two ends
 

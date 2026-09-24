@@ -311,6 +311,15 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 	var replayed: Sim = Game.replay(_sim)
 	assert_eq((replayed.store(&"standing") as Standing).fingerprint(), standing.fingerprint(),
 		"every town's opinion of you rebuilds from the log alone")
+	# And the new model's store beside it (J2), which is a different number reached a
+	# different way: the town the deed was done in, moved once, where it was done.
+	var player := _sim.store(&"player") as PlayerState
+	assert_true(player.standing_in(&"harrowgate") < PlayerState.NEUTRAL,
+		"the market is the place that saw it: %.1f" % player.standing_in(&"harrowgate"))
+	assert_eq(player.standing_in(&"muster"), PlayerState.NEUTRAL,
+		"and two days of the story walking do not give the camp an opinion of you")
+	assert_eq((replayed.store(&"player") as PlayerState).fingerprint(), player.fingerprint(),
+		"the player's own numbers rebuild from the log alone too")
 	assert_eq((replayed.store(&"rumours") as Rumours).fingerprint(), rumours.fingerprint(),
 		"and every story still in the air, at the same distance out")
 
