@@ -118,8 +118,10 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 
 	var mine := DuelFighter.new()
 	mine.who = DuelRules.PLAYER
-	mine.hp = DuelRules.hp_of(DuelRules.PLAYER)
-	mine.max_hp = mine.hp
+	# **The world's bar, not one of the fight's own** (Yannick, 2026-09-24). A fight
+	# does not hand the player a fresh hundred; it spends what he walked in with.
+	mine.hp = world.player_hp
+	mine.max_hp = WorldState.MAX_HP
 	mine.at = world.player_tile()
 	mine.facing = world.player_facing
 	duel.fighters = [mine]
@@ -340,6 +342,14 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 	if victim.is_player() and world != null and world.unkillable:
 		damage = mini(damage, maxi(victim.hp - 1, 0))
 	victim.hp = maxi(victim.hp - damage, 0)
+	# **And the world is where a player's blow is actually paid** (2026-09-24), through
+	# the one door everything that hurts him goes through, so `G`, the grace window and
+	# the death count all keep working inside a fight. The felling blow is the one
+	# exception and it is paid when the beat is over, a dozen lines below: paying it
+	# here would wake him at the last fire in the middle of his own death scene.
+	if victim.is_player() and world != null and not DuelRules.is_down(victim.hp):
+		world.hurt(damage, sim.step, false)
+		victim.hp = world.player_hp
 	victim.hurt_left = DuelRules.hurt_steps()
 	victim.facing = DuelRules.facing_from(victim.at, who.at)
 	if victim.is_player() and DuelRules.is_down(victim.hp):

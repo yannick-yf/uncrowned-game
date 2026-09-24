@@ -45,7 +45,8 @@ func test_the_player_wakes_in_the_fairies_clearing_at_full_health() -> void:
 	assert_eq(_world.region().zone_at(_world.player_tile()), &"",
 		"which belongs to no settlement")
 	assert_eq(_world.player_hp, WorldState.MAX_HP)
-	assert_eq(_world.player_hp, 10, "SPECS §3: ten hit points")
+	assert_eq(_world.player_hp, WorldState.MAX_HP,
+		"SPECS §3: the player wakes at a full bar, whatever the bar is")
 	assert_eq(_world.deaths, 0)
 	assert_false(_world.reached_blackcairn)
 
@@ -181,12 +182,17 @@ func test_the_king_kills_the_player_in_exactly_three_touches() -> void:
 	var grace: int = ContactRules.invulnerable_steps()
 	_world.player_pos = _world.king_pos
 	_sim.advance(1)
-	assert_eq(_world.player_hp, 6, "first touch")
+	# **Derived, so the claim survives a rescale.** These read 6 and 2 while the bar was
+	# ten; the bar is a hundred now and the claim — three touches — has not moved. A
+	# hard-coded number here would have let `KING_DAMAGE` drift without anybody noticing
+	# the king had stopped being lethal.
+	assert_eq(_world.player_hp, WorldState.MAX_HP - ContactRules.KING_DAMAGE, "first touch")
 	assert_eq(_world.touches_taken, 1)
 	assert_eq(_world.deaths, 0)
 
 	_sim.advance(grace)
-	assert_eq(_world.player_hp, 2, "second touch, after the grace window")
+	assert_eq(_world.player_hp, WorldState.MAX_HP - 2 * ContactRules.KING_DAMAGE,
+		"second touch, after the grace window")
 	assert_eq(_world.deaths, 0, "not dead on the second")
 
 	_sim.advance(grace)

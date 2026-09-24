@@ -45,5 +45,10 @@ func test_a_town_mends_you_faster_than_the_country() -> void:
 
 
 func test_a_full_recovery_in_the_open_is_minutes_not_an_afternoon() -> void:
-	assert_true(RecoveryRules.WILD_SECONDS_PER_POINT * float(WorldState.MAX_HP) < 240.0,
+	# **Mends, not points.** A rest restores `MEND_PER_REST` of the bar, so the time to
+	# fill it is the number of mends and not the number of points — which is what this
+	# claim always meant, and what it stopped saying the day the bar went from ten to a
+	# hundred (2026-09-24). Written this way it holds at any size of bar.
+	var mends: float = float(WorldState.MAX_HP) / float(WorldState.MEND_PER_REST)
+	assert_true(RecoveryRules.WILD_SECONDS_PER_POINT * mends < 240.0,
 		"a full recovery in the open is minutes, not a lost afternoon")

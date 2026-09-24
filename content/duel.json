@@ -8,8 +8,6 @@
     "_reach_note": "Adjacent, diagonals included, because the game's movement is 8-way. A bow or a spear is a later reach, not a later system.",
     "strike_damage": 5,
     "_damage_note": "Fixed. A blow that lands takes five, always, from anybody, and that is why a fight is a thing the player can reason about rather than gamble on.",
-    "player_hp": 100,
-    "_player_hp_note": "A DEVELOPMENT VALUE and Yannick said so plainly (2026-09-24): 'justement pour que ça soit une formalité, c'est dans le cadre de mes tests et devs'. Twenty blows before the player falls, so nothing in the demo can threaten them. The shipped number is still open — 30 is the recommendation, six blows — and S4 is when it has to be settled. Written here rather than left as a silent default, because a number nobody remembers choosing is a number that ships.",
     "stand_off_tiles": 3,
     "_stand_off_note": "How far away somebody is set down when a fight begins and they were not already beside you. Three is out of reach and inside one turn's move, so the first turn is a real move-and-act rather than a stand-off. Ours, not the design's: a fight begins because there is a person in front of you, and a photograph taken where the man is three hundred tiles away would otherwise be a picture of nothing.",
     "leaves_at_tiles": 3,
@@ -17,8 +15,6 @@
     "_leaves_note": "Further than leaves_at_tiles from every enemy at the end of leaves_after_rounds ROUNDS RUNNING and you have left the fight — dead or gone is the general form of an ending, and fleeing counts as leaving for the player exactly as it does for anybody. Two numbers rather than one because the design's words are 'getting out of reach AND STAYING THERE': one round is not staying, and checking it at the end of a single round hands the ending to whoever happened to move last, which is how a wounded man who ran four tiles escaped a player who had not yet had a turn to follow him.",
     "follows_tiles": 8,
     "_follows_note": "How far from where the fight began an opponent will chase you, and it is the reason walking out of a fight is possible at all. Both sides move four tiles a turn, so a chaser who never gives up can never be outrun and nobody could ever leave. Ours, not the design's: docs/COMBAT_V2.md §7 leaves where the fled go open and says nothing about pursuit. It does not cap a FLEEING fighter, who is running from the fight rather than following it.",
-    "flees_at_hp": 5,
-    "_flees_note": "At or below this an NPC spends its turn moving away and does not strike (docs/COMBAT_V2.md §5). One strike of five takes anything from ten to five, so the second blow is the one that would kill it and this is the turn before that — a wounded person runs, which is the half of a fight the first design had none of.",
     "steps_per_tile": 10,
     "_steps_note": "How long a fighter takes to walk one tile of its move, in sim steps. Ten is exactly the world's own walking pace (MovementRules.TILES_PER_SECOND is 6), so a fighter crossing the grid on its turn moves at the speed the player walks everywhere else — a fight that moved people faster than the world does would read as a different game.",
     "act_steps": 30,
@@ -29,28 +25,29 @@
     "pause_steps": 8,
     "_pause_note": "The gap between one turn and the next, so two turns read as two turns and not as one long scramble.",
     "beat_steps": 100,
-    "_beat_note": "The beat between the blow that decides a fight and the world coming back: somebody is down, everybody stands where the last blow left them, the clock is still held and nothing anybody presses does anything. A bit over a second and a half. Kept from the first design (H5), which got it right."
+    "_beat_note": "The beat between the blow that decides a fight and the world coming back: somebody is down, everybody stands where the last blow left them, the clock is still held and nothing anybody presses does anything. A bit over a second and a half. Kept from the first design (H5), which got it right.",
+    "_hp_note": "THE PLAYER IS NOT HERE. He brings WorldState.player_hp, the one bar — there were two of them until 2026-09-24 and a man on his last point walked into a fight fresh. Everybody else is fifteen, which is three blows at five: ten was two, and two blows plus 'whoever starts wins' is not a fight. NOBODY FLEES, decided the same day. The threshold was five, which against ten points and five damage meant everything ran after exactly one hit — including Bram, who is the tutorial. Wounded men running and hiding is a thing Yannick wants and it is deferred, not dropped: it needs a third state between healthy and dead, which these numbers have room for now that a fight is three blows rather than two."
   },
   "_fighters_note": "Who you can be put in front of and what they bring. Anybody not listed takes the default. 'spares' means they stop when you go down instead of killing you — Bram says so in his own line, and a sparring partner who sends you back to the fairies' clearing twelve seconds into the game is not a sparring partner.",
   "fighters": {
     "_default": {
-      "hp": 10,
+      "hp": 15,
       "spares": false
     },
     "bram": {
-      "hp": 10,
+      "hp": 15,
       "spares": true
     },
     "harry": {
-      "hp": 10,
+      "hp": 15,
       "spares": false
     },
     "tom": {
-      "hp": 10,
+      "hp": 15,
       "spares": false
     },
     "wolf": {
-      "hp": 10,
+      "hp": 15,
       "spares": false
     }
   }

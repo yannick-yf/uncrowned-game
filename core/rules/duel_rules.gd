@@ -106,8 +106,10 @@ static func strike_damage() -> int:
 	return number("strike_damage", 5)
 
 
+## Kept only so that a table still carrying `player_hp` is read rather than ignored;
+## nothing seats the player with it any more. It goes with the row.
 static func player_hp() -> int:
-	return number("player_hp", 100)
+	return number("player_hp", WorldState.MAX_HP)
 
 
 static func leaves_at_tiles() -> int:
@@ -129,8 +131,13 @@ static func follows_tiles() -> int:
 	return number("follows_tiles", 8)
 
 
+## **Zero, so nobody flees** (Yannick, 2026-09-24). The row is gone from the table and
+## this default is what the absence means. It was five, and against ten points and five
+## damage that made everything run after exactly one hit — Bram included, who is the
+## tutorial. A wounded man running and hiding is still wanted; it is deferred until
+## there is a state between healthy and dead, which fifteen points leaves room for.
 static func flees_at_hp() -> int:
-	return number("flees_at_hp", 5)
+	return number("flees_at_hp", 0)
 
 
 static func steps_per_tile() -> int:
@@ -164,14 +171,11 @@ static func _about(who: StringName) -> Dictionary:
 	return all.get("_default", {}) as Dictionary
 
 
-## How much health somebody brings to a fight. The player brings the table's own
-## number rather than `WorldState`'s ten pips, because the two are different things:
-## the pips are how much of the world you can take before you wake at the last fire,
-## and this is how long a fight lasts. See `docs/COMBAT_V2.md` §7.
+## How much health somebody brings to a fight. **The player is not asked** — he brings
+## `WorldState.player_hp`, the one bar, which `DuelSystem` reads when it seats him
+## (Yannick, 2026-09-24). This answers for everybody else.
 static func hp_of(who: StringName) -> int:
-	if who == PLAYER:
-		return player_hp()
-	return int(_about(who).get("hp", 10))
+	return int(_about(who).get("hp", 15))
 
 
 ## Whether they stop when you go down. A sparring partner does.

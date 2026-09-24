@@ -196,7 +196,7 @@ tends to work. Nothing checks which phase you are in; nothing opens or closes on
 | 3 | **Confront the king** | Blackcairn, by any of the three ways in, with whatever the kingdom has become behind you — or the reading where the throne is yours and there is nobody left to confront (§3) |
 
 **Phase 3 is available in minute one.** That is Pillar 1 and it is not negotiable. A
-player who walks there at 10 HP gets their confrontation and loses it; the phases
+player who walks there at full health gets their confrontation and loses it; the phases
 describe when a confrontation tends to *go well*, never when it is *allowed*.
 
 **After the ending:** the world continues (see §5, Endings).
@@ -225,7 +225,7 @@ the kingdom does with its ground.
 > TBD — write the exact first-attempt experience: what the player sees, tries, and
 > loses to. This is the tutorial whether you intend it or not.
 
-At the start the player has 10 HP; the king has 1000, and ten guards. That gap is
+At the start the player has 100 HP; the king has 1000, and ten guards. That gap is
 the design's opening statement, and the player is allowed to walk into it.
 
 ### How the difficulty gap actually closes 🟡
@@ -757,7 +757,7 @@ and he should sound like one.
 
 The King's Road runs past Brindle toward Harrowgate. A player who follows it
 north-west reaches the castle in minutes, not hours, and can attempt the king
-immediately, exactly as intended — through ten guards, at 10 HP.
+immediately, exactly as intended — through ten guards, at a hundredth of his health.
 
 ### Map sketch
 
@@ -2775,7 +2775,27 @@ progresses at a comparable rate.
 > 2026-09-11, §19 Q7): the world reacting is the punishment, and a world that
 > noticed nothing would not be one.
 
-**Numbers.** Player starts at 10 HP. Levelling raises health and attributes.
+**Numbers.** Player starts at **100 HP**. Levelling raises health and attributes.
+
+> **It was 10 until 2026-09-24, and the change is a rescale rather than a redesign** —
+> recorded here in place, the way §10's arena reversal was, because a spec that quietly
+> disagrees with the code is worse than one that is out of date.
+>
+> Yannick settled that the player has **one health bar**. The turn-based fight
+> (`docs/COMBAT_V2.md`) had been handing him a hundred points of its own while this bar
+> kept ten that moved only when they fell, so a man on his last point walked into a
+> fight fresh and walked out on his last point again.
+>
+> **Every ratio this section states is unchanged.** The king still kills in exactly
+> three touches (`ContactRules.KING_DAMAGE` scaled with it, and a test derives the
+> claim from both rather than hard-coding either); a full rest still takes ten mends;
+> the king's 1000 still dwarfs the player. What changed is the grain: a five-point blow
+> is a twentieth of the bar instead of half of it, which is what a fight of several
+> exchanges needs.
+>
+> **The hundred itself is a development value** and Yannick said so: *"justement pour
+> que ça soit une formalité, c'est dans le cadre de mes tests et devs"*. Thirty is the
+> recommendation for what ships, and **S4** is when it has to be settled.
 Equipment carries at least as much of the player's power as levels do.
 > TBD: the actual curve. Target endgame player HP, and damage scaling.
 

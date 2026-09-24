@@ -261,6 +261,67 @@ tout, donc, si tu comptes les deux sens.
 
 C'est la seule chose qui manque vraiment au combat. Le reste marche.
 
+### Ce qui a changé le 24 septembre, et ça te concerne directement
+
+Deux paragraphes plus haut sont maintenant faux, et plutôt que de les effacer je les
+corrige ici — pour que tu voies ce qui a bougé et pourquoi.
+
+**Le combat a changé de forme.** Il n'est plus en temps réel. C'est maintenant du **tour
+par tour sur la grille du monde**, à la Baldur's Gate : chacun son tour, on se déplace de
+quatre cases et on frappe. Yannick l'a décidé après avoir joué le premier, pour une
+raison simple — il veut qu'on puisse **s'en prendre à n'importe qui**, y compris à trois
+personnes dans une cour, et un duel en temps réel ne sait pas faire ça.
+
+**Ce que ça défait.** On t'avait écrit : *« seulement `left` et `right`, pas besoin de
+`up` ni de `down`, un combat se déroule toujours d'est en ouest »*. **Ce n'est plus
+vrai.** Sur une grille, deux combattants se retrouvent constamment l'un au nord de
+l'autre.
+
+**Et donc on a dessiné sur ta vue de dos.** Il faut que tu le saches, c'est la raison
+d'être de cette section. Il y a maintenant **douze poses** au lieu de quatre : la
+préparation, le coup et l'encaissement, dans les quatre directions. Les trois conditions
+n'ont pas bougé — aucune couleur inventée, tes fichiers jamais touchés, tout supprimé le
+jour où tu dessines les tiennes — et la première est devenue un **test** plutôt qu'une
+promesse : il parcourt les seize cases et échoue sur un seul pixel dont la couleur
+n'existe pas dans ton image d'origine.
+
+**Ce qu'on te demande a donc changé de taille.** Ce n'étaient pas six images, ce sont
+douze :
+
+| | `left` | `right` | `up` | `down` |
+|---|---|---|---|---|
+| **Préparation** | ✔ | ✔ | ✔ | ✔ |
+| **Attaque** | ✔ | ✔ | ✔ | ✔ |
+| **Encaisse** | ✔ | ✔ | ✔ | ✔ |
+
+La garde a disparu du jeu — il n'y a pas de bouton de blocage, comme dans Baldur's Gate 3
+— donc ne la dessine pas.
+
+**Et une chose franche, parce que tu la verrais de toute façon.** Le coup vers le nord se
+lit : le bras monte et le poing passe derrière les cheveux. **Le coup vers le sud, non.**
+De profil, la préparation est basse et en arrière et le coup part vers l'avant ; vers le
+sud, la préparation est haute et le coup descend le long du corps. Les deux mêmes poses
+veulent dire des choses opposées selon l'orientation, et un bras qui pend se lit comme un
+bras retombé, pas comme un coup. C'est la pose qu'on referait en premier.
+
+**Deux autres choses ont bougé et ton avis compte sur les deux.**
+
+- **On ne peut plus sortir de la zone, ce n'est plus vrai non plus** : la limite de deux
+  cases a disparu. Tu peux quitter un combat en marchant, et l'adversaire te poursuit sur
+  huit cases avant d'abandonner.
+- **La caméra de combat est passée de 7 m à 15 m**, parce qu'un déplacement de quatre
+  cases fait un champ de neuf cases de large et que ça débordait de l'écran. **Tes
+  personnages sont donc environ deux fois plus petits pendant un combat.** L'angle et
+  l'orientation n'ont pas bougé. Regarde et dis ce que tu en penses :
+
+```bash
+UNCROWNED_DUEL=bram tools/shot.sh /tmp/duel.png play 280,315
+```
+
+Et un avertissement qu'on te doit : dans un bois dense, un combat est presque illisible.
+Tes sapins passent devant les combattants. On sait comment le régler — faire disparaître
+en fondu ce qui passe entre la caméra et eux — mais ce n'est pas encore fait.
+
 Donc concrètement, pour toi : **rien à redessiner.** La caméra garde son orientation,
 elle descend seulement. Le combat se déroule d'est en ouest, et il utilise tes images
 `left` et `right` telles quelles.

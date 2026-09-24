@@ -129,12 +129,10 @@ func test_the_rules_never_quietly_disagree_with_the_file() -> void:
 	assert_eq(DuelRules.tiles_per_turn(), int(table["tiles_per_turn"]))
 	assert_eq(DuelRules.reach_tiles(), int(table["reach_tiles"]))
 	assert_eq(DuelRules.strike_damage(), int(table["strike_damage"]))
-	assert_eq(DuelRules.player_hp(), int(table["player_hp"]))
 	assert_eq(DuelRules.stand_off_tiles(), int(table["stand_off_tiles"]))
 	assert_eq(DuelRules.leaves_at_tiles(), int(table["leaves_at_tiles"]))
 	assert_eq(DuelRules.leaves_after_rounds(), int(table["leaves_after_rounds"]))
 	assert_eq(DuelRules.follows_tiles(), int(table["follows_tiles"]))
-	assert_eq(DuelRules.flees_at_hp(), int(table["flees_at_hp"]))
 	assert_eq(DuelRules.steps_per_tile(), int(table["steps_per_tile"]))
 	assert_eq(DuelRules.act_steps(), int(table["act_steps"]))
 	assert_eq(DuelRules.strike_at_step(), int(table["strike_at_step"]))
@@ -147,17 +145,21 @@ func test_all_of_the_balance_is_one_small_table() -> void:
 	# The one rule worth keeping from the first design. Every number that decides how a
 	# fight goes is in content/duel.json and in no other file.
 	var table: Dictionary = DuelRules.table()
-	for key: String in ["tiles_per_turn", "reach_tiles", "strike_damage", "player_hp",
+	for key: String in ["tiles_per_turn", "reach_tiles", "strike_damage",
 			"stand_off_tiles", "leaves_at_tiles", "leaves_after_rounds", "follows_tiles",
-			"flees_at_hp", "steps_per_tile",
+			"steps_per_tile",
 			"act_steps", "strike_at_step", "hurt_steps", "pause_steps", "beat_steps"]:
 		assert_true(table.has(key), "the table says what '%s' is" % key)
 	assert_eq(DuelRules.tiles_per_turn(), 4, "four tiles a turn — eight metres")
 	assert_eq(DuelRules.reach_tiles(), 1, "reach is one tile")
 	assert_eq(DuelRules.strike_damage(), 5, "a strike takes five")
-	assert_eq(DuelRules.player_hp(), 100, "the player's hundred, a development value")
-	assert_eq(DuelRules.hp_of(&"bram"), 10, "and everything else has ten")
-	assert_eq(DuelRules.hp_of(&"nobody_in_particular"), 10, "including anybody not listed")
+	# **The player is deliberately absent from it** (Yannick, 2026-09-24): he brings
+	# `WorldState.player_hp`, the one bar, and a fight spends what he walked in with.
+	# A row here would be the second bar coming back.
+	assert_false(table.has("player_hp"), "the player's health is the world's, not the table's")
+	assert_false(table.has("flees_at_hp"), "and nobody flees, so there is no threshold")
+	assert_eq(DuelRules.hp_of(&"bram"), 15, "and everything else has fifteen — three blows")
+	assert_eq(DuelRules.hp_of(&"nobody_in_particular"), 15, "including anybody not listed")
 
 
 func test_there_are_two_actions_and_no_guard() -> void:
@@ -179,14 +181,14 @@ func test_editing_the_table_alone_changes_the_outcome_of_a_scripted_fight() -> v
 	# K2's check, and the reason the table exists. Same fight, same hands, one number.
 	var five: Sim = _start()
 	_play(five, DuelPlayer.PRESS, 4000)
-	assert_eq((_duel(five)).outcome, &"won", "ten health against five a blow")
-	assert_eq(_blows_by(five, "player"), 2, "goes down in two")
+	assert_eq((_duel(five)).outcome, &"won", "fifteen health against five a blow")
+	assert_eq(_blows_by(five, "player"), 3, "goes down in three")
 
 	DuelRules.override({"strike_damage": 10})
 	var ten: Sim = _start()
 	_play(ten, DuelPlayer.PRESS, 4000)
 	assert_eq((_duel(ten)).outcome, &"won", "and against ten a blow")
-	assert_eq(_blows_by(ten, "player"), 1, "it goes down in one")
+	assert_eq(_blows_by(ten, "player"), 2, "it goes down in two")
 
 
 func test_the_movement_cap_is_the_tables_and_nothing_elses() -> void:
@@ -395,15 +397,31 @@ func test_the_end_is_held_for_a_beat_before_the_world_comes_back() -> void:
 	assert_eq(sim.events.of_type(&"duel_ended").size(), 1, "and the one result is handed over")
 
 
-func test_a_wounded_opponent_runs_rather_than_striking() -> void:
-	# docs/COMBAT_V2.md §5: attack the works' people and they run and hide somewhere.
+func test_nobody_flees_on_the_shipped_table_and_the_machinery_still_works() -> void:
+	# **Two claims, because the behaviour is deferred rather than deleted** (Yannick,
+	# 2026-09-24). He cut the threshold: it was five, and against ten points and five
+	# damage that made everything run after exactly one hit — Bram included, who is the
+	# tutorial. So the shipped table has no threshold and nobody runs.
+	#
+	# But wounded men running and hiding is a thing he wants, and docs/COMBAT_V2.md §5
+	# still describes it. The machinery is left standing and proved here under an
+	# override, so the day it comes back it comes back working rather than rotted.
+	assert_eq(DuelRules.flees_at_hp(), 0, "on the shipped table, nobody runs")
+	var stands: Sim = _start()
+	var standing: Duel = _duel(stands)
+	_play_turns(stands, DuelPlayer.PRESS, 1)
+	_play(stands, DuelPlayer.STAND, 400)
+	assert_true(_blows_by(stands, "bram") > 0,
+		"a wounded man with no threshold stays and swings")
+
+	DuelRules.override({"flees_at_hp": 10})
 	var sim: Sim = _start()
 	var duel: Duel = _duel(sim)
 	var him: DuelFighter = duel.foe()
 	var mine: DuelFighter = duel.me()
 	_play_turns(sim, DuelPlayer.PRESS, 1)
 	_play(sim, DuelPlayer.STAND, 40)
-	assert_true(him.hp <= DuelRules.flees_at_hp(), "one blow of five leaves him at it")
+	assert_true(him.hp <= DuelRules.flees_at_hp(), "one blow of five leaves him under it")
 	var was: int = DuelRules.apart(mine.at, him.at)
 	_play(sim, DuelPlayer.STAND, 400)
 	assert_true(DuelRules.apart(mine.at, him.at) > was,
@@ -468,7 +486,6 @@ func test_a_sparring_partner_stops_when_you_go_down() -> void:
 func test_nothing_can_take_a_point_off_you_while_the_development_switch_is_on() -> void:
 	# `G`, and it is read here as well as in `WorldState.hurt`: a fight that drained a
 	# bar nothing was allowed to empty would be a fight the HUD lied about.
-	DuelRules.override({"player_hp": 5})
 	var sim: Sim = Game.build()
 	sim.submit(&"unkillable", {"on": true})
 	sim.submit(&"duel_began", {"opponent": "harry", "by": "harry"})
@@ -476,7 +493,11 @@ func test_nothing_can_take_a_point_off_you_while_the_development_switch_is_on() 
 	var duel: Duel = _duel(sim)
 	_play(sim, DuelPlayer.STAND, 1200)
 	assert_true(duel.on() or duel.settled(), "the fight is still going after a blow")
-	assert_eq((duel.me()).hp, 1, "and the player is left standing on one")
+	# **Not a point, which is stronger than it was.** The old reading left him on one,
+	# because the fight kept a bar of its own and clamped it. The bar is the world's
+	# now, every blow goes through `WorldState.hurt`, and `G` makes that a no-op — so
+	# `CLAUDE.md`'s own words, *nothing can take a point off him*, are literally true.
+	assert_eq((duel.me()).hp, WorldState.MAX_HP, "the player is untouched, not left on one")
 
 
 # -------------------------------------------------- what the window is handed ---

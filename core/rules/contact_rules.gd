@@ -8,7 +8,11 @@ extends RefCounted
 ## 10 → 6 → 2 → 0.
 
 const CONTACT_RADIUS: float = 1.25
-const KING_DAMAGE: int = 4
+## Scaled with `WorldState.MAX_HP` when it went from ten to a hundred (2026-09-24).
+## **`TOUCHES_TO_KILL` below is the claim** — three touches and you are dead — so this
+## is a third of the bar rounded up, and changing the bar without changing this is how
+## the king quietly stops being lethal.
+const KING_DAMAGE: int = 34
 const TOUCHES_TO_KILL: int = 3
 
 ## Half a second of grace, so standing in the king does not drain ten hit points

@@ -8,7 +8,11 @@ with a status of the same shape. This is that draft.
 kingdom already has, this document points at it. Two documents holding one rule is how
 they come to disagree.
 
-**Status: a draft for Yannick.** Section 7 holds what is still open. Nothing is built.
+**Status: built, 2026-09-24.** It was a draft for two days; **J1–J6 of
+`docs/DEMO_TASKS.md` are done** — the purse, a deed moving the town, the scale, the
+mean at Blackcairn, dialogue reading the town, and the journal page. Section 7 holds
+what is still open, and section 2 records the one place where building it proved this
+document wrong.
 
 ---
 
@@ -32,7 +36,7 @@ something you decide, and something that moves with what happens.
 | | What it is | Where it lives | Moves how |
 |---|---|---|---|
 | **Allégeance** | The side the player *chose*. Visible to everyone | `core/allegiance.gd`, `side` — **exists** | Only when the player says so. Never drifts |
-| **Standing, per town** | What each place thinks of the player | `core/standing.gd`, `by_town` — **exists** | By deeds done there, and only by deeds |
+| **Standing, per town** | What each place thinks of the player | `core/player_state.gd` — **new, and see below** | By deeds done there, and only by deeds |
 | **Richesse** | **The gold the player has.** One number | **new — see §6** | By earning, taking, being given, spending |
 
 The first two were already written with the right split, in September:
@@ -50,6 +54,14 @@ C3; `by_town` and `side` are what this model keeps.
 
 `by_person` goes too. A witness's opinion diverging from their neighbours' was a good
 idea and it is not this model's: a deed moves the town it happened in.
+
+> **This document said to reuse `Standing.by_town`, and that was wrong** — found while
+> building J2 on 2026-09-24. `RumourSystem` moves `by_town` when a *story arrives* in a
+> town, which is place-to-place propagation: §4's guardrail and this section's own
+> "by deeds done there, and only by deeds" both forbid it, and reusing the field would
+> have made the player's standing travel by gossip. So the model lives in a new store
+> beside the old one, the way M1 built `TownState` beside `WorldTick`, and the old half
+> goes with C3 where it was always going.
 
 **Richesse is money, and nothing more** (Yannick, 2026-09-23). It is how much gold the
 player has. `SPECS` §12 already settles the currency — *"Currency: gold. The king's is
@@ -92,6 +104,29 @@ rather than a slider.
 **Standing does not decay** (Yannick, 2026-09-23). A town remembers. There is no
 timer that quietly forgives, because a number that drains is a number the player
 cannot reason about.
+
+### And the way up is quests — which means there is none in v1
+
+The line above this section says *a change names who is offended and who is impressed*.
+**In a one-number-per-town model that cannot be true**, and it is worth saying so plainly
+rather than discovering it: stealing in a town has no counterparty *in that same town* to
+impress. Today an unpriced deed still falls through to the old table, which is the only
+reason any town's opinion can rise at all — and that table dies with **C3**.
+
+**Yannick settled it on 2026-09-24, and the answer is that v1 has no way up.** Giving
+back what you took is worth **+6** and that is the whole of it. What raises a town later
+is **the outcome of its own quest, and side quests beside it** — his words. So the
+up-direction is not missing by oversight; it is a thing the quests will carry, and there
+is one quest in the demo.
+
+Two consequences to hold on to:
+
+- **A demo player cannot repair a reputation.** Steal twice in the Cinderworks and the
+  doors that shut stay shut for the length of the demo. That is a real consequence and
+  it is the design, but S4's tester should be watched for whether it reads as a rule or
+  as a bug.
+- **C3 must not be run without reading this.** It removes the fall-through, and on that
+  day the only remaining way up is restitution.
 
 ## 4. How a town's opinion reaches the king
 

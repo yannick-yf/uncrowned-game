@@ -7,7 +7,23 @@ extends RefCounted
 ## the log into a fresh WorldState has to reproduce it exactly. Nothing here is
 ## written by view/; nothing here is written outside Sim.advance().
 
-const MAX_HP: int = 10
+## **One bar, and it is this one** (Yannick, 2026-09-24). A fight used to hand the
+## player a hundred points of its own while the world kept ten pips that only moved
+## when they fell, so somebody on one pip walked into a fight fresh and walked out on
+## one pip again. There is one number now and the fight spends it.
+##
+## **A hundred is a development value and he said so plainly** — *"justement pour que
+## ça soit une formalité, c'est dans le cadre de mes tests et devs"*. At five damage a
+## blow that is twenty blows, so nothing in the demo can threaten him. The shipped
+## number is open, thirty is the recommendation, and **S4** is when it has to be
+## settled. It is written here rather than left as a silent default, because a number
+## nobody remembers choosing is a number that ships.
+const MAX_HP: int = 100
+## What one rest's worth of mending restores: **a tenth of the bar**, which is the one
+## point it always was when the bar was ten. A fraction rather than a number, so moving
+## `MAX_HP` moves the pace of healing with it instead of making a hundred-point player
+## heal ten times slower than a ten-point one did.
+const MEND_PER_REST: int = MAX_HP / 10
 const OVERWORLD: StringName = &"overworld"
 
 var zones: Dictionary = {}

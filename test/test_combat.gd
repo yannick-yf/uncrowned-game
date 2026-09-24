@@ -154,7 +154,10 @@ func test_holding_a_guard_means_holding_no_blow() -> void:
 	sim.advance(60)
 	sim.submit(&"fight_input", {"walk": 0, "guard": true, "attack": true})
 	sim.advance(CombatRules.length(CombatRules.STRIKE) + 4)
-	assert_eq(fight.opponent_hp, CombatRules.opponent_hp(),
+	# Against *his* starting health, not `opponent_hp()`, which is the default for
+	# somebody the table does not list and happened to equal it while the player's bar
+	# was ten (2026-09-24).
+	assert_eq(fight.opponent_hp, CombatRules.hp_of(fight.opponent),
 		"a fighter behind their guard swings at nobody")
 
 
