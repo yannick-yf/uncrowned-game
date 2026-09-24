@@ -80,3 +80,32 @@ static func priced_deeds() -> Array[StringName]:
 ## The two killings, so nothing has to spell the ids out to tell them apart.
 static func is_a_killing(deed: StringName) -> bool:
 	return deed == DEED_KILLED_INNOCENT or deed == DEED_KILLED_ATTACKER
+
+
+## **What the court hears** (§4, J4). The mean of every town's standing — *all* of them,
+## including the ones the player has never been to, which sit at neutral and pull the
+## average toward zero.
+##
+## **No new rule.** The player travels the kingdom's existing star
+## (`SIMULATION_MODEL.md` §3, guardrail 1: propagation is always place → kingdom →
+## places, never place → place). Towns do not talk to each other, and neither does the
+## player's reputation; this is the reading at the far end and nothing more, which is
+## why it is a function over the store rather than a number kept anywhere.
+##
+## Two consequences, and both are the design working rather than side effects:
+##
+## - Hated in one town and liked in four arrives at court **slightly well regarded**.
+##   One terrible town is survivable.
+## - Mildly disliked everywhere arrives **worse** than being loathed in one place.
+##   Consistency matters more than any single act, which is the right shape for a game
+##   about a reign.
+static func at_blackcairn(player: PlayerState) -> float:
+	if player == null:
+		return PlayerState.NEUTRAL
+	var towns: Array[StringName] = player.towns()
+	if towns.is_empty():
+		return PlayerState.NEUTRAL
+	var total: float = 0.0
+	for town: StringName in towns:
+		total += player.standing_in(town)
+	return total / float(towns.size())

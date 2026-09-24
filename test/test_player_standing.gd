@@ -229,6 +229,66 @@ func test_the_old_acts_keep_their_numbers_until_c3_takes_them() -> void:
 		"and it is still the way up")
 
 
+# ------------------------------------------------- what the court hears (J4) ---
+
+## Written straight into the store rather than played to, because this is a reading
+## and not a route: the arithmetic is what the two tests below are about.
+func _standings(sim: Sim, by_town: Dictionary) -> PlayerState:
+	var player := sim.store(&"player") as PlayerState
+	for town: StringName in player.towns():
+		player.standing[town] = float(by_town.get(town, PlayerState.NEUTRAL))
+	return player
+
+
+func test_hated_in_one_town_and_liked_in_four_arrives_at_court_well_regarded() -> void:
+	# The numbers, written out. A murder in the works — the worst single deed in the
+	# game — and four towns you have done right by.
+	var player: PlayerState = _standings(Game.build(), {
+		&"cinderworks": -80.0,
+		&"harrowgate": 30.0, &"muster": 30.0, &"saltmarch": 30.0, &"wide_acres": 30.0,
+	})
+	assert_eq(PlayerRules.at_blackcairn(player), 8.0, "(-80 + 30 + 30 + 30 + 30) / 5")
+	assert_true(PlayerRules.at_blackcairn(player) > PlayerState.NEUTRAL,
+		"one terrible town is survivable")
+	assert_eq(StandingRules.word_for(PlayerRules.at_blackcairn(player)), &"welcome",
+		"the court is glad to see you")
+
+
+func test_mildly_disliked_everywhere_arrives_worse_than_loathed_in_one_place() -> void:
+	# The counter-intuitive one, and the reason J4's check asks for both written out.
+	# One theft in each of the five towns — the smallest deed in the game, five times —
+	# and the court thinks less of you than it does of a murderer with four friends.
+	var mild: PlayerState = _standings(Game.build(), {
+		&"cinderworks": -10.0, &"harrowgate": -10.0, &"muster": -10.0,
+		&"saltmarch": -10.0, &"wide_acres": -10.0,
+	})
+	var loathed: PlayerState = _standings(Game.build(), {
+		&"cinderworks": -80.0,
+		&"harrowgate": 30.0, &"muster": 30.0, &"saltmarch": 30.0, &"wide_acres": 30.0,
+	})
+	assert_eq(PlayerRules.at_blackcairn(mild), -10.0, "(-10 x 5) / 5")
+	assert_eq(PlayerRules.at_blackcairn(loathed), 8.0, "against +8 for the murderer")
+	assert_true(PlayerRules.at_blackcairn(mild) < PlayerRules.at_blackcairn(loathed),
+		"consistency matters more than any single act")
+	assert_eq(StandingRules.word_for(PlayerRules.at_blackcairn(mild)), &"wary",
+		"and the court has heard about you")
+
+
+func test_the_towns_never_visited_pull_it_toward_zero() -> void:
+	# The half of §4 that is easy to leave out. The four towns the player has never
+	# been to sit at neutral and are counted, so one ruined reputation is diluted.
+	var player: PlayerState = _standings(Game.build(), {&"cinderworks": -80.0})
+	assert_eq(PlayerRules.at_blackcairn(player), -16.0, "-80 / 5, and not -80")
+	assert_eq(StandingRules.word_for(PlayerRules.at_blackcairn(player)), &"wary",
+		"hated in the works, merely talked about at court")
+
+
+func test_a_player_nobody_has_heard_of_arrives_at_neutral() -> void:
+	var player := Game.build().store(&"player") as PlayerState
+	assert_eq(PlayerRules.at_blackcairn(player), PlayerState.NEUTRAL,
+		"five towns at neutral average to neutral")
+
+
 # ------------------------------------------------------------------- the log ---
 
 func test_nothing_writes_a_standing_except_a_deed_in_the_log() -> void:

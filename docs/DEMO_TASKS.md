@@ -796,7 +796,7 @@ table it will read, exercised through the same `Deeds.perform` pipe every deed u
 
 **Checked:** 6 new tests. 55 suites, 600 tests, 0 failed on both worlds.
 
-### J4 · Blackcairn reads the mean
+### J4 · Blackcairn reads the mean — **built 2026-09-24**
 
 Est. 1 h. Depends on: J2.
 
@@ -808,6 +808,19 @@ does (`SIMULATION_MODEL.md` §3, guardrail 1).
 **Check:** hated in one town and liked in four arrives positive; mildly disliked in all
 five arrives lower than that. Two tests with the numbers written out, because the
 second result is the counter-intuitive one and it is the design working.
+
+**Delivered 2026-09-24.** `PlayerRules.at_blackcairn()` — one pure function over the
+store, so nothing is kept and nothing can drift. The numbers, written out:
+
+- A murder in the works and four towns you have done right by:
+  `(−80 + 30 + 30 + 30 + 30) / 5 = +8`, which reads **welcome**. One terrible town is
+  survivable.
+- One theft in each of the five: `(−10 × 5) / 5 = −10`, which reads **wary** — *lower
+  than the murderer's*. Consistency matters more than any single act.
+- And the half that is easy to leave out: hated in the works alone is `−80 / 5 = −16`,
+  because the four towns never visited are counted at neutral.
+
+**Checked:** 4 new tests. 55 suites, 604 tests, 0 failed on both worlds.
 
 ### J5 · Dialogue reads the town
 
