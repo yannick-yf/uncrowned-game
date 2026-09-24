@@ -21,10 +21,19 @@ func _world() -> Sim:
 	return sim
 
 
+## **The town's opinion, not the person's** (J5, `docs/PLAYER_MODEL.md` §5). A
+## reaction used to be read off what this one person thought of you; since the player
+## model it is read off what the place you are both standing in thinks. The line
+## written for each band is unchanged, and so is every claim below — only where the
+## band comes from has moved.
 func _talk_to(sim: Sim, who: StringName, regard: float) -> void:
 	var world := sim.store(&"world") as WorldState
-	(sim.store(&"standing") as Standing).shift_person(who, regard)
 	world.player_pos = (sim.store(&"cast") as Cast).get_npc(who).centre()
+	var here: StringName = world.region().zone_at(world.player_tile())
+	var player := sim.store(&"player") as PlayerState
+	if not player.has_standing(here):
+		fail("%s stands in %s, which carries no standing" % [who, here])
+	player.standing[here] = regard
 	sim.submit(&"talk", {"npc": String(who)})
 	sim.advance(2)
 
@@ -135,7 +144,7 @@ func test_a_stranger_hears_exactly_what_the_game_always_said() -> void:
 	assert_eq(_ask_first(sim), written, "word for word what was written")
 
 
-func test_a_man_who_watched_you_steal_answers_differently() -> void:
+func test_a_man_in_a_town_that_has_turned_on_you_answers_differently() -> void:
 	var written: Sim = _world()
 	_talk_to(written, &"harry", 0.0)
 	var plain: String = _ask_first(written)

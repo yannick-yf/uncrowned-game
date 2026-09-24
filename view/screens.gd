@@ -52,7 +52,8 @@ func _ready() -> void:
 func _first_screen() -> StringName:
 	if not OS.has_feature("debug"):
 		return &"play" if QUICK_START else &"title"
-	match OS.get_environment("UNCROWNED_SCREEN"):
+	# Split, because `journal:standing` names a screen and a page of it.
+	match OS.get_environment("UNCROWNED_SCREEN").split(":")[0]:
 		"title":
 			return &"title"
 		"creation":

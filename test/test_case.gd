@@ -119,6 +119,17 @@ func at_a_stall(zone: StringName = &"harrowgate") -> Vector2:
 	return Vector2.ZERO
 
 
+## Every counter in a place, in the region's own order. Two thefts in one town need
+## two of them: a robbed stall stays bare for a quarter of an in-game day.
+func stalls_in(zone: StringName) -> Array[Vector2]:
+	var region: Region = Region.build_overworld()
+	var out: Array[Vector2] = []
+	for prop: Dictionary in region.props:
+		if (prop["kind"] as StringName) == &"stall" and region.zone_at(prop["at"] as Vector2i) == zone:
+			out.append(Vector2(prop["at"] as Vector2i) + Vector2(0.5, 1.0))
+	return out
+
+
 ## In the middle of a place, on its street.
 func in_town(zone: StringName) -> Vector2:
 	var region: Region = Region.build_overworld()

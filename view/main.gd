@@ -40,6 +40,9 @@ var _journal_page: int = 0
 ## The log length the page was built from. A journal held open would otherwise walk
 ## every event in the run sixty times a second to print the same page.
 var _journal_at: int = -1
+## Which page `UNCROWNED_SCREEN=journal:standing` asked for, resolved on the first
+## draw because the pages are built there. Debug only, and empty every other run.
+var _journal_wanted: StringName = &""
 ## Deaths already answered for, so one death triggers one reload.
 var _deaths_seen: int = 0
 
@@ -49,6 +52,8 @@ var _world: WorldState = null
 var _cast: Cast = null
 var _ticked: WorldTick = null
 var _standing: Standing = null
+## The player's own store (J1–J6): the purse, and what each town thinks of them.
+var _player: PlayerState = null
 var _road: Travellers = null
 var _book: Phrasebook = null
 ## Whatever chooses words, if anything does. The default asks nothing, so the game
@@ -159,6 +164,7 @@ func _ready() -> void:
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
 	_standing = _sim.store(&"standing") as Standing
+	_player = _sim.store(&"player") as PlayerState
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
 	_seen_events = _sim.events.size()
@@ -168,11 +174,16 @@ func _ready() -> void:
 	# screenshot tool. `screens.gd` routes all three of these here, so there is one
 	# variable naming every screen in the game rather than one per overlay.
 	if _debug_available:
-		match OS.get_environment("UNCROWNED_SCREEN"):
+		# `journal:standing` opens the journal *at a page*, because the journal is
+		# seven pages now and the one being photographed is rarely the first.
+		var asked: PackedStringArray = OS.get_environment("UNCROWNED_SCREEN").split(":")
+		match asked[0]:
 			"map":
 				_map_open = true
 			"journal":
 				_journal_open = true
+				if asked.size() > 1:
+					_journal_wanted = StringName("journal.%s" % asked[1].strip_edges())
 			"pause":
 				_pause_menu()
 	var stand: String = OS.get_environment("UNCROWNED_AT")
@@ -245,6 +256,47 @@ func _ready() -> void:
 		# front of cold furnaces — a picture of the debug tool rather than of the game.
 		# An hour is what the population is matched on.
 		_sim.advance(Sim.STEPS_PER_WORLD_TICK * 61)
+
+	# **`UNCROWNED_DID=i_stole_in_public,i_killed_somebody_innocent`** — deeds done where
+	# the player is standing, for the frame `shot.sh` takes, through the one pipe every
+	# deed in the game uses. Same gate and same reason as the others, plus its own: J6's
+	# page shows **what you did and what it cost, side by side**, and there was no way
+	# to photograph it — a killing has no key yet (K3), and a theft needs a stall and a
+	# key press. Unlike `UNCROWNED_TOWN` this writes nothing directly: it raises the real
+	# event, so the witnesses are the real witnesses and the picture is of the game.
+	var did: String = OS.get_environment("UNCROWNED_DID")
+	if _debug_available and did != "":
+		for deed: String in did.split(","):
+			Deeds.perform(_sim, StringName(deed.strip_edges()),
+				_world.region().zone_at(_world.player_tile()), _world.player_pos)
+			_sim.advance(3)
+
+	# **`UNCROWNED_TALK=maddox:-45`** — standing in front of somebody, mid-greeting, for
+	# the frame `shot.sh` takes, with the standing of the town you are both in set to
+	# the number after the colon.
+	#
+	# The same gate and the same reason as the four above, plus one of its own: what a
+	# town's opinion *does* in v1 is change what people say to you (J5,
+	# `docs/PLAYER_MODEL.md` §5), and **a greeting that silently never fires is exactly
+	# what `--headless` cannot see**. Like `UNCROWNED_TOWN` it writes the store
+	# directly, so it is one frame for one photograph and not a state that can be saved.
+	var greeting: String = OS.get_environment("UNCROWNED_TALK")
+	if _debug_available and greeting != "" and _cast != null:
+		var halves: PackedStringArray = greeting.strip_edges().split(":")
+		var npc: Npc = _cast.get_npc(StringName(halves[0].strip_edges()))
+		if npc == null:
+			push_warning("UNCROWNED_TALK: nobody called '%s'" % halves[0])
+		else:
+			# A stride south of him, so the two figures do not stand in one tile.
+			_world.player_pos = npc.centre() + Vector2(0.0, 1.2)
+			var here: StringName = _world.region().zone_at(_world.player_tile())
+			if halves.size() > 1 and _player != null and _player.has_standing(here):
+				_player.standing[here] = clampf(
+					float(halves[1]), PlayerState.WORST, PlayerState.BEST)
+			elif halves.size() > 1:
+				push_warning("UNCROWNED_TALK: %s carries no standing" % here)
+			_sim.submit(&"talk", {"npc": String(npc.id)})
+			_sim.advance(2)
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
@@ -921,6 +973,7 @@ func _reload() -> void:
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
+	_player = _sim.store(&"player") as PlayerState
 	_road = _sim.store(&"travellers") as Travellers
 	_book = _sim.store(&"phrasebook") as Phrasebook
 	_mine = _sim.store(&"allegiance") as Allegiance
@@ -1570,16 +1623,23 @@ func _place_name() -> String:
 ## baseline is what makes the change legible; a readout that only appears once
 ## something has gone wrong gives the player nothing to compare it against.
 ##
-## It says how you are regarded. It never says why, and it never moves at the
-## moment of the act — it moves when the story gets here, which may be days after
-## you left. Push the ambient, pull the attribution.
+## It says how you are regarded. It never says why. **Since J5 it moves at the moment
+## of the act**, in the town the act was done in, because that is what the new model
+## says a standing is: the story still travels and the player's reputation does not
+## travel with it. Push the ambient, pull the attribution — the journal is still the
+## only thing that answers *why*.
+##
+## It reads `PlayerRules.regard_in`, which is the same function `DialogueSystem` asks.
+## One reading, one number: the HUD saying *wary* while everyone greets you as a
+## stranger would be a lie the player cannot audit.
 func _regard() -> String:
-	if _standing == null:
+	if _player == null:
 		return ""
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
 	if zone == &"":
 		return ""
-	return Text.of(&"hud.regard", [Text.of(StringName("regard.%s" % StandingRules.word_for(_standing.in_town(zone))))])
+	return Text.of(&"hud.regard", [Text.of(StringName("regard.%s"
+		% StandingRules.word_for(PlayerRules.regard_in(_player, zone))))])
 
 
 func _draw_hud() -> void:
@@ -1699,6 +1759,11 @@ func _draw_journal() -> void:
 		return
 	_journal_at = _sim.events.size()
 	var pages: Array[Dictionary] = _journal_pages()
+	if _journal_wanted != &"":
+		for at: int in pages.size():
+			if pages[at]["name"] == _journal_wanted:
+				_journal_page = at
+		_journal_wanted = &""
 	_journal_page = posmod(_journal_page, pages.size())
 	var page: Dictionary = pages[_journal_page]
 	_journal_title.text = "%s      %s" % [
@@ -1733,6 +1798,7 @@ func _journal_pages() -> Array[Dictionary]:
 		{"name": &"journal.kingdom", "blocks": _page_kingdom()},
 		{"name": &"journal.quests", "blocks": _page_quests()},
 		{"name": &"journal.side", "blocks": _page_you()},
+		{"name": &"journal.standing", "blocks": _page_standing()},
 	]
 	var known: Array[Array] = _page_known()
 	if not known.is_empty():
@@ -1914,6 +1980,48 @@ func _page_you() -> Array[Array]:
 			Text.of(StringName("ground.%s" % (held if held != FactionRules.NEUTRAL else &"none"))),
 		]))
 	return [first, ground] as Array[Array]
+
+
+## **What they think of you, and what you did about it** (J6).
+##
+## The number and its cause on the same screen, which is the whole of the task: a town
+## that hates you and will not say why is the bug. Every other page here pulls the
+## attribution the same way — the world never announces what a deed cost, and this is
+## where a player who wants to know comes to find out.
+##
+## Ordered **best first**, which puts the worst town at the bottom: `_last_that_fit`
+## keeps the end of a page, so the place that has turned on you is the one that
+## survives a page too full to hold every town, with its reasons under it.
+func _page_standing() -> Array[Array]:
+	var rows: Array[Dictionary] = Journal.standings(_player, _sim.events)
+	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["amount"]) > float(b["amount"]))
+	var blocks: Array[Array] = []
+	var quiet: bool = true
+	for row: Dictionary in rows:
+		var block: Array[String] = [Text.of(&"journal.standing.row", [
+			_short_place(row["town"] as StringName),
+			Text.of(StringName("regard.%s" % row["word"])),
+		])]
+		for move: Dictionary in (row["moves"] as Array[Dictionary]):
+			quiet = false
+			block.append(Text.of(&"journal.standing.because", [
+				_clock(int(move["tick"])),
+				Text.of(StringName("deed.heard.%s" % String(move["deed"]))),
+				"%+d" % int(round(float(move["by"]))),
+			]))
+		blocks.append(block)
+	if quiet:
+		blocks.append([Text.of(&"journal.standing.quiet")] as Array[String])
+	# And the far end of the star: the court hears the mean of every town, the ones
+	# never visited included (J4). It is the one reading in the model that is not a
+	# place's own, so it is said apart rather than as a sixth row.
+	blocks.append(["", Text.of(&"journal.standing.court", [
+		Text.of(StringName("regard.%s" % StandingRules.word_for(
+			PlayerRules.at_blackcairn(_player))))])] as Array[String])
+	blocks.append(["", Text.of(&"journal.purse", [_player.gold if _player != null else 0])]
+		as Array[String])
+	return blocks
 
 
 ## What you know, and — invariant 6 made visible — whether it would survive the death

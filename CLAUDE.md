@@ -308,7 +308,7 @@ and kept as a real one: a game whose argument is *the road against the forest* s
 let you see the shape of the argument. It is painted once into a texture rather than
 redrawn, because 56,000 rectangles a frame is a slideshow.
 
-**`tools/shot.sh out.png [title|creation|play|pause|journal|map] [x,y]`** renders one
+**`tools/shot.sh out.png [title|creation|play|pause|journal[:page]|map] [x,y]`** renders one
 frame of a screen to a file and quits. It is the only check that catches what the
 suite cannot see — the ocean shipped covered in shoreline tiles because "300 frames,
 zero script errors" was reported as though it meant the picture was right. Under it:
@@ -360,7 +360,31 @@ past it; and only the last ten steps' events are fresh, so the picture carries o
 spark and number and not every blow's. `godot --headless --path . -s tools/play_fight.gd
 -- stand 200` prints the trace that says which step is which.
 
-**All seven are gated on `OS.has_feature("debug")`**, so they are absent from a
+**`UNCROWNED_TALK=maddox[:standing]`** (2026-09-24) stands the player in front of
+somebody, mid-greeting, for the frame `shot.sh` takes, and sets the standing of the town
+they are both in to the number after the colon. Same gate and same reason as the three
+above, plus its own: **what a town's opinion does in v1 is change what people say to
+you** (J5, `docs/PLAYER_MODEL.md` §5), and a greeting that silently never fires is
+precisely what `--headless` cannot see — it was added the day the reading moved from the
+person to the town, to photograph both halves. Like `UNCROWNED_TOWN` it writes the store
+directly and is therefore **one frame for one photograph, not a save-able state**.
+
+**`UNCROWNED_DID=deed[,deed]`** (2026-09-24) does those deeds where the player is
+standing, for the frame `shot.sh` takes, through `Deeds.perform` — the one pipe every
+deed in the game uses, so the witnesses are the real witnesses. Same gate and same
+reason, plus its own: J6's journal page shows **what you did and what it cost, side by
+side**, and there was no way to photograph it — a killing has no key yet (K3) and a
+theft needs a stall and a key press. Unlike `UNCROWNED_TOWN` it writes nothing directly;
+it raises the real event, so the picture is of the game.
+`UNCROWNED_DID=i_stole_in_public,i_killed_somebody_innocent UNCROWNED_AT=236,208
+UNCROWNED_SCREEN=journal:standing` is the frame that settled J6.
+
+**`UNCROWNED_SCREEN=journal:<page>`** (2026-09-24) is not a ninth tool but the existing
+one extended: the journal is seven pages and the page being photographed is rarely the
+first, so the screen name may carry the page after a colon — `journal:standing`,
+`journal:kingdom`, and so on for any page in `_journal_pages`.
+
+**All nine are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

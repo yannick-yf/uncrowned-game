@@ -20,6 +20,12 @@ func _deed_sim(cast: Cast = Cast.shared()) -> Sim:
 	sim.add_store(&"worldtick", WorldTick.new())
 	sim.add_store(&"standing", Standing.new())
 	sim.add_store(&"rumours", Rumours.new())
+	# The player's own store, and the system that writes it. Added with J5, when a
+	# conversation stopped reading what one person thinks of you and started reading
+	# what the place does: a world without it is a world where every greeting is a
+	# stranger's, which would make three of the tests below pass for the wrong reason.
+	sim.add_store(&"player", PlayerState.new())
+	sim.add_system(PlayerSystem.new())
 	sim.add_system(ArmySystem.new())
 	sim.add_system(WorldTickSystem.new())
 	sim.add_system(GrainSystem.new())
@@ -42,6 +48,25 @@ func _act(sim: Sim, where: Vector2, event: StringName) -> void:
 
 func _days(sim: Sim, count: float) -> void:
 	sim.advance_world_ticks(int(float(Game.TICKS_PER_IN_GAME_DAY) * count))
+
+
+## Enough for Harrowgate to stop being willing.
+##
+## **Two counters, since J3 settled the scale.** A theft is about −10 on the new model
+## and `StandingRules.UNWELCOME` is −20, so one is a nuisance and two is a town that
+## has had enough — which is `docs/PLAYER_MODEL.md` §3's own reading of it (*"the
+## player who takes things is a nuisance"*). The first one is still legible the first
+## time: it carries the town from `unknown` to `wary`, which the HUD says out loud.
+func _steal_enough_to_shut_a_door(sim: Sim) -> void:
+	var stalls: Array[Vector2] = stalls_in(&"harrowgate")
+	assert_true(stalls.size() >= 2, "Harrowgate keeps more than one counter")
+	_act(sim, stalls[0], &"steal")
+	var player := sim.store(&"player") as PlayerState
+	assert_eq(StandingRules.word_for(player.standing_in(&"harrowgate")), &"wary",
+		"one theft is already a word on the HUD: %.1f" % player.standing_in(&"harrowgate"))
+	_act(sim, stalls[1], &"steal")
+	assert_true(StandingRules.is_unwelcome(player.standing_in(&"harrowgate")),
+		"and two is a town that has had enough: %.1f" % player.standing_in(&"harrowgate"))
 
 
 # ------------------------------------------------------------- the hard rule ---
@@ -234,14 +259,16 @@ func test_nobody_is_counted_against_you_twice_for_one_deed() -> void:
 
 
 func test_ossa_stops_telling_you_things() -> void:
-	# The door that shuts, at the level of one person. She still treats whoever
-	# bleeds — that is who she is — but you get nothing else from her.
+	# The door that shuts. **At the level of the town since J5** — a deed moves the
+	# place it happened in, and nobody in a town that has turned on you does you
+	# favours. She still treats whoever bleeds — that is who she is — but you get
+	# nothing else from her.
 	var sim: Sim = _deed_sim()
 	var before: Array[String] = _talk_to(sim, &"ossa")
 	assert_true(before.has("ask_why"), "she will tell a stranger why the men run")
 	assert_true(before.has("ask_kell"), "and hint at the one she remembers")
 
-	_act(sim, at_a_stall(), &"steal")
+	_steal_enough_to_shut_a_door(sim)
 	var after: Array[String] = _talk_to(sim, &"ossa")
 	assert_false(after.has("ask_why"), "not any more")
 	assert_false(after.has("ask_kell"), "nor that")
@@ -252,7 +279,7 @@ func test_what_ossa_knows_is_still_reachable() -> void:
 	# Invariant 7, at the level of a conversation rather than a death. Closing a
 	# source is the design working; closing the last one is a bug.
 	var sim: Sim = _deed_sim()
-	_act(sim, at_a_stall(), &"steal")
+	_steal_enough_to_shut_a_door(sim)
 	var garrick: Array[String] = _talk_to(sim, &"garrick")
 	assert_true(garrick.has("ask_muster"),
 		"Garrick teaches the same fact and nothing gates him")

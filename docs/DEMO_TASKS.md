@@ -708,7 +708,7 @@ field. Then it steered by eye and wedged itself in the first doorway. It follows
 `SIMULATION_MODEL.md` left open. The places are simulated; the player is not, and every
 consequence of *you can kill everyone* lands here rather than in the fight.
 
-### J1 · The purse
+### J1 · The purse — **built 2026-09-24**
 
 Est. 2 h. Depends on: —.
 
@@ -720,7 +720,20 @@ to go, not because v1 spends it.
 **Check:** a run that earns and spends and then replays its log lands on the same
 number; a purse cannot go below zero.
 
-### J2 · A deed moves the town, not the person
+**Delivered 2026-09-24.** `core/player_state.gd` — **the player's own store**, built
+where the model says the player is shaped like a town: `TownState` holds two numbers
+for a place, this holds the player's. `core/systems/player_system.gd` is the only thing
+that writes it, and only from `move_purse`, so a replay rebuilds the same purse.
+Overdrawing takes what is there rather than refusing — refusing is a price check, and
+§5 says there are no prices — and the event records what actually moved, not what was
+asked for, so a journal reading it cannot claim a price the player never paid.
+
+**The four bands are not built**, deliberately: §7's first open question is their
+thresholds and they are Yannick's numbers. Nothing waits on them.
+
+**Checked:** 5 new tests. 54 suites, 585 tests, 0 failed on both worlds.
+
+### J2 · A deed moves the town, not the person — **built 2026-09-24**
 
 Est. 3 h. Depends on: —.
 
@@ -732,7 +745,23 @@ rather than a slider.
 **Check:** a theft in the Cinderworks moves the Cinderworks and no other town; the same
 theft unwitnessed moves nothing; both suites green.
 
-### J3 · The scale's two ends
+**Delivered 2026-09-24, beside the old model and not on top of it** (rule 4). The
+player's standing is a new dictionary on `core/player_state.gd`, for the same five
+places `TownState` carries and read from the same file, so the two can never disagree
+about which places exist. `PlayerSystem` listens for **`deed_witnessed`** — which
+`Deeds` derives only when somebody saw it — and moves the town the deed names, once,
+and no other. `core/rules/player_rules.gd` is the new table's seam; its numbers are
+still `DeedRules`' until **J3**.
+
+`DeedRules`' factions and witnesses still move, and `RumourSystem` still carries a
+story into `Standing.by_town` as it arrives. All of that goes with **C3**, not here:
+`test_factions`, `test_deeds` and `test_rumour` are untouched and green.
+
+**Checked:** 9 new tests, plus three assertions in `test_journeys`' replay test, where
+the walk to the stall is in the log and a replay can be proved. 55 suites, 594 tests,
+0 failed on both worlds.
+
+### J3 · The scale's two ends — **built 2026-09-24**
 
 Est. 2 h. Depends on: J2.
 
@@ -744,7 +773,30 @@ drew on you first is a different deed from a bystander.
 first costs less than killing a bystander, with the two named in one test so the
 distinction cannot quietly disappear.
 
-### J4 · Blackcairn reads the mean
+**Delivered 2026-09-24.** `PlayerRules` prices the four deeds the model names: a theft
+at **−10**, putting it back at **+6**, killing somebody innocent at **−80**, and
+killing a man who drew on you first at **−20**. *Innocent* is answered as **two deed
+ids** rather than as a judgement made at the moment of the blow, because the town's
+opinion is the only place the distinction can show and one `i_killed_somebody` would
+have to guess. They live in `PlayerRules` and not in `DeedRules`, whose docstring
+promises every deed's effects are written in one place and which has no faction,
+witness or hardship row for either — the three columns that go with C3.
+
+**−20 is ours, not Yannick's**, and it is the first number in the model that is: he set
+the two ends and not the middle. A quarter of the murder and twice the theft — there is
+still a body in the street, and everyone standing there saw who reached first.
+
+**The old twenty-four keep their numbers** and fall through to `DeedRules.town_effect`
+until C3. Re-pricing acts that are on their way out is work thrown away, and dropping
+them to zero would quietly remove every way a town's opinion can go **up** — §8's Q38
+defect, reintroduced.
+
+**Nothing performs a killing yet.** `K3` is where a fight can end in one; this is the
+table it will read, exercised through the same `Deeds.perform` pipe every deed uses.
+
+**Checked:** 6 new tests. 55 suites, 600 tests, 0 failed on both worlds.
+
+### J4 · Blackcairn reads the mean — **built 2026-09-24**
 
 Est. 1 h. Depends on: J2.
 
@@ -757,7 +809,20 @@ does (`SIMULATION_MODEL.md` §3, guardrail 1).
 five arrives lower than that. Two tests with the numbers written out, because the
 second result is the counter-intuitive one and it is the design working.
 
-### J5 · Dialogue reads the town
+**Delivered 2026-09-24.** `PlayerRules.at_blackcairn()` — one pure function over the
+store, so nothing is kept and nothing can drift. The numbers, written out:
+
+- A murder in the works and four towns you have done right by:
+  `(−80 + 30 + 30 + 30 + 30) / 5 = +8`, which reads **welcome**. One terrible town is
+  survivable.
+- One theft in each of the five: `(−10 × 5) / 5 = −10`, which reads **wary** — *lower
+  than the murderer's*. Consistency matters more than any single act.
+- And the half that is easy to leave out: hated in the works alone is `−80 / 5 = −16`,
+  because the four towns never visited are counted at neutral.
+
+**Checked:** 4 new tests. 55 suites, 604 tests, 0 failed on both worlds.
+
+### J5 · Dialogue reads the town — **built 2026-09-24**
 
 Est. 1 h. Depends on: J2.
 
@@ -768,7 +833,31 @@ the whole of what standing does in v1** — no hostile watch, no prices, no clos
 person's; a frame of it, because a greeting that silently never fires is invisible to
 the suite.
 
-### J6 · The journal shows what you did and what it cost
+**Delivered 2026-09-24. The one replacement in this group**, and deliberate: everything
+else was built beside the old model, this reads the new number instead of the old one.
+`DialogueSystem` asks `PlayerRules.regard_in()` for the town the player is standing in —
+the same place the speaker is, because you have to be within `Game.TALK_REACH` to talk at
+all. **The HUD moved with it**, to the same function: `StandingRules`' own docstring says
+why — *"the HUD saying 'wary' while a trader refuses to serve you would be a lie the
+player cannot audit"* — and two readings of one idea is how that lie gets written.
+
+Cairnwell and Blackcairn carry no standing, so a conversation there takes **J4's mean**.
+Brindle and the road read neutral: a ruin has nobody in it to have an opinion.
+
+**Photographed**, both halves, with a new debug tool — `UNCROWNED_TALK=maddox[:standing]`,
+listed in `CLAUDE.md`. At neutral Maddox opens with *« Vous êtes venu à pied »* and the
+HUD reads *Harrowgate, inconnu*; at −45 he opens with *« Maddox ne vous rend pas votre
+salut »* and the HUD reads *Harrowgate, indésirable*. Same person, same tile, one number.
+
+**One consequence of J3's scale, and it is the design**: a theft is −10 and
+`StandingRules.UNWELCOME` is −20, so **one theft no longer shuts a door — two do.**
+§3 says the player who takes things is a nuisance. The first one is still legible the
+first time: it carries the town from `unknown` to `wary`, which the HUD says out loud.
+
+**Checked:** 3 new tests; four existing ones updated where the reading deliberately
+moved (below). 55 suites, 607 tests, 0 failed on both worlds.
+
+### J6 · The journal shows what you did and what it cost — **built 2026-09-24**
 
 Est. 3 h. Depends on: J2.
 
@@ -779,6 +868,29 @@ standing is already an event in it. This is the reading.
 
 **Check:** a frame of the page after a theft and after a killing, with the number and
 its cause on the same screen. A town that hates you and will not say why is a bug.
+
+**Delivered 2026-09-24, and it is a reading and not a machine**, as the entry says:
+`Journal.standings()` walks the log for `standing_moved` and hangs each deed under the
+town it moved, with what it cost. A seventh journal page draws it, best town first so
+the worst survives the page's cut with its reasons under it, and under the five towns
+the two readings that are not a place's own: **the court's mean** (J4) and **the purse**
+(J1), which had no way of being seen at all before this.
+
+**Photographed**, on the baked world, standing in Harrowgate:
+
+- after a theft — *Harrowgate : méfiance* / *vous avez pris quelque chose sur un étal,
+  devant des gens   −10* / *À la cour : inconnu.*
+- after a theft and a killing — *Harrowgate : haï*, both causes under it with −10 and
+  −80, and *À la cour : méfiance*, because four towns that never heard pull −90 to −18.
+
+Two things were needed to take those frames and both are new debug tools, gated and
+listed in `CLAUDE.md`: **`UNCROWNED_DID=deed[,deed]`**, which does deeds where the
+player stands through the real pipe — a killing has no key until K3 — and
+**`UNCROWNED_SCREEN=journal:<page>`**, which is the existing screen knob extended,
+because the journal is seven pages and the one being photographed is rarely the first.
+
+**Checked:** 4 new tests in `test_journal`. 55 suites, 611 tests, 0 failed on both
+worlds.
 
 ---
 
