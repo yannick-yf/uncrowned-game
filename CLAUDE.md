@@ -79,21 +79,36 @@ library carries a provenance-and-licence manifest and `test_workshop_provenance`
 a file without one. Mixing artists is the mark of an amateur game in meshes exactly as
 in pixels. (The HUD's font is the pack's, and an open question.)
 
-**One exception, and Yannick made it deliberately (2026-09-19).** His brother had drawn
-no attack and no guard — eight animations, idle and walk in four directions — so a fight
-showed three different actions as a person standing still. Yannick was told plainly that
-a second hand on his brother's character would show, and said to do it anyway. So
-`tools/draw_fight_frames.gd` builds **eight** frames — a cocked arm, an attack, a guard
-and a flinch, left and right — and `view3d/fight/traveler_sheet.png` is the result. It
-was six until Yannick played it and said the animation was very slight: the wind-up had
-no drawing at all, which is the half of a blow a person reads.
+**One exception, and Yannick made it deliberately (2026-09-19, widened 2026-09-24).** His
+brother had drawn no attack and no guard — eight animations, idle and walk in four
+directions — so a fight showed three different actions as a person standing still.
+Yannick was told plainly that a second hand on his brother's character would show, and
+said to do it anyway. So `tools/draw_fight_frames.gd` builds **twelve** frames — a cocked
+arm, a blow and a flinch in all four facings, plus the two guards drawn before the guard
+was cut — and `view3d/fight/traveler_sheet.png` is the result. It was six until Yannick
+played it and said the animation was very slight: the wind-up had no drawing at all,
+which is the half of a blow a person reads.
+
+**North and south were added because the grid needed them (K5).** `docs/COMBAT_V2.md`
+puts fights on the world grid, where two fighters stand north and south of each other
+constantly, and Yannick refused the free answer — a blow thrown north drawn side-on —
+twice: *"Ok pour huit images, et même plus si nécessaire. On veut un rendu assez propre
+pour la demo v1."* His figure fills the cell from his hair to his boots, so the axial
+frames cannot lunge up or down the screen at all; what carries the blow is the arm's
+direction and the fact that the northward one goes **behind his hair** and the southward
+one falls past his knee. **The row order in the tool is load-bearing** — right and left
+are the last two rows, so `view/world3d.gd`, which counts our block up from the bottom of
+the sheet, still finds the first eight exactly where it left them.
 
 Three things keep it honest, and none of them makes it *not* an exception:
 
-- **No colour is invented.** His hand is copied to a new place, his sleeve lengthened by
-  repeating one of its own columns, his outline sampled from his own line. His figure is
-  painted rather than flat — the hair alone runs to thousands of browns — so a flat
-  rectangle beside it would read as somebody else's hand at fifty paces.
+- **No colour is invented**, and since K5 that is a test rather than a promise:
+  `test_no_colour_of_ours_is_absent_from_his_own_frame` walks all sixteen cells and fails
+  on one pixel that does not occur in the very frame of his it was built from. His hand
+  is copied to a new place, his sleeve laid down from a cross-section of his own sleeve,
+  his outline sampled from his own line. His figure is painted rather than flat — the
+  hair alone runs to thousands of browns — so a flat rectangle beside it would read as
+  somebody else's hand at fifty paces.
 - **His files are never touched.** `prototypes/` is his, the tool only reads it, and the
   combined sheet and the extra animations are ours.
 - **It is written down where he will see it**, in `docs/POUR_SLOSINIO.md` §8, so he does
