@@ -114,6 +114,13 @@ static func leaves_at_tiles() -> int:
 	return number("leaves_at_tiles", 3)
 
 
+## How far off somebody is set down when a fight begins and they were not already
+## beside you. In the table with everything else, because it decides whether the first
+## turn is spent closing.
+static func stand_off_tiles() -> int:
+	return maxi(number("stand_off_tiles", 3), 1)
+
+
 static func leaves_after_rounds() -> int:
 	return maxi(number("leaves_after_rounds", 2), 1)
 
@@ -192,6 +199,13 @@ static func in_reach(a: Vector2i, b: Vector2i) -> bool:
 ## A tile is two metres, read from the bake so the fight and the map cannot disagree.
 static func metres_of(tiles: int) -> float:
 	return float(tiles) * BakeRules.METRES_PER_TILE
+
+
+## And the same in millimetres, which is the unit the window's blows already speak. A
+## conversion and not a number of the fight's: it is here so that nothing in the fight
+## itself has to write a figure down.
+static func millimetres_of(tiles: int) -> int:
+	return int(metres_of(tiles) * 1000.0)
 
 
 ## Where a fighter may stand at the end of its move, and what each tile costs it.

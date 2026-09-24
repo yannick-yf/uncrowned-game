@@ -83,13 +83,73 @@ func _play_turns(sim: Sim, policy: StringName, turns: int, cap: int = 4000) -> v
 
 
 # ------------------------------------------------------------------- the table ---
+#
+# K2's hard requirement, and the one rule worth keeping from the first design: **all of
+# balance stays one small table**. Two tests hold it, because it can be broken in two
+# ways — a number written into the machinery, and a fallback in the rules that quietly
+# says something other than the file.
+
+## Every integer and float written in the fight's machinery, with the line it is on.
+## Comments and strings are taken out first, and a digit inside a name — `Vector2i`,
+## `maxi` — is not a number.
+func _numbers_in(path: String) -> Array:
+	var out: Array = []
+	var strings := RegEx.create_from_string("&?\"[^\"]*\"")
+	var numbers := RegEx.create_from_string("(?<![A-Za-z0-9_.])[0-9]+(\\.[0-9]+)?")
+	var line_at: int = 0
+	for line: String in FileAccess.get_file_as_string(path).split("\n"):
+		line_at += 1
+		var hash_at: int = line.find("#")
+		var code: String = line.substr(0, hash_at) if hash_at >= 0 else line
+		code = strings.sub(code, "", true)
+		for found: RegExMatch in numbers.search_all(code):
+			out.append([line_at, found.get_string(), line.strip_edges()])
+	return out
+
+
+func test_the_fights_machinery_holds_no_number_of_its_own() -> void:
+	# A balance number written in a system is a balance number nobody finds again. The
+	# only figures allowed here are structural — an index, a counter, a nothing.
+	var looked: int = 0
+	for path: String in ["res://core/systems/duel_system.gd", "res://core/duel.gd",
+			"res://core/duel_fighter.gd"]:
+		for row: Array in _numbers_in(path):
+			looked += 1
+			assert_true(float(row[1]) <= 1.0,
+				"%s:%d writes %s — every number the fight uses belongs in content/duel.json: %s"
+					% [path.get_file(), int(row[0]), String(row[1]), String(row[2])])
+	assert_true(looked > 0, "the scan found something to look at")
+
+
+func test_the_rules_never_quietly_disagree_with_the_file() -> void:
+	# Each accessor carries a fallback so a missing row cannot crash a fight. A fallback
+	# that drifts from the file is a second balance table nobody is reading.
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DuelRules.PATH))
+	var table: Dictionary = (parsed as Dictionary)["table"] as Dictionary
+	assert_eq(DuelRules.tiles_per_turn(), int(table["tiles_per_turn"]))
+	assert_eq(DuelRules.reach_tiles(), int(table["reach_tiles"]))
+	assert_eq(DuelRules.strike_damage(), int(table["strike_damage"]))
+	assert_eq(DuelRules.player_hp(), int(table["player_hp"]))
+	assert_eq(DuelRules.stand_off_tiles(), int(table["stand_off_tiles"]))
+	assert_eq(DuelRules.leaves_at_tiles(), int(table["leaves_at_tiles"]))
+	assert_eq(DuelRules.leaves_after_rounds(), int(table["leaves_after_rounds"]))
+	assert_eq(DuelRules.follows_tiles(), int(table["follows_tiles"]))
+	assert_eq(DuelRules.flees_at_hp(), int(table["flees_at_hp"]))
+	assert_eq(DuelRules.steps_per_tile(), int(table["steps_per_tile"]))
+	assert_eq(DuelRules.act_steps(), int(table["act_steps"]))
+	assert_eq(DuelRules.strike_at_step(), int(table["strike_at_step"]))
+	assert_eq(DuelRules.hurt_steps(), int(table["hurt_steps"]))
+	assert_eq(DuelRules.pause_steps(), int(table["pause_steps"]))
+	assert_eq(DuelRules.beat_steps(), int(table["beat_steps"]))
+
 
 func test_all_of_the_balance_is_one_small_table() -> void:
 	# The one rule worth keeping from the first design. Every number that decides how a
 	# fight goes is in content/duel.json and in no other file.
 	var table: Dictionary = DuelRules.table()
 	for key: String in ["tiles_per_turn", "reach_tiles", "strike_damage", "player_hp",
-			"leaves_at_tiles", "follows_tiles", "flees_at_hp", "steps_per_tile",
+			"stand_off_tiles", "leaves_at_tiles", "leaves_after_rounds", "follows_tiles",
+			"flees_at_hp", "steps_per_tile",
 			"act_steps", "strike_at_step", "hurt_steps", "pause_steps", "beat_steps"]:
 		assert_true(table.has(key), "the table says what '%s' is" % key)
 	assert_eq(DuelRules.tiles_per_turn(), 4, "four tiles a turn — eight metres")

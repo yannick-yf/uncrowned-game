@@ -788,9 +788,16 @@ its cause on the same screen. A town that hates you and will not say why is a bu
 fighting-game system, which was not broken — it was the wrong game for *you can kill
 everyone*. `docs/COMBAT.md` stays as the record of what was built and why it went.
 
-### K1 · A fight on the world grid, turn by turn
+### K1 · A fight on the world grid, turn by turn — **built 2026-09-24, beside the first**
 
 Est. 6 h. Depends on: —.
+
+**Built as new files rather than as edits**, because K6 is the deletion and nothing is
+deleted until the demo runs on the new model: `core/duel.gd`, `core/duel_fighter.gd`,
+`core/rules/duel_rules.gd`, `core/systems/duel_system.gd`, `content/duel.json`,
+`tools/duel_player.gd`, `tools/play_duel.gd`, `test/test_duel.gd`. The first design's
+four files are untouched and still run. The paragraph below describes the cut-over, and
+it is K6's to make.
 
 `core/fight.gd`'s millimetre line becomes tiles of the world grid, and
 `CombatSystem`'s sixty steps a second becomes turns. Everyone acts once per round in a
@@ -802,9 +809,17 @@ because there are no dice. The world clock stays held (`Sim.ticks_held`).
 **Check:** a fight of twenty turns is twenty events; the same log replays to the same
 tiles; the fourteen combat tests that survive stay in the fast suite and it stays fast.
 
-### K2 · Move and act, and the three actions
+### K2 · Move and act, and the three actions — **built 2026-09-24**
 
 Est. 4 h. Depends on: K1.
+
+Two numbers of the table are ours rather than this list's, and `content/duel.json` says
+which and why. **`follows_tiles`** — how far from where a fight began an opponent will
+chase — because both sides move four tiles a turn, so a chaser who never gives up can
+never be outrun and *nobody could ever leave*, which is K4's rule and §7's ending.
+**`leaves_after_rounds`** — because "out of reach **and staying there**" is one round
+longer than the end of the round somebody happened to move last in: a wounded man who
+ran four tiles escaped a player who had not yet had a turn to follow him.
 
 **Strike and wait, and there is no guard** (Yannick, 2026-09-24) — Baldur's Gate 3 has
 no block button and neither does this. Defence is position and initiative. **Fixed

@@ -140,7 +140,7 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		# there is a person in front of you — a debug photograph taken in a town where
 		# the man is three hundred tiles away would otherwise be a picture of nothing.
 		if npc == null or DuelRules.apart(stands, mine.at) > DuelRules.tiles_per_turn():
-			stands = DuelRules.stand_off(mine.at, stands, region, DuelRules.reach_tiles() + 2)
+			stands = DuelRules.stand_off(mine.at, stands, region, DuelRules.stand_off_tiles())
 		while taken.has(stands):
 			stands += Vector2i(0, 1)
 		taken[stands] = true
@@ -355,7 +355,7 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 		"move": String(DuelRules.STRIKE), "damage": damage, "guarded": false,
 		"opponent_hp": foe.hp if foe != null else 0,
 		"player_hp": mine.hp if mine != null else 0,
-		"apart_mm": int(DuelRules.metres_of(DuelRules.apart(who.at, victim.at)) * 1000.0),
+		"apart_mm": DuelRules.millimetres_of(DuelRules.apart(who.at, victim.at)),
 		"felled": DuelRules.is_down(victim.hp),
 	})
 
