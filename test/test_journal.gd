@@ -145,3 +145,76 @@ func test_bookkeeping_is_not_knowledge() -> void:
 	for row: Dictionary in Journal.knowledge(sim.facts, sim.store(&"cast") as Cast):
 		assert_false(String(row["fact"]).begins_with("met:"),
 			"'%s' is bookkeeping, not knowledge" % row["fact"])
+
+
+# ---------------------------------- what they think of you, and why (J6) ---
+
+## The player's own store and its writer, added for the standings page. The lean
+## world above raises the events; without these two nothing holds the number.
+func _run_with_a_player() -> Sim:
+	var sim: Sim = _run()
+	sim.add_store(&"player", PlayerState.new())
+	sim.add_system(PlayerSystem.new())
+	return sim
+
+
+func _row_for(rows: Array[Dictionary], town: StringName) -> Dictionary:
+	for row: Dictionary in rows:
+		if row["town"] == town:
+			return row
+	fail("no row for %s" % town)
+	return {}
+
+
+func test_the_number_and_its_cause_are_on_the_same_row() -> void:
+	# J6's whole reason: **a town that hates you and will not say why is a bug.** The
+	# standing is in the store, the deed that moved it is in the log, and this is the
+	# reading that puts them together.
+	var sim: Sim = _run_with_a_player()
+	_steal_and_wait(sim, 0.0)
+	var rows: Array[Dictionary] = Journal.standings(
+		sim.store(&"player") as PlayerState, sim.events)
+	var here: Dictionary = _row_for(rows, &"harrowgate")
+	assert_eq(here["word"], &"wary", "Harrowgate has heard something")
+	assert_eq(float(here["amount"]), PlayerRules.A_THEFT, "and it is worth ten of them")
+	var moves: Array[Dictionary] = here["moves"] as Array[Dictionary]
+	assert_eq(moves.size(), 1, "one act moved it")
+	assert_eq(moves[0]["deed"], DeedRules.DEED_THEFT, "and the row says which")
+	assert_eq(float(moves[0]["by"]), PlayerRules.A_THEFT, "and what it cost")
+
+
+func test_a_killing_reads_as_a_killing_and_not_as_a_number() -> void:
+	var sim: Sim = _run_with_a_player()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = in_town(&"harrowgate")
+	Deeds.perform(sim, PlayerRules.DEED_KILLED_INNOCENT, &"harrowgate", world.player_pos)
+	sim.advance(3)
+	var here: Dictionary = _row_for(Journal.standings(
+		sim.store(&"player") as PlayerState, sim.events), &"harrowgate")
+	assert_eq(here["word"], &"hated", "one afternoon and the town is done with you")
+	var moves: Array[Dictionary] = here["moves"] as Array[Dictionary]
+	assert_eq(moves.size(), 1, "and there is one line under it")
+	assert_eq(moves[0]["deed"], PlayerRules.DEED_KILLED_INNOCENT, "saying what you did")
+	assert_eq(float(moves[0]["by"]), PlayerRules.A_MURDER, "and what it cost")
+
+
+func test_every_town_is_on_the_page_including_the_ones_that_never_heard() -> void:
+	# §4's half that is easy to leave out: the towns never visited are part of the
+	# reading, at neutral, and a page that hid them would hide why the court's number
+	# is what it is.
+	var sim: Sim = _run_with_a_player()
+	_steal_and_wait(sim, 0.0)
+	var rows: Array[Dictionary] = Journal.standings(
+		sim.store(&"player") as PlayerState, sim.events)
+	assert_eq(rows.size(), 5, "five towns, whether or not they have heard of you")
+	var quiet: Dictionary = _row_for(rows, &"muster")
+	assert_eq(quiet["word"], &"unknown", "the camp has heard nothing")
+	assert_eq((quiet["moves"] as Array[Dictionary]).size(), 0, "and has nothing to say")
+
+
+func test_a_page_read_before_anything_happened_says_so_rather_than_nothing() -> void:
+	var rows: Array[Dictionary] = Journal.standings(
+		_run_with_a_player().store(&"player") as PlayerState, null)
+	assert_eq(rows.size(), 5, "the towns are there from the first minute")
+	for row: Dictionary in rows:
+		assert_eq(row["word"], &"unknown", "%s has never heard of you" % row["town"])

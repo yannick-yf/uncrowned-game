@@ -857,7 +857,7 @@ first time: it carries the town from `unknown` to `wary`, which the HUD says out
 **Checked:** 3 new tests; four existing ones updated where the reading deliberately
 moved (below). 55 suites, 607 tests, 0 failed on both worlds.
 
-### J6 · The journal shows what you did and what it cost
+### J6 · The journal shows what you did and what it cost — **built 2026-09-24**
 
 Est. 3 h. Depends on: J2.
 
@@ -868,6 +868,29 @@ standing is already an event in it. This is the reading.
 
 **Check:** a frame of the page after a theft and after a killing, with the number and
 its cause on the same screen. A town that hates you and will not say why is a bug.
+
+**Delivered 2026-09-24, and it is a reading and not a machine**, as the entry says:
+`Journal.standings()` walks the log for `standing_moved` and hangs each deed under the
+town it moved, with what it cost. A seventh journal page draws it, best town first so
+the worst survives the page's cut with its reasons under it, and under the five towns
+the two readings that are not a place's own: **the court's mean** (J4) and **the purse**
+(J1), which had no way of being seen at all before this.
+
+**Photographed**, on the baked world, standing in Harrowgate:
+
+- after a theft — *Harrowgate : méfiance* / *vous avez pris quelque chose sur un étal,
+  devant des gens   −10* / *À la cour : inconnu.*
+- after a theft and a killing — *Harrowgate : haï*, both causes under it with −10 and
+  −80, and *À la cour : méfiance*, because four towns that never heard pull −90 to −18.
+
+Two things were needed to take those frames and both are new debug tools, gated and
+listed in `CLAUDE.md`: **`UNCROWNED_DID=deed[,deed]`**, which does deeds where the
+player stands through the real pipe — a killing has no key until K3 — and
+**`UNCROWNED_SCREEN=journal:<page>`**, which is the existing screen knob extended,
+because the journal is seven pages and the one being photographed is rarely the first.
+
+**Checked:** 4 new tests in `test_journal`. 55 suites, 611 tests, 0 failed on both
+worlds.
 
 ---
 

@@ -33,6 +33,7 @@ const GRAIN: StringName = &"grain"
 const ESCORT: StringName = &"escort"
 const HARDSHIP: StringName = &"hardship"
 const FLIP: StringName = &"flip"
+const STANDING: StringName = &"standing"
 
 
 ## One chronological list. Every row carries facts, never phrasing.
@@ -152,6 +153,46 @@ static func kingdom(mine: Allegiance, ticked: WorldTick, tick: int) -> Array[Dic
 		"unrest": CastleRules.instability(mine, tick)})
 	return rows
 
+
+
+## **What each town thinks of you, and what you did to make it think that** (J6,
+## `docs/PLAYER_MODEL.md` §7).
+##
+## Not a new machine, and that is the task's own point: the number is in the store, the
+## acts that moved it are already `standing_moved` events in the log, and this is the
+## reading that puts the two **on the same row**. A town that hates you and will not
+## say why is the bug this exists to prevent.
+##
+## One row per town, the towns in a stable order, and under each the deeds that moved
+## it, oldest first, with what each one cost. Facts and never phrasing: the window says
+## *hated* and *you killed somebody*, and it says them in the player's language.
+static func standings(player: PlayerState, events: EventLog) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	if player == null:
+		return rows
+	var moved: Dictionary = {}
+	if events != null:
+		for event: SimEvent in events.all():
+			if event.type != &"standing_moved":
+				continue
+			var town: StringName = StringName(event.data.get("town", ""))
+			if not moved.has(town):
+				moved[town] = [] as Array[Dictionary]
+			(moved[town] as Array[Dictionary]).append({
+				"tick": _tick_of(event),
+				"deed": StringName(event.data.get("about", "")),
+				"by": float(event.data.get("by", 0.0)),
+			})
+	for town: StringName in player.towns():
+		var here: Array[Dictionary] = moved.get(town, [] as Array[Dictionary])
+		rows.append({
+			"kind": STANDING,
+			"town": town,
+			"amount": player.standing_in(town),
+			"word": StandingRules.word_for(player.standing_in(town)),
+			"moves": here,
+		})
+	return rows
 
 
 ## What you know, and who you had it from. §15's other half: progression here is

@@ -16,6 +16,9 @@
 #   UNCROWNED_TALK=maddox:-45 tools/shot.sh out.png play
 #                                             in front of somebody, mid-greeting, in a
 #                                             town that thinks that much of you (J5)
+#   UNCROWNED_DID=i_stole_in_public tools/shot.sh out.png journal:standing 236,208
+#                                             deeds done where you stand, and the page
+#                                             that says what they cost (J6)
 #
 # The check that "zero script errors" is not. Looking at the output is cheap, and
 # every bug the first two nights shipped would have been caught by one of these.
@@ -31,7 +34,7 @@ if [[ -z "$GODOT" ]]; then
 fi
 [[ -z "$GODOT" ]] && { echo "no Godot binary found. Set GODOT=/path/to/godot." >&2; exit 1; }
 
-OUT="${1:?usage: shot.sh out.png [title|creation|play] [x,y]}"
+OUT="${1:?usage: shot.sh out.png [title|creation|play|journal[:page]] [x,y]}"
 SCREEN="${2:-title}"
 AT="${3:-}"
 
