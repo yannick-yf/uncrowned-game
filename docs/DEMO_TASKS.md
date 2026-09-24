@@ -806,9 +806,23 @@ tiles; the fourteen combat tests that survive stay in the fast suite and it stay
 
 Est. 4 h. Depends on: K1.
 
-Strike, guard, wait. **Fixed damage, no dice.** Reach is one tile, diagonals included,
-because the game's movement is 8-way. All of balance stays **one small table** — the
-rule worth keeping from the first design.
+**Strike and wait, and there is no guard** (Yannick, 2026-09-24) — Baldur's Gate 3 has
+no block button and neither does this. Defence is position and initiative. **Fixed
+damage, no dice.** Reach is one tile, diagonals included, because the game's movement is
+8-way. All of balance stays **one small table** — the rule worth keeping from the first
+design.
+
+**A blow does not move you**: the one who takes it plays the flinch and stays on their
+tile. No knockback, no pushbox (Yannick, 2026-09-24).
+
+The first pass at the table, and the four settled values are Yannick's of 2026-09-24:
+
+| | |
+|---|---|
+| Tiles per turn | **to confirm** — 10 proposed, 4 recommended, see `COMBAT_V2.md` §7 |
+| Player hit points | 100, a test value; **`G` already makes the player unkillable**, so a shipped number nearer 30 is the one to settle before S4 |
+| Opponent and monster hit points | 10 |
+| Damage of a strike | 5 |
 
 **A turn is move *and* act** (Yannick, 2026-09-24), with the movement **capped** at a
 number of tiles. The cap is not a comfort setting: moving and acting in one turn is the
@@ -845,13 +859,14 @@ the sparks and the ending's beat are kept as they are.
 **Check:** four frames — a turn being taken, a blow landing, somebody fleeing, the end
 — and in one of them the player walks out of a fight that is still going.
 
-### K5 · Eight more frames: the four actions, north and south
+### K5 · Six more frames: wind-up, attack and flinch, north and south
 
-Est. 5 h. Depends on: —.
+Est. 4 h. Depends on: —.
 
 `tools/draw_fight_frames.gd` built eight from his brother's own pixels, under Yannick's
-explicit exception. **Eight more — wind-up, attack, guard and flinch, up and down —
-which makes sixteen in all**, built from the up and down walk frames his brother drew.
+explicit exception. **Six more — wind-up, attack and flinch, up and down — which makes
+twelve in all**, built from the up and down walk frames his brother drew. It was eight
+until the guard was cut on 2026-09-24; the two guard frames already drawn go unused.
 
 Yannick was offered the free answer, a blow thrown north drawn side-on, and refused it
 twice: first choosing to draw rather than accept (2026-09-23), then raising the count
@@ -859,7 +874,7 @@ himself (2026-09-24) — *"Ok pour huit images, et même plus si nécessaire. On
 rendu assez propre pour la demo v1."* **That last sentence is the brief**: the bar is
 how it looks, not how many files there are.
 
-Four actions rather than two, and the reason is his own playtest. He found the first
+Three actions rather than one, and the reason is his own playtest. He found the first
 animation too slight because **the wind-up had no drawing**, and the wind-up is the half
 of a blow a player reads. An attack thrown north with a wind-up drawn west would break
 the telegraph in the exact facing these frames exist for; a flinch that recoils west
@@ -870,7 +885,7 @@ are never touched**, and the whole thing is deleted the day he draws his own.
 
 **Check:** **a photograph of a blow struck north, and one of a blow taken from the
 north** — a back view is the hard one to draw and a file count proves nothing about it.
-Then the sheet holds sixteen, every `AtlasTexture` points at the combined sheet, and
+Then the sheet holds twelve, every `AtlasTexture` points at the combined sheet, and
 `test_his_brother_has_not_drawn_a_blow` still fails the day his own sheet grows an
 attack.
 

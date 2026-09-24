@@ -85,8 +85,18 @@ Everyone in the fight acts once per round, in a fixed order. On their turn a com
 | Action | What it does |
 |---|---|
 | **Strike** | A target on an adjacent tile takes fixed damage |
-| **Guard** | Halves what you take until your next turn |
 | **Wait** | Ends the turn. Sometimes the right move |
+
+**There is no guard** (Yannick, 2026-09-24): Baldur's Gate 3 has no block button, and
+neither does this. Defence is position and initiative, not a held button — which is the
+point of moving to a grid. Two consequences worth naming, because they are savings: the
+guard frames drawn for the first design go unused, and **K5 needs six new frames rather
+than eight**.
+
+**A blow does not move you.** The one who takes it plays a recoil — the flinch frame,
+which is drawn — and stays on their tile (Yannick, 2026-09-24). No knockback, no
+pushbox, no shove. A hit that moved you would make position depend on the enemy's dice,
+and there are no dice.
 
 Movement is the game's own 8-way movement on the world grid, so diagonals count and a
 tile is 2 m. Reach is one tile; a bow or a spear is a later reach, not a later system.
@@ -156,15 +166,41 @@ on its turn. That is the whole of it, and it is why turn-based makes monsters ch
 
 ## 7. Open
 
-1. **The numbers.** **Tiles moved per turn** — the one that decides whether position
-   means anything — the player's hit points, a wolf's hit points, what a strike takes,
-   what guard saves. All of it is one small table, and it is the whole of balance: the
-   first design's rule that *balance is editing one file* should survive.
-2. **What ends a fight when nobody wins.** The player walks away, or everyone has
+### The numbers — first pass, 2026-09-24
+
+All of balance is this table, which is the first design's rule kept.
+
+| | Value | |
+|---|---|---|
+| Tiles moved per turn | **under review** | Yannick proposed 10, and asked for it to be checked. See below |
+| Player hit points | 100 | *"pour le moment… qu'il ne meure pas dans nos tests"* |
+| Opponent and monster hit points | 10 | Everyone, for now |
+| Damage of a strike | 5 | Everyone, for now |
+| Guard | — | There is none |
+
+So a strike kills anything in two, and twenty land before the player falls.
+
+**Tiles per turn, measured rather than argued.** A tile is 2 m and the fight camera
+shows 7 m of height — about **six tiles across the screen**. Ten tiles is 20 m, more
+than three screen-widths in one turn: everybody would reach everybody every turn and
+position would stop existing, which is precisely what §4's cap is for. Baldur's Gate 3
+gives 9 m a turn, which is **four to five tiles here**. Four is the recommendation, and
+because it is one row in a table it costs nothing to raise.
+
+**Two of these are test values and should not ship.** 100 hit points against 5 damage
+is not a fight, it is a formality, and the demo's wolves are supposed to make the road
+a journey. The project already has the right tool for testing — **`G` makes the player
+unkillable** and says so on the HUD — so the balance does not have to be bent to get a
+suite green. A shipped number nearer **30** gives the player six blows to survive. To
+settle before **S4**, when somebody who is not us plays it.
+
+### Still open
+
+1. **What ends a fight when nobody wins.** The player walks away, or everyone has
    fled. Does it end at a distance, after a number of rounds, or when no enemy can
    reach you?
-3. **Where the fled go**, and whether they return.
-4. **The tutorial fight.** Against what, and what it must teach in how many turns.
+2. **Where the fled go**, and whether they return.
+3. **The tutorial fight.** Against what, and what it must teach in how many turns.
 
 ## 8. The frames, and the exception grows
 
@@ -177,16 +213,17 @@ thrown north drawn side-on, which costs nothing and which the flash, the sparks 
 damage number already half sell — and he refused it. His words: *"Ok pour huit images,
 et même plus si nécessaire. On veut un rendu assez propre pour la demo v1."*
 
-So the count is **eight new, sixteen in all**, not four:
+So the count is **six new, twelve in all** — it was eight until the guard was cut on
+2026-09-24, and the two guard frames already drawn go unused:
 
 | | left | right | **up** | **down** |
 |---|---|---|---|---|
 | Wind-up | ✅ | ✅ | new | new |
 | Attack | ✅ | ✅ | new | new |
-| Guard | ✅ | ✅ | new | new |
 | Flinch | ✅ | ✅ | new | new |
+| ~~Guard~~ | *unused* | *unused* | — | — |
 
-**Four rather than two, and the reason is Yannick's own playtest.** He played the first
+**Three actions rather than one, and the reason is Yannick's own playtest.** He played the first
 version and said the animation was very slight; the cause was that the wind-up had no
 drawing at all, and the wind-up is the half of a blow a player reads. Drawing an attack
 facing north with a wind-up drawn facing west would break the telegraph in exactly the
