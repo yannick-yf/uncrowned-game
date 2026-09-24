@@ -36,7 +36,13 @@ fi
 
 OUT="${1:?usage: shot.sh out.png [title|creation|play|journal[:page]] [x,y]}"
 SCREEN="${2:-title}"
-AT="${3:-}"
+# The tile, from the third argument — or from the environment when none is given.
+# **It used to be `${3:-}` flat**, which set UNCROWNED_AT to the empty string and so
+# silently threw away a value the caller had exported. `CLAUDE.md` documents
+# UNCROWNED_AT as the tile to stand on, and it was true of `godot` directly and a lie
+# through this script: a film of fifty frames was rendered in the wrong place before
+# anybody noticed (2026-09-24). The argument still wins when it is given.
+AT="${3:-${UNCROWNED_AT:-}}"
 
 UNCROWNED_SHOT="$OUT" UNCROWNED_SCREEN="$SCREEN" UNCROWNED_AT="$AT" \
   "$GODOT" --path . --quit-after 60 >/dev/null 2>&1
