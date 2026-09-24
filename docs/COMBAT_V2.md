@@ -76,10 +76,11 @@ stops an enemy fleeing.
 
 ## 4. A turn
 
-Proposed, not settled — §7 holds the numbers.
+Settled 2026-09-24, except the numbers, which §7 holds.
 
-Everyone in the fight acts once per round, in a fixed order. On their turn a
-combatant may **move** up to a number of tiles and take **one action**:
+Everyone in the fight acts once per round, in a fixed order. On their turn a combatant
+**moves and acts** — both, not one or the other (Yannick, 2026-09-24) — moving up to a
+**capped** number of tiles and taking **one action**:
 
 | Action | What it does |
 |---|---|
@@ -89,6 +90,11 @@ combatant may **move** up to a number of tiles and take **one action**:
 
 Movement is the game's own 8-way movement on the world grid, so diagonals count and a
 tile is 2 m. Reach is one tile; a bow or a spear is a later reach, not a later system.
+
+**The cap on movement is what makes position cost anything.** Moving and acting in the
+same turn is the faster game to play, and it would make the grid meaningless if a
+fighter could cross it — so the tiles per turn is not a comfort number, it is the whole
+of what spacing means here. It belongs in the balance table with everything else.
 
 **Order is deterministic and there is no initiative roll** — there are no dice. Whoever
 started the fight acts first, then the others in a fixed order. A player who opens on
@@ -150,35 +156,55 @@ on its turn. That is the whole of it, and it is why turn-based makes monsters ch
 
 ## 7. Open
 
-1. **The numbers.** Tiles moved per turn, the player's hit points, a wolf's hit
-   points, what a strike takes, what guard saves. All of it is one small table, and it
-   is the whole of balance — the first design's rule that *balance is editing one
-   file* should survive.
-2. **Move and act, or move or act?** Both are defensible. Move-and-act plays faster;
-   move-or-act makes position a real cost.
-3. **What ends a fight when nobody wins.** The player walks away, or everyone has
+1. **The numbers.** **Tiles moved per turn** — the one that decides whether position
+   means anything — the player's hit points, a wolf's hit points, what a strike takes,
+   what guard saves. All of it is one small table, and it is the whole of balance: the
+   first design's rule that *balance is editing one file* should survive.
+2. **What ends a fight when nobody wins.** The player walks away, or everyone has
    fled. Does it end at a distance, after a number of rounds, or when no enemy can
    reach you?
-4. **Where the fled go**, and whether they return.
-5. **The tutorial fight.** Against what, and what it must teach in how many turns.
+3. **Where the fled go**, and whether they return.
+4. **The tutorial fight.** Against what, and what it must teach in how many turns.
 
-## 8. The one thing that may need drawing
+## 8. The frames, and the exception grows
 
-**His traveller has no attack facing north or south.**
+**His traveller has no attack facing north or south**, and on a grid two fighters stand
+north and south of each other constantly. The first design ran fights along one axis
+for exactly that reason.
 
-The first design ran a fight along the world's east-west axis for exactly this reason:
-the camera never turns, his brother drew idle and walk in four directions, and the
-eight frames we added under Yannick's exception are **left and right only**. On a grid,
-two fighters can stand north and south of each other, and there is no frame for that.
+**Settled 2026-09-24: we draw them.** Yannick was offered the cheap answer — a blow
+thrown north drawn side-on, which costs nothing and which the flash, the sparks and the
+damage number already half sell — and he refused it. His words: *"Ok pour huit images,
+et même plus si nécessaire. On veut un rendu assez propre pour la demo v1."*
 
-Three answers, and it is a question about a picture, so it is Yannick's:
+So the count is **eight new, sixteen in all**, not four:
 
-- **Accept it.** A fighter striking north is drawn striking left or right. Cheapest,
-  and it will look wrong to anyone who notices.
-- **Draw four more frames** — attack and guard, up and down — under the same exception
-  that produced the eight, and delete them the day his brother draws his own.
-- **Keep fights on one axis**, by placing combatants east and west when a fight starts.
-  Free, but it throws away half of what a grid is for.
+| | left | right | **up** | **down** |
+|---|---|---|---|---|
+| Wind-up | ✅ | ✅ | new | new |
+| Attack | ✅ | ✅ | new | new |
+| Guard | ✅ | ✅ | new | new |
+| Flinch | ✅ | ✅ | new | new |
 
-Nothing else in this design depends on the answer, so the task list can be written
-before it is settled — but the fight cannot be *built* before it is.
+**Four rather than two, and the reason is Yannick's own playtest.** He played the first
+version and said the animation was very slight; the cause was that the wind-up had no
+drawing at all, and the wind-up is the half of a blow a player reads. Drawing an attack
+facing north with a wind-up drawn facing west would break the telegraph in exactly the
+facing the new frames exist for. The flinch follows for the same reason: being hit from
+the north and recoiling to the left reads as a bug.
+
+**"And more if necessary" is the standing instruction**, and the bar is *clean enough
+for demo v1* rather than a count.
+
+Three things keep this honest, and they are the same three that made the first eight an
+acceptable exception rather than a breach — `CLAUDE.md`'s art rule holds unchanged:
+
+- **No colour is invented.** His hand is copied to a new place, his outline sampled from
+  his own line. The up and down walk frames he drew are the base.
+- **His files are never touched.** `tools/draw_fight_frames.gd` reads `prototypes/`, and
+  the combined sheet is ours.
+- **`test_his_brother_has_not_drawn_a_blow` still fails** the day his own sheet grows an
+  attack. On that day the tool, the sixteen frames and this exception are all deleted.
+
+A back view is the hard one to draw and the easiest to get wrong, so **K5's check is a
+photograph of a blow struck north**, not a count of files.

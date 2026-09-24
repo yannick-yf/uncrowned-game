@@ -810,11 +810,14 @@ Strike, guard, wait. **Fixed damage, no dice.** Reach is one tile, diagonals inc
 because the game's movement is 8-way. All of balance stays **one small table** — the
 rule worth keeping from the first design.
 
-**Open, and Yannick's:** move **and** act in a turn, or move **or** act. The first plays
-faster; the second makes position a real cost. One line either way.
+**A turn is move *and* act** (Yannick, 2026-09-24), with the movement **capped** at a
+number of tiles. The cap is not a comfort setting: moving and acting in one turn is the
+faster game to play, and it would make the grid meaningless if a fighter could cross it.
+That number *is* what spacing means here, and it lives in the table with everything else.
 
 **Check:** editing the table alone changes the outcome of a scripted fight; a test plays
-the same five turns twice and gets the same result to the tile.
+the same five turns twice and gets the same result to the tile; and a fighter cannot
+reach across the arena and strike in the same turn.
 
 ### K3 · Killing, and fleeing
 
@@ -842,24 +845,34 @@ the sparks and the ending's beat are kept as they are.
 **Check:** four frames — a turn being taken, a blow landing, somebody fleeing, the end
 — and in one of them the player walks out of a fight that is still going.
 
-### K5 · Four more frames: attack and guard, north and south
+### K5 · Eight more frames: the four actions, north and south
 
-Est. 3 h. Depends on: —.
+Est. 5 h. Depends on: —.
 
 `tools/draw_fight_frames.gd` built eight from his brother's own pixels, under Yannick's
-explicit exception. Four more, from the up and down walk frames his brother drew.
-Yannick chose this over accepting a side-on blow (2026-09-23).
+explicit exception. **Eight more — wind-up, attack, guard and flinch, up and down —
+which makes sixteen in all**, built from the up and down walk frames his brother drew.
 
-**Open, and it comes from his own playtest.** He found the first animation too slight
-because **the wind-up had no drawing**, and the wind-up is the half of a blow a player
-reads. It is drawn left and right only. An attack thrown north with a wind-up drawn west
-breaks the telegraph exactly where the new frames are used. Either the wind-up is drawn
-north and south too — **eight new frames, not four** — or the telegraph for those two
-facings falls back to the ring at the feet, which already exists and already works.
+Yannick was offered the free answer, a blow thrown north drawn side-on, and refused it
+twice: first choosing to draw rather than accept (2026-09-23), then raising the count
+himself (2026-09-24) — *"Ok pour huit images, et même plus si nécessaire. On veut un
+rendu assez propre pour la demo v1."* **That last sentence is the brief**: the bar is
+how it looks, not how many files there are.
 
-**Check:** the sheet holds them all; a frame of a blow struck north; and
+Four actions rather than two, and the reason is his own playtest. He found the first
+animation too slight because **the wind-up had no drawing**, and the wind-up is the half
+of a blow a player reads. An attack thrown north with a wind-up drawn west would break
+the telegraph in the exact facing these frames exist for; a flinch that recoils west
+from a blow struck from the north reads as a bug.
+
+The art rule's three conditions hold unchanged: **no colour is invented**, **his files
+are never touched**, and the whole thing is deleted the day he draws his own.
+
+**Check:** **a photograph of a blow struck north, and one of a blow taken from the
+north** — a back view is the hard one to draw and a file count proves nothing about it.
+Then the sheet holds sixteen, every `AtlasTexture` points at the combined sheet, and
 `test_his_brother_has_not_drawn_a_blow` still fails the day his own sheet grows an
-attack, which is the day this tool and this exception are deleted.
+attack.
 
 ### K6 · The first design comes out
 
