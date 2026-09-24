@@ -360,7 +360,21 @@ past it; and only the last ten steps' events are fresh, so the picture carries o
 spark and number and not every blow's. `godot --headless --path . -s tools/play_fight.gd
 -- stand 200` prints the trace that says which step is which.
 
-**All seven are gated on `OS.has_feature("debug")`**, so they are absent from a
+**`UNCROWNED_DUEL=bram[:steps[:hand]]`** (2026-09-24) does the same for the **second**
+design's fight — the turn-based one of `docs/COMBAT_V2.md`, built beside the first by
+K1–K4 and not yet wired to anything the player can reach. Same gate and the same two
+reasons as `UNCROWNED_FIGHT` above, plus one of its own: a turn-based fight spends most
+of its length with nobody doing anything, so a photograph taken at an arbitrary step is
+a photograph of two people standing about. `bram` alone squares up and waits on the
+player, which is the frame that shows the tiles a turn buys; `bram:19:press` runs
+nineteen steps with one of `tools/duel_player.gd`'s hands on the keys — `press`, `hold`,
+`stand`, `leave` — which is the step a blow lands on. The simulation is held on the step
+asked for and only the last ten steps' events are fresh, exactly as above.
+`UNCROWNED_AT=280,315 godot --headless --path . -s tools/play_duel.gd -- press 400`
+prints the trace that says which step is which, and it reads the same `UNCROWNED_AT` the
+shot does, because the step numbers depend on how far apart the two of them start.
+
+**All eight are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

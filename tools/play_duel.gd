@@ -37,15 +37,26 @@ func _initialize() -> void:
 
 
 ## On open ground, because a fight about position needs somewhere to stand. The player
-## is put where the man already is and the fight is begun from there, as the world will
+## is put a stride from the man and the fight is begun from there, as the world will
 ## begin it once K6 wires this to a conversation.
+##
+## **`UNCROWNED_AT=x,y` stands them somewhere else**, and it is the same variable
+## `tools/shot.sh` reads — so the trace and the photograph are of the same fight. Step
+## numbers depend on the ground: two people three tiles apart spend a turn closing and
+## two people beside each other do not, and a trace taken somewhere else would send
+## the shutter to the wrong step.
 func _square_up() -> Sim:
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
 	var cast := sim.store(&"cast") as Cast
-	var him: Npc = cast.get_npc(StringName(OPPONENT))
-	if him != null:
-		world.player_pos = him.centre() + Vector2(3.0, 0.0)
+	var stand: String = OS.get_environment("UNCROWNED_AT")
+	if stand.contains(","):
+		var parts: PackedStringArray = stand.split(",")
+		world.player_pos = Vector2(float(parts[0]) + 0.5, float(parts[1]) + 0.5)
+	else:
+		var him: Npc = cast.get_npc(StringName(OPPONENT))
+		if him != null:
+			world.player_pos = him.centre() + Vector2(3.0, 0.0)
 	sim.submit(&"duel_began", {"opponent": OPPONENT, "by": "player"})
 	sim.advance(1)
 	return sim

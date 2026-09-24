@@ -53,6 +53,13 @@ const FIGHT_THRUST_TILES: float = 0.45
 ## figure stretched to sell a movement stops being pixel art.
 const FIGHT_DIP_M: float = 0.15
 const FIGHT_SIZE_M: float = 7.0
+## **And how much of it a fight on the grid needs** (K4). Seven metres is three and a
+## half tiles of height, which was right for two men on one line and is wrong the
+## moment a turn buys four tiles in every direction: the field of tiles a turn reaches
+## is nine tiles across and ran off all four edges of the first photograph. The drop
+## and the azimuth are unchanged — the ruling of 2026-09-19 is about the angle, and
+## this is the framing.
+const DUEL_SIZE_M: float = 15.0
 
 ## **The fight, drawn** (H group, 2026-09-21). Everything under these constants is a
 ## mark of ours and reads as one — a line on the ground, a ring filling, a spark, a
@@ -94,6 +101,8 @@ const MARK_MINE: Color = Color(1.0, 0.847, 0.443)
 const MARK_HIS: Color = Color(1.0, 0.42, 0.28)
 const MARK_GUARD: Color = Color(0.694, 0.851, 0.804)
 const MARK_INK: Color = Color(0.94, 0.93, 0.88)
+## How dark the fight's floor is laid. The second design lays it lighter — see `K4`.
+const ARENA_FILL: Color = Color(0.02, 0.02, 0.03, 0.30)
 
 ## **A flash on his figure, in a shader of ours.** His `traveler_sprite.gdshader` puts
 ## the sheet's colour straight into `ALBEDO`, so `modulate` does nothing to it and a hit
@@ -240,6 +249,11 @@ var _camera: Camera3D = null
 ## are; billboards are lifted along it so their feet stay on the ground however the
 ## sprite leans toward the lens — the workshop's `sprite_billboard.gd` trick.
 var _lens_up: Vector3 = Vector3.UP
+## How tight the lens closes for a fight, which is not the same for the two designs —
+## see `DUEL_SIZE_M`. Set from the reading at the top of every `sync`.
+var _fight_size_m: float = FIGHT_SIZE_M
+## A framing snap asked for before the reading arrived, replayed on the next `sync`.
+var _snap_wanted: float = -1.0
 ## The tilt the lens returns to when nobody is fighting — his 48°, or whatever
 ## `UNCROWNED_LENS` asked for, so the debug tool still wins.
 var _rest_tilt: float = TILT_DEGREES
@@ -1062,6 +1076,13 @@ func _ground_height_at(x_m: float, z_m: float) -> float:
 func sync(frame: Dictionary, delta: float) -> void:
 	if _region == null or _sim == null:
 		return
+	# How tight the lens closes, read off the reading before anything is placed: the
+	# first design's fight runs along one line and the second's covers a grid.
+	_fight_size_m = DUEL_SIZE_M \
+		if bool((frame.get("fight", {}) as Dictionary).get("turn_based", false)) else FIGHT_SIZE_M
+	if _snap_wanted >= 0.0:
+		snap_framing(_snap_wanted)
+		_snap_wanted = -1.0
 	_aim_lens(float(frame.get("fight_lens", 0.0)))
 	_now += delta
 	var world := _sim.store(&"world") as WorldState
@@ -1109,8 +1130,7 @@ func _sync_player(frame: Dictionary) -> void:
 	# The lunge is added to where he is *drawn* and not to where he is: the walk cycle is
 	# driven by ground covered, and a blow that made his feet turn over would read as a
 	# man walking on the spot.
-	_foot_figure(_player, at + Vector2(_lunge_of(fighting, true) + _shove_of(fighting, true), 0.0),
-		_dip_of(fighting, true))
+	_foot_figure(_player, at + _offset_of(fighting, true), _dip_of(fighting, true))
 	_wear_fight_paint(_player, true, fighting)
 
 
@@ -1148,7 +1168,7 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			stands_at = fighting.get("at", stands_at) as Vector2
 			_step_the_foe(figure, stands_at,
 				fighting.get("facing", Vector2i(0, 1)) as Vector2i, fighting)
-			stands_at += Vector2(_lunge_of(fighting, false) + _shove_of(fighting, false), 0.0)
+			stands_at += _offset_of(fighting, false)
 			_foot_figure(figure, stands_at, _dip_of(fighting, false))
 			_wear_fight_paint(figure, false, fighting)
 			figure.visible = true
@@ -1202,6 +1222,11 @@ func _fight_pose(figure: Node3D, fighting: Dictionary, mine: bool, facing: Vecto
 	if bool(fighting.get("felled" if mine else "his_down", false)):
 		stunned = maxi(stunned, 1)
 	var pose: StringName = CombatRules.pose_of(move, at_frame, stunned, guarding)
+	# **The second design decides its own poses** (K4). A turn-based fight has no frame
+	# data to read them out of, so the reading carries the pose itself — `DuelRules`
+	# worked it out, and the window is handed it like everything else.
+	if bool(fighting.get("turn_based", false)):
+		pose = StringName(String(fighting.get("my_pose" if mine else "his_pose", "")))
 	if pose == &"":
 		return false
 	var named := StringName("%s_%s" % [pose, _facing_name(facing)])
@@ -1213,6 +1238,23 @@ func _fight_pose(figure: Node3D, fighting: Dictionary, mine: bool, facing: Vecto
 	sprite.pause()
 	sprite.set_frame_and_progress(0, 0.0)
 	return true
+
+
+## **How far a fighter is drawn from where he stands**, as an offset in tiles.
+##
+## The first design's fight runs along the world's east-west axis and nothing else, so
+## its offset is one number on x — the lunge of a blow plus the shove of one taken.
+## The second design is on the grid and a blow can be thrown in any of eight
+## directions, so its offset is a vector along the striker's own facing; and **a blow
+## does not move you** there (Yannick, 2026-09-24), so there is no shove in it at all.
+func _offset_of(fighting: Dictionary, mine: bool) -> Vector2:
+	if not bool(fighting.get("turn_based", false)):
+		return Vector2(_lunge_of(fighting, mine) + _shove_of(fighting, mine), 0.0)
+	var shape: float = float(fighting.get("my_lunge" if mine else "his_lunge", 0.0))
+	if is_zero_approx(shape):
+		return Vector2.ZERO
+	var way: Vector2 = fighting.get("my_face" if mine else "his_face", Vector2.ZERO) as Vector2
+	return way * shape * (FIGHT_THRUST_TILES if shape > 0.0 else FIGHT_LUNGE_TILES)
 
 
 ## **How far a fighter is drawn from where he stands**, in tiles along the fight's line.
@@ -1241,6 +1283,9 @@ func _dip_of(fighting: Dictionary, mine: bool) -> float:
 		return 0.0
 	var move := StringName(String(fighting.get("my_move" if mine else "his_move", "")))
 	var at_frame: int = int(fighting.get("my_frame" if mine else "his_frame", 0))
+	if bool(fighting.get("turn_based", false)) \
+			and not bool(fighting.get("felled" if mine else "his_down", false)):
+		return float(fighting.get("my_dip" if mine else "his_dip", 0.0))
 	if bool(fighting.get("felled" if mine else "his_down", false)):
 		var beat: int = int(fighting.get("settle_steps", 1))
 		var left: int = int(fighting.get("settling", 0))
@@ -1451,10 +1496,15 @@ func _aim_lens(fight_lens: float) -> void:
 ## the picture is taken twelve frames in, and the lens takes about a second to drop, so
 ## a photograph of a fight would otherwise always be a photograph of a camera halfway
 ## through moving. Debug-gated at the caller.
+## **It is asked for again on the next `sync`**, because which of the two fights is
+## running is in the reading and the reading has not arrived yet when this is called.
+## Snapping to the first design's framing and then easing to the second's would put the
+## camera halfway through moving in exactly the photograph this exists to prevent.
 func snap_framing(fight_lens: float) -> void:
 	_aim_lens(fight_lens)
 	if _camera != null:
-		_camera.size = lerpf(_zoom, FIGHT_SIZE_M, clampf(fight_lens, 0.0, 1.0))
+		_camera.size = lerpf(_zoom, _fight_size_m, clampf(fight_lens, 0.0, 1.0))
+	_snap_wanted = fight_lens
 
 
 ## The lens follows the same eased point the 2D camera does, handed over in tiles.
@@ -1465,7 +1515,7 @@ func _sync_camera(eye_tiles: Vector2, fight_lens: float, delta: float) -> void:
 		_focus_placed = true
 	else:
 		_focus = _focus.lerp(want, 1.0 - exp(-CAMERA_CATCHES_UP * delta))
-	var framing: float = lerpf(_zoom, FIGHT_SIZE_M, clampf(fight_lens, 0.0, 1.0))
+	var framing: float = lerpf(_zoom, _fight_size_m, clampf(fight_lens, 0.0, 1.0))
 	_camera.size = lerpf(_camera.size, framing, 1.0 - exp(-10.0 * delta))
 	# **The jolt of a hit** (H2): a decaying wobble of the lens on the frame a blow
 	# lands, in the lens's own plane so the ground never appears to tilt. A function of
@@ -1509,9 +1559,12 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 			var heavy: bool = int(blow.get("damage", 0)) >= 2 and not guarded
 			var target: StringName = &"his" if by_me else &"mine"
 			_struck[target] = {"at": _now, "guarded": guarded}
-			# Shoved away from the man who hit them, for the hitstop the blow has.
-			_shove = {"who": target, "dir": float(toward if by_me else -toward),
-				"frames": maxi(CombatRules.hitstop(move), 1)}
+			# Shoved away from the man who hit them, for the hitstop the blow has —
+			# except in the second design, where **a blow does not move you** and the
+			# recoil is the flinch frame and nothing else (Yannick, 2026-09-24).
+			if not bool(fighting.get("turn_based", false)):
+				_shove = {"who": target, "dir": float(toward if by_me else -toward),
+					"frames": maxi(CombatRules.hitstop(move), 1)}
 			var between: Vector3 = _between(fighting, by_me)
 			if guarded:
 				_spark_burst(between, MARK_GUARD, 6, 1.6)
@@ -1522,13 +1575,20 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 				_spark_burst(between, MARK_MINE if by_me else MARK_HIS, 5, 1.4)
 				_shake_at = _now
 				_shake_amp = SHAKE_M * (1.0 if heavy else 0.6)
-		elif kind == &"fight_decided":
+		elif kind == &"fight_decided" or kind == &"duel_decided":
 			_shake_at = _now
 			_shake_amp = SHAKE_M * 0.5
 
 
 ## Where a blow meets: at the defender's near edge, hip high, on the fight's line.
+##
+## On the grid there is no line, so it is simply between the two of them — which is the
+## same place, said in a way that works when the blow is thrown north.
 func _between(fighting: Dictionary, by_me: bool) -> Vector3:
+	if bool(fighting.get("turn_based", false)):
+		var mine: Vector2 = fighting.get("my_at", Vector2.ZERO) as Vector2
+		var his: Vector2 = fighting.get("at", Vector2.ZERO) as Vector2
+		return _ground(mine.lerp(his, 0.5), SWIPE_HEIGHT_M)
 	var toward: int = int(fighting.get("toward", 1))
 	var defender: Vector2 = (fighting.get("at", Vector2.ZERO) as Vector2) if by_me \
 		else (fighting.get("my_at", Vector2.ZERO) as Vector2)
@@ -1625,9 +1685,16 @@ func _sync_fight(fighting: Dictionary, fight_lens: float) -> void:
 	if fighting_now:
 		var centre: Vector2 = fighting.get("centre", Vector2.ZERO) as Vector2
 		var radius: float = float(fighting.get("radius_tiles", 2.0))
+		var turn_based: bool = bool(fighting.get("turn_based", false))
 		if centre.distance_to(_arena_floor_at) > 0.01:
-			_lay_floor(centre, radius)
-		_draw_marks(fighting)
+			# **Softened, and no longer a boundary** (K4). The fight moves with the
+			# people in it, so its floor is laid wherever they are and lighter than the
+			# first design's — it says *you are in a fight*, not *you cannot leave*.
+			_lay_floor(centre, radius, ARENA_FILL * 0.55 if turn_based else ARENA_FILL)
+		if turn_based:
+			_draw_duel_marks(fighting)
+		else:
+			_draw_marks(fighting)
 	elif _arena_mesh != null:
 		_arena_mesh.clear_surfaces()
 	_sync_sparks()
@@ -1668,12 +1735,11 @@ func _build_arena() -> void:
 ## with a wall at each end — laid on his terrain point by point so it lies on a slope
 ## as it lies on the flat. It says where the fight is; the rim drawn over it says where
 ## it stops. Rebuilt only when the arena moves, which is once a fight.
-func _lay_floor(centre: Vector2, radius: float) -> void:
+func _lay_floor(centre: Vector2, radius: float, fill: Color = ARENA_FILL) -> void:
 	_arena_floor_at = centre
 	var vertices := PackedVector3Array()
 	var colours := PackedColorArray()
 	var indices := PackedInt32Array()
-	var fill := Color(0.02, 0.02, 0.03, 0.30)
 	var rings: int = 4
 	var around: int = 44
 	vertices.append(_ground(centre, MARK_LIFT_M * 0.5))
@@ -1798,6 +1864,121 @@ func _draw_marks(fighting: Dictionary) -> void:
 	_swipe(him, StringName(String(fighting.get("his_move", ""))), int(fighting.get("his_frame", 0)),
 		float(-toward), bool(fighting.get("his_connected", false)), MARK_HIS)
 	_arena_mesh.surface_end()
+
+
+## **The second design's marks** (K4, `docs/COMBAT_V2.md`). Same mesh, same colours,
+## same voice as the HUD — and a different picture, because it is a different game.
+##
+## What it draws, and why each of them:
+##
+## - **The tiles a turn buys**, faintly, under whoever is acting. The cap on movement
+##   *is* what spacing means here (§4), so showing it is showing the whole of the
+##   decision. It is the one mark the first design had no need of.
+## - **The tile the player has chosen to stand on**, brighter, while it is their turn.
+## - **A ring at each fighter's feet** — where they are, which is what reach measures
+##   from — and **the reach itself**, one tile, round whoever is acting: full when
+##   somebody is inside it, faint when nobody is.
+## - **The soft rim**, and this is the thing that changed. The first design drew a rim
+##   and two walls that brightened as a fighter was pressed against them, because there
+##   *was* a wall. There is none now: nothing stops the player leaving and nothing stops
+##   an enemy fleeing, so the rim is a vignette that fades outward and no wall is drawn
+##   at all. A boundary drawn here would be a boundary the simulation does not have.
+## - **The wind-up and the blow**, as the first design draws them.
+func _draw_duel_marks(fighting: Dictionary) -> void:
+	_arena_mesh.clear_surfaces()
+	_arena_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var me: Vector2 = fighting.get("my_at", Vector2.ZERO) as Vector2
+	var him: Vector2 = fighting.get("at", Vector2.ZERO) as Vector2
+	var settling: bool = int(fighting.get("settling", 0)) > 0
+	var mine_acting: bool = bool(fighting.get("my_turn", false))
+
+	# **No rim is drawn on the ground at all**, and that is the change. The first design
+	# drew one, with two walls that brightened as a fighter was pressed against them,
+	# because `CombatRules.inside_arena` was a wall you could be pressed against. There
+	# is none now: nothing stops the player leaving and nothing stops an enemy fleeing,
+	# and a circle on his grass would say otherwise every frame. What is left of the
+	# ring is the darkened edge of the screen — dimmed for this fight in `main.gd` — and
+	# the floor under the two of them, which moves with them. Through the beat the floor
+	# is all there is, so the winner's colour is said by the feet instead.
+	if not settling:
+		# What a turn buys, and where the player has decided to stand. **This is the
+		# mark the first design had no need of**: the cap on movement is the whole of
+		# what spacing means here (`docs/COMBAT_V2.md` §4), so the tiles a turn reaches
+		# are the decision, drawn.
+		var acting: Vector2 = me if mine_acting else him
+		var voice: Color = MARK_MINE if mine_acting else MARK_HIS
+		for row: Variant in fighting.get("moves", []) as Array:
+			_tile_patch(row as Vector2, Color(voice.r, voice.g, voice.b, 0.17))
+		if fighting.has("cursor"):
+			_tile_patch(fighting["cursor"] as Vector2, Color(voice.r, voice.g, voice.b, 0.42))
+			_ring(fighting["cursor"] as Vector2, 0.46, 0.34, 0.06,
+				Color(voice.r, voice.g, voice.b, 0.95), 24)
+		# Reach: one tile, round whoever is acting, full when it has somebody in it.
+		var reach: float = float(fighting.get("reach_tiles", 1))
+		var can_hit: bool = bool(fighting.get("in_reach", false))
+		_ring(acting, reach, reach * 0.70, 0.075 if can_hit else 0.045,
+			Color(voice.r, voice.g, voice.b, 0.9 if can_hit else 0.32), 36)
+
+	# Feet: where each of them *is*, drawn last so they sit over the field of tiles. On
+	# the beat they widen and take the winner's colour, which is the job the first
+	# design gave its rim — said by the ground the two of them are standing on, now that
+	# there is no rim to say it with.
+	var mine_foot: Color = MARK_MINE
+	var his_foot: Color = MARK_HIS
+	var thickness: float = 0.045
+	if settling:
+		var won: bool = String(fighting.get("outcome", "")) == "won"
+		mine_foot = MARK_MINE if won else Color(MARK_MINE.r, MARK_MINE.g, MARK_MINE.b, 0.4)
+		his_foot = MARK_HIS if not won else Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.4)
+		thickness = 0.08
+	_ring(me, 0.30, 0.21, thickness, Color(mine_foot.r, mine_foot.g, mine_foot.b, 0.85 * mine_foot.a))
+	_ring(him, 0.30, 0.21, thickness, Color(his_foot.r, his_foot.g, his_foot.b, 0.85 * his_foot.a))
+
+	if not settling:
+		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)), MARK_MINE)
+		_duel_telegraph(him, float(fighting.get("his_telegraph", -1.0)), MARK_HIS)
+	_duel_swipe(me, him, fighting, true, MARK_MINE)
+	_duel_swipe(him, me, fighting, false, MARK_HIS)
+	_arena_mesh.surface_end()
+
+
+## One tile of the grid, laid flat on his ground. Slightly inset, so a field of them
+## reads as tiles and not as one sheet.
+func _tile_patch(centre_tiles: Vector2, colour: Color) -> void:
+	var half: float = 0.42
+	_quad(
+		_ground(centre_tiles + Vector2(-half, -half), MARK_LIFT_M * 0.8),
+		_ground(centre_tiles + Vector2(half, -half), MARK_LIFT_M * 0.8),
+		_ground(centre_tiles + Vector2(half, half), MARK_LIFT_M * 0.8),
+		_ground(centre_tiles + Vector2(-half, half), MARK_LIFT_M * 0.8),
+		colour, colour)
+
+
+## The telegraph, against a fraction the fight worked out rather than against frame
+## data: −1 is nothing winding up, 0 is a tell just begun, 1 is the blow about to land.
+func _duel_telegraph(feet: Vector2, through: float, colour: Color) -> void:
+	if through < 0.0:
+		return
+	var radius: float = TELEGRAPH_RADIUS_M / _metres_per_tile
+	_arc(feet, radius, -90.0, -90.0 + 360.0 * clampf(through, 0.0, 1.0), 0.09,
+		Color(colour.r, colour.g, colour.b, 0.55 + 0.4 * through), 32)
+
+
+## The blow itself, drawn from the one throwing it to the one it is thrown at, on the
+## steps it is out — so a blow is seen touching the man it lands on however he is stood.
+func _duel_swipe(from: Vector2, to: Vector2, fighting: Dictionary, mine: bool, colour: Color) -> void:
+	if String(fighting.get("my_pose" if mine else "his_pose", "")) != "attack":
+		return
+	var reach: float = float(fighting.get("reach_tiles", 1))
+	var way: Vector2 = (to - from)
+	if way.length() < 0.001:
+		return
+	way = way.normalized()
+	var points := PackedVector3Array([
+		_ground(from + way * 0.25, SWIPE_HEIGHT_M),
+		_ground(from + way * reach * 0.75, SWIPE_HEIGHT_M * 1.05),
+	])
+	_ribbon(points, SWIPE_THICKNESS_M, Color(colour.r, colour.g, colour.b, 0.9))
 
 
 func _telegraph(feet: Vector2, move: StringName, frame: int, colour: Color) -> void:

@@ -62,6 +62,19 @@ var _debug_available: bool = false
 var _skipped_days: int = 0
 var _held_dir: Vector2i = Vector2i.ZERO
 var _fight: Fight = null
+## **The second design's fight** (K group, `docs/COMBAT_V2.md`), beside the first and
+## not instead of it. Empty unless something has submitted `duel_began`, which today is
+## its own tests and `UNCROWNED_DUEL`; K6 is the change that switches the game over.
+var _duel: Duel = null
+## **Where the player has decided to stand this turn**, and it is a proposal and not
+## state: only the confirmed turn is an event. Moved by the arrows over the tiles the
+## turn buys, and forgotten the moment the turn is taken.
+var _duel_cursor: Vector2i = Vector2i.ZERO
+var _duel_cursor_set: bool = false
+## The tiles whoever is acting can still reach, worked out once per turn rather than
+## sixty times a second. Keyed by who is acting and where they stand.
+var _duel_moves: Array = []
+var _duel_moves_key: String = ""
 ## **How far into the fight's framing we are**, 0 at rest and 1 squared up. Eased once,
 ## here, and read by two things that must not disagree: the 3D lens, which drops and
 ## tightens by it, and the darkened edge of the screen, which comes up by it. Two
@@ -155,6 +168,7 @@ func _ready() -> void:
 		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_fight = _sim.store(&"fight") as Fight
+	_duel = _sim.store(&"duel") as Duel
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
@@ -219,6 +233,35 @@ func _ready() -> void:
 		_snap_lens = true
 		_draw_ring()
 
+	# **`UNCROWNED_DUEL=bram[:steps[:hand]]`** — the *second* design's fight, squared up
+	# for the frame `shot.sh` takes, with the lens already dropped and the edge already
+	# darkened. Same gate and same reasons as `UNCROWNED_FIGHT` beside it, and one more
+	# of its own: a turn-based fight spends most of its length with nothing happening,
+	# so a photograph taken at an arbitrary step is a photograph of two people standing
+	# about. `bram:38:press` runs thirty-eight steps with one of `DuelPlayer`'s hands on
+	# the keys — `press`, `hold`, `stand`, `leave` — which is the step a blow lands on.
+	# `godot --headless --path . -s tools/play_duel.gd -- press 400` prints the trace
+	# that says which step is which.
+	var duelling: String = OS.get_environment("UNCROWNED_DUEL")
+	if OS.has_feature("debug") and duelling != "":
+		var asked: PackedStringArray = duelling.strip_edges().split(":")
+		_sim.submit(&"duel_began", {"opponent": asked[0], "by": String(DuelRules.PLAYER)})
+		_sim.advance(1)
+		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
+		var playing: DuelPlayer = DuelPlayer.new(StringName(asked[2])) if asked.size() > 2 else null
+		for i: int in turns:
+			if playing != null:
+				playing.play(_sim, _duel)
+			# Only the last ten steps' events are fresh, so a picture taken on the step
+			# a blow lands carries that blow's spark and number and not every blow's.
+			if i == turns - 10:
+				_seen_events = _sim.events.size()
+			_sim.advance(1)
+		_held_for_shot = turns > 0 and not OS.get_environment("UNCROWNED_SHOT").is_empty()
+		_fight_lens = 1.0
+		_snap_lens = true
+		_draw_ring()
+
 	# **`UNCROWNED_TOWN=cinderworks:9/7`** — a place's two numbers, set for the frame
 	# `shot.sh` takes, so an outcome can be looked at before there is a quest to play to
 	# it. `place:allegiance/richesse`, comma-separated for more than one. The same debug
@@ -272,6 +315,12 @@ func _ready() -> void:
 ## idle and walk in four directions — so the only thing that can read as a wind-up is
 ## the figure he already made, moved, and the marks the window draws around it.
 func _fight_frame() -> Dictionary:
+	# **The second design's fight, when one is on** (K4). One slot, two fights, and the
+	# window draws whichever reading it is handed: the keys it needs are the same ones,
+	# plus `turn_based` and what only a fight on the grid has. Nothing existing changes
+	# shape, and nothing existing is reached while a duel is running.
+	if _duel != null and _duel.on():
+		return _duel_frame()
 	if _fight == null or not _fight.on():
 		return {}
 	var him: Npc = _cast.get_npc(_fight.opponent) if _cast != null else null
@@ -314,6 +363,96 @@ func _fight_frame() -> Dictionary:
 	}
 
 
+## **The turn-based fight, as one reading** (K4). The same slot and most of the same
+## keys as the first design's, so both windows draw it with the code that is already
+## there, plus the four things only a fight on the grid has: who is acting, the tiles
+## their turn buys, where the player has decided to stand, and a pose worked out by
+## `DuelRules` rather than read out of frame data.
+##
+## Built here, once, so the 3D marks and the flat HUD cannot disagree with each other
+## or with the simulation. Everything in it is read; nothing is written.
+func _duel_frame() -> Dictionary:
+	var mine: DuelFighter = _duel.me()
+	var him: DuelFighter = _duel.foe()
+	if mine == null or him == null:
+		return {}
+	var npc: Npc = _cast.get_npc(him.who) if _cast != null else null
+	var acting: DuelFighter = _duel.acting_fighter()
+	var mine_acting: bool = acting != null and acting.is_player()
+	var into: int = _duel.into_act()
+	var my_act: StringName = _duel.acting if mine_acting else DuelRules.WAIT
+	var his_act: StringName = _duel.acting if (acting == him) else DuelRules.WAIT
+	var my_at: Vector2 = _duel.drawn_at(mine)
+	var his_at: Vector2 = _duel.drawn_at(him)
+	var reading: Dictionary = {
+		"turn_based": true,
+		"who": String(him.who),
+		"his_name": npc.display_name if npc != null else String(him.who).capitalize(),
+		"at": his_at,
+		"my_at": my_at,
+		"facing": him.facing,
+		# Which way along the world the two of them stand, for whatever still reads it.
+		"toward": signi(int(round(his_at.x - my_at.x))) if not is_equal_approx(his_at.x, my_at.x) else 1,
+		"my_face": Vector2(mine.facing).normalized(),
+		"his_face": Vector2(him.facing).normalized(),
+		"my_pose": String(DuelRules.pose_of(mine.hurt_left, my_act, into)),
+		"his_pose": String(DuelRules.pose_of(him.hurt_left, his_act, into)),
+		"my_lunge": DuelRules.lunge_at(my_act, into),
+		"his_lunge": DuelRules.lunge_at(his_act, into),
+		"my_dip": DuelRules.dip_at(my_act, into),
+		"his_dip": DuelRules.dip_at(his_act, into),
+		"my_telegraph": DuelRules.telegraph_at(my_act, into),
+		"his_telegraph": DuelRules.telegraph_at(his_act, into),
+		"my_turn": mine_acting,
+		"reach_tiles": DuelRules.reach_tiles(),
+		"in_reach": DuelRules.in_reach(mine.at, him.at),
+		"moves": _duel_reach(acting),
+		"centre": my_at.lerp(his_at, 0.5),
+		# **Wide enough to hold both of them and a turn's walk, and it is not a wall.**
+		# The first design's radius was where the simulation stopped you; this is only
+		# how far the floor is laid, and the player can walk straight off it.
+		"radius_tiles": maxf(my_at.distance_to(his_at) * 0.5, 1.0) + float(DuelRules.tiles_per_turn()),
+		"freeze": 0,
+		"settling": _duel.settling,
+		"settle_steps": DuelRules.beat_steps(),
+		"outcome": String(_duel.outcome),
+		"felled": _duel.player_felled,
+		"his_down": DuelRules.is_down(him.hp),
+		"my_hp": mine.hp,
+		"my_max": mine.max_hp,
+		"his_hp": him.hp,
+		"his_max": him.max_hp,
+	}
+	if _duel.waiting_on_player():
+		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
+	return reading
+
+
+## The tiles whoever is acting can still end their move on, in tile centres for the
+## window. Worked out once per turn and kept: it is a small breadth-first walk, but it
+## is one the frame does not need sixty times a second.
+func _duel_reach(acting: DuelFighter) -> Array:
+	if acting == null:
+		return []
+	var key: String = "%s@%d,%d/%s/%d" % [
+		String(acting.who), acting.at.x, acting.at.y, String(_duel.phase), _duel.turns_taken]
+	if key == _duel_moves_key:
+		return _duel_moves
+	_duel_moves_key = key
+	_duel_moves = []
+	if _duel.phase != Duel.WAITING:
+		return _duel_moves
+	var taken: Dictionary = {}
+	for fighter: DuelFighter in _duel.fighters:
+		if fighter != acting and fighter.alive():
+			taken[fighter.at] = true
+	var cost: Dictionary = DuelRules.reachable(
+		acting.at, _world.region(), DuelRules.tiles_per_turn(), taken)
+	for row: Variant in cost.keys():
+		_duel_moves.append(Vector2(row as Vector2i) + Vector2(0.5, 0.5))
+	return _duel_moves
+
+
 ## The fight's events since the last frame this screen drew, read once off the log and
 ## never again — see `_seen_events`. Each row is the event's data plus its `type`, and a
 ## screen point `at` over whoever the blow was about, for the HUD to hang a number on.
@@ -323,7 +462,8 @@ func _fresh_fight_events() -> Array:
 	for k: int in range(_seen_events, total):
 		var event: SimEvent = _sim.events.at(k)
 		if event.type != &"blow_landed" and event.type != &"blow_missed" \
-				and event.type != &"fight_decided" and event.type != &"fight_ended":
+				and event.type != &"fight_decided" and event.type != &"fight_ended" \
+				and event.type != &"duel_decided" and event.type != &"duel_ended":
 			continue
 		var row: Dictionary = event.data.duplicate()
 		row["type"] = String(event.type)
@@ -340,9 +480,13 @@ func _place_blows(fresh: Array) -> Array:
 	for row: Variant in fresh:
 		var blow: Dictionary = (row as Dictionary).duplicate()
 		blow["at"] = Vector2(-1.0, -1.0)
-		if _three_d != null and _fight != null and _fight.on():
-			var by_me: bool = String(blow.get("by", "")) == "player"
-			var about_him: bool = by_me if String(blow.get("type", "")) == "blow_landed" else not by_me
+		var by_me: bool = String(blow.get("by", "")) == "player"
+		var about_him: bool = by_me if String(blow.get("type", "")) == "blow_landed" else not by_me
+		if _three_d != null and _duel != null and _duel.on():
+			var who: DuelFighter = _duel.foe() if about_him else _duel.me()
+			if who != null:
+				blow["at"] = _three_d.screen_of(_duel.drawn_at(who), 1.9)
+		elif _three_d != null and _fight != null and _fight.on():
 			var tiles: Vector2 = _fight.at_tiles(_fight.opponent_at_mm if about_him else _fight.player_at_mm)
 			blow["at"] = _three_d.screen_of(tiles, 1.9)
 		placed.append(blow)
@@ -369,15 +513,30 @@ func _sound_the_fight(fresh: Array) -> void:
 				elif CombatRules.spares(StringName(String(blow.get("opponent", "")))):
 					# A man who does not spare you kills you, and the death has its own jingle.
 					Sound.cue(&"fight_lost")
+			"duel_decided":
+				# The same two cues, off the second design's own table of who spares you.
+				if String(blow.get("how", "")) == "won":
+					Sound.cue(&"fight_won")
+				elif DuelRules.spares(StringName(String(blow.get("opponent", "")))):
+					Sound.cue(&"fight_lost")
 
 
 ## What the HUD's fight layer needs, this frame: the fight's reading and the lens.
 func _fight_reading() -> Dictionary:
 	var reading: Dictionary = _fight_frame()
 	reading["lens"] = _fight_lens
-	reading["on"] = not reading.is_empty() and _fight != null and _fight.on()
+	reading["on"] = not reading.is_empty() and _squared_up()
 	reading["blows"] = _place_blows(_fresh_blows)
 	return reading
+
+
+## **Somebody is fighting**, whichever of the two designs it is. One question, asked in
+## the four places that have to agree — the lens, the darkened edge, the keyboard and
+## the HUD — because two of them disagreeing is a fight drawn half way in.
+func _squared_up() -> bool:
+	if _duel != null and _duel.on():
+		return true
+	return _fight != null and _fight.on()
 
 
 ## What the 3D window needs to place things this frame, read from the same stores this
@@ -529,7 +688,7 @@ func _process(delta: float) -> void:
 	# a view of the top-left corner of the map.
 	# Eased before the frame is built, so the lens and the ring see the same number on
 	# the same frame.
-	var squared_up: float = 1.0 if (_fight != null and _fight.on()) else 0.0
+	var squared_up: float = 1.0 if _squared_up() else 0.0
 	_fight_lens = lerpf(_fight_lens, squared_up, 1.0 - exp(-FIGHT_LENS_SETTLES * delta))
 	if absf(_fight_lens - squared_up) < 0.002:
 		_fight_lens = squared_up
@@ -645,6 +804,13 @@ func _read_input() -> void:
 	# second with the world's clock held, and nothing else may be open while it does:
 	# a dialogue box would read the player's blows as menu choices, and walking would
 	# go out as `move_intent` instead of along the fight's own line.
+	if _duel != null and _duel.on():
+		if Input.is_action_just_pressed(&"back"):
+			_pause_menu()
+			return
+		_read_duel_input()
+		return
+	_duel_cursor_set = false
 	if _fight != null and _fight.on():
 		# Escape still opens the pause menu, because a player must always be able to
 		# stop. **It is not a way out of the fight** — Yannick, 2026-09-19: no fleeing
@@ -788,6 +954,68 @@ func _skip_a_day() -> void:
 ## One event per change of what is held, which is `CombatSystem`'s contract and the
 ## reason a saved fight is a handful of rows rather than a recording of the keyboard.
 ##
+## **The turn-based fight's keys** (K4): the arrows say where to stand, **K** takes the
+## turn with a blow at the end of it, **O** takes it without one.
+##
+## The arrows move a *cursor* over the tiles the turn buys, and a cursor is a proposal
+## rather than state — nothing is submitted until the turn is taken, and only the turn
+## is an event. One event per turn, which is the whole of what makes a fight replayable.
+##
+## K strikes whoever is in reach of the tile chosen, and waits when nobody is, because
+## there are only two actions and only one of them is ever possible. **There is no
+## guard to press** (Yannick, 2026-09-24).
+func _read_duel_input() -> void:
+	if not _duel.waiting_on_player():
+		_duel_cursor_set = false
+		return
+	var mine: DuelFighter = _duel.me()
+	if mine == null:
+		return
+	if not _duel_cursor_set:
+		_duel_cursor = mine.at
+		_duel_cursor_set = true
+	var dir: Vector2i = _read_direction_pressed()
+	if dir != Vector2i.ZERO:
+		var wanted: Vector2i = _duel_cursor + dir
+		# Only onto ground the turn actually reaches, so the cursor cannot promise a
+		# move the rules would quietly refuse.
+		for row: Variant in _duel_reach(mine):
+			if Vector2i((row as Vector2) - Vector2(0.5, 0.5)) == wanted:
+				_duel_cursor = wanted
+				break
+	var strike: bool = Input.is_action_just_pressed(&"strike")
+	var wait: bool = Input.is_action_just_pressed(&"guard")
+	if not strike and not wait:
+		return
+	var target: StringName = &""
+	if strike:
+		for foe: DuelFighter in _duel.foes_of(mine.who):
+			if DuelRules.in_reach(_duel_cursor, foe.at):
+				target = foe.who
+				break
+	_sim.submit(&"duel_turn", {
+		"who": String(DuelRules.PLAYER), "to_x": _duel_cursor.x, "to_y": _duel_cursor.y,
+		"action": String(DuelRules.STRIKE if target != &"" else DuelRules.WAIT),
+		"target": String(target),
+	})
+	_duel_cursor_set = false
+
+
+## The direction pressed *this frame*, for a cursor that steps a tile at a time rather
+## than sliding at sixty tiles a second.
+func _read_direction_pressed() -> Vector2i:
+	var dir := Vector2i.ZERO
+	if Input.is_action_just_pressed(&"move_right"):
+		dir.x += 1
+	if Input.is_action_just_pressed(&"move_left"):
+		dir.x -= 1
+	if Input.is_action_just_pressed(&"move_down"):
+		dir.y += 1
+	if Input.is_action_just_pressed(&"move_up"):
+		dir.y -= 1
+	return dir
+
+
 func _read_fight_input() -> void:
 	var walk: int = 0
 	if Input.is_action_pressed(&"move_right"):
@@ -918,6 +1146,7 @@ func _reload() -> void:
 	_sim = loaded
 	_world = _sim.store(&"world") as WorldState
 	_fight = _sim.store(&"fight") as Fight
+	_duel = _sim.store(&"duel") as Duel
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
@@ -968,6 +1197,9 @@ const CAMERA_LOOKAHEAD: float = 1.6
 ## How fast the fight's framing comes on and goes off. Slow enough to read as a camera
 ## move and not a cut — which is the whole of the decision in `SPECS.md` §10.
 const FIGHT_LENS_SETTLES: float = 3.2
+## How much of the darkened edge a turn-based fight gets (K4). Enough to say *you are
+## in a fight*; not enough to read as the wall the second design took away.
+const RING_SOFTENED: float = 0.55
 ## The darkened edge. No aspect correction on purpose: the shape follows the screen's,
 ## so the *borders* close in rather than a circle being laid over the world. `0.42` is
 ## where it starts and `1.02` is past the corners, so the corners never go fully black.
@@ -1021,7 +1253,13 @@ func _draw_ring() -> void:
 		_hud.move_child(_ring, 0)
 	_ring.visible = _fight_lens > 0.002
 	if _ring.visible:
-		(_ring.material as ShaderMaterial).set_shader_parameter("strength", _fight_lens)
+		# **Softened for a turn-based fight** (K4). The first design's edge said *you
+		# cannot leave*, because `CombatRules.inside_arena` was a wall. There is no wall
+		# now: nothing stops the player walking out and nothing stops an enemy fleeing,
+		# so the edge is dimmed to what it is — a vignette that says *you are in a
+		# fight*, and nothing about where it ends.
+		var soft: float = RING_SOFTENED if (_duel != null and _duel.on()) else 1.0
+		(_ring.material as ShaderMaterial).set_shader_parameter("strength", _fight_lens * soft)
 
 
 func _camera_at(delta: float) -> Vector2:
@@ -1613,8 +1851,8 @@ func _draw_hud() -> void:
 		return
 
 	# Nothing to press while a fight is on, and "E, talk to Bram" over the top of a man
-	# swinging at you reads as a bug.
-	if _fight != null and _fight.on():
+	# swinging at you reads as a bug. Either fight; the keys a fight offers are its own.
+	if _squared_up():
 		_prompt.text = ""
 		return
 

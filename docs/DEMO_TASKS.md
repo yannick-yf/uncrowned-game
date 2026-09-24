@@ -862,9 +862,25 @@ carries its gold.
 (invariant 6, proved against a real death rather than structurally); attack the works'
 people and they flee rather than die in place; the standing moves by J3's numbers.
 
-### K4 · The picture, adapted
+### K4 · The picture, adapted — **built 2026-09-24**
 
 Est. 3 h. Depends on: K1.
+
+Five frames in `docs/frames/duel/`, taken with the new `UNCROWNED_DUEL` (written into
+`CLAUDE.md` beside `UNCROWNED_FIGHT`): `turn.png`, `blow.png`, `fleeing.png`,
+`walking_out.png`, `end.png`.
+
+Two things the picture asked for that the design had not:
+
+- **The ground's rim is gone entirely**, not softened. A circle drawn on his grass says
+  *this is where it stops* every frame, and there is no longer anywhere it stops. What
+  is left of the ring is the darkened edge of the screen, dimmed to 0.55, and a floor
+  that moves with the two people in it. The winner's colour, which the rim used to say
+  on the beat, is said by the ground under their feet instead.
+- **The lens closes to 15 m and not 7.** The drop and the azimuth are untouched — the
+  ruling of 2026-09-19 is about the angle — but seven metres is three and a half tiles
+  of height, and a turn that buys four tiles in every direction is a field nine tiles
+  across. The first photograph had it running off all four edges.
 
 The camera that drops and never turns stays. The ring is **softened and stops being a
 boundary** — nothing prevents the player leaving or an enemy fleeing, which is this

@@ -4,7 +4,17 @@ Settled with Yannick on 2026-09-23, after he played the first one and said it wa
 what he wanted. It replaces the fighting-game design recorded in `docs/COMBAT.md`,
 which stays as the record of what was built and why it went.
 
-**Status: a draft for Yannick.** §7 holds what is still open. Nothing is built.
+**Status: a draft for Yannick, and since 2026-09-24 a built one.** §7 holds what is
+still open. **K1, K2 and K4 of `docs/DEMO_TASKS.md` are built** — the turn, the two
+actions, the table, the ending, and the picture — as `core/duel.gd`,
+`core/duel_fighter.gd`, `core/rules/duel_rules.gd`, `core/systems/duel_system.gd` and
+`content/duel.json`, **beside the first design rather than over it**. Nothing the
+player can reach runs on it yet: it is reached by `test/test_duel.gd`,
+`tools/play_duel.gd` and the `UNCROWNED_DUEL` switch, and **K6 is the cut-over**, which
+is one careful change made by hand with the first design still on disk until then.
+Three rules this document left open and the build had to settle are named where they
+belong, in `content/duel.json`: `follows_tiles`, `leaves_after_rounds` and
+`stand_off_tiles`.
 
 Read `docs/PLAYER_MODEL.md` first — this design assumes it.
 

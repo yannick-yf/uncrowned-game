@@ -82,7 +82,51 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 
 
 func test_the_fights_words_exist_in_both_languages() -> void:
-	for key: StringName in [&"fight.you", &"fight.keys", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down"]:
+	for key: StringName in [&"fight.you", &"fight.keys", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
+			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",
 			"and the font can draw it: %s" % Text.of(key, ["Bram"]))
+
+
+# ------------------------------------------ the second design's fight (K4) ---
+
+func _turn_reading(my_hp: int, his_hp: int, my_turn: bool, outcome: String = "") -> Dictionary:
+	return {
+		"lens": 1.0, "on": true, "turn_based": true, "my_turn": my_turn,
+		"who": "bram", "his_name": "Bram",
+		"my_hp": my_hp, "my_max": DuelRules.player_hp(), "his_hp": his_hp, "his_max": 10,
+		"felled": false, "his_down": his_hp <= 0, "settling": 100 if outcome != "" else 0,
+		"outcome": outcome, "blows": [],
+	}
+
+
+func test_a_hundred_points_is_a_bar_and_ten_is_still_pips() -> void:
+	# The second design's table gives the player a hundred (a development value, and
+	# content/duel.json says so). A hundred pips is 1,500 pixels on a 640-wide screen,
+	# so the same widget draws a bar above twelve and pips at or below it — and it still
+	# reports the health it was handed either way, because the number is what is true.
+	var hud := FightHud.new()
+	hud.present(_turn_reading(100, 10, true), 1.0 / 60.0)
+	assert_true(FightHud.MAX_PIPS < DuelRules.player_hp(), "a hundred is past the pips")
+	assert_eq(hud.pips_shown(&"mine"), 100, "and the bar still knows it is a hundred")
+	assert_eq(hud.pips_shown(&"his"), 10, "while his ten are still ten pips")
+	hud.present(_turn_reading(95, 5, false), 1.0 / 60.0)
+	assert_eq(hud.pips_shown(&"mine"), 95, "a blow of five off a hundred")
+	assert_eq(hud.pips_shown(&"his"), 5, "and of five off ten")
+	hud.free()
+
+
+func test_a_turn_based_fight_says_whose_turn_it_is() -> void:
+	# A turn-based fight that does not say so is a fight the player stands in wondering
+	# why nothing is happening. `--headless` never calls `_draw`, so what is checked
+	# here is that the reading reaches the node; `docs/frames/duel/turn.png` is the
+	# check that it is on the screen.
+	var hud := FightHud.new()
+	hud.present(_turn_reading(100, 10, true), 1.0 / 60.0)
+	assert_true(hud.is_up(), "up with the fight")
+	assert_eq(hud.opponent_named(), "Bram")
+	assert_eq(hud.banner(), "", "and nothing is decided yet")
+	hud.present(_turn_reading(100, 0, true, "won"), 1.0 / 60.0)
+	assert_true(hud.banner().contains("Bram"), "then he is named as the one down")
+	hud.free()

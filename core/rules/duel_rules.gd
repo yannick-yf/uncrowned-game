@@ -338,6 +338,20 @@ static func decide(
 				away = tile
 		return {"to": away, "action": WAIT, "target": &""}
 
+	# **It will not follow you past `follows_tiles` from where the fight began**, and
+	# that is one rule over both of the branches below rather than only over the closing
+	# one. Written the other way first, it capped the walk and not the chase — and a
+	# chase *is* a walk that ends in a blow, so the man simply kept coming through the
+	# striking branch and nobody could ever be outrun. Found by walking away from him
+	# and reading the trace, which is what `tools/play_duel.gd` is for.
+	var near: Array[Vector2i] = []
+	for tile: Vector2i in tiles:
+		if apart(tile, began_at) <= follows_tiles():
+			near.append(tile)
+	if near.is_empty():
+		near.append(me.at)
+	tiles = near
+
 	var strike_from: Vector2i = me.at
 	var victim: StringName = &""
 	var found: bool = false
@@ -356,8 +370,6 @@ static func decide(
 	var closer: Vector2i = me.at
 	var best: int = _nearest(me.at, foes)
 	for tile: Vector2i in tiles:
-		if apart(tile, began_at) > follows_tiles():
-			continue
 		var gap: int = _nearest(tile, foes)
 		if gap < best:
 			best = gap
