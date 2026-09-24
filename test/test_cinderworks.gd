@@ -517,7 +517,23 @@ func _walk_to(sim: Sim, target: Vector2i, budget: int) -> bool:
 	return false
 
 
+## **The quest's fight is the turn-based one, since K6** (2026-09-24). The claims here
+## have not changed — beating him is what lets the act through, losing opens nothing —
+## only the engine underneath them. `DuelPlayer.PRESS` is the hand that closes and
+## strikes, which is what "a competent player" meant when this drove the first design.
 func _fight_it_out(sim: Sim) -> StringName:
+	var duel := sim.store(&"duel") as Duel
+	var hands := DuelPlayer.new(DuelPlayer.PRESS)
+	for _step: int in 8000:
+		if not duel.on():
+			break
+		hands.play(sim, duel)
+		sim.advance(1)
+	return duel.outcome
+
+
+## The first design's, kept until the first design is deleted (K6's other half).
+func _fight_it_out_the_old_way(sim: Sim) -> StringName:
 	var fight := sim.store(&"fight") as Fight
 	var held: Dictionary = {}
 	for _step: int in 6000:
@@ -572,9 +588,9 @@ func test_reaching_for_a_furnace_brings_somebody_out() -> void:
 	_at_a_furnace(sim)
 	_act(sim)
 
-	var fight := sim.store(&"fight") as Fight
-	assert_true(fight.on(), "somebody came out")
-	assert_eq(fight.opponent, &"tom", "and on her side it is Tom")
+	var duel := sim.store(&"duel") as Duel
+	assert_true(duel.on(), "somebody came out")
+	assert_eq((duel.foe()).who, &"tom", "and on her side it is Tom")
 	assert_false(sim.facts.has(RELIGHT), "the furnaces are untouched while he is standing there")
 
 
@@ -608,7 +624,7 @@ func test_he_does_not_come_out_twice() -> void:
 	sim.facts.add_source(FACED, &"tom")
 	_at_a_furnace(sim)
 	_act(sim)
-	assert_false((sim.store(&"fight") as Fight).on(),
+	assert_false((sim.store(&"duel") as Duel).on(),
 		"somebody already stopped you once, and lost")
 	assert_true(sim.facts.has(RELIGHT), "so the furnace answers instead")
 
@@ -620,17 +636,23 @@ func test_losing_opens_nothing() -> void:
 	sim.facts.add_source(BROUGHT, &"tom")
 	_talk(sim, &"harry")
 	_say(sim, &"face_harry")
-	var fight := sim.store(&"fight") as Fight
-	var held: Dictionary = {}
-	for _step: int in 6000:
-		if not fight.on():
+	# **A small bar, on purpose.** The shipped one is a hundred, which Yannick set as a
+	# development value so that nothing in the demo can threaten him — at five damage a
+	# blow that is twenty turns of standing still. This test is about the *rule* that
+	# only a win opens the furnaces, not about the balance, so it gives the player a bar
+	# a loss can actually empty and leaves the hundred to the player.
+	var world := sim.store(&"world") as WorldState
+	world.player_hp = 10
+	var duel := sim.store(&"duel") as Duel
+	if duel.on():
+		(duel.me()).hp = world.player_hp
+	var hands := DuelPlayer.new(DuelPlayer.STAND)
+	for _step: int in 8000:
+		if not duel.on():
 			break
-		var want: Dictionary = {"walk": 0, "attack": false, "guard": false, "evade": false}
-		if want != held:
-			sim.submit(&"fight_input", want)
-			held = want
+		hands.play(sim, duel)
 		sim.advance(1)
-	assert_eq(fight.outcome, &"lost", "stand there and he fells you")
+	assert_eq(duel.outcome, &"lost", "stand there and he fells you")
 	sim.advance(4)
 	assert_false(sim.facts.has(FACED), "and the furnaces are still shut to you")
 
@@ -662,9 +684,9 @@ func test_the_whole_quest_replays_from_its_log() -> void:
 	# She answers for him at the gate, so the yard lets him in: Q1 and Q3, played.
 	assert_true(_walk_to(sim, _a_furnace_tile(), 6000), "and into the yard")
 	_act(sim)
-	var fight := sim.store(&"fight") as Fight
-	assert_true(fight.on(), "and Tom comes out to stop the shift")
-	assert_eq(fight.opponent, &"tom", "it is him and not somebody else")
+	var duel := sim.store(&"duel") as Duel
+	assert_true(duel.on(), "and Tom comes out to stop the shift")
+	assert_eq((duel.foe()).who, &"tom", "it is him and not somebody else")
 	assert_eq(_fight_it_out(sim), &"won", "Tom is stopped")
 	sim.advance(4)
 

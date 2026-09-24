@@ -107,7 +107,8 @@ func _somebody_stops_you(sim: Sim, world: WorldState) -> void:
 			continue
 		world.last_act_step = sim.step
 		sim.derive(&"stopped_at_the_furnaces", {"by": String(npc.id)})
-		sim.derive(&"fight_began", {"opponent": String(npc.id), "asked_by": "the_furnaces"})
+		sim.derive(DuelRules.began_event(),
+			{"opponent": String(npc.id), "asked_by": "the_furnaces"})
 		return
 
 

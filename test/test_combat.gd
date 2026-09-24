@@ -303,6 +303,11 @@ func test_somebody_near_the_start_will_fight_you() -> void:
 func test_a_fight_begins_because_you_said_so() -> void:
 	# **A fight is something you say.** Not something you walk into — that is the king's
 	# on-contact death, which is the oldest debt in the project and not the design.
+	#
+	# **Since K6 the line begins a *duel*, so that half of this moved** (2026-09-24) to
+	# `test_duel.gd`'s `test_saying_the_line_is_what_begins_a_duel`. What is left here is
+	# the half this file is for: the first design still squares two people up when it is
+	# asked to, and it does it where they were standing.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
 	var fight: Fight = _fight(sim)
@@ -310,13 +315,13 @@ func test_a_fight_begins_because_you_said_so() -> void:
 	assert_true(world.in_dialogue(), "you are talking to him")
 	assert_false(fight.on(), "and nobody is fighting yet")
 
-	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.submit(&"fight_began", {"opponent": "bram", "asked_by": "ask_bram_spar"})
 	sim.advance(4)
 	assert_true(fight.on(), "saying it squares the two of you up")
 	assert_eq(fight.opponent, &"bram", "against him and nobody else")
-	assert_false(world.in_dialogue(),
-		"and the conversation is over — a dialogue box open behind a fight would read "
-		+ "the player's blows as menu choices")
+	# *And the conversation closes* is asserted in `test_duel.gd` now, where the line is
+	# actually said. It cannot be checked here any more: this starts the fight directly,
+	# so there is no `DialogueSystem` in the path to close anything.
 
 
 func test_you_can_ask_him_again() -> void:
@@ -380,9 +385,16 @@ func test_the_two_keys_are_bound() -> void:
 # which is why there was nothing for a camera to frame. These check the join: the line
 # becomes ground, the ground is bounded, and only one hand moves the player.
 
+## **Started directly, since K6** (2026-09-24). This used to say the line and let
+## `DialogueSystem` answer with a fight — and that is exactly what the cut-over
+## repointed: saying the line now begins a *duel*. These tests are the first design's
+## own, and they keep testing it until it is deleted, so they ask for it by name. The
+## claim this helper used to carry in passing — *a line starts a fight* — did not go
+## missing; it moved to `test_duel.gd`, where it is now asserted on purpose rather than
+## as a side effect of a helper.
 func _square_up(sim: Sim) -> Fight:
 	_stand_by(sim, &"bram")
-	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.submit(&"fight_began", {"opponent": "bram", "asked_by": "ask_bram_spar"})
 	sim.advance(4)
 	return _fight(sim)
 

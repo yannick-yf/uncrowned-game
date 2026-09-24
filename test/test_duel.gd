@@ -500,6 +500,45 @@ func test_nothing_can_take_a_point_off_you_while_the_development_switch_is_on() 
 	assert_eq((duel.me()).hp, WorldState.MAX_HP, "the player is untouched, not left on one")
 
 
+# ------------------------------------------------- the cut-over, K6 (2026-09-24) ---
+
+func test_saying_the_line_is_what_begins_a_duel() -> void:
+	# **K6's whole point, and the claim it inherited.** A fight is something you *say* —
+	# not something you walk into, which is the king's on-contact death and the oldest
+	# debt in the project. That claim lived in `test_combat.gd` while the line began the
+	# first design's fight; the cut-over repointed `DialogueSystem` at this one, so the
+	# claim moved with it rather than being lost in the move.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var duel: Duel = _duel(sim)
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	assert_true(world.in_dialogue(), "you are talking to him")
+	assert_false(duel.on(), "and nobody is fighting yet")
+
+	sim.submit(&"choose_intent", {"intent": "ask_bram_spar"})
+	sim.advance(4)
+	assert_true(duel.on(), "saying it squares the two of you up")
+	assert_eq((duel.foe()).who, &"bram", "against him and nobody else")
+	assert_eq(duel.asked_by, &"ask_bram_spar", "and it remembers the line that did it")
+	assert_false(world.in_dialogue(),
+		"and the conversation is over — a dialogue box open behind a fight would read "
+		+ "the player's turns as menu choices")
+
+
+func test_the_switch_is_one_line_and_both_designs_are_still_there() -> void:
+	# The cut-over is reversible on purpose: the first design is on disk, tested, and one
+	# word away. This fails the day somebody flips it back and forgets, and it fails the
+	# day the two events stop agreeing on their fields — which is what lets a caller name
+	# who and why without naming which system.
+	assert_true(DuelRules.TURN_BASED, "the game starts the turn-based fight")
+	assert_eq(DuelRules.began_event(), &"duel_began", "and that is the event it derives")
+	assert_eq(DuelRules.ended_event(), &"duel_ended", "and the one it answers with")
+	assert_not_null(load("res://core/systems/combat_system.gd"),
+		"the first design is still on disk, because K6 does not delete it")
+
+
 # -------------------------------------------------- what the window is handed ---
 
 func test_the_shape_of_a_blow_is_the_fights_business_and_not_the_windows() -> void:
