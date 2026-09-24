@@ -1,0 +1,55 @@
+{
+  "_note": "THE WHOLE OF THE SECOND FIGHT'S BALANCE (docs/COMBAT_V2.md §7, task K2). One small table, which is the one rule worth keeping from the first design: change a number here and nothing else. There are no dice anywhere in this file and none in the code that reads it — determinism comes from there being nothing random, which is stronger than seeding.",
+  "_units_note": "Distances are TILES of the world grid, measured 8-way, so a diagonal is one tile like any other (BakeRules.METRES_PER_TILE says a tile is 2 m). Times are COUNTS OF SIM STEPS, 60 to the real second, because the world clock is held for the length of a fight and a turn still has to take a readable amount of time.",
+  "table": {
+    "tiles_per_turn": 4,
+    "_tiles_note": "8 m. Settled 2026-09-24 after ten was proposed and measured out: the fight camera shows about six tiles across, so ten tiles is three screen-widths in one turn and position stops existing. Baldur's Gate 3 gives 9 m, four to five tiles here. THE CAP IS THE WHOLE OF WHAT SPACING MEANS in this design — a turn is move AND act, so without it a fighter crosses the grid and the grid means nothing.",
+    "reach_tiles": 1,
+    "_reach_note": "Adjacent, diagonals included, because the game's movement is 8-way. A bow or a spear is a later reach, not a later system.",
+    "strike_damage": 5,
+    "_damage_note": "Fixed. A blow that lands takes five, always, from anybody, and that is why a fight is a thing the player can reason about rather than gamble on.",
+    "player_hp": 100,
+    "_player_hp_note": "A DEVELOPMENT VALUE and Yannick said so plainly (2026-09-24): 'justement pour que ça soit une formalité, c'est dans le cadre de mes tests et devs'. Twenty blows before the player falls, so nothing in the demo can threaten them. The shipped number is still open — 30 is the recommendation, six blows — and S4 is when it has to be settled. Written here rather than left as a silent default, because a number nobody remembers choosing is a number that ships.",
+    "leaves_at_tiles": 3,
+    "leaves_after_rounds": 2,
+    "_leaves_note": "Further than leaves_at_tiles from every enemy at the end of leaves_after_rounds ROUNDS RUNNING and you have left the fight — dead or gone is the general form of an ending, and fleeing counts as leaving for the player exactly as it does for anybody. Two numbers rather than one because the design's words are 'getting out of reach AND STAYING THERE': one round is not staying, and checking it at the end of a single round hands the ending to whoever happened to move last, which is how a wounded man who ran four tiles escaped a player who had not yet had a turn to follow him.",
+    "follows_tiles": 8,
+    "_follows_note": "How far from where the fight began an opponent will chase you, and it is the reason walking out of a fight is possible at all. Both sides move four tiles a turn, so a chaser who never gives up can never be outrun and nobody could ever leave. Ours, not the design's: docs/COMBAT_V2.md §7 leaves where the fled go open and says nothing about pursuit. It does not cap a FLEEING fighter, who is running from the fight rather than following it.",
+    "flees_at_hp": 5,
+    "_flees_note": "At or below this an NPC spends its turn moving away and does not strike (docs/COMBAT_V2.md §5). One strike of five takes anything from ten to five, so the second blow is the one that would kill it and this is the turn before that — a wounded person runs, which is the half of a fight the first design had none of.",
+    "steps_per_tile": 10,
+    "_steps_note": "How long a fighter takes to walk one tile of its move, in sim steps. Ten is exactly the world's own walking pace (MovementRules.TILES_PER_SECOND is 6), so a fighter crossing the grid on its turn moves at the speed the player walks everywhere else — a fight that moved people faster than the world does would read as a different game.",
+    "act_steps": 30,
+    "strike_at_step": 18,
+    "_act_note": "The blow: eighteen steps of wind-up, then it lands, then twelve of recovery. The wind-up is the half of a blow a player reads — Yannick played the first design and found the animation slight, and the cause was that the wind-up had no drawing at all. Nothing here is reactable, because a turn-based fight is not reacted to; it is read.",
+    "hurt_steps": 20,
+    "_hurt_note": "How long the one who took it plays the flinch. A BLOW DOES NOT MOVE YOU (Yannick, 2026-09-24): no knockback, no pushbox, no shove. They recoil and stay on their tile.",
+    "pause_steps": 8,
+    "_pause_note": "The gap between one turn and the next, so two turns read as two turns and not as one long scramble.",
+    "beat_steps": 100,
+    "_beat_note": "The beat between the blow that decides a fight and the world coming back: somebody is down, everybody stands where the last blow left them, the clock is still held and nothing anybody presses does anything. A bit over a second and a half. Kept from the first design (H5), which got it right."
+  },
+  "_fighters_note": "Who you can be put in front of and what they bring. Anybody not listed takes the default. 'spares' means they stop when you go down instead of killing you — Bram says so in his own line, and a sparring partner who sends you back to the fairies' clearing twelve seconds into the game is not a sparring partner.",
+  "fighters": {
+    "_default": {
+      "hp": 10,
+      "spares": false
+    },
+    "bram": {
+      "hp": 10,
+      "spares": true
+    },
+    "harry": {
+      "hp": 10,
+      "spares": false
+    },
+    "tom": {
+      "hp": 10,
+      "spares": false
+    },
+    "wolf": {
+      "hp": 10,
+      "spares": false
+    }
+  }
+}

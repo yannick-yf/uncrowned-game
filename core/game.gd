@@ -36,6 +36,11 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"towns", TownState.new())
 	sim.add_store(&"folk", Folk.new())
 	sim.add_store(&"fight", Fight.new())
+	# **Beside the first design, not instead of it** (K1). `Duel` is the turn-based
+	# fight of `docs/COMBAT_V2.md`; it holds nothing and does nothing until a
+	# `duel_began` event arrives, which today only its own tests and `UNCROWNED_DUEL`
+	# submit. The cut-over is K6.
+	sim.add_store(&"duel", Duel.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -93,6 +98,11 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(FolkSystem.new())
 	systems.append(KingdomSystem.new())
 	systems.append(CombatSystem.new())
+	# **After it, and that is not arbitrary** (K1): `Sim.ticks_held` has one writer per
+	# step and `CombatSystem` recomputes it to false whenever its own fight is not on.
+	# This one sets it back to true when a duel is, so the two cannot leave it on
+	# between them and a duel still holds the world's clock.
+	systems.append(DuelSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
@@ -119,6 +129,7 @@ static func fresh_stores() -> Dictionary:
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
 		&"towns": TownState.new(), &"folk": Folk.new(), &"fight": Fight.new(),
+		&"duel": Duel.new(),
 	}
 
 

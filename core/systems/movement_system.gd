@@ -33,6 +33,11 @@ func on_step(sim: Sim, _step: int) -> void:
 	var fight := sim.store(&"fight") as Fight
 	if fight != null and fight.on():
 		return
+	# And nor mid-duel (K1): the second design's fight owns the player's position while
+	# it runs and writes it from the tile they are standing on, for the same reason.
+	var duel := sim.store(&"duel") as Duel
+	if duel != null and duel.on():
+		return
 	var traits := sim.store(&"traits") as Traits
 	var attuned: bool = traits != null and traits.is_attuned()
 	var wanted: Vector2 = MovementRules.step(
