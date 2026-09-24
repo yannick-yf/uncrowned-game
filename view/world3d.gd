@@ -159,15 +159,22 @@ const HIS_LIBRARY: String = "res://view3d/workshop/prototype_3d/assets/library/"
 ## the traffic. His frames, his material, his pixel size (a 197-pixel frame stands
 ## 1.53 m), his billboard trick. §13's *nobody shares a face* is a debt he settles.
 const HIS_FRAMES: String = "res://view3d/workshop/prototype_3d/assets/traveler_walk_frames.tres"
-## **Ours, and it says so.** Six frames of his traveller fighting, built from his own
+## **Ours, and it says so.** Sixteen cells of his traveller fighting, built from his own
 ## pixels by `tools/draw_fight_frames.gd` because he has drawn no attack and no guard.
 ## Yannick's call on 2026-09-19, over the art rule and knowing a second hand would show;
 ## the reasoning is in that tool's header and in `docs/POUR_SLOSINIO.md` §8. The day his
 ## sheet grows an `attack_left` of its own, delete this and the tool with it.
+##
+## **The row order is the tool's and it is load-bearing** (K5, 2026-09-24). The block is
+## found by counting *up from the bottom of the sheet*, so `right` and `left` must stay
+## last: that is what let the six north and south cells be added underneath his own
+## rows without the eight already accepted moving by a pixel. `up` and `down` were
+## added here the day the grid fight could aim at them; before that the sheet held them
+## and this list did not, and a blow thrown north drew side-on.
 const OUR_FIGHT_FRAMES: String = "res://view3d/fight/traveler_sheet.png"
 const OUR_CELL: Vector2i = Vector2i(160, 200)
 const OUR_POSES: Array[StringName] = [&"ready", &"attack", &"guard", &"hurt"]
-const OUR_WAYS: Array[StringName] = [&"right", &"left"]
+const OUR_WAYS: Array[StringName] = [&"up", &"down", &"right", &"left"]
 const HIS_FIGURE_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/traveler_sprite.tres"
 const HIS_FIGURE_PIXEL_SIZE: float = 0.0077832513
 const FIGURE_HEIGHT_M: float = 1.55

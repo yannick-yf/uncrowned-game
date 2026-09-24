@@ -94,7 +94,7 @@ func test_his_own_pixels_are_where_he_left_them() -> void:
 		"every one of his frames still lands inside the combined sheet: %s" % str(outside))
 
 
-func test_the_window_still_finds_his_eight_where_it_left_them() -> void:
+func test_the_window_reads_the_tools_last_rows_in_the_tools_order() -> void:
 	# **The row order is load-bearing.** `view/world3d.gd` counts our block up from the
 	# bottom of the sheet, so right and left have to stay the last two rows: a window that
 	# knows only those two finds them unmoved, and a window taught the other two finds all
@@ -113,11 +113,21 @@ func test_the_window_still_finds_his_eight_where_it_left_them() -> void:
 	if sheet == null or his == null:
 		debt("his workshop is not copied in; run tools/vendor_workshop.sh")
 		return
-	# Where the window looks for its first row, and where the tool put "right".
+	# **The invariant, rather than a snapshot of it.** Whatever the window reads, it must
+	# read the tool's *last* rows in the tool's order — that is what makes the block
+	# findable by counting up from the bottom, and it holds whether the window knows two
+	# facings or four. It was two until 2026-09-24, when the grid fight could aim north
+	# and south and `OUR_WAYS` was extended; the assertion below is the same claim
+	# written so that it survived the change instead of failing it.
 	var window_looks: int = sheet.get_height() - World3d.OUR_CELL.y * World3d.OUR_WAYS.size()
-	var tool_put_right: int = his.get_height() + World3d.OUR_CELL.y * 2
-	assert_eq(window_looks, tool_put_right,
-		"the window's first row is still the right-facing one")
+	var tool_put_them: int = his.get_height() \
+		+ World3d.OUR_CELL.y * (ways.size() - World3d.OUR_WAYS.size())
+	assert_eq(window_looks, tool_put_them,
+		"the window's first row is the tool's %dth" % (ways.size() - World3d.OUR_WAYS.size()))
+	for at: int in World3d.OUR_WAYS.size():
+		assert_eq(String(World3d.OUR_WAYS[at]),
+			String(ways[ways.size() - World3d.OUR_WAYS.size() + at]),
+			"the window's facings are the tool's last ones, in the tool's order")
 
 
 func test_each_of_the_new_facings_actually_drew_something() -> void:
