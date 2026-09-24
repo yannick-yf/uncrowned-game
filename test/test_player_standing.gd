@@ -148,6 +148,87 @@ func test_a_deed_on_the_road_moves_nothing_and_says_so() -> void:
 	assert_true(kinds.has(&"standing_unmoved"), "and the log says nothing happened")
 
 
+# ------------------------------------------------------------ the scale's ends ---
+
+func test_a_theft_costs_ten_and_a_murder_costs_eighty() -> void:
+	# Yannick's two worked examples, end to end (§3, 2026-09-23), written out because
+	# the gap between them *is* the design: ten thefts and you are hated in one town;
+	# one murder and you are nearly there in a single afternoon.
+	assert_eq(PlayerRules.standing_effect(DeedRules.DEED_THEFT), -10.0, "a theft")
+	assert_eq(PlayerRules.standing_effect(PlayerRules.DEED_KILLED_INNOCENT), -80.0,
+		"killing somebody innocent")
+	assert_eq(StandingRules.word_for(10.0 * PlayerRules.A_THEFT), &"hated",
+		"ten thefts and one town is done with you")
+	assert_eq(StandingRules.word_for(PlayerRules.A_MURDER), &"hated",
+		"and one murder gets there in an afternoon")
+
+
+func test_killing_a_man_who_drew_first_is_not_the_same_deed_as_killing_a_bystander() -> void:
+	# The substance of J3. Two ids rather than one judgement made at the moment of the
+	# blow, because the town's opinion is the only place the distinction can show.
+	var murder: float = PlayerRules.standing_effect(PlayerRules.DEED_KILLED_INNOCENT)
+	var self_defence: float = PlayerRules.standing_effect(PlayerRules.DEED_KILLED_ATTACKER)
+	assert_true(self_defence > murder,
+		"a man who drew on you first costs less: %.1f against %.1f" % [self_defence, murder])
+	assert_true(self_defence < PlayerState.NEUTRAL,
+		"but it is not free — there is still a body in the street: %.1f" % self_defence)
+	assert_true(absf(self_defence) < absf(PlayerRules.A_THEFT) * 3.0,
+		"and it is nearer a theft than a murder")
+
+
+func test_the_two_killings_move_the_town_they_happened_in() -> void:
+	# Not the table this time: the whole pipe, both deeds, in the same town, so that
+	# the distinction cannot quietly disappear into a rules file nothing calls.
+	var murdered: Sim = Game.build()
+	_at(murdered, _beside(murdered, &"ivo"))
+	Deeds.perform(murdered, PlayerRules.DEED_KILLED_INNOCENT, &"cinderworks",
+		_beside(murdered, &"ivo"))
+	murdered.advance(2)
+
+	var defended: Sim = Game.build()
+	_at(defended, _beside(defended, &"ivo"))
+	Deeds.perform(defended, PlayerRules.DEED_KILLED_ATTACKER, &"cinderworks",
+		_beside(defended, &"ivo"))
+	defended.advance(2)
+
+	var after_murder: float = (murdered.store(&"player") as PlayerState).standing_in(&"cinderworks")
+	var after_defence: float = (defended.store(&"player") as PlayerState).standing_in(&"cinderworks")
+	assert_eq(after_murder, PlayerRules.A_MURDER, "the works watched you kill a bystander")
+	assert_eq(after_defence, PlayerRules.A_KILLING_IN_SELF_DEFENCE,
+		"and watched somebody draw on you first")
+	assert_eq(StandingRules.word_for(after_murder), &"hated", "one is the end of that town")
+	assert_ne(StandingRules.word_for(after_defence), &"hated", "and one is not")
+
+
+func test_a_killing_nobody_saw_moves_nothing_either() -> void:
+	# The rule holds for the worst deed in the game, which is the only place it
+	# matters that it is a rule and not a special case for stealing.
+	var sim: Sim = Game.build()
+	var player := sim.store(&"player") as PlayerState
+	Deeds.perform(sim, PlayerRules.DEED_KILLED_INNOCENT, &"cinderworks",
+		empty_corner_of(&"cinderworks"))
+	sim.advance(2)
+	assert_eq(player.standing_in(&"cinderworks"), PlayerState.NEUTRAL,
+		"a wood with nobody in it is where a murder costs nothing")
+
+
+func test_no_deed_the_model_prices_costs_nothing() -> void:
+	for deed: StringName in PlayerRules.priced_deeds():
+		assert_ne(PlayerRules.standing_effect(deed), 0.0,
+			"%s is in the model's table and has no number" % deed)
+
+
+func test_the_old_acts_keep_their_numbers_until_c3_takes_them() -> void:
+	# Dropping them to zero would quietly remove every way a town's opinion of you can
+	# go up, which is the defect §8's Q38 was raised about. They fall through to the
+	# old table and die with it.
+	assert_eq(PlayerRules.standing_effect(DeedRules.DEED_WARNING),
+		DeedRules.town_effect(DeedRules.DEED_WARNING),
+		"warning a town is still worth what it was")
+	assert_true(PlayerRules.standing_effect(DeedRules.DEED_WARNING) > 0.0,
+		"and it is still the way up")
+
+
 # ------------------------------------------------------------------- the log ---
 
 func test_nothing_writes_a_standing_except_a_deed_in_the_log() -> void:

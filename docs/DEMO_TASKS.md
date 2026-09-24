@@ -761,7 +761,7 @@ story into `Standing.by_town` as it arrives. All of that goes with **C3**, not h
 the walk to the stall is in the log and a replay can be proved. 55 suites, 594 tests,
 0 failed on both worlds.
 
-### J3 · The scale's two ends
+### J3 · The scale's two ends — **built 2026-09-24**
 
 Est. 2 h. Depends on: J2.
 
@@ -772,6 +772,29 @@ drew on you first is a different deed from a bystander.
 **Check:** both numbers, written out in a test; and killing an opponent who attacked
 first costs less than killing a bystander, with the two named in one test so the
 distinction cannot quietly disappear.
+
+**Delivered 2026-09-24.** `PlayerRules` prices the four deeds the model names: a theft
+at **−10**, putting it back at **+6**, killing somebody innocent at **−80**, and
+killing a man who drew on you first at **−20**. *Innocent* is answered as **two deed
+ids** rather than as a judgement made at the moment of the blow, because the town's
+opinion is the only place the distinction can show and one `i_killed_somebody` would
+have to guess. They live in `PlayerRules` and not in `DeedRules`, whose docstring
+promises every deed's effects are written in one place and which has no faction,
+witness or hardship row for either — the three columns that go with C3.
+
+**−20 is ours, not Yannick's**, and it is the first number in the model that is: he set
+the two ends and not the middle. A quarter of the murder and twice the theft — there is
+still a body in the street, and everyone standing there saw who reached first.
+
+**The old twenty-four keep their numbers** and fall through to `DeedRules.town_effect`
+until C3. Re-pricing acts that are on their way out is work thrown away, and dropping
+them to zero would quietly remove every way a town's opinion can go **up** — §8's Q38
+defect, reintroduced.
+
+**Nothing performs a killing yet.** `K3` is where a fight can end in one; this is the
+table it will read, exercised through the same `Deeds.perform` pipe every deed uses.
+
+**Checked:** 6 new tests. 55 suites, 600 tests, 0 failed on both worlds.
 
 ### J4 · Blackcairn reads the mean
 
