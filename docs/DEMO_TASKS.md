@@ -819,8 +819,8 @@ The first pass at the table, and the four settled values are Yannick's of 2026-0
 
 | | |
 |---|---|
-| Tiles per turn | **to confirm** — 10 proposed, 4 recommended, see `COMBAT_V2.md` §7 |
-| Player hit points | 100, a test value; **`G` already makes the player unkillable**, so a shipped number nearer 30 is the one to settle before S4 |
+| Tiles per turn | **4** — 8 m. Ten was proposed and measured out: it is three screen-widths and position stops existing |
+| Player hit points | **100, and deliberately a formality** for development. The shipped number is still open — 30 is the recommendation — and S4 is when it has to be settled |
 | Opponent and monster hit points | 10 |
 | Damage of a strike | 5 |
 
@@ -933,15 +933,33 @@ finished the tutorial* is invariant 4 broken, in a demo or out of one.
 numbers; **nothing refuses to let the player walk anywhere**; a frame of the road that
 shows why a first-time player takes it.
 
-### W3 · The tutorial fight
+### W3 · The tutorial fight, against Bram
 
-Est. 3 h. Depends on: K1–K4.
+Est. 4 h. Depends on: K1–K4.
 
-The first fight, against something that cannot kill a beginner in two turns. What it
-must teach, and in how many turns, is open.
+**The same sparring partner as the first design** (Yannick, 2026-09-24), which keeps
+everything F2 built for getting into a fight from a conversation. The shape he asked
+for:
 
-**Check:** somebody who has never played finishes it without being told the keys. That
-is **S4's tester**, not a test — a suite cannot see whether a person understood.
+1. The player talks to Bram.
+2. **Bram walks a few tiles away**, and the fight starts.
+3. Explanations are laid over the fight itself, as it is played.
+
+Step 2 is the one doing the teaching and it is worth saying why: with reach at one tile
+and movement at four, a Bram who has stepped away **cannot be hit on the first turn**.
+The player has to move before they can strike, so the first thing the fight teaches is
+the thing the grid is for, and it teaches it by making them do it rather than by saying
+it.
+
+Bram already spares the player (`spares` in `content/moves.json`), so a beginner who
+loses does not die in the tutorial.
+
+**Open:** which explanations, and how they leave the screen. The words are Yannick's,
+like every other line — **P2**.
+
+**Check:** somebody who has never played finishes it without being told the keys, and
+moves before their first blow. That is **S4's tester**, not a test — a suite cannot see
+whether a person understood.
 
 ### W4 · The funnel comes out in one change
 

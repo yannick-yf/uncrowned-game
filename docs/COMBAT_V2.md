@@ -172,35 +172,53 @@ All of balance is this table, which is the first design's rule kept.
 
 | | Value | |
 |---|---|---|
-| Tiles moved per turn | **under review** | Yannick proposed 10, and asked for it to be checked. See below |
-| Player hit points | 100 | *"pour le moment… qu'il ne meure pas dans nos tests"* |
-| Opponent and monster hit points | 10 | Everyone, for now |
-| Damage of a strike | 5 | Everyone, for now |
+| **Tiles moved per turn** | **4** | 8 m. Everyone, v1 |
+| Player hit points | **100 — a development value** | Deliberately a formality. See below |
+| Opponent and monster hit points | 10 | Everyone, v1 |
+| Damage of a strike | 5 | Everyone, v1 |
 | Guard | — | There is none |
 
 So a strike kills anything in two, and twenty land before the player falls.
 
-**Tiles per turn, measured rather than argued.** A tile is 2 m and the fight camera
-shows 7 m of height — about **six tiles across the screen**. Ten tiles is 20 m, more
-than three screen-widths in one turn: everybody would reach everybody every turn and
-position would stop existing, which is precisely what §4's cap is for. Baldur's Gate 3
-gives 9 m a turn, which is **four to five tiles here**. Four is the recommendation, and
-because it is one row in a table it costs nothing to raise.
+**Four tiles, and it was measured rather than argued.** Ten was proposed and checked at
+Yannick's request. A tile is 2 m and the fight camera shows 7 m of height — about **six
+tiles across the screen** — so ten tiles is 20 m, three screen-widths in one turn:
+everybody would reach everybody every turn and position would stop existing, which is
+precisely what §4's cap exists to prevent. Baldur's Gate 3 gives 9 m a turn, four to
+five tiles here. Settled at **4** on 2026-09-24.
 
-**Two of these are test values and should not ship.** 100 hit points against 5 damage
-is not a fight, it is a formality, and the demo's wolves are supposed to make the road
-a journey. The project already has the right tool for testing — **`G` makes the player
-unkillable** and says so on the HUD — so the balance does not have to be bent to get a
-suite green. A shipped number nearer **30** gives the player six blows to survive. To
-settle before **S4**, when somebody who is not us plays it.
+**The player's 100 is a development value and Yannick says so plainly** — *"justement
+pour que ça soit une formalité, c'est dans le cadre de mes tests et devs"* (2026-09-24).
+It is written here rather than left as a silent default, because a number nobody
+remembers choosing is a number that ships.
+
+At 100 against 5 damage a wolf needs twenty blows, so **nothing in the demo can
+threaten the player**, and the demo's wolves exist to make the road a journey. The
+shipped number is still to settle — **30** gives six blows and is the recommendation —
+and the moment it has to be settled is **S4**, when somebody who is not us plays it.
+
+> Worth remembering while it stands: **`G` already makes the player unkillable** and
+> says `[G] INVULNÉRABLE` on the HUD, so development never needed the balance bent. It
+> is there if the 100 becomes tiresome.
+
+### What ends a fight — settled 2026-09-24
+
+**Somebody reaching 0 hit points**, or a scripted end for the fights that want one
+(*"on verra ça plus tard"*). No round limit, no timer.
+
+Two readings that rule needs, and neither is a new decision — they are what it means
+once the rest of this design is true:
+
+- **Fleeing takes you out of the fight**, so the general form is *one side has nobody
+  left in it* — dead or gone. §5's wounded NPCs already leave this way.
+- **It works for the player too.** §3 removed the boundary so the player can walk out,
+  and a fight that only ends at 0 would otherwise follow them across the map. Getting
+  out of reach and staying there is leaving, for everybody. Symmetry is the whole
+  reason it needs no extra rule.
 
 ### Still open
 
-1. **What ends a fight when nobody wins.** The player walks away, or everyone has
-   fled. Does it end at a distance, after a number of rounds, or when no enemy can
-   reach you?
-2. **Where the fled go**, and whether they return.
-3. **The tutorial fight.** Against what, and what it must teach in how many turns.
+1. **Where the fled go**, and whether they return.
 
 ## 8. The frames, and the exception grows
 
