@@ -708,7 +708,7 @@ field. Then it steered by eye and wedged itself in the first doorway. It follows
 `SIMULATION_MODEL.md` left open. The places are simulated; the player is not, and every
 consequence of *you can kill everyone* lands here rather than in the fight.
 
-### J1 · The purse
+### J1 · The purse — **built 2026-09-24**
 
 Est. 2 h. Depends on: —.
 
@@ -719,6 +719,19 @@ to go, not because v1 spends it.
 
 **Check:** a run that earns and spends and then replays its log lands on the same
 number; a purse cannot go below zero.
+
+**Delivered 2026-09-24.** `core/player_state.gd` — **the player's own store**, built
+where the model says the player is shaped like a town: `TownState` holds two numbers
+for a place, this holds the player's. `core/systems/player_system.gd` is the only thing
+that writes it, and only from `move_purse`, so a replay rebuilds the same purse.
+Overdrawing takes what is there rather than refusing — refusing is a price check, and
+§5 says there are no prices — and the event records what actually moved, not what was
+asked for, so a journal reading it cannot claim a price the player never paid.
+
+**The four bands are not built**, deliberately: §7's first open question is their
+thresholds and they are Yannick's numbers. Nothing waits on them.
+
+**Checked:** 5 new tests. 54 suites, 585 tests, 0 failed on both worlds.
 
 ### J2 · A deed moves the town, not the person
 

@@ -36,6 +36,7 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"towns", TownState.new())
 	sim.add_store(&"folk", Folk.new())
 	sim.add_store(&"fight", Fight.new())
+	sim.add_store(&"player", PlayerState.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -87,6 +88,9 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(CreationSystem.new())
 	systems.append(AllegianceSystem.new())
 	systems.append(TownSystem.new())
+	# Beside it, and for the same reason: the player is a town with numbers of their
+	# own (`docs/PLAYER_MODEL.md` §2), and one system writes them.
+	systems.append(PlayerSystem.new())
 	# After it, and that is not arbitrary: the outcome asks the town system to move the
 	# two numbers, so the thing that answers has to be in the list to hear it.
 	systems.append(OutcomeSystem.new())
@@ -119,6 +123,7 @@ static func fresh_stores() -> Dictionary:
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
 		&"towns": TownState.new(), &"folk": Folk.new(), &"fight": Fight.new(),
+		&"player": PlayerState.new(),
 	}
 
 
