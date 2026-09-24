@@ -20,6 +20,12 @@ extends Control
 ## stays lit in ember before it goes dark, which is how a hit reads on the bar.
 const PIP: Vector2 = Vector2(13.0, 6.0)
 const PIP_GAP: float = 2.0
+## **Above this, health is a bar and not pips** (K4). Ten small integers count from the
+## sofa; a hundred of them is 1,500 pixels on a 640-wide screen. The second design's
+## table gives the player a hundred (`content/duel.json`, a development value Yannick
+## named as one), so the same widget has to draw both without lying about either — the
+## bar keeps the pips' footprint and their two colours and only stops being countable.
+const MAX_PIPS: int = 12
 const MARGIN: float = 10.0
 const TOP: float = 10.0
 const GHOST_SECONDS: float = 0.55
@@ -156,7 +162,18 @@ func _draw() -> void:
 		var at := Vector2((size.x - width) * 0.5, size.y * 0.80 + (1.0 - came) * 6.0)
 		Ui.write_over(self, at, _banner, Ui.LARGE, colour)
 	elif not settling:
-		var keys: String = Text.of(&"fight.keys")
+		# **Whose turn it is** (K4). A turn-based fight that does not say so is a fight
+		# the player stands in wondering why nothing is happening, and the keys are not
+		# the first design's: there is no guard to press.
+		var turn_based: bool = bool(_reading.get("turn_based", false))
+		if turn_based:
+			var whose: String = Text.of(&"duel.your_turn") if bool(_reading.get("my_turn", false)) \
+				else Text.of(&"duel.his_turn", [his_name])
+			var tone: Color = MINE if bool(_reading.get("my_turn", false)) else HIS
+			tone.a = _alpha
+			Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
+				whose, Ui.ROW, tone)
+		var keys: String = Text.of(&"duel.keys") if turn_based else Text.of(&"fight.keys")
 		var colour: Color = Ui.DIM
 		colour.a = _alpha * 0.9
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(keys, Ui.NOTE)) * 0.5, size.y - 12.0),
@@ -181,6 +198,9 @@ func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, righ
 	ghost.a = _alpha
 	var gone := Color(0.08, 0.08, 0.10, 0.72 * _alpha)
 	var edge := Color(colour.r, colour.g, colour.b, 0.55 * _alpha)
+	if max_hp > MAX_PIPS:
+		_draw_long_bar(hp, ghost_to, max_hp, label, lit, ghost, gone, edge, right, size)
+		return
 	for i: int in max_hp:
 		var x: float = MARGIN + float(i) * (PIP.x + PIP_GAP)
 		if right:
@@ -198,6 +218,43 @@ func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, righ
 		return
 	# A hairline under the player's pips only, so the two sides are told apart at a glance.
 	draw_rect(Rect2(Vector2(MARGIN, TOP + PIP.y + 2.0), Vector2(width, 1.0)), edge, true)
+
+
+## **A hundred points, drawn as one bar** (K4). The same footprint ten pips have, the
+## same three tones — lit, the ember of what just went, and dark — and it drains toward
+## the middle of the screen as the pips do. It is not countable, which is the honest
+## thing to say about a hundred of anything: the number beside it is what a player
+## reads, and the length is what they feel.
+func _draw_long_bar(
+	hp: int,
+	ghost_to: int,
+	max_hp: int,
+	label: String,
+	lit: Color,
+	ghost: Color,
+	gone: Color,
+	edge: Color,
+	right: bool,
+	size: Vector2,
+) -> void:
+	var width: float = float(MAX_PIPS) * (PIP.x + PIP_GAP) - PIP_GAP
+	var left: float = MARGIN if not right else size.x - MARGIN - width
+	var share: float = clampf(float(hp) / float(maxi(max_hp, 1)), 0.0, 1.0)
+	var was: float = clampf(float(ghost_to) / float(maxi(max_hp, 1)), 0.0, 1.0)
+	draw_rect(Rect2(Vector2(left, TOP), Vector2(width, PIP.y)), gone, true)
+	# Both bars drain toward the middle, so the remaining health is anchored at the
+	# outer edge and the loss appears on the inner side — the pips' rule, kept.
+	var lit_x: float = left if not right else left + width * (1.0 - share)
+	var ghost_x: float = left if not right else left + width * (1.0 - was)
+	draw_rect(Rect2(Vector2(ghost_x, TOP), Vector2(width * was, PIP.y)), ghost, true)
+	draw_rect(Rect2(Vector2(lit_x, TOP), Vector2(width * share, PIP.y)), lit, true)
+	draw_rect(Rect2(Vector2(left, TOP), Vector2(width, PIP.y)), edge, false, 1.0)
+	var reading: String = "%s  %d" % [label, maxi(hp, 0)]
+	var name_colour: Color = Color(edge.r, edge.g, edge.b, _alpha)
+	var name_x: float = MARGIN if not right else size.x - MARGIN - Ui.width_of(reading, Ui.ROW)
+	Ui.write_over(self, Vector2(name_x, TOP + PIP.y + 13.0), reading, Ui.ROW, name_colour)
+	if not right:
+		draw_rect(Rect2(Vector2(MARGIN, TOP + PIP.y + 2.0), Vector2(width, 1.0)), edge, true)
 
 
 # ------------------------------------------------------------- for the suite ---
