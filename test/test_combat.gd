@@ -1120,10 +1120,16 @@ func test_a_player_killed_in_the_ring_wakes_at_the_fire_and_not_in_the_ring() ->
 	assert_true(hp_before - announced * 2 <= 0, "and it took what it took")
 
 
-func test_the_six_frames_we_drew_are_there() -> void:
+func test_the_frames_we_drew_are_there() -> void:
 	# Yannick's exception to the art rule, 2026-09-19, kept as a check so that a build
 	# which quietly lost the sheet falls back to his eight animations and says so rather
 	# than drawing a fist that is not there.
+	#
+	# **The row count is the tool's, not this window's, since K5 (2026-09-24).** The sheet
+	# grew a row for north and a row for south, and the window has not been taught them
+	# yet; right and left are deliberately the *last* two rows, so what the window counts
+	# up from the bottom still lands where it always did. `test_fight_frames.gd` holds the
+	# rest of the frames' checks.
 	if not ResourceLoader.exists(World3d.OUR_FIGHT_FRAMES):
 		debt("view3d/fight/traveler_sheet.png is missing — run tools/draw_fight_frames.gd")
 		return
@@ -1134,12 +1140,15 @@ func test_the_six_frames_we_drew_are_there() -> void:
 	if frames != null:
 		var slice := frames.get_frame_texture(&"idle_right", 0) as AtlasTexture
 		his = slice.atlas if slice != null else null
+	var drawn: GDScript = load("res://tools/draw_fight_frames.gd") as GDScript
+	var rows: int = (drawn.get_script_constant_map().get("WAYS", []) as Array).size()
+	assert_eq(rows, 4, "four facings drawn")
 	if his != null:
 		assert_eq(int(sheet.get_width()), int(his.get_width()),
 			"ours is his sheet, the same width")
 		assert_eq(int(sheet.get_height()),
-			int(his.get_height()) + World3d.OUR_CELL.y * World3d.OUR_WAYS.size(),
-			"with our two rows below it — his pixels stay at his coordinates")
+			int(his.get_height()) + World3d.OUR_CELL.y * rows,
+			"with our rows below it — his pixels stay at his coordinates")
 
 
 
