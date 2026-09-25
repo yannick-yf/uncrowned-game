@@ -960,9 +960,17 @@ That number *is* what spacing means here, and it lives in the table with everyth
 the same five turns twice and gets the same result to the tile; and a fighter cannot
 reach across the arena and strike in the same turn.
 
-### K3 · Killing, and fleeing
+### K3 · Killing — **built 2026-09-25**, and fleeing is deferred
 
 Est. 4 h. Depends on: K1, J2.
+
+> `core/systems/felling_system.gd`: a death writes a fact `OpeningRules.is_gone`
+> reads, the body's purse goes to the player, and the town prices it by who drew
+> first — −80 for murder, −20 for finishing what somebody else began.
+> **Invariant 6 is now proved against a real death**: kill Tom and the works still
+> opens to somebody the office vouched for. **Fleeing is not built** — Yannick cut
+> the threshold on 2026-09-24 because at ten points and five damage everything ran
+> after one hit, Bram included. The machinery stands and is tested under an override.
 
 Anybody can be attacked, from the world or from a conversation, and nothing checks who
 they are. A killed person is **gone** through `OpeningRules.is_gone`, which reads a fact
@@ -1051,9 +1059,14 @@ it.
 is the group that makes the demo's walk a journey instead of a corridor, and it is where
 the demo's funnel lives — made of wolves, never of walls.
 
-### W1 · A wolf
+### W1 · A wolf — **built 2026-09-25**
 
 Est. 3 h. Depends on: K1, K2.
+
+> Most of it was already standing: `DuelRules.decide` is one rule for anybody's turn.
+> What it needed was numbers that are not a man's — **ten points where a man is
+> fifteen** — and a way to be more than one. `_named` refused every duplicate, which
+> is right for a person and wrong for a species, so three wolves were one wolf.
 
 Hit points, one damage number, a reach, and one rule for what it does on its turn. That
 is the whole of a monster, and it is why turn-based makes them cheap enough to have.
@@ -1061,9 +1074,17 @@ is the whole of a monster, and it is why turn-based makes them cheap enough to h
 **Check:** a wolf fights, kills, and can be killed; the same fight played twice comes
 out the same.
 
-### W2 · Wolves on the roads, never in the towns
+### W2 · Wolves on the roads, never in the towns — **built 2026-09-25**
 
 Est. 3 h. Depends on: W1.
+
+> Three packs as anchors in `content/places.json`, `core/wild.gd`,
+> `core/systems/wild_system.gd`, and a block in his rock paint because **his brother
+> has drawn no animal** — a DEBT, and `POUR_SLOSINIO.md` asks him for one. **It found
+> the worst bug of the group**: a fight held its fighters by the name of their kind,
+> so every blow aimed at the second wolf landed on the first, which was dead.
+> Fighters carry a seat now. The pack also had to move twice — a third of the way out
+> of Brindle is the way out to *everywhere*, and six journey tests walked into it.
 
 Where they stand is **content, not code**, the same discipline the routines already
 follow. The road to the works is plainly the safe one; the others are where the wolves
