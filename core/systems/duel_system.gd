@@ -112,7 +112,7 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	var cast := sim.store(&"cast") as Cast
 	if world == null:
 		return
-	var against: Array[StringName] = _named(event)
+	var against: Array[StringName] = _named(event, cast)
 	if against.is_empty():
 		return
 
@@ -178,15 +178,24 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 ## Who the fight is against: one name, or a list of them. There is no party — the
 ## player fights alone — but *you can kill everyone* means drawing on three people in a
 ## yard, so the fight itself is written for a list.
-func _named(event: SimEvent) -> Array[StringName]:
+## **A person appears once; a species appears as often as it is named** (W1,
+## 2026-09-25). This used to refuse every repeat, which is right for Harry — a man
+## cannot be in a fight twice — and wrong for a wolf, where the danger is *three of
+## them*. So the guard now asks the cast: somebody it knows is a person and is taken
+## once, and anything it does not know is a kind and may repeat.
+func _named(event: SimEvent, cast: Cast) -> Array[StringName]:
 	var out: Array[StringName] = []
 	var one: String = String(event.data.get("opponent", ""))
 	if one != "":
 		out.append(StringName(one))
 	for row: Variant in event.data.get("opponents", []) as Array:
 		var who := StringName(String(row))
-		if who != Duel.NOBODY and not out.has(who):
-			out.append(who)
+		if who == Duel.NOBODY:
+			continue
+		var a_person: bool = cast != null and cast.get_npc(who) != null
+		if a_person and out.has(who):
+			continue
+		out.append(who)
 	return out
 
 

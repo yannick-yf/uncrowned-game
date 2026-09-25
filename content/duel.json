@@ -47,8 +47,9 @@
       "spares": false
     },
     "wolf": {
-      "hp": 15,
+      "hp": 10,
       "spares": false
-    }
+    },
+    "_wolf_note": "TEN, WHERE A MAN IS FIFTEEN (W1, 2026-09-25). Two blows rather than three, and the difference is the whole point: a wolf that took as long to kill as Harry would be a man in a fur coat. What makes the wood dangerous is not that one wolf is hard, it is that wolves come in more than one — the duel takes a list of opponents and W2 uses it. It never spares: a sparring partner stops when you go down and an animal does not, which is the only line in this file that is about what something *is* rather than what it costs."
   }
 }
