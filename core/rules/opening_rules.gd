@@ -62,7 +62,17 @@ const TOM: StringName = &"tom"
 const WORKS_RELIT: StringName = &"i_lit_them_again"
 
 
+## **And a third reason, which is the bluntest** (K3, 2026-09-25): they were killed.
+## `FellingSystem` writes `killed:<who>` when a duel puts somebody down, and this reads
+## it — a fact, like the other two, so a replay rebuilds it and nothing is kept in step.
+## It is checked first because it outranks the others: a dead man is not merely finished
+## with you.
+const KILLED: String = "killed:%s"
+
+
 static func is_gone(who: StringName, facts: FactBase) -> bool:
+	if facts != null and facts.has(StringName(KILLED % who)):
+		return true
 	if who == FAIRY:
 		return not fairy_is_here(facts)
 	if who == TOM:

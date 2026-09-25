@@ -322,3 +322,89 @@ func test_every_beast_in_a_pack_is_its_own_fighter() -> void:
 		assert_eq(DuelRules.kind_of(fighter.who), &"wolf", "and each is still a wolf")
 		assert_eq(fighter.hp, DuelRules.hp_of(&"wolf"), "with a wolf's own health")
 	assert_eq(names.size(), 3, "three of them")
+
+
+# ------------------------------------------- K3, killing and what it costs ---
+
+func _kill(sim: Sim, who: String) -> Duel:
+	var duel: Duel = _duel(sim)
+	sim.submit(&"duel_began", {"opponent": who, "by": "player"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.PRESS, 12000)
+	return duel
+
+
+func test_a_man_you_kill_is_gone_from_the_world() -> void:
+	# **A fact, not a flag** — the mechanism written for the fairy and reused for Tom,
+	# now reused a third time. A replay rebuilds it and nothing is kept in step.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = alone_on_the_road()
+	assert_false(OpeningRules.is_gone(&"harry", sim.facts), "he is about his business")
+	var duel: Duel = _kill(sim, "harry")
+	assert_eq(duel.outcome, &"won", "he goes down")
+	sim.advance(2)
+	assert_true(OpeningRules.is_gone(&"harry", sim.facts),
+		"and the world stops drawing him")
+
+
+func test_a_body_carries_its_gold_and_a_wolf_carries_none() -> void:
+	# The only source of gold in the game so far, and the reason the wood is where you
+	# learn to fight rather than where you get rich.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var purse := sim.store(&"player") as PlayerState
+	world.player_pos = alone_on_the_road()
+	assert_eq(purse.gold, 0, "you start with nothing")
+	_kill(sim, "harry")
+	sim.advance(2)
+	assert_eq(purse.gold, DuelRules.purse_of(&"harry"), "what he had is yours")
+	assert_true(purse.gold > 0, "and he had something")
+
+	var wood: Sim = Game.build()
+	(wood.store(&"world") as WorldState).player_pos = alone_on_the_road()
+	_kill(wood, "wolf")
+	wood.advance(2)
+	assert_eq((wood.store(&"player") as PlayerState).gold, 0, "a wolf carries nothing")
+
+
+func test_who_drew_first_decides_what_the_town_thinks() -> void:
+	# `PLAYER_MODEL.md` §3's two ends. Starting it is murder; finishing what somebody
+	# else started is not the same deed, and the town prices them differently.
+	assert_true(PlayerRules.standing_effect(PlayerRules.DEED_KILLED_INNOCENT)
+			< PlayerRules.standing_effect(PlayerRules.DEED_KILLED_ATTACKER),
+		"murder costs more than defending yourself")
+	assert_eq(int(PlayerRules.standing_effect(PlayerRules.DEED_KILLED_INNOCENT)), -80,
+		"eighty, which is Yannick's number")
+
+
+func test_killing_a_wolf_offends_nobody() -> void:
+	# An animal in a wood has no town to belong to, which is what makes the wood the
+	# place the game lets you practise.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var me := sim.store(&"player") as PlayerState
+	world.player_pos = alone_on_the_road()
+	var before: String = me.fingerprint()
+	_kill(sim, "wolf")
+	sim.advance(2)
+	assert_eq(me.fingerprint(), before, "no town thinks worse of you for it")
+
+
+func test_killing_one_of_the_quest_s_people_does_not_close_the_quest() -> void:
+	# **Invariant 6, proved against a real death rather than structurally.** Two things
+	# open the works — being vouched for, and being brought through — and killing the man
+	# behind one of them must leave the other standing. Killing is allowed *because* the
+	# quest was built to survive it, and this is where that is checked rather than hoped.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = alone_on_the_road()
+	_kill(sim, "tom")
+	sim.advance(2)
+	assert_true(OpeningRules.is_gone(&"tom", sim.facts), "Tom is dead")
+
+	var keys: Array = WardRules.KEYS[&"cinderworks_gate"] as Array
+	assert_true(keys.size() >= 2, "the gate has more than one key")
+	sim.facts.add_source(keys[0] as StringName, &"drissa")
+	assert_true(WardRules.opens(&"cinderworks_gate", sim.facts),
+		"and one of them still opens it with him in the ground")

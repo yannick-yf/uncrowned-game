@@ -111,6 +111,8 @@ static func build_systems() -> Array[SimSystem]:
 	# After the duel, so a pack that has just been killed is cleared on the same step
 	# its fight ended rather than one step later.
 	systems.append(WildSystem.new())
+	# After the duel too: it answers `duel_down`, which the duel raises.
+	systems.append(FellingSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())

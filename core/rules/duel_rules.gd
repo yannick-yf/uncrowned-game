@@ -215,6 +215,13 @@ static func hp_of(who: StringName) -> int:
 	return int(_about(who).get("hp", 15))
 
 
+## **What is on them when they fall** (K3). Zero for anything that would make a fight
+## worth starting for the money — the wood pays nothing, and neither does a man who
+## offered to spar with you.
+static func purse_of(who: StringName) -> int:
+	return int(_about(who).get("purse", 0))
+
+
 ## Whether they stop when you go down. A sparring partner does.
 static func spares(who: StringName) -> bool:
 	return bool(_about(who).get("spares", false))
