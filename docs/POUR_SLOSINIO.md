@@ -261,6 +261,24 @@ tout, donc, si tu comptes les deux sens.
 
 C'est la seule chose qui manque vraiment au combat. Le reste marche.
 
+### Une chose qu'on te demande en plus : un animal
+
+Depuis le 25 septembre il y a des **loups** dans le bois et sur la Route du Roi. Ils se
+battent, ils tuent, on peut les tuer — et ils sont dessinés comme **un bloc gris dans ta
+peinture de roche**, parce que tu n'as encore dessiné aucun animal.
+
+C'est la règle qu'on s'est donnée : ce que tu n'as pas fait est *visiblement* absent
+plutôt qu'emprunté à autre chose. On aurait pu mettre ton voyageur — ça aurait posé un
+homme sur la route en l'appelant un loup, et c'est la seule chose que la règle interdit
+vraiment.
+
+Donc pour l'instant, sur un pont de la Route du Roi, deux cailloux mordent le joueur.
+
+**Ce qu'il faudrait :** un loup, vu de dessus comme tes autres personnages, dans les
+quatre orientations si tu peux, une seule de profil si tu ne peux pas. Une posture
+suffit — ils ne marchent pas encore, ils attendent. Le jour où tu le livres, le bloc
+disparaît tout seul : un test le surveille.
+
 ### Ce qui a changé le 24 septembre, et ça te concerne directement
 
 Deux paragraphes plus haut sont maintenant faux, et plutôt que de les effacer je les

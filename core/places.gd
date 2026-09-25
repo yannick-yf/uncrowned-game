@@ -56,6 +56,8 @@ var _order: Array[StringName] = []
 var _points: Dictionary = {}
 var _cast: Dictionary = {}
 var _strangers: Array[Dictionary] = []
+## The packs of the wood (W2): a kind, a count and an anchor, in the file's order.
+var _wild: Array[Dictionary] = []
 var _campfires: Array[Dictionary] = []
 var _stalls: Array[Dictionary] = []
 var _documents: Dictionary = {}
@@ -142,6 +144,13 @@ static func load_from(path: String) -> Places:
 
 	for entry: Variant in (root.get("strangers", []) as Array):
 		places._strangers.append(_anchor(entry))
+	for entry: Variant in (root.get("wild", []) as Array):
+		var row: Dictionary = entry as Dictionary
+		places._wild.append({
+			"kind": String(row.get("kind", "wolf")),
+			"count": int(row.get("count", 1)),
+			"anchor": _anchor(entry),
+		})
 	for entry: Variant in (root.get("campfires", []) as Array):
 		places._campfires.append(_anchor(entry))
 	for entry: Variant in (root.get("stalls", []) as Array):
@@ -256,6 +265,13 @@ func cast_anchor(id: StringName) -> Dictionary:
 
 ## The strangers' placements, in order. The order is the id: the third watchman in
 ## the file is `watchman@3`.
+## Where the wood is dangerous, in the content file's order. The order is the pack's
+## identity, the way the third watchman's is: a store that has killed pack 1 has killed
+## the one this list puts second.
+func wild() -> Array[Dictionary]:
+	return _wild
+
+
 func strangers() -> Array[Dictionary]:
 	return _strangers.duplicate()
 

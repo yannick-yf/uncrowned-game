@@ -189,10 +189,22 @@ static func beat_steps() -> int:
 	return maxi(number("beat_steps", 100), 0)
 
 
+## **The kind, with the seat taken off.** A fight may hold three wolves and they have
+## to be three *different* fighters — `wolf`, `wolf#2`, `wolf#3` — or striking one of
+## them means striking whichever the list hands back first, which is how a player spent
+## seventeen blows on a corpse while the second wolf stood untouched (found 2026-09-25).
+##
+## The convention is Godot's own for node names, and it stays inside the fight: the
+## table, the window and the standing all read the kind.
+static func kind_of(who: StringName) -> StringName:
+	return StringName(String(who).get_slice("#", 0))
+
+
 static func _about(who: StringName) -> Dictionary:
 	var all: Dictionary = fighters()
-	if all.has(String(who)):
-		return all[String(who)] as Dictionary
+	var kind: String = String(kind_of(who))
+	if all.has(kind):
+		return all[kind] as Dictionary
 	return all.get("_default", {}) as Dictionary
 
 

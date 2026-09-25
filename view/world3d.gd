@@ -1104,6 +1104,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_fight(frame.get("fight", {}) as Dictionary, float(frame.get("fight_lens", 0.0)))
 	_sync_traffic(road, world)
 	_sync_folk(folk, world)
+	_sync_wild(_sim.store(&"wild") as Wild, world)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
@@ -1361,6 +1362,53 @@ func _sync_guards(world: WorldState, escort: int, extra: int) -> void:
 ## not, and the darkened readings wait for his scenes of the two states.
 ## The people of a place, walking to work or not walking at all. The simulation decides
 ## how many there are; this only puts them where it says.
+## **The wood's animals, and they are plainly not drawn yet** (W2).
+##
+## His brother has drawn no beast of any kind — the art rule's answer to that is a plain
+## block in his own rock paint, so what is missing is *visibly* missing rather than
+## quietly borrowed from something else. Drawing a wolf with his traveller would have put
+## a man on the road and called it an animal, which is the one thing the rule forbids.
+##
+## Low and long rather than a person's box, so it reads as a thing on four legs even
+## while it is a box. `docs/POUR_SLOSINIO.md` asks him for the real one.
+const WOLF_SIZE_M: Vector3 = Vector3(1.3, 0.75, 0.7)
+var _wild_blocks: Dictionary = {}
+
+
+func _sync_wild(wild: Wild, world: WorldState) -> void:
+	if wild == null or world == null:
+		return
+	var standing: Dictionary = wild.standing(world.region())
+	var seen: Dictionary = {}
+	for tile: Vector2i in standing.keys():
+		var which: int = int(standing[tile])
+		var count: int = wild.count_of(which)
+		for one: int in count:
+			var id: String = "%d_%d" % [which, one]
+			seen[id] = true
+			var block: MeshInstance3D = _wild_blocks.get(id, null) as MeshInstance3D
+			if block == null:
+				var box := BoxMesh.new()
+				box.size = WOLF_SIZE_M
+				block = MeshInstance3D.new()
+				block.mesh = box
+				block.material_override = \
+					_block_material if _block_material != null else _plain_grey()
+				block.name = "Wild_%s" % id
+				add_child(block)
+				_wild_blocks[id] = block
+			# Spread along the tile so a pack of three reads as three and not as one
+			# thing standing in the same place three times.
+			var spread: float = (float(one) - float(count - 1) * 0.5) * 0.6
+			var stands: Vector2 = Vector2(tile) + Vector2(0.5 + spread, 0.5)
+			block.position = _feet_of(stands) + Vector3.UP * (WOLF_SIZE_M.y * 0.5)
+	# A pack that has been killed is gone, not hidden.
+	for id: Variant in _wild_blocks.keys():
+		if not seen.has(id):
+			(_wild_blocks[id] as MeshInstance3D).queue_free()
+			_wild_blocks.erase(id)
+
+
 func _sync_folk(folk: Folk, world: WorldState) -> void:
 	if folk == null:
 		return

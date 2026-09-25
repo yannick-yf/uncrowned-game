@@ -498,7 +498,29 @@ func _walk_to(sim: Sim, target: Vector2i, budget: int) -> bool:
 		return false
 	var held := Vector2i.ZERO
 	var next: int = 0
+	var fought: bool = false
+	var hands := DuelPlayer.new(DuelPlayer.PRESS)
 	for _step: int in budget:
+		# **The road to the works has wolves on it** (W2), and this is the walk the demo
+		# actually makes — Yannick's own account of the opening: wake, the tutorial, walk
+		# toward the works, fight wolves, start the quest. So a walk that meets a pack
+		# fights it and goes on, rather than the test pretending the wood is empty.
+		var met := sim.store(&"duel") as Duel
+		if met != null and met.on():
+			hands.play(sim, met)
+			sim.advance(1)
+			held = Vector2i.ZERO
+			fought = true
+			continue
+		if fought:
+			# **The route was worked out before the fight and the fight moved us.**
+			# Walking the old one from a new tile wanders; this is the same recovery a
+			# player makes without thinking, which is to look again from where they are.
+			fought = false
+			route = Navigation.path(world.region(), world.player_tile(), target, true)
+			next = 0
+			if route.is_empty():
+				return false
 		while next < route.size() \
 				and world.player_pos.distance_to(Vector2(route[next]) + Vector2(0.5, 0.5)) < 0.9:
 			next += 1
@@ -673,7 +695,11 @@ func test_the_whole_quest_replays_from_its_log() -> void:
 	var sim: Sim = _world()
 	var cast := sim.store(&"cast") as Cast
 
-	assert_true(_walk_to(sim, Vector2i(cast.get_npc(&"sena").centre()), 6000), "walked to Sena")
+	# **Twelve thousand, not six.** The road to the works carries a pack since W2 and this
+	# walk now fights it on the way — which is the demo, not an accident: wake, the
+	# tutorial, walk toward the works, wolves, then the quest. A fight is a few hundred
+	# steps the old budget did not allow for.
+	assert_true(_walk_to(sim, Vector2i(cast.get_npc(&"sena").centre()), 12000), "walked to Sena")
 	sim.submit(&"talk", {"npc": "sena"})
 	sim.advance(2)
 	_say(sim, &"ask_hand")

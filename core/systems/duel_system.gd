@@ -129,9 +129,14 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 
 	var region: Region = world.region()
 	var taken: Dictionary = {mine.at: true}
+	var seats: Dictionary = {}
 	for who: StringName in against:
 		var him := DuelFighter.new()
-		him.who = who
+		# **A seat, when the kind repeats.** Three wolves are three fighters; without
+		# this they are one fighter found three times, and a blow aimed at the second
+		# lands on the first — which is dead by then.
+		seats[who] = int(seats.get(who, 0)) + 1
+		him.who = who if seats[who] == 1 else StringName("%s#%d" % [who, seats[who]])
 		him.hp = DuelRules.hp_of(who)
 		him.max_hp = him.hp
 		var npc: Npc = cast.get_npc(who) if cast != null else null

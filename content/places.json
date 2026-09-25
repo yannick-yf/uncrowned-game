@@ -25,6 +25,15 @@
     "cinderworks_gate": [245, 167]
   },
   "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the tile the old guard stood on, so the gatekeeper resolves on both worlds.",
+  "_wild_note": "WHERE THE WOOD IS DANGEROUS (W2, 2026-09-25). A pack is an anchor and a count, and it stands where it stands until somebody walks into it. NOTHING HERE CLOSES A ROAD: a player who wants one of these fights it or goes round, and the demo's funnel is made of where the wolves are rather than of any check in core/ (PLAYER_MODEL.md section 8, invariant 4). Taking the funnel out again is W4, and it is editing this list. Anchors were checked against the baked world rather than guessed: road_last_stop was tried first and dropped because it resolves INSIDE Cairnwell, and monsters never stand in a town.",
+  "wild": [
+    {"kind": "wolf", "count": 2, "place": "brindle", "offset": [23, -65],
+      "_why": "On the road the demo actually walks, TWO THIRDS of the way from Brindle to the works and deliberately not a third: at a third it sat on the way out of Brindle, which is the way out to everywhere, and every long journey in the game walked into it. Here the roads west have already branched off - Yannick's own account of the opening: wake, the tutorial, walk toward the works, fight wolves, start the quest. TWO, because this is the first real fight a player has after the tutorial and it must be survivable by somebody who has just learnt which key strikes."},
+    {"kind": "wolf", "count": 3, "point": "road_climb", "offset": [0, 0],
+      "_why": "The climb, 126 tiles off the demo's road. Three: this is a road the demo does not want a first-time player on, and the difference has to be felt rather than announced."},
+    {"kind": "wolf", "count": 3, "point": "road_muster_junction", "offset": [0, 0],
+      "_why": "The junction toward the Muster, 86 tiles off the demo's road. Same reason, same count. Pillar 1 is untouched: the road is open and Blackcairn is reachable in minute one, at a price."}
+  ],
   "cast": {
     "fairy": {"point": "clearing", "offset": [0, -1]},
     "maddox": {"place": "harrowgate", "offset": [-2, -2]},

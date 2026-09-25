@@ -21,8 +21,6 @@ func before_each() -> void:
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
-
-
 # ------------------------------------------------------------------ walking ---
 
 func _walk(dir: Vector2i, quarter_seconds: int) -> void:

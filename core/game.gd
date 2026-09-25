@@ -37,6 +37,7 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"folk", Folk.new())
 	sim.add_store(&"fight", Fight.new())
 	sim.add_store(&"player", PlayerState.new())
+	sim.add_store(&"wild", Wild.new())
 	# **Beside the first design, not instead of it** (K1). `Duel` is the turn-based
 	# fight of `docs/COMBAT_V2.md`; it holds nothing and does nothing until a
 	# `duel_began` event arrives, which today only its own tests and `UNCROWNED_DUEL`
@@ -107,6 +108,9 @@ static func build_systems() -> Array[SimSystem]:
 	# This one sets it back to true when a duel is, so the two cannot leave it on
 	# between them and a duel still holds the world's clock.
 	systems.append(DuelSystem.new())
+	# After the duel, so a pack that has just been killed is cleared on the same step
+	# its fight ended rather than one step later.
+	systems.append(WildSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
@@ -134,6 +138,7 @@ static func fresh_stores() -> Dictionary:
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
 		&"towns": TownState.new(), &"folk": Folk.new(), &"fight": Fight.new(),
 		&"player": PlayerState.new(),
+		&"wild": Wild.new(),
 		&"duel": Duel.new(),
 	}
 
