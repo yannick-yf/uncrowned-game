@@ -455,9 +455,39 @@ the walk to the ironworks, the workers-versus-management quest, combat, and a wo
 that visibly changes with the choice. macOS was dropped on 2026-09-16, and the Windows
 test machine is still not identified — the one platform risk with no fallback.
 
-**The player's own status is not designed yet.** The model covers the simulation of
-*places*; Yannick will draft how the player influences it and what the player's status
-is, treating the player as a town with a status of the same shape.
+**The player's own status is designed and built** (2026-09-23, built 2026-09-24).
+`docs/PLAYER_MODEL.md` is the design and **J1–J6 of `docs/DEMO_TASKS.md` are done**: the
+player is shaped like a town — an allégeance he chooses, a standing per town that moves
+only with witnessed deeds, and a richesse that is gold. **The town is the unit of
+account**: a theft moves the town it happened in and not the person it happened to.
+
+### Where the work actually stands — 2026-09-26
+
+The task list is the record; this is the short version, because a session that has to
+reconstruct it from forty commits will get it wrong.
+
+| Group | State |
+|---|---|
+| **M, P, Q** | Built, except **M3** (the colour cast — built and **not accepted**; Yannick wants to look at it with his brother) and **M5** |
+| **F** | Built, and **superseded**. The first fight was real-time; Yannick played it and rejected it |
+| **J** | Built. The player's own simulation |
+| **K** | K1, K2, K4, K5 built. **K6 is half done**: the cut-over is made, the deletion is not, and that is deliberate — nothing goes until he has played the second design |
+| **W** | W1, W2, W3 built. **W4** — taking the demo's funnel out again — is not |
+| **S** | None. S1 and S2 are small; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
+| **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
+| **P2** | Yannick's, in a branch of its own, written with him |
+
+**Two things are true of the fight and both matter.** The turn-based design of
+`docs/COMBAT_V2.md` is what the game starts now — one constant, `DuelRules.TURN_BASED`,
+and going back is one word. And **the player's hundred hit points are a development
+value Yannick set on purpose**, so nothing in the demo can threaten him; thirty is the
+recommendation and **S4** is when it has to be settled.
+
+**One defect is open and it is ours, not his brother's**: `docs/MIGRATION_3D.md` §9b.
+His merged meshes are compressed binaries carrying his project's own paths, which our
+vendoring cannot rewrite. Three sectors are dropped from the copied map plate to keep
+the game launchable, and that is a patch — the four real answers are in §9b and the
+recommendation is to ask his brother first.
 
 **What came before.** v1 and v2 shipped on 2026-09-13 (`docs/V1.md`, `docs/V2.md`,
 and everything in `SPECS.md` dated that day). Their simulation is what the redesign
