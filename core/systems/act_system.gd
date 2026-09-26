@@ -78,7 +78,7 @@ func _the_quests_act(sim: Sim, world: WorldState, deed: StringName, at: Vector2i
 	# **Somebody comes out to stop you** (Yannick, 2026-09-19). Reaching for the furnace
 	# is the moment, not a fight you went looking for: the quest document always said
 	# *Tom, come to stop the shift*. He arrives where you are standing, which is what
-	# `fight_began` does anyway — it squares the two of you up on the ground you are on.
+	# `duel_began` does anyway — it squares the two of you up on the ground you are on.
 	if not sim.facts.has(SiteRules.FACED):
 		_somebody_stops_you(sim, world)
 		return
@@ -97,7 +97,7 @@ func _the_quests_act(sim: Sim, world: WorldState, deed: StringName, at: Vector2i
 ## is nobody to send — a player with no side cannot be here, and one who has already
 ## settled it is not stopped twice.
 func _somebody_stops_you(sim: Sim, world: WorldState) -> void:
-	if (sim.store(&"fight") as Fight) == null:
+	if (sim.store(&"duel") as Duel) == null:
 		return
 	var cast := sim.store(&"cast") as Cast
 	if cast == null:
@@ -107,7 +107,7 @@ func _somebody_stops_you(sim: Sim, world: WorldState) -> void:
 			continue
 		world.last_act_step = sim.step
 		sim.derive(&"stopped_at_the_furnaces", {"by": String(npc.id)})
-		sim.derive(DuelRules.began_event(),
+		sim.derive(&"duel_began",
 			{"opponent": String(npc.id), "asked_by": "the_furnaces"})
 		return
 

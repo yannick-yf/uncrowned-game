@@ -554,25 +554,6 @@ func _fight_it_out(sim: Sim) -> StringName:
 	return duel.outcome
 
 
-## The first design's, kept until the first design is deleted (K6's other half).
-func _fight_it_out_the_old_way(sim: Sim) -> StringName:
-	var fight := sim.store(&"fight") as Fight
-	var held: Dictionary = {}
-	for _step: int in 6000:
-		if not fight.on():
-			break
-		var want: Dictionary = {"walk": 0, "attack": false, "guard": true, "evade": false}
-		if not CombatRules.reaches(fight.player_at_mm, fight.opponent_at_mm, CombatRules.STRIKE):
-			want = {"walk": 1, "attack": false, "guard": false, "evade": false}
-		elif fight.player_free() and (fight.opponent_stun > 0 or fight.opponent_move == &""):
-			want = {"walk": 0, "attack": true, "guard": false, "evade": false}
-		if want != held:
-			sim.submit(&"fight_input", want)
-			held = want
-		sim.advance(1)
-	return fight.outcome
-
-
 func test_whose_side_you_took_decides_who_stands_in_the_way() -> void:
 	var his: Sim = _world()
 	his.facts.add_source(BROUGHT, &"tom")

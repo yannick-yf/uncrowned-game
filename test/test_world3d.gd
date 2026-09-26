@@ -144,7 +144,7 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(region.is_passable(tile),
 			"%s can be hidden because it never stopped anybody" % tile)
 
-	# **The fight's picture** (H group, 2026-09-21): the arena's floor and marks come up
+	# **The fight's picture** (H group, 2026-09-21; turn-based since K6): the floor and marks come up
 	# with a fight, the two fighters wear our flash shader for its length, a blow throws
 	# sparks, and all of it goes when the fight does — his material back on both.
 	var foe := Vector2(283.5, 315.5)
@@ -153,13 +153,14 @@ func test_the_window_stands_on_his_ground() -> void:
 		"fight_lens": 1.0, "towns": {}, "free": {}, "escort": 0, "extra_guards": 0, "witnesses": [],
 		"fight": {
 			"who": "bram", "his_name": "Bram", "at": foe, "my_at": Vector2(281.5, 315.5),
-			"facing": Vector2i(-1, 0), "toward": 1, "his_move": "swing", "his_frame": 10,
-			"my_move": "", "my_frame": 0, "my_stun": 0, "his_stun": 0, "my_connected": false,
-			"his_connected": false, "guarding": true, "blockstun": false, "freeze": 0,
+			"facing": Vector2i(-1, 0), "my_face": Vector2(1, 0), "his_face": Vector2(-1, 0),
+			"my_pose": "", "his_pose": "ready", "my_lunge": 0.0, "his_lunge": -0.5,
+			"my_dip": 0.0, "his_dip": 0.5, "my_telegraph": -1.0, "his_telegraph": 0.5,
+			"my_turn": false, "reach_tiles": 1, "in_reach": false,
+			"moves": [Vector2(283.5, 314.5), Vector2(282.5, 315.5)],
+			"centre": Vector2(282.5, 315.5), "radius_tiles": 5.0,
 			"settling": 0, "settle_steps": 100, "outcome": "", "felled": false, "his_down": false,
-			"apart_mm": 2000, "my_reach_mm": 1550, "his_jab_mm": 1550, "his_swing_mm": 2450,
-			"pushbox_tiles": 0.45, "centre": Vector2(282.5, 315.5), "radius_tiles": 2.0,
-			"my_hp": 10, "my_max": 10, "his_hp": 10, "his_max": 10,
+			"my_hp": 100, "my_max": 100, "his_hp": 15, "his_max": 15,
 		},
 		"blows": [],
 	}
@@ -168,8 +169,7 @@ func test_the_window_stands_on_his_ground() -> void:
 	if window.figures_are_his():
 		assert_true(window.fighters_wear_our_paint(), "and the fighters wear the shader a hit can show on")
 	var landed: Dictionary = fight_frame.duplicate(true)
-	landed["blows"] = [{"type": "blow_landed", "by": "bram", "move": "swing", "damage": 2, "guarded": false}]
-	(landed["fight"] as Dictionary)["freeze"] = 8
+	landed["blows"] = [{"type": "blow_landed", "by": "bram", "move": "strike", "damage": 5, "guarded": false}]
 	window.sync(landed, 1.0 / 60.0)
 	assert_true(window.sparks_alive() > 0, "a blow that lands throws sparks: %d" % window.sparks_alive())
 	var over: Dictionary = fight_frame.duplicate(true)

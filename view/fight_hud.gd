@@ -163,17 +163,14 @@ func _draw() -> void:
 		Ui.write_over(self, at, _banner, Ui.LARGE, colour)
 	elif not settling:
 		# **Whose turn it is** (K4). A turn-based fight that does not say so is a fight
-		# the player stands in wondering why nothing is happening, and the keys are not
-		# the first design's: there is no guard to press.
-		var turn_based: bool = bool(_reading.get("turn_based", false))
-		if turn_based:
-			var whose: String = Text.of(&"duel.your_turn") if bool(_reading.get("my_turn", false)) \
-				else Text.of(&"duel.his_turn", [his_name])
-			var tone: Color = MINE if bool(_reading.get("my_turn", false)) else HIS
-			tone.a = _alpha
-			Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
-				whose, Ui.ROW, tone)
-		var keys: String = Text.of(&"duel.keys") if turn_based else Text.of(&"fight.keys")
+		# the player stands in wondering why nothing is happening.
+		var whose: String = Text.of(&"duel.your_turn") if bool(_reading.get("my_turn", false)) \
+			else Text.of(&"duel.his_turn", [his_name])
+		var tone: Color = MINE if bool(_reading.get("my_turn", false)) else HIS
+		tone.a = _alpha
+		Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
+			whose, Ui.ROW, tone)
+		var keys: String = Text.of(&"duel.keys")
 		var colour: Color = Ui.DIM
 		colour.a = _alpha * 0.9
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(keys, Ui.NOTE)) * 0.5, size.y - 12.0),

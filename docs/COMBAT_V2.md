@@ -8,10 +8,9 @@ which stays as the record of what was built and why it went.
 still open. **K1, K2 and K4 of `docs/DEMO_TASKS.md` are built** — the turn, the two
 actions, the table, the ending, and the picture — as `core/duel.gd`,
 `core/duel_fighter.gd`, `core/rules/duel_rules.gd`, `core/systems/duel_system.gd` and
-`content/duel.json`, **beside the first design rather than over it**. Nothing the
-player can reach runs on it yet: it is reached by `test/test_duel.gd`,
-`tools/play_duel.gd` and the `UNCROWNED_DUEL` switch, and **K6 is the cut-over**, which
-is one careful change made by hand with the first design still on disk until then.
+`content/duel.json`. It was built beside the first design; **K6 switched the game
+over to it on 2026-09-24 and deleted the first design on 2026-09-26**, once Yannick had
+played it. It is the only fight there is.
 Three rules this document left open and the build had to settle are named where they
 belong, in `content/duel.json`: `follows_tiles`, `leaves_after_rounds` and
 `stand_off_tiles`.
@@ -74,7 +73,7 @@ More than half, because most of the work was the picture and the picture was rig
 |---|---|
 | `core/rules/combat_rules.gd`'s frame data | Startup, active, recovery, hitstun, blockstun, i-frames, pushbox — all of it is real-time vocabulary |
 | `core/fight.gd`'s millimetre line | Positions become tiles on the world grid |
-| `core/systems/combat_system.gd` at 60 steps/s | A turn-based fight advances on a decision, not on a clock |
+| `core/systems/combat_system.gd` at 60 steps/s (deleted in K6) | A turn-based fight advances on a decision, not on a clock |
 | `content/moves.json`'s frame numbers | Replaced by a much smaller table: reach, damage, and what it costs |
 | Most of `test_combat.gd`'s 1,199 lines | They assert frame counts |
 

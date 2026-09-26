@@ -1040,9 +1040,21 @@ Then the sheet holds twelve, every `AtlasTexture` points at the combined sheet, 
 `test_his_brother_has_not_drawn_a_blow` still fails the day his own sheet grows an
 attack.
 
-### K6 · The first design comes out
+### K6 · The first design comes out — **built 2026-09-26**
 
 Est. 2 h. Depends on: K1–K4.
+
+> Yannick played the turn-based fight several times and said the real-time one could
+> go. About 2,500 lines went: `core/fight.gd`, `CombatRules`, `CombatSystem`,
+> `content/moves.json`, `test_combat.gd`, the two fight tools, `UNCROWNED_FIGHT`, the
+> `evade` key, the `DuelRules.TURN_BASED` switch and every first-design branch in the
+> two windows. **One trap, and a test now holds it shut**: `CombatSystem` was the half
+> of `Sim.ticks_held` that turned the hold *off*, so `DuelSystem` became its only
+> writer — without that, the first fight of the game would stop the world's clock for
+> good (`test_the_clock_is_recomputed_every_step_by_the_duel_alone`). Four tests about
+> *any* fight moved to `test_duel.gd`, and the art exception's guard
+> (`test_his_brother_has_not_drawn_a_blow`) to `test_fight_frames.gd`. Fast suite
+> 29 s before, 28 s after.
 
 `CombatRules`' frame data, the millimetre line, the sixty-steps system, the frame counts
 in `content/moves.json`, and the tests that assert them. Last, like every deletion in
@@ -1137,6 +1149,11 @@ Est. 1 h. Depends on: W2.
 > constraint is the `wild` list in `content/places.json`, and nothing in `core/` asks
 > whether a tutorial is finished. **Whether to build a real funnel is Yannick's call** —
 > and a real one would put wolves on the very roads the journey tests measure.
+>
+> **His call, 2026-09-26: not now.** The demo's pack stands **before the bridge** on the
+> road to the works (two wolves, three tiles short of the deck, on the drawn road). The
+> funnel will be built later, in a game-design pass, *through game-design elements* —
+> once the first tasks are done.
 
 Written the day W2 is written, never afterwards. Taking the demo's constraint out must
 be an afternoon and not an excavation.

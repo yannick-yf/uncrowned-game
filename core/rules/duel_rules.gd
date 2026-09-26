@@ -3,10 +3,9 @@ extends RefCounted
 
 ## The rules of a fight, second design (K1, K2 — `docs/COMBAT_V2.md`).
 ##
-## **Built beside the first design, which is still on disk and still runs.**
-## `CombatRules`, `Fight` and `CombatSystem` are the real-time fighting game Yannick
-## played and replaced; nothing here touches them, and the cut-over that deletes them
-## is K6. Until then two fights exist and only one of them is wired to the player.
+## **The only fight there is.** The first design — `CombatRules`, `Fight` and
+## `CombatSystem`, a real-time fighting game — was played, replaced, and deleted in K6
+## (2026-09-26). `docs/COMBAT.md` records what it was.
 ##
 ## **There are no dice.** Not a seeded roll, not a coin, nothing: damage is fixed, the
 ## order of play is fixed, and whoever started the fight acts first. Determinism here
@@ -34,31 +33,6 @@ const PATH: String = "res://content/duel.json"
 
 ## The player, as a fighter id. NPCs use their cast id.
 const PLAYER: StringName = &"player"
-
-## **K6's cut-over, 2026-09-24. The one line that decides which fight the game is.**
-##
-## `true` and the world starts the turn-based fight of `docs/COMBAT_V2.md`; `false` and
-## it starts the first design's real-time one, which is still on disk and still tested.
-## Everything that begins a fight asks this and nothing else, so the two never both run
-## and going back costs one word.
-##
-## It exists because the deletion is a separate, later job. Yannick has to *play* the
-## second design before anybody throws the first one away, and he could not: it was
-## built beside the old one and wired to nothing, so the fight he kept testing was the
-## one he had already rejected.
-const TURN_BASED: bool = true
-
-
-## The event that starts a fight, and it is the only place the two designs are chosen
-## between. `duel_began` and `fight_began` take the same two fields — `opponent` and
-## `asked_by` — so a caller names who and why, never which system.
-static func began_event() -> StringName:
-	return &"duel_began" if TURN_BASED else &"fight_began"
-
-
-## Its answer, for whoever is waiting on the result of a fight.
-static func ended_event() -> StringName:
-	return &"duel_ended" if TURN_BASED else &"fight_ended"
 
 const STRIKE: StringName = &"strike"
 const WAIT: StringName = &"wait"

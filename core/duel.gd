@@ -8,9 +8,8 @@ extends RefCounted
 ## A fight of twenty turns is twenty events, which is fewer than the first design
 ## rather than more — that one logged every change of what the player was holding down.
 ##
-## **Built beside `Fight`, which still exists and still runs.** Nothing here replaces
-## it; K6 is the change that takes the first design out, by hand, with it still on disk
-## until then.
+## **The only fight there is, since K6** (2026-09-26); the first design's `Fight` was
+## deleted once Yannick had played this one.
 
 ## Nobody is fighting.
 const NOBODY: StringName = &""

@@ -82,7 +82,7 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 
 
 func test_the_fights_words_exist_in_both_languages() -> void:
-	for key: StringName in [&"fight.you", &"fight.keys", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
+	for key: StringName in [&"fight.you", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
 			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",

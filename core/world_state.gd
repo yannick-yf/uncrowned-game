@@ -162,10 +162,9 @@ func tiles_to_blackcairn() -> float:
 ## so that death, the respawn and the grace window cannot drift apart between them.
 ## **`grace` is the half-second of mercy, and only *contact* wants it** (F4,
 ## 2026-09-19). It exists because standing inside the king drains ten hit points in
-## three frames; a blow in a fight is not that. A fight's blows are discrete, already
-## cannot land twice on their own active frames, and are spaced by the frame data in
-## `content/moves.json` — so the window has nothing to protect against and silently
-## eats blows instead.
+## three frames; a blow in a fight is not that. A fight's blows are discrete — one per
+## turn since the turn-based fight (K6) — so the window has nothing to protect against
+## and would silently eat blows instead.
 ##
 ## **A trap removed, not a bug fixed, and the difference was measured.** The first
 ## claim here was that a played fight lost a whole swing to the window; measuring it

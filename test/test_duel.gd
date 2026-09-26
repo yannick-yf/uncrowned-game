@@ -7,9 +7,9 @@ extends TestCase
 ## coin — so two runs of the same fight are the same fight, which several of these
 ## tests check rather than assume.
 ##
-## **In the fast suite on purpose**, for the reason `test_combat.gd` gives: the fight
-## is the thing that will be retuned most often in this project, and a balance change
-## you have to remember to check is a balance change nobody checks.
+## **In the fast suite on purpose**: the fight is the thing that will be retuned most
+## often in this project, and a balance change you have to remember to check is a
+## balance change nobody checks.
 const SLOW: bool = false
 
 
@@ -527,16 +527,101 @@ func test_saying_the_line_is_what_begins_a_duel() -> void:
 		+ "the player's turns as menu choices")
 
 
-func test_the_switch_is_one_line_and_both_designs_are_still_there() -> void:
-	# The cut-over is reversible on purpose: the first design is on disk, tested, and one
-	# word away. This fails the day somebody flips it back and forgets, and it fails the
-	# day the two events stop agreeing on their fields — which is what lets a caller name
-	# who and why without naming which system.
-	assert_true(DuelRules.TURN_BASED, "the game starts the turn-based fight")
-	assert_eq(DuelRules.began_event(), &"duel_began", "and that is the event it derives")
-	assert_eq(DuelRules.ended_event(), &"duel_ended", "and the one it answers with")
-	assert_not_null(load("res://core/systems/combat_system.gd"),
-		"the first design is still on disk, because K6 does not delete it")
+func test_the_first_design_is_gone() -> void:
+	# **K6's other half, 2026-09-26.** Yannick played the turn-based fight, kept it, and
+	# said the real-time one could go. This fails the day any of it comes back by
+	# accident — a file restored from an old branch, a system re-registered.
+	for path: String in [
+		"res://core/fight.gd", "res://core/rules/combat_rules.gd",
+		"res://core/systems/combat_system.gd", "res://content/moves.json",
+		"res://tools/fight_player.gd", "res://tools/play_fight.gd",
+	]:
+		assert_false(FileAccess.file_exists(path), "%s is deleted" % path)
+	var sim: Sim = Game.build(1)
+	assert_null(sim.store(&"fight"), "and no fight store is built beside the duel")
+	assert_not_null(sim.store(&"duel"), "the duel is the only fight there is")
+
+
+func test_the_clock_is_recomputed_every_step_by_the_duel_alone() -> void:
+	# **The trap K6 had to step round.** `Sim.ticks_held` was reset to false every step
+	# by `CombatSystem`, and the duel only ever set it to true. Take the first system
+	# out without moving that half and the first fight of the game stops the world's
+	# clock for ever. So: left on by anything, it is off again one step later when
+	# nobody is fighting, and the hours pass.
+	var sim: Sim = Game.build(1)
+	sim.ticks_held = true
+	sim.advance(1)
+	assert_false(sim.ticks_held, "nobody is fighting, so the world's clock runs")
+	var tick: int = sim.tick
+	sim.advance(Sim.STEPS_PER_WORLD_TICK * 3)
+	assert_true(sim.tick > tick, "and the minutes pass: %d to %d" % [tick, sim.tick])
+
+
+# --------------------------- kept from the first design's tests when it went (K6) ---
+#
+# `test_combat.gd` went with the real-time fight on 2026-09-26. Most of it was about
+# frame data and a line, and went with them; these four were about *any* fight, and
+# are said again here against the one there is.
+
+func test_the_two_keys_are_bound() -> void:
+	# The third thing missing on 2026-09-19: the fight could not be reached, and if it
+	# had been there was no key to hit anybody with. K and O, as **physical** keycodes,
+	# so the pair sits in the same place on AZERTY and on QWERTY.
+	for action: StringName in [&"strike", &"guard"]:
+		assert_true(InputMap.has_action(action), "%s is a key" % action)
+		assert_true(InputMap.action_get_events(action).size() > 0,
+			"%s has something bound to it" % action)
+
+
+func test_the_camera_never_turns() -> void:
+	# The constraint the whole of `docs/COMBAT.md` §1 turns on, kept as a test because
+	# it is one number and forgetting it costs his brother eight drawings per character.
+	assert_eq(World3d.AZIMUTH_DEGREES, 0.0,
+		"the azimuth is the one camera value a fight may not touch")
+	assert_true(World3d.FIGHT_TILT_DEGREES < World3d.TILT_DEGREES,
+		"the lens drops for a fight: %.0f from %.0f"
+		% [World3d.FIGHT_TILT_DEGREES, World3d.TILT_DEGREES])
+	assert_true(World3d.FIGHT_TILT_DEGREES >= 20.0,
+		"but not so far that his buildings stand in front of it: %.0f"
+		% World3d.FIGHT_TILT_DEGREES)
+
+
+func test_a_player_killed_in_a_fight_wakes_at_the_fire_and_not_where_it_was() -> void:
+	# **A bug the first design's beat found**, and one any fight could have again:
+	# `WorldState.hurt` respawns on the step it kills, and a fight that went on writing
+	# the player's tile would put them back where they died, whole. Here the fight is
+	# somewhere other than the clearing, so the two places can be told apart.
+	DuelRules.override({"player_hp": 5})
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	var ring: Vector2 = world.player_pos
+	assert_true(ring.distance_to(world.region().clearing_centre()) > 10.0, "the fight is not at the clearing")
+	sim.submit(&"duel_began", {"opponent": "harry", "by": "harry"})
+	sim.advance(1)
+	var duel: Duel = _duel(sim)
+	_play(sim, DuelPlayer.STAND, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	assert_eq(duel.outcome, &"lost")
+	assert_eq(world.deaths, 1, "he killed you")
+	assert_eq(world.player_hp, WorldState.MAX_HP, "and you woke whole, as the checkpoint rule says")
+	assert_true(world.player_pos.distance_to(world.region().clearing_centre()) < 2.0,
+		"at the clearing, %.1f tiles from it, and not %.1f tiles from the fight"
+		% [world.player_pos.distance_to(world.region().clearing_centre()), world.player_pos.distance_to(ring)])
+
+
+func test_a_run_played_unkillable_replays_unkillable() -> void:
+	# `G` goes through an event so that a run played through it replays through it.
+	var sim: Sim = Game.build()
+	sim.submit(&"unkillable", {"on": true})
+	sim.submit(&"duel_began", {"opponent": "harry", "by": "harry"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.STAND, 1200)
+	var replayed: Sim = Game.replay(sim)
+	assert_true((replayed.store(&"world") as WorldState).unkillable,
+		"the log carries it, so the rebuilt run is the run that was played")
+	assert_eq((replayed.store(&"world") as WorldState).player_hp,
+		(sim.store(&"world") as WorldState).player_hp, "and ends on the same health")
 
 
 # -------------------------------------------------- what the window is handed ---

@@ -191,7 +191,7 @@ projet, et on préfère te l'éviter.
 c'est construit — tu peux le voir toi-même :
 
 ```bash
-UNCROWNED_FIGHT=bram tools/shot.sh /tmp/combat.png play 280,315
+UNCROWNED_DUEL=bram tools/shot.sh /tmp/combat.png play 280,315
 ```
 
 **Son idée, et elle est bonne.** Pendant que la caméra descend, **les bords de l'écran

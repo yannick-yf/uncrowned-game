@@ -270,9 +270,9 @@ stops being the thing you run without thinking, that is the thing to fix. Two th
 were already done for that on 2026-09-18 — the walking population is matched once an
 in-game hour rather than once a minute, and each day a test simulates is a day it
 actually needs. The 4 s the full suites gained on 2026-09-19 is **not** the fight:
-`--all` was measured at 42.2 s with `CombatSystem` taken out of `Game.build()` and
-42.8 s with it in, so a system on the step costs the other 478 tests nothing
-measurable. The fourteen combat tests are in the **fast** suite for the same reason.)
+`--all` was measured at 42.2 s with the first design's `CombatSystem` taken out of
+`Game.build()` and 42.8 s with it in, so a system on the step costs the other 478 tests
+nothing measurable. The duel's tests are in the **fast** suite for the same reason.)
 A suite marked `const SLOW := true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
@@ -372,30 +372,20 @@ place in his world, that is a question about a *picture*, and `--headless` never
 **The azimuth is deliberately not offered**, because his traveller's four facings are
 keyed to the world's axes and a turned camera draws every fighter looking the wrong way.
 
-**`UNCROWNED_FIGHT=bram[:steps[:policy]]`** (2026-09-19, extended 2026-09-21) squares
-the player up against somebody for the frame `shot.sh` takes, with the lens already
-dropped and the screen already darkened. Same gate and same reason as the two above,
-plus one of its own: the picture is taken twelve frames in and the fight's camera takes
-about a second to move, so without this every photograph of a fight is a photograph of a
-camera halfway through moving. `bram:44` runs forty-four steps first, so a wind-up or a
-blow can be photographed; `bram:44:guard` runs them with one of `tools/fight_player.gd`'s
-scripted hands on the keys — `stand`, `guard`, `competent`, `dodger` — so a guarded blow
-or the moment of winning can be. **When a picture is being taken the simulation is held
-on the frame asked for**, or the twelve frames before the shutter would carry the fight
-past it; and only the last ten steps' events are fresh, so the picture carries one blow's
-spark and number and not every blow's. `godot --headless --path . -s tools/play_fight.gd
--- stand 200` prints the trace that says which step is which.
-
-**`UNCROWNED_DUEL=bram[:steps[:hand]]`** (2026-09-24) does the same for the **second**
-design's fight — the turn-based one of `docs/COMBAT_V2.md`, built beside the first by
-K1–K4 and not yet wired to anything the player can reach. Same gate and the same two
-reasons as `UNCROWNED_FIGHT` above, plus one of its own: a turn-based fight spends most
-of its length with nobody doing anything, so a photograph taken at an arbitrary step is
-a photograph of two people standing about. `bram` alone squares up and waits on the
+**`UNCROWNED_DUEL=bram[:steps[:hand]]`** (2026-09-24) squares the player up against
+somebody for the frame `shot.sh` takes, with the lens already dropped and the screen
+already darkened. Same gate and same reason as the two above, plus two of its own: the
+fight's camera takes about a second to move, so without this every photograph of a
+fight is a photograph of a camera halfway through moving; and a turn-based fight spends
+most of its length with nobody doing anything, so a photograph taken at an arbitrary
+step is a photograph of two people standing about. (It replaced `UNCROWNED_FIGHT`, the
+first design's, deleted with it in K6 on 2026-09-26.) `bram` alone squares up and waits on the
 player, which is the frame that shows the tiles a turn buys; `bram:19:press` runs
 nineteen steps with one of `tools/duel_player.gd`'s hands on the keys — `press`, `hold`,
-`stand`, `leave` — which is the step a blow lands on. The simulation is held on the step
-asked for and only the last ten steps' events are fresh, exactly as above.
+`stand`, `leave` — which is the step a blow lands on. **When a picture is being
+taken the simulation is held on the step asked for**, or the twelve frames before the
+shutter would carry the fight past it; and only the last ten steps' events are fresh, so
+the picture carries one blow's spark and number and not every blow's.
 `UNCROWNED_AT=280,315 godot --headless --path . -s tools/play_duel.gd -- press 400`
 prints the trace that says which step is which, and it reads the same `UNCROWNED_AT` the
 shot does, because the step numbers depend on how far apart the two of them start.
@@ -424,7 +414,7 @@ one extended: the journal is seven pages and the page being photographed is rare
 first, so the screen name may carry the page after a colon — `journal:standing`,
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
-**All ten are gated on `OS.has_feature("debug")`**, so they are absent from a
+**All nine are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 
@@ -482,16 +472,16 @@ reconstruct it from forty commits will get it wrong.
 | **M, P, Q** | Built, except **M3** (the colour cast — built and **not accepted**; Yannick wants to look at it with his brother) and **M5** |
 | **F** | Built, and **superseded**. The first fight was real-time; Yannick played it and rejected it |
 | **J** | Built. The player's own simulation |
-| **K** | K1, K2, K4, K5 built. **K6 is half done**: the cut-over is made, the deletion is not, and that is deliberate — nothing goes until he has played the second design |
-| **W** | W1, W2, W3 built. **W4** — taking the demo's funnel out again — is not |
+| **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
+| **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
 | **S** | None. S1 and S2 are small; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
 | **P2** | Yannick's, in a branch of its own, written with him |
 
 **Two things are true of the fight and both matter.** The turn-based design of
-`docs/COMBAT_V2.md` is what the game starts now — one constant, `DuelRules.TURN_BASED`,
-and going back is one word. And **the player's hundred hit points are a development
-value Yannick set on purpose**, so nothing in the demo can threaten him; thirty is the
+`docs/COMBAT_V2.md` is the only fight there is — the real-time one was deleted in K6,
+and `docs/COMBAT.md` records what it was. And **the player's hundred hit points are a
+development value Yannick set on purpose**, so nothing in the demo can threaten him; thirty is the
 recommendation and **S4** is when it has to be settled.
 
 **One defect is open and it is ours, not his brother's**: `docs/MIGRATION_3D.md` §9b.
@@ -584,20 +574,20 @@ without asking.
    place rather than quietly applied. The argument is `docs/COMBAT.md` §1 and §6.
 
    **What is built, and the ruling owes nothing more (2026-09-21):** the fight's rules,
-   headless and tested — `core/rules/combat_rules.gd`, `core/fight.gd`,
-   `core/systems/combat_system.gd`, `content/moves.json`, and the world clock held by
-   `Sim.ticks_held` — plus everything the ruling asked for: the camera that drops and
+   headless and tested — turn-based since K6 (2026-09-26): `core/rules/duel_rules.gd`,
+   `core/duel.gd`, `core/systems/duel_system.gd`, `content/duel.json`, and the world
+   clock held by `Sim.ticks_held`, whose only writer is `DuelSystem` — plus everything
+   the ruling asked for: the camera that drops and
    never turns (F3), the two keys and the way in (F2), the way back out (F4), an
    opponent who does something (F5), the fight's place in the quest (F6), and the
    presentation a player reads it through — both healths, the wind-up, reach, an arena
    floor and an ending with a beat (`view/fight_hud.gd`, H1–H5 of
    `docs/DEMO_POLISH.md`). Nothing may assume a *separate screen* — that shape is wrong.
 
-   **It is a first version and not the design, and Yannick said so on 2026-09-21**,
-   having played it: *« Le système de combat on va le changer je pense. »* So do not
-   build depth onto what is there — more moves, weapons, stamina, a second opponent —
-   until he has said what it becomes. Fixing what is plainly broken in it is another
-   matter, and `docs/COMBAT.md` §12 lists what is known to be.
+   **The turn-based fight is the demo's v1, and Yannick said so on 2026-09-26**,
+   having played it several times: good for a v1, and **more versatility — ranged
+   combat, magic, a better AI — comes in a later workstream, on its own branch**. So do
+   not build that depth onto it here. Fixing what is plainly broken is another matter.
 
 **Retired, kept here so the history reads straight:**
 

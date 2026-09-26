@@ -14,9 +14,9 @@ extends TestCase
 ##   cells and says so pixel by pixel.
 ## - **His files are never touched, and ours is not in `assets/`.**
 ##   `test_the_tool_reads_his_folder_and_writes_ours`.
-## - **It is deleted the day he draws his own.** That one lives next door, in
-##   `test_combat.gd`'s `test_his_brother_has_not_drawn_a_blow`, which fails on a ninth
-##   animation of his.
+## - **It is deleted the day he draws his own.** `test_his_brother_has_not_drawn_a_blow`,
+##   below, fails on a ninth animation of his. It lived in `test_combat.gd` until that
+##   file went with the first design (K6, 2026-09-26).
 ##
 ## Nothing here draws: it reads the sheet the tool wrote and the numbers `view/world3d.gd`
 ## reads it with. `--headless` never calls `_draw()`, so whether the frames are any *good*
@@ -221,3 +221,54 @@ func _differing(sheet: Image, one: Vector2i, other: Vector2i) -> int:
 					!= sheet.get_pixelv(other + Vector2i(x, y)):
 				count += 1
 	return count
+
+
+# ------------------------------- moved from test_combat.gd when it went (K6) ---
+
+func test_his_brother_has_not_drawn_a_blow() -> void:
+	# Written down as a test rather than as a note, so the day the sheet gains an
+	# `attack_left` this fails and somebody goes and uses it.
+	var frames: SpriteFrames = load(World3d.HIS_FRAMES) as SpriteFrames
+	if frames == null:
+		debt("his workshop is not copied in; run tools/vendor_workshop.sh")
+		return
+	var names: PackedStringArray = PackedStringArray()
+	for name: StringName in frames.get_animation_names():
+		names.append(String(name))
+	assert_eq(names.size(), 8, "eight animations: %s" % str(names))
+	for way: String in ["up", "down", "left", "right"]:
+		assert_true(names.has("idle_" + way), "idle_%s" % way)
+		assert_true(names.has("walk_" + way), "walk_%s" % way)
+	debt("he has drawn no attack, guard or flinch; ours are built from his own pixels by "
+		+ "tools/draw_fight_frames.gd — delete both the day he draws them")
+
+
+func test_the_frames_we_drew_are_there() -> void:
+	# Yannick's exception to the art rule, 2026-09-19, kept as a check so that a build
+	# which quietly lost the sheet falls back to his eight animations and says so rather
+	# than drawing a fist that is not there.
+	#
+	# **The row count is the tool's, not this window's, since K5 (2026-09-24).** The sheet
+	# grew a row for north and a row for south, and the window has not been taught them
+	# yet; right and left are deliberately the *last* two rows, so what the window counts
+	# up from the bottom still lands where it always did. `test_fight_frames.gd` holds the
+	# rest of the frames' checks.
+	if not ResourceLoader.exists(World3d.OUR_FIGHT_FRAMES):
+		debt("view3d/fight/traveler_sheet.png is missing — run tools/draw_fight_frames.gd")
+		return
+	var sheet: Texture2D = load(World3d.OUR_FIGHT_FRAMES) as Texture2D
+	assert_not_null(sheet, "our sheet loads")
+	var his: Texture2D = null
+	var frames: SpriteFrames = load(World3d.HIS_FRAMES) as SpriteFrames
+	if frames != null:
+		var slice := frames.get_frame_texture(&"idle_right", 0) as AtlasTexture
+		his = slice.atlas if slice != null else null
+	var drawn: GDScript = load("res://tools/draw_fight_frames.gd") as GDScript
+	var rows: int = (drawn.get_script_constant_map().get("WAYS", []) as Array).size()
+	assert_eq(rows, 4, "four facings drawn")
+	if his != null:
+		assert_eq(int(sheet.get_width()), int(his.get_width()),
+			"ours is his sheet, the same width")
+		assert_eq(int(sheet.get_height()),
+			int(his.get_height()) + World3d.OUR_CELL.y * rows,
+			"with our rows below it — his pixels stay at his coordinates")

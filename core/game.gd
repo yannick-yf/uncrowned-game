@@ -35,7 +35,6 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"traits", Traits.new())
 	sim.add_store(&"towns", TownState.new())
 	sim.add_store(&"folk", Folk.new())
-	sim.add_store(&"fight", Fight.new())
 	sim.add_store(&"player", PlayerState.new())
 	sim.add_store(&"wild", Wild.new())
 	# **Beside the first design, not instead of it** (K1). `Duel` is the turn-based
@@ -102,11 +101,8 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(OutcomeSystem.new())
 	systems.append(FolkSystem.new())
 	systems.append(KingdomSystem.new())
-	systems.append(CombatSystem.new())
-	# **After it, and that is not arbitrary** (K1): `Sim.ticks_held` has one writer per
-	# step and `CombatSystem` recomputes it to false whenever its own fight is not on.
-	# This one sets it back to true when a duel is, so the two cannot leave it on
-	# between them and a duel still holds the world's clock.
+	# **The one writer of `Sim.ticks_held`** (K6, 2026-09-26): it recomputes the clock's
+	# hold every step, true while a duel is on and false otherwise.
 	systems.append(DuelSystem.new())
 	# After the duel, so a pack that has just been killed is cleared on the same step
 	# its fight ended rather than one step later.
@@ -138,7 +134,7 @@ static func fresh_stores() -> Dictionary:
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(), &"phrasebook": Phrasebook.new(),
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
-		&"towns": TownState.new(), &"folk": Folk.new(), &"fight": Fight.new(),
+		&"towns": TownState.new(), &"folk": Folk.new(),
 		&"player": PlayerState.new(),
 		&"wild": Wild.new(),
 		&"duel": Duel.new(),

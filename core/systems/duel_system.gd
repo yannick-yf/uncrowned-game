@@ -3,12 +3,9 @@ extends SimSystem
 
 ## The fight, resolved — second design (K1, K2; `docs/COMBAT_V2.md`).
 ##
-## **Built beside `CombatSystem`, which still exists and still runs.** Nothing here
-## replaces it and nothing here is wired to the player's keys by default: this fight is
-## reached through its own tests and through `UNCROWNED_DUEL`, and the cut-over that
-## takes the first design out is K6. Two fights on disk at once is the point — rule 4
-## of `docs/DEMO_TASKS.md`, *build beside, delete nothing until the demo runs on the new
-## one*.
+## **The only fight there is, since K6** (2026-09-26). It was built beside the first
+## design's real-time fight, the game was switched over to it, Yannick played it, and
+## the first design was deleted.
 ##
 ## **Turn-based, on the world grid.** Everybody in the fight acts once per round in a
 ## fixed order, and **whoever started it acts first** — there is no initiative roll,
@@ -24,10 +21,9 @@ extends SimSystem
 ## as a record of what the world did — recomputed on replay from the same state, never
 ## re-injected, which is `Sim`'s rule and not a special case for fighting.
 ##
-## **The world's clock is held for the duration** (`Sim.ticks_held`), as it already was.
-## `CombatSystem` is the other writer and recomputes it to `false` every step when
-## nobody is fighting its fight; this system is registered after it and sets it back to
-## `true` when a duel is on, so the two cannot leave it on between them.
+## **The world's clock is held for the duration** (`Sim.ticks_held`), and this system
+## is its only writer: every step it sets it to whether a duel is on. Recomputed, never
+## remembered — so a fight that ended cannot leave the world stopped.
 ##
 ## A turn takes real steps to play out — the walk, the wind-up, the blow, the recovery
 ## — because a turn nobody can see is not a turn. Every one of those counts is an
@@ -53,11 +49,12 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 
 func on_step(sim: Sim, _step: int) -> void:
 	var duel := sim.store(&"duel") as Duel
-	# The path where nobody is fighting is one store lookup and a return, which is what
-	# it costs every other simulation in the game. **`ticks_held` is deliberately not
-	# written here**: `CombatSystem` recomputes it every step and this system runs after
-	# it, so a duel turns it back on and nothing turns it on when no fight is running.
+	# The path where nobody is fighting is one store lookup, one write and a return,
+	# which is what it costs every other simulation in the game. **The write is not
+	# optional** (K6): this is the only thing that turns the hold off, and without it
+	# the first fight of the game would stop the world's clock for good.
 	if duel == null or not duel.on():
+		sim.ticks_held = false
 		return
 	sim.ticks_held = true
 	var world := sim.store(&"world") as WorldState

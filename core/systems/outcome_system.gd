@@ -25,7 +25,7 @@ const UP: int = 1
 
 
 func on_event(sim: Sim, event: SimEvent) -> void:
-	if event.type == DuelRules.ended_event():
+	if event.type == &"duel_ended":
 		_faced(sim, event)
 		return
 	if event.type != &"works_act":

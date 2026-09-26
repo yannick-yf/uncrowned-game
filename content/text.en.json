@@ -33,7 +33,6 @@
   "hud.to_blackcairn": "{0} tiles to Blackcairn",
   "hud.clock": "{0}   -   walked {1}:{2}",
   "fight.you": "You",
-  "fight.keys": "K  strike        O  guard        I  step back        left / right  walk",
   "fight.blocked": "guarded",
   "fight.miss": "miss",
   "fight.down": "{0} is down",

@@ -140,8 +140,8 @@ var _tickers: Array[SimSystem] = []
 ## Without it, thirty real seconds of fighting is 1,800 steps and **two in-game hours**
 ## of grain drifting, rumours travelling and armies moving: a fight would cost a morning.
 ##
-## Set by `CombatSystem` from the fight store every step, so it is recomputed rather
-## than remembered and cannot be left on by a fight that ended. Nothing else may touch it.
+## Set by `DuelSystem` from the duel store every step, so it is recomputed rather than
+## remembered and cannot be left on by a fight that ended. Nothing else may touch it.
 var ticks_held: bool = false
 
 
