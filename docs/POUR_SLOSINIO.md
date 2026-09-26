@@ -272,7 +272,16 @@ plutôt qu'emprunté à autre chose. On aurait pu mettre ton voyageur — ça au
 homme sur la route en l'appelant un loup, et c'est la seule chose que la règle interdit
 vraiment.
 
-Donc pour l'instant, sur un pont de la Route du Roi, deux cailloux mordent le joueur.
+Donc au début, sur un pont de la Route du Roi, deux cailloux mordaient le joueur.
+
+**Depuis le 26 septembre, c'est un loup de chez nous, dans ta peinture.** Yannick a
+trouvé les cailloux trop laids et m'a demandé mieux. Je n'ai pas voulu télécharger un
+modèle : ç'aurait été la main d'un troisième artiste. Je l'ai donc **construit** — onze
+boîtes, dans le style facetté de tes accessoires — et **coloré uniquement avec deux de
+tes matières**, `styled_rock` pour le pelage et `styled_dark` pour le dos, le museau,
+les oreilles et la queue. Aucune couleur inventée, comme pour les images de combat.
+
+Ça se voit que c'est nous, et c'est normal. Ton loup le remplacera.
 
 **Ce qu'il faudrait :** un loup, vu de dessus comme tes autres personnages, dans les
 quatre orientations si tu peux, une seule de profil si tu ne peux pas. Une posture

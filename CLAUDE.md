@@ -115,6 +115,17 @@ Three things keep it honest, and none of them makes it *not* an exception:
   not discover it. `test_his_brother_has_not_drawn_a_blow` fails the day his own sheet
   grows a ninth animation, and on that day this tool and this exception are deleted.
 
+**A second exception, the wolf, and Yannick asked for it too (2026-09-26).** His
+brother has drawn no animal. The rule's usual answer — a plain block in his rock paint —
+was built first, and on a bridge it read as two rocks biting the player. Yannick asked
+for something better, *"créer ou trouver"*. **Finding was refused**: a downloaded wolf
+is a third artist's hand, and mixing artists is exactly what this rule is for. So it is
+**made** — `_wolf()` in `view/world3d.gd`, eleven boxes in the low-poly language his own
+props speak — and it keeps the same first condition as the frames: **coloured only with
+two of his materials**, `styled_rock` and `styled_dark`, nothing invented. It is ours
+and it shows; `test_his_brother_has_drawn_no_beast` still reports the debt, and the day
+he draws one this goes. `docs/POUR_SLOSINIO.md` tells him.
+
 The sheet is **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
 has never lived there — his own sheet is in `prototypes/`.

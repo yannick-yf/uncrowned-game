@@ -1362,17 +1362,65 @@ func _sync_guards(world: WorldState, escort: int, extra: int) -> void:
 ## not, and the darkened readings wait for his scenes of the two states.
 ## The people of a place, walking to work or not walking at all. The simulation decides
 ## how many there are; this only puts them where it says.
-## **The wood's animals, and they are plainly not drawn yet** (W2).
+## **The wood's animals — a wolf of ours, in his paint** (W2, reshaped 2026-09-26).
 ##
-## His brother has drawn no beast of any kind — the art rule's answer to that is a plain
-## block in his own rock paint, so what is missing is *visibly* missing rather than
-## quietly borrowed from something else. Drawing a wolf with his traveller would have put
-## a man on the road and called it an animal, which is the one thing the rule forbids.
+## His brother has drawn no beast. The first answer was the art rule's usual one, a
+## plain block in his rock paint, and Yannick looked at it on a bridge and asked for
+## something better: two grey slabs biting the player read as rocks, not as wolves.
 ##
-## Low and long rather than a person's box, so it reads as a thing on four legs even
-## while it is a box. `docs/POUR_SLOSINIO.md` asks him for the real one.
-const WOLF_SIZE_M: Vector3 = Vector3(1.3, 0.75, 0.7)
+## **Made, not found.** A downloaded wolf would be a third artist's hand, and mixing
+## artists is the one thing this project's art rule exists to stop. So this is built
+## here, from primitives, in the low-poly language his own props already speak — and
+## **coloured only with two of his materials**, `styled_rock` for the coat and
+## `styled_dark` for the back, the muzzle, the ears and the tail. No colour is invented,
+## which is the same first condition the drawn fight frames keep.
+##
+## It is still ours and it still shows, and `CLAUDE.md`'s art rule records it as the
+## second exception, beside the frames. The day he draws a wolf, this goes.
+const WOLF_COAT: String = "res://view3d/workshop/prototype_3d/materials/styled_rock.tres"
+const WOLF_DARK: String = "res://view3d/workshop/prototype_3d/materials/styled_dark.tres"
+## Standing height to the shoulder, for lifting the model off the ground.
+const WOLF_HEIGHT_M: float = 0.7
 var _wild_blocks: Dictionary = {}
+var _wolf_coat: Material = null
+var _wolf_dark: Material = null
+
+
+## One part of the wolf: a box of a size, at a place, in one of the two materials.
+func _wolf_part(parent: Node3D, size: Vector3, at: Vector3, dark: bool,
+		tilt_deg: float = 0.0) -> void:
+	var box := BoxMesh.new()
+	box.size = size
+	var part := MeshInstance3D.new()
+	part.mesh = box
+	part.position = at
+	part.rotation.z = deg_to_rad(tilt_deg)
+	var mat: Material = _wolf_dark if dark else _wolf_coat
+	part.material_override = mat if mat != null else _plain_grey()
+	parent.add_child(part)
+
+
+## A wolf, facing +x, standing on its own origin. Eleven boxes: body, chest, head,
+## muzzle, two ears, four legs and a tail. Low-poly on purpose — his trees and his fences
+## are faceted, and a smooth animal among them would be the odd one out.
+func _wolf() -> Node3D:
+	if _wolf_coat == null and ResourceLoader.exists(WOLF_COAT):
+		_wolf_coat = load(WOLF_COAT) as Material
+	if _wolf_dark == null and ResourceLoader.exists(WOLF_DARK):
+		_wolf_dark = load(WOLF_DARK) as Material
+	var wolf := Node3D.new()
+	_wolf_part(wolf, Vector3(0.80, 0.34, 0.34), Vector3(0.0, 0.50, 0.0), false)      # body
+	_wolf_part(wolf, Vector3(0.80, 0.08, 0.30), Vector3(0.0, 0.69, 0.0), true)       # back
+	_wolf_part(wolf, Vector3(0.30, 0.40, 0.36), Vector3(0.34, 0.52, 0.0), false)     # chest
+	_wolf_part(wolf, Vector3(0.30, 0.26, 0.26), Vector3(0.56, 0.66, 0.0), false)     # head
+	_wolf_part(wolf, Vector3(0.20, 0.12, 0.14), Vector3(0.76, 0.60, 0.0), true)      # muzzle
+	_wolf_part(wolf, Vector3(0.07, 0.13, 0.06), Vector3(0.52, 0.84, 0.08), true)     # ear
+	_wolf_part(wolf, Vector3(0.07, 0.13, 0.06), Vector3(0.52, 0.84, -0.08), true)    # ear
+	for x: float in [0.28, -0.28]:
+		for z: float in [0.11, -0.11]:
+			_wolf_part(wolf, Vector3(0.09, 0.36, 0.09), Vector3(x, 0.18, z), false)   # legs
+	_wolf_part(wolf, Vector3(0.40, 0.09, 0.09), Vector3(-0.56, 0.52, 0.0), true, -28.0)  # tail
+	return wolf
 
 
 func _sync_wild(wild: Wild, world: WorldState) -> void:
@@ -1386,26 +1434,24 @@ func _sync_wild(wild: Wild, world: WorldState) -> void:
 		for one: int in count:
 			var id: String = "%d_%d" % [which, one]
 			seen[id] = true
-			var block: MeshInstance3D = _wild_blocks.get(id, null) as MeshInstance3D
+			var block: Node3D = _wild_blocks.get(id, null) as Node3D
 			if block == null:
-				var box := BoxMesh.new()
-				box.size = WOLF_SIZE_M
-				block = MeshInstance3D.new()
-				block.mesh = box
-				block.material_override = \
-					_block_material if _block_material != null else _plain_grey()
+				block = _wolf()
 				block.name = "Wild_%s" % id
+				# Turned a little each, from its place in the pack rather than at random,
+				# so three of them do not stand like one wolf pasted three times.
+				block.rotation.y = deg_to_rad(-20.0 + 35.0 * float(one))
 				add_child(block)
 				_wild_blocks[id] = block
 			# Spread along the tile so a pack of three reads as three and not as one
 			# thing standing in the same place three times.
 			var spread: float = (float(one) - float(count - 1) * 0.5) * 0.6
 			var stands: Vector2 = Vector2(tile) + Vector2(0.5 + spread, 0.5)
-			block.position = _feet_of(stands) + Vector3.UP * (WOLF_SIZE_M.y * 0.5)
+			block.position = _feet_of(stands)
 	# A pack that has been killed is gone, not hidden.
 	for id: Variant in _wild_blocks.keys():
 		if not seen.has(id):
-			(_wild_blocks[id] as MeshInstance3D).queue_free()
+			(_wild_blocks[id] as Node3D).queue_free()
 			_wild_blocks.erase(id)
 
 

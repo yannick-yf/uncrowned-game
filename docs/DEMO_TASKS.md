@@ -1125,9 +1125,18 @@ like every other line — **P2**.
 moves before their first blow. That is **S4's tester**, not a test — a suite cannot see
 whether a person understood.
 
-### W4 · The funnel comes out in one change
+### W4 · The funnel comes out in one change — **built 2026-09-26, and there is no funnel**
 
 Est. 1 h. Depends on: W2.
+
+> **The task's premise was false and a test found it.** Walking from Brindle to
+> Blackcairn, to Harrowgate and to the Muster meets **no pack at all**; only the road to
+> the works does. The two "dangerous road" packs stand beside named points that the real
+> shortest paths go round, so W2's *the others are where the wolves are* was never true
+> in play. What W4 pins instead is what *is* true: Pillar 1 is whole, the whole of the
+> constraint is the `wild` list in `content/places.json`, and nothing in `core/` asks
+> whether a tutorial is finished. **Whether to build a real funnel is Yannick's call** —
+> and a real one would put wolves on the very roads the journey tests measure.
 
 Written the day W2 is written, never afterwards. Taking the demo's constraint out must
 be an afternoon and not an excavation.

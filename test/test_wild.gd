@@ -241,10 +241,10 @@ func test_a_pack_you_beat_is_gone_and_one_you_walk_away_from_is_not() -> void:
 
 func test_his_brother_has_drawn_no_beast() -> void:
 	# **A DEBT and not a failure** (`CLAUDE.md`: a debt names something a person has to
-	# settle). There is no animal anywhere in his library, so a wolf is a plain block in
-	# his own rock paint — what is missing is *visibly* missing rather than quietly
-	# borrowed from his traveller, which would have put a man on the road and called it
-	# a wolf. `docs/POUR_SLOSINIO.md` asks him for one.
+	# settle). There is no animal anywhere in his library. A wolf was first a plain block
+	# in his rock paint; since 2026-09-26 it is a low-poly wolf **made here** from two of
+	# his materials, at Yannick's request — ours, and it shows, which is why this is still
+	# owed rather than settled. `docs/POUR_SLOSINIO.md` asks him for the real one.
 	var found: PackedStringArray = PackedStringArray()
 	for folder: String in ["assets", "prototype_3d/assets/library"]:
 		var at: String = "res://view3d/workshop/%s" % folder
@@ -253,7 +253,7 @@ func test_his_brother_has_drawn_no_beast() -> void:
 				if name.to_lower().contains("wolf") or name.to_lower().contains("beast"):
 					found.append(name)
 	if found.is_empty():
-		debt("his brother has drawn no animal: a wolf stands as a block in his rock paint")
+		debt("his brother has drawn no animal: a wolf is ours, built from his two materials")
 		return
 	assert_true(false, "he has drawn one — delete the block: %s" % ", ".join(found))
 
@@ -408,3 +408,77 @@ func test_killing_one_of_the_quest_s_people_does_not_close_the_quest() -> void:
 	sim.facts.add_source(keys[0] as StringName, &"drissa")
 	assert_true(WardRules.opens(&"cinderworks_gate", sim.facts),
 		"and one of them still opens it with him in the ground")
+
+
+# ------------------------------------------- W4, the funnel is one list ---
+
+func _meets(region: Region, wild: Wild, to: Vector2i) -> Array[int]:
+	var from: Vector2i = Places.shared().centre(&"brindle")
+	var route: Array[Vector2i] = Navigation.path(region, from, to, true)
+	var met: Array[int] = []
+	for tile: Vector2i in wild.standing(region).keys():
+		for step: Vector2i in route:
+			if maxi(absi(step.x - tile.x), absi(step.y - tile.y)) <= WildSystem.REACH_TILES:
+				met.append(int(wild.standing(region)[tile]))
+				break
+	return met
+
+
+func test_pillar_one_is_whole_blackcairn_is_reachable_in_minute_one() -> void:
+	# **Pillar 1, and it is not negotiable** (SPECS, *Three phases of play*): phase 3 is
+	# available in minute one. A pack is not a wall, so this would hold even with wolves
+	# on the King's Road — you would fight, you would not be stopped. Checked here as the
+	# path existing at all, which is the claim, rather than as the road being empty.
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var region: Region = Region.build_overworld()
+	var from: Vector2i = Places.shared().centre(&"brindle")
+	var route: Array[Vector2i] = Navigation.path(region, from, Region.BLACKCAIRN, true)
+	assert_true(route.size() > 0, "there is a way from Brindle to Blackcairn")
+
+
+func test_the_funnel_is_the_wild_list_and_nothing_else() -> void:
+	# **W4's check: the one change exists and it is named.** Clearing every pack is the
+	# whole of taking the demo's constraint out — nothing else in the game knows there is
+	# a demo, which is invariant 4 rather than a courtesy. With the list empty, no road
+	# out of Brindle meets a fight.
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var region: Region = Region.build_overworld()
+	var wild := Wild.new()
+	for which: int in Wild.packs().size():
+		wild.cleared[which] = true
+	for to: Vector2i in [Region.BLACKCAIRN, Places.shared().centre(&"cinderworks"),
+			Places.shared().centre(&"harrowgate"), Places.shared().centre(&"muster")]:
+		assert_eq(_meets(region, wild, to).size(), 0,
+			"with the list emptied, the road to %s is clear" % str(to))
+
+
+func test_nothing_in_core_asks_whether_the_tutorial_is_finished() -> void:
+	# The other half of W4, and the reason the funnel can be one list: **no gate exists to
+	# be forgotten**. A check that asks *have you finished the tutorial* is invariant 4
+	# broken, in a demo or out of one. Read off the source, because a list of the checks
+	# nobody wrote is a list that goes stale.
+	var hits: PackedStringArray = PackedStringArray()
+	var stack: Array[String] = ["res://core"]
+	while not stack.is_empty():
+		var at: String = stack.pop_back()
+		var listing := DirAccess.open(at)
+		if listing == null:
+			continue
+		listing.list_dir_begin()
+		var name: String = listing.get_next()
+		while name != "":
+			var full: String = at.path_join(name)
+			if listing.current_is_dir():
+				stack.append(full)
+			elif name.ends_with(".gd"):
+				var text: String = FileAccess.get_file_as_string(full).to_lower()
+				for word: String in ["tutorial_done", "tutorial_finished", "finished_tutorial",
+						"demo_mode", "in_the_demo", "quest_done"]:
+					if text.contains(word):
+						hits.append("%s mentions %s" % [full, word])
+			name = listing.get_next()
+	assert_eq(hits.size(), 0, "nothing in core/ gates on progress:\n  %s" % "\n  ".join(hits))
