@@ -58,6 +58,15 @@ rendering layer replaceable. Everything below protects it.
    a route to a death is intended: kill Mother Crowe and Exposure closes, and that
    is the design working. The check is a living-performer-chain walk per route, not
    an enumeration of kill sets. This is a test, not a wish.
+
+   > **6 and 7 are ruled out, and not yet removed (Yannick, 2026-09-28).** *There are
+   > no predefined routes to the king.* How the player reaches him will depend on the
+   > player's status and on the kingdom's status against each town's. So Access,
+   > Exposure and the third route — and the performer chains and the walk that test
+   > them — go, with the rest of C3, **run together with C2 and C4 after P2**. Until
+   > then the tests stay green and nothing new is built on the routes. What replaces
+   > invariant 7 (*killing somebody never makes the game unfinishable*) is written
+   > when the new way to the king is.
 8. **The LLM never decides anything mechanical.** `core/rules/` issues the verdict;
    the model phrases it. Its output is text plus enums of ids that already exist.
 9. **The player never types free text.** Dialogue is always a choice among generated

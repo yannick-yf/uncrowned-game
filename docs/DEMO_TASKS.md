@@ -1302,6 +1302,13 @@ that survive are named in the keep-or-drop review.
 > which is C4's and waits on P2. So the rest of C3 is a question before it is a task:
 > **what are the routes to the king in the new model?** Until that is answered it runs
 > with C2 and C4, not before them.
+>
+> **Answered the same day (Yannick, 2026-09-28): there are none.** No predefined routes
+> to the king — how the player reaches him depends on the player's status and on the
+> kingdom's status against each town's. So the ranks, the documents, the three routes
+> and the invariant-7 walk all go, and **they go with C2 and C4 after P2**, as one
+> change: the endings and the old dialogue read them until then. `CLAUDE.md`'s
+> invariants 6 and 7 carry the ruling.
 
 ### C4 · Delete the old dialogue and the layers behind the switches
 
