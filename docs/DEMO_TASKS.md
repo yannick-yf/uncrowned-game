@@ -1273,6 +1273,23 @@ Est. 3 h. Depends on: Q1–Q6. `DeedRules`' 24 acts, `DocumentRules` and the rea
 papers, `Standing` and the ranks, the eight fact-pattern quests. The **mechanisms**
 that survive are named in the keep-or-drop review.
 
+> **Half built, 2026-09-28 — and the other half is Yannick's call.**
+>
+> **Done.** The eight old quests are one: *the wood is going*, the fairy's, which the
+> journal shows and which now closes on the two acts the demo's quest actually ends on
+> (it closed on two old deeds nothing produces any more, so it never closed at all).
+> The per-person opinion (`Standing.by_person`, `DeedRules.witness_effect`, the rumour's
+> resident pass) is gone; `PLAYER_MODEL.md` §2 had already moved it to the town.
+>
+> **Not done, because it is not a deletion.** The factions' ranks and the documents are
+> what **the three routes to the confrontation** are made of: the crown's rank opens
+> *Access*, the papers are *Exposure*. Delete them and two routes of three go, and with
+> them `test_factions.gd`'s invariant-7 walk. The endings (`EndRules`) read the twelve
+> quantities, which are C2's; and the old dialogue gates on the ranks and the regard,
+> which is C4's and waits on P2. So the rest of C3 is a question before it is a task:
+> **what are the routes to the king in the new model?** Until that is answered it runs
+> with C2 and C4, not before them.
+
 ### C4 · Delete the old dialogue and the layers behind the switches
 
 Est. 2 h. Depends on: P2, Q6. The 93 options and 21 reactions; the terrain speed table

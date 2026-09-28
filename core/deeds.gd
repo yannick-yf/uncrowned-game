@@ -68,8 +68,6 @@ static func perform(
 
 	if standing != null:
 		standing.shift_factions(DeedRules.faction_effects(deed))
-		for who: String in witnesses:
-			standing.shift_person(StringName(who), DeedRules.witness_effect(deed))
 
 	sim.facts.add_source(deed, &"witnessed")
 

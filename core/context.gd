@@ -82,7 +82,8 @@ static func build(
 		lines.append("HOLDS: %s" % theirs[i])
 
 	# 4. What they know about *you*, which is the half that changes.
-	var regard: float = standing.with_person(who) if standing != null else 0.0
+	# The town's regard since C3 took the person's away. Inert until C1 deletes this file.
+	var regard: float = standing.in_town(town) if standing != null else 0.0
 	lines.append("REGARDS YOU: %s (%d)" % [StandingRules.word_for(regard), int(round(regard))])
 	lines.append("HAS MET YOU: %s" % (facts != null and facts.has(StringName("met:%s" % who))))
 	# Every deed, not the two that happened to be written down first. A hand-kept

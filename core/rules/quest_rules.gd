@@ -22,52 +22,20 @@ extends RefCounted
 
 ## `id` is the text key's suffix, so a quest needs no name field: `quest.<id>` and
 ## `quest.<id>.note` are looked up, and a test asserts both exist in both languages.
+## **One quest, since C3** (2026-09-28). The old game had eight — who you were, what
+## the works cost, why the soldiers run and five more — and they went with it: the new
+## model is one quest per place and the demo has one place in play. The mechanism is
+## what `SIMULATION_KEEP_OR_DROP.md` kept, and adding the next place's quest is a row.
 const QUESTS: Array[Dictionary] = [
-	# --- who you are -------------------------------------------------------
-	{
-		"id": &"who_you_were",
-		"needs": [&"you:raised"],
-		"done": [&"brindle:the_ground", &"acres:razed_villages", &"brindle:that_night"],
-	},
-	# --- what the king's project costs -------------------------------------
-	{
-		"id": &"the_true_count",
-		"needs": [&"you:owed"],
-		"done": [&"cinderworks:death_toll"],
-	},
-	{
-		"id": &"why_they_run",
-		"needs": [&"thornwood:kell"],
-		"done": [&"muster:pay_fraud"],
-	},
-	{
-		"id": &"what_leaves",
-		"needs": [&"muster:pay_fraud"],
-		"done": [&"saltmarch:what_leaves"],
-	},
-	{
-		"id": &"the_kings_purse",
-		"needs": [&"law:the_effects"],
-		"done": [&"bank:leveraged"],
-	},
-	# --- the people --------------------------------------------------------
-	{
-		"id": &"the_man_in_the_wood",
-		"needs": [&"thornwood:kell"],
-		"done": [&"met:kell"],
-	},
-	{
-		"id": &"another_way_across",
-		"needs": [&"met:garrick"],
-		"done": [&"kettle:ford"],
-	},
-	# --- and the thing you were raised for ---------------------------------
 	{
 		"id": &"the_wood_is_going",
-		"needs": [&"thornwood:save_us"],
-		# Either lever stops the furnaces, and stopping the furnaces is what stops
-		# the clearing (§8). Two ways, because there are two.
-		"done_any": [&"i_turned_the_workers", &"i_wrecked_a_furnace"],
+		# The fairy's last word, given in the first minute by somebody who cannot be
+		# killed and does not leave until she has said it.
+		"needs": [OpeningRules.FACT_LAST_WORD],
+		# **Either act at the works settles it** — put the fires out with Tom, or light
+		# them again with Sena (`docs/QUEST_CINDERWORKS.md` §4). Relighting answers her
+		# the way she did not want, and it is still an answer.
+		"done_any": [DeedRules.DEED_DOUSE, DeedRules.DEED_RELIGHT],
 	},
 ]
 

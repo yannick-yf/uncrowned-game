@@ -229,35 +229,6 @@ func _talk_to(sim: Sim, who: StringName) -> Array[String]:
 	return out
 
 
-func test_a_witness_thinks_worse_of_you_than_the_neighbours_who_heard() -> void:
-	# Maddox is two tiles from the stall and watched it. Ossa is ten tiles away
-	# and gets it the way everyone else does — as the story, once it is a story.
-	var sim: Sim = _deed_sim()
-	var cast := sim.store(&"cast") as Cast
-	var standing := sim.store(&"standing") as Standing
-	assert_true(CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, at_a_stall()).has("maddox"),
-		"Maddox saw it")
-	assert_false(CrimeRules.witnesses_to(cast, WorldState.OVERWORLD, at_a_stall()).has("ossa"),
-		"and Ossa, ten tiles off, did not")
-
-	_act(sim, at_a_stall(), &"steal")
-	assert_true(standing.with_person(&"maddox") < standing.with_person(&"ossa"),
-		"seeing it is worse than hearing it: maddox %.1f, ossa %.1f"
-			% [standing.with_person(&"maddox"), standing.with_person(&"ossa")])
-	assert_true(standing.with_person(&"ossa") < 0.0,
-		"but the whole town heard, so she thinks less of you too")
-
-
-func test_nobody_is_counted_against_you_twice_for_one_deed() -> void:
-	# Maddox is both a witness and a resident. He must not take the witness hit
-	# and the town's hit for the same theft.
-	var sim: Sim = _deed_sim()
-	var standing := sim.store(&"standing") as Standing
-	_act(sim, at_a_stall(), &"steal")
-	assert_eq(standing.with_person(&"maddox"), DeedRules.witness_effect(DeedRules.DEED_THEFT),
-		"exactly what one pair of eyes is worth, and not that plus the hearsay")
-
-
 func test_ossa_stops_telling_you_things() -> void:
 	# The door that shuts. **At the level of the town since J5** — a deed moves the
 	# place it happened in, and nobody in a town that has turned on you does you
@@ -283,18 +254,6 @@ func test_what_ossa_knows_is_still_reachable() -> void:
 	var garrick: Array[String] = _talk_to(sim, &"garrick")
 	assert_true(garrick.has("ask_muster"),
 		"Garrick teaches the same fact and nothing gates him")
-
-
-func test_giving_it_back_in_front_of_them_is_forgiven() -> void:
-	var sim: Sim = _deed_sim()
-	var standing := sim.store(&"standing") as Standing
-	_act(sim, at_a_stall(), &"steal")
-	var after_the_theft: float = standing.with_person(&"maddox")
-	_act(sim, at_a_stall(), &"give_back")
-	assert_true(standing.with_person(&"maddox") > after_the_theft,
-		"Maddox watched you put it back")
-	assert_false(StandingRules.is_unwelcome(standing.with_person(&"maddox")),
-		"and having watched both, he is done with it: %.1f" % standing.with_person(&"maddox"))
 
 
 # ----------------------------------------------------------- giving it back ---

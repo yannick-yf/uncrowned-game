@@ -312,12 +312,6 @@ func test_the_greeting_fires_on_the_town_and_not_on_the_person() -> void:
 	assert_ne(_greeting(town, &"maddox"), plain,
 		"Harrowgate has turned on you and Maddox does not greet you as a stranger")
 
-	var person: Sim = Game.build()
-	assert_eq(_greeting(person, &"maddox"), plain, "the same world, the same hello")
-	(person.store(&"standing") as Standing).shift_person(&"maddox", StandingRules.HATED - 1.0)
-	assert_eq(_greeting(person, &"maddox"), plain,
-		"and what one man privately thinks of you no longer changes a word of it")
-
 
 func test_a_town_that_has_had_enough_of_you_still_holds_a_conversation() -> void:
 	# §5's explicit *not* list: no hostile towns, no closed doors. A watch does not

@@ -71,11 +71,10 @@ static func deliver(sim: Sim, rumour: Rumour, town: StringName, carried: bool) -
 	if standing == null:
 		return
 
-	# Only the town, and the people in it. The factions moved once, where the deed
+	# Only the town. The factions moved once, where the deed
 	# happened — they are not places and cannot hear the same story eight times.
 	var effect: float = DeedRules.town_effect(rumour.about)
 	standing.shift_town(town, effect)
-	_town_hears(sim, rumour, town, effect)
 	# And what it does to how they regard *him*, which is a different number from
 	# how they regard you and the one §3's `discredited` ending counts.
 	var about_the_crown: float = DeedRules.sentiment_on_arrival(rumour.about)
@@ -90,27 +89,6 @@ static func deliver(sim: Sim, rumour: Rumour, town: StringName, carried: bool) -
 		"days": float(sim.step - rumour.started_step)
 			/ float(Sim.STEPS_PER_WORLD_TICK * Game.TICKS_PER_IN_GAME_DAY),
 	})
-
-
-## The people who live there, who heard it rather than saw it.
-##
-## A town's opinion is the aggregate of the people in it, so residents move with
-## their town by default. Anyone who actually watched the deed is skipped — theirs
-## already moved, further, at the moment it happened, and adding this on top would
-## count the same event against them twice.
-static func _town_hears(sim: Sim, rumour: Rumour, town: StringName, effect: float) -> void:
-	var world := sim.store(&"world") as WorldState
-	var cast := sim.store(&"cast") as Cast
-	var standing := sim.store(&"standing") as Standing
-	if world == null or cast == null or standing == null:
-		return
-	var region: Region = world.region()
-	for npc: Npc in cast.in_zone(WorldState.OVERWORLD):
-		if region.zone_at(npc.tile) != town:
-			continue
-		if rumour.witnesses.has(String(npc.id)):
-			continue
-		standing.shift_person(npc.id, effect)
 
 
 ## Nothing to do between ticks.

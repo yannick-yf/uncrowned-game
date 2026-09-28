@@ -268,21 +268,6 @@ func test_a_traveller_can_never_be_a_source() -> void:
 	assert_eq(rumours.told, 0, "and started nothing, however many people were on the road")
 
 
-func test_a_traveller_never_acquires_an_opinion() -> void:
-	# They carry stories; they do not hold them against you. An opinion you can
-	# never encounter again is not an opinion, and putting one in the standing
-	# table is how a system acquires rows nobody can account for.
-	var sim: Sim = _road_sim()
-	var standing := sim.store(&"standing") as Standing
-	_steal_at(sim, at_a_stall())
-	_days(sim, 1.0)
-	for who: StringName in standing.by_person.keys():
-		assert_false(String(who).begins_with("traveller"),
-			"'%s' has an opinion of the player and cannot be found to ask" % who)
-		assert_true(Cast.shared().get_npc(who) != null,
-			"'%s' holds standing but is nobody in the cast" % who)
-
-
 func test_the_road_is_walked_the_same_way_every_time() -> void:
 	# Seeded from the road itself rather than from the rng, so a run rebuilt from
 	# its log puts everybody back where they were without spending randomness.

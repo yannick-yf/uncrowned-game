@@ -15,10 +15,9 @@ const BEST: float = 100.0
 
 var by_town: Dictionary = {}
 var by_faction: Dictionary = {}
-## And per person. A town's opinion is the aggregate of the people in it, so these
-## track each other — until somebody *watches* you do something, and then theirs
-## diverges from their neighbours' and stays diverged.
-var by_person: Dictionary = {}
+## **There was a third, per person, and it went with C3** (2026-09-28). A witness's
+## opinion diverging from their neighbours' was a good idea and not this model's:
+## `docs/PLAYER_MODEL.md` §2 — a deed moves the town it happened in.
 
 
 func _init() -> void:
@@ -34,10 +33,6 @@ func with_faction(faction: StringName) -> float:
 	return float(by_faction.get(faction, NEUTRAL))
 
 
-func with_person(who: StringName) -> float:
-	return float(by_person.get(who, NEUTRAL))
-
-
 ## Every door that shuts opens another (§8). A change is never only a loss: it
 ## names who is offended *and* who is impressed, and refusing to move one without
 ## the other is what keeps this from becoming a morality meter.
@@ -47,10 +42,6 @@ func shift_town(town: StringName, amount: float) -> void:
 
 func shift_faction(faction: StringName, amount: float) -> void:
 	by_faction[faction] = clampf(with_faction(faction) + amount, WORST, BEST)
-
-
-func shift_person(who: StringName, amount: float) -> void:
-	by_person[who] = clampf(with_person(who) + amount, WORST, BEST)
 
 
 ## A whole deed's worth at once, from DeedRules' table. Applied at the act and
@@ -70,10 +61,4 @@ func fingerprint() -> String:
 	var sides := PackedStringArray()
 	for faction: StringName in factions:
 		sides.append("%s:%.2f" % [faction, with_faction(faction)])
-	var people: Array = by_person.keys()
-	people.sort()
-	var faces := PackedStringArray()
-	for who: StringName in people:
-		faces.append("%s:%.2f" % [who, with_person(who)])
-	return "towns[%s] factions[%s] people[%s]" % [
-		";".join(towns), ";".join(sides), ";".join(faces)]
+	return "towns[%s] factions[%s]" % [";".join(towns), ";".join(sides)]

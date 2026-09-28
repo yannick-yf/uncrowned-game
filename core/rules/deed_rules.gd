@@ -220,64 +220,6 @@ static func faction_effects(deed: StringName) -> Dictionary:
 	return {}
 
 
-## What somebody who *watched you do it* thinks, personally.
-##
-## Worse than what their town thinks, and better when it is good: seeing a thing
-## is not hearing about it. Everyone else in the town moves with the town, because
-## a town's opinion is the aggregate of the people in it — so the two track each
-## other until somebody is standing there, and from then on that one person's
-## opinion is their own.
-static func witness_effect(deed: StringName) -> float:
-	if deed == DEED_THEFT:
-		return -30.0
-	if deed == DEED_RESTITUTION:
-		return 20.0
-	if deed == DEED_WARNING:
-		return 35.0
-	if deed == DEED_SABOTAGE:
-		return -34.0
-	if deed == DEED_BURN_STORES:
-		return -40.0
-	if deed == DEED_ROB_BANK:
-		return -36.0
-	if deed == DEED_WRECK_ROLLS:
-		return -20.0
-	if deed == DEED_MAKE_PUBLIC:
-		return 30.0
-	if deed == DEED_TURN_WORKERS:
-		return 22.0
-	if deed == DEED_WITHHOLDING:
-		return 18.0
-	if deed == DEED_RECRUIT:
-		return -10.0
-	if deed == DEED_CONVOY:
-		return -8.0
-	if deed == DEED_TURN_LORD:
-		return 26.0
-	if deed == DEED_ENFORCE_GRANTS:
-		return -20.0
-	if deed == DEED_MOVE_CONVOYS:
-		return 8.0
-	if deed == DEED_DELIVER_LABOUR:
-		return 10.0
-	if deed == DEED_SETTLE_WAGE:
-		return 18.0
-	if deed == DEED_FEED_FOREST:
-		return 8.0
-	if deed == DEED_PAY_MUSTER:
-		return 12.0
-	if deed == DEED_FEED_MUSTER:
-		return 8.0
-	if deed == DEED_HAND_OVER_DESERTERS:
-		return 10.0
-	if deed == DEED_RESTORE_CONFIDENCE:
-		return 10.0
-	if deed == DEED_BRING_CREDITORS:
-		return 12.0
-
-	return 0.0
-
-
 ## What a deed does to how a town regards **the crown**, when word of it arrives.
 ##
 ## Only one deed does anything here, and it is the whole of Route C: reading a

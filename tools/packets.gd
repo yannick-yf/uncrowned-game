@@ -67,14 +67,12 @@ func _set_up(situation: StringName, npc: Npc, world: WorldState, standing: Stand
 			# somebody who just walked in off the road, which was the whole gap.
 			for fact: StringName in LEARNED:
 				facts.add_source(fact, &"setup")
-			standing.shift_person(npc.id, 45.0)
 			standing.shift_town(town, 25.0)
 		&"unwelcome":
 			facts.add_source(StringName("met:%s" % npc.id), &"setup")
 			facts.add_source(DeedRules.DEED_THEFT, &"setup")
 			for fact: StringName in LEARNED:
 				facts.add_source(fact, &"setup")
-			standing.shift_person(npc.id, -45.0)
 			standing.shift_town(town, -30.0)
 			ticked.rouse(town, 25.0)
 		&"hungry":
