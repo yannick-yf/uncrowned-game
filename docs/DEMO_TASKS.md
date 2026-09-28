@@ -1264,9 +1264,14 @@ destroyed-works pieces are worth the work, and whether the building count comes 
 
 **Nothing here starts before the demo runs on the new model**, except C1.
 
-### C1 · Delete the LLM layer — safe today
+### C1 · Delete the LLM layer — safe today — **built 2026-09-28**
 
 Est. 1 h. Depends on: —.
+
+> About 1,500 lines. Two things were not dead and stayed: `ProseRules`, which is the
+> house style every hand-written line is checked against and the join the reactions
+> use (its model-only checks went), and `content/voices.json`, kept as writing notes
+> for P2. `Answers` and `answers.json` went too — they were briefs for the model.
 
 `core/context.gd`, `core/rules/prose_rules.gd`, `core/phrasebook.gd`,
 `PhrasingSystem`, `view/phraser.gd`, `tools/phrase.py`, and their tests. Inert since

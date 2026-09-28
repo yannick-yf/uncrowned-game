@@ -544,10 +544,13 @@ construction and it still got the sign backwards 5 times in 6 — while the pass
 went *up* to 94%. A measurement that reads *ready* over inverted output is worse than
 one that reads *broken*.
 
-The machinery stays: `core/context.gd` (the packet), `core/rules/prose_rules.gd`
-(the door), `core/phrasebook.gd`, `PhrasingSystem`, `view/phraser.gd` and
-`tools/phrase.py`. All inert, all tested, all switched off. `Phraser.phrase()`
-returns `""` and nothing asks it anything.
+**The machinery is deleted** (C1, 2026-09-28): the packet (`core/context.gd`), the
+phrasebook, `PhrasingSystem`, `view/phraser.gd`, `tools/phrase.py`, the briefs
+(`core/answers.gd`, `content/answers.json`), the voice reader and the packet tools. It
+had been inert since 2026-09-12. **`core/rules/prose_rules.gd` stays**, trimmed to what
+was never the model's: the house style every hand-written line is checked against, and
+the join that puts a reaction in front of an answer. `content/voices.json` stays too, as
+the writing notes for P2 — nothing reads it now.
 
 **What replaced it, and it is built** (2026-09-12): the reactive **openers**, hand
 written. A `reactions` block beside `dispositions` in the cast sheets — 3 shared

@@ -189,3 +189,36 @@ func test_walking_away_and_coming_back_acknowledges_it_again() -> void:
 	sim.submit(&"talk", {"npc": "maddox"})
 	sim.advance(2)
 	assert_true(_ask_first(sim).begins_with(reaction), "and said again next time")
+
+
+# ------------------------------------ the opener's rules (from test_phrasing, C1) ---
+
+func test_an_opener_may_not_state_a_fact() -> void:
+	# An opener says what the speaker will or will not give; the written line says what
+	# is true. A reaction that carries a figure is doing the written line's job.
+	var known: PackedStringArray = ProseRules.known_names(Cast.shared())
+	assert_true(ProseRules.opener_faults("Je sais ce que vous avez pris.", known).is_empty(),
+		"a reaction that gives nothing away is fine")
+	assert_false(ProseRules.opener_faults("381 hommes en 11 ans, et je le sais.", known).is_empty(),
+		"an opener carrying a figure is doing the written line's job")
+
+
+func test_an_opener_is_one_short_sentence() -> void:
+	var known: PackedStringArray = ProseRules.known_names(Cast.shared())
+	assert_false(ProseRules.opener_faults(
+		"Je sais ce que vous avez pris. Vous aurez quand meme votre reponse.", known).is_empty(),
+		"two sentences is a speech, not an opener")
+	assert_false(ProseRules.opener_faults(
+		("Je sais parfaitement ce que vous avez pris sur cet etal hier, devant tout le "
+			+ "monde, et je ne l'ai pas oublie."), known).is_empty(), "and this is a paragraph")
+
+
+func test_no_reaction_means_the_written_line_alone() -> void:
+	assert_eq(ProseRules.joined("", "381 en 11 ans."), "381 en 11 ans.",
+		"nothing to react to joins to exactly the line that was written")
+
+
+func test_the_join_is_the_written_line_with_a_reaction_in_front() -> void:
+	assert_eq(ProseRules.joined("Vous, vous payez d'avance.", "C'est la seule chose que je vends."),
+		"Vous, vous payez d'avance. C'est la seule chose que je vends.",
+		"the facts are untouched")

@@ -4,11 +4,14 @@ extends RefCounted
 ## The house style, as a function.
 ##
 ## §9's register, settled 2026-09-12: plain words, short sentences, no metaphor, and
-## every line understandable on its own. These rules were written as a test first and
-## live here so there is **one definition** used by two callers: `test_prose.gd`
-## checks the hand-written corpus, and the phrasing pipeline checks every line a
-## model ever produces. Two copies would drift, and the copy that drifted would be
-## the one guarding the generated text.
+## every line understandable on its own. Written as a test first, and checked against
+## every hand-written line in the game (`test_prose.gd`, `test_reactions.gd`).
+##
+## **It was also the door a model's lines had to pass**, until C1 deleted the model
+## layer on 2026-09-28. What only the model needed went with it — the check that a line
+## said the figures it was given, and the word it answered with when it had nothing to
+## say. What is left is the style, and the join that puts a reaction in front of an
+## answer.
 ##
 ## Everything here is checkable without a human reading the line. That is the whole
 ## point: a reject filter that needs judgement is not a filter.
@@ -38,10 +41,9 @@ static func max_letters_per_word() -> float:
 	return float(MAX_LETTERS_PER_WORD.get(Text.locale(), MAX_LETTERS_FALLBACK))
 
 
-## Everything wrong with this line, or an empty list. A list rather than a bool so a
-## generator can be told what to fix.
-static func faults(line: String, known_names: PackedStringArray,
-		must_be_true: PackedStringArray = PackedStringArray()) -> PackedStringArray:
+## Everything wrong with this line, or an empty list. A list rather than a bool so the
+## test can say what to fix.
+static func faults(line: String, known_names: PackedStringArray) -> PackedStringArray:
 	var out := PackedStringArray()
 	var trimmed: String = line.strip_edges()
 	if trimmed.is_empty():
@@ -84,39 +86,6 @@ static func faults(line: String, known_names: PackedStringArray,
 	var invented: PackedStringArray = names_not_in(trimmed, known_names)
 	for name: String in invented:
 		out.append("names '%s', who or which does not exist" % name)
-	out.append_array(number_faults(trimmed, must_be_true))
-	return out
-
-
-static func accepts(line: String, known_names: PackedStringArray,
-		must_be_true: PackedStringArray = PackedStringArray()) -> bool:
-	return faults(line, known_names, must_be_true).is_empty()
-
-
-## Did the line say the figures it was given, and only those?
-##
-## The one part of "it must state the facts" that is checkable without a human, and
-## it is checkable **because the numbers are written as digits**. That decision was
-## taken for the player — 381 reads faster than three hundred and eighty-one — and it
-## turns out to be the only thing here that survives being written in one language
-## and checked in another. 381 is 381 in French.
-##
-## Both directions matter. A missing figure is an answer that dodged the question; an
-## invented one is worse, because a figure is why anybody believes the rest of the
-## line. Facts that spell a number out ("two winters") are checked by neither, which
-## is correct: content spells a number out exactly where the number is not the point.
-static func number_faults(line: String, must_be_true: PackedStringArray) -> PackedStringArray:
-	var out := PackedStringArray()
-	if must_be_true.is_empty():
-		return out
-	var wanted: PackedStringArray = numbers_in(" ".join(must_be_true))
-	var said: PackedStringArray = numbers_in(line)
-	for number: String in wanted:
-		if not said.has(number):
-			out.append("never says %s, which it was told to" % number)
-	for number: String in said:
-		if not wanted.has(number):
-			out.append("says %s, which is a figure nobody gave it" % number)
 	return out
 
 
@@ -203,8 +172,6 @@ static func _add_words(out: PackedStringArray, phrase: String) -> void:
 ## The one sentence a character puts in front of a written answer because of where
 ## the player stands.
 const OPENER_WORDS: int = 14
-## What a character says when nothing has changed and there is nothing to react to.
-const NO_OPENER: String = "RIEN"
 
 
 ## Everything wrong with an opening reaction.
@@ -224,8 +191,6 @@ const NO_OPENER: String = "RIEN"
 static func opener_faults(line: String, known_names: PackedStringArray) -> PackedStringArray:
 	var out := PackedStringArray()
 	var trimmed: String = line.strip_edges()
-	if trimmed == NO_OPENER:
-		return out
 	if trimmed.is_empty():
 		out.append("empty")
 		return out
@@ -242,14 +207,10 @@ static func opener_faults(line: String, known_names: PackedStringArray) -> Packe
 	return out
 
 
-static func opener_accepted(line: String, known_names: PackedStringArray) -> bool:
-	return opener_faults(line, known_names).is_empty()
-
-
 ## The opener and the written answer, as one thing somebody says.
 static func joined(opener: String, written: String) -> String:
 	var trimmed: String = opener.strip_edges()
-	if trimmed.is_empty() or trimmed == NO_OPENER:
+	if trimmed.is_empty():
 		return written
 	return "%s %s" % [trimmed, written]
 
