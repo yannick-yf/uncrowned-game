@@ -1188,9 +1188,16 @@ specialisms and nothing else. The French names and notes rewritten with them.
 **Check:** a character made on the screen is one the simulation accepts; 9 points is
 refused with a reason; both languages.
 
-### S2 · A fresh run reaches the fairy through creation
+### S2 · A fresh run reaches the fairy through creation — **built 2026-09-28**
 
 Est. 2 h. Depends on: S1.
+
+> `Screens.QUICK_START` is gone. Where the game opens is `Screens.first_screen`, a pure
+> function tested without a window: a release build always opens on the title, and a
+> debug build does too unless the harness names a screen or `UNCROWNED_QUICK=1` asks
+> for the old quick launch. The fresh-run check — allocate, wake beside the fairy, she
+> speaks, Continue rebuilds the same person in the same place — is
+> `test_a_fresh_run_reaches_the_fairy_through_creation`.
 
 The public build opens on the title and creation. The quick launch survives as a
 development path only.

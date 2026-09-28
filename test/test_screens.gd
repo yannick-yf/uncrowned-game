@@ -203,6 +203,51 @@ func test_a_character_made_on_the_screen_is_one_the_simulation_accepts() -> void
 	creation.free()
 
 
+# ------------------------------------------------- where the game opens (S2) ---
+
+func _opens(debug: bool, screen: String = "", shot: String = "", quick: String = "") -> StringName:
+	var screens: GDScript = load("res://view/screens.gd") as GDScript
+	return screens.call(&"first_screen", debug, screen, shot, quick) as StringName
+
+
+func test_the_public_build_opens_on_the_title() -> void:
+	# **S2, 2026-09-28.** The demo opens on creation, so the public build passes through
+	# the title and never drops a stranger into the world at the floor of every trait.
+	assert_eq(_opens(false), &"title", "a release build opens on the title")
+	assert_eq(_opens(false, "play", "/tmp/x.png", "1"), &"title",
+		"and nothing a player can set in their environment changes that")
+
+
+func test_the_quick_launch_is_a_development_path_only() -> void:
+	assert_eq(_opens(true), &"title", "a debug build opens on the title too, unless asked")
+	assert_eq(_opens(true, "", "", "1"), &"play", "UNCROWNED_QUICK=1 skips to the world")
+	assert_eq(_opens(true, "creation"), &"creation", "and the harness still names its screen")
+	assert_eq(_opens(true, "", "/tmp/x.png"), &"play", "a bare shot is still of the world")
+
+
+func test_a_fresh_run_reaches_the_fairy_through_creation() -> void:
+	# The check S2 names: start fresh, allocate, meet the fairy; save; Continue. Without
+	# a window: the run the creation screen begins, the save it writes, and the run the
+	# title's Continue reads back.
+	var levels: Dictionary = TraitRules.at_the_floor()
+	levels[TraitRules.STRENGTH] = 5
+	levels[TraitRules.AGILITY] = 5
+	var run: Sim = Game.begin_run(levels)
+	var world := run.store(&"world") as WorldState
+	var fairy: Npc = (run.store(&"cast") as Cast).get_npc(OpeningRules.FAIRY)
+	assert_true((run.store(&"traits") as Traits).chosen, "the run has the person who was made")
+	assert_true(fairy.centre().distance_to(world.player_pos) <= Game.TALK_REACH,
+		"and wakes within reach of her")
+	run.submit(&"talk", {"npc": "fairy"})
+	run.advance(2)
+	assert_true(world.in_dialogue(), "who speaks first")
+	var continued: Sim = Game.replay(run)
+	assert_eq((continued.store(&"traits") as Traits).fingerprint(),
+		(run.store(&"traits") as Traits).fingerprint(), "and Continue rebuilds the same person")
+	assert_eq((continued.store(&"world") as WorldState).fingerprint(), world.fingerprint(),
+		"in the same place")
+
+
 # ----------------------------------------------------------------- journal ---
 
 ## The whole play screen, wired up, so the journal's pages can be measured against the

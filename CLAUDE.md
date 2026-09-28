@@ -409,12 +409,20 @@ it raises the real event, so the picture is of the game.
 `UNCROWNED_DID=i_stole_in_public,i_killed_somebody_innocent UNCROWNED_AT=236,208
 UNCROWNED_SCREEN=journal:standing` is the frame that settled J6.
 
+**`UNCROWNED_QUICK=1`** (2026-09-28, S2) skips the title and the creation and opens a
+fresh run at the floor of every trait, saved as Begin saves it. It is what
+`Screens.QUICK_START` was for two weeks, turned from a constant that was on in every
+build into a switch a debug build has to be asked for — because the public build must
+open on the title (`Screens.first_screen`, and `test_the_public_build_opens_on_the_title`).
+In the Godot editor it goes in the run's environment; from a terminal,
+`UNCROWNED_QUICK=1 godot --path .`.
+
 **`UNCROWNED_SCREEN=journal:<page>`** (2026-09-24) is not a ninth tool but the existing
 one extended: the journal is seven pages and the page being photographed is rarely the
 first, so the screen name may carry the page after a colon — `journal:standing`,
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
-**All nine are gated on `OS.has_feature("debug")`**, so they are absent from a
+**All ten are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 
@@ -430,7 +438,7 @@ has now said what becomes of each, and the removals are tasks in `docs/DEMO_TASK
 |---|---|
 | `Region.TERRAIN_SLOWS_YOU` | **The layer goes.** The speed table and its tests are removed — task **C4**. He found the wild's price in time useless walking his brother's map |
 | `Sound.MUSIC` | **The tables go** — they name the 2D pack's tracks, which the art rule now forbids anyway. Music returns one day with real tracks — task **C4** |
-| `Screens.QUICK_START` | **The switch goes, the screens stay.** The public build opens on character creation, because the demo does; the quick launch survives as a development path only — task **S2** |
+| `Screens.QUICK_START` | **Gone** (S2, 2026-09-28). The public build opens on the title and passes through creation; the quick launch is `UNCROWNED_QUICK=1`, a debug tool below |
 
 Until those tasks run the switches are as they were, and a test that claims what a
 switch turns off still says `OFF` in the run (`TestCase.off`) rather than failing or
@@ -474,7 +482,7 @@ reconstruct it from forty commits will get it wrong.
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
-| **S** | **S1 built** (2026-09-28): four traits, a pool of 8. S2 is small; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
+| **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
 | **P2** | Yannick's, in a branch of its own, written with him |
 
