@@ -1,38 +1,37 @@
 class_name TraitRules
 extends RefCounted
 
-## The six traits, and what a character is made of.
+## The four traits, and what a character is made of.
 ##
-## §11: a fixed pool allocated at creation, every trait starting at 1, a cap of 5.
-## Each does double duty — dialogue and combat — so no point is ever wasted.
+## **Force, Intelligence, Agilité, Prestance — a pool of 8, a floor of 1, a cap of 5**
+## (S1, 2026-09-28; `docs/SIMULATION_MODEL.md`'s list). At 4 points to take a trait
+## from 1 to 5, eight buys exactly two specialisms and nothing else — or one at 5 and
+## two at 3, or a flat spread — and each of those is a different person.
 ##
-## **Pool of 10, cap of 5** (2026-09-13, closing §19 Q6 and Q22). Q22's complaint was
-## that 12 does not force two specialisms: at 4 points to raise a trait from 1 to 5,
-## twelve buys *three* maxed traits and leaves three at the floor, which is not a
-## choice, it is a shopping list. Ten buys two at 5 with two spare, or one at 5 and
-## two at 3, or a flat spread of mediocrity — and each of those is a different person.
+## It was six traits and a pool of 10 (2026-09-13). Two of the six were ever asked for
+## by a line of dialogue: *Wits* became Intelligence and *Temper* — saying it to their
+## face — became Force. The other four were never read, and Attunement's one use, the
+## wood slowing somebody not raised in it, is a layer that is switched off (C4).
 ##
 ## **Traits are not progression.** They are chosen once and do not rise (§19 Q23), so
 ## gating a line of dialogue on one is not the progression check invariant 4 forbids:
 ## it is the same kind of thing as being unwelcome in a town. What invariant 4 forbids
 ## is a door that opens because you did the previous thing, and none of these do.
 
-const WITS: StringName = &"wits"
+const STRENGTH: StringName = &"strength"
+const INTELLIGENCE: StringName = &"intelligence"
+const AGILITY: StringName = &"agility"
 const PRESENCE: StringName = &"presence"
-const TEMPER: StringName = &"temper"
-const HANDS: StringName = &"hands"
-const BODY: StringName = &"body"
-const ATTUNEMENT: StringName = &"attunement"
 
 ## Order is the order they are shown in, and nothing else depends on it.
-const ALL: Array[StringName] = [WITS, PRESENCE, TEMPER, HANDS, BODY, ATTUNEMENT]
+const ALL: Array[StringName] = [STRENGTH, INTELLIGENCE, AGILITY, PRESENCE]
 
 const FLOOR: int = 1
 const CAP: int = 5
-const POOL: int = 10
+const POOL: int = 8
 
 ## What a trait has to reach before a line that leans on it is offered. One number
-## for all six, because six numbers would be six things nobody had reasoned about —
+## for all four, because four numbers would be four things nobody had reasoned about —
 ## and 3 is "you put points here", which is exactly what the gate should mean.
 const SPEAKS_AT: int = 3
 

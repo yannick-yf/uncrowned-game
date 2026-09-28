@@ -343,7 +343,7 @@ func test_ossa_teaches_the_pay_fraud_and_garrick_confirms_it() -> void:
 	# Ossa's line leans on Wits, and §11's `tag` gates now that traits exist — so
 	# this asks somebody who would notice. Garrick tells anybody, which is what keeps
 	# the fact out from behind the gate (invariant 6).
-	_say(&"create_character", {"wits": 4})
+	_say(&"create_character", {"intelligence": 4})
 	_stand_by(&"ossa")
 	_say(&"talk", {"npc": "ossa"})
 	assert_false(_sim.facts.has(ArmyRules.FACT_PAY_FRAUD))

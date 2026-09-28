@@ -1172,9 +1172,15 @@ minute one and Pillar 1 is whole again.
 
 ## S — the shell
 
-### S1 · Four traits, a pool of 8
+### S1 · Four traits, a pool of 8 — **built 2026-09-28**
 
 Est. 2 h. Depends on: —.
+
+> Only two of the six old traits were ever asked for by a line: **Wits became
+> Intelligence** (sixteen lines) and **Temper — saying it to their face — became Force**
+> (four). Attunement's one use was the wood slowing a walker, a layer that is switched
+> off and goes in C4, so its two `OFF` tests went with it. The creation frame is two
+> rows shorter. A save from before S1 still loads, with the old names ignored.
 
 Force, Intelligence, Agilité, Prestance. Floor 1, cap 5, **pool 8** — which buys two
 specialisms and nothing else. The French names and notes rewritten with them.

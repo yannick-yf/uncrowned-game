@@ -131,21 +131,21 @@
         },
         {
           "intent": "ask_law",
-          "tag": "Wits",
+          "tag": "Intelligence",
           "text": "Qui applique la loi ici ?",
           "reply": "Tovin, le Prévôt. Son bureau est sur la place. Il sera poli et il prendra votre argent quand même.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_soldiers",
-          "tag": "Temper",
+          "tag": "Strength",
           "text": "Les soldats passent-ils encore ?",
           "reply": "De moins en moins. Ils quittent le camp de l'armée au nord. Demandez à Ossa, l'herboriste, elle soigne ceux qui fuient.",
           "costs": "goodwill"
         },
         {
           "intent": "ask_bread",
-          "tag": "Wits",
+          "tag": "Intelligence",
           "text": "Pourquoi le pain a-t-il augmenté ?",
           "reply": "Les soldats. L'armée les nourrissait. Maintenant ils ont quitté le camp et ils achètent le pain ici, et il n'y a pas plus de grain qu'avant.",
           "requires_condition": "grain_is_dear_here"
@@ -189,7 +189,7 @@
         },
         {
           "intent": "ask_tiers",
-          "tag": "Wits",
+          "tag": "Intelligence",
           "text": "Et vous trouvez ça juste ?",
           "reply": "Non. C'est la loi et ce n'est pas juste. Ce sont deux choses différentes. J'ai une maison, un travail, et je l'applique.",
           "costs": "goodwill"
@@ -241,7 +241,7 @@
         },
         {
           "intent": "ask_copy",
-          "tag": "Wits",
+          "tag": "Intelligence",
           "text": "Vous arrive-t-il de copier lentement ?",
           "reply": "Parfois. 14 lignes par heure au lieu de 40. Ça donne une semaine à un homme avant que sa peine soit enregistrée.",
           "costs": "goodwill"
@@ -271,7 +271,7 @@
         },
         {
           "intent": "ask_why",
-          "tag": "Wits",
+          "tag": "Intelligence",
           "text": "Pourquoi sont-ils si nombreux à fuir ?",
           "reply": "Pas les combats. La paie. Il y a une quartier-maître au camp, Odile. Elle signe pour des soldats morts et garde leur paie.",
           "teaches": "muster:pay_fraud",
@@ -1210,7 +1210,7 @@
           },
           {
             "intent": "ask_refusal",
-            "tag": "Temper",
+            "tag": "Strength",
             "text": "Vous ne m'avez jamais vu.",
             "reply": "Le bruit est monté par la route avant vous, et il était précis.",
             "requires_condition": "they_think_ill_of_me"
@@ -1240,7 +1240,7 @@
           },
           {
             "intent": "ask_ford",
-            "tag": "Wits",
+            "tag": "Intelligence",
             "text": "Y a-t-il un autre passage ?",
             "reply": "Un gué en aval. Praticable en semaine sèche, et personne n'y compte les passages. Ça n'a pas été dit.",
             "teaches": "kettle:ford",
@@ -1274,7 +1274,7 @@
           },
           {
             "intent": "ask_gate_who",
-            "tag": "Wits",
+            "tag": "Intelligence",
             "text": "Qui passe, alors ?",
             "reply": "L'équipe. Et ceux pour qui le bureau répond : la pesée, là-bas, la porte au sud. Pas moi.",
             "costs": "goodwill"
@@ -1313,7 +1313,7 @@
           },
           {
             "intent": "ask_orders",
-            "tag": "Wits",
+            "tag": "Intelligence",
             "text": "Qui vous a dit de surveiller ça ?",
             "reply": "Quelqu'un qui signe pour. C'est aussi haut qu'on l'ait dit à quiconque ici.",
             "costs": "goodwill"

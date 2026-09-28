@@ -33,10 +33,10 @@ func on_step(sim: Sim, _step: int) -> void:
 	var duel := sim.store(&"duel") as Duel
 	if duel != null and duel.on():
 		return
-	var traits := sim.store(&"traits") as Traits
-	var attuned: bool = traits != null and traits.is_attuned()
+	# Nobody walks the wood faster for who they are since S1 took Attunement away; the
+	# speed table that would have read it is switched off, and goes in C4.
 	var wanted: Vector2 = MovementRules.step(
-		world.player_pos, world.player_dir, world.region(), -1.0, attuned)
+		world.player_pos, world.player_dir, world.region(), -1.0)
 	world.player_pos = _past_the_watch(sim, world, wanted)
 
 

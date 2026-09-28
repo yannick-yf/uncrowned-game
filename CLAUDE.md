@@ -219,7 +219,7 @@ his catalogue before placing anything of his**: its `placement` note is the only
 that says how a piece is meant to be used, and the first yard was built without it.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
 commit checks. The current baked run prints **ten** DEBT lines for **six** claims and
-four OFF lines. Five claims are the map's and the brief's; the sixth is **his brother's
+two OFF lines (four until S1 took Attunement and its two terrain tests away). Five claims are the map's and the brief's; the sixth is **his brother's
 figures** — `traveler_walk_frames.tres` holds idle and walk in four directions and no
 attack, no guard and no flinch, so a fight's blows are shown by moving the figure he did
 draw (2026-09-19, F5). The procedural world prints one, for the same reason.
@@ -474,7 +474,7 @@ reconstruct it from forty commits will get it wrong.
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
-| **S** | None. S1 and S2 are small; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
+| **S** | **S1 built** (2026-09-28): four traits, a pool of 8. S2 is small; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
 | **P2** | Yannick's, in a branch of its own, written with him |
 

@@ -2,8 +2,8 @@ extends Node2D
 
 ## Who you are, before you wake up in the clearing.
 ##
-## §11's pool, on screen: six traits at the floor, ten points to place, nothing above
-## five. The screen only ever moves numbers about — the decision is one
+## §11's pool, on screen: four traits at the floor, eight points to place, nothing
+## above five (S1). The screen only ever moves numbers about — the decision is one
 ## `create_character` event submitted to a fresh run, and `CreationSystem` refuses it
 ## if the numbers do not add up. That refusal is not defensive clutter: it is what
 ## makes the save honest, because a run is its event log and this is the first row.
@@ -15,10 +15,10 @@ extends Node2D
 
 signal chose(what: StringName, carrying: Variant)
 
-## One framed block holding the six traits, the seventh row that starts the game, and
+## One framed block holding the four traits, the fifth row that starts the game, and
 ## what the trait under the cursor means. Framed because the alternative — six rows
 ## floating on a dark field — left a third of the screen empty and read as unfinished.
-const FRAME: Rect2 = Rect2(96.0, 86.0, 448.0, 212.0)
+const FRAME: Rect2 = Rect2(96.0, 86.0, 448.0, 186.0)
 const ROWS_TOP: float = 112.0
 const ROW_STEP: float = 21.0
 const LABEL_X: float = 150.0
@@ -129,7 +129,7 @@ func _draw() -> void:
 		Color(0.75, 0.70, 0.55, 0.28), 1.0)
 	_draw_note(rule + 18.0)
 
-	Ui.write_over(self, Vector2(0.0, 330.0), Text.of(&"creation.help"),
+	Ui.write_over(self, Vector2(0.0, FRAME.end.y + 32.0), Text.of(&"creation.help"),
 		Ui.NOTE, Ui.FAINT, HORIZONTAL_ALIGNMENT_CENTER, screen.x)
 
 
@@ -148,7 +148,7 @@ func _draw_pips(what: StringName, y: float, lit: bool) -> void:
 
 
 ## What the trait under the cursor means, in the words the game uses everywhere else.
-## On Begin there is no trait, so it says what the six of them add up to instead.
+## On Begin there is no trait, so it says what the four of them add up to instead.
 func _draw_note(top: float) -> void:
 	var what: StringName = _menu.chosen()
 	var line: String = Text.of(&"creation.ready") if what == &"begin" \

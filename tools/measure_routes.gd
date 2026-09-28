@@ -14,7 +14,6 @@ extends SceneTree
 func _initialize() -> void:
 	_report("the King's Road", Region.road_waypoints(), false)
 	_report("the wild", _wild_line(), false)
-	_report("the wild, attuned", _wild_line(), true)
 	if not Region.TERRAIN_SLOWS_YOU:
 		print("(terrain speeds are off — Region.TERRAIN_SLOWS_YOU, 2026-09-14 — so the wild costs the time of its length and no more)")
 	quit(0)
@@ -34,10 +33,6 @@ func _wild_line() -> Array[Vector2i]:
 func _report(label: String, route: Array[Vector2i], attuned: bool) -> void:
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	if attuned:
-		var wanted: Dictionary = TraitRules.at_the_floor()
-		wanted[TraitRules.ATTUNEMENT] = TraitRules.SPEAKS_AT
-		(sim.store(&"traits") as Traits).choose(wanted)
 	# Both routes are Brindle to the castle by definition. The game starts the player
 	# in the fairies' clearing now, and since the deep wood closed, walking straight
 	# out of it is not a thing anybody can do — which is the point of the wood, and

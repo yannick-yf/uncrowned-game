@@ -188,7 +188,7 @@ func test_a_character_made_on_the_screen_is_one_the_simulation_accepts() -> void
 	var creation: Node = _screen("res://view/creation.gd")
 	creation.call(&"_build")
 	var levels: Dictionary = creation.get(&"_levels") as Dictionary
-	levels[TraitRules.WITS] = 5
+	levels[TraitRules.INTELLIGENCE] = 5
 	levels[TraitRules.PRESENCE] = 4
 	var sim: Sim = Game.build()
 	var data: Dictionary = {}
@@ -198,7 +198,7 @@ func test_a_character_made_on_the_screen_is_one_the_simulation_accepts() -> void
 	sim.advance(1)
 	var traits := sim.store(&"traits") as Traits
 	assert_true(traits.chosen, "the run has a person in it")
-	assert_eq(traits.level_of(TraitRules.WITS), 5, "who is the one that was chosen")
+	assert_eq(traits.level_of(TraitRules.INTELLIGENCE), 5, "who is the one that was chosen")
 	assert_true(traits.speaks_with(TraitRules.PRESENCE), "and speaks with what they took")
 	creation.free()
 

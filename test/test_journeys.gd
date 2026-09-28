@@ -207,33 +207,6 @@ func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
 		"and the difference is worth noticing: %.0f s" % (wild_seconds - road_seconds))
 
 
-## §11's second half of Attunement, on the ground. Faster through the wood than
-## anybody else, and still slower than the road — or the forest build gets the wild
-## for free and the choice stops being a choice for exactly the player it is about.
-func test_an_attuned_walker_crosses_the_wood_faster_but_not_as_fast_as_the_road() -> void:
-	if not Region.TERRAIN_SLOWS_YOU:
-		off("terrain speeds are off for now (Yannick, 2026-09-14): the wood costs nobody time, attuned or not")
-		return
-	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
-
-	_sim = Game.build()
-	_world = _sim.store(&"world") as WorldState
-	var plain: float = _seconds_to_cross(_wild_line())
-
-	_sim = Game.build()
-	_world = _sim.store(&"world") as WorldState
-	var wanted: Dictionary = TraitRules.at_the_floor()
-	wanted[TraitRules.ATTUNEMENT] = TraitRules.SPEAKS_AT
-	assert_true((_sim.store(&"traits") as Traits).choose(wanted), "a forest build")
-	var attuned: float = _seconds_to_cross(_wild_line())
-
-	assert_true(attuned < plain,
-		"attuned %.0f s against %.0f s: the wood should slow them less" % [attuned, plain])
-	assert_true(road_seconds < attuned,
-		"road %.0f s, attuned wild %.0f s: the road must stay the fast way for everyone"
-			% [road_seconds, attuned])
-
-
 func test_a_walk_through_the_wood_replays_from_the_log() -> void:
 	assert_true(_walk_to(Vector2i(in_the_wood()), 200.0), "walked into the wood")
 	var replayed: Sim = Game.replay(_sim)
@@ -336,7 +309,7 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 
 func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
 	# Somebody who notices things, because the chain goes through Ossa's Wits line.
-	_say(&"create_character", {"wits": 4})
+	_say(&"create_character", {"intelligence": 4})
 	assert_eq(_ticked.kings_escort(), 10, "before: ten guards stand between me and the king")
 
 	assert_true(_walk_to(Region.HARROWGATE, _at_pace(180.0)), "walked the road to Harrowgate")
@@ -382,7 +355,7 @@ func test_the_whole_chain_replays_identically_from_its_log() -> void:
 	# Through Ossa's Wits line again, so this needs the same person the chain test
 	# makes. Creation is an ordinary event, so it replays with everything else —
 	# which is half of what this test is checking.
-	_say(&"create_character", {"wits": 4})
+	_say(&"create_character", {"intelligence": 4})
 	assert_true(_walk_to(Region.HARROWGATE, _at_pace(180.0)))
 	var ossa: Npc = _cast.get_npc(&"ossa")
 	assert_true(_walk_to(ossa.tile, _at_pace(60.0)))
