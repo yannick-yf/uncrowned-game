@@ -682,7 +682,7 @@ func test_a_player_killed_in_a_fight_wakes_at_the_fire_and_not_where_it_was() ->
 	var world := sim.store(&"world") as WorldState
 	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
 	var ring: Vector2 = world.player_pos
-	assert_true(ring.distance_to(world.region().clearing_centre()) > 10.0, "the fight is not at the clearing")
+	assert_true(ring.distance_to(world.region().start_centre()) > 10.0, "the fight is not where the game starts")
 	sim.submit(&"duel_began", {"opponent": "harry", "by": "harry"})
 	sim.advance(1)
 	var duel: Duel = _duel(sim)
@@ -691,9 +691,9 @@ func test_a_player_killed_in_a_fight_wakes_at_the_fire_and_not_where_it_was() ->
 	assert_eq(duel.outcome, &"lost")
 	assert_eq(world.deaths, 1, "he killed you")
 	assert_eq(world.player_hp, WorldState.MAX_HP, "and you woke whole, as the checkpoint rule says")
-	assert_true(world.player_pos.distance_to(world.region().clearing_centre()) < 2.0,
-		"at the clearing, %.1f tiles from it, and not %.1f tiles from the fight"
-		% [world.player_pos.distance_to(world.region().clearing_centre()), world.player_pos.distance_to(ring)])
+	assert_true(world.player_pos.distance_to(world.region().start_centre()) < 2.0,
+		"where the game starts, %.1f tiles from it, and not %.1f tiles from the fight"
+		% [world.player_pos.distance_to(world.region().start_centre()), world.player_pos.distance_to(ring)])
 
 
 func test_a_run_played_unkillable_replays_unkillable() -> void:

@@ -52,15 +52,15 @@ func _init() -> void:
 	var region: Region = Region.build_overworld()
 	print("MAP_SPEC section 9 — the twelve\n")
 
-	# 1 — every zone reachable. Checked from the clearing, where the player now
-	# actually wakes, which is stricter than Brindle: it is behind the thicket.
-	var open: Dictionary = _reach(region, Region.CLEARING, {})
+	# 1 — every zone reachable. Checked from where the player actually wakes, which
+	# is stricter than Brindle.
+	var open: Dictionary = _reach(region, Region.START, {})
 	var unreachable: Array[String] = []
 	for zone: StringName in Region.ZONE_ORDER:
 		if not open.has(Region.zone_sites()[zone] as Vector2i):
 			unreachable.append(String(zone))
 	_ok(1, "every zone reachable, over ground", unreachable.is_empty(),
-		"from the clearing" if unreachable.is_empty() else str(unreachable))
+		"from where you wake" if unreachable.is_empty() else str(unreachable))
 
 	# 2 — no walkable tile touches the edge.
 	var leaks: int = 0

@@ -123,6 +123,12 @@ const KETTLE_HALF_WIDTH: int = 2
 ## §4's rule against empty walking still holds. East of the Kettle, so it sits on
 ## Brindle's own side of the river.
 static var CLEARING: Vector2i = Places.shared().point(&"clearing")
+## **Where a new run wakes** (O3, 2026-09-29) — its own name, apart from the fairies'
+## clearing, which is what the fairies hold and the works shrink. The same point for
+## now; O12 moves the start to a cemetery south of Brindle and leaves the clearing its
+## ground. Everything that means *where you woke* reads this, and everything that means
+## *the fairies' ground* keeps reading `CLEARING`.
+static var START: Vector2i = Places.shared().point(&"clearing")
 const CLEARING_RADIUS: int = 7
 ## How deep the thicket ring is. Five, because 8-way movement will find a diagonal
 ## seam in anything thinner.
@@ -334,14 +340,14 @@ static func zone_footprints() -> Dictionary:
 
 
 ## Where the player wakes, which is no longer Brindle (§4's opening, 2026-09-12).
-func clearing_centre() -> Vector2:
-	return Vector2(CLEARING) + Vector2(0.5, 0.5)
+func start_centre() -> Vector2:
+	return Vector2(START) + Vector2(0.5, 0.5)
 
 
 ## The figure §4's "reachable from minute one" is really about, now that the game
 ## does not start in Brindle.
-func clearing_to_blackcairn_tiles() -> float:
-	return clearing_centre().distance_to(blackcairn_centre())
+func start_to_blackcairn_tiles() -> float:
+	return start_centre().distance_to(blackcairn_centre())
 
 
 func brindle_centre() -> Vector2:

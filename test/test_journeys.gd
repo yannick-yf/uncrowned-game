@@ -254,7 +254,7 @@ func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 
 	assert_true(_world.reached_blackcairn, "the player got there")
 	assert_eq(_world.deaths, 1, "and lost, once")
-	assert_eq(_world.player_tile(), Region.CLEARING, "and woke up in the clearing again")
+	assert_eq(_world.player_tile(), where_the_game_starts(), "and woke up where the game starts again")
 
 	var replayed: Sim = Game.replay(_sim)
 	assert_eq(replayed.step, _sim.step, "same clock")

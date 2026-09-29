@@ -579,8 +579,8 @@ func _draw_map() -> void:
 			Text.of(StringName("place.short.%s" % zone)), Ui.NOTE,
 			Color(0.96, 0.93, 0.86, 0.92))
 
-	# The fairies' clearing, which is not a zone and is where you woke up.
-	draw_circle(at + Vector2(Region.CLEARING) * scale, 2.0, Color(0.78, 0.96, 0.80, 1.0))
+	# Where you woke up, which is not a zone.
+	draw_circle(at + Vector2(Region.START) * scale, 2.0, Color(0.78, 0.96, 0.80, 1.0))
 
 	Ui.write_over(self, at + Vector2(0.0, -8.0), Text.of(&"map.title"), Ui.HEADING,
 		Ui.INK)

@@ -65,7 +65,7 @@ func test_the_player_wakes_on_open_ground_in_the_wood() -> void:
 	assert_true(region.is_passable(Region.CLEARING), "and you can stand on it")
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	assert_eq(world.player_pos, region.clearing_centre(), "and the game starts you there")
+	assert_eq(world.player_pos, region.start_centre(), "and the game starts you there")
 
 
 func test_the_clearing_is_ringed_by_wood_you_cannot_walk_into() -> void:
@@ -107,10 +107,10 @@ func test_one_corridor_leads_out_and_only_one() -> void:
 func test_walking_out_takes_about_five_seconds() -> void:
 	# §4's rule against empty walking cuts both ways: long enough to be a walk out
 	# of the trees, short enough that it is not the content.
-	var tiles: float = Vector2(Region.CLEARING).distance_to(Vector2(Region.BRINDLE))
+	var tiles: float = Vector2(where_the_game_starts()).distance_to(Vector2(Region.BRINDLE))
 	var seconds: float = tiles / 6.0
 	assert_true(seconds >= 3.0 and seconds <= 8.0,
-		"clearing to Brindle is %.1f tiles, %.1f seconds" % [tiles, seconds])
+		"the start to Brindle is %.1f tiles, %.1f seconds" % [tiles, seconds])
 
 
 # ------------------------------------------------------- what it must not break ---
@@ -119,22 +119,22 @@ func test_the_king_is_still_reachable_from_the_first_minute() -> void:
 	# Pillar 1. Starting in the wood may not put the castle further away than
 	# "minutes, not hours", and the straight line is the number that says so.
 	var region: Region = _region()
-	var seconds: float = region.clearing_to_blackcairn_tiles() / 6.0
+	var seconds: float = region.start_to_blackcairn_tiles() / 6.0
 	assert_true(seconds < 90.0,
-		"the clearing is %.0f tiles from Blackcairn, %.0f seconds" % [
-			region.clearing_to_blackcairn_tiles(), seconds])
+		"the start is %.0f tiles from Blackcairn, %.0f seconds" % [
+			region.start_to_blackcairn_tiles(), seconds])
 
 
 func test_every_zone_is_still_reachable_from_where_the_player_wakes() -> void:
 	# The rule attached to the thicket: it may never be the only thing between the
 	# player and anything. Eight zones, walked from the clearing, over ground.
 	var region: Region = _region()
-	var open: Dictionary = _reachable(region, Region.CLEARING, [] as Array[Vector2i])
+	var open: Dictionary = _reachable(region, where_the_game_starts(), [] as Array[Vector2i])
 	for zone: StringName in Region.ZONE_ORDER:
 		var site: Vector2i = Region.zone_sites().get(zone, Region.NOWHERE)
 		if site == Region.NOWHERE:
 			continue
-		assert_true(open.has(site), "%s is reachable from the clearing" % zone)
+		assert_true(open.has(site), "%s is reachable from where the player wakes" % zone)
 
 
 func test_the_furnaces_are_in_frame_when_you_reach_the_ruins() -> void:
@@ -193,8 +193,8 @@ func test_the_fairies_ground_is_the_first_fire() -> void:
 	# hold you is the ground still held, and it gives the player a reason to come
 	# back — which is the only way the shrinking can be *seen* rather than asserted.
 	var region: Region = _region()
-	assert_ne(region.nearest_campfire(Region.CLEARING, 4.0), Region.NOWHERE,
-		"there is a fire in the clearing")
+	assert_ne(region.nearest_campfire(where_the_game_starts(), 4.0), Region.NOWHERE,
+		"there is a fire where you wake")
 
 
 func test_dying_before_you_ever_rest_puts_you_back_where_you_woke() -> void:
@@ -203,8 +203,8 @@ func test_dying_before_you_ever_rest_puts_you_back_where_you_woke() -> void:
 	world.player_pos = world.region().brindle_centre()
 	assert_eq(world.rested_at, Vector2i(-1, -1), "nobody has slept yet")
 	world.hurt(WorldState.MAX_HP, sim.step)
-	assert_eq(world.player_pos, world.region().clearing_centre(),
-		"back in the clearing, not in the ruins")
+	assert_eq(world.player_pos, world.region().start_centre(),
+		"back where you woke, not in the ruins")
 
 
 # --------------------------------------------- stage 2: the protected ground ---
@@ -351,7 +351,8 @@ func test_walking_away_leaves_her_there_because_nothing_is_gated() -> void:
 	world.player_pos = world.region().brindle_centre()
 	sim.advance(120)
 	assert_true(OpeningRules.fairy_is_here(sim.facts), "she has not finished, so she waits")
-	world.player_pos = world.region().clearing_centre()
+	# Back to her, wherever she stands.
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(OpeningRules.FAIRY).centre()
 	var rest: Array[String] = _wake_and_listen(sim, 9)
 	assert_eq(rest.size(), OpeningRules.WHAT_SHE_TELLS_YOU.size() - 3,
 		"and picks up where she left off")

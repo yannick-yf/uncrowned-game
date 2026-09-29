@@ -45,7 +45,7 @@ func test_criterion_1_every_zone_is_reachable_over_ground() -> void:
 	# clearing is behind the thicket, so this also holds the rule that thicket may
 	# never be the only thing between the player and anything.
 	var region: Region = _region()
-	var open: Dictionary = _reach(region, Region.CLEARING, {})
+	var open: Dictionary = _reach(region, where_the_game_starts(), {})
 	for zone: StringName in Region.ZONE_ORDER:
 		assert_true(open.has(Region.zone_sites()[zone] as Vector2i),
 			"%s is reachable from where the player wakes" % zone)

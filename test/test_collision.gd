@@ -22,7 +22,7 @@ func _region() -> Region:
 ## Everywhere you can get to from where the game starts you.
 func _the_world_you_can_walk() -> Dictionary:
 	var region: Region = _region()
-	var start := Region.CLEARING
+	var start := where_the_game_starts()
 	var seen: Dictionary = {start: true}
 	var queue: Array[Vector2i] = [start]
 	while not queue.is_empty():

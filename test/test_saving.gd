@@ -177,4 +177,4 @@ func test_a_first_death_before_any_rest_is_not_a_dead_end() -> void:
 	var world := sim.store(&"world") as WorldState
 	world.player_pos = alone_on_the_road()
 	world.hurt(WorldState.MAX_HP, sim.step)
-	assert_eq(world.player_tile(), Region.CLEARING, "you wake where you first woke")
+	assert_eq(world.player_tile(), where_the_game_starts(), "you wake where you first woke")

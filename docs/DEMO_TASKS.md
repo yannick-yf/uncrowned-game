@@ -1280,7 +1280,7 @@ The HUD offers the fire ("E, sit down and rest") while E actually opens the fair
 
 **Test first:** a fresh run's first prompt names the fairy. **Check:** a frame at the wake.
 
-### O3 · Where you wake is its own name
+### O3 · Where you wake is its own name — **built 2026-09-29**
 
 Est. 4–5 h. Depends on: —.
 

@@ -168,6 +168,13 @@ func _is_empty_spot(region: Region, cast: Cast, tile: Vector2i, zone: StringName
 	return true
 
 
+## **Where a new run wakes**, in the world's terms (O3). A test that means *the start*
+## says so, and one that means *the fairies' clearing* says `Region.CLEARING` — the two
+## are the same point until O12 moves the start to the cemetery.
+func where_the_game_starts() -> Vector2i:
+	return Region.START
+
+
 ## On the King's Road, in open country, with nobody near.
 ##
 ## **The waypoints first, then the road itself** (2026-09-16). This walked only

@@ -204,7 +204,7 @@ func hurt(amount: int, step: int, grace: bool = true) -> bool:
 	# rather than a dead end, which is all that survives of Phase 0's "respawn in
 	# Brindle keeping everything".
 	player_pos = Vector2(rested_at) + Vector2(0.5, 1.5) if rested_at != Vector2i(-1, -1) \
-		else region().clearing_centre()
+		else region().start_centre()
 	player_dir = Vector2i.ZERO
 	player_tile_last = player_tile()
 	return true
