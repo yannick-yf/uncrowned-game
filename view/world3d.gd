@@ -128,6 +128,29 @@ void fragment() {
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 }
 """
+## **The player's ghost, in the same shader again** (O21): his billboard trick and his
+## rule for what is background, drawn with no depth test and at `ghost_alpha`, so the
+## player shows through a crown or a wall at a third of himself.
+const GHOST_SHADER: String = """
+shader_type spatial;
+render_mode unshaded, cull_disabled, depth_test_disabled, blend_mix;
+uniform sampler2D sprite_sheet : source_color, filter_nearest, repeat_disable;
+uniform float ghost_alpha : hint_range(0.0, 1.0) = 0.32;
+
+void vertex() {
+	vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0] * scale.x, INV_VIEW_MATRIX[1] * scale.y, INV_VIEW_MATRIX[2] * scale.z, MODEL_MATRIX[3]);
+}
+
+void fragment() {
+	vec4 ink = texture(sprite_sheet, UV);
+	float high = max(ink.r, max(ink.g, ink.b));
+	float low = min(ink.r, min(ink.g, ink.b));
+	if (ink.a < 0.5 || (high > 0.35 && (high - low) / max(high, 0.001) < 0.22)) { discard; }
+	ALBEDO = ink.rgb;
+	ALPHA = ink.a * ghost_alpha;
+}
+"""
 const CAMERA_SIZE: float = 24.0
 const CAMERA_DISTANCE: float = 45.0
 ## The same easing as the 2D camera, so the two windows feel alike.
@@ -1137,6 +1160,7 @@ func _sync_player(frame: Dictionary) -> void:
 		_player = _figure()
 		_player.name = "Player"
 		add_child(_player)
+		_player_ghost = _ghost_of(_player)
 	var facing: Vector2i = frame.get("facing", Vector2i(0, 1)) as Vector2i
 	var at: Vector2 = frame.get("player", Vector2.ZERO) as Vector2
 	var feet: Vector3 = _feet_of(at)
@@ -1155,6 +1179,70 @@ func _sync_player(frame: Dictionary) -> void:
 	# man walking on the spot.
 	_foot_figure(_player, at + _offset_of(fighting, true), _dip_of(fighting, true))
 	_wear_fight_paint(_player, true, fighting)
+	_follow_ghost(_player, _player_ghost)
+
+
+## **The player seen through what hides him** (O21, 2026-09-29): his brother's birches
+## stand over the ground where the hail ends and the drills begin, and the first frame of
+## the sword drill showed half a player under a canopy. The same figure again, as a child
+## — his traveller's own frames, nothing drawn — at a third of its opacity and drawn over
+## everything: where the player is in plain sight it lies on him and is not seen; where a
+## crown or a wall covers him, it is the shape of him through it.
+const GHOST_ALPHA: float = 0.32
+var _player_ghost: AnimatedSprite3D = null
+
+
+func _ghost_of(figure: Node3D) -> AnimatedSprite3D:
+	var body := figure as AnimatedSprite3D
+	if body == null:
+		return null
+	var ghost := AnimatedSprite3D.new()
+	ghost.name = "Ghost"
+	ghost.sprite_frames = body.sprite_frames
+	ghost.pixel_size = body.pixel_size
+	ghost.billboard = body.billboard
+	ghost.texture_filter = body.texture_filter
+	ghost.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+	ghost.shaded = false
+	ghost.no_depth_test = true
+	ghost.modulate = Color(1.0, 1.0, 1.0, GHOST_ALPHA)
+	ghost.render_priority = -1
+	var his := body.material_override as ShaderMaterial
+	if his != null:
+		var shader := Shader.new()
+		shader.code = GHOST_SHADER
+		var paint := ShaderMaterial.new()
+		paint.shader = shader
+		paint.set_shader_parameter("sprite_sheet", his.get_shader_parameter("sprite_sheet"))
+		paint.set_shader_parameter("ghost_alpha", GHOST_ALPHA)
+		ghost.material_override = paint
+	ghost.pause()
+	body.add_child(ghost)
+	return ghost
+
+
+func _follow_ghost(figure: Node3D, ghost: AnimatedSprite3D) -> void:
+	var body := figure as AnimatedSprite3D
+	if body == null or ghost == null:
+		return
+	if ghost.animation != body.animation:
+		ghost.animation = body.animation
+	ghost.frame = body.frame
+	# The sheet his figure is drawn from this frame — his, or the fight's paint of it.
+	var worn := body.material_override as ShaderMaterial
+	var paint := ghost.material_override as ShaderMaterial
+	if worn != null and paint != null:
+		var sheet: Variant = worn.get_shader_parameter("sprite_sheet")
+		if paint.get_shader_parameter("sprite_sheet") != sheet:
+			paint.set_shader_parameter("sprite_sheet", sheet)
+	ghost.flip_h = body.flip_h
+	ghost.offset = body.offset
+	ghost.visible = body.visible
+
+
+## Whether the player's ghost stands with him, for the suite.
+func player_ghost() -> AnimatedSprite3D:
+	return _player_ghost
 
 
 ## `fighting` is empty unless somebody is squared up with the player, in which case it

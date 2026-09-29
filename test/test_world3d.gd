@@ -101,6 +101,13 @@ func test_the_window_stands_on_his_ground() -> void:
 		"extra_guards": 0, "witnesses": ["maddox", "bell"], "now": 3.2,
 	}, 1.0 / 60.0)
 	assert_true(window.people_count() >= 30, "the cast stands in the window: %d" % window.people_count())
+	# The player seen through what covers him (O21): his own frames, drawn over everything.
+	if window.figures_are_his():
+		var ghost: AnimatedSprite3D = window.player_ghost()
+		assert_true(ghost != null and ghost.no_depth_test, "the player has a ghost that shows through a canopy")
+		if ghost != null:
+			assert_eq(ghost.animation, (ghost.get_parent() as AnimatedSprite3D).animation, "in the pose he stands in")
+			assert_true(ghost.modulate.a < 0.5, "and faint")
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
 	# **The hail's '!'** (O17): up while the reading says so, over the man calling, and
 	# gone the frame it does not.
