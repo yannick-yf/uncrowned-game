@@ -1624,7 +1624,7 @@ writes each hail's fact; `alone_on_the_road` never picks a tile in a hail's grou
 short held-direction walks (`test_harrowgate`, `test_zones`, `test_phase_0`,
 `test_saving`) are left as they are: none goes near the hail's ground or a pack.
 
-### O16 · Bram calls you over
+### O16 · Bram calls you over — **built 2026-09-29**
 
 Est. 10–12 h. Depends on: O7, O15.
 
@@ -1647,6 +1647,22 @@ the same fingerprint and the same talk step; `advance(300)` equals 300 × `advan
 `met:bram` or `killed:bram` means no hail; never during a duel or a dialogue; an empty
 `hails` holds nobody, ever (the W4 one-change check); a spar is still offered by an
 ordinary talk.
+
+**Built.** `core/hail.gd` (`Hail`: `rows`, `who`, `phase`, `beat`, `spent`, `quiet`,
+`facing`; `holds_player`, `walks`, `called_out`) and `core/systems/hail_system.gd`, its one
+writer, between `DuelSystem` and `WildSystem`. IDLE looks only when no fight is on or
+settling and no conversation is open; SPOTTED writes `hailed:<who>`, derives `hailed`, and
+stands for the table's beat; COMING walks him through `Walkers` — `at`, `path`, `walked`,
+exactly as `WalkerSystem` walks a man home, so both windows already draw him walking —
+and `WalkerSystem` leaves alone a man the hail `walks`; ARRIVED derives `talk`; TALKING
+waits for it to close; RETURNING sets his linger at once (a drill chosen in the talk
+reaches the fight a step later and finds him standing there) and ends the hail after two
+quiet steps. The budget gives up a walk that runs long. The player is held by a third
+early return in `MovementSystem`; the wood waits; `DialogueSystem._open` refuses anyone
+else while held; `called_out` is the store's phase for the speaker. Bram's hail line is a
+draft marked `_p2` (O18). **The save test** round-trips the file's rows into stores given
+the same hail row, because `SaveFile.read` builds from `places.json`'s list, which is
+empty until O17 — the day it is filled, the same test can load through `SaveFile.read`.
 
 ### O17 · The hail, seen — and switched on
 

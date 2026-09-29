@@ -22,6 +22,7 @@ func on_step(sim: Sim, _step: int) -> void:
 	var world := sim.store(&"world") as WorldState
 	var cast := sim.store(&"cast") as Cast
 	var duel := sim.store(&"duel") as Duel
+	var hail := sim.store(&"hail") as Hail
 	if world == null or cast == null:
 		return
 	var ids: Array = walkers.at.keys()
@@ -33,6 +34,9 @@ func on_step(sim: Sim, _step: int) -> void:
 			walkers.release(who)
 			continue
 		if duel != null and duel.on() and duel.get_fighter(who) != null:
+			continue
+		# The hail walks a man calling you over; nobody walks him home at the same time.
+		if hail != null and hail.walks(who):
 			continue
 		if world.talking_to == who:
 			walkers.linger[who] = WalkerRules.linger_steps()

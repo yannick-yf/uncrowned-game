@@ -41,6 +41,8 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"duel", Duel.new())
 	# Where the named people the world has displaced actually stand (O7).
 	sim.add_store(&"walkers", Walkers.new())
+	# Who is calling the player over, and how far it has got (O16).
+	sim.add_store(&"hail", Hail.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -102,6 +104,9 @@ static func build_systems() -> Array[SimSystem]:
 	# **The one writer of `Sim.ticks_held`** (K6, 2026-09-26): it recomputes the clock's
 	# hold every step, true while a duel is on and false otherwise.
 	systems.append(DuelSystem.new())
+	# **Somebody calling you over** (O16). After the duel, so it sees a fight that has
+	# just begun and waits for it; before the wood, so a player it holds is not set upon.
+	systems.append(HailSystem.new())
 	# After the duel, so a pack that has just been killed is cleared on the same step
 	# its fight ended rather than one step later.
 	systems.append(WildSystem.new())
@@ -142,6 +147,7 @@ static func fresh_stores() -> Dictionary:
 		&"wild": Wild.new(),
 		&"duel": Duel.new(),
 		&"walkers": Walkers.new(),
+		&"hail": Hail.new(),
 	}
 
 

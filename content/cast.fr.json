@@ -380,6 +380,7 @@
       "role": "Survivant de Brindle",
       "zone": "overworld",
       "greeting": "J'étais au bois le jour où c'est arrivé. Je suis rentré à un village de cendre. Depuis je frappe ce poteau tous les matins.",
+      "alt_greetings": [{"when": "called_out", "text": "Toi ! Tu remontes du cimetière ? Personne n'a pris ce chemin depuis l'incendie. Laisse-moi te regarder.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"}],
       "options": [
         {
           "intent": "ask_bram_post",

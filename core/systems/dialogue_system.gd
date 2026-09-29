@@ -29,6 +29,13 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var regard: float = PlayerRules.regard_in(sim.store(&"player") as PlayerState, here)
 	conditions[&"they_think_ill_of_me"] = StandingRules.is_unwelcome(regard)
 	conditions[&"they_think_well_of_me"] = StandingRules.is_welcome(regard)
+	# **He called you over** (O16): true in the conversation his hail opened and in no
+	# other. Read from the hail's phase — the `hailed:` fact is forever, and he would open
+	# every later conversation with the shout.
+	var hail := sim.store(&"hail") as Hail
+	var speaker: StringName = StringName(String(event.data.get("npc", ""))) \
+		if event.type == &"talk" else world.talking_to
+	conditions[&"called_out"] = hail != null and hail.called_out(speaker)
 
 	match event.type:
 		&"talk":
@@ -50,6 +57,11 @@ func _open(
 	# She leaves when she has finished (§4's opening). The authoritative gate, so a
 	# stale prompt or a replayed event cannot reopen a conversation that is over.
 	if OpeningRules.is_gone(id, sim.facts):
+		return
+	# While somebody is calling you over, he has the floor (O16): the talk his hail
+	# raises opens, and a stale key press toward anybody else does not.
+	var hail := sim.store(&"hail") as Hail
+	if hail != null and hail.holds_player() and id != hail.who:
 		return
 	var npc: Npc = cast.get_npc(id)
 	if npc == null or npc.zone != world.current_zone:

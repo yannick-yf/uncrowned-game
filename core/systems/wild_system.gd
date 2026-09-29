@@ -48,6 +48,10 @@ func on_step(sim: Sim, _step: int) -> void:
 	# One fight at a time, and no ambush during somebody else's.
 	if duel.on() or duel.settling > 0:
 		return
+	# Nor on a player somebody is calling over and holding still (O16).
+	var hail := sim.store(&"hail") as Hail
+	if hail != null and hail.holds_player():
+		return
 	var region: Region = world.region()
 	var standing: Dictionary = wild.standing(region)
 	if standing.is_empty():

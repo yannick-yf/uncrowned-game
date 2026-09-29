@@ -33,6 +33,12 @@ func on_step(sim: Sim, _step: int) -> void:
 	var duel := sim.store(&"duel") as Duel
 	if duel != null and duel.on():
 		return
+	# **And you stand still while somebody calls you over** (O16): from the moment he sees
+	# you until the talk he opens is closed. Read from the hail's store, never from a
+	# window — a held key is still in the log, and still moves nobody.
+	var hail := sim.store(&"hail") as Hail
+	if hail != null and hail.holds_player():
+		return
 	# Nobody walks the wood faster for who they are since S1 took Attunement away; the
 	# speed table that would have read it is switched off, and goes in C4.
 	var wanted: Vector2 = MovementRules.step(

@@ -380,6 +380,7 @@
       "role": "Survivor of Brindle",
       "zone": "overworld",
       "greeting": "I was out in the wood the day it happened. I came back to a village of ash. I have hit that post every morning since.",
+      "alt_greetings": [{"when": "called_out", "text": "You! Coming up from the graveyard? Nobody has taken that path since the fire. Let me look at you.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"}],
       "options": [
         {
           "intent": "ask_bram_post",
