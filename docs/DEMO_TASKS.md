@@ -1295,9 +1295,16 @@ converted and turned into debts.
 
 **Check:** both suites green with the same DEBT and OFF counts; the wake frame unchanged.
 
-### O4 · A re-bake cannot replay an old save onto new ground
+### O4 · A re-bake cannot replay an old save onto new ground — **built 2026-09-29**
 
 Est. 1 h. Depends on: —.
+
+> Built as `SaveFile.world_key()`: the world's name and a hash of `region.json` (baked)
+> and `places.json` (both) — the bake's own `source` block hashes only his inputs, not
+> our brief, so the produced file is what is hashed. 0.6 ms. **And a defect found on
+> the way:** `test_saving` discarded the save before and after each test, and a headless
+> run shares `user://` with the game, so every suite run deleted the player's own save.
+> Tests now write to `user://save_under_test.json` (`SaveFile.path`).
 
 The save's world id is the constant `baked`. It takes the bake's `source` hash, which
 `region.json` already carries, so any re-bake (O11, O12) refuses old logs by itself;

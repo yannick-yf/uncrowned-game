@@ -11,12 +11,43 @@ extends TestCase
 
 
 
+## **Never the player's own save** (O4, 2026-09-29). These tests discard the save
+## before and after each one, and a headless run shares `user://` with the game, so
+## every suite run used to delete Yannick's save. They write beside it instead.
+const TEST_PATH: String = "user://save_under_test.json"
+
+
 func before_each() -> void:
+	SaveFile.path = TEST_PATH
 	SaveFile.discard()
 
 
 func after_each() -> void:
 	SaveFile.discard()
+	SaveFile.path = SaveFile.PATH
+
+
+func test_the_suite_never_touches_the_players_save() -> void:
+	assert_eq(SaveFile.path, TEST_PATH, "these tests write beside the real save")
+	assert_ne(SaveFile.path, SaveFile.PATH, "never over it")
+
+
+func test_a_save_from_other_ground_is_refused() -> void:
+	# **O4.** A run is its event log, and a log replayed on other ground walks into
+	# walls — a re-bake, or a person moved in places.json, is other ground. The save
+	# remembers the ground it was written on and refuses any other.
+	var sim: Sim = Game.build()
+	assert_true(SaveFile.write(sim), "a save is written")
+	assert_true(SaveFile.exists(), "and read back on the same ground")
+	var saved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TEST_PATH)) as Dictionary
+	assert_true(String(saved["world"]).begins_with(Places.world_id() + ":"),
+		"it names the world and the ground: %s" % saved["world"])
+	saved["world"] = Places.world_id() + ":0000000000000000"
+	var file := FileAccess.open(TEST_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(saved))
+	file.close()
+	assert_false(SaveFile.exists(), "a save from other ground is no save")
+	assert_null(SaveFile.read(), "and nothing is rebuilt from it")
 
 
 func _rest_at_the_nearest_fire(sim: Sim) -> bool:

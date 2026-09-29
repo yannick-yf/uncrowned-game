@@ -31,6 +31,22 @@ extends RefCounted
 const PATH: String = "user://save.json"
 ## 2 since O1 (2026-09-29): a won spar used to replay as a killing, and now yields.
 const VERSION: int = 2
+## Where the save is written. `PATH`, except under test: the suite shares `user://`
+## with the game, and a test that discards its save must not discard the player's (O4).
+static var path: String = PATH
+
+
+## **The ground a save was written on** (O4, 2026-09-29). A run is its event log, and a
+## log replayed on other ground walks into walls: a re-bake changes the ground and a
+## person moved in `places.json` changes where things stand. So a save names its world
+## and a hash of the two files that make it — `region.json` on the baked world, and
+## `places.json` on both — and any other ground refuses it without anybody having to
+## remember to bump `VERSION`. `VERSION` stays for changes to the rules.
+static func world_key() -> String:
+	var ground: String = FileAccess.get_sha256(Places.PATH)
+	if Places.baked():
+		ground = FileAccess.get_sha256(Places.BAKED_PATH) + ground
+	return "%s:%s" % [Places.world_id(), ground.sha256_text().substr(0, 16)]
 
 
 ## Whether there is a save **for this world**. A run is its event log, and a log
@@ -38,25 +54,25 @@ const VERSION: int = 2
 ## at all once the game plays on the baked world (M4, 2026-09-13). One written before
 ## worlds had names is the 2D map's.
 static func exists() -> bool:
-	if not FileAccess.file_exists(PATH):
+	if not FileAccess.file_exists(path):
 		return false
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not (parsed is Dictionary):
 		return false
 	var save: Dictionary = parsed as Dictionary
 	return int(save.get("version", 0)) == VERSION \
-		and String(save.get("world", Places.PROCEDURAL)) == Places.world_id()
+		and String(save.get("world", Places.PROCEDURAL)) == world_key()
 
 
 ## Write what happened. Only external events — a system's answers are recomputed,
 ## and storing them would replay each one twice.
 static func write(sim: Sim) -> bool:
-	var file := FileAccess.open(PATH, FileAccess.WRITE)
+	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
 		return false
 	file.store_string(JSON.stringify({
 		"version": VERSION,
-		"world": Places.world_id(),
+		"world": world_key(),
 		"seed": sim.rng_seed,
 		"step": sim.step,
 		"events": sim.events.external_rows(),
@@ -69,7 +85,7 @@ static func write(sim: Sim) -> bool:
 static func read() -> Sim:
 	if not exists():
 		return null
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not (parsed is Dictionary):
 		return null
 	var save: Dictionary = parsed as Dictionary
@@ -82,4 +98,4 @@ static func read() -> Sim:
 
 static func discard() -> void:
 	if exists():
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(PATH))
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
