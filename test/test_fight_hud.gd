@@ -131,6 +131,15 @@ func test_a_drill_ends_passed_or_not_yet() -> void:
 	hud.free()
 
 
+func test_a_dodged_arrow_says_so() -> void:
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 100, 15)
+	reading["blows"] = [{"type": "arrow_dodged", "by": "wren", "at": Vector2(100, 100)}]
+	hud.present(reading, 1.0 / 60.0)
+	assert_true(hud.float_words().has(Text.of(&"fight.dodged")), "the word is hung on it")
+	hud.free()
+
+
 func test_a_felled_player_is_shown_at_nothing() -> void:
 	# The felling blow is paid at the end of the beat, so the store still says one or
 	# two while you are on the ground. The picture says nothing left, because that is
@@ -145,7 +154,8 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 
 func test_the_fights_words_exist_in_both_languages() -> void:
 	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"drill.passed", &"drill.failed",
-			&"drill.sword.title", &"drill.sword.instruction", &"drill.sword.goal", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
+			&"drill.sword.title", &"drill.sword.instruction", &"drill.sword.goal", &"fight.dodged",
+			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
 			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",

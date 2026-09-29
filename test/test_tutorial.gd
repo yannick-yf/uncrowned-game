@@ -157,6 +157,64 @@ func test_the_old_spar_line_still_spars() -> void:
 	assert_true(_intents(sim).has(&"drill_sword"), "beside the lesson")
 
 
+# ------------------------------------------------------------------ the bow (O9) ---
+
+func test_the_bow_drill_comes_after_the_sword() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	assert_false(_intents(sim).has(&"drill_bow"), "not before the sword")
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	sim.facts.add_source(&"drilled:sword", &"test")
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	assert_true(_intents(sim).has(&"drill_bow"), "offered once the sword is passed")
+
+
+func _bow_drill() -> Sim:
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "bow"})
+	sim.advance(1)
+	return sim
+
+
+func test_dodging_passes_the_bow_drill() -> void:
+	var sim: Sim = _bow_drill()
+	var world := sim.store(&"world") as WorldState
+	_play(sim, DuelPlayer.DODGE, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_true(sim.facts.has(&"drilled:bow"), "three arrows dodged is the lesson learnt")
+	assert_eq(world.player_hp, WorldState.MAX_HP, "and he mends you")
+
+
+func test_standing_in_the_arrows_fails_it_and_harms_nobody() -> void:
+	var sim: Sim = _bow_drill()
+	var world := sim.store(&"world") as WorldState
+	var duel: Duel = _duel(sim)
+	_play(sim, DuelPlayer.STAND, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_eq(duel.outcome, &"failed", "not yet")
+	assert_eq(world.deaths, 0, "nobody died")
+	assert_false(sim.facts.has(&"drilled:bow"), "and nothing is written")
+
+
+func test_beating_her_without_dodging_is_not_the_lesson() -> void:
+	# The goal is the dodge: running in and hitting her until she yields is a fight won
+	# and a lesson missed.
+	var sim: Sim = _bow_drill()
+	var duel: Duel = _duel(sim)
+	_play(sim, DuelPlayer.PRESS, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	if duel.tally < DuelRules.drill_count(&"bow"):
+		assert_eq(duel.outcome, &"failed", "she yielded before you dodged three")
+		assert_false(sim.facts.has(&"drilled:bow"), "so it is not passed")
+	else:
+		assert_true(sim.facts.has(&"drilled:bow"), "or you dodged three on the way in")
+
+
 func test_only_bram_reads_what_you_have_drilled() -> void:
 	# A drill is a lesson, not a gate: nothing but the master's own next lesson may ask
 	# whether you passed the last one (invariant 4).

@@ -162,7 +162,7 @@ func _choose(
 		# A drill's master acts first: his first act is to step off (O8).
 		if option.drill != &"":
 			began["drill"] = String(option.drill)
-			began["by"] = String(DuelRules.drill_master(option.drill))
+			began["by"] = String(DuelRules.drill_first(option.drill))
 		sim.derive(&"duel_began", began)
 
 

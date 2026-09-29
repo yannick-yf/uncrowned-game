@@ -399,6 +399,18 @@
           "_p2": "DRAFT wording (O8, 2026-09-29) - the words are Yannick's (O19). What must stay is the shape: the sword drill, repeatable until passed; the old spar line stays beside it."
         },
         {
+          "intent": "drill_bow",
+          "text": "L'arc. Montre-moi.",
+          "reply": "Wren tire, toi tu bouges. Trois flèches qui ne trouvent personne, et tu as compris.",
+          "requires": "drilled:sword",
+          "fights": "wren",
+          "spar": true,
+          "drill": "bow",
+          "repeatable": true,
+          "hides_after": "drilled:bow",
+          "_p2": "DRAFT wording (O9, 2026-09-29) - the words are Yannick's (O19). The shape: after the sword, Wren shoots and the player learns to step off the tile."
+        },
+        {
           "intent": "ask_bram_spar",
           "text": "Apprenez-moi à me battre.",
           "reply": "Alors lève les mains. Je ne retiens pas grand-chose, mais je m'arrête quand tu tombes.",

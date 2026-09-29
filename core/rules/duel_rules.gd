@@ -36,6 +36,8 @@ const PLAYER: StringName = &"player"
 
 const STRIKE: StringName = &"strike"
 const WAIT: StringName = &"wait"
+## **An archer's act** (O9): she aims at a tile, and the arrow lands there on her next turn.
+const AIM: StringName = &"aim"
 
 ## The eight neighbours, in a fixed order, so every search in this file breaks its
 ## ties the same way on every machine and in every replay.
@@ -234,6 +236,36 @@ static func drill_rounds(id: StringName) -> int:
 	return int(drill(id).get("rounds", 1))
 
 
+## Who acts first in a drill: its `first`, or its master (O9 — Bram teaches the bow and
+## Wren shoots it).
+static func drill_first(id: StringName) -> StringName:
+	var first := StringName(String(drill(id).get("first", "")))
+	return first if first != &"" else drill_master(id)
+
+
+## **What somebody fights with** (O9): `sword` unless their row says otherwise.
+static func weapon_of(who: StringName) -> StringName:
+	return StringName(String(_about(who).get("weapon", "sword")))
+
+
+static func bow_reach_tiles() -> int:
+	return number("bow_reach_tiles", 6)
+
+
+static func bow_keeps_off_tiles() -> int:
+	return number("bow_keeps_off_tiles", 3)
+
+
+## How long an arrow is in the air, in steps.
+static func loose_steps() -> int:
+	return number("loose_steps", 24)
+
+
+## How far somebody reaches with what they carry.
+static func reach_of(who: StringName) -> int:
+	return bow_reach_tiles() if weapon_of(kind_of(who)) == &"bow" else reach_tiles()
+
+
 ## Whether they are a sparring partner. **Not a mercy of their own since O1** — the
 ## mercy is the line's (`Duel.spar`): a spar line leaves you on one point, and the same
 ## man fought for real does not. Read only where a fight starts without a line, so a
@@ -430,6 +462,8 @@ static func decide(
 		return standing
 	var cost: Dictionary = reachable(me.at, region, tiles_per_turn(), taken)
 	var tiles: Array[Vector2i] = _ordered(cost)
+	if weapon_of(kind_of(me.who)) == &"bow":
+		return _archer(me, foes, tiles)
 
 	if me.hp <= flees_at_hp():
 		var away: Vector2i = me.at
@@ -480,6 +514,31 @@ static func decide(
 	return {"to": closer, "action": WAIT, "target": &""}
 
 
+## **One rule for an archer** (O9): stand where the nearest foe is between keeping off
+## and her reach — staying put if she already does — and aim at the tile he stands on.
+## When no tile she can walk to is in that band, the one nearest it.
+static func _archer(me: DuelFighter, foes: Array[DuelFighter], tiles: Array[Vector2i]) -> Dictionary:
+	var target: DuelFighter = foes[0]
+	for foe: DuelFighter in foes:
+		if apart(me.at, foe.at) < apart(me.at, target.at):
+			target = foe
+	var low: int = bow_keeps_off_tiles()
+	var high: int = bow_reach_tiles()
+	var best: Vector2i = me.at
+	var best_off: int = 1 << 20
+	for tile: Vector2i in tiles:
+		var gap: int = apart(tile, target.at)
+		var off: int = 0 if (gap >= low and gap <= high) else mini(absi(gap - low), absi(gap - high))
+		if off < best_off:
+			best_off = off
+			best = tile
+		if off == 0:
+			break
+	if apart(best, target.at) > high:
+		return {"to": best, "action": WAIT, "target": &""}
+	return {"to": best, "action": AIM, "target": target.who, "aim": target.at}
+
+
 ## The tiles of a reachable field, cheapest first and then north to south and west to
 ## east — a fixed order, so every search above breaks its ties the same way twice.
 static func _ordered(cost: Dictionary) -> Array[Vector2i]:
@@ -510,7 +569,14 @@ static func _nearest(tile: Vector2i, foes: Array[DuelFighter]) -> int:
 static func out_of_reach(me: DuelFighter, foes: Array[DuelFighter]) -> bool:
 	if foes.is_empty():
 		return false
-	return _nearest(me.at, foes) > leaves_at_tiles()
+	# **Reach-aware since the bow** (O9): an archer keeping off within her reach is
+	# fighting, not leaving — and somebody inside an archer's reach has not got away.
+	var mine: int = reach_of(me.who)
+	for foe: DuelFighter in foes:
+		var gap: int = apart(me.at, foe.at)
+		if gap <= maxi(leaves_at_tiles(), maxi(mine, reach_of(foe.who))):
+			return false
+	return true
 
 
 ## **And staying there is the other half** (`docs/COMBAT_V2.md` §7), which is the same
@@ -536,6 +602,10 @@ static func has_left(me: DuelFighter, foes: Array[DuelFighter]) -> bool:
 static func pose_of(hurt_left: int, acting: StringName, into: int) -> StringName:
 	if hurt_left > 0:
 		return &"hurt"
+	# Drawing the bow is held as the wind-up: his brother drew no bow, and the cocked arm
+	# is the honest nearest thing (O9).
+	if acting == AIM:
+		return &"ready"
 	if acting != STRIKE:
 		return &""
 	if into < strike_at_step():

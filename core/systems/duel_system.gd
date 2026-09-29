@@ -82,6 +82,12 @@ func on_step(sim: Sim, _step: int) -> void:
 			_walk_on(duel)
 		Duel.ACTING:
 			_act_on(sim, duel, world)
+		Duel.LOOSING:
+			duel.phase_left -= 1
+			if duel.phase_left <= 0:
+				_land_volley(sim, duel, world, duel.acting_fighter())
+				if not _over(sim, duel):
+					_choose(sim, duel, world, duel.acting_fighter())
 		Duel.PAUSING:
 			duel.phase_left -= 1
 			if duel.phase_left <= 0:
@@ -169,6 +175,7 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	duel.spar = bool(event.data.get("spar", false))
 	duel.drill = StringName(String(event.data.get("drill", "")))
 	duel.tally = 0
+	duel.volleys = {}
 	# **Whoever started the fight acts first.** A player who opens on somebody gets the
 	# first blow, which is the right incentive: attacking from a conversation should be
 	# an advantage, and the price should be paid in standing rather than in mechanics.
@@ -223,11 +230,25 @@ func _open_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 		duel.phase = Duel.WAITING
 		duel.phase_left = 0
 		return
+	# **An arrow already in the air lands first** (O9): the start of an archer's turn is
+	# the loosing, and only then does she choose again.
+	if duel.volleys.has(who.who):
+		duel.phase = Duel.LOOSING
+		duel.phase_left = DuelRules.loose_steps()
+		return
+	_choose(sim, duel, world, who)
+
+
+## What somebody who is not the player does with their turn.
+func _choose(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
+	if who == null or not who.alive():
+		_next_turn(sim, duel, world)
+		return
 	# **A drill's opening** (O8): the master's first act is to walk off, further than one
 	# turn can close and strike, so the first thing the lesson teaches is to move. Walked,
 	# not set down — the player sees him step back and why.
 	if duel.drill != Duel.NOBODY and duel.turns_taken == 0 \
-			and DuelRules.kind_of(who.who) == DuelRules.drill_master(duel.drill):
+			and DuelRules.kind_of(who.who) == DuelRules.drill_first(duel.drill):
 		var mine: DuelFighter = duel.me()
 		var apart: int = DuelRules.drill_stand_off(duel.drill)
 		var to: Vector2i = DuelRules.step_back(who.at, mine.at, world.region(), apart, _taken(duel, who))
@@ -236,6 +257,7 @@ func _open_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 		return
 	var chosen: Dictionary = DuelRules.decide(
 		who, duel.foes_of(who.who), world.region(), duel.began_at, _taken(duel, who))
+	duel.aim = chosen.get("aim", who.at) as Vector2i
 	_take(sim, duel, world, who,
 		chosen["to"] as Vector2i,
 		chosen["action"] as StringName,
@@ -307,10 +329,14 @@ func _take(
 	duel.struck = false
 	duel.turns_taken += 1
 	if record:
-		sim.derive(&"duel_turn", {
+		var turn: Dictionary = {
 			"who": String(who.who), "to_x": to.x, "to_y": to.y,
 			"action": String(action), "target": String(at),
-		})
+		}
+		if action == DuelRules.AIM:
+			turn["aim_x"] = duel.aim.x
+			turn["aim_y"] = duel.aim.y
+		sim.derive(&"duel_turn", turn)
 	if duel.walk.is_empty():
 		_start_acting(duel, who)
 	else:
@@ -351,6 +377,12 @@ func _act_on(sim: Sim, duel: Duel, world: WorldState) -> void:
 	var into: int = duel.into_act()
 	if duel.acting == DuelRules.STRIKE and not duel.struck and into >= DuelRules.strike_at_step():
 		_strike(sim, duel, world, who)
+	# The bow drawn and the tile named: the arrow is announced now and lands at the start
+	# of her next turn (O9).
+	if duel.acting == DuelRules.AIM and not duel.struck and into >= DuelRules.strike_at_step():
+		duel.struck = true
+		duel.volleys[who.who] = duel.aim
+		sim.derive(&"arrow_aimed", {"by": _named_as(who), "x": duel.aim.x, "y": duel.aim.y})
 	duel.phase_left -= 1
 	if duel.phase_left <= 0:
 		_end_turn(sim, duel, world)
@@ -418,6 +450,25 @@ func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 	})
 
 
+## **An arrow lands** (O9) on whoever stands on its tile now — or on nobody, and that
+## is a dodge. It goes through the one door every hit goes through.
+func _land_volley(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
+	if who == null or not duel.volleys.has(who.who):
+		return
+	var tile: Vector2i = duel.volleys[who.who] as Vector2i
+	duel.volleys.erase(who.who)
+	for foe: DuelFighter in duel.foes_of(who.who):
+		if foe.at == tile:
+			var amount: int = DuelRules.strike_damage()
+			if duel.drill != Duel.NOBODY:
+				amount = DuelRules.drill_damage(duel.drill)
+			_land(sim, duel, world, who, foe, amount, &"arrow")
+			return
+	sim.derive(&"arrow_dodged", {"by": _named_as(who), "x": tile.x, "y": tile.y})
+	if duel.drill != Duel.NOBODY and DuelRules.drill_goal(duel.drill) == &"dodged":
+		duel.tally += 1
+
+
 ## `"player"` or a cast id, which is the word the window's blows already speak.
 func _named_as(who: DuelFighter) -> String:
 	return "player" if who.is_player() else String(who.who)
@@ -431,6 +482,7 @@ func _end_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 	for fighter: DuelFighter in duel.fighters:
 		if fighter.alive() and DuelRules.is_down(fighter.hp):
 			fighter.out = true
+			duel.volleys.erase(fighter.who)
 			# **In a spar the partner yields** (O1, 2026-09-29): out of the fight, not out
 			# of the world. `duel_down` is what `FellingSystem` answers with a killing, so
 			# a yield must never raise it. The player still goes out *down* — the spar's
@@ -516,7 +568,10 @@ func _over(sim: Sim, duel: Duel) -> bool:
 		_decided(sim, duel, &"lost" if mine.how_out == &"down" else &"left")
 		return true
 	if duel.foes_of(mine.who).is_empty():
-		_decided(sim, duel, &"won")
+		# A drill won by beating the partner before the lesson is learnt is not passed
+		# (O9): the goal is the dodge, not the yield.
+		var missed: bool = duel.drill != Duel.NOBODY and duel.tally < DuelRules.drill_count(duel.drill)
+		_decided(sim, duel, &"failed" if missed else &"won")
 		return true
 	return false
 
@@ -576,6 +631,7 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 	duel.spar = false
 	duel.drill = Duel.NOBODY
 	duel.tally = 0
+	duel.volleys = {}
 	duel.owed_damage = 0
 	duel.player_felled = false
 	duel.felled_by = Duel.NOBODY

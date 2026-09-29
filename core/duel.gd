@@ -21,6 +21,8 @@ const WAITING: StringName = &"waiting"   ## the player's turn; the fight waits f
 const MOVING: StringName = &"moving"
 const ACTING: StringName = &"acting"
 const PAUSING: StringName = &"pausing"
+## **An arrow in the air** (O9): the start of an archer's turn, before she chooses again.
+const LOOSING: StringName = &"loosing"
 
 var fighters: Array[DuelFighter] = []
 ## Which of them is acting, or −1 when nobody is.
@@ -74,6 +76,11 @@ var spar: bool = false
 ## goal — blows landed, for the sword.
 var drill: StringName = NOBODY
 var tally: int = 0
+## **Arrows announced and not yet landed** (O9): archer -> the tile aimed at. An arrow
+## lands at the start of its archer's next turn, on whoever stands there then.
+var volleys: Dictionary = {}
+## The tile the current act aims at, when it is an archer's.
+var aim: Vector2i = Vector2i.ZERO
 
 
 func on() -> bool:
@@ -177,8 +184,13 @@ func fingerprint() -> String:
 	var parts := PackedStringArray()
 	for fighter: DuelFighter in fighters:
 		parts.append(fighter.fingerprint())
-	return "%s turn=%d/%s r=%d n=%d %s->%s %s beat=%d owed=%d fell=%s spar=%s drill=%s/%d" % [
+	var aimed := PackedStringArray()
+	var archers: Array = volleys.keys()
+	archers.sort()
+	for who: Variant in archers:
+		aimed.append("%s>%s" % [who, volleys[who]])
+	return "%s turn=%d/%s r=%d n=%d %s->%s %s beat=%d owed=%d fell=%s spar=%s drill=%s/%d aim=%s" % [
 		" ".join(parts), turn, String(phase), round_number, turns_taken,
 		String(acting), String(target), String(outcome), settling, owed_damage,
-		player_felled, spar, String(drill), tally,
+		player_felled, spar, String(drill), tally, ";".join(aimed),
 	]

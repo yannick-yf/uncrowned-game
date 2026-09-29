@@ -336,6 +336,29 @@ func test_the_reach_ring_speaks_for_whoever_is_acting() -> void:
 	play.free()
 
 
+func test_an_aimed_arrow_is_in_the_reading_until_it_lands() -> void:
+	# O9: the tile she aims at is marked through the player's turn, which is the whole
+	# of what makes the dodge a decision rather than a guess.
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true})
+	sim.advance(1)
+	var duel := sim.store(&"duel") as Duel
+	for _step: int in 2000:
+		if duel.waiting_on_player() and not duel.volleys.is_empty():
+			break
+		sim.advance(1)
+	assert_false(duel.volleys.is_empty(), "she has aimed")
+	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var volleys: Array = (play.call(&"_fight_frame") as Dictionary).get("volleys", []) as Array
+	assert_eq(volleys.size(), 1, "one arrow announced")
+	var tile: Vector2i = duel.volleys.values()[0] as Vector2i
+	assert_eq((volleys[0] as Dictionary)["tile"] as Vector2, Vector2(tile) + Vector2(0.5, 0.5),
+		"on the tile she named")
+	play.free()
+
+
 func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# The failure this exists for is completely silent: a Label given more lines than
 	# it has room for draws the ones that fit and says nothing about the rest. The

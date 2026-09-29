@@ -220,14 +220,15 @@ func _ready() -> void:
 		if asked.size() > 1 and asked[0] == "drill":
 			drill = asked[1]
 			asked = asked.slice(1)
-			asked[0] = String(DuelRules.drill_master(StringName(drill)))
+			asked[0] = String(DuelRules.drill_first(StringName(drill)))
 		# `wolf,wolf` squares up against several at once (O6), the way a pack does.
 		var against: PackedStringArray = asked[0].split(",", false)
 		var began: Dictionary = {"opponents": Array(against), "by": String(DuelRules.PLAYER),
 			# A sparring partner is sparred with, as the game's own line does it (O1).
 			"spar": against.size() == 1 and DuelRules.spares(StringName(against[0]))}
 		if drill != "":
-			began.merge({"drill": drill, "by": asked[0], "spar": true}, true)
+			began.merge({"drill": drill, "by": String(DuelRules.drill_first(StringName(drill))),
+				"spar": true}, true)
 		_sim.submit(&"duel_began", began)
 		_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
@@ -442,6 +443,21 @@ func _duel_frame() -> Dictionary:
 		reading["target_at"] = _duel.drawn_at(targeted)
 	if acting_name != "":
 		reading["acting_name"] = acting_name
+	# **Arrows announced and in the air** (O9): the tile each archer named, marked through
+	# the player's turn, and the arrow itself while it flies.
+	var volleys: Array = []
+	for archer: Variant in _duel.volleys.keys():
+		var shooter: DuelFighter = _duel.get_fighter(StringName(String(archer)))
+		if shooter == null:
+			continue
+		volleys.append({"from": _duel.drawn_at(shooter),
+			"tile": Vector2(_duel.volleys[archer] as Vector2i) + Vector2(0.5, 0.5)})
+	reading["volleys"] = volleys
+	if _duel.phase == Duel.LOOSING and acting != null and _duel.volleys.has(acting.who):
+		var loose: int = DuelRules.loose_steps()
+		reading["arrow"] = {"from": _duel.drawn_at(acting),
+			"to": Vector2(_duel.volleys[acting.who] as Vector2i) + Vector2(0.5, 0.5),
+			"through": 1.0 - float(_duel.phase_left) / float(maxi(loose, 1))}
 	if _duel.waiting_on_player():
 		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
 	return reading
@@ -501,6 +517,7 @@ func _fresh_fight_events() -> Array:
 	for k: int in range(_seen_events, total):
 		var event: SimEvent = _sim.events.at(k)
 		if event.type != &"blow_landed" and event.type != &"blow_missed" \
+				and event.type != &"arrow_dodged" \
 				and event.type != &"duel_decided" and event.type != &"duel_ended":
 			continue
 		var row: Dictionary = event.data.duplicate()
@@ -523,8 +540,9 @@ func _place_blows(fresh: Array) -> Array:
 		if _three_d != null and _duel != null and _duel.on():
 			# Over the fighter the blow was about, by name (O6): a landed blow is about
 			# its target and a missed one about whoever swung.
-			var named: String = String(blow.get("target", "")) if String(blow.get("type", "")) == "blow_landed" \
-				else String(blow.get("by", ""))
+			var kind: String = String(blow.get("type", ""))
+			var named: String = String(blow.get("target", "")) if kind == "blow_landed" \
+				else ("player" if kind == "arrow_dodged" else String(blow.get("by", "")))
 			var who: DuelFighter = _duel.me() if named == "player" else _duel.get_fighter(StringName(named))
 			if who == null:
 				who = _duel.foe() if about_him else _duel.me()
@@ -546,7 +564,7 @@ func _sound_the_fight(fresh: Array) -> void:
 					Sound.cue(&"felled")
 				else:
 					Sound.cue(&"hit")
-			"blow_missed":
+			"blow_missed", "arrow_dodged":
 				Sound.cue(&"whiff")
 			"duel_decided":
 				# Lost in a spar is lost; lost for real is a death, which has its own jingle;

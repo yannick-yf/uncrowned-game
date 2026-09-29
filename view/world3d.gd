@@ -1688,6 +1688,10 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 				_spark_burst(between, MARK_MINE if by_me else MARK_HIS, 5, 1.4)
 				_shake_at = _now
 				_shake_amp = SHAKE_M * (1.0 if heavy else 0.6)
+		elif kind == &"arrow_dodged":
+			# Dust where it fell on nobody.
+			var fell: Vector3 = _ground(Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5), 0.1)
+			_spark_burst(fell, MARK_INK, 5, 0.9)
 		elif kind == &"duel_decided":
 			_shake_at = _now
 			_shake_amp = SHAKE_M * 0.5
@@ -1945,8 +1949,46 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 
 	if not settling:
 		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)), MARK_MINE)
+		_draw_volleys(fighting)
 	_duel_swipe(me, fighting.get("target_at", him) as Vector2, fighting, true, MARK_MINE)
 	_arena_mesh.surface_end()
+
+
+## **The bow, drawn** (O9): every tile an archer has named — a patch, a crosshair and a
+## dashed line back to her — kept through the player's turn, because seeing it is the
+## whole of the dodge; and the arrow in flight, a raised ribbon from her to it.
+func _draw_volleys(fighting: Dictionary) -> void:
+	for row: Variant in fighting.get("volleys", []) as Array:
+		var volley: Dictionary = row as Dictionary
+		var tile: Vector2 = volley["tile"] as Vector2
+		var from: Vector2 = volley["from"] as Vector2
+		_tile_patch(tile, Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.34))
+		_ring(tile, 0.34, 0.26, 0.05, Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.95), 24)
+		_ring(tile, 0.12, 0.09, 0.04, Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.95), 12)
+		var way: Vector2 = tile - from
+		var length: float = way.length()
+		if length > 0.6:
+			var unit: Vector2 = way / length
+			var dash: float = 0.35
+			var gap: float = 0.25
+			var at: float = 0.5
+			while at + dash < length - 0.4:
+				_ribbon(PackedVector3Array([_ground(from + unit * at, MARK_LIFT_M),
+					_ground(from + unit * (at + dash), MARK_LIFT_M)]), 0.035,
+					Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.55))
+				at += dash + gap
+	var arrow: Dictionary = fighting.get("arrow", {}) as Dictionary
+	if not arrow.is_empty():
+		var start: Vector2 = arrow["from"] as Vector2
+		var end: Vector2 = arrow["to"] as Vector2
+		var through: float = clampf(float(arrow["through"]), 0.0, 1.0)
+		var head: Vector2 = start.lerp(end, through)
+		var tail: Vector2 = start.lerp(end, maxf(through - 0.3, 0.0))
+		# A shallow arc, highest half way; long and pale enough to be followed.
+		var lift: float = SWIPE_HEIGHT_M + 0.8 * sin(PI * through)
+		var tail_lift: float = SWIPE_HEIGHT_M + 0.8 * sin(PI * maxf(through - 0.3, 0.0))
+		_ribbon(PackedVector3Array([_ground(tail, tail_lift), _ground(head, lift)]), 0.12,
+			Color(MARK_INK.r, MARK_INK.g, MARK_INK.b, 0.95))
 
 
 ## Where whoever is acting stands, when it is one of several foes.

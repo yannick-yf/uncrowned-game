@@ -24,6 +24,9 @@ const STAND: StringName = &"stand"
 ## **Walks out of the fight.** As far from the nearest enemy as a turn buys, every
 ## turn, and never a blow — which is the thing nothing in this design prevents.
 const LEAVE: StringName = &"leave"
+## **Steps off any tile an arrow is aimed at, and otherwise stands** (O9): the bow drill's
+## lesson, played.
+const DODGE: StringName = &"dodge"
 
 var policy: StringName = PRESS
 
@@ -68,6 +71,23 @@ func _turn(mine: DuelFighter, foes: Array[DuelFighter], region: Region, duel: Du
 			var away: Vector2i = _furthest(mine, foes, region, duel)
 			standing["to_x"] = away.x
 			standing["to_y"] = away.y
+			return standing
+		DODGE:
+			var aimed: Dictionary = {}
+			for tile: Variant in duel.volleys.values():
+				aimed[tile as Vector2i] = true
+			if not aimed.has(mine.at):
+				return standing
+			var cost: Dictionary = DuelRules.reachable(mine.at, region, 1, _taken(duel, mine))
+			var best: Vector2i = mine.at
+			for key: Variant in cost.keys():
+				var tile: Vector2i = key as Vector2i
+				if aimed.has(tile):
+					continue
+				if best == mine.at or _before(tile, best):
+					best = tile
+			standing["to_x"] = best.x
+			standing["to_y"] = best.y
 			return standing
 	var chosen: Dictionary = DuelRules.decide(mine, foes, region, duel.began_at, _taken(duel, mine))
 	var to: Vector2i = chosen["to"] as Vector2i

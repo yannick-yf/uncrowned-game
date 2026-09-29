@@ -645,6 +645,81 @@ func test_a_blow_says_what_it_was_and_where_it_landed() -> void:
 	assert_true(first.data.has("at_x") and first.data.has("at_y"), "on a tile it names")
 
 
+# ------------------------------------------------------- the bow (O9, 2026-09-29) ---
+
+## A fight against Wren, who carries a bow, begun from where the game starts so it
+## replays from the log.
+func _against_the_bow() -> Sim:
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true})
+	sim.advance(1)
+	return sim
+
+
+func test_an_archer_keeps_off() -> void:
+	var sim: Sim = _against_the_bow()
+	var duel: Duel = _duel(sim)
+	assert_eq(DuelRules.weapon_of(&"wren"), &"bow", "Wren carries a bow")
+	_play(sim, DuelPlayer.STAND, 400)
+	var mine: DuelFighter = duel.me()
+	var her: DuelFighter = duel.get_fighter(&"wren")
+	assert_true(DuelRules.apart(mine.at, her.at) >= DuelRules.bow_keeps_off_tiles(),
+		"she stands off at %d tiles" % DuelRules.apart(mine.at, her.at))
+	assert_true(sim.events.of_type(&"arrow_aimed").size() > 0, "and aims")
+
+
+func test_standing_on_the_tile_is_hit_and_moving_off_it_dodges() -> void:
+	var still: Sim = _against_the_bow()
+	_play(still, DuelPlayer.STAND, 3000)
+	var arrows: int = 0
+	for row: Variant in still.events.of_type(&"blow_landed"):
+		if String((row as SimEvent).data.get("move", "")) == "arrow":
+			arrows += 1
+	assert_true(arrows > 0, "standing still, you are hit: %d arrows" % arrows)
+
+	var quick: Sim = _against_the_bow()
+	_play(quick, DuelPlayer.DODGE, 3000)
+	for row: Variant in quick.events.of_type(&"blow_landed"):
+		assert_ne(String((row as SimEvent).data.get("move", "")), "arrow", "moving off the tile, never hit")
+	assert_true(quick.events.of_type(&"arrow_dodged").size() > 0, "every arrow lands where you were")
+
+
+func test_an_arrow_lands_a_turn_later_on_whoever_stands_there() -> void:
+	# No dice: the arrow is announced on a tile, and lands there when her next turn
+	# starts. The time between is the player's turn — the whole of the dodge.
+	var sim: Sim = _against_the_bow()
+	_play(sim, DuelPlayer.STAND, 3000)
+	var aimed: Array = sim.events.of_type(&"arrow_aimed")
+	var hit: Array = []
+	for row: Variant in sim.events.of_type(&"blow_landed"):
+		if String((row as SimEvent).data.get("move", "")) == "arrow":
+			hit.append(row)
+	assert_true(aimed.size() > 0 and hit.size() > 0, "an arrow aimed and one landed")
+	var first_aim: SimEvent = aimed[0] as SimEvent
+	var first_hit: SimEvent = hit[0] as SimEvent
+	assert_true(first_hit.step > first_aim.step, "landing after the aim")
+	assert_eq(Vector2i(int(first_hit.data["at_x"]), int(first_hit.data["at_y"])),
+		Vector2i(int(first_aim.data["x"]), int(first_aim.data["y"])), "on the tile announced")
+
+
+func test_a_kiting_archer_does_not_leave() -> void:
+	var sim: Sim = _against_the_bow()
+	_play(sim, DuelPlayer.STAND, 3000)
+	var fled: int = 0
+	for row: Variant in sim.events.of_type(&"duel_fled"):
+		if String((row as SimEvent).data.get("who", "")) == "wren":
+			fled += 1
+	assert_eq(fled, 0, "keeping off with a bow is fighting, not leaving")
+	assert_true(sim.events.of_type(&"arrow_aimed").size() >= 2, "and she kept on shooting")
+
+
+func test_a_bow_fight_replays_to_the_tile() -> void:
+	var sim: Sim = _against_the_bow()
+	_play(sim, DuelPlayer.DODGE, 1500)
+	var replayed: Sim = Game.replay(sim)
+	assert_eq(_duel(replayed).fingerprint(), _duel(sim).fingerprint(), "the same fight, to the tile")
+
+
 func test_the_first_design_is_gone() -> void:
 	# **K6's other half, 2026-09-26.** Yannick played the turn-based fight, kept it, and
 	# said the real-time one could go. This fails the day any of it comes back by

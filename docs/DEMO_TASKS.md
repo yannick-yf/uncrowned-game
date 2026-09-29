@@ -1398,7 +1398,14 @@ no death; `drilled:sword` written once and replayed; a failed drill writes nothi
 is offered again; only Bram's options read `drilled:*`; `ask_bram_spar` still spars; the
 card shows `2 / 3`.
 
-### O9 · The bow — Wren, the drill, and how an arrow is seen
+### O9 · The bow — Wren, the drill, and how an arrow is seen — **built 2026-09-29**
+
+> Built as planned, plus one rule the tests asked for: **a drill won by beating the
+> partner before the goal is failed** — the bow's lesson is the dodge, not the yield.
+> A drill names who acts `first` (Wren shoots, Bram teaches). Known and left: Wren is
+> set down beside you when the drill begins (she stands too far to be squared up from
+> where she is), where she should walk over; and everybody is still his one traveller,
+> so the HUD's bar is what names her. Words are marked drafts for O19.
 
 Est. 14 h. Depends on: O8.
 
