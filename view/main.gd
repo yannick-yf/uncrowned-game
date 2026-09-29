@@ -78,6 +78,9 @@ var _hail_sounded: bool = false
 ## turn buys, and forgotten the moment the turn is taken.
 var _duel_cursor: Vector2i = Vector2i.ZERO
 var _duel_cursor_set: bool = false
+## **The weapon in your hands for this turn** (T6): a proposal like the cursor, chosen with
+## U and sent with the turn. It opens on what you last struck with.
+var _duel_weapon: StringName = DuelRules.SWORD
 ## The tiles whoever is acting can still reach, worked out once per turn rather than
 ## sixty times a second. Keyed by who is acting and where they stand.
 var _duel_moves: Array = []
@@ -410,6 +413,11 @@ func _duel_frame() -> Dictionary:
 	var his_act: StringName = _duel.acting if (acting == him) else DuelRules.WAIT
 	var my_at: Vector2 = _duel.drawn_at(mine)
 	var his_at: Vector2 = _duel.drawn_at(him)
+	# On your own turn the window speaks of the weapon you have chosen, not the last one.
+	var choosing: bool = _duel.waiting_on_player() and _duel_cursor_set
+	var held: StringName = _duel_weapon if choosing else mine.weapon
+	# The weapon whose reach is drawn: yours while you choose, whoever acts' otherwise.
+	var ringed: StringName = held if choosing else (acting.weapon if acting != null else DuelRules.SWORD)
 	var reading: Dictionary = {
 		"who": String(him.who),
 		"his_name": _fighter_name(him.who),
@@ -431,10 +439,15 @@ func _duel_frame() -> Dictionary:
 		"my_telegraph": DuelRules.telegraph_at(my_act, into),
 		"his_telegraph": DuelRules.telegraph_at(his_act, into),
 		"my_turn": mine_acting,
-		# What whoever is acting reaches with what they carry — a bow's six, a sword's one.
-		"reach_tiles": DuelRules.reach_with(acting.weapon) if acting != null else DuelRules.reach_tiles(),
-		"my_weapon": String(mine.weapon),
-		"in_reach": _anybody_in_reach(acting if acting != null else mine),
+		# What whoever is acting reaches with what they carry — a bow's six, a sword's one —
+		# and on your own turn, with what you have in your hands, round the tile you chose
+		# (T6).
+		"reach_tiles": DuelRules.reach_with(ringed),
+		"min_reach_tiles": DuelRules.bow_min_tiles() if ringed == DuelRules.BOW else 0,
+		"reach_at": Vector2(_duel_cursor) + Vector2(0.5, 0.5) if choosing else _duel.drawn_at(acting if acting != null else mine),
+		"my_weapon": String(held),
+		"has_bow": _has_bow(),
+		"in_reach": _reaches_from(mine, held, _duel_cursor) if choosing else _anybody_in_reach(acting if acting != null else mine),
 		"moves": _duel_reach(acting),
 		"centre": my_at.lerp(his_at, 0.5),
 		# **Wide enough to hold both of them and a turn's walk, and it is not a wall.**
@@ -529,6 +542,14 @@ func _duel_frame() -> Dictionary:
 	if _duel.waiting_on_player():
 		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
 	return reading
+
+
+## Whether a weapon reaches anybody from a tile — your turn's ring, round the cursor (T6).
+func _reaches_from(who: DuelFighter, weapon: StringName, tile: Vector2i) -> bool:
+	for foe: DuelFighter in _duel.foes_of(who.who):
+		if DuelRules.reaches(weapon, tile, foe.at):
+			return true
+	return false
 
 
 ## Whether whoever is acting has somebody in reach — for the ring drawn round them.
@@ -1198,6 +1219,7 @@ func _read_duel_input() -> void:
 	if not _duel_cursor_set:
 		_duel_cursor = mine.at
 		_duel_cursor_set = true
+		_duel_weapon = mine.weapon if _has_bow() else DuelRules.SWORD
 	var dir: Vector2i = _read_direction_pressed()
 	if dir != Vector2i.ZERO:
 		var wanted: Vector2i = _duel_cursor + dir
@@ -1207,31 +1229,50 @@ func _read_duel_input() -> void:
 			if Vector2i((row as Vector2) - Vector2(0.5, 0.5)) == wanted:
 				_duel_cursor = wanted
 				break
-	var strike: bool = Input.is_action_just_pressed(&"strike")
-	var wait: bool = Input.is_action_just_pressed(&"guard")
+	# **U changes the weapon in your hands** (T6), like the arrows change where you stand:
+	# nothing is sent until the turn is taken.
+	if Input.is_action_just_pressed(&"weapon"):
+		_toggle_weapon()
+	if Input.is_action_just_pressed(&"strike"):
+		_submit_duel_turn(DuelRules.STRIKE)
+	elif Input.is_action_just_pressed(&"guard"):
+		_submit_duel_turn(DuelRules.WAIT)
 	# **I casts the fairy's gift** (O10), at whoever is nearest within its reach of the
 	# tile chosen. The rules decide whether it can; the key only asks.
-	var cast: bool = Input.is_action_just_pressed(&"cast") and _sim.facts.has(OpeningRules.GIFT)
-	if not strike and not wait and not cast:
+	elif Input.is_action_just_pressed(&"cast") and _sim.facts.has(OpeningRules.GIFT):
+		_submit_duel_turn(DuelRules.CAST)
+
+
+## Whether you hold a bow of your own (T5).
+func _has_bow() -> bool:
+	return _sim.facts.has(DuelRules.THE_BOW)
+
+
+## The sword for the bow and back — and only the sword for somebody who has no bow.
+func _toggle_weapon() -> void:
+	if not _has_bow():
+		_duel_weapon = DuelRules.SWORD
+		return
+	_duel_weapon = DuelRules.BOW if _duel_weapon == DuelRules.SWORD else DuelRules.SWORD
+
+
+## **The turn, taken**: where you stand, what you do there, and with what. K strikes, with
+## the weapon in your hands, whoever it reaches from the chosen tile, and waits when it
+## reaches nobody — a bow never reaches the next tile, which is the lesson of standing
+## too close.
+func _submit_duel_turn(asked: StringName) -> void:
+	var mine: DuelFighter = _duel.me()
+	if mine == null or not _duel.waiting_on_player():
 		return
 	var target: StringName = &""
 	var action: StringName = DuelRules.WAIT
-	var weapon: StringName = DuelRules.SWORD
-	if strike:
-		# **K throws whatever reaches** (T5): the sword at the next tile, and otherwise a
-		# bow of your own at anybody in its band. T6 puts the choice in your hands.
-		for held: StringName in [DuelRules.SWORD, DuelRules.BOW]:
-			if held == DuelRules.BOW and not _sim.facts.has(DuelRules.THE_BOW):
-				continue
-			for foe: DuelFighter in _duel.foes_of(mine.who):
-				if DuelRules.reaches(held, _duel_cursor, foe.at):
-					target = foe.who
-					action = DuelRules.STRIKE
-					weapon = held
-					break
-			if action == DuelRules.STRIKE:
+	if asked == DuelRules.STRIKE:
+		for foe: DuelFighter in _duel.foes_of(mine.who):
+			if DuelRules.reaches(_duel_weapon, _duel_cursor, foe.at):
+				target = foe.who
+				action = DuelRules.STRIKE
 				break
-	elif cast:
+	elif asked == DuelRules.CAST:
 		for foe: DuelFighter in _duel.foes_of(mine.who):
 			if DuelRules.can_cast(mine, _duel.round_number, _duel_cursor, foe.at):
 				target = foe.who
@@ -1241,7 +1282,7 @@ func _read_duel_input() -> void:
 		"who": String(DuelRules.PLAYER), "to_x": _duel_cursor.x, "to_y": _duel_cursor.y,
 		"action": String(action),
 		"target": String(target),
-		"weapon": String(weapon),
+		"weapon": String(_duel_weapon),
 	})
 	_duel_cursor_set = false
 

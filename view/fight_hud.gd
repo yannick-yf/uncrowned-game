@@ -350,9 +350,19 @@ func bars_shown() -> int:
 	return 1 + maxi(_foes().size(), 1)
 
 
-## The keys the fight offers: the gift's among them only for somebody she gave it to.
+## The keys the fight offers: the gift's among them only for somebody she gave it to, and
+## **what K does with what you hold**, and what U would put in your hands instead, only
+## for somebody with a bow of their own (T6 — Yannick could not shoot and nothing said why).
 func keys_line() -> String:
-	return Text.of(&"duel.keys_gift") if bool(_reading.get("can_cast", false)) else Text.of(&"duel.keys")
+	var bow: bool = String(_reading.get("my_weapon", "")) == String(DuelRules.BOW)
+	var parts: Array[String] = [Text.of(&"duel.part.move"),
+		Text.of(&"duel.part.shoot" if bow else &"duel.part.strike")]
+	if bool(_reading.get("has_bow", false)):
+		parts.append(Text.of(&"duel.part.take_sword" if bow else &"duel.part.take_bow"))
+	if bool(_reading.get("can_cast", false)):
+		parts.append(Text.of(&"duel.part.spell"))
+	parts.append(Text.of(&"duel.part.wait"))
+	return "        ".join(parts)
 
 
 func float_words() -> PackedStringArray:

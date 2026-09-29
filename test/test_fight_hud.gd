@@ -135,10 +135,30 @@ func test_the_keys_offer_the_gift_only_to_who_has_it() -> void:
 	var hud := FightHud.new()
 	var reading: Dictionary = _reading(1.0, 100, 15)
 	hud.present(reading, 1.0 / 60.0)
-	assert_eq(hud.keys_line(), Text.of(&"duel.keys"), "two keys without the gift")
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.strike")), "K strikes")
+	assert_false(hud.keys_line().contains(Text.of(&"duel.part.spell")), "and no spell without the gift")
 	reading["can_cast"] = true
 	hud.present(reading, 1.0 / 60.0)
-	assert_eq(hud.keys_line(), Text.of(&"duel.keys_gift"), "three with it")
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.spell")), "with it, I casts")
+	hud.free()
+
+
+func test_the_keys_name_the_weapon_in_your_hands() -> void:
+	# T6: Yannick could not shoot and nothing told him why. The line says what K does with
+	# what you hold, and what U would put in your hands instead.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 100, 15)
+	hud.present(reading, 1.0 / 60.0)
+	assert_false(hud.keys_line().contains(Text.of(&"duel.part.take_bow")), "no bow of your own, no U")
+	reading["has_bow"] = true
+	reading["my_weapon"] = "sword"
+	hud.present(reading, 1.0 / 60.0)
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.strike")), "the sword in hand: K strikes")
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.take_bow")), "and U takes the bow")
+	reading["my_weapon"] = "bow"
+	hud.present(reading, 1.0 / 60.0)
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.shoot")), "the bow in hand: K shoots")
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.take_sword")), "and U takes the sword back")
 	hud.free()
 
 
@@ -157,9 +177,11 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 func test_the_fights_words_exist_in_both_languages() -> void:
 	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"drill.passed", &"drill.failed",
 			&"drill.sword.title", &"drill.sword.instruction", &"drill.sword.goal",
-			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal", &"duel.keys_gift",
+			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
+			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
+			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",
 			&"drill.magic.title", &"drill.magic.instruction", &"drill.magic.goal", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
-			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
+			&"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",
 			"and the font can draw it: %s" % Text.of(key, ["Bram"]))

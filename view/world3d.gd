@@ -2303,11 +2303,18 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 			_tile_patch(fighting["cursor"] as Vector2, Color(voice.r, voice.g, voice.b, 0.42))
 			_ring(fighting["cursor"] as Vector2, 0.46, 0.34, 0.06,
 				Color(voice.r, voice.g, voice.b, 0.95), 24)
-		# Reach: one tile, round whoever is acting, full when it has somebody in it.
+		# Reach: round whoever is acting — and on your turn round the tile you chose, with
+		# what you hold (T6) — full when it has somebody in it. A bow's is a band: its
+		# outer ring, and an inner one round the tiles too close to shoot.
 		var reach: float = float(fighting.get("reach_tiles", 1))
 		var can_hit: bool = bool(fighting.get("in_reach", false))
-		_ring(acting, reach, reach * 0.70, 0.075 if can_hit else 0.045,
-			Color(voice.r, voice.g, voice.b, 0.9 if can_hit else 0.32), 36)
+		var ring_at: Vector2 = fighting.get("reach_at", acting) as Vector2
+		_ring(ring_at, reach, reach * 0.70, 0.075 if can_hit else 0.045,
+			Color(voice.r, voice.g, voice.b, 0.9 if can_hit else 0.32), 48)
+		var nearest: int = int(fighting.get("min_reach_tiles", 0))
+		if nearest > 1:
+			var inside: float = float(nearest) - 0.5
+			_ring(ring_at, inside, inside * 0.70, 0.035, Color(voice.r, voice.g, voice.b, 0.28), 28)
 
 	# Feet: where each of them *is*, drawn last so they sit over the field of tiles. On
 	# the beat they widen and take the winner's colour, which is the job the first

@@ -373,6 +373,54 @@ func test_an_arrow_in_flight_is_in_the_reading_while_it_flies() -> void:
 	play.free()
 
 
+func _squared_up_with_bram(has_bow: bool) -> Array:
+	var sim: Sim = Game.build()
+	if has_bow:
+		sim.facts.add_source(DuelRules.THE_BOW, &"wren")
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	sim.advance(1)
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	# The turn opens for the window as it does in play: the cursor and the weapon are set.
+	play.call(&"_read_duel_input")
+	return [sim, play]
+
+
+func test_u_puts_the_bow_in_your_hands_and_the_reading_follows() -> void:
+	# T6: the weapon is chosen on your turn, like where you stand, and the ring the window
+	# draws is the reach of what you hold, round the tile you have chosen.
+	var pair: Array = _squared_up_with_bram(true)
+	var sim: Sim = pair[0]
+	var play: Node = pair[1]
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	assert_eq(String(reading.get("my_weapon", "")), "sword", "the sword to begin with")
+	assert_true(bool(reading.get("has_bow", false)), "and a bow of your own")
+	play.call(&"_toggle_weapon")
+	reading = play.call(&"_fight_frame") as Dictionary
+	assert_eq(String(reading.get("my_weapon", "")), "bow", "U: the bow")
+	assert_eq(int(reading.get("reach_tiles", 0)), DuelRules.bow_reach_tiles(), "its reach")
+	assert_eq(int(reading.get("min_reach_tiles", 0)), DuelRules.bow_min_tiles(), "and its nearest")
+	assert_true(bool(reading.get("in_reach", false)), "Bram, three tiles off, is in the band")
+	play.call(&"_submit_duel_turn", &"strike")
+	var turns: Array[SimEvent] = sim.events.of_type(&"duel_turn")
+	var last: SimEvent = turns[turns.size() - 1]
+	assert_eq(String(last.data.get("weapon", "")), "bow", "and K shoots with it")
+	assert_eq(String(last.data.get("action", "")), "strike", "at him")
+	play.free()
+
+
+func test_without_a_bow_u_changes_nothing() -> void:
+	var pair: Array = _squared_up_with_bram(false)
+	var play: Node = pair[1]
+	play.call(&"_toggle_weapon")
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	assert_eq(String(reading.get("my_weapon", "")), "sword", "still the sword")
+	assert_false(bool(reading.get("has_bow", true)), "you have no bow")
+	assert_false(bool(reading.get("in_reach", true)), "and he is out of its reach")
+	play.free()
+
+
 func test_the_reading_says_whether_the_gift_can_be_cast() -> void:
 	# O10: the keys line offers the spell only to somebody she gave it to, and the ring
 	# of its reach is drawn only while it is ready.

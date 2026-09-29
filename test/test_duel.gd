@@ -911,7 +911,8 @@ func test_the_two_keys_are_bound() -> void:
 	# The third thing missing on 2026-09-19: the fight could not be reached, and if it
 	# had been there was no key to hit anybody with. K and O, as **physical** keycodes,
 	# so the pair sits in the same place on AZERTY and on QWERTY.
-	for action: StringName in [&"strike", &"guard", &"cast"]:
+	# And U changes the weapon in your hands (T6), beside I and K.
+	for action: StringName in [&"strike", &"guard", &"cast", &"weapon"]:
 		assert_true(InputMap.has_action(action), "%s is a key" % action)
 		assert_true(InputMap.action_get_events(action).size() > 0,
 			"%s has something bound to it" % action)

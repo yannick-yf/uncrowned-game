@@ -304,7 +304,8 @@ a strike with a bow**: it lands on the archer's own act, like a blow, on whoever
 archer keeps between `bow_keeps_off_tiles` (3) and her reach and shoots. **The weapon is
 the turn's**: the player's `duel_turn` names it, and a bow counts only if he holds one of
 his own (`you:the_bow`, given by Bram's bow line as the drill begins); asked without it,
-it is the sword. `AIM`, `LOOSING` and the announced tiles are gone.
+it is the sword. `AIM`, `LOOSING` and the announced tiles are gone. **U changes the weapon
+in your hands** on your turn (T6), and the keys line says what K does with it.
 
 **The spell.** `CAST` with the fairy's gift (`you:the_gift`): reach 3, damage 5, every
 2 rounds. Only the player has it.

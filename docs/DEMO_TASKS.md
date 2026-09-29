@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1–T5 are built** (T7's rules with T5). Then P2, with him, then C2–C4.
+> answers the same evening. **T1–T6 are built** (T7's rules with T5). Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -1999,7 +1999,19 @@ avoid it; never at a neighbour; without the bow the player strikes with the swor
 whatever he asks; with it, at range; Wren keeps off and shoots; a bow fight replays to
 the fingerprint; the sword and the spell unchanged.
 
-### T6 · Choosing the weapon, and seeing the arrow
+### T6 · Choosing the weapon, and seeing the arrow — **built 2026-09-29**
+
+> **Built.** Physical **U** (`weapon` in the input map) changes the weapon in your hands on
+> your turn — a proposal like the cursor, sent with the turn (`_submit_duel_turn`), and
+> opening on what you last struck with; without a bow of your own it changes nothing.
+> **K strikes with what you hold**, and a bow never reaches the next tile. The keys line
+> is built from parts and says what K does with what you hold and what U would put in
+> your hands: *K frapper · U prendre l'arc*, *K tirer · U prendre l'épée* — U only for
+> somebody with a bow, I only with the gift. On your turn the reach ring is drawn **round
+> the tile you chose, with the weapon you hold**, and a bow's is a band: its outer ring
+> and a faint inner one round the tiles too close to shoot. The arrow in flight is T5's.
+> Frames in French and English: the sword in hand, the bow in hand, an arrow flying, an
+> arrow landing (`drill:bow` at steps 47, 153, 60, 66).
 
 Est. 6–8 h. Depends on: T5.
 
