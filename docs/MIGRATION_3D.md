@@ -158,7 +158,7 @@ His five sites against §4's eight, in the coordinates of `geographie-v1.json`:
 
 | §4's place | His site | State |
 |---|---|---|
-| **Brindle** | `brindle` (175, 255) | Built. The ruins are exactly §4's opening; the clearing the player wakes in and the corridor out are missing (§4: one corridor south to Brindle, thicket closing it) |
+| **Brindle** | `brindle` (175, 255) | Built. The ruins are §4's opening. **Since 2026-09-29 (O12) the player wakes in the village's own cemetery at its south edge** — a point of the brief, dressed with his fence, gate, earth and fallow and markers made in his materials (O13) — and Bram calls from the village's edge (O14–O17). The clearing and its corridor are no longer where anybody starts; deleting them waits for Yannick's OK |
 | **The Cinderworks** | `village_acierie` (255, 65) — the mine at (308, 80) | **Wrong adjacency.** §4: *built on Brindle's own ground, smoking a minute's walk away, in the first frame*. It is 200 m north of Brindle now. Either the works moves to Brindle's edge, or Brindle moves to the works' — the first frame is the game's one piece of exposition and it is not negotiable |
 | **The Wide Acres** | `village_fermier` (−170, 40) | Envelope only. Fields, a granary row with its watch, Vale's house, Pell's ground |
 | **Cairnwell** and **the bank** | `ville_chateau` (−150, −180), the city | Envelope only. §0: Cairnwell is the capital and the bank is in it |

@@ -246,7 +246,7 @@ commit checks. The current baked run prints **eleven** DEBT lines for **eight** 
 three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Five claims are the map's and the brief's; three are **things his brother
 has not drawn** — a blow (`traveler_walk_frames.tres` holds idle and walk in four
 directions and no attack, no guard and no flinch, F5, 2026-09-19), a beast (the wolf, ours,
-2026-09-26) and a grave (the cemetery's stones are his boulder made small, O13,
+2026-09-26) and a grave (the cemetery's markers are ours, made in his two paints, O13,
 2026-09-29). The procedural world prints the same three, plus **thirty-one** that say
 the works' furnaces, its yard, the wolf packs and the opening's last two stages stand on
 his map and not on the 2D one, and five OFF lines — the baked run's three, and two claims
@@ -287,9 +287,10 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **12 s**, which is the one to run without
-thinking. `--all` adds the journeys, the asset pack and the days of weather, and takes
-about **42 s** on the baked world and **36 s** on the 2D map.
+walks, no asset pack — in about **41 s**, which is too long to be the one you run
+without thinking, and is the next thing to fix (below). `--all` adds the journeys, the
+asset pack and the days of weather, and takes about **91 s** on the baked world and
+**64 s** on the 2D map.
 (It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people;
 4.7 s and 18 s when v1 shipped; 9 s and 25 s before the simplified simulation, which
 added a system running sixty times a second and tests that advance whole in-game days.
@@ -300,13 +301,17 @@ in-game hour rather than once a minute, and each day a test simulates is a day i
 actually needs. The 4 s the full suites gained on 2026-09-19 is **not** the fight:
 `--all` was measured at 42.2 s with the first design's `CombatSystem` taken out of
 `Game.build()` and 42.8 s with it in, so a system on the step costs the other 478 tests
-nothing measurable. The duel's tests are in the **fast** suite for the same reason.)
+nothing measurable. The duel's tests are in the **fast** suite for the same reason.
+**It is 41 s now** (2026-09-29, measured after O21): the full suite has 720 tests where
+it had 479 on 2026-09-19, and no single test is to blame — the five slowest fast tests
+are 10 s between them. Nobody has profiled it yet; that is owed, and it is owed before
+the next group adds another hundred.)
 A suite marked `const SLOW := true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
-`run_tests.sh` runs on the baked world (about **12 s** fast, **42 s** all);
+`run_tests.sh` runs on the baked world (about **41 s** fast, **91 s** all);
 `tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
-**36 s**), and both have to be green before a commit that touches the map, the kit, a
+**64 s**), and both have to be green before a commit that touches the map, the kit, a
 position or the pace. A test says where it stands in the world's terms —
 `at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
 `TestCase` — and never as a tile; a time budget written for six tiles a second is
@@ -360,7 +365,10 @@ nobody can see is a switch nobody turns off.
 named, the fairies' clearing, and where you are standing. Asked for as a debug tool
 and kept as a real one: a game whose argument is *the road against the forest* should
 let you see the shape of the argument. It is painted once into a texture rather than
-redrawn, because 56,000 rectangles a frame is a slideshow.
+redrawn, because 56,000 rectangles a frame is a slideshow. Since O21 it names the graves
+where you wake, keeps every name off every other, and is bound to the **letter** M
+rather than the key's place — the moving keys are physical so WASD sits under an AZERTY
+hand, but a key the HUD names by its letter has to be found by its letter.
 
 **`tools/shot.sh out.png [title|creation|play|pause|journal[:page]|map] [x,y]`** renders one
 frame of a screen to a file and quits. It is the only check that catches what the
@@ -453,7 +461,8 @@ and talking. Same gate and same reason as the others — a '!' that never goes u
 exactly what `--headless` cannot see. **And the frames that stand you somewhere spend
 the hail first**: `UNCROWNED_AT`, `_TALK` and `_DUEL` write `hailed:<who>` straight into
 the facts, so a photograph of Brindle is of Brindle and not of Bram walking over. One
-frame for one photograph, not a save-able state.
+frame for one photograph, not a save-able state. A hail is spent once, so on a run that
+has already been called it warns and does nothing — take it on `UNCROWNED_QUICK=1`.
 
 **`UNCROWNED_SCREEN=journal:<page>`** (2026-09-24) is not a ninth tool but the existing
 one extended: the journal is seven pages and the page being photographed is rarely the
@@ -508,7 +517,7 @@ player is shaped like a town — an allégeance he chooses, a standing per town 
 only with witnessed deeds, and a richesse that is gold. **The town is the unit of
 account**: a theft moves the town it happened in and not the person it happened to.
 
-### Where the work actually stands — 2026-09-26
+### Where the work actually stands — 2026-09-29
 
 The task list is the record; this is the short version, because a session that has to
 reconstruct it from forty commits will get it wrong.
@@ -520,7 +529,7 @@ reconstruct it from forty commits will get it wrong.
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
-| **O** | **The opening, redone** (asked and planned 2026-09-29): the cemetery, Bram's hail, three drills (sword, bow, magic), then the words. **O1–O17 built** (2026-09-29): the drills, the cemetery, the hail seen and switched on. **O18–O19 are the words, and they are Yannick's**; O20–O22 are the checks and the docs |
+| **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
 | **P2** | Folded into **the tutorial's redo** (2026-09-29): the fairy, the combat tutorial, the departure for the works — the dialogue is rewritten then. C2–C4 wait on it |

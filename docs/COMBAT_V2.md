@@ -95,6 +95,8 @@ Everyone in the fight acts once per round, in a fixed order. On their turn a com
 |---|---|
 | **Strike** | A target on an adjacent tile takes fixed damage |
 | **Wait** | Ends the turn. Sometimes the right move |
+| **Cast** *(2026-09-29)* | The fairy's gift, and only with it: a target within three tiles takes fixed damage; once every other round. Key **I** (§9) |
+| **Aim** *(2026-09-29)* | An archer's: she marks a tile, and when her next turn comes the arrow lands there. Wren's alone, in the bow drill (§9) |
 
 **There is no guard** (Yannick, 2026-09-24): Baldur's Gate 3 has no block button, and
 neither does this. Defence is position and initiative, not a held button — which is the
@@ -272,3 +274,35 @@ acceptable exception rather than a breach — `CLAUDE.md`'s art rule holds uncha
 
 A back view is the hard one to draw and the easiest to get wrong, so **K5's check is a
 photograph of a blow struck north**, not a count of files.
+
+## 9. Drills, the bow and the spell (group O, 2026-09-29)
+
+Yannick's Bannerlord training grounds, one workshop a weapon, for the tutorial and for
+nothing else yet. **A drill is a spar with a lesson**: a *master* (Bram), sometimes a
+*first* who acts in it (Wren), a *stand-off* — the master walks that many tiles away
+before the first turn, further than one turn can close and strike, so the first thing
+every drill teaches is to move — a *goal* and a *count*, and a limit of *rounds*. The
+master's blows cost one point; the drill is **passed** the moment the goal is reached
+and **failed** when the rounds run out; either way the master mends you, and it can be
+asked for again. **Nothing in a drill can kill you.** The numbers are
+`content/duel.json`'s `drills`; the rules are `DuelRules.drill*`; `DrillSystem` writes
+`drilled:<id>` and has the master speak again if he is near.
+
+| Drill | Asks for | The lesson |
+|---|---|---|
+| **The sword** | 3 blows that land, 10 rounds | Close the distance, then strike (K). He stands off 6 tiles |
+| **The bow** | 3 arrows dodged, 10 rounds | Wren aims at the tile you stand on; end your turn anywhere else. After the sword |
+| **Magic** | 2 spells that land, 10 rounds | Cast (I) on Wren from three tiles. After the bow, and only with the fairy's gift |
+
+**The bow.** Wren's weapon is a `bow` in `fighters`: she keeps three tiles off, aims at
+the player's tile (`AIM`), and the start of her next turn is the loosing (`LOOSING`):
+the arrow lands on that tile, on whoever is standing there. A player who has moved is missed and the arrow counts as
+*dodged*. `bow_reach_tiles` 6, `loose_steps` 24.
+
+**The spell.** `CAST` with the fairy's gift (`you:the_gift`): reach 3, damage 5, every
+2 rounds. Only the player has it.
+
+**What it is not.** No AI worth the name, no balance between reach and cover, no second
+spell: those are the later workstream the standing exception in CLAUDE.md keeps for its
+own branch. The bow and the spell exist so the tutorial can teach three things, and the
+game uses them nowhere else yet.

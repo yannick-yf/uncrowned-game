@@ -1,5 +1,12 @@
 # Demo — shared walkthrough and next sessions
 
+> **The opening was redone on 2026-09-29 (group O of [DEMO_TASKS.md](DEMO_TASKS.md)).**
+> R01–R03 below describe a start that no longer exists: the player wakes in Brindle's
+> cemetery, is called over by Bram, and learns the sword, the bow and magic before the
+> road north. The route is now played headless, stage by stage, by
+> `tools/play_opening.gd` (O20), which prints walking, fighting and reading time and the
+> damage taken; the frames of O21 are listed there. What follows is kept for R04–R09.
+
 > **Measurements out of date, 2026-09-18.** Every tile and distance below was measured
 > against his ironworks **version 3**; his v4 landed on 2026-09-17 and moved sixteen of
 > twenty-seven buildings. The route legs and the gap register still read true; the

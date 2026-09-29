@@ -72,7 +72,7 @@
       "weapon": "bow"
     }
   },
-  "_drills_note": "THE TUTORIAL'S DRILLS (O8, 2026-09-29): Yannick's Bannerlord training grounds, one workshop a weapon. A drill is a spar with a lesson: its MASTER acts first and walks STAND_OFF tiles away before the first turn - further than one turn can close and strike, so the first thing it teaches is to move; the master's blows cost DAMAGE; it is PASSED when the player reaches COUNT of its GOAL and FAILED after ROUNDS rounds without; the master mends you after either. Nothing in a drill can kill you.",
+  "_drills_note": "THE TUTORIAL'S DRILLS (O8, 2026-09-29): Yannick's Bannerlord training grounds, one workshop a weapon. A drill is a spar with a lesson: its MASTER acts first and walks STAND_OFF tiles away before the first turn - further than one turn can close and strike, so the first thing it teaches is to move; the master's blows cost DAMAGE; it is PASSED when the player reaches COUNT of its GOAL and FAILED after ROUNDS rounds without; the master mends you after either. Nothing in a drill can kill anybody: the master's blows mend, and yours stop short of his last point (the review of O21).",
   "drills": {
     "_order": [
       "sword",

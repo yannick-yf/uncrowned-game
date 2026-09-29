@@ -1182,6 +1182,9 @@ minute one and Pillar 1 is whole again.
 
 ## O — the opening, redone: the cemetery, the hail, three drills
 
+> **Built, all twenty-two steps, 2026-09-29.** The lines are drafts Yannick let stand for
+> this version; the check that counts is him playing the fifteen minutes.
+
 **Asked 2026-09-29 (Yannick), planned the same day.** The first ten to fifteen minutes
 of the demo, made to feel finished: the player wakes in a **cemetery south of Brindle**,
 a **path** leads him into the ruined village, **Bram hails him** the way a Pokémon
@@ -1598,7 +1601,8 @@ cannot reach Brindle's centre or the bridge.
 **Built.** `bram_post` (281, 315 baked; 264, 176 on the 2D map — the tiles Brindle+(2,−4)
 already gave him, so nothing he does moved) and his ground as **two discs of radius 3** —
 `brindle_hail` (277, 322; 257, 180) and `brindle_hail_east` (284, 322; 258, 180), two rows
-for Bram in `hails` — a barrier across the village's south edge, not its heart, so a test
+for Bram in `hails` — across the village's south edge, where every *shortest* way north
+from the graves crosses (a long way round can miss it), not its heart, so a test
 or a frame standing in Brindle's centre is never called out; the table in
 `content/hail.json` holds the radius beside the beat's two numbers (the '!' for one
 second, twenty to reach you). **The ground was found by search, after the review**: a
@@ -1720,7 +1724,7 @@ the birch his brother planted there, and the first photograph of the talk showed
 person. `UNCROWNED_HAIL=bram[:steps]` is written into CLAUDE.md, and `UNCROWNED_AT`,
 `_TALK` and `_DUEL` spend the hail. Not yet played by hand: that is Yannick's.
 
-### O18 · The fairy's words
+### O18 · The fairy's words — **the drafts stand for this version** (Yannick, 2026-09-29)
 
 Est. 3 h of wiring, plus his writing. Depends on: O12, O10.
 
@@ -1729,7 +1733,11 @@ His rewrite, French first, for a meeting among the graves — and his answer to 
 one quest, nothing in `SHE_MAY_NEVER_SAY` — and now **her gift, the spell**. If he changes
 the seven facts, the tests move first.
 
-### O19 · Bram, Wren, and the way on
+**2026-09-29:** Yannick read the drafts (in English, his settings had flipped) and
+validated them for this version: *« le texte pour le moment est validé »*. They keep
+their `_p2` marks in the cast sheets, so a later rewrite finds every one of them.
+
+### O19 · Bram, Wren, and the way on — **the drafts stand for this version** (Yannick, 2026-09-29)
 
 Est. 4 h of wiring, plus his writing. Depends on: O17, O10.
 
@@ -1737,6 +1745,9 @@ The hail, each drill's instruction and transition, Wren's lines, a farewell that
 north along his road with no marker, the departure for the Cinderworks; Wren's
 *"west of here"* fixed (the works are north on the baked map). The drafts from O1, O8,
 O9, O10 and O16 are replaced — they are marked as drafts so none ships.
+
+**2026-09-29:** validated for this version with O18's; the `_p2` marks stay. What O21's
+review finds wrong in them — Wren's direction among it — is fixed there.
 
 ### O20 · The first fifteen minutes, played headless — **built 2026-09-29** (with draft lines)
 
@@ -1761,9 +1772,21 @@ you** — they take 30 in one fight, the drills' three mended before it. Both ar
 the words' to settle, not this tool's; it says them after every change. It must be run
 again when O19's words are in.
 
-### O21 · Photographs and a fresh-eyes review
+### O21 · Photographs and a fresh-eyes review — **built 2026-09-29**
 
 Est. 6 h, plus fixes. Depends on: O20.
+
+> **Built.** Twenty-six frames in each language, zero script errors in any of them, and
+> the review sub-agent's walk of the route: 38 findings confirmed, many of them the same
+> defect seen twice, fixed in `O21 review: the lessons and what Bram says around them` and
+> `O21 review: what the window shows around the opening`, beside three changes the frames
+> asked for on their own — the player drawn through what hides him, Wren sending you
+> north, and the graves' markers and the fires (O13b). The fixes a suite can see have
+> tests: a partner who cannot fall, Bram's greeting after each lesson, the summon, the
+> dialogue box's height, the fight's framing, the beasts' banners, the '!' readable on
+> its first frame. **Three findings were ruled on and left** (Yannick, 2026-09-29): the
+> fifteen minutes' length, the hundred hit points, and the wolves a player can walk
+> round. The check is still Yannick playing it.
 
 About 25 frames printed by the player tool — title, creation, the wake, the fairy, the
 path, the hail, each drill's first turn and key moment, the banners, the journal, the
@@ -1772,9 +1795,16 @@ Then the review sub-agent Yannick allowed walks the route for bugs, stalls and
 incoherence. Each defect gets a failing test first where a suite can see it, and its
 own commit. **The check is Yannick playing the fifteen minutes.**
 
-### O22 · The documents say what the game is
+### O22 · The documents say what the game is — **built 2026-09-29**
 
 Est. 4 h. Depends on: O21.
+
+> **Built.** CLAUDE.md's art rule carries the third exception (the markers and the
+> fires), the tools the hail and the map, the DEBT and OFF counts as the runs print them,
+> the state table and **the suites' real timings — 41 s fast, 91 s and 64 s all — which
+> are a debt of their own**; SPECS §4, §5 and §10, COMBAT_V2's drills, QUEST_CINDERWORKS
+> §6, V3's *The opening, redone*, MIGRATION_3D's Brindle row, POUR_SLOSINIO §12–13, the
+> walkthrough's banner and duel.json's notes. §9b stays open: it waits on his brother.
 
 CLAUDE.md (the art rule and the new marks, DEBT/OFF counts, the tools and their count,
 the state table, the standing exception), SPECS §4, §5, §10, COMBAT_V2 (a section on

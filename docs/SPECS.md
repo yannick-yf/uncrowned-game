@@ -684,6 +684,20 @@ an ending reads either figure; a test holds that.
 
 ### The opening (2026-09-12)
 
+> **Redone on 2026-09-29 (group O of `docs/DEMO_TASKS.md`, asked by Yannick).** The
+> player wakes among the graves of Brindle's own cemetery, at the burned village's
+> south edge, on the meadow above his cliffs — not in the village and no longer in the
+> fairies' clearing (O12). The fairy is there among the graves, beside a campfire that
+> is the game's first save. Walking north into the village, the player is **called
+> over by Bram**: a '!' over him, the player held, Bram walks down and the conversation
+> opens without being asked for — once (O16–O17, Yannick's *« dresseur Pokémon »*).
+> He teaches three drills, the sword, the bow with Wren shooting and magic with the
+> fairy's gift (O8–O10, and §5's amendment below), and then the road runs north to the
+> Cinderworks, with two wolves before the bridge. What stands below still holds: one
+> fairy, once; the seven things; what she must not say. **What no longer holds** is the
+> Cinderworks *in the first frame*: on his map the works are well north of Brindle, and
+> the suite prints that as a DEBT.
+
 The player wakes in Brindle, and from the first screen can see the Cinderworks
 smoking on their village's ground, a minute or two's walk away. No exposition is
 needed: the crime and the industry it served are in the same frame.
@@ -1071,6 +1085,15 @@ Three things follow, and they are why this answer is worth more than its opposit
 because it was ever common — which is a better reason than the systemic one §11
 gives, and replaces it. One raising, in the forest, by the things that live there.
 Nothing else in the game does anything a reasonable person would call magic.
+
+> **Amended 2026-09-29 (O10, Yannick): the gift.** Her last word — *if you can, save
+> us* — now also gives the player a sliver of what raised them: **one spell**, the only
+> magic a person holds in the game (`you:the_gift`). It changes nothing above: it is
+> still the one miracle's, it comes from nothing but her, and nobody else casts
+> anything. The raising is now *among the graves* rather than *in the forest* (the
+> opening above), which is the one line of this paragraph the redo moved. The spell is
+> scoped to what the tutorial's magic drill teaches — cast with I, three tiles, five
+> points, every other round; more spells are the later combat workstream.
 
 ### The opening points two ways (2026-09-13)
 
@@ -2709,6 +2732,17 @@ words.
 ---
 
 ## 10. Combat
+
+> **The genre below is superseded, twice.** On **2026-09-26 (K6)** Yannick played the
+> real-time fight described here, rejected it, and the fight became **turn-based on the
+> world grid** — `docs/COMBAT_V2.md` is the design, and the real-time one is deleted
+> (`docs/COMBAT.md` records it). On **2026-09-29 (group O)** it gained, for the
+> tutorial's three drills only, **a bow** — Wren's: she aims at a tile and looses when
+> her next turn comes, and stepping off the tile in between dodges — and **one spell**, the fairy's gift
+> (§5). A drill is a spar with a goal, a master and a round limit, and nothing in it
+> can kill you (`COMBAT_V2.md` §9). *Where* it happens — in place, the camera dropping
+> and never turning — still stands as settled below; the depth (an AI worth the name,
+> ranged balance, more spells) is still a later workstream.
 
 **Where it happens. Settled 2026-09-19, and this reverses what this section used to
 say.** A fight happens **in place, in the world, with no cut and no separate screen**.

@@ -158,6 +158,12 @@ saying so. Not everything that matters has to be a number.
 
 ## 6. Combat
 
+> **Superseded (2026-09-19 and 2026-09-26).** There is no separate screen: a fight
+> happens in place, in the world, the camera dropping and never turning (SPECS §10), and
+> since K6 it is **turn-based on the world grid** (`docs/COMBAT_V2.md`). Before the works
+> the player has learnt it from Bram's three drills and met two wolves at the bridge
+> (group O, 2026-09-29). The paragraph below is kept as it was written.
+
 **A separate screen.** The quest runs in the world; when the fight starts there is a
 short load into an arena, side-on, in the manner of Street Fighter. One opponent, one
 person. The system can change later; this is where it starts.
