@@ -1,5 +1,10 @@
 # Contributing to Uncrowned
 
+> **Parts of this predate v3 (2026-09-13) and the simulation's redesign (2026-09-18).**
+> Where it disagrees with `CLAUDE.md` — the reading order, the art rule, the invariants,
+> what CI runs, one commit per task with its docs — `CLAUDE.md` is the working agreement
+> and wins.
+
 Two people work on this repository. These rules exist so that neither of us has to
 read the other's mind, and so `main` is always something you can clone and play.
 
@@ -22,8 +27,8 @@ git clone git@github.com:yannick-yf/uncrowned-game.git
 cd uncrowned-game
 
 godot --headless --path . --import      # once after cloning
-tools/run_tests.sh                      # fast suite, ~5 s
-tools/run_tests.sh --all                # everything, ~18 s — before every push
+tools/run_tests.sh                      # fast suite, ~41 s (CLAUDE.md, *Two speeds*)
+tools/run_tests.sh --all                # everything, ~91 s — before every push
 godot --path . &                        # play it
 ```
 

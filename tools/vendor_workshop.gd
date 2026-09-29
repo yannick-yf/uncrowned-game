@@ -38,8 +38,9 @@ const SKIP_DIRS: Array[String] = [".godot", "__pycache__", "verification-output"
 ## editor refuses to play it, while the meshes themselves sit copied and unreachable a
 ## few folders away.
 ##
-## Everything listed here is a sector the demo never walks to, so dropping it costs the
-## player nothing today. **It is a patch and not a repair**, and Yannick said so first:
+## Everything listed here was a sector the demo never walks to, so dropping it cost the
+## player nothing — until O12 (2026-09-29) started the game above his cliffs, and
+## `CoastlineDecor` is now on the first frame (MIGRATION_3D §9b). **It is a patch and not a repair**, and Yannick said so first:
 ## the same defect returns with his next delivery, and the real answers are written in
 ## `docs/MIGRATION_3D.md` — none of them is free and all of them are his to choose.
 const SECTORS_WE_DO_NOT_VISIT: Array[String] = [

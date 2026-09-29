@@ -478,7 +478,9 @@ a machine that refuses the borrowed thing. Rewritten for the 3D world:
    and renegotiated with the map, not defended.
 2. **The works beside Brindle.** Still the brother's call with Yannick; the plan does
    not wait on it — the works is scaffolded beside Brindle until the map says
-   otherwise, because the first frame is not negotiable.
+   otherwise, because the first frame is not negotiable. **Superseded (2026-09-15):** his
+   ironworks delivery replaced the kit, the works stands about 80 tiles north of Brindle's
+   centre, and §4's first-frame claim is a DEBT the suite prints.
 3. **The sawmill village goes.** Decided. If any of it survives it is the works' fuel
    yard.
 4. **The character sprites — decided 2026-09-14, on seeing it: nothing of the 2D
@@ -524,7 +526,8 @@ a machine that refuses the borrowed thing. Rewritten for the 3D world:
    what a switch turns off says `OFF` in the run (`TestCase.off`) rather than failing or
    going quiet. Rejected: deleting the systems — they are v2's tested work and the spec
    still argues for them; what is decided is what the game does *now*, on his map, at
-   his pace.
+   his pace. **Superseded in part (2026-09-18):** Yannick then decided that the terrain's
+   speed table and the music tables do go — task C4 of `docs/DEMO_TASKS.md`.
 
 ## 9b. The vendoring's one real defect, and the four ways out — open, 2026-09-24
 
@@ -559,6 +562,12 @@ sectors — the farming village, its greenery, and the coastline.
 The copied map plate no longer carries `VillageFermier`, `FarmingAtmosphere` or
 `CoastlineDecor` (`SECTORS_WE_DO_NOT_VISIT` in the vendoring tool). Errors went from
 412 to **0**, and the demo lost nothing: it never walks to any of them.
+
+> **No longer true since O12 (2026-09-29).** The game now starts in Brindle's cemetery,
+> above his cliffs, and `CoastlineDecor` is on its first frame: the cliffs show bare, and
+> his granite shingle could not be used for the cemetery's ground. The patch now costs
+> the opening its coast. Yannick is asking his brother (option 4 below), and
+> `docs/POUR_SLOSINIO.md` §11 asks him to re-export the coast's pieces.
 
 **Yannick named the limit of this himself, immediately:** *"on peut pour le moment
 enlever le village mais quand on va merge sur main on va rencontrer le même problème"*.

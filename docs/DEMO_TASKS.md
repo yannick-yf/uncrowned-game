@@ -1,11 +1,16 @@
 # The demo, as tasks
 
-Date: 2026-09-18, and three groups added on 2026-09-23. The specs turned into work.
+Date: 2026-09-18; J, K and W added on 2026-09-23; O, S and B since. The specs turned into
+work.
 
-**J, K and W are new and nothing in them is started.** They come from two designs
-settled that day — [the player model](PLAYER_MODEL.md) and [combat's second
-design](COMBAT_V2.md) — and they are the consequence of one idea Yannick returned to:
-**you can kill everyone**. M, P, Q and F are built; their entries say so.
+> **Where it stands (2026-09-29).** M, P, Q, J, K, W and O are built, with the exceptions
+> their entries give (M3 not accepted, P2 folded into O18–O19, Q6's lines); F was built
+> and deleted in K6; S1–S2 and C1 are built, C3 half. **CLAUDE.md's table *Where the work
+> actually stands* is the short version and is kept current** — read it before this list.
+
+J, K and W came from two designs settled on 2026-09-23 — [the player model](PLAYER_MODEL.md)
+and [combat's second design](COMBAT_V2.md) — and they are the consequence of one idea
+Yannick returned to: **you can kill everyone**.
 
 Reads from: [the simulation model](SIMULATION_MODEL.md) · [the Cinderworks
 quest](QUEST_CINDERWORKS.md) · [what we keep](SIMULATION_KEEP_OR_DROP.md) ·
@@ -1785,10 +1790,11 @@ Est. 6 h, plus fixes. Depends on: O20.
 > tests: a partner who cannot fall, Bram's greeting after each lesson, the summon, the
 > dialogue box's height, the fight's framing, the beasts' banners, the '!' readable on
 > its first frame. **Three findings were ruled on and left** (Yannick, 2026-09-29): the
-> fifteen minutes' length, the hundred hit points, and the wolves a player can walk
-> round. The check is still Yannick playing it.
+> fifteen minutes' length (*« durée parfaite pour cette version »*), the hundred hit
+> points (*« point de vie parfait »*; S4 still settles them for the public build), and
+> the wolves a player can walk round (*« oui parfait »*). The check is still Yannick playing it.
 
-About 25 frames printed by the player tool — title, creation, the wake, the fairy, the
+Twenty-six frames a language, printed by `tools/opening_frames.sh` — title, creation, the wake, the fairy, the
 path, the hail, each drill's first turn and key moment, the banners, the journal, the
 wolves, the gate, the map, the flat bake, the procedural start — in French and English.
 Then the review sub-agent Yannick allowed walks the route for bugs, stalls and
@@ -1969,6 +1975,14 @@ and the music tables, with their tests.
 ---
 
 ## Order, and what it adds up to
+
+> **The order below is the one planned on 2026-09-18, kept for its reasoning.** It was
+> followed through M, P, Q and F; J, K, W, O and S were added and built after it, and F
+> was deleted in K6. What is left is CLAUDE.md's table: the rest of C (C2–C4, as one
+> change, after Yannick says P2 is done), S3 (a Windows machine) and S4 (a stranger), M3's
+> acceptance, B00 with Yannick, and — his to say — the Cinderworks' lines by state (P2's
+> first scope, Q6's), which O18–O19 did not write. Its "63 hours, twenty-seven tasks"
+> predates every group after F.
 
 **M1 → M2** first: two sessions to the moment the works *looks* like it is going
 badly, with no quest in the game at all. That is the model earning its place before

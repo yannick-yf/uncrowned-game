@@ -15,7 +15,7 @@ the dialogue:
 | `docs/SIMULATION_MODEL.md` | **What the simulation is.** Two values per place, two for the kingdom, the star, the look, the routines, where the player enters |
 | `docs/QUEST_CINDERWORKS.md` | The demo's quest, settled on paper |
 | `docs/SIMULATION_KEEP_OR_DROP.md` | What survives of the old simulation, component by component |
-| `docs/DEMO_TASKS.md` | The work, as 47 tasks with their checks |
+| `docs/DEMO_TASKS.md` | The work, as lettered groups of tasks with their checks — *Where the work actually stands*, below, says which are built |
 
 `docs/SIMULATION_AS_BUILT.md` records what the old simulation did, so that what is
 dropped is dropped on purpose and not by accident.
@@ -28,6 +28,39 @@ and much of its simulation half is now superseded.
 **Precedence.** `SPECS.md` wins on *what the game is*, except where the four documents
 above supersede it. This file wins on *how we work* and *which phase we are in*. Where
 a genuine conflict crosses that line, Yannick decides — do not silently pick.
+
+## Working with Yannick
+
+Written into the repo on 2026-09-29, when he changed Claude accounts: until then it
+lived in one account's private memory, and a new account starts with none. It is how he
+wants the work run, learned from his corrections — not a style guide.
+
+- **Speak to him in French, plain and short.** Docs, code and commit messages stay in
+  English; game strings are French first. He corrected the French five times in two days
+  (*« ton français sonne faux »*, *« je ne comprends pas cette phrase »*), and every time
+  it was a metaphor, a compressed clause or a term used without being defined — twice it
+  hid a real bug in what was being described. Short sentences, one idea each, no figures
+  of speech; define a term the first time it appears (*la coupe* = where the workers
+  cut); when he asks what a phrase meant, rewrite the thing rather than explain the
+  phrase.
+- **Autonomy, a task at a time.** *« Go, stop only if you have an important
+  question. »* One commit per task with its docs, both worlds green, the game launching;
+  then a short report. Ask only at a real fork — one that touches his brother's work
+  qualifies — in plain words, with the recommended option first.
+- **Measurements, not adjectives**: tests, seconds, tiles. **Pictures for anything
+  visual**: he decides visual questions from frames, not prose, so render them before
+  recommending (`tools/shot.sh`, the debug tools below).
+- **A big request is run the way group O was** (approved 2026-09-29, *« globalement tu
+  as fait du très bon travail »*): planned as numbered tasks in `docs/DEMO_TASKS.md`, each
+  with its check; one commit each; frames of every screen in both languages
+  (`tools/opening_frames.sh` for the opening); a fresh-eyes review sub-agent walking the
+  result at the end, which he allows for reviews and asset research; then his open
+  questions in **one numbered list**, which he answers by number in one message.
+- **When he is handed a commit to push**: its hash, the one command, and in advance any
+  CI step that will be red and why. He reads an unannounced red CI as *everything is
+  broken*. A worktree is not private — GitKraken lists every one, and an untracked log
+  left in a scratch worktree was once committed and pushed by him in good faith — so a
+  worktree is left with `git status --short` empty, and its logs go to the scratchpad.
 
 ## The one architectural rule
 
@@ -236,21 +269,25 @@ scenes and refuses stale copies. Only the build tool loads those nodes; core rec
 plain polygons. The bake hashes the town and river data and each used collision scene,
 and checks that the landscape's resolved crossings agree with the river layout.
 **Since 2026-09-21 (G1) the bake also reads his catalogues** — the brief's `catalogs`,
-today `assets/ironworks/catalog.json` — and every piece of his it places (the works'
+today `assets/ironworks/catalog.json` and, since O13, `assets/farming/catalog.json` (the
+cemetery's fence, gate and earth) — and every piece of his it places (the works'
 yard: `YardRules`, `CatalogRules`) is stood at his metres and yaw, blocks what its own
 collision shapes cover, and has its catalogue and its scene hashed into the bake. **Read
 his catalogue before placing anything of his**: its `placement` note is the only document
 that says how a piece is meant to be used, and the first yard was built without it.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
-commit checks. The current baked run prints **eleven** DEBT lines for **eight** claims and
+commit checks. The current baked run prints **eleven** DEBT lines — twelve debts, one test owing two;
+the run's last line counts debts — for **eight** claims and
 three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Five claims are the map's and the brief's; three are **things his brother
 has not drawn** — a blow (`traveler_walk_frames.tres` holds idle and walk in four
 directions and no attack, no guard and no flinch, F5, 2026-09-19), a beast (the wolf, ours,
 2026-09-26) and a grave (the cemetery's markers are ours, made in his two paints, O13,
-2026-09-29). The procedural world prints the same three, plus **thirty-one** that say
+2026-09-29). The procedural world prints the same three, plus **thirty-one** (34 lines, 35
+debts in all) that say
 the works' furnaces, its yard, the wolf packs and the opening's last two stages stand on
-his map and not on the 2D one, and five OFF lines — the baked run's three, and two claims
-about the hail's ground that only his map's layout can make.
+his map and not on the 2D one, and five OFF lines — the two switches', one saying the 2D
+map's shore is sand and not his cliffs, and two claims about the hail's ground that only
+his map's layout can make.
 
 ### Committing — read this before your first `git commit`
 
@@ -277,6 +314,20 @@ Three habits that come from getting this wrong:
   because the backup predated it. `git diff` first, or use `git show HEAD:path`.
 
 Yannick pushes; this repo does not. Commit locally and stop.
+
+**Reads need the variable too, for now** (found 2026-09-24). His `~/.gitconfig` carries an
+empty `[gpg] format =`, and git dies *parsing* it, before any `-c` override applies — so
+`git log` fails without `GIT_CONFIG_GLOBAL` while `git status` and `git add` survive. The
+`git -c gpg.format=…` fallback does not work; do not try it again. **Inside a worktree** the
+relative path does not resolve, because a worktree's `.git` is a file: use the absolute
+`GIT_CONFIG_GLOBAL=/Users/yannickflores/PersoProject/uncrowned-game/.git/overnight-gitconfig`,
+and check first how far the worktree is behind (`git rev-list --count HEAD..feat/playable-demo`
+— one agent started 64 commits behind). One git command per shell call; stage and commit
+in separate calls. **The override file is not versioned** — it lives in `.git/`, so a fresh
+clone has none: recreate it with `[user]` name and email as on this branch's own commits
+(`GIT_CONFIG_GLOBAL=/dev/null git log -1 --format='%an <%ae>'` reads them without the
+broken file), `signingKey` empty, `[gpg] program = gpg`, `[commit] gpgSign = false` and
+`[tag] forceSignAnnotated = false` — and never by copying anything from `~/.gitconfig`.
 
 **Run the suite through `tools/run_tests.sh`, never `test_runner.gd` directly.**
 The script is part of the check, not a convenience. A GDScript runtime error does
@@ -306,7 +357,7 @@ nothing measurable. The duel's tests are in the **fast** suite for the same reas
 it had 479 on 2026-09-19, and no single test is to blame — the five slowest fast tests
 are 10 s between them. Nobody has profiled it yet; that is owed, and it is owed before
 the next group adds another hundred.)
-A suite marked `const SLOW := true` is in the second group.
+A suite that declares `const SLOW: bool = true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
 `run_tests.sh` runs on the baked world (about **41 s** fast, **91 s** all);
@@ -318,12 +369,14 @@ position or the pace. A test says where it stands in the world's terms —
 scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
 the run is the map's or the brief's, not the code's: a claim the spec makes that the
 baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
-apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Four stand
-today: the works far from Brindle, §4's 45–90 s road band at his pace, the clearing's
-ring of wood, and the north his rivers close with no crossing. Never turn a failure
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Eight claims
+stand today — five the map's and the brief's, three things his brother has not drawn;
+they are listed above, under *Delivery ingestion*. Never turn a failure
 into a debt to get green; a debt names something a person has to settle. A line marked **`OFF`** is the third kind
 (`TestCase.off`): a claim that holds only while one of the testing switches below is
-on, printed so the switch is not forgotten and counted apart so the claim is not lost.
+on, printed so the switch is not forgotten and counted apart so the claim is not lost —
+or, since O12, a claim one world makes and the other cannot (the cemetery's cliffs, the
+hail's ground, the 2D map's road into Brindle).
 
 One tick is one in-game minute and the overworld runs 4 ticks per real second, so
 `--ticks 5000` is 3.5 in-game days — about 21 real minutes of play. See SPECS §8.
@@ -335,9 +388,12 @@ entry point. It requires this agreement in full, then `docs/V3.md`, then
 `docs/MIGRATION_3D.md` §6.2 and §9, and only the task's needed SPECS section. This
 agreement remains shared and binding; `AGENTS.md` records Codex's lanes and the files
 reserved for Claude's map ingestion, so the two agents do not edit the same work.
+(Dormant since 2026-09-18, as `AGENTS.md` itself says: its lanes and its reserved list
+are out of date, and nothing in it is assigned.)
 
-Write the test first. Run the suite after every meaningful change — it takes
-milliseconds and it is the only thing that tells you whether something broke.
+Write the test first. Run the fast suite after every meaningful change — it is the only
+thing that tells you whether something broke. (It takes 41 s today, which is a debt of
+its own: see *Two speeds*.)
 
 If verifying a change requires opening the editor, ask whether the logic belongs in
 `core/` instead.
@@ -464,13 +520,24 @@ the facts, so a photograph of Brindle is of Brindle and not of Bram walking over
 frame for one photograph, not a save-able state. A hail is spent once, so on a run that
 has already been called it warns and does nothing — take it on `UNCROWNED_QUICK=1`.
 
-**`UNCROWNED_SCREEN=journal:<page>`** (2026-09-24) is not a ninth tool but the existing
+**`UNCROWNED_SCREEN=journal:<page>`** (2026-09-24) is not a tool of its own but the existing
 one extended: the journal is seven pages and the page being photographed is rarely the
 first, so the screen name may carry the page after a colon — `journal:standing`,
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
-**All eleven are gated on `OS.has_feature("debug")`**, so they are absent from a
-release export. Anything else of this kind goes behind the same gate and gets listed
+**`tools/opening_frames.sh [out_dir] [languages…]`** (2026-09-29, O21) photographs the
+opening for a review: twenty-six frames a language, from the title to the works' gate,
+through the tools above, with one line per frame giving its count of `SCRIPT ERROR`s — 0,
+and then look at them. A shot plays the run on disk and the language is a setting on
+disk, so it moves the player's `save.json` aside (every frame is then a fresh run) and
+rewrites `settings.cfg` per language; it copies both first and puts them back on exit,
+checked by fingerprint the day it was written. A script, not part of the game, so it
+never ships; its tiles are the baked world's.
+
+**All twelve in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
+journal's who-is-where, and the `UNCROWNED_` variables of `shot.sh`, `FREE`, `TOWN`,
+`LENS`, `DUEL`, `TALK`, `DID`, `QUICK` and `HAIL` — so they are absent from a release
+export. **`M` is the one that is not**: kept as a real feature, it ships. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 
 > `Engine.time_scale` was considered and rejected: it accelerates the player too,
@@ -494,7 +561,10 @@ quietly passing.
 ## Effort discipline
 
 Do not spawn subagents or parallel workflows unless I explicitly ask, or unless
-the task genuinely requires reading more than fits in one context. Analysis of
+the task genuinely requires reading more than fits in one context. **Standing, since
+group O (2026-09-29):** a fresh-eyes review sub-agent at the end of a group, and research
+into assets. Group O's planning fan-out (seven readers, a planner, a reviewer) was asked
+for with that request and is not standing. Analysis of
 documents in this repo does not qualify — I wrote them and can hold them in my
 head. Default to answering directly. If you think a task warrants fan-out, say
 what it would cost in time and tokens and ask first.
@@ -502,8 +572,8 @@ what it would cost in time and tokens and ask first.
 ## Current phase
 
 **The simulation is being rebuilt, simpler, and its design is settled** (2026-09-18).
-Start at `docs/SIMULATION_MODEL.md`. The work is `docs/DEMO_TASKS.md`: **47 tasks, one
-at a time, both suites green between them**, and **nothing is deleted until the demo
+Start at `docs/SIMULATION_MODEL.md`. The work is `docs/DEMO_TASKS.md`: **lettered groups
+of tasks, one at a time, both suites green between them**, and **nothing is deleted until the demo
 runs on the new model** — the clean-up tasks are last on purpose.
 
 **The target is a Windows-only public demo**: creation, the fairy, the ruined village,
@@ -524,15 +594,15 @@ reconstruct it from forty commits will get it wrong.
 
 | Group | State |
 |---|---|
-| **M, P, Q** | Built, except **M3** (the colour cast — built and **not accepted**; Yannick wants to look at it with his brother) and **M5** |
+| **M, P, Q** | Built, except **M3** (the colour cast — built and **not accepted**; Yannick wants to look at it with his brother), **P2** (below) and **Q6's lines**. These M's are `DEMO_TASKS.md`'s model tasks; `MIGRATION_3D.md` has its own phases M1–M5, whose **M3b** (his art) and **M5** (the map's fill) wait on his brother — two series, one letter |
 | **F** | Built, and **superseded**. The first fight was real-time; Yannick played it and rejected it |
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
 | **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
-| **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
-| **P2** | Folded into **the tutorial's redo** (2026-09-29): the fairy, the combat tutorial, the departure for the works — the dialogue is rewritten then. C2–C4 wait on it |
+| **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28); see P2 for when. Deleting the clearing needs its own OK |
+| **P2** | Folded into **the tutorial's redo** (2026-09-29), and **that redo is built**: O18–O19's drafts stand *for this version* and keep their `_p2` marks for a later rewrite. His OK to C2–C4 was given *« once the redo is done »* (group O's rulings), so they are open. **One thing is not settled**: the Cinderworks' lines by state — P2's first scope, and Q6's — are not in O18–O19; ask whether they are still wanted before C4 deletes the old lines they would replace |
 
 **Two things are true of the fight and both matter.** The turn-based design of
 `docs/COMBAT_V2.md` is the only fight there is — the real-time one was deleted in K6,
@@ -559,7 +629,7 @@ on. The map and the graphics are the brother's; the systems, the content and the
 are ours, and the bridge is the one architectural rule below applied once more: the
 simulation keeps its grid, the 3D data is *baked* into a `Region` (`content/region.json`),
 and a 3D window (`view/world3d.gd`) reads the sim and never moves the player. What waits
-on him: his props and the 25 faces in his style (M3b) and the map's own fill (M5). Combat is still the oldest debt in the project. Nothing structural moves
+on him: his props and the 25 faces in his style (M3b) and the map's own fill (M5). The king's contact kill is still the oldest debt in the project (*Standing exceptions*, below). Nothing structural moves
 without asking Yannick. **One discipline, in force since M1a (2026-09-13):** anything
 positional — a person, a paper, a fire, a stall, a site — is an *anchor* in
 `content/places.json` (a place or point plus an offset, or a feature standing in a
@@ -624,6 +694,11 @@ without asking.
 1. **The king kills you on contact, and there is no fight.** v1's Phase 0 gave the
    king three touches and a death, and that is still what happens. It is the oldest
    debt in the project, and what retires it is the F group of `docs/DEMO_TASKS.md`.
+
+   **Corrected 2026-09-29: nothing retires it now.** The F group was built, superseded
+   and deleted (K6), and the turn-based duel never took the king on — `ContactSystem`
+   still kills on the third touch, and no task in `docs/DEMO_TASKS.md` replaces it. It
+   waits on the way to the king, which is not designed yet (invariant 7's note).
 
    **The screen question is settled, 2026-09-19.** Yannick ruled for the **in-place
    arena**: a fight happens in the world, with no cut and no separate screen; the

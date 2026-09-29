@@ -3,10 +3,10 @@ extends SimSystem
 
 ## The king, who does not move and does not need to.
 ##
-## Phase 0 exception (CLAUDE.md): there is no combat screen, so the confrontation
-## is contact damage in the overworld. Death respawns the player in Brindle with
-## everything kept — no save system, no cost — and that respawn is a consequence of
-## a tick, so replay reproduces it.
+## Phase 0 exception (CLAUDE.md, *Standing exceptions*): the king fights nobody, so the
+## confrontation is contact damage in the overworld. Dying to it is dying like anything
+## else — back at the last fire you rested at (`WorldState`, `RestSystem`) — and it is a
+## consequence of a tick, so replay reproduces it.
 
 func on_step(sim: Sim, step: int) -> void:
 	var world := sim.store(&"world") as WorldState
