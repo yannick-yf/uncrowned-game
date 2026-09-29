@@ -307,6 +307,35 @@ func test_the_fight_reading_carries_every_fighter() -> void:
 	play.free()
 
 
+func test_the_reach_ring_speaks_for_whoever_is_acting() -> void:
+	# Found by O6's review: the ring moved to the acting wolf, but whether it was full
+	# was still measured from the first wolf.
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponents": ["wolf", "wolf"], "by": "wolf", "asked_by": "the_wood"})
+	sim.advance(1)
+	var duel := sim.store(&"duel") as Duel
+	var mine: DuelFighter = duel.me()
+	var near: DuelFighter = duel.get_fighter(&"wolf")
+	var far: DuelFighter = duel.get_fighter(&"wolf#2")
+	near.at = mine.at + Vector2i(1, 0)
+	far.at = mine.at + Vector2i(4, 0)
+	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	duel.turn = duel.fighters.find(far)
+	assert_false(bool((play.call(&"_fight_frame") as Dictionary)["in_reach"]),
+		"the far wolf's ring is faint: nobody is in its reach")
+	duel.turn = duel.fighters.find(near)
+	assert_true(bool((play.call(&"_fight_frame") as Dictionary)["in_reach"]),
+		"the near wolf's ring is full")
+	near.at = mine.at + Vector2i(-4, 0)
+	far.at = mine.at + Vector2i(0, 1)
+	duel.turn = duel.fighters.find(mine)
+	assert_true(bool((play.call(&"_fight_frame") as Dictionary)["in_reach"]),
+		"and yours is full when any of them is beside you, not only the first")
+	play.free()
+
+
 func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# The failure this exists for is completely silent: a Label given more lines than
 	# it has room for draws the ones that fit and says nothing about the rest. The

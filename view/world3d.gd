@@ -1669,7 +1669,9 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 		if kind == &"blow_landed":
 			var guarded: bool = bool(blow.get("guarded", false))
 			var heavy: bool = int(blow.get("damage", 0)) >= 2 and not guarded
-			# Kept by who took it (O6), so the second wolf's hit flashes the second wolf.
+			# Kept by who took it (O6), so a hit on one of several people flashes that one.
+			# Beasts are boxes in his materials and wear no paint: a hit on a wolf shows
+			# as sparks and the jolt, not as a flash.
 			var took: String = String(blow.get("target", ""))
 			var target: StringName = &"mine" if took == "player" \
 				else (StringName(took) if took != "" else (&"his" if by_me else &"mine"))
@@ -1928,7 +1930,12 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		foes = [fighting.merged({"at": him})]
 	for row: Variant in foes:
 		var entry: Dictionary = row as Dictionary
-		if bool(entry.get("his_down", false)) and not settling:
+		# A felled beast is no longer drawn, so its ring goes with it — through the beat
+		# too. A person who yields is still there, sunk, and keeps his.
+		var cast := _sim.store(&"cast") as Cast if _sim != null else null
+		var beast: bool = cast != null and entry.has("kind") \
+			and cast.get_npc(StringName(String(entry["kind"]))) == null
+		if bool(entry.get("his_down", false)) and (beast or not settling):
 			continue
 		var at: Vector2 = entry.get("at", him) as Vector2
 		_ring(at, 0.30, 0.21, thickness, Color(his_foot.r, his_foot.g, his_foot.b, 0.85 * his_foot.a))

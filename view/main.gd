@@ -372,7 +372,7 @@ func _duel_frame() -> Dictionary:
 		"his_telegraph": DuelRules.telegraph_at(his_act, into),
 		"my_turn": mine_acting,
 		"reach_tiles": DuelRules.reach_tiles(),
-		"in_reach": DuelRules.in_reach(mine.at, him.at),
+		"in_reach": _anybody_in_reach(acting if acting != null else mine),
 		"moves": _duel_reach(acting),
 		"centre": my_at.lerp(his_at, 0.5),
 		# **Wide enough to hold both of them and a turn's walk, and it is not a wall.**
@@ -445,6 +445,15 @@ func _duel_frame() -> Dictionary:
 	if _duel.waiting_on_player():
 		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
 	return reading
+
+
+## Whether whoever is acting has somebody in reach — for the ring drawn round them.
+## Asked of their own foes, not of the fight's first opponent (O6's review).
+func _anybody_in_reach(who: DuelFighter) -> bool:
+	for foe: DuelFighter in _duel.foes_of(who.who):
+		if DuelRules.in_reach(who.at, foe.at):
+			return true
+	return false
 
 
 ## **What a fighter is called on screen**: a person by name, a beast by what it is, in
