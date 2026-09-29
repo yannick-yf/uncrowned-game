@@ -109,6 +109,14 @@ func test_the_window_stands_on_his_ground() -> void:
 			assert_eq(ghost.animation, (ghost.get_parent() as AnimatedSprite3D).animation, "in the pose he stands in")
 			assert_true(ghost.modulate.a < 0.5, "and faint")
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
+	# The lens opens with the fight (O6): a wide one is framed wider, never past the cap.
+	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
+		"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},
+		"fight": {"radius_tiles": 7.0, "fighters": []}}, 1.0 / 60.0)
+	assert_true(window.fight_size_m() > World3d.DUEL_SIZE_M and window.fight_size_m() <= World3d.FIGHT_SIZE_MAX_M,
+		"a fight seven tiles wide is framed wider than a close duel: %.1f m" % window.fight_size_m())
+	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
+		"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}}}, 1.0 / 60.0)
 	# **The hail's '!'** (O17): up while the reading says so, over the man calling, and
 	# gone the frame it does not.
 	assert_false(window.hail_mark_shown(), "no '!' while nobody is calling")
@@ -117,6 +125,9 @@ func test_the_window_stands_on_his_ground() -> void:
 	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5), "towns": cold,
 		"hail": {"who": &"bram", "shown": true, "age": 0.05}}, 1.0 / 60.0)
 	assert_true(window.hail_mark_shown(), "the '!' goes up over him")
+	assert_true(World3d.hail_pop(0.0) >= 0.5, "and is already big enough to read on the frame it goes up")
+	assert_true(World3d.hail_pop(World3d.HAIL_POP_S) > 1.0, "pops past its size")
+	assert_eq(World3d.hail_pop(1.0), 1.0, "and settles")
 	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5), "towns": cold,
 		"hail": {"who": &"bram", "shown": false, "age": 2.0}}, 1.0 / 60.0)
 	assert_false(window.hail_mark_shown(), "and comes down when it is over")

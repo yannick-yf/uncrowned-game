@@ -345,6 +345,10 @@ func _ready() -> void:
 				row = candidate
 		if row.is_empty():
 			push_warning("UNCROWNED_HAIL: nobody called '%s' calls out (content/places.json hails)" % asked[0])
+		elif not HailRules.calls_out(StringName(asked[0]), _sim.facts):
+			# The run loaded has already met him, and a hail is spent once: say so rather
+			# than photograph a player standing in a meadow (the review of O21).
+			push_warning("UNCROWNED_HAIL: this run has already been hailed by '%s'; start one with UNCROWNED_QUICK=1" % asked[0])
 		else:
 			var walk: Array[Vector2i] = Navigation.path(_world.region(), Region.START, row["at"] as Vector2i)
 			for tile: Vector2i in walk:
@@ -400,6 +404,10 @@ func _duel_frame() -> Dictionary:
 	var reading: Dictionary = {
 		"who": String(him.who),
 		"his_name": _fighter_name(him.who),
+		# A beast is named with its article in a sentence (the review of O21): "le loup",
+		# and a pack's fall is the pack's.
+		"his_kind": _beast_kind(him.who),
+		"foes": _duel.fighters.size() - 1,
 		"at": his_at,
 		"my_at": my_at,
 		"facing": him.facing,
@@ -452,6 +460,7 @@ func _duel_frame() -> Dictionary:
 	# helpers it already has.
 	var fighters: Array = []
 	var centroid: Vector2 = my_at
+	var acting_kind: String = ""
 	var acting_name: String = ""
 	for fighter: DuelFighter in _duel.fighters:
 		if fighter.is_player():
@@ -462,6 +471,7 @@ func _duel_frame() -> Dictionary:
 		centroid += at
 		if acting == fighter:
 			acting_name = _fighter_name(fighter.who)
+			acting_kind = _beast_kind(fighter.who)
 		fighters.append({
 			"who": String(fighter.who),
 			"kind": String(kind),
@@ -494,6 +504,7 @@ func _duel_frame() -> Dictionary:
 		reading["target_at"] = _duel.drawn_at(targeted)
 	if acting_name != "":
 		reading["acting_name"] = acting_name
+		reading["acting_kind"] = acting_kind
 	# **Arrows announced and in the air** (O9): the tile each archer named, marked through
 	# the player's turn, and the arrow itself while it flies.
 	var volleys: Array = []
@@ -532,6 +543,14 @@ func _fighter_name(who: StringName) -> String:
 		return person.display_name
 	var key := StringName("beast.%s" % kind)
 	return Text.of(key) if Text.has(key) else String(kind).capitalize()
+
+
+## The kind of beast a fighter is, or empty for a person.
+func _beast_kind(who: StringName) -> String:
+	var kind: StringName = DuelRules.kind_of(who)
+	if _cast != null and _cast.get_npc(kind) != null:
+		return ""
+	return String(kind) if Text.has(StringName("beast.%s.noun" % kind)) else ""
 
 
 ## The tiles whoever is acting can still end their move on, in tile centres for the
@@ -770,17 +789,24 @@ func _draw_map() -> void:
 	draw_texture_rect(_map_texture(), Rect2(at, size), false)
 	draw_rect(Rect2(at, size), Color(0.75, 0.70, 0.55, 0.9), false, 1.0)
 
-	# The eight places, and the one you are standing in.
+	# The eight places, and the one you are standing in; then where you woke up, which
+	# is not a zone: the graves, named (O12). The dots first and the names after, so a
+	# name can be kept off every dot and every name already written.
+	var names: Array[String] = []
+	var dots: Array[Vector2] = []
 	for zone: StringName in Region.ZONE_ORDER:
-		var site: Vector2i = Region.zone_sites()[zone] as Vector2i
-		var dot: Vector2 = at + Vector2(site) * scale
-		draw_circle(dot, 2.5, Color(0.96, 0.93, 0.86, 1.0))
-		Ui.write_over(self, dot + Vector2(4.0, 3.0),
-			Text.of(StringName("place.short.%s" % zone)), Ui.NOTE,
-			Color(0.96, 0.93, 0.86, 0.92))
-
-	# Where you woke up, which is not a zone.
-	draw_circle(at + Vector2(Region.START) * scale, 2.0, Color(0.78, 0.96, 0.80, 1.0))
+		names.append(Text.of(StringName("place.short.%s" % zone)))
+		dots.append(at + Vector2(Region.zone_sites()[zone] as Vector2i) * scale)
+	names.append(Text.of(&"place.cemetery"))
+	dots.append(at + Vector2(Region.START) * scale)
+	var taken: Array[Rect2] = []
+	for dot: Vector2 in dots:
+		taken.append(Rect2(dot - Vector2(3.0, 3.0), Vector2(6.0, 6.0)))
+	for i: int in dots.size():
+		var graves: bool = i == dots.size() - 1
+		var ink := Color(0.78, 0.96, 0.80, 0.92) if graves else Color(0.96, 0.93, 0.86, 0.92)
+		draw_circle(dots[i], 2.0 if graves else 2.5, Color(ink, 1.0))
+		taken.append(_map_label(dots[i], names[i], Rect2(at, size), taken, ink))
 
 	Ui.write_over(self, at + Vector2(0.0, -8.0), Text.of(&"map.title"), Ui.HEADING,
 		Ui.INK)
@@ -790,6 +816,38 @@ func _draw_map() -> void:
 	var you: Vector2 = at + _world.player_pos * scale
 	draw_circle(you, 3.5, Color(0.15, 0.12, 0.10, 1.0))
 	draw_circle(you, 2.5, Color(1.0, 0.42, 0.28, 1.0))
+
+
+## A name beside a dot on the map, kept inside the map's frame and off every rectangle in
+## `taken` — the dots and the names already written. Right of the dot if it fits, else
+## left, below, above; the first that is clear, or the first inside the frame when none
+## is. Returns where it went. The review of O21 found the Great Fields written across
+## the Forges and Harrowgate, which is three names nobody can read.
+func _map_label(dot: Vector2, text: String, frame: Rect2, taken: Array[Rect2], colour: Color) -> Rect2:
+	var wide: float = Ui.width_of(text, Ui.NOTE)
+	var tall: float = float(Ui.NOTE) + 1.0
+	var tries: Array[Vector2] = [
+		Vector2(dot.x + 4.0, dot.y + 3.0), Vector2(dot.x - 4.0 - wide, dot.y + 3.0),
+		Vector2(dot.x - wide * 0.5, dot.y + 4.0 + tall), Vector2(dot.x - wide * 0.5, dot.y - 5.0)]
+	var chosen: Vector2 = Vector2.INF
+	for baseline: Vector2 in tries:
+		var box := Rect2(Vector2(baseline.x, baseline.y - tall + 1.0), Vector2(wide, tall))
+		if not frame.encloses(box):
+			continue
+		if chosen == Vector2.INF:
+			chosen = baseline
+		var clear: bool = true
+		for other: Rect2 in taken:
+			if other.intersects(box):
+				clear = false
+				break
+		if clear:
+			chosen = baseline
+			break
+	if chosen == Vector2.INF:
+		chosen = Vector2(clampf(tries[0].x, frame.position.x, frame.end.x - wide), tries[0].y)
+	Ui.write_over(self, chosen, text, Ui.NOTE, colour)
+	return Rect2(Vector2(chosen.x, chosen.y - tall + 1.0), Vector2(wide, tall))
 
 
 func _process(delta: float) -> void:
@@ -960,6 +1018,7 @@ func _read_input() -> void:
 	# player's turns as menu choices, and walking would go out as `move_intent`.
 	# Escape still opens the pause menu, because a player must always be able to stop.
 	if _duel != null and _duel.on():
+		_close_overlays()
 		if Input.is_action_just_pressed(&"back"):
 			_pause_menu()
 			return
@@ -971,6 +1030,7 @@ func _read_input() -> void:
 	# Only Escape passes, because a player must always be able to stop. The held key is
 	# let go in the log too, so the walk does not resume by itself when he has finished.
 	if _held_by_the_hail():
+		_close_overlays()
 		if _held_dir != Vector2i.ZERO:
 			_held_dir = Vector2i.ZERO
 			_sim.submit(&"move_intent", {"x": 0, "y": 0})
@@ -979,6 +1039,7 @@ func _read_input() -> void:
 		return
 
 	if _world.in_dialogue():
+		_close_overlays()
 		if _held_dir != Vector2i.ZERO:
 			_held_dir = Vector2i.ZERO
 			_sim.submit(&"move_intent", {"x": 0, "y": 0})
@@ -1006,7 +1067,7 @@ func _read_input() -> void:
 
 	# Left and right turn the journal's pages while it is open, so they cannot also
 	# be walking. Reading a page while walking into a bear was never a feature.
-	var dir: Vector2i = Vector2i.ZERO if _journal_open else _read_direction()
+	var dir: Vector2i = Vector2i.ZERO if _journal_open or _map_open else _read_direction()
 	if dir != _held_dir:
 		_held_dir = dir
 		_sim.submit(&"move_intent", {"x": dir.x, "y": dir.y})
@@ -1072,6 +1133,16 @@ func _read_input() -> void:
 			_sim.submit(&"tell_town")
 		elif _can_expose():
 			_sim.submit(&"expose_fraud")
+
+
+## **The world takes the screen back** (the review of O21): a fight, a hail or a
+## conversation that begins while the map or the journal is open closes them, or the talk
+## box and the fight's text sat hidden under the map with nothing that could close it.
+func _close_overlays() -> void:
+	_map_open = false
+	if _journal_open:
+		_journal_open = false
+		_draw_journal()
 
 
 ## The slot that leaves the conversation. One function, used by both the keybind
@@ -1328,6 +1399,9 @@ func _can_give_back() -> bool:
 ## matters on a map whose whole point is choosing a route. Kept small: more than a
 ## tile or two and the player stops being the thing you are looking at.
 const CAMERA_LOOKAHEAD: float = 1.6
+## How far north of a fight's centre the eye sits, in tiles, to keep the fighters under
+## the fight's text.
+const FIGHT_EYE_NORTH: float = 1.2
 ## How long the hail's '!' stays up once he has started walking, in real seconds.
 const HAIL_MARK_LINGERS: float = 0.5
 ## How near the start the readout names the cemetery, in tiles (O12).
@@ -1407,7 +1481,17 @@ func _camera_at(delta: float) -> Vector2:
 	var caller: Npc = _caller()
 	if caller != null:
 		want = _draw_position().lerp(_walkers.drawn_at(caller), 0.5)
-	if not _camera_placed or _camera.distance_to(want) > TELEPORT_TILES:
+	# **On the fight, not on you, while one is on** (O6, built after the review of O21):
+	# the centre of everybody in it, and a little north of it, so the fighters sit below
+	# the band the fight's own text takes at the top of the screen.
+	elif _squared_up():
+		var reading: Dictionary = _fight_frame()
+		if reading.has("centre"):
+			want = (reading["centre"] as Vector2) + Vector2(0.0, -FIGHT_EYE_NORTH)
+	# A jump of the eye is taken at once only when the player jumped — a respawn, a load.
+	# The eye's own jumps, to a caller or a fight's centre, are eased (the review of O21):
+	# snapping to them read as a cut.
+	if not _camera_placed or _render_from.distance_to(_render_to) > TELEPORT_TILES:
 		_camera = want
 		_camera_placed = true
 		return _camera
@@ -2026,7 +2110,11 @@ func _draw_hud() -> void:
 	match _what_e_does():
 		&"talk":
 			var npc: Npc = _nearby_npc()
-			rows.append(Text.of(&"prompt.talk", [npc.display_name, npc.role.to_lower()]))
+			# Mid-sentence: a name that begins with an article takes its lowercase form, and
+			# a role loses only its first capital — "survivor of Brindle", not "of brindle"
+			# (the review of O21).
+			var role: String = npc.role.left(1).to_lower() + npc.role.substr(1)
+			rows.append(Text.of(&"prompt.talk", [npc.prompt_name if npc.prompt_name != "" else npc.display_name, role]))
 		&"give_back":
 			rows.append(Text.of(&"prompt.put_back"))
 		&"steal":

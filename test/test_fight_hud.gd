@@ -215,3 +215,18 @@ func test_a_turn_based_fight_says_whose_turn_it_is() -> void:
 	hud.present(_turn_reading(100, 0, true, "won"), 1.0 / 60.0)
 	assert_true(hud.banner().contains("Bram"), "then he is named as the one down")
 	hud.free()
+
+
+func test_a_beast_is_named_with_its_article_and_a_pack_as_a_pack() -> void:
+	# The review of O21: "Loup est à terre", and after the two wolves at the bridge, one.
+	var hud := FightHud.new()
+	var one: Dictionary = _reading(1.0, 7, 0, "won")
+	one.merge({"his_name": "Wolf", "his_kind": "wolf", "foes": 1}, true)
+	hud.present(one, 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"fight.beast_down", [Text.of(&"beast.wolf.noun")]), "the wolf is down")
+	hud.present({"lens": 0.0, "on": false}, 1.0 / 60.0)
+	var pack: Dictionary = _reading(1.0, 7, 0, "won")
+	pack.merge({"his_name": "Wolf", "his_kind": "wolf", "foes": 2}, true)
+	hud.present(pack, 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"fight.pack_down", [Text.of(&"beast.wolf.many")]), "and two are the wolves")
+	hud.free()

@@ -105,7 +105,13 @@ func present(reading: Dictionary, delta: float) -> void:
 		if outcome != "" and _banner == "":
 			# A spar won ends with him yielding, not down: nobody dies in one (O1).
 			var his: String = String(reading.get("his_name", ""))
-			if outcome == "won":
+			var beast: String = String(reading.get("his_kind", ""))
+			if outcome == "won" and beast != "":
+				# A beast with its article, and a pack as a pack (the review of O21).
+				_banner = Text.of(&"fight.pack_down", [Text.of(StringName("beast.%s.many" % beast))]) \
+					if int(reading.get("foes", 1)) > 1 \
+					else Text.of(&"fight.beast_down", [Text.of(StringName("beast.%s.noun" % beast))])
+			elif outcome == "won":
 				_banner = Text.of(&"fight.yielded", [his]) if bool(reading.get("spar", false)) \
 					else Text.of(&"fight.down", [his])
 			elif outcome == "left":
@@ -241,8 +247,10 @@ func _draw() -> void:
 		# the player stands in wondering why nothing is happening.
 		# Named for whoever is acting, when several are (O6).
 		var acting: String = String(_reading.get("acting_name", his_name))
+		var acting_kind: String = String(_reading.get("acting_kind", _reading.get("his_kind", "")))
 		var whose: String = Text.of(&"duel.your_turn") if bool(_reading.get("my_turn", false)) \
-			else Text.of(&"duel.his_turn", [acting])
+			else (Text.of(&"duel.beast_turn", [Text.of(StringName("beast.%s.noun" % acting_kind))]) if acting_kind != ""
+				else Text.of(&"duel.his_turn", [acting]))
 		var tone: Color = MINE if bool(_reading.get("my_turn", false)) else HIS
 		tone.a = _alpha
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),

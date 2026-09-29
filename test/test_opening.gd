@@ -114,7 +114,7 @@ func test_she_waits_among_the_graves_and_so_does_her_fire() -> void:
 # --------------------------------------------------- where Bram calls from (O14) ---
 #
 # The ground the hail fires in, on each world: the rows `hails` in places.json holds —
-# two discs side by side since the review, a barrier across the village's south edge.
+# two discs side by side since the review, across the village's south edge, which every shortest way north crosses.
 #
 # **Not a wall round the start.** The plan asked that the start could not reach
 # Brindle or the bridge with the zone dammed. That held for the cove it was written

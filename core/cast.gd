@@ -78,6 +78,7 @@ static func load_from(path: String) -> Cast:
 		npc.id = StringName(key)
 		npc.display_name = String(row.get("name", key))
 		npc.role = String(row.get("role", ""))
+		npc.prompt_name = String(row.get("prompt_name", ""))
 		npc.zone = StringName(row.get("zone", ""))
 		npc.tile = _tile_for(Places.shared().cast_anchor(npc.id))
 		npc.greeting = String(row.get("greeting", ""))

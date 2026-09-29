@@ -47,6 +47,7 @@
   "npcs": {
     "fairy": {
       "name": "La fée",
+      "prompt_name": "la fée",
       "role": "Ce qui vit dans le bois",
       "zone": "overworld",
       "greeting": "Vous êtes réveillé. Ne partez pas encore.",

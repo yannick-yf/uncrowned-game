@@ -9,6 +9,9 @@ extends RefCounted
 var id: StringName = &""
 var display_name: String = ""
 var role: String = ""
+## The name as it reads mid-sentence, when it differs — "la fée" beside "La fée". Empty
+## means the display name reads the same anywhere.
+var prompt_name: String = ""
 var zone: StringName = &""
 var tile: Vector2i = Vector2i.ZERO
 ## What this person says in front of an answer at a given standing, when the band's

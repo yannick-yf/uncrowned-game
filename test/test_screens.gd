@@ -277,7 +277,8 @@ func test_the_first_prompt_says_what_e_does() -> void:
 	play.call(&"_draw_hud")
 	var prompt: String = (play.get(&"_prompt") as Label).text
 	var fairy: Npc = Cast.shared().get_npc(OpeningRules.FAIRY)
-	assert_true(prompt.contains(fairy.display_name), "and the prompt names her: '%s'" % prompt)
+	assert_true(prompt.contains(fairy.prompt_name), "and the prompt names her, mid-sentence: '%s'" % prompt)
+	assert_false(prompt.contains(fairy.display_name), "not with the capital her name takes alone (the review of O21)")
 	assert_false(prompt.contains(Text.of(&"prompt.rest")), "not the fire")
 	play.free()
 
@@ -437,3 +438,19 @@ func test_the_journal_turns_its_pages_and_comes_back_round() -> void:
 	assert_eq(posmod(play.get(&"_journal_page") as int, pages), 0,
 		"a full turn of the pages ends where it started")
 	play.free()
+
+
+func test_the_dialogue_box_holds_every_row_it_can_be_given() -> void:
+	# The review of O21: a talk offering three lines plus the way out drew its fourth row
+	# below the box, half off the screen.
+	var main: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var box: Control = main.get_node("HUD/DialogueBox") as Control
+	var choices: Label = main.get_node("HUD/DialogueBox/Choices") as Label
+	var font_size: int = choices.get_theme_font_size(&"font_size")
+	var row: float = float(font_size) * 1.8
+	assert_true(choices.offset_bottom - choices.offset_top >= row * DialogueRules.MAX_OPTIONS,
+		"%d rows fit the choices: %.0f px for rows of %.0f" % [DialogueRules.MAX_OPTIONS,
+			choices.offset_bottom - choices.offset_top, row])
+	assert_true(choices.offset_bottom <= box.offset_bottom - box.offset_top, "and the choices fit inside the box")
+	assert_true(box.offset_bottom <= 360.0, "and the box on the screen")
+	main.free()

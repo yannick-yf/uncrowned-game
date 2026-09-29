@@ -34,7 +34,7 @@
     {"who": "bram", "point": "brindle_hail",
       "_why": "O17, 2026-09-29: the tutorial's way in (Yannick's « dresseur Pokémon »). Walk up from the graves into the village's edge and Bram, at his post up the trail, sees you, calls, and comes over. Once: hailed:bram, and never to somebody who has met him or killed him. Emptying this list takes it out again, whole."},
     {"who": "bram", "point": "brindle_hail_east",
-      "_why": "the other half of his ground: two discs side by side make the barrier across the village's south edge (content/hail.json). The first row that sees you calls; the second never calls twice, because the fact is his, not the row's."}
+      "_why": "the other half of his ground: two discs side by side across the village's south edge, which every shortest way from the graves crosses (content/hail.json). The first row that sees you calls; the second never calls twice, because the fact is his, not the row's."}
   ],
   "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the road in front of the tile the old guard stood on, which is a wall there (moved a row south on 2026-09-29, when the anchors began to be checked before they are nudged), so the gatekeeper resolves on both worlds.",
   "_wild_note": "WHERE THE WOOD IS DANGEROUS (W2, 2026-09-25). A pack is an anchor and a count, and it stands where it stands until somebody walks into it. NOTHING HERE CLOSES A ROAD: a player who wants one of these fights it or goes round, and the demo's funnel is made of where the wolves are rather than of any check in core/ (PLAYER_MODEL.md section 8, invariant 4). Taking the funnel out again is W4, and it is editing this list. Anchors were checked against the baked world rather than guessed: road_last_stop was tried first and dropped because it resolves INSIDE Cairnwell, and monsters never stand in a town.",
@@ -99,7 +99,7 @@
     {"place": "saltmarch", "offset": [7, 6], "_why": "the quay, where the boats tie up"},
     {"place": "cairnwell", "offset": [8, 9], "_why": "the carters' yard outside the walls"},
     {"place": "blackcairn", "offset": [8, 10], "_why": "the last verge before the gate. A row south since 2026-09-29: (8, 9) stood on his ramparts"},
-    {"point": "cemetery", "offset": [1, 2], "_why": "the fairies' fire, among the graves since O12: the first save in the game. Two tiles south and one east, just beyond the fire's reach of the wake tile, so the first key hears her before it rests you; one east and not two since it became a real fire (2026-09-29), because his hazel at (181.3, 284.2) m grew through it"},
+    {"point": "cemetery", "offset": [2, 1], "_why": "the fairies' fire, among the graves since O12: the first save in the game. Two tiles east and one south, just beyond the fire's reach of the wake tile, so the first key hears her before it rests you. Moved twice on 2026-09-29: off his hazel at (181.3, 284.2) m, which grew through it, and then a tile north-east, because from the tiles south and east of it his cliff hid it (the review of O21)"},
     {"point": "bridge", "offset": [0, 6], "_why": "short of the bridge, on the Brindle side"},
     {"point": "road_long_stretch", "offset": [0, 0], "_why": "the long empty stretch west of the river"},
     {"point": "road_muster_junction", "offset": [0, 0], "_why": "the Muster junction, outside the camp"},

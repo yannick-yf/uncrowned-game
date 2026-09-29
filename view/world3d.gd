@@ -152,6 +152,13 @@ void fragment() {
 }
 """
 const CAMERA_SIZE: float = 24.0
+## How far back along the lens the camera stands. Orthographic, so this frames nothing —
+## but **it is also a cutaway, and must stay 45 m** (checked in the review of O21). His
+## sea cliffs south of the graves stand taller than the camera is far: at 150 m they were
+## whole, and seen from the south they covered the meadow, the fairies' fire and the
+## player standing by it. At 45 m the near plane cuts them open over the ground the
+## camera is looking at. The cut moves as the camera does, which is the price of seeing
+## the cemetery at all; the fire was moved a tile clear of it instead.
 const CAMERA_DISTANCE: float = 45.0
 ## The same easing as the 2D camera, so the two windows feel alike.
 const CAMERA_CATCHES_UP: float = 7.0
@@ -202,6 +209,9 @@ const WALK_CYCLE_M: float = 3.0
 const HAIL_MARK_PIXEL: float = 0.03
 const HAIL_POP_OVER: float = 1.35
 const HAIL_POP_S: float = 0.1
+## The size it pops *from*: a mark that starts at nothing is invisible on the frame it
+## goes up, and the frame it goes up is the one a photograph takes (the review of O21).
+const HAIL_POP_FROM: float = 0.6
 ## A placeholder block wears his rock paint, so even what is not drawn is in his hand.
 const HIS_BLOCK_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/styled_rock.tres"
 
@@ -278,8 +288,16 @@ var _camera: Camera3D = null
 ## are; billboards are lifted along it so their feet stay on the ground however the
 ## sprite leans toward the lens — the workshop's `sprite_billboard.gd` trick.
 var _lens_up: Vector3 = Vector3.UP
-## How tight the lens closes for a fight — see `DUEL_SIZE_M`.
+## How tight the lens closes for a fight — see `DUEL_SIZE_M` — opened with the fight's
+## radius up to this, and how much of the radius the framing gives.
+const FIGHT_SIZE_MAX_M: float = 22.0
+const FIGHT_SIZE_PER_M: float = 1.4
 var _fight_size_m: float = DUEL_SIZE_M
+
+
+## The lens's framing for a fight, for the suite.
+func fight_size_m() -> float:
+	return _fight_size_m
 ## A framing snap asked for before the reading arrived, replayed on the next `sync`.
 var _snap_wanted: float = -1.0
 ## The tilt the lens returns to when nobody is fighting — his 48°, or whatever
@@ -1531,8 +1549,10 @@ func _campfire(at: Vector2i) -> Node3D:
 			var lean := Node3D.new()
 			lean.rotation.y = -angle
 			fire.add_child(lean)
-			one.position = Vector3(0.28, 0.1, 0.0)
-			one.rotation.z = deg_to_rad(24.0)
+			# Tilted so the end toward the centre rises and the outer end rests just
+			# inside the stones — the review found the first draft's teepee upside down.
+			one.position = Vector3(0.32, 0.1, 0.0)
+			one.rotation.z = deg_to_rad(-24.0)
 			lean.add_child(one)
 	# The coals, in his own material.
 	var bed := MeshInstance3D.new()
@@ -1878,16 +1898,21 @@ func _sync_hail_mark(cast: Cast, reading: Dictionary) -> void:
 	_hail_mark.visible = npc != null
 	if npc == null:
 		return
-	var age: float = float(reading.get("age", 0.0))
-	var pop: float = 1.0
-	if age < HAIL_POP_S:
-		pop = HAIL_POP_OVER * sin(clampf(age / HAIL_POP_S, 0.0, 1.0) * PI * 0.5)
-	elif age < HAIL_POP_S * 2.0:
-		pop = lerpf(HAIL_POP_OVER, 1.0, (age - HAIL_POP_S) / HAIL_POP_S)
+	var pop: float = hail_pop(float(reading.get("age", 0.0)))
 	_hail_mark.pixel_size = HAIL_MARK_PIXEL * pop
 	var walkers := _sim.store(&"walkers") as Walkers
 	var head_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
 	_hail_mark.position = _feet_of(head_at) + _lens_up * (FIGURE_HEIGHT_M + 0.55 + 0.1 * pop)
+
+
+## How big the '!' is, against its size at rest, `age` seconds after he saw you: from
+## HAIL_POP_FROM up past its size, and back.
+static func hail_pop(age: float) -> float:
+	if age < HAIL_POP_S:
+		return lerpf(HAIL_POP_FROM, HAIL_POP_OVER, sin(clampf(age / HAIL_POP_S, 0.0, 1.0) * PI * 0.5))
+	if age < HAIL_POP_S * 2.0:
+		return lerpf(HAIL_POP_OVER, 1.0, (age - HAIL_POP_S) / HAIL_POP_S)
+	return 1.0
 
 
 ## Whether the '!' is up, for the suite.
@@ -2126,6 +2151,13 @@ func _fight_paint_for(who: StringName) -> ShaderMaterial:
 ## The arena and its marks, once a frame while somebody is fighting; hidden otherwise.
 func _sync_fight(fighting: Dictionary, fight_lens: float) -> void:
 	var fighting_now: bool = not fighting.is_empty()
+	# **The lens opens to hold everybody in it** (O6, built at last after the review of
+	# O21): the fight's radius in metres, a little over, between the duel's close framing
+	# and `FIGHT_SIZE_MAX_M`. A drill's master stands off six tiles, and at a fixed fifteen
+	# metres he stood at the screen's edge under the fight's own text.
+	if fighting_now:
+		_fight_size_m = clampf(float(fighting.get("radius_tiles", 0.0)) * _metres_per_tile * FIGHT_SIZE_PER_M,
+			DUEL_SIZE_M, FIGHT_SIZE_MAX_M)
 	if fighting_now and not _fighting_was:
 		_struck = {}
 	_fighting_was = fighting_now

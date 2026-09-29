@@ -47,6 +47,7 @@
   "npcs": {
     "fairy": {
       "name": "The fairy",
+      "prompt_name": "the fairy",
       "role": "What lives in the wood",
       "zone": "overworld",
       "greeting": "You are awake. Do not go yet.",
