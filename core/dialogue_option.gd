@@ -57,6 +57,11 @@ var joins: StringName = &""
 ## so it goes through the closed set of intents like everything else, and it is in the
 ## log and replays.
 var fights: StringName = &""
+## **Whether the fight it starts is a spar** (O1, 2026-09-29). A partner who loses a
+## spar yields rather than dies; the same person fought for real is killed like anybody
+## else. Said by the line, not by the person — Bram can be sparred with *and* killed,
+## and Pillar 3 needs both.
+var spar: bool = false
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible

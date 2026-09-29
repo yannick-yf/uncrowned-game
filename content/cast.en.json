@@ -390,7 +390,17 @@
           "text": "Teach me to fight.",
           "reply": "Then get your hands up. I do not hold back much, but I stop when you go down.",
           "fights": "bram",
+          "spar": true,
           "repeatable": true
+        },
+        {
+          "intent": "fight_bram_for_real",
+          "text": "Pick up where we stopped. For real, this time.",
+          "reply": "Then you had better mean it. I will not stop.",
+          "requires": "bested:bram",
+          "fights": "bram",
+          "repeatable": true,
+          "_p2": "DRAFT wording (O1, 2026-09-29) - the words are Yannick's. What must stay is the shape: offered only once you have bested him in a spar, a real fight, and killing him is murder. Pillar 3: nobody is made invulnerable."
         }
       ]
     },

@@ -32,6 +32,7 @@
   "fight.blocked": "paré",
   "fight.miss": "raté",
   "fight.down": "{0} est à terre",
+  "fight.yielded": "{0} se rend",
   "fight.you_down": "Vous êtes à terre",
   "duel.keys": "flèches  où se placer        K  frapper        O  attendre",
   "duel.your_turn": "À vous",

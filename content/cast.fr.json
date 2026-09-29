@@ -390,7 +390,17 @@
           "text": "Apprenez-moi à me battre.",
           "reply": "Alors lève les mains. Je ne retiens pas grand-chose, mais je m'arrête quand tu tombes.",
           "fights": "bram",
+          "spar": true,
           "repeatable": true
+        },
+        {
+          "intent": "fight_bram_for_real",
+          "text": "On reprend. Pour de vrai, cette fois.",
+          "reply": "Alors il faudra le vouloir. Je ne m'arrêterai pas.",
+          "requires": "bested:bram",
+          "fights": "bram",
+          "repeatable": true,
+          "_p2": "DRAFT wording (O1, 2026-09-29) - the words are Yannick's. What must stay is the shape: offered only once you have bested him in a spar, a real fight, and killing him is murder. Pillar 3: nobody is made invulnerable."
         }
       ]
     },

@@ -162,6 +162,7 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	duel.owed_damage = 0
 	duel.player_felled = false
 	duel.felled_by = Duel.NOBODY
+	duel.spar = bool(event.data.get("spar", false))
 	# **Whoever started the fight acts first.** A player who opens on somebody gets the
 	# first blow, which is the right incentive: attacking from a conversation should be
 	# an advantage, and the price should be paid in standing rather than in mechanics.
@@ -394,6 +395,15 @@ func _end_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 	for fighter: DuelFighter in duel.fighters:
 		if fighter.alive() and DuelRules.is_down(fighter.hp):
 			fighter.out = true
+			# **In a spar the partner yields** (O1, 2026-09-29): out of the fight, not out
+			# of the world. `duel_down` is what `FellingSystem` answers with a killing, so
+			# a yield must never raise it. The player still goes out *down* — the spar's
+			# floor in `_end` is what keeps him standing — or `_over` would read a lost
+			# spar as a fight he walked out of.
+			if duel.spar and not fighter.is_player():
+				fighter.how_out = &"yielded"
+				sim.derive(&"duel_yielded", {"who": String(fighter.who)})
+				continue
 			fighter.how_out = &"down"
 			sim.derive(&"duel_down", {"who": String(fighter.who)})
 	if _over(sim, duel):
@@ -500,9 +510,10 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 	# down where you fell and `_stand` has stopped writing your position first.
 	if felled and world != null:
 		var owed: int = world.player_hp
-		if DuelRules.spares(by):
+		if duel.spar or DuelRules.spares(by):
 			owed = maxi(world.player_hp - 1, 0)
 		world.hurt(owed, sim.step, false)
+	duel.spar = false
 	duel.owed_damage = 0
 	duel.player_felled = false
 	duel.felled_by = Duel.NOBODY

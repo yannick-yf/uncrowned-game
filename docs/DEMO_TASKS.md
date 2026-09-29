@@ -1243,7 +1243,7 @@ invisible.
 **Size, honestly: about 130 h of sessions**, not counting his writing. The heavy items
 are the coast (O11), the hail (O16), drawing several opponents (O6) and the bow (O9).
 
-### O1 · A spar never kills — and the partner can still be killed
+### O1 · A spar never kills — and the partner can still be killed — **built 2026-09-29**
 
 Est. 3 h. Depends on: —.
 

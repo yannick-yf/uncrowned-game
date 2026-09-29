@@ -18,6 +18,10 @@ extends SimSystem
 ## than a flag** — the same reason the fairy's leaving is a fact: a replay rebuilds it
 ## for free and nothing has to be kept in step.
 const KILLED: String = "killed:%s"
+## **And what a yield leaves** (O1, 2026-09-29): that you beat them. A fact, so the
+## partner can offer the fight for real afterwards — which is the only way a sparring
+## partner can be killed, and Pillar 3 says one must be able to be.
+const BESTED: String = "bested:%s"
 
 
 func steps() -> bool:
@@ -29,6 +33,11 @@ func ticks() -> bool:
 
 
 func on_event(sim: Sim, event: SimEvent) -> void:
+	if event.type == &"duel_yielded":
+		var yielded := StringName(String(event.data.get("who", "")))
+		if yielded != Duel.NOBODY and yielded != DuelRules.PLAYER:
+			sim.facts.add_source(StringName(BESTED % DuelRules.kind_of(yielded)), &"witnessed")
+		return
 	if event.type != &"duel_down":
 		return
 	var who := StringName(String(event.data.get("who", "")))

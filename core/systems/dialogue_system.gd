@@ -157,6 +157,7 @@ func _choose(
 		# so the log holds one intent rather than an intent and a fight.
 		sim.derive(&"duel_began", {
 			"opponent": String(option.fights), "asked_by": String(intent),
+			"spar": option.spar,
 		})
 
 

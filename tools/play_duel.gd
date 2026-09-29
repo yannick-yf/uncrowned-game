@@ -57,7 +57,9 @@ func _square_up() -> Sim:
 		var him: Npc = cast.get_npc(StringName(OPPONENT))
 		if him != null:
 			world.player_pos = him.centre() + Vector2(3.0, 0.0)
-	sim.submit(&"duel_began", {"opponent": OPPONENT, "by": "player"})
+	# A sparring partner is sparred with, as the game's own line does it (O1).
+	sim.submit(&"duel_began", {"opponent": OPPONENT, "by": "player",
+		"spar": DuelRules.spares(StringName(OPPONENT))})
 	sim.advance(1)
 	return sim
 

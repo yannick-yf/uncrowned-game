@@ -29,7 +29,8 @@ extends RefCounted
 ## is one event; the log grows with what the player *does*, not with how long they do it.
 
 const PATH: String = "user://save.json"
-const VERSION: int = 1
+## 2 since O1 (2026-09-29): a won spar used to replay as a killing, and now yields.
+const VERSION: int = 2
 
 
 ## Whether there is a save **for this world**. A run is its event log, and a log

@@ -212,7 +212,9 @@ func _ready() -> void:
 	var duelling: String = OS.get_environment("UNCROWNED_DUEL")
 	if OS.has_feature("debug") and duelling != "":
 		var asked: PackedStringArray = duelling.strip_edges().split(":")
-		_sim.submit(&"duel_began", {"opponent": asked[0], "by": String(DuelRules.PLAYER)})
+		# A sparring partner is sparred with, as the game's own line does it (O1).
+		_sim.submit(&"duel_began", {"opponent": asked[0], "by": String(DuelRules.PLAYER),
+			"spar": DuelRules.spares(StringName(asked[0]))})
 		_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
 		var playing: DuelPlayer = DuelPlayer.new(StringName(asked[2])) if asked.size() > 2 else null
@@ -366,6 +368,7 @@ func _duel_frame() -> Dictionary:
 		"settling": _duel.settling,
 		"settle_steps": DuelRules.beat_steps(),
 		"outcome": String(_duel.outcome),
+		"spar": _duel.spar,
 		"felled": _duel.player_felled,
 		"his_down": DuelRules.is_down(him.hp),
 		"my_hp": mine.hp,

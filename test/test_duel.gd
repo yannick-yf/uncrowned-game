@@ -527,6 +527,92 @@ func test_saying_the_line_is_what_begins_a_duel() -> void:
 		+ "the player's turns as menu choices")
 
 
+# ------------------------------------------------ a spar never kills (O1, 2026-09-29) ---
+
+## A spar against Bram, started the way the game starts it: by saying the line.
+func _spar(sim: Sim, intent: String = "ask_bram_spar") -> Duel:
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	sim.submit(&"choose_intent", {"intent": intent})
+	sim.advance(4)
+	return _duel(sim)
+
+
+func test_winning_a_spar_kills_nobody() -> void:
+	# **A live defect found by the O analysis, and ours (K3).** Winning the spar wrote
+	# `killed:bram`, a witnessed murder in Brindle and a rumour: the felling answered
+	# every fighter at 0, and `spares` only ever protected the player.
+	var sim: Sim = Game.build()
+	var duel: Duel = _spar(sim)
+	assert_true(duel.spar, "saying the spar line starts a spar")
+	_play(sim, DuelPlayer.PRESS, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	assert_eq(duel.outcome, &"won", "you beat him")
+	assert_false(OpeningRules.is_gone(&"bram", sim.facts), "and he is still there")
+	assert_false(sim.facts.has(&"killed:bram"), "nobody was killed")
+	assert_false(sim.facts.has(PlayerRules.DEED_KILLED_INNOCENT), "no murder was done")
+	assert_eq(sim.events.of_type(&"duel_down").size(), 0, "nobody went down")
+	assert_eq(sim.events.of_type(&"duel_yielded").size(), 1, "he yielded, once")
+	assert_true(sim.facts.has(&"bested:bram"), "and the world remembers you beat him")
+
+
+func test_a_partner_who_yielded_can_be_talked_to_again() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	_spar(sim)
+	_play(sim, DuelPlayer.PRESS, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	assert_true(world.in_dialogue(), "he talks to you")
+	var intents: Array[StringName] = []
+	for option: DialogueOption in world.options:
+		intents.append(option.intent)
+	assert_true(intents.has(&"ask_bram_spar"), "and will spar again")
+
+
+func test_bram_can_still_be_killed() -> void:
+	# **Pillar 3** (SPECS §1): the design never protects itself by making somebody
+	# invulnerable. A spar yields; a fight you pick for real, after you have bested
+	# him, is a killing — and a murder, since you started it.
+	var sim: Sim = Game.build()
+	_spar(sim)
+	_play(sim, DuelPlayer.PRESS, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	var duel: Duel = _spar(sim, "fight_bram_for_real")
+	assert_true(duel.on(), "the line for real starts a fight")
+	assert_false(duel.spar, "and it is not a spar")
+	_play(sim, DuelPlayer.PRESS, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	assert_true(sim.facts.has(&"killed:bram"), "he is dead")
+	assert_true(OpeningRules.is_gone(&"bram", sim.facts), "and gone from the world")
+	assert_true(sim.facts.has(PlayerRules.DEED_KILLED_INNOCENT), "and it was murder")
+
+
+func test_the_fight_for_real_is_not_offered_before_you_have_bested_him() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	for option: DialogueOption in world.options:
+		assert_ne(option.intent, &"fight_bram_for_real",
+			"a first-time player is not offered a murder in the tutorial's menu")
+
+
+func test_losing_a_spar_still_reads_lost() -> void:
+	# The yield is for the partner. The player who goes down in a spar is *down*, or
+	# `_over` would read the lost spar as `left`.
+	DuelRules.override({"player_hp": 5})
+	var sim: Sim = Game.build()
+	var duel: Duel = _spar(sim)
+	_play(sim, DuelPlayer.STAND, 4000)
+	assert_eq(duel.outcome, &"lost", "you lost")
+	assert_eq(sim.events.of_type(&"duel_yielded").size(), 0, "and you did not yield")
+
+
 func test_the_first_design_is_gone() -> void:
 	# **K6's other half, 2026-09-26.** Yannick played the turn-based fight, kept it, and
 	# said the real-time one could go. This fails the day any of it comes back by

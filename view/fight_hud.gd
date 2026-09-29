@@ -87,8 +87,13 @@ func present(reading: Dictionary, delta: float) -> void:
 		# the event — the first one drawn, a photograph — still says who is down.
 		var outcome: String = String(reading.get("outcome", ""))
 		if outcome != "" and _banner == "":
-			_banner = Text.of(&"fight.down", [String(reading.get("his_name", ""))]) if outcome == "won" \
-				else Text.of(&"fight.you_down")
+			# A spar won ends with him yielding, not down: nobody dies in one (O1).
+			var his: String = String(reading.get("his_name", ""))
+			if outcome == "won":
+				_banner = Text.of(&"fight.yielded", [his]) if bool(reading.get("spar", false)) \
+					else Text.of(&"fight.down", [his])
+			else:
+				_banner = Text.of(&"fight.you_down")
 			_banner_at = _now
 	for i: int in range(_floats.size() - 1, -1, -1):
 		if _now - float(_floats[i]["born"]) > FLOAT_SECONDS:

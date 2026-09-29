@@ -36,6 +36,7 @@
   "fight.blocked": "guarded",
   "fight.miss": "miss",
   "fight.down": "{0} is down",
+  "fight.yielded": "{0} yields",
   "fight.you_down": "You are down",
   "duel.keys": "arrows  where to stand        K  strike        O  wait",
   "duel.your_turn": "Your turn",

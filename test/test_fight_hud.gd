@@ -69,6 +69,16 @@ func test_the_banner_is_read_off_the_outcome_and_goes_with_the_fight() -> void:
 	hud.free()
 
 
+func test_a_won_spar_says_he_yields_not_that_he_is_down() -> void:
+	# O1: nobody dies in a spar, so the banner does not say he is down.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 7, 0, "won")
+	reading["spar"] = true
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"fight.yielded", ["Bram"]), "he yields: '%s'" % hud.banner())
+	hud.free()
+
+
 func test_a_felled_player_is_shown_at_nothing() -> void:
 	# The felling blow is paid at the end of the beat, so the store still says one or
 	# two while you are on the ground. The picture says nothing left, because that is
@@ -82,7 +92,7 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 
 
 func test_the_fights_words_exist_in_both_languages() -> void:
-	for key: StringName in [&"fight.you", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
+	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
 			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",
