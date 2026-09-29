@@ -25,9 +25,9 @@ func _duel(sim: Sim) -> Duel:
 
 ## A fight against somebody, started by whoever `by` names. The player keeps the ground
 ## they are standing on; the opponent is set down a stride away on the side they are on.
-func _start(against: String = "bram", by: String = "player") -> Sim:
+func _start(against: String = "bram", by: String = "player", spar: bool = false) -> Sim:
 	var sim: Sim = Game.build()
-	sim.submit(&"duel_began", {"opponent": against, "by": by})
+	sim.submit(&"duel_began", {"opponent": against, "by": by, "spar": spar})
 	sim.advance(1)
 	return sim
 
@@ -473,9 +473,10 @@ func test_losing_is_paid_down_the_one_path_everything_that_hurts_you_takes() -> 
 
 
 func test_a_sparring_partner_stops_when_you_go_down() -> void:
-	# Bram says so in his own line, so the code had better agree with the content.
+	# Bram says so in his own line, so the code had better agree with the content. A
+	# spar since O1: the mercy is the line's, not the man's.
 	DuelRules.override({"player_hp": 5})
-	var sim: Sim = _start("bram", "bram")
+	var sim: Sim = _start("bram", "bram", true)
 	var world := sim.store(&"world") as WorldState
 	_play(sim, DuelPlayer.STAND, 4000)
 	assert_eq((_duel(sim)).outcome, &"lost", "you lost")
@@ -600,6 +601,25 @@ func test_the_fight_for_real_is_not_offered_before_you_have_bested_him() -> void
 	for option: DialogueOption in world.options:
 		assert_ne(option.intent, &"fight_bram_for_real",
 			"a first-time player is not offered a murder in the tutorial's menu")
+
+
+func test_the_fight_for_real_is_real_both_ways() -> void:
+	# **Found by O1's review.** "I will not stop", he says — and he used to stop anyway,
+	# because the mercy came from `spares` on the man rather than from the line. A fight
+	# you pick for real can kill you as surely as it can kill him.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	_spar(sim)
+	_play(sim, DuelPlayer.PRESS, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	DuelRules.override({"player_hp": 5})
+	world.player_hp = 5
+	var duel: Duel = _spar(sim, "fight_bram_for_real")
+	assert_false(duel.spar, "not a spar")
+	_play(sim, DuelPlayer.STAND, 4000)
+	sim.advance(DuelRules.beat_steps() + 4)
+	assert_eq(duel.outcome, &"lost", "you lost")
+	assert_eq(world.deaths, 1, "and it killed you")
 
 
 func test_losing_a_spar_still_reads_lost() -> void:

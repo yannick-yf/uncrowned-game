@@ -457,10 +457,11 @@ func _sound_the_fight(fresh: Array) -> void:
 			"blow_missed":
 				Sound.cue(&"whiff")
 			"duel_decided":
-				# A man who does not spare you kills you, and the death has its own jingle.
+				# Lost in a spar is lost; lost for real is a death, which has its own jingle;
+				# and walking away is neither.
 				if String(blow.get("how", "")) == "won":
 					Sound.cue(&"fight_won")
-				elif DuelRules.spares(StringName(String(blow.get("opponent", "")))):
+				elif String(blow.get("how", "")) == "lost" and bool(blow.get("spar", false)):
 					Sound.cue(&"fight_lost")
 
 

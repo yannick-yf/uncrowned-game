@@ -196,7 +196,10 @@ static func purse_of(who: StringName) -> int:
 	return int(_about(who).get("purse", 0))
 
 
-## Whether they stop when you go down. A sparring partner does.
+## Whether they are a sparring partner. **Not a mercy of their own since O1** — the
+## mercy is the line's (`Duel.spar`): a spar line leaves you on one point, and the same
+## man fought for real does not. Read only where a fight starts without a line, so a
+## debug tool spars with Bram as the game's own line would.
 static func spares(who: StringName) -> bool:
 	return bool(_about(who).get("spares", false))
 

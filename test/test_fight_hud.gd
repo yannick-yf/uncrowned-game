@@ -79,6 +79,15 @@ func test_a_won_spar_says_he_yields_not_that_he_is_down() -> void:
 	hud.free()
 
 
+func test_walking_out_of_a_fight_does_not_say_you_are_down() -> void:
+	# Found by O1's review: leaving is the ordinary way out of a spar, and every outcome
+	# but a win used to read "you are down" — at full health.
+	var hud := FightHud.new()
+	hud.present(_reading(1.0, 10, 10, "left"), 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"fight.you_left"), "you walked away: '%s'" % hud.banner())
+	hud.free()
+
+
 func test_a_felled_player_is_shown_at_nothing() -> void:
 	# The felling blow is paid at the end of the beat, so the store still says one or
 	# two while you are on the ground. The picture says nothing left, because that is
@@ -92,7 +101,7 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 
 
 func test_the_fights_words_exist_in_both_languages() -> void:
-	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
+	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
 			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",

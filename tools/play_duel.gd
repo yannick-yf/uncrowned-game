@@ -132,6 +132,8 @@ func _trace(hand: StringName, steps: int) -> void:
 					note.append("%s MISSES" % String(event.data.get("by", "")))
 				&"duel_down":
 					note.append("%s IS DOWN" % String(event.data.get("who", "")))
+				&"duel_yielded":
+					note.append("%s YIELDS" % String(event.data.get("who", "")))
 				&"duel_fled":
 					note.append("%s HAS LEFT THE FIGHT" % String(event.data.get("who", "")))
 				&"duel_decided", &"duel_ended":

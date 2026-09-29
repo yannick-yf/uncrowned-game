@@ -92,6 +92,9 @@ func present(reading: Dictionary, delta: float) -> void:
 			if outcome == "won":
 				_banner = Text.of(&"fight.yielded", [his]) if bool(reading.get("spar", false)) \
 					else Text.of(&"fight.down", [his])
+			elif outcome == "left":
+				# Walking out is the ordinary way out of a spar, and nobody is down.
+				_banner = Text.of(&"fight.you_left")
 			else:
 				_banner = Text.of(&"fight.you_down")
 			_banner_at = _now

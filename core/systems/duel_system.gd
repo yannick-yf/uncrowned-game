@@ -485,6 +485,7 @@ func _decided(sim: Sim, duel: Duel, how: StringName) -> void:
 	var foe: DuelFighter = duel.foe()
 	sim.derive(&"duel_decided", {
 		"opponent": String(foe.who) if foe != null else "", "how": String(how),
+		"spar": duel.spar,
 	})
 	if duel.settling <= 0:
 		_end(sim, duel, how, sim.store(&"world") as WorldState)
@@ -510,7 +511,9 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 	# down where you fell and `_stand` has stopped writing your position first.
 	if felled and world != null:
 		var owed: int = world.player_hp
-		if duel.spar or DuelRules.spares(by):
+		# **The line decides, not the man** (O1's review): a spar leaves you on one point,
+		# and a fight picked for real — "I will not stop" — does not, whoever throws it.
+		if duel.spar:
 			owed = maxi(world.player_hp - 1, 0)
 		world.hurt(owed, sim.step, false)
 	duel.spar = false
