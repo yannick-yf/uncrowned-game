@@ -73,8 +73,13 @@ static func compose(yard: Dictionary, catalog: Dictionary, wet: Callable,
 			pieces.append(_placement(asset, _xz(gate["xz"]), float(gate.get("yaw", 0.0)), ROLE_GATE, "gate"))
 	for raw: Variant in (yard.get("pieces", []) as Array):
 		var single: Dictionary = raw as Dictionary
-		var asset: Dictionary = library_entry(String(single["library"])) if single.has("library") \
-			else CatalogRules.entry(catalog, String(single.get("piece", "")))
+		var asset: Dictionary = {}
+		if single.has("made"):
+			asset = made_entry(String(single["made"]))
+		elif single.has("library"):
+			asset = library_entry(String(single["library"]))
+		else:
+			asset = CatalogRules.entry(catalog, String(single.get("piece", "")))
 		if asset.is_empty():
 			report.append("YARD %s: no piece '%s' in his catalogue" % [place, single.get("piece", "")])
 			continue
@@ -89,6 +94,8 @@ static func compose(yard: Dictionary, catalog: Dictionary, wet: Callable,
 				_wobble(seed, "z") * float(jitter.get("shift_m", 0.0)))
 			var yaw: float = float(single.get("yaw", 0.0)) + _wobble(seed, "yaw") * float(jitter.get("yaw", 0.0))
 			var placed: Dictionary = _placement(asset, xz, yaw, role, id)
+			if asset.has("made"):
+				placed["made"] = String(asset["id"])
 			placed["scale"] = _scale(single.get("scale", 1.0)) \
 				* (1.0 + _wobble(seed, "scale") * float(jitter.get("scale", 0.0)))
 			pieces.append(placed)
@@ -108,6 +115,15 @@ static func library_entry(path: String) -> Dictionary:
 	if path == "":
 		return {}
 	return {"id": path.get_file(), "scene": LIBRARY + path + ".tscn", "ground_pivot": true}
+
+
+## **Something he has not drawn, made here in his materials** (O13, 2026-09-29): a grave's
+## marker. It has no scene of his, so the window builds it (`World3d.MADE`) and nothing
+## collides but the tile it stands on, which the bake closes as it closes any piece's.
+static func made_entry(kind: String) -> Dictionary:
+	if kind == "":
+		return {}
+	return {"id": kind, "scene": "", "made": true, "ground_pivot": true}
 
 
 ## **A stone's own small difference from the next**, in [-1, 1], from the yard's name,

@@ -135,6 +135,21 @@ two of his materials**, `styled_rock` and `styled_dark`, nothing invented. It is
 and it shows; `test_his_brother_has_drawn_no_beast` still reports the debt, and the day
 he draws one this goes. `docs/POUR_SLOSINIO.md` tells him.
 
+**A third, the graves' markers and the fires (Yannick, 2026-09-29).** He has drawn no
+grave and no campfire. The cemetery's stones were first his `boulder_round` made small,
+and read as pebbles close to; a campfire was a 2×2 block in his rock paint, and it was
+the first thing the player saw on waking. Yannick widened the wolf's exception to the
+markers (*« pour les stèles je valide »*) and asked for a fire *« simple mais beau et
+visuel »*. So `view/world3d.gd` makes `_headstone()` (a rounded stele on a plinth, his
+`styled_rock` only) and `_grave_board()` (a plank cut to a point, his `styled_wood`
+only), placed by the brief as `"made"` pieces; and `_campfire()` is **composed from his
+pieces** — a ring of his `boulder_round` small, a teepee of his `fallen_log` cut to
+firewood, a bed in his furnaces' `embers` material, his `fumee_ruine` smoke, a light in
+his forge's colour — with only the flames ours, made the way his smoke is and coloured
+from fire already on the screen. `test_world3d` fails on a marker surface that wears
+anything but his two paints; `test_his_brother_has_drawn_no_grave` still reports the
+debt, and the day he draws one the brief names his piece.
+
 The sheet is **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
 has never lived there — his own sheet is in `prototypes/`.

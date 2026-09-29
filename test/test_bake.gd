@@ -312,9 +312,14 @@ func _reach(region: Region, from: Vector2i, dam: Dictionary) -> Dictionary:
 
 # ------------------------------------------------------- the cemetery (O13) ---
 #
-# The game begins among graves (O12), and they have to be seen. His pieces only: his
-# farm fence and gate, his library's boulder made small for each stone, and his loose
-# earth and fallow narrowed over each grave. A yard on a point — dressed, not closed.
+# The game begins among graves (O12), and they have to be seen. His farm fence and
+# gate, his loose earth and fallow narrowed over each grave — and the markers, which he
+# has not drawn: a stone stele for the old dead and a plank for the burning's, made in
+# his materials since Yannick widened the wolf's exception to them (2026-09-29). A yard
+# on a point — dressed, not closed.
+
+func _is_marker(prop: Dictionary) -> bool:
+	return prop.has("made") and World3d.MADE.has(StringName(String(prop["made"])))
 
 func _cemetery(region: Region) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
@@ -324,7 +329,7 @@ func _cemetery(region: Region) -> Array[Dictionary]:
 	return out
 
 
-func test_the_cemetery_has_graves_a_fence_and_a_gate_all_his() -> void:
+func test_the_cemetery_has_graves_a_fence_and_a_gate() -> void:
 	var data: Dictionary = _baked()
 	if data.is_empty():
 		assert_true(false, "content/region.json exists — run tools/bake_region.gd")
@@ -332,26 +337,30 @@ func test_the_cemetery_has_graves_a_fence_and_a_gate_all_his() -> void:
 	var region: Region = RegionBake.read(data)
 	var count: Dictionary = {}
 	var stones: Dictionary = {}
+	var markers: int = 0
 	for prop: Dictionary in _cemetery(region):
-		if String(prop["piece"]) == "boulder_round":
+		if _is_marker(prop):
 			stones[prop["at"]] = true
 	for prop: Dictionary in _cemetery(region):
 		count[String(prop["piece"])] = int(count.get(String(prop["piece"]), 0)) + 1
+		var at: Vector2i = prop["at"] as Vector2i
+		if _is_marker(prop):
+			markers += 1
+			assert_eq(String(prop["scene"]), "", "a marker is made, not one of his scenes")
+			assert_eq(region.terrain_at(at), Region.Terrain.WALL, "and you walk round it, at %s" % at)
+			continue
 		assert_true(String(prop["scene"]).begins_with("res://assets/")
 			or String(prop["scene"]).begins_with(YardRules.LIBRARY),
-			"%s is one of his scenes: %s" % [prop["piece"], prop["scene"]])
-		var at: Vector2i = prop["at"] as Vector2i
-		if String(prop["piece"]) == "boulder_round":
-			var scale: Vector3 = prop.get("scale", Vector3.ONE) as Vector3
-			assert_true(scale.x < 0.5 and scale.y < 1.0, "a grave's stone is his boulder made small: %s" % scale)
-			assert_eq(region.terrain_at(at), Region.Terrain.WALL, "and you walk round it, at %s" % at)
-		elif String(prop["role"]) == String(YardRules.ROLE_GROUND):
+			"everything else is one of his scenes: %s is %s" % [prop["piece"], prop["scene"]])
+		if String(prop["role"]) == String(YardRules.ROLE_GROUND):
 			# The earth stops nobody; the stone at its head is what the tile is walled for.
 			assert_true(region.is_passable(at) or stones.has(at),
 				"the earth over a grave closes nothing of its own, at %s" % at)
-	assert_true(int(count.get("boulder_round", 0)) >= 5, "five graves at least: %s" % count)
-	assert_true(int(count.get("sol_cultive_raccord", 0)) + int(count.get("jachere_irreguliere", 0))
-		== int(count.get("boulder_round", 0)), "and every stone has its grave under it: %s" % count)
+	assert_true(markers >= 5, "five graves at least: %s" % count)
+	assert_true(int(count.get("headstone", 0)) >= 2 and int(count.get("grave_board", 0)) >= 3,
+		"old stones and new planks: %s" % count)
+	assert_eq(int(count.get("sol_cultive_raccord", 0)) + int(count.get("jachere_irreguliere", 0)), markers,
+		"and every marker has its grave under it: %s" % count)
 	assert_true(int(count.get("cloture_rustique_2m", 0)) >= 4, "his meadow fence: %s" % count)
 	assert_eq(int(count.get("portail_fermier_ouvert", 0)), 1, "and his gate in it")
 
@@ -387,6 +396,8 @@ func test_every_piece_of_the_cemetery_is_part_of_what_a_stale_bake_is_measured_a
 	var source: Dictionary = data.get("source", {}) as Dictionary
 	assert_true(source.has("assets/farming/catalog.json"), "his farming catalogue is hashed")
 	for prop: Dictionary in _cemetery(RegionBake.read(data)):
+		if _is_marker(prop):
+			continue  # made here, no scene of his to hash; the brief that places it is hashed
 		var relative: String = String(prop["scene"]).trim_prefix("res://")
 		assert_true(source.has(relative), "%s's scene is hashed: %s" % [prop["piece"], relative])
 
@@ -402,8 +413,9 @@ func test_a_scaled_piece_reads_back_at_its_scale() -> void:
 
 func test_his_brother_has_drawn_no_grave() -> void:
 	# **A DEBT and not a failure.** Nothing in his library or his catalogues is a grave,
-	# a headstone or a cross, so the cemetery's stones are his boulder made small and its
-	# mounds his loose earth and fallow narrowed — his, and it shows as makeshift.
+	# a headstone or a cross, so the cemetery's markers are ours, made in his materials
+	# (Yannick widened the wolf's exception to them, 2026-09-29), over his loose earth and
+	# fallow narrowed — and it shows.
 	# `docs/POUR_SLOSINIO.md` asks him for a cemetery kit; the day one arrives, this fails
 	# and the brief's cemetery is rebuilt from it.
 	var found: PackedStringArray = PackedStringArray()
@@ -416,7 +428,7 @@ func test_his_brother_has_drawn_no_grave() -> void:
 					if lower.contains(word):
 						found.append(name)
 	if found.is_empty():
-		debt("his brother has drawn no grave: the cemetery's stones are his boulder made small")
+		debt("his brother has drawn no grave: the cemetery's markers are ours, made in his materials")
 		return
 	assert_true(false, "he has drawn one — rebuild the cemetery from it: %s" % ", ".join(found))
 

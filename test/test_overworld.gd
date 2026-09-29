@@ -244,7 +244,10 @@ func test_every_landmark_kind_has_art() -> void:
 		var kind: StringName = prop["kind"] as StringName
 		# A building his data stands, or a piece of his catalogue the bake placed (G1):
 		# either way his scene draws it, from the vendored copy.
-		if prop.has("scene") and (bool(prop.get("his", false)) or prop.has("piece")):
+		if prop.has("made"):
+			# Made here in his materials, drawn by the window by name (O13).
+			assert_true(World3d.MADE.has(StringName(String(prop["made"]))), "the window makes a '%s'" % prop["made"])
+		elif prop.has("scene") and (bool(prop.get("his", false)) or prop.has("piece")):
 			assert_true(ResourceLoader.exists(String(prop["scene"]).replace("res://", "res://view3d/workshop/")),
 				"his scene draws %s" % prop.get("source_id", prop.get("piece", kind)))
 		else:

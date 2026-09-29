@@ -77,10 +77,9 @@
     "assets/ironworks/modules/portail_cour.tscn": "7a663dbc761bb59b8b44e300a4776627b71f5c6b9462ad8bb2526f95878bbf4b",
     "assets/farming/modules/cloture_rustique_2m.tscn": "be065ca5e0012dabaf9450156bfd699f0e6e0db330930013117a3a683a14943a",
     "assets/farming/modules/portail_fermier_ouvert.tscn": "1d24889512b29c3fe8ab85777ea14f7666991bb3d1e8cd11dd5f64a799ff82ae",
-    "prototype_3d/assets/library/rocks/boulder_round.tscn": "3850fc3355a10ea6356ecf7f555d865e84fecd4b956ae8db980ce6eedafc02a6",
     "assets/farming/champs/jachere_irreguliere.tscn": "167b44a84ddf0ce514afecbaad21f2be62936b9ba177c3ec3ab1d29a5afa566d",
     "assets/farming/champs/sol_cultive_raccord.tscn": "6056aba6665c6f183afb14c34aefbf64cb5fe7482e35c1e44ae45dbb3aada6dd",
-    "content/bake_brief.json": "63fd358f6f087c174522f41e6a69c025add2018a2f5e2abe999ce9d62c07ef72"
+    "content/bake_brief.json": "9399c89795b66f69aefd2588fe5edb06e55fa9ad3c14b6d3e964e2eb675555d5"
   },
   "width": 384,
   "height": 384,
@@ -3659,7 +3658,7 @@
       "lift": 0.0
     },
     {
-      "kind": "boulder_round",
+      "kind": "headstone",
       "at": [
         276,
         327
@@ -3668,24 +3667,25 @@
         1,
         1
       ],
-      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
-      "piece": "boulder_round",
+      "scene": "",
+      "piece": "headstone",
       "role": "piece",
       "yard": "cemetery",
+      "made": "headstone",
       "xz": [
-        168.960906982422,
-        270.318023681641
+        168.968734741211,
+        270.434417724609
       ],
-      "yaw": 0.312932021057449,
+      "yaw": 0.182543678950179,
       "lift": 0.0,
       "scale": [
-        0.395169615745544,
-        0.740943014621735,
-        0.197584807872772
+        0.991949319839478,
+        0.991949319839478,
+        0.991949319839478
       ]
     },
     {
-      "kind": "boulder_round",
+      "kind": "headstone",
       "at": [
         277,
         327
@@ -3694,20 +3694,21 @@
         1,
         1
       ],
-      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
-      "piece": "boulder_round",
+      "scene": "",
+      "piece": "headstone",
       "role": "piece",
       "yard": "cemetery",
+      "made": "headstone",
       "xz": [
-        171.080291748047,
-        270.383239746094
+        171.064239501953,
+        270.486572265625
       ],
-      "yaw": -10.0949416342412,
+      "yaw": -5.88871595330739,
       "lift": 0.0,
       "scale": [
-        0.376073598861694,
-        0.705137968063354,
-        0.188036799430847
+        0.96012270450592,
+        0.96012270450592,
+        0.96012270450592
       ]
     },
     {
@@ -3763,7 +3764,7 @@
       ]
     },
     {
-      "kind": "boulder_round",
+      "kind": "grave_board",
       "at": [
         276,
         329
@@ -3772,24 +3773,25 @@
         1,
         1
       ],
-      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
-      "piece": "boulder_round",
+      "scene": "",
+      "piece": "grave_board",
       "role": "piece",
       "yard": "cemetery",
+      "made": "grave_board",
       "xz": [
         168.978317260742,
-        274.397216796875
+        274.497222900391
       ],
-      "yaw": 6.96311894407568,
+      "yaw": 7.83350881208515,
       "lift": 0.0,
       "scale": [
-        0.323763936758041,
-        0.571348190307617,
-        0.161881968379021
+        0.961797535419464,
+        0.961797535419464,
+        0.961797535419464
       ]
     },
     {
-      "kind": "boulder_round",
+      "kind": "grave_board",
       "at": [
         277,
         329
@@ -3798,24 +3800,25 @@
         1,
         1
       ],
-      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
-      "piece": "boulder_round",
+      "scene": "",
+      "piece": "grave_board",
       "role": "piece",
       "yard": "cemetery",
+      "made": "grave_board",
       "xz": [
         171.001266479492,
-        274.350524902344
+        274.450531005859
       ],
-      "yaw": 7.7390096894789,
+      "yaw": 8.70638590066377,
       "lift": 0.0,
       "scale": [
-        0.373053699731827,
-        0.658330082893372,
-        0.186526849865913
+        1.07777345180511,
+        1.07777345180511,
+        1.07777345180511
       ]
     },
     {
-      "kind": "boulder_round",
+      "kind": "grave_board",
       "at": [
         278,
         329
@@ -3824,20 +3827,21 @@
         1,
         1
       ],
-      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
-      "piece": "boulder_round",
+      "scene": "",
+      "piece": "grave_board",
       "role": "piece",
       "yard": "cemetery",
+      "made": "grave_board",
       "xz": [
         172.955383300781,
-        274.43310546875
+        274.533111572266
       ],
-      "yaw": 7.46337071793698,
+      "yaw": 8.3962920576791,
       "lift": 0.0,
       "scale": [
-        0.368931263685226,
-        0.651055216789246,
-        0.184465631842613
+        1.06807351112366,
+        1.06807351112366,
+        1.06807351112366
       ]
     },
     {

@@ -215,6 +215,8 @@ func _run() -> void:
 	for file: Variant in catalog_files:
 		source[String(file)] = FileAccess.get_sha256(WORKSHOP + String(file))
 	for item: Dictionary in (town["buildings"] as Array) + (town["props"] as Array) + pieces:
+		if String(item["scene"]) == "":
+			continue
 		var relative: String = String(item["scene"]).trim_prefix("res://")
 		source[relative] = FileAccess.get_sha256(WORKSHOP + relative)
 	source["content/bake_brief.json"] = FileAccess.get_sha256(BRIEF)

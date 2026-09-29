@@ -47,8 +47,8 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(window.his_kit_count > 20,
 			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
 		assert_true(window.figures_are_his(), "every person is his traveller, not a pack sprite")
-		# The cemetery's stones are his boulder made small (O13): the window stands each
-		# at the scale the bake gave it, or the graves would be boulders.
+		# The cemetery's pieces stand at the scale the bake gave them (O13): his earth and
+		# fallow narrowed to a grave, the markers varied one from the next.
 		var stones: int = 0
 		for prop: Dictionary in region.props:
 			if String(prop.get("yard", "")) != "cemetery" or not prop.has("scale"):
@@ -60,6 +60,20 @@ func test_the_window_stands_on_his_ground() -> void:
 				assert_eq(node.scale, prop["scale"], "at its baked scale")
 				stones += 1
 		assert_true(stones >= 5, "the graves stand: %d scaled pieces" % stones)
+		# **The markers are made, and only in his materials** (O13, the wolf's exception
+		# widened): every surface of a stele or a plank wears one of his paints.
+		assert_eq(window.made_count, 5, "two steles and three planks")
+		for node: Node in window.get_node("Props").get_children():
+			var name: String = String(node.name)
+			if not (name.begins_with("headstone_") or name.begins_with("grave_board_")):
+				continue
+			for part: Node in node.find_children("*", "MeshInstance3D", true, false):
+				var paint: Material = (part as MeshInstance3D).material_override
+				assert_true(paint != null and paint.resource_path in [World3d.HIS_STONE_PAINT, World3d.HIS_WOOD_PAINT],
+					"%s wears his paint: %s" % [name, paint.resource_path if paint != null else "none"])
+		# **The fires are composed from his pieces** (O13): stones, logs, coals, smoke, a light.
+		assert_true(window.campfire_count > 5, "every fire is a campfire now: %d" % window.campfire_count)
+		assert_eq(window.fire_lights(), window.campfire_count, "and each gives light")
 	else:
 		assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
 		assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)

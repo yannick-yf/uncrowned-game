@@ -99,7 +99,7 @@
     {"place": "saltmarch", "offset": [7, 6], "_why": "the quay, where the boats tie up"},
     {"place": "cairnwell", "offset": [8, 9], "_why": "the carters' yard outside the walls"},
     {"place": "blackcairn", "offset": [8, 10], "_why": "the last verge before the gate. A row south since 2026-09-29: (8, 9) stood on his ramparts"},
-    {"point": "cemetery", "offset": [2, 2], "_why": "the fairies' fire, among the graves since O12: the first save in the game. Two tiles off on both axes, beyond the fire's reach of the wake tile, so the first key hears her before it rests you"},
+    {"point": "cemetery", "offset": [1, 2], "_why": "the fairies' fire, among the graves since O12: the first save in the game. Two tiles south and one east, just beyond the fire's reach of the wake tile, so the first key hears her before it rests you; one east and not two since it became a real fire (2026-09-29), because his hazel at (181.3, 284.2) m grew through it"},
     {"point": "bridge", "offset": [0, 6], "_why": "short of the bridge, on the Brindle side"},
     {"point": "road_long_stretch", "offset": [0, 0], "_why": "the long empty stretch west of the river"},
     {"point": "road_muster_junction", "offset": [0, 0], "_why": "the Muster junction, outside the camp"},

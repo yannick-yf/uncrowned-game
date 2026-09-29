@@ -362,6 +362,9 @@ var his_kit_count: int = 0
 ## Pieces of his catalogue the bake placed — the yard's walls, gate and sign (G1–G3).
 var catalog_count: int = 0
 var block_count: int = 0
+## Fires composed from his pieces (O13b) and grave markers made in his materials (O13c).
+var campfire_count: int = 0
+var made_count: int = 0
 var wall_count: int = 0
 
 
@@ -735,6 +738,18 @@ func _build_props() -> void:
 		if kind == &"townsfolk":
 			entry["node"] = _figure()
 			entry["figure"] = true
+		elif _his != null and prop.has("made") and MADE.has(kind):
+			# A grave marker he has not drawn, made here in his materials (O13): stood like
+			# a piece of his, at the brief's metres, turned and scaled as the bake said.
+			var made: Node3D = _headstone() if kind == &"headstone" else _grave_board()
+			made.rotation.y = deg_to_rad(float(prop.get("yaw", 0.0)))
+			made.scale = prop.get("scale", Vector3.ONE) as Vector3
+			entry["node"] = made
+			entry["placed"] = true
+			made_count += 1
+		elif _his != null and kind == &"campfire":
+			entry["node"] = _campfire(at)
+			campfire_count += 1
 		elif _his != null and prop.has("scene") and prop.has("xz"):
 			# A piece of his catalogue the bake placed (G1): his scene from the vendored
 			# copy, stood where the brief put it in his metres and turned as the brief
@@ -1379,6 +1394,188 @@ var _wolf_coat: Material = null
 var _wolf_dark: Material = null
 
 
+# ------------------------------------------------------ fires and graves (O13) ---
+
+## **A campfire composed from his pieces** (Yannick, 2026-09-29: *« simple mais beau et
+## visuel. Un feu de camp. »*). It was a 2×2 block in his rock paint, the first thing the
+## player saw on waking. Now: a ring of his `boulder_round` made small, a teepee of his
+## `fallen_log` cut to firewood, a bed of coals in his furnaces' own `embers` material,
+## his `fumee_ruine` smoke above it, and a light in his forge's colour. **The flames are
+## ours** — his hand has drawn none — made the way his smoke is made (particles over a
+## quad) and coloured only from fire already on the screen: the ember rising from every
+## hearth at the root, his forge glow in the body, his coals' emission at the tip.
+const HIS_STONE: String = "res://view3d/workshop/prototype_3d/assets/library/rocks/boulder_round.tscn"
+const HIS_LOG: String = "res://view3d/workshop/prototype_3d/assets/library/props/fallen_log.tscn"
+const HIS_SMOKE: String = "res://view3d/workshop/scenes/effects/fumee_ruine.tscn"
+const HIS_COALS: String = "res://view3d/workshop/assets/ironworks/materials/embers.tres"
+## His `ForgeGlow` light (bas_fourneau_actif.tscn) and his coals' emission
+## (ironworks_embers.gdshader): the two colours a fire of his already has.
+const HIS_FORGE_GLOW: Color = Color(1.0, 0.35, 0.075)
+const HIS_COAL_GLOW: Color = Color(1.0, 0.19, 0.025)
+## The ember that rises from every hearth (`_sync_embers`), the flames' root.
+const HEARTH_EMBER: Color = Color(1.0, 0.74, 0.40)
+## How a fire flickers: its light's energy swings this much either side of its rest.
+const FIRE_LIGHT_ENERGY: float = 1.3
+const FIRE_FLICKER: float = 0.22
+var _fire_lights: Array[OmniLight3D] = []
+
+
+func _campfire(at: Vector2i) -> Node3D:
+	var fire := Node3D.new()
+	var stone: PackedScene = load(HIS_STONE) as PackedScene if ResourceLoader.exists(HIS_STONE) else null
+	var log: PackedScene = load(HIS_LOG) as PackedScene if ResourceLoader.exists(HIS_LOG) else null
+	# The ring: eight stones, each turned its own way so they do not read as one pasted.
+	if stone != null:
+		for i: int in 8:
+			var angle: float = TAU * float(i) / 8.0
+			var one: Node3D = stone.instantiate() as Node3D
+			var size: float = 0.18 + 0.04 * float((Art.scatter_hash(at.x + i, at.y) % 3))
+			one.scale = Vector3(size, size * 0.8, size)
+			one.position = Vector3(cos(angle) * 0.82, 0.0, sin(angle) * 0.82)
+			one.rotation.y = angle * 1.7 + float(i)
+			fire.add_child(one)
+	# The wood: four logs leaning in, their inner ends raised, a teepee.
+	if log != null:
+		for i: int in 4:
+			var angle: float = TAU * float(i) / 4.0 + PI / 4.0
+			var one: Node3D = log.instantiate() as Node3D
+			one.scale = Vector3(0.33, 0.4, 0.4)
+			var lean := Node3D.new()
+			lean.rotation.y = -angle
+			fire.add_child(lean)
+			one.position = Vector3(0.28, 0.1, 0.0)
+			one.rotation.z = deg_to_rad(24.0)
+			lean.add_child(one)
+	# The coals, in his own material.
+	var bed := MeshInstance3D.new()
+	var disc := CylinderMesh.new()
+	disc.top_radius = 0.4
+	disc.bottom_radius = 0.48
+	disc.height = 0.06
+	disc.radial_segments = 8
+	bed.mesh = disc
+	bed.position = Vector3(0.0, 0.03, 0.0)
+	if ResourceLoader.exists(HIS_COALS):
+		bed.material_override = load(HIS_COALS) as Material
+	fire.add_child(bed)
+	fire.add_child(_flames())
+	# His smoke, smaller than over a ruin: a cooking fire, not a burnt house.
+	if ResourceLoader.exists(HIS_SMOKE):
+		var smoke: Node3D = (load(HIS_SMOKE) as PackedScene).instantiate() as Node3D
+		smoke.scale = Vector3.ONE * 0.7
+		smoke.position = Vector3(0.0, 1.2, 0.0)
+		fire.add_child(smoke)
+	var light := OmniLight3D.new()
+	light.light_color = HIS_FORGE_GLOW
+	light.light_energy = FIRE_LIGHT_ENERGY
+	light.omni_range = 4.6
+	light.position = Vector3(0.0, 0.6, 0.0)
+	fire.add_child(light)
+	_fire_lights.append(light)
+	return fire
+
+
+## The flames: quads rising and shrinking, bright at the root and gone at the tip, over
+## the coals. Additive, unshaded, facing the lens, as his smoke faces it.
+func _flames() -> CPUParticles3D:
+	var flames := CPUParticles3D.new()
+	flames.name = "Flames"
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.5, 0.62)
+	var skin := StandardMaterial3D.new()
+	skin.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	skin.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	skin.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	skin.vertex_color_use_as_albedo = true
+	skin.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	skin.albedo_texture = _soft_dot()
+	quad.material = skin
+	flames.mesh = quad
+	flames.amount = 24
+	flames.lifetime = 0.75
+	flames.preprocess = 1.0
+	flames.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	flames.emission_sphere_radius = 0.2
+	flames.direction = Vector3.UP
+	flames.spread = 12.0
+	flames.gravity = Vector3(0.0, 0.6, 0.0)
+	flames.initial_velocity_min = 0.5
+	flames.initial_velocity_max = 0.95
+	flames.scale_amount_min = 0.8
+	flames.scale_amount_max = 1.2
+	var shrink := Curve.new()
+	shrink.add_point(Vector2(0.0, 1.0))
+	shrink.add_point(Vector2(1.0, 0.15))
+	flames.scale_amount_curve = shrink
+	var ramp := Gradient.new()
+	ramp.offsets = PackedFloat32Array([0.0, 0.35, 1.0])
+	ramp.colors = PackedColorArray([Color(HEARTH_EMBER, 0.95), Color(HIS_FORGE_GLOW, 0.8),
+		Color(HIS_COAL_GLOW, 0.0)])
+	flames.color_ramp = ramp
+	flames.position = Vector3(0.0, 0.12, 0.0)
+	return flames
+
+
+## Whether the fires are lit and flickering, for the suite.
+func fire_lights() -> int:
+	return _fire_lights.size()
+
+
+## **The graves' markers, made** (O13; Yannick widened the wolf's exception to them on
+## 2026-09-29, having seen his boulders stand for stones and read as pebbles close to).
+## His brother has drawn no grave, so these are ours — the old dead's rounded stone stele
+## on its plinth, and the burning's dead's plank of wood, put up in a hurry — built from
+## boxes and a disc in the low-poly language of his props and **coloured only with his
+## materials**: `styled_rock` for the stone, `styled_wood` for the plank. The day he draws
+## a grave, the brief names his piece and these go.
+const MADE: Array[StringName] = [&"headstone", &"grave_board"]
+const HIS_STONE_PAINT: String = "res://view3d/workshop/prototype_3d/materials/styled_rock.tres"
+const HIS_WOOD_PAINT: String = "res://view3d/workshop/prototype_3d/materials/styled_wood.tres"
+
+
+func _made_part(parent: Node3D, mesh: Mesh, at: Vector3, paint: String, turn: Vector3 = Vector3.ZERO) -> void:
+	var part := MeshInstance3D.new()
+	part.mesh = mesh
+	part.position = at
+	part.rotation = turn
+	part.material_override = load(paint) as Material if ResourceLoader.exists(paint) else _plain_grey()
+	parent.add_child(part)
+
+
+## An old stone: a slab with a rounded head on a low plinth, leaning a little, as stones
+## do after years. Its face is its local +Z, the way his pieces face.
+func _headstone() -> Node3D:
+	var stone := Node3D.new()
+	var plinth := BoxMesh.new()
+	plinth.size = Vector3(0.82, 0.12, 0.36)
+	_made_part(stone, plinth, Vector3(0.0, 0.06, 0.0), HIS_STONE_PAINT)
+	var lean := Node3D.new()
+	lean.rotation.x = deg_to_rad(-5.0)
+	stone.add_child(lean)
+	var slab := BoxMesh.new()
+	slab.size = Vector3(0.62, 0.7, 0.15)
+	_made_part(lean, slab, Vector3(0.0, 0.47, 0.0), HIS_STONE_PAINT)
+	var head := CylinderMesh.new()
+	head.top_radius = 0.31
+	head.bottom_radius = 0.31
+	head.height = 0.15
+	head.radial_segments = 10
+	_made_part(lean, head, Vector3(0.0, 0.82, 0.0), HIS_STONE_PAINT, Vector3(PI * 0.5, 0.0, 0.0))
+	return stone
+
+
+## A new grave's marker: one plank, its top cut to a point, stood in the loose earth.
+func _grave_board() -> Node3D:
+	var board := Node3D.new()
+	var plank := BoxMesh.new()
+	plank.size = Vector3(0.38, 0.78, 0.06)
+	_made_part(board, plank, Vector3(0.0, 0.39, 0.0), HIS_WOOD_PAINT)
+	var point := BoxMesh.new()
+	point.size = Vector3(0.269, 0.269, 0.06)
+	_made_part(board, point, Vector3(0.0, 0.78, 0.0), HIS_WOOD_PAINT, Vector3(0.0, 0.0, PI * 0.25))
+	return board
+
+
 ## One part of the wolf: a box of a size, at a place, in one of the two materials.
 func _wolf_part(parent: Node3D, size: Vector3, at: Vector3, dark: bool,
 		tilt_deg: float = 0.0) -> void:
@@ -1643,6 +1840,11 @@ func _sync_embers(frame: Dictionary) -> void:
 				(node as CPUParticles3D).emitting = on
 		for coals: ShaderMaterial in (group["coals"] as Array[ShaderMaterial]):
 			coals.set_shader_parameter("glow_strength", null if on else 0.0)
+	# A fire's light breathes on two periods of its own, so it flickers rather than pulses.
+	for i: int in _fire_lights.size():
+		var light: OmniLight3D = _fire_lights[i]
+		light.light_energy = FIRE_LIGHT_ENERGY * (1.0 + FIRE_FLICKER
+			* (0.6 * sin(now * 9.0 + float(i) * 1.3) + 0.4 * sin(now * 23.0 + float(i) * 2.9)))
 	for hearth: Dictionary in _embers:
 		var dots: Array[Sprite3D] = hearth["dots"] as Array[Sprite3D]
 		var lit: bool = _burns(burning, hearth)

@@ -460,3 +460,21 @@ braise que les feux), cerclés d'un trait d'encre, toujours au-dessus du reste d
 C'est un signe d'interface, comme les petites marques au-dessus des témoins d'un vol, pas
 un objet de ton monde. Si tu veux en dessiner un à ta main — une bulle, un point
 d'exclamation peint —, il remplace le nôtre sans rien changer d'autre.
+
+## 13. Des stèles et des feux de camp, faits avec tes matières (2026-09-29)
+
+Yannick a vu tes rochers réduits en guise de stèles et a validé qu'on fabrique de vraies
+stèles, comme pour le loup. Elles sont donc **faites par nous, uniquement avec tes
+matières** : une stèle de pierre au sommet arrondi sur un petit socle (`styled_rock`)
+pour les anciennes tombes, une planche taillée en pointe (`styled_wood`) pour les
+tombes des morts de l'incendie. La terre et la jachère dessous restent les tiennes.
+
+Il a aussi demandé un vrai **feu de camp** à la place du bloc gris. Il est **composé de
+tes pièces** : un cercle de ton `boulder_round` en petit, quatre de ton `fallen_log`
+coupés en bûches et appuyés en tipi, un lit de braises dans la matière `embers` de tes
+fourneaux, ta fumée `fumee_ruine` au-dessus, et une lumière de la couleur de ta forge
+qui vacille. Seules les flammes sont à nous (des particules, faites comme ta fumée,
+dans les couleurs de tes braises et de ta forge). Tous les feux de camp du jeu sont
+maintenant comme ça.
+
+Le jour où tu dessines une tombe ou un feu de camp, on remplace les nôtres par les tiens.

@@ -678,6 +678,8 @@ func _yards(brief: Dictionary, pieces: Array) -> void:
 			var scale: Vector3 = piece.get("scale", Vector3.ONE) as Vector3
 			if scale != Vector3.ONE:
 				prop["scale"] = scale
+			if piece.has("made"):
+				prop["made"] = String(piece["made"])
 			region.props.append(prop)
 			stood[String(piece["piece"])] = int(stood.get(String(piece["piece"]), 0)) + 1
 			if role == YardRules.ROLE_GATE:
@@ -932,7 +934,7 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 			out["solid"] = bool(prop["solid"])
 		if bool(prop.get("his", false)):
 			out["his"] = true
-		for key: String in ["source_id", "scene", "place", "piece", "role", "yard"]:
+		for key: String in ["source_id", "scene", "place", "piece", "role", "yard", "made"]:
 			if prop.has(key):
 				out[key] = prop[key]
 		# A piece of his catalogue we placed (G1): where it stands in his metres, how it
@@ -1008,7 +1010,7 @@ static func read(data: Dictionary) -> Region:
 			out["solid"] = bool(prop["solid"])
 		if bool(prop.get("his", false)):
 			out["his"] = true
-		for key: String in ["source_id", "scene", "place", "piece", "role", "yard"]:
+		for key: String in ["source_id", "scene", "place", "piece", "role", "yard", "made"]:
 			if prop.has(key):
 				out[key] = prop[key]
 		if prop.has("xz"):

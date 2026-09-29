@@ -1562,6 +1562,22 @@ boulder at 0.3 even (pebbles, from the game's lens); his three-block scree for t
 mounds (strewn stones); his coastal granite shingle (its mesh names his material path,
 §9b). The frame is Yannick's to judge; made headstones only if he widens the exception.
 
+### O13b · The fires and the graves' markers — **built 2026-09-29**
+
+Asked by Yannick after seeing O13 and O17's frames: *« pour les stèles je valide »*, and
+for the fairies' fire *« on compose quelque chose qui ressemble à un feu de camp. Simple
+mais beau et visuel. »* The graves' markers are **made** (`"made": "headstone"` and
+`"grave_board"` in the brief; `YardRules.made_entry`; no scene, so they close their own
+tile and nothing more; the window's `_headstone()` and `_grave_board()` wear only his
+`styled_rock` and `styled_wood`). **Every campfire** is `_campfire()`, composed from his
+pieces — a ring of his `boulder_round`, four of his `fallen_log` leaning in, a bed in his
+`embers` material, his `fumee_ruine`, an `OmniLight3D` in his forge's colour that
+flickers on two periods — and the flames, ours, particles over a soft quad coloured from
+the hearth ember, his forge glow and his coals' emission. The fairies' fire moved one
+tile west, because his hazel grew through it. The art rule in CLAUDE.md records the
+widening; `test_world3d` checks the paints, the count of markers and that every fire
+gives light.
+
 ### O14 · Where Bram calls from — **built 2026-09-29**
 
 Est. 3–4 h. Depends on: O12.

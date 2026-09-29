@@ -44,6 +44,12 @@ static func pieces_with_collisions(pieces: Array) -> Array:
 	for raw: Variant in pieces:
 		var piece: Dictionary = (raw as Dictionary).duplicate(true)
 		var path: String = String(piece["scene"])
+		# A piece made here has no scene of his and no shapes: it closes its own tile, as
+		# the bake closes any piece's origin, and nothing more (O13).
+		if path == "":
+			piece["obstacles"] = []
+			out.append(piece)
+			continue
 		var copied: String = path.replace("res://", "res://view3d/workshop/")
 		if not loaded.has(copied):
 			var source: String = path.replace("res://", RegionBake.WORKSHOP)
