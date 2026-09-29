@@ -119,9 +119,17 @@ func living(against: StringName = NOBODY) -> Array[DuelFighter]:
 	return out
 
 
-## Everybody still in it who is not this one — the enemies, since there is no party.
+## **Two sides: the player, and everybody else** (fixed 2026-09-29). The player fights
+## alone — there is no party — so his foes are everybody still in it, and theirs is
+## him and nobody else. It used to be "everybody but me", which set a pack of wolves on
+## each other while the player stood untouched.
 func foes_of(who: StringName) -> Array[DuelFighter]:
-	return living(who)
+	var asking_is_player: bool = who == DuelRules.PLAYER
+	var out: Array[DuelFighter] = []
+	for fighter: DuelFighter in living(who):
+		if asking_is_player or fighter.is_player():
+			out.append(fighter)
+	return out
 
 
 func acting_fighter() -> DuelFighter:

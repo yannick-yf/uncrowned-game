@@ -324,6 +324,28 @@ func test_every_beast_in_a_pack_is_its_own_fighter() -> void:
 	assert_eq(names.size(), 3, "three of them")
 
 
+func test_a_pack_never_bites_its_own() -> void:
+	# **Found while drawing O6, and older than it.** `foes_of` meant "everybody but me",
+	# so in a pack of two the first wolf bit the second and the second bit it back while
+	# the player stood untouched at a hundred — which is also why W1's "two wolves are
+	# beaten in five turns" was so easy: they were beating each other. The player fights
+	# alone and everybody else is on one side.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = alone_on_the_road()
+	sim.submit(&"duel_began", {"opponents": ["wolf", "wolf"], "by": "wolf"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.STAND, 3000)
+	var blows: Array = sim.events.of_type(&"blow_landed")
+	assert_true(blows.size() > 0, "they bit")
+	for row: Variant in blows:
+		var blow: SimEvent = row as SimEvent
+		assert_eq(String(blow.data.get("target", "")), "player",
+			"%s bit %s, and a wolf bites only the player" % [blow.data.get("by", ""), blow.data.get("target", "")])
+	var duel: Duel = _duel(sim)
+	assert_eq(duel.foes_of(&"wolf").size(), 1 if duel.on() else 0, "a wolf's one foe is you")
+
+
 # ------------------------------------------- K3, killing and what it costs ---
 
 func _kill(sim: Sim, who: String) -> Duel:
