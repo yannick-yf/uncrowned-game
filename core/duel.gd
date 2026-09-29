@@ -81,6 +81,17 @@ var tally: int = 0
 var volleys: Dictionary = {}
 ## The tile the current act aims at, when it is an archer's.
 var aim: Vector2i = Vector2i.ZERO
+## **Where a drill's master stands when he is not one of its fighters** (the review of
+## O21): in Wren's drills Bram watches. Nobody walks onto him, and nothing walks him
+## home until the lesson is over. `Duel.NOWHERE` otherwise.
+const NOWHERE: Vector2i = Vector2i(-1, -1)
+var master_at: Vector2i = NOWHERE
+## **What was said as it began** (the review of O21): the answer to the line that
+## squared you up — a drill's instruction, most of the time — and who said it. The
+## conversation closes on the step the fight begins, so without this the answer was
+## never on screen at all. The window shows it through the first round.
+var said: String = ""
+var said_by: StringName = NOBODY
 
 
 func on() -> bool:
@@ -193,4 +204,4 @@ func fingerprint() -> String:
 		" ".join(parts), turn, String(phase), round_number, turns_taken,
 		String(acting), String(target), String(outcome), settling, owed_damage,
 		player_felled, spar, String(drill), tally, ";".join(aimed),
-	]
+	] + (" master@%s" % master_at if master_at != NOWHERE else "")

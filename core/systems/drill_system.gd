@@ -11,8 +11,10 @@ extends SimSystem
 
 const DRILLED: String = "drilled:%s"
 ## **How near the master must be to speak** (the review of O8), in tiles. Beside you he
-## turns and speaks; across the village he does not, and you walk to him — a talk opened
-## from sixteen tiles away was a voice from nowhere.
+## turns and speaks — a talk opened from sixteen tiles away was a voice from nowhere.
+## **Further off, he comes over** (the review of O21): a lesson that ended with the two
+## of you at its opposite edges ended in silence, and the last one sent nobody on to the
+## works; now he walks to you, as he did at the hail, and speaks when he is beside you.
 const SPEAKS_WITHIN: float = 4.0
 
 
@@ -42,5 +44,12 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	if him == null or world == null or OpeningRules.is_gone(master, sim.facts):
 		return
 	var where: Vector2 = Walkers.centre_of(him, sim.store(&"walkers") as Walkers)
+	var passed: bool = bool(event.data.get("passed", false))
 	if world.player_pos.distance_to(where) <= SPEAKS_WITHIN:
-		sim.derive(&"talk", {"npc": String(master)})
+		# He speaks to the lesson just done (the review of O21): the talk says which, and
+		# how it went, and `DialogueSystem` turns that into his first words.
+		sim.derive(&"talk", {"npc": String(master), "after": String(drill), "passed": passed})
+	else:
+		# Further than that he comes over first, as he came over at the hail — the
+		# hail's own walk, without its shout — and speaks when he is beside you.
+		sim.derive(&"summon", {"who": String(master), "after": String(drill), "passed": passed})

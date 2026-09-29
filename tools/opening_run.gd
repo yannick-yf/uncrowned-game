@@ -196,11 +196,18 @@ func _drill(intent: String, hand: StringName) -> bool:
 		sim.advance(1)
 	if duel.on():
 		return _stop("the drill never ended")
-	sim.advance(3)
+	# He speaks after every lesson — at once when beside you, after walking over when not
+	# (the review of O21) — so wait for him, as a person at the keys would.
+	for _step: int in HailRules.budget_steps() + DuelRules.beat_steps():
+		if world.talking_to == &"bram":
+			break
+		sim.advance(1)
+	if world.talking_to != &"bram":
+		return _stop("he did not speak after the lesson")
+	_lines += 1
 	var id: String = intent.trim_prefix("drill_")
 	if not sim.facts.has(StringName("drilled:%s" % id)):
 		return _stop("not passed with the %s hand" % hand)
-	_lines += 1
 	return true
 
 

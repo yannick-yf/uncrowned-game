@@ -202,17 +202,18 @@ func test_standing_in_the_arrows_fails_it_and_harms_nobody() -> void:
 
 
 func test_beating_her_without_dodging_is_not_the_lesson() -> void:
-	# The goal is the dodge: running in and hitting her until she yields is a fight won
-	# and a lesson missed.
+	# The goal is the dodge. Since the review of O21 nobody falls in a drill, so running in
+	# and hitting her cannot end it: it is decided by the arrows dodged, or by the rounds.
 	var sim: Sim = _bow_drill()
-	var duel: Duel = _duel(sim)
 	_play(sim, DuelPlayer.PRESS, 20000)
 	sim.advance(DuelRules.beat_steps() + 5)
-	if duel.tally < DuelRules.drill_count(&"bow"):
-		assert_eq(duel.outcome, &"failed", "she yielded before you dodged three")
-		assert_false(sim.facts.has(&"drilled:bow"), "so it is not passed")
-	else:
-		assert_true(sim.facts.has(&"drilled:bow"), "or you dodged three on the way in")
+	assert_eq(sim.events.of_type(&"duel_yielded").size() + sim.events.of_type(&"duel_down").size(), 0,
+		"she never goes down, however hard you press")
+	var ended: Array[SimEvent] = sim.events.of_type(&"duel_ended")
+	assert_eq(ended.size(), 1, "the lesson ends")
+	if not ended.is_empty():
+		assert_eq(sim.facts.has(&"drilled:bow"), bool(ended[0].data.get("passed", false)),
+			"and it is passed exactly when the arrows were dodged")
 
 
 # --------------------------------------------------------------- the spell (O10) ---
@@ -330,3 +331,170 @@ func test_only_bram_reads_what_you_have_drilled() -> void:
 				for field: String in ["requires", "hides_after"]:
 					assert_false(String(row.get(field, "")).begins_with("drilled:"),
 						"%s's %s reads a drill (%s)" % [who, row.get("intent", ""), language])
+
+
+# ------------------------------------------------------- the review of O21 ---
+
+func test_a_passed_lesson_is_not_a_man_beaten() -> void:
+	# The sword's third blow took Bram's fifteen to nothing; he yielded, and the lesson
+	# counted as beating him — so he offered a fight to the death straight after it.
+	var sim: Sim = Game.build()
+	_ask(sim, "drill_sword")
+	_play(sim, DuelPlayer.PRESS, 6000)
+	sim.advance(5)
+	assert_true(sim.facts.has(&"drilled:sword"), "the lesson is passed")
+	assert_false(sim.facts.has(&"bested:bram"), "and nobody was beaten")
+	assert_eq(sim.events.of_type(&"duel_yielded").size(), 0, "nobody yielded")
+	var world := sim.store(&"world") as WorldState
+	if not world.in_dialogue():
+		sim.submit(&"talk", {"npc": "bram"})
+		sim.advance(2)
+	assert_false(_intents(sim).has(&"fight_bram_for_real"), "so no fight to the death is offered after a lesson")
+
+
+func test_a_spell_is_not_the_sword_lesson() -> void:
+	# With the gift in hand, the sword lesson could be passed from three tiles away.
+	var sim: Sim = Game.build()
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	_ask(sim, "drill_sword")
+	var duel: Duel = _duel(sim)
+	var hands := DuelPlayer.new(DuelPlayer.CAST)
+	var spells: int = 0
+	for _step: int in 20000:
+		if not duel.on():
+			break
+		hands.play(sim, duel)
+		sim.advance(1)
+		var struck: int = 0
+		spells = 0
+		for blow: SimEvent in sim.events.of_type(&"blow_landed"):
+			if String(blow.data.get("by", "")) != String(DuelRules.PLAYER):
+				continue
+			if String(blow.data.get("move", "")) == String(DuelRules.STRIKE):
+				struck += 1
+			else:
+				spells += 1
+		if duel.on():
+			assert_eq(duel.tally, struck, "the lesson counts sword blows only")
+	assert_true(spells > 0, "and spells were cast in it, so the check meant something")
+
+
+func test_in_wrens_lessons_bram_stands_and_nobody_walks_onto_him() -> void:
+	var sim: Sim = _bow_drill()
+	var duel: Duel = _duel(sim)
+	var walkers := sim.store(&"walkers") as Walkers
+	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
+	var stands: Vector2i = walkers.where(bram)
+	assert_eq(duel.master_at, stands, "the lesson knows where he watches from")
+	var hands := DuelPlayer.new(DuelPlayer.DODGE)
+	for _step: int in 20000:
+		if not duel.on():
+			break
+		assert_eq(walkers.where(bram), stands, "he does not walk off mid-lesson")
+		var me: DuelFighter = duel.me()
+		if me != null:
+			assert_ne(me.at, stands, "and nobody stands on him")
+		hands.play(sim, duel)
+		sim.advance(1)
+
+
+func _first_words(sim: Sim) -> String:
+	return (sim.store(&"world") as WorldState).current_line
+
+
+func test_after_each_lesson_he_speaks_to_it() -> void:
+	# The review of O21: after every lesson he opened with his everyday greeting.
+	var cast: Cast = Cast.shared()
+	var bram: Npc = cast.get_npc(&"bram")
+	var sim: Sim = Game.build()
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	_ask(sim, "drill_sword")
+	_play(sim, DuelPlayer.PRESS, 6000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_eq(_first_words(sim), bram.alt_greeting_for({&"just_passed_sword": true}), "the way on to the bow")
+	sim.submit(&"choose_intent", {"intent": "drill_bow"})
+	sim.advance(3)
+	_play(sim, DuelPlayer.DODGE, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_eq(_first_words(sim), bram.alt_greeting_for({&"just_passed_bow": true}), "the way on to the gift")
+	sim.submit(&"choose_intent", {"intent": "drill_magic"})
+	sim.advance(3)
+	_play(sim, DuelPlayer.CAST, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_true(sim.facts.has(&"drilled:magic"), "the last lesson passed")
+	assert_eq((sim.store(&"world") as WorldState).talking_to, &"bram", "and he speaks after it")
+	assert_eq(_first_words(sim), bram.alt_greeting_for({&"just_passed_magic": true}), "his farewell, north")
+	assert_true(_intents(sim).has(&"ask_bram_way_on"), "and the way on can be asked again")
+
+
+func test_a_failed_lesson_is_a_not_yet() -> void:
+	var sim: Sim = Game.build()
+	_ask(sim, "drill_sword")
+	_play(sim, DuelPlayer.STAND, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_eq(_first_words(sim), Cast.shared().get_npc(&"bram").alt_greeting_for({&"just_failed_a_lesson": true}),
+		"not yet")
+
+
+func test_without_the_gift_the_bow_is_the_last_lesson() -> void:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(&"drilled:sword", &"test")
+	_ask(sim, "drill_bow")
+	_play(sim, DuelPlayer.DODGE, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_eq(_first_words(sim), Cast.shared().get_npc(&"bram").alt_greeting_for({&"just_passed_bow_without_gift": true}),
+		"a farewell, not a lesson he cannot give")
+
+
+func test_at_the_hail_the_post_waits() -> void:
+	var bram: Npc = Cast.shared().get_npc(&"bram")
+	var at_the_hail: Array[DialogueOption] = DialogueRules.available(bram, FactBase.new(), {&"called_out": true})
+	var later: Array[DialogueOption] = DialogueRules.available(bram, FactBase.new(), {})
+	var intents: Callable = func(options: Array[DialogueOption]) -> Array[StringName]:
+		var out: Array[StringName] = []
+		for option: DialogueOption in options:
+			out.append(option.intent)
+		return out
+	assert_false((intents.call(at_the_hail) as Array).has(&"ask_bram_post"), "nobody has spoken of a post at the hail")
+	assert_true((intents.call(later) as Array).has(&"ask_bram_post"), "after his greeting, it can be asked")
+
+
+func test_a_lesson_that_ends_far_from_him_brings_him_over() -> void:
+	# The review of O21: the magic lesson ended nine tiles from him, in silence, and the
+	# farewell north was never said. Now he walks over — the hail's walk, without its '!'.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.facts.add_source(&"drilled:sword", &"test")
+	sim.facts.add_source(&"drilled:bow", &"test")
+	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
+	world.player_pos = bram.centre() + Vector2(-7.0, -7.0)
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "magic"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.CAST, 20000)
+	var hail := sim.store(&"hail") as Hail
+	var came: bool = false
+	for _step: int in 2000:
+		if world.talking_to == &"bram":
+			break
+		if hail.phase == Hail.COMING:
+			came = true
+			assert_true(hail.holds_player(), "you wait for him")
+			assert_false(hail.called_out(&"bram"), "and he is not calling you out")
+		sim.advance(1)
+	assert_true(sim.facts.has(&"drilled:magic"), "the lesson passed")
+	assert_eq(sim.events.of_type(&"summon").size(), 1, "far from him, he was sent for")
+	assert_true(came, "and he walked over")
+	assert_eq(world.talking_to, &"bram", "and speaks")
+	assert_eq(world.current_line, bram.alt_greeting_for({&"just_passed_magic": true}), "his farewell, north")
+
+
+func test_what_he_says_as_a_lesson_begins_is_kept_for_the_first_round() -> void:
+	# The review of O21: the conversation closes on the step the fight begins, so his
+	# answer to "A lesson. The sword." — the lesson's instruction — was never on screen.
+	var sim: Sim = Game.build()
+	_ask(sim, "drill_sword")
+	var duel: Duel = _duel(sim)
+	var option: DialogueOption = DialogueRules.find(Cast.shared().get_npc(&"bram"), &"drill_sword")
+	assert_true(duel.said.ends_with(option.reply), "the fight keeps his answer: %s" % duel.said)
+	assert_eq(duel.said_by, &"bram", "and who said it")

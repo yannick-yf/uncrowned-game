@@ -9,6 +9,7 @@
     "Kettle"
   ],
   "facts": {
+    "you:the_gift": "The fairy left you a little of what brought you back: a spell. In a fight, I casts it, from three tiles, every other turn.",
     "muster:pay_fraud": "Quartermaster Odile at the Muster signs for soldiers who are dead or never existed, and keeps the difference.",
     "kettle:ford": "A ford crosses the Kettle downstream of the bridge, shallow only in dry weeks.",
     "wide_acres:unwatched_stall": "There is a market stall in Saltmarch that nobody stands near, the marsh town is off the road and keeps no watch worth the name.",
@@ -106,7 +107,7 @@
         {
           "intent": "hear_ask",
           "text": "Listen.",
-          "reply": "Find your way in this world. And if you can, save us.",
+          "reply": "Take this: a little of what brought you back. Find your way in this world. And if you can, save us.",
           "teaches": "thornwood:save_us",
           "gives": "you:the_gift",
           "requires": "you:owed",
@@ -352,7 +353,7 @@
         {
           "intent": "ask_ruins",
           "text": "You live out here?",
-          "reply": "I work here. Nobody lives in Brindle any more, the village was burned. I came afterwards to collect what was left."
+          "reply": "I work here. Nobody but Bram lives in Brindle any more. The village was burned. I came afterwards to collect what was left."
         },
         {
           "intent": "ask_watched",
@@ -380,11 +381,20 @@
       "role": "Survivor of Brindle",
       "zone": "overworld",
       "greeting": "I was out in the wood the day it happened. I came back to a village of ash. I have hit that post every morning since.",
-      "alt_greetings": [{"when": "called_out", "text": "You! Coming up from the graveyard? Nobody has taken that path since the fire. Let me look at you.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"}],
+      "alt_greetings": [
+        {"when": "called_out", "text": "You! Coming up from the graveyard? Nobody has taken that path since the fire. Let me look at you.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"},
+        {"when": "just_failed_a_lesson", "text": "Not yet. Get your breath back, and we go again when you want.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after a lesson failed"},
+        {"when": "just_passed_magic", "text": "I have nothing more to teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge. You know what to do now.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the farewell after the last lesson, pointing north with no marker (O19)"},
+        {"when": "just_passed_bow_without_gift", "text": "Good. That is all I can teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after the bow, for somebody without the fairy's gift: the farewell"},
+        {"when": "just_passed_bow", "text": "Good. Not one arrow found you. Now what the fairy gave you: show me.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
+        {"when": "just_passed_sword", "text": "Good. You close before you strike, and that is all it takes. Now the bow: Wren shoots, you move.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"}
+      ],
       "options": [
         {
           "intent": "ask_bram_post",
           "hides_after": "bested:bram",
+          "forbids_condition": "called_out",
+          "_why_called_out": "the review of O21: at the hail nobody has spoken of a post yet, so the question waits for his everyday greeting",
           "_why": "O8, 2026-09-29: a conversation holds three lines, and once you have bested him the fight for real takes this one's place.",
           "text": "Why hit a post?",
           "reply": "Because it does not hit back. It is restful. It teaches you nothing."
@@ -414,7 +424,7 @@
         },
         {
           "intent": "drill_magic",
-          "text": "And what she gave me?",
+          "text": "The fairy gave me something. A spell?",
           "reply": "Then show me. Wren keeps off; reach her with it, twice.",
           "requires": "drilled:bow",
           "requires_also": "you:the_gift",
@@ -426,8 +436,16 @@
           "_p2": "DRAFT wording (O10, 2026-09-29) - the words are Yannick's (O19). The shape: after the bow, and only with the fairy's gift, two spells that land on Wren."
         },
         {
+          "intent": "ask_bram_way_on",
+          "text": "What now?",
+          "reply": "The works are north. Follow the road up and cross the river; wolves keep the bridge. What I know, you know.",
+          "requires": "drilled:bow",
+          "repeatable": true,
+          "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way on, for whoever missed his farewell — north up his road, no marker (O19)"
+        },
+        {
           "intent": "ask_bram_spar",
-          "text": "Teach me to fight.",
+          "text": "Just a bout. No lesson.",
           "reply": "Then get your hands up. I do not hold back much, but I stop when you go down.",
           "fights": "bram",
           "spar": true,

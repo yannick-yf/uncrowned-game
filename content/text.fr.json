@@ -42,6 +42,7 @@
   "drill.sword.title": "L'épée",
   "drill.sword.goal": "Coups portés : {0} / {1}",
   "drill.sword.instruction": "Il recule. Approchez-vous d'abord, puis frappez.",
+  "fight.said": "{0} : \"{1}\"",
   "fight.dodged": "Esquivé",
   "drill.bow.title": "L'arc",
   "drill.bow.goal": "Flèches esquivées : {0} / {1}",

@@ -433,6 +433,9 @@ func _duel_frame() -> Dictionary:
 		"my_casting": mine_acting and _duel.acting == DuelRules.CAST,
 		# The lesson, when this fight is one (O8).
 		"drill": String(_duel.drill),
+		# What was said as it began, through the first round (the review of O21).
+		"said": _duel.said if _duel.round_number <= 1 else "",
+		"said_by": _cast.get_npc(_duel.said_by).display_name if _duel.said != "" and _cast.get_npc(_duel.said_by) != null else "",
 		"goal_done": _duel.tally,
 		"goal_of": DuelRules.drill_count(_duel.drill) if _duel.drill != Duel.NOBODY else 0,
 		"felled": _duel.player_felled,
@@ -691,8 +694,9 @@ func _hail_frame() -> Dictionary:
 	if caller == null:
 		return {}
 	var age: float = float(_hail.spent) / float(Sim.STEPS_PER_REAL_SECOND)
-	var shown: bool = _hail.phase == Hail.SPOTTED \
-		or (_hail.phase == Hail.COMING and age < HailRules.spotted_steps() / float(Sim.STEPS_PER_REAL_SECOND) + HAIL_MARK_LINGERS)
+	# A master coming over after a lesson has no '!': he is not calling you out.
+	var shown: bool = _hail.summoned.is_empty() and (_hail.phase == Hail.SPOTTED \
+		or (_hail.phase == Hail.COMING and age < HailRules.spotted_steps() / float(Sim.STEPS_PER_REAL_SECOND) + HAIL_MARK_LINGERS))
 	return {"who": caller.id, "shown": shown, "age": age}
 
 
@@ -886,7 +890,7 @@ func _listen() -> void:
 	# The pack's `seen` cue when somebody calls you over (O17) — the same noise as a
 	# theft noticed, because it is the same news: somebody has seen you. Flagged rather
 	# than extended; the music and the cues are the pack's until real ones come (C4).
-	if _hail != null and _hail.phase != Hail.IDLE:
+	if _hail != null and _hail.phase != Hail.IDLE and _hail.summoned.is_empty():
 		if not _hail_sounded:
 			_hail_sounded = true
 			Sound.cue(&"seen")

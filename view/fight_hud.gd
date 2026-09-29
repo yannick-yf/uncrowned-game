@@ -135,14 +135,20 @@ func _foes() -> Array[Dictionary]:
 ## The drill's card: what it is, how far you are, and what to do (O8).
 func _lesson(reading: Dictionary) -> PackedStringArray:
 	var drill: String = String(reading.get("drill", ""))
-	if drill == "":
-		return PackedStringArray()
-	return PackedStringArray([
-		Text.of(StringName("drill.%s.title" % drill)),
-		Text.of(StringName("drill.%s.goal" % drill),
-			[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]),
-		Text.of(StringName("drill.%s.instruction" % drill)),
-	])
+	var out := PackedStringArray()
+	if drill != "":
+		out.append_array([
+			Text.of(StringName("drill.%s.title" % drill)),
+			Text.of(StringName("drill.%s.goal" % drill),
+				[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]),
+			Text.of(StringName("drill.%s.instruction" % drill)),
+		])
+	# And what was said as it began, through the first round (the review of O21): the
+	# answer to the line that squared you up, which the closing box used to swallow.
+	var said: String = String(reading.get("said", ""))
+	if said != "":
+		out.append(Text.of(&"fight.said", [String(reading.get("said_by", "")), said]))
+	return out
 
 
 func _take_health(side: StringName, hp: int) -> void:

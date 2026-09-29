@@ -36,6 +36,10 @@ var spent: int = 0
 var quiet: int = 0
 ## Which way he faces: toward you.
 var facing: Vector2i = Vector2i(0, 1)
+## **Come over, not called out** (the review of O21): a master whose lesson ended out of
+## speaking reach walks to the player the same way — no '!', no shout — and opens the
+## talk with what the lesson left (`after`, `passed`), which is what `summoned` carries.
+var summoned: Dictionary = {}
 
 
 func _init(p_rows: Array[Dictionary] = Places.shared().hails()) -> void:
@@ -57,8 +61,9 @@ func walks(id: StringName) -> bool:
 ## greeting's `called_out` reads. The phase, not the fact: the fact is forever, and he
 ## would open every conversation after with the hail.
 func called_out(id: StringName) -> bool:
-	return id == who and (phase == ARRIVED or phase == TALKING)
+	return id == who and summoned.is_empty() and (phase == ARRIVED or phase == TALKING)
 
 
 func fingerprint() -> String:
-	return "hail %s %s b%d s%d q%d f%s" % [who, phase, beat, spent, quiet, facing]
+	return "hail %s %s b%d s%d q%d f%s%s" % [who, phase, beat, spent, quiet, facing,
+		" came:%s/%s" % [summoned.get("after", ""), summoned.get("passed", false)] if not summoned.is_empty() else ""]

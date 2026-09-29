@@ -36,6 +36,18 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var speaker: StringName = StringName(String(event.data.get("npc", ""))) \
 		if event.type == &"talk" else world.talking_to
 	conditions[&"called_out"] = hail != null and hail.called_out(speaker)
+	# **Right after a lesson** (the review of O21): the talk a drill's end opens says
+	# which lesson and how it went, so his first words are about it — a way on, a
+	# "not yet", a farewell — and not his everyday greeting after every lesson.
+	if event.type == &"talk" and event.data.has("after"):
+		var after: String = String(event.data["after"])
+		if bool(event.data.get("passed", false)):
+			conditions[StringName("just_passed_%s" % after)] = true
+			if after == "bow" and not sim.facts.has(OpeningRules.GIFT):
+				conditions[&"just_passed_bow_without_gift"] = true
+				conditions.erase(&"just_passed_bow")
+		else:
+			conditions[&"just_failed_a_lesson"] = true
 
 	match event.type:
 		&"talk":
@@ -173,6 +185,8 @@ func _choose(
 		var began: Dictionary = {
 			"opponent": String(option.fights), "asked_by": String(intent),
 			"spar": option.spar,
+			# His answer, which the closing box would otherwise swallow (the review of O21).
+			"said": spoken, "said_by": String(npc.id),
 		}
 		# A drill's master acts first: his first act is to step off (O8).
 		if option.drill != &"":

@@ -26,6 +26,28 @@ func steps() -> bool:
 	return true
 
 
+## **A master coming over after a lesson** (the review of O21): asked for by `DrillSystem`
+## when the lesson ended out of speaking reach. Only when nothing else is happening to the
+## player's hail: a hail in progress is never overwritten.
+func on_event(sim: Sim, event: SimEvent) -> void:
+	if event.type != &"summon":
+		return
+	var hail := sim.store(&"hail") as Hail
+	var world := sim.store(&"world") as WorldState
+	var cast := sim.store(&"cast") as Cast
+	var walkers := sim.store(&"walkers") as Walkers
+	if hail == null or world == null or cast == null or walkers == null or hail.phase != Hail.IDLE:
+		return
+	var him: Npc = cast.get_npc(StringName(String(event.data.get("who", ""))))
+	if him == null or OpeningRules.is_gone(him.id, sim.facts):
+		return
+	hail.who = him.id
+	hail.summoned = {"after": String(event.data.get("after", "")), "passed": bool(event.data.get("passed", false))}
+	hail.spent = 0
+	hail.beat = 0
+	_set_off(hail, world, him, walkers)
+
+
 func ticks() -> bool:
 	return false
 
@@ -63,7 +85,9 @@ func on_step(sim: Sim, _step: int) -> void:
 				walkers.linger[hail.who] = WalkerRules.linger_steps()
 			# Derived, as the fight a line begins is: the player's event was the step
 			# into his ground, and the conversation is the world's answer to it.
-			sim.derive(&"talk", {"npc": String(hail.who)})
+			var talk: Dictionary = {"npc": String(hail.who)}
+			talk.merge(hail.summoned)
+			sim.derive(&"talk", talk)
 		Hail.TALKING:
 			if world.talking_to != hail.who:
 				hail.phase = Hail.RETURNING
@@ -152,6 +176,7 @@ func _let_go(hail: Hail, walkers: Walkers, him: Npc) -> void:
 	hail.who = &""
 	hail.quiet = 0
 	hail.beat = 0
+	hail.summoned = {}
 
 
 static func _toward(from: Vector2i, to: Vector2i) -> Vector2i:

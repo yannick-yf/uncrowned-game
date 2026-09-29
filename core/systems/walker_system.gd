@@ -35,6 +35,10 @@ func on_step(sim: Sim, _step: int) -> void:
 			continue
 		if duel != null and duel.on() and duel.get_fighter(who) != null:
 			continue
+		# Nor a drill's master watching his lesson from the side (the review of O21).
+		if duel != null and duel.on() and duel.drill != Duel.NOBODY and DuelRules.drill_master(duel.drill) == who:
+			walkers.linger[who] = WalkerRules.linger_steps()
+			continue
 		# The hail walks a man calling you over; nobody walks him home at the same time.
 		if hail != null and hail.walks(who):
 			continue

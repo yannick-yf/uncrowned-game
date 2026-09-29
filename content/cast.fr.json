@@ -9,6 +9,7 @@
     "Bouilloire"
   ],
   "facts": {
+    "you:the_gift": "La fée vous a laissé un peu de ce qui vous a ramené : un sort. En combat, la touche I le lance, de trois cases, un tour sur deux.",
     "muster:pay_fraud": "La quartier-maître Odile, au Rassemblement, signe pour des soldats morts ou qui n'ont jamais existé, et garde la différence.",
     "kettle:ford": "Un gué traverse la Bouilloire en aval du pont, praticable seulement en semaine sèche.",
     "wide_acres:unwatched_stall": "Il y a un étal à Saltmarch devant lequel personne ne se tient, la ville des marais est hors de la route et ne tient pas de vraie garde.",
@@ -106,7 +107,7 @@
         {
           "intent": "hear_ask",
           "text": "Écouter.",
-          "reply": "Trouvez votre chemin dans ce monde. Et si vous le pouvez, sauvez-nous.",
+          "reply": "Prenez ceci : un peu de ce qui vous a ramené. Trouvez votre chemin dans ce monde. Et si vous le pouvez, sauvez-nous.",
           "teaches": "thornwood:save_us",
           "gives": "you:the_gift",
           "requires": "you:owed",
@@ -352,7 +353,7 @@
         {
           "intent": "ask_ruins",
           "text": "Vous vivez ici ?",
-          "reply": "Je travaille ici. Plus personne ne vit à Brindle, le village a été brûlé. Je suis venue après pour ramasser ce qui restait."
+          "reply": "Je travaille ici. Plus personne ne vit à Brindle, à part Bram. Le village a été brûlé. Je suis venue après pour ramasser ce qui restait."
         },
         {
           "intent": "ask_watched",
@@ -380,11 +381,20 @@
       "role": "Survivant de Brindle",
       "zone": "overworld",
       "greeting": "J'étais au bois le jour où c'est arrivé. Je suis rentré à un village de cendre. Depuis je frappe ce poteau tous les matins.",
-      "alt_greetings": [{"when": "called_out", "text": "Toi ! Tu remontes du cimetière ? Personne n'a pris ce chemin depuis l'incendie. Laisse-moi te regarder.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"}],
+      "alt_greetings": [
+        {"when": "called_out", "text": "Toi ! Tu remontes du cimetière ? Personne n'a pris ce chemin depuis l'incendie. Laisse-moi te regarder.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"},
+        {"when": "just_failed_a_lesson", "text": "Pas encore. Reprends ton souffle, et on recommence quand tu veux.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after a lesson failed"},
+        {"when": "just_passed_magic", "text": "Je n'ai plus rien à t'apprendre. Les Forges sont au nord : remonte la route et passe la rivière. Des loups gardent le pont. Tu sais quoi faire, maintenant.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the farewell after the last lesson, pointing north with no marker (O19)"},
+        {"when": "just_passed_bow_without_gift", "text": "Bien. C'est tout ce que je peux t'apprendre. Les Forges sont au nord : remonte la route et passe la rivière. Des loups gardent le pont.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after the bow, for somebody without the fairy's gift: the farewell"},
+        {"when": "just_passed_bow", "text": "Bien. Plus une flèche ne t'a trouvé. Maintenant, ce que la fée t'a donné : montre-le-moi.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
+        {"when": "just_passed_sword", "text": "Bien. Tu approches avant de frapper, c'est tout ce qu'il fallait. Maintenant l'arc : Wren tire, toi tu bouges.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"}
+      ],
       "options": [
         {
           "intent": "ask_bram_post",
           "hides_after": "bested:bram",
+          "forbids_condition": "called_out",
+          "_why_called_out": "the review of O21: at the hail nobody has spoken of a post yet, so the question waits for his everyday greeting",
           "_why": "O8, 2026-09-29: a conversation holds three lines, and once you have bested him the fight for real takes this one's place.",
           "text": "Pourquoi frapper un poteau ?",
           "reply": "Parce qu'il ne rend pas les coups. C'est reposant. Ça n'apprend rien."
@@ -414,7 +424,7 @@
         },
         {
           "intent": "drill_magic",
-          "text": "Et ce qu'elle m'a donné ?",
+          "text": "La fée m'a donné quelque chose. Un sort ?",
           "reply": "Alors montre-moi. Wren garde ses distances ; atteins-la avec, deux fois.",
           "requires": "drilled:bow",
           "requires_also": "you:the_gift",
@@ -426,8 +436,16 @@
           "_p2": "DRAFT wording (O10, 2026-09-29) - the words are Yannick's (O19). The shape: after the bow, and only with the fairy's gift, two spells that land on Wren."
         },
         {
+          "intent": "ask_bram_way_on",
+          "text": "Et maintenant ?",
+          "reply": "Les Forges sont au nord. Remonte la route et passe la rivière ; des loups gardent le pont. Ce que je sais, tu le sais.",
+          "requires": "drilled:bow",
+          "repeatable": true,
+          "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way on, for whoever missed his farewell — north up his road, no marker (O19)"
+        },
+        {
           "intent": "ask_bram_spar",
-          "text": "Apprenez-moi à me battre.",
+          "text": "Juste un assaut. Sans leçon.",
           "reply": "Alors lève les mains. Je ne retiens pas grand-chose, mais je m'arrête quand tu tombes.",
           "fights": "bram",
           "spar": true,

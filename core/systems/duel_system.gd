@@ -176,6 +176,15 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	duel.drill = StringName(String(event.data.get("drill", "")))
 	duel.tally = 0
 	duel.volleys = {}
+	duel.said = String(event.data.get("said", ""))
+	duel.said_by = StringName(String(event.data.get("said_by", "")))
+	duel.master_at = Duel.NOWHERE
+	if duel.drill != Duel.NOBODY:
+		var master: StringName = DuelRules.drill_master(duel.drill)
+		if duel.get_fighter(master) == null and cast != null and cast.get_npc(master) != null:
+			var walkers := sim.store(&"walkers") as Walkers
+			duel.master_at = walkers.where(cast.get_npc(master)) if walkers != null \
+				else cast.get_npc(master).tile
 	# **Whoever started the fight acts first.** A player who opens on somebody gets the
 	# first blow, which is the right incentive: attacking from a conversation should be
 	# an advantage, and the price should be paid in standing rather than in mechanics.
@@ -446,6 +455,12 @@ func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 	# drained a bar nothing was allowed to empty would be a fight the HUD lied about.
 	if victim.is_player() and world != null and world.unkillable:
 		damage = mini(damage, maxi(victim.hp - 1, 0))
+	# **Nobody falls in a drill** (the review of O21). A lesson ends on its goal or its
+	# rounds, never on a partner going down: the sword's third blow took Bram's fifteen
+	# to nothing, he yielded, and the lesson counted as having beaten him — so he offered
+	# a fight to the death straight after it. The partner stops at one point.
+	if duel.drill != Duel.NOBODY and not victim.is_player():
+		damage = mini(damage, maxi(victim.hp - 1, 0))
 	victim.hp = maxi(victim.hp - damage, 0)
 	# **And the world is where a player's blow is actually paid** (2026-09-24), through
 	# the one door everything that hurts him goes through, so `G`, the grace window and
@@ -457,8 +472,10 @@ func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 		victim.hp = world.player_hp
 	victim.hurt_left = DuelRules.hurt_steps()
 	victim.facing = DuelRules.facing_from(victim.at, who.at)
-	# A drill counts the blows you land, when landing blows is its goal (O8).
-	if duel.drill != Duel.NOBODY and who.is_player() and DuelRules.drill_goal(duel.drill) == &"blows":
+	# A drill counts the blows you land, when landing blows is its goal (O8) — sword blows:
+	# a spell from three tiles is not the sword lesson (the review of O21).
+	if duel.drill != Duel.NOBODY and who.is_player() and DuelRules.drill_goal(duel.drill) == &"blows" \
+			and move == DuelRules.STRIKE:
 		duel.tally += 1
 	if victim.is_player() and DuelRules.is_down(victim.hp):
 		# Down is down whether or not he finishes it: recorded on the step the blow
@@ -686,6 +703,9 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 		world.hurt(owed, sim.step, false)
 	duel.spar = false
 	duel.drill = Duel.NOBODY
+	duel.master_at = Duel.NOWHERE
+	duel.said = ""
+	duel.said_by = Duel.NOBODY
 	duel.tally = 0
 	duel.volleys = {}
 	duel.owed_damage = 0
@@ -704,6 +724,8 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 ## Every tile somebody is standing on but this one, so nobody walks through anybody.
 func _taken(duel: Duel, but: DuelFighter) -> Dictionary:
 	var out: Dictionary = {}
+	if duel.master_at != Duel.NOWHERE:
+		out[duel.master_at] = true
 	for fighter: DuelFighter in duel.fighters:
 		if fighter == but or not fighter.alive():
 			continue
