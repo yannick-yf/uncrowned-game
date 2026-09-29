@@ -692,6 +692,12 @@ func _yards(brief: Dictionary, pieces: Array) -> void:
 		report.append("yard  %-12s %s stand from his catalogue and his library%s" % [id, ", ".join(counts),
 			", %d REFUSED" % refused if refused > 0 else ""])
 		if on_a_point:
+			# Nothing is warded and nothing is enclosed, but a gate is still a way through:
+			# one that opens onto a wall is a dead end nobody meant (the review of O13).
+			if passage != Region.NOWHERE:
+				for side: Vector2i in [inside_seed, outside_seed]:
+					if not region.in_bounds(side) or not region.is_passable(side):
+						report.append("YARD %s: the gate at %s opens onto a wall at %s" % [id, passage, side])
 			continue
 		if passage == Region.NOWHERE:
 			report.append("YARD %s: no gate stood, so nothing is warded and the yard is not a yard" % id)

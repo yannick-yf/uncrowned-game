@@ -61,6 +61,7 @@ func walk_to(sim: Sim, target: Vector2i, budget: int, off_road: bool = false) ->
 	var held := Vector2i.ZERO
 	var spent: int = 0
 	var fought: int = 0
+	var replan: bool = false
 	while spent < budget:
 		var interrupted: int = _through(sim)
 		if interrupted == STOPPED:
@@ -68,6 +69,7 @@ func walk_to(sim: Sim, target: Vector2i, budget: int, off_road: bool = false) ->
 			return false
 		if interrupted != NOTHING:
 			held = Vector2i.ZERO
+			replan = true
 			if interrupted == FOUGHT:
 				fought += 1
 				if fought > FIGHT_CAP:
@@ -75,14 +77,17 @@ func walk_to(sim: Sim, target: Vector2i, budget: int, off_road: bool = false) ->
 					return false
 			else:
 				spent += 1
-			# **The route was worked out before the fight and the fight moved us.**
-			# Walking the old one from a new tile wanders; look again from where you are.
+			continue
+		if replan:
+			# **The route was worked out before the fight and the fight moved us.** Walking
+			# the old one from a new tile wanders; look again from where you are — once,
+			# when it is over, and not on every step of it (the review).
+			replan = false
 			route = Navigation.waypoints(world.region(), world.player_tile(), target, 4, off_road)
 			next = 0
 			if route.is_empty():
 				report = _stalled(sim, target, "no way from where it was left")
 				return false
-			continue
 		while next < route.size() and world.player_pos.distance_to(route[next]) <= 1.0:
 			next += 1
 		if next >= route.size():

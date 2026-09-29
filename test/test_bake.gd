@@ -349,7 +349,7 @@ func test_the_cemetery_has_graves_a_fence_and_a_gate_all_his() -> void:
 			# The earth stops nobody; the stone at its head is what the tile is walled for.
 			assert_true(region.is_passable(at) or stones.has(at),
 				"the earth over a grave closes nothing of its own, at %s" % at)
-	assert_true(int(count.get("boulder_round", 0)) >= 6, "six graves at least: %s" % count)
+	assert_true(int(count.get("boulder_round", 0)) >= 5, "five graves at least: %s" % count)
 	assert_true(int(count.get("sol_cultive_raccord", 0)) + int(count.get("jachere_irreguliere", 0))
 		== int(count.get("boulder_round", 0)), "and every stone has its grave under it: %s" % count)
 	assert_true(int(count.get("cloture_rustique_2m", 0)) >= 4, "his meadow fence: %s" % count)
@@ -431,3 +431,60 @@ func _files_under(path: String) -> PackedStringArray:
 	for sub: String in listing.get_directories():
 		out.append_array(_files_under(path + "/" + sub))
 	return out
+
+
+func test_the_cemetery_gate_is_a_way_through() -> void:
+	# The review of O13: a third stone stood on the tile behind the gate, and the gate
+	# was an alcove off the trail. Walked, not assumed: in one side, out of the other.
+	var data: Dictionary = _baked()
+	if data.is_empty():
+		assert_true(false, "content/region.json exists — run tools/bake_region.gd")
+		return
+	var region: Region = RegionBake.read(data)
+	var origin := Vector2(float((data["origin_m"] as Array)[0]), float((data["origin_m"] as Array)[1]))
+	var gate: Dictionary = {}
+	for prop: Dictionary in _cemetery(region):
+		if String(prop["role"]) == String(YardRules.ROLE_GATE):
+			gate = prop
+	assert_false(gate.is_empty(), "the cemetery has its gate")
+	if gate.is_empty():
+		return
+	var xz: Vector2 = gate["xz"] as Vector2
+	var passage: Vector2i = BakeRules.tile_for(xz.x, xz.y, origin, float(data["metres_per_tile"]))
+	var front: Vector2 = CatalogRules.to_world(Vector2(0.0, 1.0), Vector2.ZERO, float(gate["yaw"]))
+	var step := Vector2i(roundi(front.x), roundi(front.y))
+	var walk: Array[Vector2i] = Navigation.path(region, passage - step, passage + step)
+	assert_eq(walk.size(), 3, "from one side of the gate to the other is three tiles, through it: %s" % str(walk))
+
+
+func test_a_point_yards_piece_on_his_trail_is_refused_and_the_trail_stays() -> void:
+	# The check the baked file cannot make: once a piece has stood, the tiles it stops are
+	# walls, whatever they were. So the rule is run here on a made-up strip of trail —
+	# a point's yard refuses even a road's verge, which a place's wall may take.
+	var bake := RegionBake.new()
+	bake.region = Region.new(8, 8)
+	for x: int in 8:
+		for y: int in 8:
+			# Two rows wide, so row 3 is the trail's verge: a place's wall may take it.
+			bake.region.set_terrain(Vector2i(x, y), Region.Terrain.ROAD if y == 3 or y == 4 else Region.Terrain.WILD)
+	bake.origin_m = Vector2.ZERO
+	bake.metres_per_tile = 2.0
+	bake.points = {&"graves": {"at": Vector2i(4, 5), "scaffold": true}}
+	var stone: Array = [[[8.7, 6.7], [9.3, 6.7], [9.3, 7.3], [8.7, 7.3]]]
+	var pieces: Array = [
+		{"id": "on_the_trail", "piece": "boulder_round", "scene": "res://x.tscn", "xz": Vector2(9.0, 7.0),
+		 "yaw": 0.0, "role": YardRules.ROLE_PIECE, "yard": "graves", "obstacles": stone, "scale": Vector3.ONE},
+		{"id": "earth_on_it", "piece": "sol", "scene": "res://y.tscn", "xz": Vector2(5.0, 7.0),
+		 "yaw": 0.0, "role": YardRules.ROLE_GROUND, "yard": "graves", "obstacles": [], "scale": Vector3.ONE},
+		{"id": "beside_it", "piece": "boulder_round", "scene": "res://x.tscn", "xz": Vector2(9.0, 13.0),
+		 "yaw": 0.0, "role": YardRules.ROLE_PIECE, "yard": "graves", "obstacles": [], "scale": Vector3.ONE},
+	]
+	bake._yards({"yards": [{"point": "graves"}]}, pieces)
+	var said: String = "\n".join(bake.report)
+	assert_true(said.contains("on_the_trail boulder_round") and said.contains("REFUSED"),
+		"a stone on the trail is refused by name: %s" % said)
+	assert_true(said.contains("earth_on_it"), "and so is earth laid on it")
+	assert_true(bake._road_edge(Vector2i(4, 3)), "the stone stood on the verge, which a place's wall may take")
+	assert_eq(bake.region.terrain_at(Vector2i(4, 3)), Region.Terrain.ROAD, "the trail stays trail")
+	assert_eq(bake.region.terrain_at(Vector2i(2, 3)), Region.Terrain.ROAD, "all of it")
+	assert_eq(bake.region.terrain_at(Vector2i(4, 6)), Region.Terrain.WALL, "and a stone off it stands")

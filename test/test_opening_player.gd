@@ -26,7 +26,7 @@ func test_a_walker_facing_a_conversation_it_did_not_open_says_so_by_name() -> vo
 	assert_false(walker.walk_to(sim, Region.BRINDLE, 600), "a walker that will not answer does not arrive")
 	assert_true(walker.report.contains(String(OpeningRules.FAIRY)), "and names who is talking: %s" % walker.report)
 	assert_true(walker.report.contains("%s" % world.player_tile()), "and where it stood: %s" % walker.report)
-	assert_true(walker.report.contains("talk"), "and what happened last: %s" % walker.report)
+	assert_true(walker.report.get_slice("last: ", 1).contains("talk"), "and what happened last: %s" % walker.report)
 
 
 func test_a_walker_leaves_a_conversation_it_did_not_open_and_goes_on() -> void:

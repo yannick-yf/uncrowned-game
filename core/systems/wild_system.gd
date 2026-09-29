@@ -45,8 +45,11 @@ func on_step(sim: Sim, _step: int) -> void:
 	var duel := sim.store(&"duel") as Duel
 	if wild == null or world == null or duel == null:
 		return
-	# One fight at a time, and no ambush during somebody else's.
-	if duel.on() or duel.settling > 0:
+	# One fight at a time, and no ambush during somebody else's. **Nor a second one from
+	# the pack just beaten** (the review of O13–O16): its `duel_ended` reaches this system a
+	# step after the fight stops, and on that step it was still standing and set on the
+	# player again, so every pack was fought twice. `fighting` is cleared by that event.
+	if duel.on() or duel.settling > 0 or wild.fighting >= 0:
 		return
 	# Nor on a player somebody is calling over and holding still (O16).
 	var hail := sim.store(&"hail") as Hail

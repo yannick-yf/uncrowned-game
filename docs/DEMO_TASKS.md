@@ -1552,10 +1552,12 @@ entry, stand at many points (`at`), be scaled (a number or three axes — the ge
 scales his collision shapes with it, the window the node), lie on the ground
 (`ground`: `ROLE_GROUND`, stops nobody), and vary by `jitter` (yaw, scale, shift) from a
 mixed hash of the yard, the piece and the index. The cemetery, in the brief: his farm
-fence in two runs with his open farm gate between them, facing his trail; three old
+fence in two runs with his open farm gate between them, facing his trail; two old
 graves (his boulder narrowed and stood up, his fallow narrowed over it) and three fresh
 ones (the same stone, his loose earth), laid round his hazels, which keep the corner by
-the trail. His farming catalogue joins the bake's catalogues. Tried and dropped: his
+the trail. There were three old ones until the review found the third on the tile the
+gate opens onto: the bake now reports a point yard's gate that opens onto a wall, and a
+test walks through it. His farming catalogue joins the bake's catalogues. Tried and dropped: his
 boulder at 0.3 even (pebbles, from the game's lens); his three-block scree for the old
 mounds (strewn stones); his coastal granite shingle (its mesh names his material path,
 §9b). The frame is Yannick's to judge; made headstones only if he widens the exception.
@@ -1578,18 +1580,24 @@ the zone and no pack or fire is in it; baked only — with the zone removed, the
 cannot reach Brindle's centre or the bridge.
 
 **Built.** `bram_post` (281, 315 baked; 264, 176 on the 2D map — the tiles Brindle+(2,−4)
-already gave him, so nothing he does moved) and `brindle_hail` (278, 324; 257, 180) —
+already gave him, so nothing he does moved) and `brindle_hail` (280, 324; 257, 180) —
 the village's edge where the way from the graves comes in, not its heart, so a test or
-a frame standing in Brindle's centre is never called out — a radius of 3.5 in
+a frame standing in Brindle's centre is never called out — a radius of 4.3 in
 `content/hail.json` beside the beat's two numbers (the '!' for one second, twenty to
-reach you). `Places.hails()` reads `{who, point, radius}` rows and
+reach you). **The zone was found by search, after the review**: a 3.5 disc grazed the
+one walk it was tested on while an equally short one passed it by. Now the ground is
+dammed and every shortest walk to Brindle's heart and to the bridge must come out
+longer, and his trail cannot be walked from beside the graves to Bram's post out of his
+sight. Fires are allowed inside — to wake at one you must have rested there, and to
+rest there you walked in and were called. `Places.hails()` reads `{who, point, radius}` rows and
 hands them resolved; `hails` is empty. `HailRules`: `row`, `radius_of`, `in_sight`,
 `calls_out` (not `hailed:`, not `met:`, not `killed:`), `approach` (Navigation, cut at the
 first tile touching the player's). **The dam check changed, and why:** it was written
 for the cove, a pocket; O12 put the graves on open meadow with his walkable wood all
-round, so no disc could be passed only through. The test now asks that the walk out of
-the graves to Brindle's heart and to the bridge goes through it — on the 2D map, where
-the graves lie between Brindle and the bridge, only the first (OFF, said why).
+round, so no disc could be passed only through. The test now asks that every
+shortest walk out of the graves to Brindle's heart and to the bridge goes through it —
+on the 2D map, where the graves lie between Brindle and the bridge, only the first (OFF,
+said why).
 **The strengthened anchor test found eight** standing on a wall, the river, the ramparts
 or the mountain and nudged silently: two on his map, six on the 2D one. Seven are moved
 to offsets open on both worlds (Wren's fire, the workers' fire, Blackcairn's fire, a

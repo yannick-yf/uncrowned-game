@@ -80,7 +80,7 @@
     "prototype_3d/assets/library/rocks/boulder_round.tscn": "3850fc3355a10ea6356ecf7f555d865e84fecd4b956ae8db980ce6eedafc02a6",
     "assets/farming/champs/jachere_irreguliere.tscn": "167b44a84ddf0ce514afecbaad21f2be62936b9ba177c3ec3ab1d29a5afa566d",
     "assets/farming/champs/sol_cultive_raccord.tscn": "6056aba6665c6f183afb14c34aefbf64cb5fe7482e35c1e44ae45dbb3aada6dd",
-    "content/bake_brief.json": "c34ffe7439048d20afe6266bbe7cb4c4313759ae56c2ea8caf76ea3f36a07cab"
+    "content/bake_brief.json": "fcc921b17658ad2c3da50de0bac7fcac049c5d99a802fdfdb4e3f774b410d81d"
   },
   "width": 384,
   "height": 384,
@@ -245,7 +245,7 @@
     },
     "brindle_hail": {
       "at": [
-        278,
+        280,
         324
       ],
       "scaffold": true
@@ -3704,32 +3704,6 @@
       ]
     },
     {
-      "kind": "boulder_round",
-      "at": [
-        278,
-        327
-      ],
-      "size": [
-        1,
-        1
-      ],
-      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
-      "piece": "boulder_round",
-      "role": "piece",
-      "yard": "cemetery",
-      "xz": [
-        172.934417724609,
-        270.34130859375
-      ],
-      "yaw": -9.60714122224766,
-      "lift": 0.0,
-      "scale": [
-        0.370845526456833,
-        0.695335328578949,
-        0.185422763228416
-      ]
-    },
-    {
       "kind": "jachere_irreguliere",
       "at": [
         276,
@@ -3774,32 +3748,6 @@
         271.449249267578
       ],
       "yaw": -1.02046234836347,
-      "lift": 0.0,
-      "scale": [
-        0.150000005960464,
-        0.600000023841858,
-        0.379999995231628
-      ]
-    },
-    {
-      "kind": "jachere_irreguliere",
-      "at": [
-        278,
-        327
-      ],
-      "size": [
-        1,
-        1
-      ],
-      "scene": "res://assets/farming/champs/jachere_irreguliere.tscn",
-      "piece": "jachere_irreguliere",
-      "role": "ground",
-      "yard": "cemetery",
-      "xz": [
-        172.983444213867,
-        271.359466552734
-      ],
-      "yaw": -0.556221866178378,
       "lift": 0.0,
       "scale": [
         0.150000005960464,
@@ -5045,7 +4993,7 @@
     "4x53 12x2 14x6 12x24 9x11 12x3 0x125 11x4 0x2 11x3 0x3 11x3 0x3 11x20 0x6 11x3 0x2 1x6 0x1 11x3 0x1 11x3 0x5 11x3 0x1 11x21 0x2 11x12 0x4 5x31 0x6 5x12",
     "4x54 12x2 14x6 12x22 9x11 12x3 0x127 11x14 0x3 11x20 0x10 1x6 0x2 11x3 0x1 11x12 0x3 11x18 0x3 11x9 0x6 5x31 0x3 5x15",
     "4x55 12x2 14x6 12x21 9x11 12x1 0x129 11x14 0x2 11x21 7x2 1x12 7x2 0x1 7x2 0x3 11x12 0x3 11x10 0x1 11x3 0x1 11x3 0x1 11x12 0x5 5x49",
-    "4x56 12x2 14x7 12x19 9x10 12x1 0x132 11x12 0x2 11x19 0x2 7x2 1x11 0x1 7x3 0x2 11x15 0x1 11x16 0x1 11x3 0x1 11x6 0x1 11x5 0x5 5x49",
+    "4x56 12x2 14x7 12x19 9x10 12x1 0x132 11x12 0x2 11x19 0x2 7x2 1x11 0x1 7x2 0x3 11x15 0x1 11x16 0x1 11x3 0x1 11x6 0x1 11x5 0x5 5x49",
     "4x57 12x2 14x7 12x17 9x11 0x128 11x11 0x3 11x25 0x3 1x10 0x5 11x8 0x1 11x4 0x1 11x3 0x1 11x10 0x1 11x4 0x1 11x11 0x1 11x5 0x5 5x49",
     "4x58 12x2 14x7 12x16 9x11 0x128 11x12 0x1 11x26 0x8 1x4 0x3 7x3 11x8 0x1 11x4 0x1 11x11 0x1 11x18 0x2 11x3 0x6 5x50",
     "4x59 0x2 14x7 12x15 9x11 0x128 11x23 0x1 11x15 0x7 1x4 0x7 11x19 0x1 11x5 0x1 11x23 0x5 5x51",

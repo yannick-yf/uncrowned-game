@@ -64,6 +64,17 @@ func _walk_until(sim: Sim, done: Callable, budget: int = 4000) -> bool:
 	return bool(done.call())
 
 
+func _coming(sim: Sim) -> Callable:
+	return func() -> bool: return _hail(sim).phase == Hail.COMING
+
+
+## Into his walk: two tiles past the '!', where the checks named for his coming are made
+## (the review found three of them made inside the beat, before he had moved at all).
+func _well_on_his_way(sim: Sim) -> void:
+	_walk_until(sim, _coming(sim))
+	sim.advance(WalkerRules.steps_per_tile() * 2)
+
+
 func _spotted(sim: Sim) -> Callable:
 	return func() -> bool: return _hail(sim).phase != Hail.IDLE
 
@@ -96,7 +107,11 @@ func test_the_player_is_held_while_he_comes() -> void:
 	var at: Vector2 = _world(sim).player_pos
 	sim.submit(&"move_intent", {"x": -1, "y": 0})
 	sim.advance(30)
+	assert_eq(_hail(sim).phase, Hail.SPOTTED, "the '!' still up")
 	assert_eq(_world(sim).player_pos, at, "a held key moves nobody")
+	_well_on_his_way(sim)
+	assert_eq(_hail(sim).phase, Hail.COMING, "he is walking over")
+	assert_eq(_world(sim).player_pos, at, "and you have not moved")
 	assert_true(_hail(sim).holds_player(), "still held while he walks")
 
 
@@ -110,7 +125,9 @@ func test_he_walks_over_within_the_tables_time_and_the_talk_opens_itself() -> vo
 	for event: SimEvent in sim.events.of_type(&"talk"):
 		assert_true(event.derived, "nobody pressed a key to start it")
 	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
-	var beside: Vector2i = (sim.store(&"walkers") as Walkers).where(bram)
+	var walkers := sim.store(&"walkers") as Walkers
+	assert_false(walkers.path.has(bram.id), "and not setting off home while he talks (the review)")
+	var beside: Vector2i = walkers.where(bram)
 	var here: Vector2i = _world(sim).player_tile()
 	assert_true(maxi(absi(beside.x - here.x), absi(beside.y - here.y)) <= 1, "he is beside you: %s and %s" % [beside, here])
 
@@ -214,11 +231,17 @@ func test_while_he_comes_you_can_speak_to_nobody_else() -> void:
 	sim.submit(&"talk", {"npc": "wren"})
 	sim.advance(1)
 	assert_ne(_world(sim).talking_to, &"wren", "the man calling you has the floor")
+	_well_on_his_way(sim)
+	assert_eq(_hail(sim).phase, Hail.COMING, "he is walking over")
+	sim.submit(&"talk", {"npc": "wren"})
+	sim.advance(1)
+	assert_ne(_world(sim).talking_to, &"wren", "and keeps it while he walks")
 
 
 func test_the_wolves_wait_while_you_are_held() -> void:
 	var sim: Sim = _build()
-	_walk_until(sim, _spotted(sim))
+	_well_on_his_way(sim)
+	assert_eq(_hail(sim).phase, Hail.COMING, "he is walking over")
 	var standing: Dictionary = (sim.store(&"wild") as Wild).standing(_world(sim).region())
 	assert_false(standing.is_empty(), "the wood has a pack")
 	# Put the held player beside one — a fixture, not a walk — which the wood would
@@ -261,8 +284,9 @@ func test_a_replay_taken_mid_approach_is_the_same_walk_and_the_same_talk() -> vo
 			if _world(run).talking_to == &"bram":
 				break
 			run.advance(1)
+		assert_eq(_world(run).talking_to, &"bram", "the talk opens")
 		talk_at.append(run.step)
-	assert_eq(talk_at[0], talk_at[1], "and the talk opens on the same step")
+	assert_eq(talk_at[0], talk_at[1], "and on the same step")
 
 
 func test_a_save_taken_mid_approach_loads_into_the_same_walk() -> void:

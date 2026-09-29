@@ -1200,6 +1200,11 @@ func unresolved_anchors() -> Array[String]:
 	var hails: Array[Dictionary] = places.hail_anchors()
 	for i: int in hails.size():
 		_note_unresolved(out, "hail:%d" % (i + 1), hails[i])
+	# The packs too (the review of O13–O16): a pack anchored to a point nobody wrote was
+	# named by neither check.
+	var wild: Array[Dictionary] = places.wild()
+	for i: int in wild.size():
+		_note_unresolved(out, "wild:%d" % (i + 1), wild[i]["anchor"] as Dictionary)
 	return out
 
 
@@ -1238,7 +1243,11 @@ func anchors_off_ground() -> Array[String]:
 		rows.append(["hail:%d" % (i + 1), hails[i]])
 	for row: Array in rows:
 		var at: Vector2i = resolve(row[1] as Dictionary)
-		if at != NOWHERE and in_bounds(at) and not is_passable(at):
+		if at == NOWHERE:
+			continue
+		if not in_bounds(at):
+			out.append("%s %s off the map" % [row[0], Places.describe(row[1] as Dictionary)])
+		elif not is_passable(at):
 			out.append("%s %s on %s" % [row[0], Places.describe(row[1] as Dictionary),
 				Terrain.keys()[terrain_at(at)]])
 	return out

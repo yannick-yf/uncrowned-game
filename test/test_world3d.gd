@@ -59,7 +59,7 @@ func test_the_window_stands_on_his_ground() -> void:
 			if node != null:
 				assert_eq(node.scale, prop["scale"], "at its baked scale")
 				stones += 1
-		assert_true(stones >= 6, "the graves stand: %d scaled pieces" % stones)
+		assert_true(stones >= 5, "the graves stand: %d scaled pieces" % stones)
 	else:
 		assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
 		assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)

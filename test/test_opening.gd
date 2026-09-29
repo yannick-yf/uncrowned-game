@@ -138,22 +138,40 @@ func test_the_hail_is_not_where_you_wake() -> void:
 		"within the time he has: %d tiles" % walk.size())
 
 
-func test_no_fire_and_no_pack_stands_in_the_hail() -> void:
-	# A fire inside it would wake a dead player already in his sight, and a pack would
-	# set upon somebody the hail is holding still.
+func test_no_pack_stands_in_the_hail() -> void:
+	# A pack would set upon somebody the hail is holding still. A fire may stand in it:
+	# to wake at one you must have rested there, and to rest there you walked in and
+	# were called (content/hail.json).
 	var region: Region = _region()
 	var hail: Dictionary = _the_hail()
-	for prop: Dictionary in region.props:
-		if (prop["kind"] as StringName) == &"campfire":
-			var at: Vector2i = prop["at"] as Vector2i
-			for dx: int in 2:
-				for dy: int in 2:
-					assert_false(HailRules.in_sight(hail, at + Vector2i(dx, dy)), "a fire at %s is out of it" % at)
 	for tile: Vector2i in Wild.new().standing(region).keys():
 		assert_false(HailRules.in_sight(hail, tile), "a pack at %s is out of it" % tile)
 
 
-func test_the_way_out_of_the_graves_walks_into_the_hail() -> void:
+## Moves from one tile to another by the navigation's own step rule, keeping out of the
+## tiles `dammed` says, or -1 when there is no way.
+func _moves(region: Region, from: Vector2i, to: Vector2i, dammed: Callable) -> int:
+	var seen: Dictionary = {from: 0}
+	var queue: Array[Vector2i] = [from]
+	var head: int = 0
+	while head < queue.size():
+		var tile: Vector2i = queue[head]
+		head += 1
+		if tile == to:
+			return int(seen[tile])
+		for step: Vector2i in Navigation.DIRECTIONS:
+			var next: Vector2i = tile + step
+			if seen.has(next) or bool(dammed.call(next)) or not Navigation._can_step(region, tile, step):
+				continue
+			seen[next] = int(seen[tile]) + 1
+			queue.append(next)
+	return -1
+
+
+func test_every_shortest_way_out_of_the_graves_walks_into_the_hail() -> void:
+	# **Every one, not the one Navigation happens to pick** (the review of O13–O16): a
+	# 3.5 disc grazed the tested walk while an equally short one passed it by. So the
+	# ground is dammed and the walk must come out longer, or not at all.
 	var region: Region = _region()
 	var hail: Dictionary = _the_hail()
 	var goals: Array[Vector2i] = [Region.BRINDLE, Region.BRIDGE]
@@ -162,15 +180,37 @@ func test_the_way_out_of_the_graves_walks_into_the_hail() -> void:
 		# are west of Brindle, on the way to the bridge, and the walk there never enters it.
 		off("on the 2D map the graves lie between Brindle and the bridge")
 		goals = [Region.BRINDLE]
+	var open: Callable = func(_tile: Vector2i) -> bool: return false
+	var watched: Callable = func(tile: Vector2i) -> bool: return HailRules.in_sight(hail, tile)
 	for goal: Vector2i in goals:
-		var walk: Array[Vector2i] = Navigation.path(region, where_the_game_starts(), goal)
-		assert_false(walk.is_empty(), "the graves reach %s" % goal)
-		var through: bool = false
-		for tile: Vector2i in walk:
-			if HailRules.in_sight(hail, tile):
-				through = true
-				break
-		assert_true(through, "and the walk to %s passes where he can see you" % goal)
+		var shortest: int = _moves(region, where_the_game_starts(), goal, open)
+		assert_true(shortest > 0, "the graves reach %s" % goal)
+		var round: int = _moves(region, where_the_game_starts(), goal, watched)
+		assert_true(round == -1 or round > shortest,
+			"no walk to %s as short as %d moves keeps out of his sight: %d" % [goal, shortest, round])
+
+
+func test_his_trail_into_the_village_runs_through_the_hail() -> void:
+	# A player on the road his brother drew — up from the coast past the graves into the
+	# village — walks into it too.
+	if not Places.baked():
+		off("the 2D map's road into Brindle is ours, and is the shortest walk already")
+		return
+	var region: Region = _region()
+	var hail: Dictionary = _the_hail()
+	# His trail on the start's own row, west of the graves, where it comes up from the coast.
+	var south: Vector2i = where_the_game_starts()
+	while south.x > 0 and region.terrain_at(south) != Region.Terrain.ROAD:
+		south.x -= 1
+	var post: Vector2i = Places.shared().point(&"bram_post")
+	assert_eq(region.terrain_at(south), Region.Terrain.ROAD, "his trail passes beside the graves")
+	assert_eq(region.terrain_at(post), Region.Terrain.ROAD, "and through Bram's post")
+	var off_trail_or_watched: Callable = func(tile: Vector2i) -> bool:
+		return region.terrain_at(tile) != Region.Terrain.ROAD or HailRules.in_sight(hail, tile)
+	assert_true(_moves(region, south, post, func(t: Vector2i) -> bool: return region.terrain_at(t) != Region.Terrain.ROAD) > 0,
+		"the trail runs from beside the graves to his post")
+	assert_eq(_moves(region, south, post, off_trail_or_watched), -1,
+		"and cannot be walked along out of his sight")
 
 
 # ------------------------------------------------------------- the clearing ---

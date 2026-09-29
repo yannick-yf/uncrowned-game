@@ -63,11 +63,11 @@
       "pieces": [
         {"id": "old_graves", "library": "rocks/boulder_round", "scale": [0.4, 0.75, 0.2],
          "jitter": {"yaw": 12, "scale": 0.12, "shift_m": 0.1},
-         "at": [[169, 270.4], [171, 270.4], [173, 270.4]],
-         "_why": "the village's old dead, along row 327 (tiles 276-278), just inside the fence. His rounded boulder narrowed and stood up — 0.85 m across, 1.2 m high, a hand thick — is an uncut standing stone, set at the head (north) of each 2 m grave, one grave to a tile. Not further east: his tree's crown covers tiles 279-280 from above"},
+         "at": [[169, 270.4], [171, 270.4]],
+         "_why": "the village's old dead, along row 327 (tiles 276-277), just inside the fence. His rounded boulder narrowed and stood up — 0.85 m across, 1.2 m high, a hand thick — is an uncut standing stone, set at the head (north) of each 2 m grave, one grave to a tile. Not further east: tile 278 is the one the gate opens onto — a third stone there made the gate a dead end, and the review found it — and his tree's crown covers tiles 279-280 from above"},
         {"id": "old_mounds", "piece": "jachere_irreguliere", "scale": [0.15, 0.6, 0.38], "ground": true,
          "jitter": {"yaw": 4, "shift_m": 0.05},
-         "at": [[169, 271.4], [171, 271.4], [173, 271.4]],
+         "at": [[169, 271.4], [171, 271.4]],
          "_why": "his fallow patch (chaumes courts et herbes clairsemées) narrowed to 0.95 x 1.94 m: an old grave gone back to dry grass. Two others were tried and read worse from the game's lens: his three-block scree pressed low looked like pebbles strewn about, and his granite shingle's mesh names his project's material path (MIGRATION_3D 9b) and does not load here"},
         {"id": "fresh_graves", "library": "rocks/boulder_round", "scale": [0.34, 0.6, 0.17],
          "jitter": {"yaw": 8, "scale": 0.1, "shift_m": 0.06},
@@ -83,7 +83,7 @@
   "points": {
     "cemetery": {"xz": [175, 279], "scaffold": true, "_why": "O12, 2026-09-29 (Yannick): the burned village's own graveyard, on the meadow at Brindle's southern edge above his cliffs, beside a ruined house. Not the cove - a cemetery is not put on a beach - and not the promontory, which his cliffs make an island. Leaving it means crossing the ruins."},
     "bram_post": {"xz": [179, 247], "scaffold": true, "_why": "O14, 2026-09-29: where Bram stands and calls from — tile (281, 315), the tile Brindle+(2,-4) gave him before he had a point of his own, on his trail through the village's heart"},
-    "brindle_hail": {"xz": [173, 265], "scaffold": true, "_why": "O14: the centre of the ground Bram watches, tile (278, 324), where his trail and the graveyard's gate both come into the village from the south, with content/hail.json's radius of 3.5 tiles: the start, Wren's fire and Brindle's heart outside it, both ways out of the graves through it. Bram walks nine tiles down from his post to meet you"},
+    "brindle_hail": {"xz": [177, 265], "scaffold": true, "_why": "O14, moved after the review: the centre of the ground Bram watches, tile (280, 324), with content/hail.json's radius of 4.3 tiles. Chosen by a search over the baked grid: every shortest walk from the start to Brindle's heart and to the bridge crosses it, and so does his trail, while the start (7.1 tiles off) and the heart (5.1) are outside. Bram walks down from his post to meet you"},
     "his_bridge": {"from_crossing": "PontMine", "_why": "retain the legacy mine bridge point at its delivered location"},
     "bridge": {"from_crossing": "PontRouteRoyale", "_why": "2026-09-15: the main crossing follows his delivered bridge anchor and deck endpoints"},
     "ford": {"xz": [5, 61], "scaffold": true, "_why": "a wade 45 m downstream of his King's Road bridge, where his main river runs straight and seven tiles wide (rivers v4, 2026-09-14). The point follows his river, never the other way round: at (-22, 80) on his old course the band covered half the new one"},

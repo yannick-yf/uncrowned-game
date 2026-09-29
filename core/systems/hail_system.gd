@@ -57,6 +57,10 @@ func on_step(sim: Sim, _step: int) -> void:
 			_stride(hail, walkers, him, world)
 		Hail.ARRIVED:
 			hail.phase = Hail.TALKING
+			# He stays put for the step the talk takes to open: without it the walkers saw a
+			# man nobody was walking, talking to nobody, and set him off home (the review).
+			if walkers.is_displaced(hail.who):
+				walkers.linger[hail.who] = WalkerRules.linger_steps()
 			# Derived, as the fight a line begins is: the player's event was the step
 			# into his ground, and the conversation is the world's answer to it.
 			sim.derive(&"talk", {"npc": String(hail.who)})

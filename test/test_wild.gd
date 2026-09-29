@@ -237,6 +237,15 @@ func test_a_pack_you_beat_is_gone_and_one_you_walk_away_from_is_not() -> void:
 	assert_eq(duel.outcome, &"won", "the pack is beaten")
 	sim.advance(2)
 	assert_eq(wild.standing(region).size(), before - 1, "and that road is clear now")
+	# **Once** (the review of O13–O16): the pack's end reached the wood a step after the
+	# fight stopped, and on that step the beaten pack set on the player again.
+	sim.advance(30)
+	var from_the_wood: int = 0
+	for began: SimEvent in sim.events.of_type(&"duel_began"):
+		if String(began.data.get("asked_by", "")) == "the_wood":
+			from_the_wood += 1
+	assert_eq(from_the_wood, 1, "a beaten pack is fought once")
+	assert_false(duel.on(), "and nothing is fighting you now")
 
 
 func test_his_brother_has_drawn_no_beast() -> void:

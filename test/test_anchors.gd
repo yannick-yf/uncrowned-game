@@ -11,8 +11,18 @@ extends TestCase
 
 func test_every_anchor_resolves_by_name() -> void:
 	var region: Region = Region.build_overworld()
-	var missing: Array[String] = region.unresolved_anchors()
+	var missing: Array[String] = []
+	var owed: Array[String] = []
+	for name: String in region.unresolved_anchors():
+		# The first pack is anchored where his map has a bridge, which on the 2D map is off
+		# its edge: the 2D map's own debt, and said so, as the ground check below says it.
+		if not Places.baked() and name.begins_with("wild:"):
+			owed.append(name)
+		else:
+			missing.append(name)
 	assert_eq(missing.size(), 0, "anchors that resolve nowhere: %s" % ", ".join(missing))
+	if not owed.is_empty():
+		debt("the packs are anchored to his map; the 2D one stands nothing there: %s" % ", ".join(owed))
 
 
 func test_an_anchor_nobody_placed_is_named_not_guessed() -> void:

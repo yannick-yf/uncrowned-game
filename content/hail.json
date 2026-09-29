@@ -1,7 +1,7 @@
 {
   "_note": "The hail's beat (O14, 2026-09-29): Bram sees you walk into the ground round the ruined village, a '!' over his head, you are held, he walks over and the conversation opens (Yannick's « dresseur Pokémon »). Where it happens is content/places.json: the points bram_post and brindle_hail, and the hails list, which stays empty until the hail can be seen (O17). The numbers are real seconds at the simulation's own step, so they read the same on both worlds.",
-  "radius_tiles": 3.5,
-  "_radius_tiles": "How far from the zone's point he sees you, in tiles. 3.5 on both worlds, round the point where the way from the graves enters the village: it takes in both ways in, and leaves out where you wake, Wren's fire (a whole 2x2 fire, so a dead player never wakes in his sight) and Brindle's heart (so a test or a frame standing there is not called out).",
+  "radius_tiles": 4.3,
+  "_radius_tiles": "How far from the zone's point he sees you, in tiles. 4.3 on both worlds, round the point where the way from the graves enters the village. Found by search, not by eye (the review of O13-O16 showed a 3.5 disc grazed the one walk it was tested on, and an equally short walk passed it by): every shortest walk from where you wake to Brindle's heart and to the bridge goes through it, and so does his trail, while the start and Brindle's heart stay outside it — the heart so that a test or a frame standing there is not called out. A fire may stand inside: to wake at it you must have rested there, and to rest there you walked in and were called.",
   "spotted_seconds": 1.0,
   "_spotted_seconds": "How long the '!' stands over him before he moves: long enough to be read, short enough that the player does not think the game has frozen.",
   "budget_seconds": 20.0,
