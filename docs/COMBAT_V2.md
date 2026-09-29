@@ -291,13 +291,20 @@ asked for again. **Nothing in a drill can kill you.** The numbers are
 | Drill | Asks for | The lesson |
 |---|---|---|
 | **The sword** | 3 blows that land, 10 rounds | Close the distance, then strike (K). He stands off 6 tiles |
-| **The bow** | 3 arrows dodged, 10 rounds | Wren aims at the tile you stand on; end your turn anywhere else. After the sword |
+| **The bow** | 3 arrows that land, 10 rounds | Wren hands you a bow of your own and Bram comes at you: keep two tiles or more from him and shoot. After the sword *(redone in T5, 2026-09-29; it was three arrows dodged)* |
 | **Magic** | 2 spells that land, 10 rounds | Cast (I) on Wren from three tiles. After the bow, and only with the fairy's gift |
 
-**The bow.** Wren's weapon is a `bow` in `fighters`: she keeps three tiles off, aims at
-the player's tile (`AIM`), and the start of her next turn is the loosing (`LOOSING`):
-the arrow lands on that tile, on whoever is standing there. A player who has moved is missed and the arrow counts as
-*dodged*. `bow_reach_tiles` 6, `loose_steps` 24.
+**The bow — redone in T5 (2026-09-29).** O9's arrow was aimed at a tile and landed at
+the start of the archer's next turn, so the player's turn in between was a dodge that
+could always be taken. Yannick played it and ruled: *« je tire, ça tire »*. **An arrow is
+a strike with a bow**: it lands on the archer's own act, like a blow, on whoever she shot
+— for everybody, the player included. What answers a bow is its **band**: from
+`bow_min_tiles` (2 — never a neighbouring tile) to `bow_reach_tiles` (6), for
+`bow_damage` (3, under the sword's 5). Close on the archer, or stay out of her reach. An
+archer keeps between `bow_keeps_off_tiles` (3) and her reach and shoots. **The weapon is
+the turn's**: the player's `duel_turn` names it, and a bow counts only if he holds one of
+his own (`you:the_bow`, given by Bram's bow line as the drill begins); asked without it,
+it is the sword. `AIM`, `LOOSING` and the announced tiles are gone.
 
 **The spell.** `CAST` with the fairy's gift (`you:the_gift`): reach 3, damage 5, every
 2 rounds. Only the player has it.

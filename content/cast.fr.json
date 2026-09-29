@@ -414,14 +414,15 @@
         {
           "intent": "drill_bow",
           "text": "L'arc. Montre-moi.",
-          "reply": "Wren tire, toi tu bouges. Trois flèches qui ne trouvent personne, et tu as compris.",
+          "reply": "Wren, ton arc de rechange. Tiens, il est à toi maintenant. Je vais venir sur toi : place trois flèches avant que j'arrive, et ne me laisse pas coller à toi.",
           "requires": "drilled:sword",
-          "fights": "wren",
+          "fights": "bram",
+          "gives": "you:the_bow",
           "spar": true,
           "drill": "bow",
           "repeatable": true,
           "hides_after": "drilled:bow",
-          "_p2": "DRAFT wording (O9, 2026-09-29) - the words are Yannick's (O19). The shape: after the sword, Wren shoots and the player learns to step off the tile."
+          "_p2": "DRAFT wording (O9, redone in T5, 2026-09-29) - for P2. The shape: after the sword, Wren hands you a bow of your own (you:the_bow) and Bram comes at you; three arrows that land before he closes."
         },
         {
           "intent": "drill_magic",

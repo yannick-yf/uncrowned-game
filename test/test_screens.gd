@@ -345,26 +345,31 @@ func test_the_reach_ring_speaks_for_whoever_is_acting() -> void:
 	play.free()
 
 
-func test_an_aimed_arrow_is_in_the_reading_until_it_lands() -> void:
-	# O9: the tile she aims at is marked through the player's turn, which is the whole
-	# of what makes the dodge a decision rather than a guess.
+func test_an_arrow_in_flight_is_in_the_reading_while_it_flies() -> void:
+	# T5: an arrow is shot and lands on the archer's own act. The window is handed the
+	# arrow while it is in the air, from her to whoever she shot, and nothing before.
 	var sim: Sim = Game.build()
 	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true})
 	sim.advance(1)
 	var duel := sim.store(&"duel") as Duel
-	for _step: int in 2000:
-		if duel.waiting_on_player() and not duel.volleys.is_empty():
-			break
-		sim.advance(1)
-	assert_false(duel.volleys.is_empty(), "she has aimed")
 	var play: Node = _flat_play()
 	play.call(&"begin", sim)
 	play.call(&"_ready")
-	var volleys: Array = (play.call(&"_fight_frame") as Dictionary).get("volleys", []) as Array
-	assert_eq(volleys.size(), 1, "one arrow announced")
-	var tile: Vector2i = duel.volleys.values()[0] as Vector2i
-	assert_eq((volleys[0] as Dictionary)["tile"] as Vector2, Vector2(tile) + Vector2(0.5, 0.5),
-		"on the tile she named")
+	var hands := DuelPlayer.new(DuelPlayer.STAND)
+	var seen: int = 0
+	for _step: int in 3000:
+		hands.play(sim, duel)
+		sim.advance(1)
+		if not sim.events.of_type(&"blow_landed").is_empty():
+			break
+		var arrow: Dictionary = (play.call(&"_fight_frame") as Dictionary).get("arrow", {}) as Dictionary
+		if arrow.is_empty():
+			continue
+		seen += 1
+		assert_eq(arrow["to"] as Vector2, duel.drawn_at(duel.me()), "flying at you")
+		assert_true(float(arrow["through"]) >= 0.0 and float(arrow["through"]) <= 1.0, "part way there")
+	assert_true(seen > 0, "and it was seen in the air before it landed")
+	assert_false((play.call(&"_fight_frame") as Dictionary).has("volleys"), "no tile is announced ahead")
 	play.free()
 
 
@@ -386,9 +391,9 @@ func test_the_reading_says_whether_the_gift_can_be_cast() -> void:
 	play.free()
 
 
-func test_an_archer_in_flight_and_in_reach_reads_as_one() -> void:
-	# Found by the review of O9: while her arrow flew she wore the player's last pose,
-	# and her ring was a sword's one tile.
+func test_an_archers_ring_is_a_bows() -> void:
+	# Found by the review of O9: her ring was a sword's one tile. Whoever acts is drawn with
+	# the reach of what they hold.
 	var sim: Sim = Game.build()
 	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true})
 	sim.advance(1)
@@ -397,25 +402,19 @@ func test_an_archer_in_flight_and_in_reach_reads_as_one() -> void:
 	play.call(&"begin", sim)
 	play.call(&"_ready")
 	var hands := DuelPlayer.new(DuelPlayer.PRESS)
-	var saw_loosing: bool = false
-	var saw_aiming: bool = false
+	var saw_her: bool = false
 	for _step: int in 3000:
 		hands.play(sim, duel)
 		sim.advance(1)
 		if not duel.on():
 			break
-		var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
 		var acting: DuelFighter = duel.acting_fighter()
-		if acting == null or acting.is_player():
+		if acting == null or acting.is_player() or duel.acting != DuelRules.STRIKE:
 			continue
-		if duel.phase == Duel.LOOSING:
-			saw_loosing = true
-			assert_true(String(reading.get("his_pose", "")) in ["", "hurt"],
-				"loosing, she stands or flinches — never a borrowed wind-up: '%s'" % reading.get("his_pose", ""))
-		if duel.acting == DuelRules.AIM:
-			saw_aiming = true
-			assert_eq(int(reading.get("reach_tiles", 0)), DuelRules.bow_reach_tiles(), "her ring is a bow's")
-	assert_true(saw_loosing and saw_aiming, "both were seen")
+		saw_her = true
+		var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+		assert_eq(int(reading.get("reach_tiles", 0)), DuelRules.bow_reach_tiles(), "her ring is a bow's")
+	assert_true(saw_her, "she was seen shooting")
 	play.free()
 
 

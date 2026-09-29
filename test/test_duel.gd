@@ -646,7 +646,12 @@ func test_a_blow_says_what_it_was_and_where_it_landed() -> void:
 	assert_true(first.data.has("at_x") and first.data.has("at_y"), "on a tile it names")
 
 
-# ------------------------------------------------------- the bow (O9, 2026-09-29) ---
+# ------------------------------------------- the bow (O9), redone in T5 (2026-09-29) ---
+#
+# Yannick played O9's bow and ruled: « je tire, ça tire ». An arrow lands when it is shot,
+# on the archer's own act, for everybody — no tile announced a turn ahead, no dodge. What
+# answers a bow is the band it shoots in: never a neighbouring tile, and no further than
+# its reach.
 
 ## A fight against Wren, who carries a bow, begun from where the game starts so it
 ## replays from the log.
@@ -657,50 +662,98 @@ func _against_the_bow() -> Sim:
 	return sim
 
 
-func test_an_archer_keeps_off() -> void:
+func _arrows(sim: Sim, by: String = "") -> Array[SimEvent]:
+	var out: Array[SimEvent] = []
+	for row: SimEvent in sim.events.of_type(&"blow_landed"):
+		if String(row.data.get("move", "")) == "arrow" and (by == "" or String(row.data.get("by", "")) == by):
+			out.append(row)
+	return out
+
+
+func test_an_archer_keeps_off_and_shoots() -> void:
 	var sim: Sim = _against_the_bow()
 	var duel: Duel = _duel(sim)
-	assert_eq(DuelRules.weapon_of(&"wren"), &"bow", "Wren carries a bow")
+	assert_eq(DuelRules.weapon_of(&"wren"), DuelRules.BOW, "Wren carries a bow")
 	_play(sim, DuelPlayer.STAND, 400)
 	var mine: DuelFighter = duel.me()
 	var her: DuelFighter = duel.get_fighter(&"wren")
 	assert_true(DuelRules.apart(mine.at, her.at) >= DuelRules.bow_keeps_off_tiles(),
 		"she stands off at %d tiles" % DuelRules.apart(mine.at, her.at))
-	assert_true(sim.events.of_type(&"arrow_aimed").size() > 0, "and aims")
+	assert_true(_arrows(sim, "wren").size() > 0, "and her arrows land")
 
 
-func test_standing_on_the_tile_is_hit_and_moving_off_it_dodges() -> void:
-	var still: Sim = _against_the_bow()
-	_play(still, DuelPlayer.STAND, 3000)
-	var arrows: int = 0
-	for row: Variant in still.events.of_type(&"blow_landed"):
-		if String((row as SimEvent).data.get("move", "")) == "arrow":
-			arrows += 1
-	assert_true(arrows > 0, "standing still, you are hit: %d arrows" % arrows)
-
-	var quick: Sim = _against_the_bow()
-	_play(quick, DuelPlayer.DODGE, 3000)
-	for row: Variant in quick.events.of_type(&"blow_landed"):
-		assert_ne(String((row as SimEvent).data.get("move", "")), "arrow", "moving off the tile, never hit")
-	assert_true(quick.events.of_type(&"arrow_dodged").size() > 0, "every arrow lands where you were")
+func test_a_bow_shoots_a_band_never_a_neighbour() -> void:
+	var at := Vector2i(10, 10)
+	assert_false(DuelRules.reaches(DuelRules.BOW, at, at + Vector2i(1, 0)), "never the next tile")
+	assert_false(DuelRules.reaches(DuelRules.BOW, at, at + Vector2i(1, 1)), "nor the next one on the diagonal")
+	assert_true(DuelRules.reaches(DuelRules.BOW, at, at + Vector2i(DuelRules.bow_min_tiles(), 0)), "from two")
+	assert_true(DuelRules.reaches(DuelRules.BOW, at, at + Vector2i(DuelRules.bow_reach_tiles(), 0)), "to its reach")
+	assert_false(DuelRules.reaches(DuelRules.BOW, at, at + Vector2i(DuelRules.bow_reach_tiles() + 1, 0)), "and no further")
+	assert_true(DuelRules.reaches(DuelRules.SWORD, at, at + Vector2i(1, 1)), "the sword reaches the next tile")
+	assert_false(DuelRules.reaches(DuelRules.SWORD, at, at + Vector2i(2, 0)), "and no further")
+	assert_true(DuelRules.bow_damage() < DuelRules.strike_damage(), "an arrow costs less than a blow")
 
 
-func test_an_arrow_lands_a_turn_later_on_whoever_stands_there() -> void:
-	# No dice: the arrow is announced on a tile, and lands there when her next turn
-	# starts. The time between is the player's turn — the whole of the dodge.
+func test_an_arrow_lands_on_the_act_that_shoots_it() -> void:
+	# No delay and no dodge: between her turn and her arrow landing there is no turn of
+	# yours, so nothing you do can take you out of its way.
 	var sim: Sim = _against_the_bow()
-	_play(sim, DuelPlayer.STAND, 3000)
-	var aimed: Array = sim.events.of_type(&"arrow_aimed")
-	var hit: Array = []
-	for row: Variant in sim.events.of_type(&"blow_landed"):
-		if String((row as SimEvent).data.get("move", "")) == "arrow":
-			hit.append(row)
-	assert_true(aimed.size() > 0 and hit.size() > 0, "an arrow aimed and one landed")
-	var first_aim: SimEvent = aimed[0] as SimEvent
-	var first_hit: SimEvent = hit[0] as SimEvent
-	assert_true(first_hit.step > first_aim.step, "landing after the aim")
-	assert_eq(Vector2i(int(first_hit.data["at_x"]), int(first_hit.data["at_y"])),
-		Vector2i(int(first_aim.data["x"]), int(first_aim.data["y"])), "on the tile announced")
+	_play(sim, DuelPlayer.LEAVE, 3000)
+	var waiting_for: bool = false
+	var landed: int = 0
+	for row: SimEvent in sim.events.all():
+		if row.type == &"duel_turn" and String(row.data.get("who", "")) == "wren" \
+				and String(row.data.get("action", "")) == String(DuelRules.STRIKE):
+			waiting_for = true
+		elif row.type == &"duel_turn" and String(row.data.get("who", "")) == "player":
+			assert_false(waiting_for, "no turn of yours between her shot and its landing (step %d)" % row.step)
+		elif row.type == &"blow_landed" and String(row.data.get("by", "")) == "wren":
+			waiting_for = false
+			landed += 1
+	assert_true(landed > 0, "and walking away, you were hit all the same: %d" % landed)
+	assert_eq(sim.events.of_type(&"arrow_aimed").size() + sim.events.of_type(&"arrow_dodged").size(), 0,
+		"nothing is announced ahead and nothing is dodged")
+
+
+func _turn_now(sim: Sim, action: String, weapon: String) -> void:
+	var duel: Duel = _duel(sim)
+	for _step: int in 2000:
+		if duel.waiting_on_player():
+			break
+		sim.advance(1)
+	var mine: DuelFighter = duel.me()
+	sim.submit(&"duel_turn", {"who": "player", "to_x": mine.at.x, "to_y": mine.at.y,
+		"action": action, "target": String(duel.foe().who), "weapon": weapon})
+	sim.advance(2)
+
+
+func test_the_player_shoots_only_with_a_bow_of_his_own() -> void:
+	var without: Sim = Game.build()
+	without.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	without.advance(1)
+	var duel: Duel = _duel(without)
+	var apart: int = DuelRules.apart(duel.me().at, duel.foe().at)
+	assert_true(apart >= DuelRules.bow_min_tiles() and apart <= DuelRules.bow_reach_tiles(),
+		"he stands in the bow's band: %d tiles" % apart)
+	_turn_now(without, "strike", "bow")
+	assert_eq(duel.me().weapon, DuelRules.SWORD, "without a bow, the sword is what you hold")
+	assert_eq(duel.acting, DuelRules.WAIT, "and it does not reach him")
+
+	var with: Sim = Game.build()
+	with.facts.add_source(DuelRules.THE_BOW, &"wren")
+	with.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	with.advance(1)
+	_turn_now(with, "strike", "bow")
+	assert_eq(_duel(with).me().weapon, DuelRules.BOW, "with one, you draw it")
+	assert_eq(_duel(with).acting, DuelRules.STRIKE, "and shoot")
+	for _step: int in 200:
+		if not _arrows(with, "player").is_empty():
+			break
+		with.advance(1)
+	var hit: Array[SimEvent] = _arrows(with, "player")
+	assert_eq(hit.size(), 1, "the arrow landed")
+	if not hit.is_empty():
+		assert_eq(int(hit[0].data.get("damage", 0)), DuelRules.bow_damage(), "for the bow's figure")
 
 
 func test_a_kiting_archer_does_not_leave() -> void:
@@ -711,12 +764,15 @@ func test_a_kiting_archer_does_not_leave() -> void:
 		if String((row as SimEvent).data.get("who", "")) == "wren":
 			fled += 1
 	assert_eq(fled, 0, "keeping off with a bow is fighting, not leaving")
-	assert_true(sim.events.of_type(&"arrow_aimed").size() >= 2, "and she kept on shooting")
+	assert_true(_arrows(sim, "wren").size() >= 2, "and she kept on shooting")
 
 
 func test_a_bow_fight_replays_to_the_tile() -> void:
+	# Her arrows, replayed from the log. The player's own bow is a fact the log gives him —
+	# `test_tutorial` replays a lesson in which he is handed it and shoots.
 	var sim: Sim = _against_the_bow()
-	_play(sim, DuelPlayer.DODGE, 1500)
+	_play(sim, DuelPlayer.PRESS, 1500)
+	assert_true(_arrows(sim, "wren").size() > 0, "she shot you")
 	var replayed: Sim = Game.replay(sim)
 	assert_eq(_duel(replayed).fingerprint(), _duel(sim).fingerprint(), "the same fight, to the tile")
 
@@ -811,9 +867,8 @@ func test_an_archer_does_not_shoot_the_fallen() -> void:
 			felling = (row as SimEvent).step
 			break
 	assert_true(felling >= 0, "an arrow felled you")
-	for row: Variant in sim.events.of_type(&"arrow_aimed"):
-		var aimed: SimEvent = row as SimEvent
-		assert_true(aimed.step <= felling, "and she aimed no arrow after it (aimed at %d, felled at %d)" % [aimed.step, felling])
+	for row: SimEvent in _arrows(sim, "wren"):
+		assert_true(row.step <= felling, "and no arrow came after it (at %d, felled at %d)" % [row.step, felling])
 
 
 func test_the_first_design_is_gone() -> void:

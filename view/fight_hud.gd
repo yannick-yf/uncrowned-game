@@ -185,10 +185,6 @@ func _take_blow(blow: Dictionary) -> void:
 	elif kind == "blow_missed":
 		_floats.append({"text": Text.of(&"fight.miss"), "at": _place(at, by_me), "born": _now,
 			"colour": Ui.DIM, "size": Ui.NOTE})
-	elif kind == "arrow_dodged":
-		# Over you, in your colour: the dodge is the thing you did (O9).
-		_floats.append({"text": Text.of(&"fight.dodged"), "at": _place(at, true), "born": _now,
-			"colour": MINE, "size": Ui.ROW})
 
 
 ## A screen point to hang a word on, or the bar's corner when the window gave none.

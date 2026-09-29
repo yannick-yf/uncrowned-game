@@ -157,7 +157,7 @@ func test_the_old_spar_line_still_spars() -> void:
 	assert_true(_intents(sim).has(&"drill_sword"), "beside the lesson")
 
 
-# ------------------------------------------------------------------ the bow (O9) ---
+# ------------------------------------------------- the bow (O9), redone in T5 ---
 
 func test_the_bow_drill_comes_after_the_sword() -> void:
 	var sim: Sim = Game.build()
@@ -174,46 +174,78 @@ func test_the_bow_drill_comes_after_the_sword() -> void:
 	assert_true(_intents(sim).has(&"drill_bow"), "offered once the sword is passed")
 
 
+## The bow drill as T5 has it (2026-09-29): Bram comes at you, you hold a bow of your
+## own, and three arrows that land on him are the lesson — begun from where the game
+## starts, so it replays from the log.
 func _bow_drill() -> Sim:
 	var sim: Sim = Game.build()
-	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "bow"})
+	sim.facts.add_source(DuelRules.THE_BOW, &"wren")
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "bram", "spar": true, "drill": "bow"})
 	sim.advance(1)
 	return sim
 
 
-func test_dodging_passes_the_bow_drill() -> void:
+func test_asking_for_the_bow_puts_one_in_your_hands() -> void:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(&"drilled:sword", &"test")
+	assert_false(sim.facts.has(DuelRules.THE_BOW), "you have no bow of your own")
+	_ask(sim, "drill_bow")
+	var duel: Duel = _duel(sim)
+	assert_true(sim.facts.has(DuelRules.THE_BOW), "and the lesson begins with one")
+	assert_eq(duel.drill, &"bow", "the bow drill")
+	assert_not_null(duel.get_fighter(&"bram"), "with Bram in front of you")
+
+
+func test_shooting_passes_the_bow_drill() -> void:
 	var sim: Sim = _bow_drill()
 	var world := sim.store(&"world") as WorldState
-	_play(sim, DuelPlayer.DODGE, 20000)
+	_play(sim, DuelPlayer.BOW, 20000)
 	sim.advance(DuelRules.beat_steps() + 5)
-	assert_true(sim.facts.has(&"drilled:bow"), "three arrows dodged is the lesson learnt")
+	assert_true(sim.facts.has(&"drilled:bow"), "three arrows that land is the lesson learnt")
 	assert_eq(world.player_hp, WorldState.MAX_HP, "and he mends you")
 
 
-func test_standing_in_the_arrows_fails_it_and_harms_nobody() -> void:
+func test_the_bow_you_are_given_and_the_arrows_you_shoot_replay_from_the_log() -> void:
+	# The whole way, from the line: the sword passed, the bow asked for and handed over,
+	# three arrows. Nothing is written outside the log, so a replay shoots them too.
+	# From where the game starts, and nothing set outside the log: the sword begun as its
+	# line begins it, and Bram walking over to speak when it is passed.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "bram", "spar": true, "drill": "sword"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.PRESS, 6000)
+	for _step: int in 4000:
+		if world.talking_to == &"bram":
+			break
+		sim.advance(1)
+	assert_eq(world.talking_to, &"bram", "he speaks when the sword is passed")
+	assert_true(_intents(sim).has(&"drill_bow"), "and offers the bow")
+	sim.submit(&"choose_intent", {"intent": "drill_bow"})
+	sim.advance(3)
+	_play(sim, DuelPlayer.BOW, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_true(sim.facts.has(&"drilled:bow"), "passed")
+	var replayed: Sim = Game.replay(sim)
+	assert_true(replayed.facts.has(DuelRules.THE_BOW), "a replay is handed the bow")
+	assert_true(replayed.facts.has(&"drilled:bow"), "and passes it too")
+	assert_eq((replayed.store(&"world") as WorldState).fingerprint(),
+		(sim.store(&"world") as WorldState).fingerprint(), "to the same world")
+
+
+func test_the_sword_is_not_the_bow_lesson() -> void:
+	# The goal is the arrows. Since the review of O21 nobody falls in a drill, so pressing
+	# in with the sword cannot end it: it is decided by the arrows, or by the rounds.
 	var sim: Sim = _bow_drill()
 	var world := sim.store(&"world") as WorldState
 	var duel: Duel = _duel(sim)
-	_play(sim, DuelPlayer.STAND, 20000)
-	sim.advance(DuelRules.beat_steps() + 5)
-	assert_eq(duel.outcome, &"failed", "not yet")
-	assert_eq(world.deaths, 0, "nobody died")
-	assert_false(sim.facts.has(&"drilled:bow"), "and nothing is written")
-
-
-func test_beating_her_without_dodging_is_not_the_lesson() -> void:
-	# The goal is the dodge. Since the review of O21 nobody falls in a drill, so running in
-	# and hitting her cannot end it: it is decided by the arrows dodged, or by the rounds.
-	var sim: Sim = _bow_drill()
 	_play(sim, DuelPlayer.PRESS, 20000)
 	sim.advance(DuelRules.beat_steps() + 5)
 	assert_eq(sim.events.of_type(&"duel_yielded").size() + sim.events.of_type(&"duel_down").size(), 0,
-		"she never goes down, however hard you press")
-	var ended: Array[SimEvent] = sim.events.of_type(&"duel_ended")
-	assert_eq(ended.size(), 1, "the lesson ends")
-	if not ended.is_empty():
-		assert_eq(sim.facts.has(&"drilled:bow"), bool(ended[0].data.get("passed", false)),
-			"and it is passed exactly when the arrows were dodged")
+		"he never goes down, however hard you press")
+	assert_eq(duel.outcome, &"failed", "not yet")
+	assert_false(sim.facts.has(&"drilled:bow"), "and nothing is written")
+	assert_eq(world.deaths, 0, "nobody died")
 
 
 # --------------------------------------------------------------- the spell (O10) ---
@@ -283,13 +315,14 @@ func test_stepping_back_on_your_first_turn_does_not_end_the_drill() -> void:
 
 
 func test_the_master_speaks_only_to_somebody_beside_him() -> void:
-	# The bow drill is Wren's fight; Bram watches from his post, and may be far off. He
-	# does not open a conversation from across the village.
+	# The magic drill is Wren's fight; Bram watches from his post, and may be far off. He
+	# does not open a conversation from across the village as the lesson ends.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "bow"})
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "magic"})
 	sim.advance(1)
-	_play(sim, DuelPlayer.DODGE, 20000)
+	_play(sim, DuelPlayer.CAST, 20000)
 	sim.advance(DuelRules.beat_steps() + 5)
 	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
 	var walkers := sim.store(&"walkers") as Walkers
@@ -301,18 +334,19 @@ func test_the_master_speaks_only_to_somebody_beside_him() -> void:
 
 
 func test_the_arrow_that_decides_it_is_the_last() -> void:
-	var sim: Sim = Game.build()
-	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "bow"})
-	sim.advance(1)
-	_play(sim, DuelPlayer.DODGE, 20000)
-	var dodges: Array = sim.events.of_type(&"arrow_dodged")
-	var aims: Array = sim.events.of_type(&"arrow_aimed")
-	assert_true(dodges.size() >= DuelRules.drill_count(&"bow"), "the drill was passed")
-	var deciding: SimEvent = dodges[DuelRules.drill_count(&"bow") - 1] as SimEvent
-	for row: Variant in aims:
-		assert_true((row as SimEvent).step < deciding.step,
-			"no arrow is aimed after the dodge that passed it (aimed at %d, passed at %d)"
-				% [(row as SimEvent).step, deciding.step])
+	# The drill is passed on the step the third arrow lands, and nothing is thrown after it.
+	var sim: Sim = _bow_drill()
+	_play(sim, DuelPlayer.BOW, 20000)
+	var mine: Array[SimEvent] = []
+	for row: SimEvent in sim.events.of_type(&"blow_landed"):
+		if String(row.data.get("by", "")) == "player" and String(row.data.get("move", "")) == "arrow":
+			mine.append(row)
+	assert_true(mine.size() >= DuelRules.drill_count(&"bow"), "the drill was passed")
+	if mine.size() >= DuelRules.drill_count(&"bow"):
+		var deciding: SimEvent = mine[DuelRules.drill_count(&"bow") - 1]
+		for row: SimEvent in sim.events.of_type(&"blow_landed"):
+			assert_true(row.step <= deciding.step,
+				"no blow after the arrow that passed it (at %d, passed at %d)" % [row.step, deciding.step])
 
 
 func test_only_bram_reads_what_you_have_drilled() -> void:
@@ -380,13 +414,16 @@ func test_a_spell_is_not_the_sword_lesson() -> void:
 
 
 func test_in_wrens_lessons_bram_stands_and_nobody_walks_onto_him() -> void:
-	var sim: Sim = _bow_drill()
+	var sim: Sim = Game.build()
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "magic"})
+	sim.advance(1)
 	var duel: Duel = _duel(sim)
 	var walkers := sim.store(&"walkers") as Walkers
 	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
 	var stands: Vector2i = walkers.where(bram)
 	assert_eq(duel.master_at, stands, "the lesson knows where he watches from")
-	var hands := DuelPlayer.new(DuelPlayer.DODGE)
+	var hands := DuelPlayer.new(DuelPlayer.CAST)
 	for _step: int in 20000:
 		if not duel.on():
 			break
@@ -414,7 +451,7 @@ func test_after_each_lesson_he_speaks_to_it() -> void:
 	assert_eq(_first_words(sim), bram.alt_greeting_for({&"just_passed_sword": true}), "the way on to the bow")
 	sim.submit(&"choose_intent", {"intent": "drill_bow"})
 	sim.advance(3)
-	_play(sim, DuelPlayer.DODGE, 20000)
+	_play(sim, DuelPlayer.BOW, 20000)
 	sim.advance(DuelRules.beat_steps() + 5)
 	assert_eq(_first_words(sim), bram.alt_greeting_for({&"just_passed_bow": true}), "the way on to the gift")
 	sim.submit(&"choose_intent", {"intent": "drill_magic"})
@@ -440,7 +477,7 @@ func test_without_the_gift_the_bow_is_the_last_lesson() -> void:
 	var sim: Sim = Game.build()
 	sim.facts.add_source(&"drilled:sword", &"test")
 	_ask(sim, "drill_bow")
-	_play(sim, DuelPlayer.DODGE, 20000)
+	_play(sim, DuelPlayer.BOW, 20000)
 	sim.advance(DuelRules.beat_steps() + 5)
 	assert_eq(_first_words(sim), Cast.shared().get_npc(&"bram").alt_greeting_for({&"just_passed_bow_without_gift": true}),
 		"a farewell, not a lesson he cannot give")

@@ -36,10 +36,17 @@ const PLAYER: StringName = &"player"
 
 const STRIKE: StringName = &"strike"
 const WAIT: StringName = &"wait"
-## **An archer's act** (O9): she aims at a tile, and the arrow lands there on her next turn.
-const AIM: StringName = &"aim"
 ## **The fairy's gift** (O10): a blow at range, once every few rounds.
 const CAST: StringName = &"cast"
+
+## **What a strike is thrown with** (T5). A strike is a strike; the weapon says how far
+## it reaches and what it costs. O9's `AIM` — an arrow announced on a tile and landing a
+## turn later — is gone: Yannick played it and ruled « je tire, ça tire ».
+const SWORD: StringName = &"sword"
+const BOW: StringName = &"bow"
+## **A bow of the player's own**, which Wren gives as the bow drill begins (T5): a fact,
+## so shooting is gated by having one and by nothing else (invariant 4).
+const THE_BOW: StringName = &"you:the_bow"
 
 ## The eight neighbours, in a fixed order, so every search in this file breaks its
 ## ties the same way on every machine and in every replay.
@@ -245,7 +252,8 @@ static func drill_first(id: StringName) -> StringName:
 	return first if first != &"" else drill_master(id)
 
 
-## **What somebody fights with** (O9): `sword` unless their row says otherwise.
+## **What somebody fights with** (O9): `sword` unless their row says otherwise. The
+## player's is his turn's to say (T5), from what he holds.
 static func weapon_of(who: StringName) -> StringName:
 	return StringName(String(_about(who).get("weapon", "sword")))
 
@@ -254,13 +262,41 @@ static func bow_reach_tiles() -> int:
 	return number("bow_reach_tiles", 6)
 
 
+## **Never a neighbouring tile** (T5): the nearest a bow shoots, and half of what answers
+## an archer — close on her.
+static func bow_min_tiles() -> int:
+	return maxi(number("bow_min_tiles", 2), 1)
+
+
 static func bow_keeps_off_tiles() -> int:
 	return number("bow_keeps_off_tiles", 3)
 
 
-## How long an arrow is in the air, in steps.
-static func loose_steps() -> int:
-	return number("loose_steps", 24)
+## What an arrow costs, under a sword's blow (T5).
+static func bow_damage() -> int:
+	return number("bow_damage", 3)
+
+
+## **Whether a strike thrown with this weapon from `from` reaches `to`** (T5): a sword the
+## next tile, diagonals included; a bow its band, never the next tile.
+static func reaches(weapon: StringName, from: Vector2i, to: Vector2i) -> bool:
+	if from == to:
+		return false
+	var gap: int = apart(from, to)
+	if weapon == BOW:
+		return gap >= bow_min_tiles() and gap <= bow_reach_tiles()
+	return gap <= reach_tiles()
+
+
+## What a strike thrown with this weapon costs.
+static func damage_with(weapon: StringName) -> int:
+	return bow_damage() if weapon == BOW else strike_damage()
+
+
+## The furthest a weapon reaches, for the ring drawn round whoever holds it and for
+## whether somebody has got away.
+static func reach_with(weapon: StringName) -> int:
+	return bow_reach_tiles() if weapon == BOW else reach_tiles()
 
 
 static func spell_reach_tiles() -> int:
@@ -280,9 +316,6 @@ static func can_cast(me: DuelFighter, round_now: int, from: Vector2i, target_at:
 	return round_now >= me.ready_round and apart(from, target_at) <= spell_reach_tiles()
 
 
-## How far somebody reaches with what they carry.
-static func reach_of(who: StringName) -> int:
-	return bow_reach_tiles() if weapon_of(kind_of(who)) == &"bow" else reach_tiles()
 
 
 ## Whether they are a sparring partner. **Not a mercy of their own since O1** — the
@@ -481,7 +514,7 @@ static func decide(
 		return standing
 	var cost: Dictionary = reachable(me.at, region, tiles_per_turn(), taken)
 	var tiles: Array[Vector2i] = _ordered(cost)
-	if weapon_of(kind_of(me.who)) == &"bow":
+	if me.weapon == BOW:
 		return _archer(me, foes, tiles)
 
 	if me.hp <= flees_at_hp():
@@ -533,9 +566,9 @@ static func decide(
 	return {"to": closer, "action": WAIT, "target": &""}
 
 
-## **One rule for an archer** (O9): stand where the nearest foe is between keeping off
-## and her reach — staying put if she already does — and aim at the tile he stands on.
-## When no tile she can walk to is in that band, the one nearest it.
+## **One rule for an archer** (O9, T5): stand where the nearest foe is between keeping off
+## and her reach — staying put if she already does — and shoot him, the arrow landing on
+## this act. When no tile she can walk to is in that band, the one nearest it.
 static func _archer(me: DuelFighter, foes: Array[DuelFighter], tiles: Array[Vector2i]) -> Dictionary:
 	var target: DuelFighter = foes[0]
 	for foe: DuelFighter in foes:
@@ -553,9 +586,9 @@ static func _archer(me: DuelFighter, foes: Array[DuelFighter], tiles: Array[Vect
 			best = tile
 		if off == 0:
 			break
-	if apart(best, target.at) > high:
+	if not reaches(BOW, best, target.at):
 		return {"to": best, "action": WAIT, "target": &""}
-	return {"to": best, "action": AIM, "target": target.who, "aim": target.at}
+	return {"to": best, "action": STRIKE, "target": target.who}
 
 
 ## The tiles of a reachable field, cheapest first and then north to south and west to
@@ -590,10 +623,10 @@ static func out_of_reach(me: DuelFighter, foes: Array[DuelFighter]) -> bool:
 		return false
 	# **Reach-aware since the bow** (O9): an archer keeping off within her reach is
 	# fighting, not leaving — and somebody inside an archer's reach has not got away.
-	var mine: int = reach_of(me.who)
+	var mine: int = reach_with(me.weapon)
 	for foe: DuelFighter in foes:
 		var gap: int = apart(me.at, foe.at)
-		if gap <= maxi(leaves_at_tiles(), maxi(mine, reach_of(foe.who))):
+		if gap <= maxi(leaves_at_tiles(), maxi(mine, reach_with(foe.weapon))):
 			return false
 	return true
 
@@ -621,10 +654,8 @@ static func has_left(me: DuelFighter, foes: Array[DuelFighter]) -> bool:
 static func pose_of(hurt_left: int, acting: StringName, into: int) -> StringName:
 	if hurt_left > 0:
 		return &"hurt"
-	# Drawing the bow is held as the wind-up: his brother drew no bow, and the cocked arm
-	# is the honest nearest thing (O9).
-	if acting == AIM:
-		return &"ready"
+	# Drawing a bow is the wind-up like any strike: his brother drew no bow, and the cocked
+	# arm is the honest nearest thing (O9).
 	if acting != STRIKE and acting != CAST:
 		return &""
 	if into < strike_at_step():

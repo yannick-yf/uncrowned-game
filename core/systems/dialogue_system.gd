@@ -137,9 +137,10 @@ func _choose(
 	var learned: StringName = DialogueRules.verdict(option, offered)
 	if learned != &"":
 		sim.facts.add_source(learned, npc.id)
-		# And what the answer gives beside it (O10): the fairy's plea carries her gift.
-		if option.gives != &"":
-			sim.facts.add_source(option.gives, npc.id)
+	# And what the answer gives (O10): the fairy's plea carries her gift, and asking for
+	# the bow puts one in your hands (T5) — a line that gives without teaching anything.
+	if option.gives != &"":
+		sim.facts.add_source(option.gives, npc.id)
 	# And he has now answered it. Recorded as a fact like everything else, so it
 	# replays, and so the journal could one day show what you have already asked.
 	if not option.repeatable:

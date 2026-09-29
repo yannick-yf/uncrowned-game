@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1–T4 are built.** Then P2, with him, then C2–C4.
+> answers the same evening. **T1–T5 are built** (T7's rules with T5). Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -1967,7 +1967,22 @@ adds a hundred tests — this one will. By suite and by test: what is paid more 
 **Check:** the fast suite's time before and after, measured; both suites green with the
 same counts.
 
-### T5 · An arrow lands when it is shot
+### T5 · An arrow lands when it is shot — **built 2026-09-29**
+
+> **Built, and it took T7's rules with it.** Taking the dodge away left the bow drill
+> with a goal nothing could reach, so the drill's new rules came here rather than leave a
+> commit with a lesson nobody can pass: Bram's bow line **gives** `you:the_bow` (a line
+> may now give without teaching), the drill is **three arrows that land on Bram**, who
+> comes at you (`goal: arrows`), and `DuelPlayer.BOW` plays it. The rest is as planned:
+> `DuelRules.reaches`/`damage_with`/`reach_with`, `bow_min_tiles` 2 and `bow_damage` 3,
+> `DuelFighter.weapon` in the fingerprint, the player's weapon read from his turn,
+> `AIM`, `LOOSING`, `Duel.volleys`, `arrow_aimed`, `arrow_dodged` and *Esquivé* deleted,
+> `SaveFile.VERSION` 3, COMBAT_V2 §9 amended. **Until T6 the keyboard picks the weapon
+> for you**: K throws the sword at the next tile, otherwise the bow at anybody in its
+> band. The window draws the arrow in flight from the archer to whoever she shot, loosed
+> half way through the wind-up and landing with the blow (frames at steps 60 and 66 of
+> `UNCROWNED_DUEL=drill:bow:N:bow`, which now hands you the bow). 717 tests green on both
+> worlds, the counts unchanged.
 
 Est. 6–8 h. Depends on: —.
 
@@ -1997,7 +2012,7 @@ the blow's spark and number; O9's aimed-tile marks go with the delay. Both langu
 **Check:** frames of the bow in hand with its band, an arrow in flight and the hit, in
 French and English.
 
-### T7 · The bow drill, redone
+### T7 · The bow drill, redone — **its rules are built in T5; its words go to T8**
 
 Est. 4–6 h. Depends on: T6.
 

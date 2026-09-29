@@ -30,7 +30,9 @@ extends RefCounted
 
 const PATH: String = "user://save.json"
 ## 2 since O1 (2026-09-29): a won spar used to replay as a killing, and now yields.
-const VERSION: int = 2
+## 3 since T5 (2026-09-29): an arrow lands when it is shot, so a fight against a bow
+## replays differently.
+const VERSION: int = 3
 ## Where the save is written. `PATH`, except under test: the suite shares `user://`
 ## with the game, and a test that discards its save must not discard the player's (O4).
 static var path: String = PATH

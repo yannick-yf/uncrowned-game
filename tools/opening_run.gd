@@ -48,7 +48,7 @@ func play(levels: Dictionary = {}) -> bool:
 	var steps: Array[Array] = [
 		["creation", _create], ["the fairy", _hear_the_fairy], ["a rest at her fire", _rest],
 		["the path and the hail", _answer_the_hail], ["the sword", _drill.bind("drill_sword", DuelPlayer.PRESS)],
-		["the bow", _drill.bind("drill_bow", DuelPlayer.DODGE)],
+		["the bow", _drill.bind("drill_bow", DuelPlayer.BOW)],
 		["the magic", _drill.bind("drill_magic", DuelPlayer.CAST)],
 		["out of his sight and back", _leave_and_return], ["the wolves before the bridge", _the_wolves],
 		["the works' gate", _to_the_works], ["replay and save", _round_trip],

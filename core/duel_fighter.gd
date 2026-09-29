@@ -31,6 +31,9 @@ var away_rounds: int = 0
 var hurt_left: int = 0
 ## **The round from which the gift can be cast again** (O10).
 var ready_round: int = 0
+## **What they strike with** (T5): `DuelRules.SWORD` or `DuelRules.BOW`. An opponent's is
+## his row's in `content/duel.json`; the player's is his last turn's, which says it.
+var weapon: StringName = DuelRules.SWORD
 
 
 func is_player() -> bool:
@@ -46,7 +49,7 @@ func centre() -> Vector2:
 
 
 func fingerprint() -> String:
-	return "%s@%d,%d/%d hp=%d away=%d ready=%d%s" % [
-		String(who), at.x, at.y, hurt_left, hp, away_rounds, ready_round,
+	return "%s@%d,%d/%d hp=%d away=%d ready=%d %s%s" % [
+		String(who), at.x, at.y, hurt_left, hp, away_rounds, ready_round, String(weapon),
 		"" if not out else "/" + String(how_out),
 	]

@@ -21,8 +21,6 @@ const WAITING: StringName = &"waiting"   ## the player's turn; the fight waits f
 const MOVING: StringName = &"moving"
 const ACTING: StringName = &"acting"
 const PAUSING: StringName = &"pausing"
-## **An arrow in the air** (O9): the start of an archer's turn, before she chooses again.
-const LOOSING: StringName = &"loosing"
 
 var fighters: Array[DuelFighter] = []
 ## Which of them is acting, or −1 when nobody is.
@@ -73,14 +71,9 @@ var felled_by: StringName = NOBODY
 ## brought to 0 is left on one point, whoever threw the blow.
 var spar: bool = false
 ## **The drill this fight is**, or nothing (O8), and how far the player has got with its
-## goal — blows landed, for the sword.
+## goal — blows landed for the sword, arrows for the bow, spells for the gift.
 var drill: StringName = NOBODY
 var tally: int = 0
-## **Arrows announced and not yet landed** (O9): archer -> the tile aimed at. An arrow
-## lands at the start of its archer's next turn, on whoever stands there then.
-var volleys: Dictionary = {}
-## The tile the current act aims at, when it is an archer's.
-var aim: Vector2i = Vector2i.ZERO
 ## **Where a drill's master stands when he is not one of its fighters** (the review of
 ## O21): in Wren's drills Bram watches. Nobody walks onto him, and nothing walks him
 ## home until the lesson is over. `Duel.NOWHERE` otherwise.
@@ -195,13 +188,8 @@ func fingerprint() -> String:
 	var parts := PackedStringArray()
 	for fighter: DuelFighter in fighters:
 		parts.append(fighter.fingerprint())
-	var aimed := PackedStringArray()
-	var archers: Array = volleys.keys()
-	archers.sort()
-	for who: Variant in archers:
-		aimed.append("%s>%s" % [who, volleys[who]])
-	return "%s turn=%d/%s r=%d n=%d %s->%s %s beat=%d owed=%d fell=%s spar=%s drill=%s/%d aim=%s" % [
+	return "%s turn=%d/%s r=%d n=%d %s->%s %s beat=%d owed=%d fell=%s spar=%s drill=%s/%d" % [
 		" ".join(parts), turn, String(phase), round_number, turns_taken,
 		String(acting), String(target), String(outcome), settling, owed_damage,
-		player_felled, spar, String(drill), tally, ";".join(aimed),
+		player_felled, spar, String(drill), tally,
 	] + (" master@%s" % master_at if master_at != NOWHERE else "")

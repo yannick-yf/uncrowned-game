@@ -57,8 +57,8 @@ for LANG_ID in $LANGS; do
   shoot 11_sword_blow play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword:160:press
   shoot 12_sword_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword:700:press
   shoot 13_bow_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow
-  shoot 14_bow_arrow play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:220:dodge
-  shoot 15_bow_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:900:dodge
+  shoot 14_bow_arrow play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:60:bow
+  shoot 15_bow_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:900:bow
   shoot 16_magic_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic
   shoot 17_magic_spell play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic:220:cast
   shoot 18_magic_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic:900:cast

@@ -2079,10 +2079,6 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 			# The fairy's colour where it lands (O10).
 			var struck_at: Vector3 = _ground(Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5), SWIPE_HEIGHT_M)
 			_spark_burst(struck_at, MARK_GUARD, 12, 2.4)
-		elif kind == &"arrow_dodged":
-			# Dust where it fell on nobody.
-			var fell: Vector3 = _ground(Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5), 0.1)
-			_spark_burst(fell, MARK_INK, 5, 0.9)
 		elif kind == &"duel_decided":
 			_shake_at = _now
 			_shake_amp = SHAKE_M * 0.5
@@ -2349,7 +2345,7 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		# A cast winds up in the fairy's sage, not your gold (O10).
 		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)),
 			MARK_GUARD if bool(fighting.get("my_casting", false)) else MARK_MINE)
-		_draw_volleys(fighting)
+		_draw_arrow(fighting)
 		# The gift's reach, round the tile you have chosen, while it is ready to cast.
 		if bool(fighting.get("spell_ready", false)) and fighting.has("cursor"):
 			var spell: float = float(fighting.get("spell_reach", 3))
@@ -2365,29 +2361,10 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 	_arena_mesh.surface_end()
 
 
-## **The bow, drawn** (O9): every tile an archer has named — a patch, a crosshair and a
-## dashed line back to her — kept through the player's turn, because seeing it is the
-## whole of the dodge; and the arrow in flight, a raised ribbon from her to it.
-func _draw_volleys(fighting: Dictionary) -> void:
-	for row: Variant in fighting.get("volleys", []) as Array:
-		var volley: Dictionary = row as Dictionary
-		var tile: Vector2 = volley["tile"] as Vector2
-		var from: Vector2 = volley["from"] as Vector2
-		_tile_patch(tile, Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.34))
-		_ring(tile, 0.34, 0.26, 0.05, Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.95), 24)
-		_ring(tile, 0.12, 0.09, 0.04, Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.95), 12)
-		var way: Vector2 = tile - from
-		var length: float = way.length()
-		if length > 0.6:
-			var unit: Vector2 = way / length
-			var dash: float = 0.35
-			var gap: float = 0.25
-			var at: float = 0.5
-			while at + dash < length - 0.4:
-				_ribbon(PackedVector3Array([_ground(from + unit * at, MARK_LIFT_M),
-					_ground(from + unit * (at + dash), MARK_LIFT_M)]), 0.035,
-					Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.55))
-				at += dash + gap
+## **The arrow in flight** (O9, T5): a raised ribbon from the archer to whoever she shot,
+## loosed half way through her wind-up and landing with the blow. Nothing is drawn before
+## it: since T5 nothing is announced.
+func _draw_arrow(fighting: Dictionary) -> void:
 	var arrow: Dictionary = fighting.get("arrow", {}) as Dictionary
 	if not arrow.is_empty():
 		var start: Vector2 = arrow["from"] as Vector2
@@ -2437,6 +2414,9 @@ func _duel_telegraph(feet: Vector2, through: float, colour: Color) -> void:
 ## steps it is out — so a blow is seen touching the man it lands on however he is stood.
 func _duel_swipe(from: Vector2, to: Vector2, fighting: Dictionary, mine: bool, colour: Color) -> void:
 	if String(fighting.get("my_pose" if mine else "his_pose", "")) != "attack":
+		return
+	# A bow's strike is its arrow (`_draw_arrow`), not a blade's swipe six tiles long (T5).
+	if String(fighting.get("my_weapon" if mine else "weapon", "")) == String(DuelRules.BOW):
 		return
 	var reach: float = float(fighting.get("reach_tiles", 1))
 	var way: Vector2 = (to - from)

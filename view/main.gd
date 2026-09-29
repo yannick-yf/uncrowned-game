@@ -252,6 +252,9 @@ func _ready() -> void:
 			# written straight in, which is one frame and not a save-able state (O10).
 			if drill == "magic":
 				_sim.facts.add_source(OpeningRules.GIFT, &"debug")
+			# And the bow drill a bow of your own, which the line would have handed you (T5).
+			if drill == "bow":
+				_sim.facts.add_source(DuelRules.THE_BOW, &"debug")
 		_sim.submit(&"duel_began", began)
 		_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
@@ -429,7 +432,8 @@ func _duel_frame() -> Dictionary:
 		"his_telegraph": DuelRules.telegraph_at(his_act, into),
 		"my_turn": mine_acting,
 		# What whoever is acting reaches with what they carry — a bow's six, a sword's one.
-		"reach_tiles": DuelRules.reach_of(acting.who) if acting != null else DuelRules.reach_tiles(),
+		"reach_tiles": DuelRules.reach_with(acting.weapon) if acting != null else DuelRules.reach_tiles(),
+		"my_weapon": String(mine.weapon),
 		"in_reach": _anybody_in_reach(acting if acting != null else mine),
 		"moves": _duel_reach(acting),
 		"centre": my_at.lerp(his_at, 0.5),
@@ -492,6 +496,7 @@ func _duel_frame() -> Dictionary:
 			"his_down": DuelRules.is_down(fighter.hp),
 			"his_hp": fighter.hp,
 			"his_max": fighter.max_hp,
+			"weapon": String(fighter.weapon),
 			"acting": acting == fighter,
 			"settling": _duel.settling,
 			"settle_steps": DuelRules.beat_steps(),
@@ -511,21 +516,16 @@ func _duel_frame() -> Dictionary:
 	if acting_name != "":
 		reading["acting_name"] = acting_name
 		reading["acting_kind"] = acting_kind
-	# **Arrows announced and in the air** (O9): the tile each archer named, marked through
-	# the player's turn, and the arrow itself while it flies.
-	var volleys: Array = []
-	for archer: Variant in _duel.volleys.keys():
-		var shooter: DuelFighter = _duel.get_fighter(StringName(String(archer)))
-		if shooter == null:
-			continue
-		volleys.append({"from": _duel.drawn_at(shooter),
-			"tile": Vector2(_duel.volleys[archer] as Vector2i) + Vector2(0.5, 0.5)})
-	reading["volleys"] = volleys
-	if _duel.phase == Duel.LOOSING and acting != null and _duel.volleys.has(acting.who):
-		var loose: int = DuelRules.loose_steps()
-		reading["arrow"] = {"from": _duel.drawn_at(acting),
-			"to": Vector2(_duel.volleys[acting.who] as Vector2i) + Vector2(0.5, 0.5),
-			"through": 1.0 - float(_duel.phase_left) / float(maxi(loose, 1))}
+	# **The arrow in the air** (T5): loosed half way through the archer's wind-up and landing
+	# on the step her strike does, from her to whoever she shot. Nothing is announced
+	# before it — « je tire, ça tire ».
+	if acting != null and acting.weapon == DuelRules.BOW and _duel.acting == DuelRules.STRIKE \
+			and targeted != null and _duel.phase == Duel.ACTING:
+		var lands: int = DuelRules.strike_at_step()
+		var loosed: int = lands / 2
+		if into >= loosed and into < lands:
+			reading["arrow"] = {"from": _duel.drawn_at(acting), "to": _duel.drawn_at(targeted),
+				"through": float(into - loosed) / float(maxi(lands - loosed, 1))}
 	if _duel.waiting_on_player():
 		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
 	return reading
@@ -535,7 +535,7 @@ func _duel_frame() -> Dictionary:
 ## Asked of their own foes, not of the fight's first opponent (O6's review).
 func _anybody_in_reach(who: DuelFighter) -> bool:
 	for foe: DuelFighter in _duel.foes_of(who.who):
-		if DuelRules.apart(who.at, foe.at) <= DuelRules.reach_of(who.who):
+		if DuelRules.reaches(who.weapon, who.at, foe.at):
 			return true
 	return false
 
@@ -593,7 +593,7 @@ func _fresh_fight_events() -> Array:
 	for k: int in range(_seen_events, total):
 		var event: SimEvent = _sim.events.at(k)
 		if event.type != &"blow_landed" and event.type != &"blow_missed" \
-				and event.type != &"arrow_dodged" and event.type != &"spell_cast" \
+				and event.type != &"spell_cast" \
 				and event.type != &"duel_decided" and event.type != &"duel_ended":
 			continue
 		var row: Dictionary = event.data.duplicate()
@@ -618,7 +618,7 @@ func _place_blows(fresh: Array) -> Array:
 			# its target and a missed one about whoever swung.
 			var kind: String = String(blow.get("type", ""))
 			var named: String = String(blow.get("target", "")) if kind == "blow_landed" \
-				else ("player" if kind == "arrow_dodged" else String(blow.get("by", "")))
+				else String(blow.get("by", ""))
 			var who: DuelFighter = _duel.me() if named == "player" else _duel.get_fighter(StringName(named))
 			if who == null:
 				who = _duel.foe() if about_him else _duel.me()
@@ -640,7 +640,7 @@ func _sound_the_fight(fresh: Array) -> void:
 					Sound.cue(&"felled")
 				else:
 					Sound.cue(&"hit")
-			"blow_missed", "arrow_dodged":
+			"blow_missed":
 				Sound.cue(&"whiff")
 			"duel_decided":
 				# Lost in a spar is lost; lost for real is a death, which has its own jingle;
@@ -1216,11 +1216,20 @@ func _read_duel_input() -> void:
 		return
 	var target: StringName = &""
 	var action: StringName = DuelRules.WAIT
+	var weapon: StringName = DuelRules.SWORD
 	if strike:
-		for foe: DuelFighter in _duel.foes_of(mine.who):
-			if DuelRules.in_reach(_duel_cursor, foe.at):
-				target = foe.who
-				action = DuelRules.STRIKE
+		# **K throws whatever reaches** (T5): the sword at the next tile, and otherwise a
+		# bow of your own at anybody in its band. T6 puts the choice in your hands.
+		for held: StringName in [DuelRules.SWORD, DuelRules.BOW]:
+			if held == DuelRules.BOW and not _sim.facts.has(DuelRules.THE_BOW):
+				continue
+			for foe: DuelFighter in _duel.foes_of(mine.who):
+				if DuelRules.reaches(held, _duel_cursor, foe.at):
+					target = foe.who
+					action = DuelRules.STRIKE
+					weapon = held
+					break
+			if action == DuelRules.STRIKE:
 				break
 	elif cast:
 		for foe: DuelFighter in _duel.foes_of(mine.who):
@@ -1232,6 +1241,7 @@ func _read_duel_input() -> void:
 		"who": String(DuelRules.PLAYER), "to_x": _duel_cursor.x, "to_y": _duel_cursor.y,
 		"action": String(action),
 		"target": String(target),
+		"weapon": String(weapon),
 	})
 	_duel_cursor_set = false
 

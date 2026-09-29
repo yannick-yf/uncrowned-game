@@ -28,9 +28,10 @@
     "_beat_note": "The beat between the blow that decides a fight and the world coming back: somebody is down, everybody stands where the last blow left them, the clock is still held and nothing anybody presses does anything. A bit over a second and a half. Kept from the first design (H5), which got it right.",
     "_hp_note": "THE PLAYER IS NOT HERE. He brings WorldState.player_hp, the one bar — there were two of them until 2026-09-24 and a man on his last point walked into a fight fresh. Everybody else is fifteen, which is three blows at five: ten was two, and two blows plus 'whoever starts wins' is not a fight. NOBODY FLEES, decided the same day. The threshold was five, which against ten points and five damage meant everything ran after exactly one hit — including Bram, who is the tutorial. Wounded men running and hiding is a thing Yannick wants and it is deferred, not dropped: it needs a third state between healthy and dead, which these numbers have room for now that a fight is three blows rather than two.",
     "bow_reach_tiles": 6,
+    "bow_min_tiles": 2,
     "bow_keeps_off_tiles": 3,
-    "loose_steps": 24,
-    "_bow_note": "THE BOW (O9, 2026-09-29), scoped to the tutorial. An archer keeps between bow_keeps_off_tiles and bow_reach_tiles of you and, on her turn, AIMS AT THE TILE YOU STAND ON. The arrow flies at the start of her NEXT turn, for loose_steps, and lands on whoever stands on that tile then. Ending your move elsewhere is the dodge. No dice, no line of sight: range only. Her arrow costs strike_damage, or a drill's damage.",
+    "bow_damage": 3,
+    "_bow_note": "THE BOW (O9, redone in T5, 2026-09-29). Yannick played O9's arrow, which landed on the archer's next turn and could always be dodged, and ruled: 'je tire, ca tire'. An arrow lands on the archer's own act, like a blow, for everybody: from bow_min_tiles (never a neighbouring tile) to bow_reach_tiles, for bow_damage, under the sword's strike_damage. That band is the whole of what answers a bow: close on the archer, or stay out of her reach. An archer keeps between bow_keeps_off_tiles and her reach. The player shoots only with a bow of his own (you:the_bow, which Wren gives as the bow drill begins). No dice, no line of sight.",
     "spell_reach_tiles": 3,
     "spell_damage": 5,
     "spell_every_rounds": 2,
@@ -72,7 +73,7 @@
       "weapon": "bow"
     }
   },
-  "_drills_note": "THE TUTORIAL'S DRILLS (O8, 2026-09-29): Yannick's Bannerlord training grounds, one workshop a weapon. A drill is a spar with a lesson: its MASTER acts first and walks STAND_OFF tiles away before the first turn - further than one turn can close and strike, so the first thing it teaches is to move; the master's blows cost DAMAGE; it is PASSED when the player reaches COUNT of its GOAL and FAILED after ROUNDS rounds without; the master mends you after either. Nothing in a drill can kill anybody: the master's blows mend, and yours stop short of his last point (the review of O21).",
+  "_drills_note": "THE TUTORIAL'S DRILLS (O8, 2026-09-29): Yannick's Bannerlord training grounds, one workshop a weapon. A drill is a spar with a lesson: its MASTER acts first and walks STAND_OFF tiles away before the first turn - further than one turn can close and strike, so the first thing it teaches is to move; the master's blows cost DAMAGE; it is PASSED when the player reaches COUNT of its GOAL (sword blows, arrows or spells that land) and FAILED after ROUNDS rounds without; the master mends you after either. Nothing in a drill can kill anybody: the master's blows mend, and yours stop short of his last point (the review of O21).",
   "drills": {
     "_order": [
       "sword",
@@ -89,10 +90,9 @@
     },
     "bow": {
       "master": "bram",
-      "first": "wren",
       "stand_off": 4,
       "damage": 1,
-      "goal": "dodged",
+      "goal": "arrows",
       "count": 3,
       "rounds": 10
     },
