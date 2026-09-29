@@ -1431,7 +1431,12 @@ tile dodges and standing still is hit; a bow fight replays to the tile; DODGE pa
 drill, STAND ends with no death; the volley mark is shown; the float appears. The fast
 suite is timed — whole drills move to a SLOW file if they push it far past 12 s.
 
-### O10 · The spell — the fairy's gift, the drill, and how it is seen
+### O10 · The spell — the fairy's gift, the drill, and how it is seen — **built 2026-09-29**
+
+> Built. The gift (`you:the_gift`) is given with her last word through a new `gives`
+> field, so she still says seven things; Bram's magic line needs the bow *and* the
+> gift through a new `requires_also`. **SPECS §5 is not amended yet** — that goes with
+> O22's documents, once Yannick has named the spell.
 
 Est. 10 h. Depends on: O9.
 

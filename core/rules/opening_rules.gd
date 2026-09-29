@@ -20,6 +20,10 @@ const FAIRY: StringName = &"fairy"
 ## The last thing she says. Knowing it is what means she has finished, so nothing
 ## needs a "she is gone" flag: the facts the player holds *are* the state.
 const FACT_LAST_WORD: StringName = &"thornwood:save_us"
+## **Her gift** (O10, Yannick 2026-09-29): with her last word she gives the one she
+## raised a sliver of what raised him — one spell, kept after the tutorial. The one
+## miracle of §5 is still hers; this is the only piece of it anybody else carries.
+const GIFT: StringName = &"you:the_gift"
 
 ## Everything she tells the player, in order.
 const WHAT_SHE_TELLS_YOU: Array[StringName] = [

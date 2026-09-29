@@ -359,6 +359,24 @@ func test_an_aimed_arrow_is_in_the_reading_until_it_lands() -> void:
 	play.free()
 
 
+func test_the_reading_says_whether_the_gift_can_be_cast() -> void:
+	# O10: the keys line offers the spell only to somebody she gave it to, and the ring
+	# of its reach is drawn only while it is ready.
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	sim.advance(1)
+	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	assert_false(bool((play.call(&"_fight_frame") as Dictionary).get("can_cast", true)), "no gift, no spell")
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	assert_true(bool(reading.get("can_cast", false)), "the gift is yours")
+	assert_true(bool(reading.get("spell_ready", false)), "and ready at the start")
+	assert_eq(int(reading.get("spell_reach", 0)), DuelRules.spell_reach_tiles(), "with its reach")
+	play.free()
+
+
 func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# The failure this exists for is completely silent: a Label given more lines than
 	# it has room for draws the ones that fit and says nothing about the rest. The

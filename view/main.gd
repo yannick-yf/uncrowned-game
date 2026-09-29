@@ -229,6 +229,10 @@ func _ready() -> void:
 		if drill != "":
 			began.merge({"drill": drill, "by": String(DuelRules.drill_first(StringName(drill))),
 				"spar": true}, true)
+			# The magic drill needs the fairy's gift, and a photograph has no fairy: it is
+			# written straight in, which is one frame and not a save-able state (O10).
+			if drill == "magic":
+				_sim.facts.add_source(OpeningRules.GIFT, &"debug")
 		_sim.submit(&"duel_began", began)
 		_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
@@ -383,6 +387,11 @@ func _duel_frame() -> Dictionary:
 		"settle_steps": DuelRules.beat_steps(),
 		"outcome": String(_duel.outcome),
 		"spar": _duel.spar,
+		# The gift (O10): whether it is yours, ready, and how far it reaches.
+		"can_cast": _sim.facts.has(OpeningRules.GIFT),
+		"spell_ready": _sim.facts.has(OpeningRules.GIFT) and _duel.round_number >= mine.ready_round,
+		"spell_reach": DuelRules.spell_reach_tiles(),
+		"my_casting": mine_acting and _duel.acting == DuelRules.CAST,
 		# The lesson, when this fight is one (O8).
 		"drill": String(_duel.drill),
 		"goal_done": _duel.tally,
@@ -517,7 +526,7 @@ func _fresh_fight_events() -> Array:
 	for k: int in range(_seen_events, total):
 		var event: SimEvent = _sim.events.at(k)
 		if event.type != &"blow_landed" and event.type != &"blow_missed" \
-				and event.type != &"arrow_dodged" \
+				and event.type != &"arrow_dodged" and event.type != &"spell_cast" \
 				and event.type != &"duel_decided" and event.type != &"duel_ended":
 			continue
 		var row: Dictionary = event.data.duplicate()
@@ -1018,17 +1027,28 @@ func _read_duel_input() -> void:
 				break
 	var strike: bool = Input.is_action_just_pressed(&"strike")
 	var wait: bool = Input.is_action_just_pressed(&"guard")
-	if not strike and not wait:
+	# **I casts the fairy's gift** (O10), at whoever is nearest within its reach of the
+	# tile chosen. The rules decide whether it can; the key only asks.
+	var cast: bool = Input.is_action_just_pressed(&"cast") and _sim.facts.has(OpeningRules.GIFT)
+	if not strike and not wait and not cast:
 		return
 	var target: StringName = &""
+	var action: StringName = DuelRules.WAIT
 	if strike:
 		for foe: DuelFighter in _duel.foes_of(mine.who):
 			if DuelRules.in_reach(_duel_cursor, foe.at):
 				target = foe.who
+				action = DuelRules.STRIKE
+				break
+	elif cast:
+		for foe: DuelFighter in _duel.foes_of(mine.who):
+			if DuelRules.can_cast(mine, _duel.round_number, _duel_cursor, foe.at):
+				target = foe.who
+				action = DuelRules.CAST
 				break
 	_sim.submit(&"duel_turn", {
 		"who": String(DuelRules.PLAYER), "to_x": _duel_cursor.x, "to_y": _duel_cursor.y,
-		"action": String(DuelRules.STRIKE if target != &"" else DuelRules.WAIT),
+		"action": String(action),
 		"target": String(target),
 	})
 	_duel_cursor_set = false

@@ -162,10 +162,12 @@ func test_all_of_the_balance_is_one_small_table() -> void:
 	assert_eq(DuelRules.hp_of(&"nobody_in_particular"), 15, "including anybody not listed")
 
 
-func test_there_are_two_actions_and_no_guard() -> void:
+func test_there_are_three_actions_and_no_guard() -> void:
 	# Yannick, 2026-09-24: Baldur's Gate 3 has no block button and neither does this.
-	# Defence is position and initiative.
+	# Defence is position and initiative. **Three since O10** (2026-09-29): strike,
+	# cast — the fairy's gift — and wait.
 	assert_eq(DuelRules.STRIKE, &"strike")
+	assert_eq(DuelRules.CAST, &"cast")
 	assert_eq(DuelRules.WAIT, &"wait")
 	assert_false(DuelRules.table().has("guard"), "there is no guard in the table")
 	var sim: Sim = _start()
@@ -720,6 +722,81 @@ func test_a_bow_fight_replays_to_the_tile() -> void:
 	assert_eq(_duel(replayed).fingerprint(), _duel(sim).fingerprint(), "the same fight, to the tile")
 
 
+# ------------------------------------------------ the fairy's gift (O10, 2026-09-29) ---
+
+## A spar against Bram from where the game starts, the player given the gift.
+func _gifted(against: String = "bram") -> Sim:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.submit(&"duel_began", {"opponent": against, "by": "player", "spar": true})
+	sim.advance(1)
+	return sim
+
+
+## The player's turn, spent casting at whoever is nearest.
+func _cast_now(sim: Sim) -> void:
+	var duel: Duel = _duel(sim)
+	for _step: int in 2000:
+		if duel.waiting_on_player():
+			break
+		sim.advance(1)
+	var mine: DuelFighter = duel.me()
+	sim.submit(&"duel_turn", {"who": "player", "to_x": mine.at.x, "to_y": mine.at.y,
+		"action": "cast", "target": String(duel.foe().who)})
+	sim.advance(2)
+
+
+func test_the_gift_is_what_lets_you_cast() -> void:
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	sim.advance(1)
+	_cast_now(sim)
+	assert_eq(_duel(sim).acting, DuelRules.WAIT, "without her gift a cast is a wait")
+	var gifted: Sim = _gifted()
+	_cast_now(gifted)
+	assert_eq(_duel(gifted).acting, DuelRules.CAST, "with it, you cast")
+
+
+func test_a_spell_lands_at_range() -> void:
+	var sim: Sim = _gifted()
+	var duel: Duel = _duel(sim)
+	_cast_now(sim)
+	var mine: DuelFighter = duel.me()
+	var him: DuelFighter = duel.foe()
+	assert_true(DuelRules.apart(mine.at, him.at) > DuelRules.reach_tiles(),
+		"he is out of a sword's reach: %d tiles" % DuelRules.apart(mine.at, him.at))
+	for _step: int in 200:
+		if not sim.events.of_type(&"blow_landed").is_empty():
+			break
+		sim.advance(1)
+	var landed: SimEvent = sim.events.of_type(&"blow_landed")[0] as SimEvent
+	assert_eq(String(landed.data.get("move", "")), "spell", "and the spell reaches him")
+	assert_eq(int(landed.data.get("damage", 0)), DuelRules.spell_damage(), "for the spell's figure")
+
+
+func test_the_spell_needs_time_between_casts() -> void:
+	var sim: Sim = _gifted()
+	var duel: Duel = _duel(sim)
+	_cast_now(sim)
+	for _step: int in 600:
+		if duel.waiting_on_player():
+			break
+		sim.advance(1)
+	assert_true(duel.waiting_on_player(), "your next turn")
+	_cast_now(sim)
+	if duel.round_number < DuelRules.spell_every_rounds():
+		assert_eq(duel.acting, DuelRules.WAIT, "a second cast too soon is a wait")
+
+
+func test_a_cast_with_nobody_in_reach_is_a_wait() -> void:
+	var sim: Sim = _gifted()
+	var duel: Duel = _duel(sim)
+	var him: DuelFighter = duel.foe()
+	him.at = duel.me().at + Vector2i(DuelRules.spell_reach_tiles() + 4, 0)
+	_cast_now(sim)
+	assert_eq(duel.acting, DuelRules.WAIT, "nobody within the spell's reach")
+
+
 func test_the_first_design_is_gone() -> void:
 	# **K6's other half, 2026-09-26.** Yannick played the turn-based fight, kept it, and
 	# said the real-time one could go. This fails the day any of it comes back by
@@ -760,7 +837,7 @@ func test_the_two_keys_are_bound() -> void:
 	# The third thing missing on 2026-09-19: the fight could not be reached, and if it
 	# had been there was no key to hit anybody with. K and O, as **physical** keycodes,
 	# so the pair sits in the same place on AZERTY and on QWERTY.
-	for action: StringName in [&"strike", &"guard"]:
+	for action: StringName in [&"strike", &"guard", &"cast"]:
 		assert_true(InputMap.has_action(action), "%s is a key" % action)
 		assert_true(InputMap.action_get_events(action).size() > 0,
 			"%s has something bound to it" % action)

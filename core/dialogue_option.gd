@@ -64,6 +64,11 @@ var fights: StringName = &""
 var spar: bool = false
 ## **The drill the fight it starts is** (O8), or nothing.
 var drill: StringName = &""
+## **A second fact the answer gives** (O10), beside the one it `teaches` — the fairy's
+## last word teaches her plea and gives her gift.
+var gives: StringName = &""
+## **And a second fact the line needs** (O10), beside `requires`.
+var requires_also: StringName = &""
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible

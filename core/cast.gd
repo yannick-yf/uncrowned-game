@@ -109,6 +109,8 @@ static func load_from(path: String) -> Cast:
 			option.fights = StringName(data.get("fights", ""))
 			option.spar = bool(data.get("spar", false))
 			option.drill = StringName(data.get("drill", ""))
+			option.gives = StringName(data.get("gives", ""))
+			option.requires_also = StringName(data.get("requires_also", ""))
 			npc.options.append(option)
 		cast.npcs[npc.id] = npc
 

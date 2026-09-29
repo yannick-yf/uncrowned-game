@@ -108,6 +108,7 @@
           "text": "Écouter.",
           "reply": "Trouvez votre chemin dans ce monde. Et si vous le pouvez, sauvez-nous.",
           "teaches": "thornwood:save_us",
+          "gives": "you:the_gift",
           "requires": "you:owed",
           "hides_after": "thornwood:save_us",
           "costs": "free"
@@ -409,6 +410,19 @@
           "repeatable": true,
           "hides_after": "drilled:bow",
           "_p2": "DRAFT wording (O9, 2026-09-29) - the words are Yannick's (O19). The shape: after the sword, Wren shoots and the player learns to step off the tile."
+        },
+        {
+          "intent": "drill_magic",
+          "text": "Et ce qu'elle m'a donné ?",
+          "reply": "Alors montre-moi. Wren garde ses distances ; atteins-la avec, deux fois.",
+          "requires": "drilled:bow",
+          "requires_also": "you:the_gift",
+          "fights": "wren",
+          "spar": true,
+          "drill": "magic",
+          "repeatable": true,
+          "hides_after": "drilled:magic",
+          "_p2": "DRAFT wording (O10, 2026-09-29) - the words are Yannick's (O19). The shape: after the bow, and only with the fairy's gift, two spells that land on Wren."
         },
         {
           "intent": "ask_bram_spar",

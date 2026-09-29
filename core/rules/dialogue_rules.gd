@@ -119,6 +119,8 @@ static func available(
 	for option: DialogueOption in npc.options:
 		if option.requires != &"" and not facts.has(option.requires):
 			continue
+		if option.requires_also != &"" and not facts.has(option.requires_also):
+			continue
 		# Already answered. A person is a finite resource in a game about
 		# information, and a conversation should get shorter every time you have it
 		# until there is nothing left but the way out.

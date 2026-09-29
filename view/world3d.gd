@@ -1688,6 +1688,10 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 				_spark_burst(between, MARK_MINE if by_me else MARK_HIS, 5, 1.4)
 				_shake_at = _now
 				_shake_amp = SHAKE_M * (1.0 if heavy else 0.6)
+		elif kind == &"spell_cast":
+			# The fairy's colour where it lands (O10).
+			var struck_at: Vector3 = _ground(Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5), SWIPE_HEIGHT_M)
+			_spark_burst(struck_at, MARK_GUARD, 12, 2.4)
 		elif kind == &"arrow_dodged":
 			# Dust where it fell on nobody.
 			var fell: Vector3 = _ground(Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5), 0.1)
@@ -1948,9 +1952,22 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		_duel_swipe(at, me, entry.merged({"reach_tiles": fighting.get("reach_tiles", 1)}), false, MARK_HIS)
 
 	if not settling:
-		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)), MARK_MINE)
+		# A cast winds up in the fairy's sage, not your gold (O10).
+		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)),
+			MARK_GUARD if bool(fighting.get("my_casting", false)) else MARK_MINE)
 		_draw_volleys(fighting)
-	_duel_swipe(me, fighting.get("target_at", him) as Vector2, fighting, true, MARK_MINE)
+		# The gift's reach, round the tile you have chosen, while it is ready to cast.
+		if bool(fighting.get("spell_ready", false)) and fighting.has("cursor"):
+			var spell: float = float(fighting.get("spell_reach", 3))
+			_ring(fighting["cursor"] as Vector2, spell, spell * 0.7, 0.04,
+				Color(MARK_GUARD.r, MARK_GUARD.g, MARK_GUARD.b, 0.45), 48)
+		# The bolt itself, from you to him, on the steps it is out.
+		if bool(fighting.get("my_casting", false)) and String(fighting.get("my_pose", "")) == "attack":
+			var to: Vector2 = fighting.get("target_at", him) as Vector2
+			_ribbon(PackedVector3Array([_ground(me, SWIPE_HEIGHT_M * 1.2), _ground(to, SWIPE_HEIGHT_M)]),
+				0.14, Color(MARK_GUARD.r, MARK_GUARD.g, MARK_GUARD.b, 0.9))
+	if not bool(fighting.get("my_casting", false)):
+		_duel_swipe(me, fighting.get("target_at", him) as Vector2, fighting, true, MARK_MINE)
 	_arena_mesh.surface_end()
 
 

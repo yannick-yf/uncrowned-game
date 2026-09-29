@@ -38,6 +38,8 @@ const STRIKE: StringName = &"strike"
 const WAIT: StringName = &"wait"
 ## **An archer's act** (O9): she aims at a tile, and the arrow lands there on her next turn.
 const AIM: StringName = &"aim"
+## **The fairy's gift** (O10): a blow at range, once every few rounds.
+const CAST: StringName = &"cast"
 
 ## The eight neighbours, in a fixed order, so every search in this file breaks its
 ## ties the same way on every machine and in every replay.
@@ -259,6 +261,23 @@ static func bow_keeps_off_tiles() -> int:
 ## How long an arrow is in the air, in steps.
 static func loose_steps() -> int:
 	return number("loose_steps", 24)
+
+
+static func spell_reach_tiles() -> int:
+	return number("spell_reach_tiles", 3)
+
+
+static func spell_damage() -> int:
+	return number("spell_damage", 5)
+
+
+static func spell_every_rounds() -> int:
+	return number("spell_every_rounds", 2)
+
+
+## Whether somebody who knows the spell can cast it now, at somebody standing there.
+static func can_cast(me: DuelFighter, round_now: int, from: Vector2i, target_at: Vector2i) -> bool:
+	return round_now >= me.ready_round and apart(from, target_at) <= spell_reach_tiles()
 
 
 ## How far somebody reaches with what they carry.
@@ -606,7 +625,7 @@ static func pose_of(hurt_left: int, acting: StringName, into: int) -> StringName
 	# is the honest nearest thing (O9).
 	if acting == AIM:
 		return &"ready"
-	if acting != STRIKE:
+	if acting != STRIKE and acting != CAST:
 		return &""
 	if into < strike_at_step():
 		return &"ready"
@@ -617,7 +636,7 @@ static func pose_of(hurt_left: int, acting: StringName, into: int) -> StringName
 ## lands, and **−1.0 when nothing is winding up**, so the window can tell "no telegraph"
 ## from "a telegraph just begun" without a second question.
 static func telegraph_at(acting: StringName, into: int) -> float:
-	if acting != STRIKE or into >= strike_at_step():
+	if (acting != STRIKE and acting != CAST) or into >= strike_at_step():
 		return -1.0
 	return float(into) / float(maxi(strike_at_step() - 1, 1))
 
@@ -626,7 +645,7 @@ static func telegraph_at(acting: StringName, into: int) -> float:
 ## fraction of whatever the window thinks that is worth in tiles. The gather, then the
 ## release, then the arm coming back.
 static func lunge_at(acting: StringName, into: int) -> float:
-	if acting != STRIKE:
+	if acting != STRIKE and acting != CAST:
 		return 0.0
 	var wind: int = strike_at_step()
 	if into < wind:
@@ -640,7 +659,7 @@ static func lunge_at(acting: StringName, into: int) -> float:
 ## they sink through the wind-up and come up as it goes out, which is the part of a
 ## blow a person actually reads. Purely up and down, so his pixels are never stretched.
 static func dip_at(acting: StringName, into: int) -> float:
-	if acting != STRIKE:
+	if acting != STRIKE and acting != CAST:
 		return 0.0
 	if into < strike_at_step():
 		return float(into + 1) / float(maxi(strike_at_step(), 1))

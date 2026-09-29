@@ -391,7 +391,7 @@ step is a photograph of two people standing about. (It replaced `UNCROWNED_FIGHT
 first design's, deleted with it in K6 on 2026-09-26.) `bram` alone squares up and waits on the
 player, which is the frame that shows the tiles a turn buys; `bram:19:press` runs
 nineteen steps with one of `tools/duel_player.gd`'s hands on the keys — `press`, `hold`,
-`stand`, `leave` — which is the step a blow lands on. `wolf,wolf` squares up against several at once (O6); `drill:sword[:steps[:hand]]` begins a drill of the tutorial as its master's line does (O8). **When a picture is being
+`stand`, `leave` — which is the step a blow lands on. `wolf,wolf` squares up against several at once (O6); `drill:sword[:steps[:hand]]` begins a drill of the tutorial as its master's line does (O8); `drill:magic` also writes the fairy's gift straight in, one frame and not a save-able state (O10). **When a picture is being
 taken the simulation is held on the step asked for**, or the twelve frames before the
 shutter would carry the fight past it; and only the last ten steps' events are fresh, so
 the picture carries one blow's spark and number and not every blow's.

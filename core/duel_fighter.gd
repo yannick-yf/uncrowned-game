@@ -29,6 +29,8 @@ var away_rounds: int = 0
 ## Steps of flinch left. A blow does not move you (Yannick, 2026-09-24) — this is the
 ## whole of what being hit does to where you are, which is nothing.
 var hurt_left: int = 0
+## **The round from which the gift can be cast again** (O10).
+var ready_round: int = 0
 
 
 func is_player() -> bool:
@@ -44,7 +46,7 @@ func centre() -> Vector2:
 
 
 func fingerprint() -> String:
-	return "%s@%d,%d/%d hp=%d away=%d%s" % [
-		String(who), at.x, at.y, hurt_left, hp, away_rounds,
+	return "%s@%d,%d/%d hp=%d away=%d ready=%d%s" % [
+		String(who), at.x, at.y, hurt_left, hp, away_rounds, ready_round,
 		"" if not out else "/" + String(how_out),
 	]

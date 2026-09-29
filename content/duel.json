@@ -30,7 +30,11 @@
     "bow_reach_tiles": 6,
     "bow_keeps_off_tiles": 3,
     "loose_steps": 24,
-    "_bow_note": "THE BOW (O9, 2026-09-29), scoped to the tutorial. An archer keeps between bow_keeps_off_tiles and bow_reach_tiles of you and, on her turn, AIMS AT THE TILE YOU STAND ON. The arrow flies at the start of her NEXT turn, for loose_steps, and lands on whoever stands on that tile then. Ending your move elsewhere is the dodge. No dice, no line of sight: range only. Her arrow costs strike_damage, or a drill's damage."
+    "_bow_note": "THE BOW (O9, 2026-09-29), scoped to the tutorial. An archer keeps between bow_keeps_off_tiles and bow_reach_tiles of you and, on her turn, AIMS AT THE TILE YOU STAND ON. The arrow flies at the start of her NEXT turn, for loose_steps, and lands on whoever stands on that tile then. Ending your move elsewhere is the dodge. No dice, no line of sight: range only. Her arrow costs strike_damage, or a drill's damage.",
+    "spell_reach_tiles": 3,
+    "spell_damage": 5,
+    "spell_every_rounds": 2,
+    "_spell_note": "THE FAIRY'S GIFT (O10, 2026-09-29): one spell, given with her last word and kept after the tutorial. A third action beside strike and wait: it reaches spell_reach_tiles, costs spell_damage, and can be cast once every spell_every_rounds rounds. The cooldown is load-bearing, not polish: a ranged blow every turn would make the one-tile sword pointless, and the gift stays for the wolves, Tom and Harry."
   },
   "_fighters_note": "Who you can be put in front of and what they bring. Anybody not listed takes the default. 'spares' marks a sparring partner: since O1 (2026-09-29) the mercy is the LINE's, not the man's - a fight begun by a spar line leaves you on one point and its partner yields, and the same man fought for real can kill you and be killed. 'spares' is read only where a fight starts without a line (the debug tools), to spar with a partner.",
   "fighters": {
@@ -72,7 +76,8 @@
   "drills": {
     "_order": [
       "sword",
-      "bow"
+      "bow",
+      "magic"
     ],
     "sword": {
       "master": "bram",
@@ -89,6 +94,15 @@
       "damage": 1,
       "goal": "dodged",
       "count": 3,
+      "rounds": 10
+    },
+    "magic": {
+      "master": "bram",
+      "first": "wren",
+      "stand_off": 4,
+      "damage": 1,
+      "goal": "spells",
+      "count": 2,
       "rounds": 10
     }
   }

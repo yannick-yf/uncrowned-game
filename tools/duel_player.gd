@@ -27,6 +27,8 @@ const LEAVE: StringName = &"leave"
 ## **Steps off any tile an arrow is aimed at, and otherwise stands** (O9): the bow drill's
 ## lesson, played.
 const DODGE: StringName = &"dodge"
+## **Casts the gift whenever it can, and otherwise closes as PRESS does** (O10).
+const CAST: StringName = &"cast"
 
 var policy: StringName = PRESS
 
@@ -72,6 +74,17 @@ func _turn(mine: DuelFighter, foes: Array[DuelFighter], region: Region, duel: Du
 			standing["to_x"] = away.x
 			standing["to_y"] = away.y
 			return standing
+		CAST:
+			var cost: Dictionary = DuelRules.reachable(mine.at, region, DuelRules.tiles_per_turn(), _taken(duel, mine))
+			var tiles: Array = cost.keys()
+			tiles.sort_custom(func(a: Variant, b: Variant) -> bool:
+				return int(cost[a]) < int(cost[b]) or (int(cost[a]) == int(cost[b]) and _before(a as Vector2i, b as Vector2i)))
+			for key: Variant in tiles:
+				var tile: Vector2i = key as Vector2i
+				for foe: DuelFighter in foes:
+					if DuelRules.can_cast(mine, duel.round_number, tile, foe.at):
+						return {"who": String(mine.who), "to_x": tile.x, "to_y": tile.y,
+							"action": String(DuelRules.CAST), "target": String(foe.who)}
 		DODGE:
 			var aimed: Dictionary = {}
 			for tile: Variant in duel.volleys.values():

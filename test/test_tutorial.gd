@@ -215,6 +215,51 @@ func test_beating_her_without_dodging_is_not_the_lesson() -> void:
 		assert_true(sim.facts.has(&"drilled:bow"), "or you dodged three on the way in")
 
 
+# --------------------------------------------------------------- the spell (O10) ---
+
+func test_her_last_word_gives_the_gift() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"talk", {"npc": "fairy"})
+	sim.advance(2)
+	for _line: int in 9:
+		if world.options.is_empty():
+			break
+		sim.submit(&"choose_intent", {"intent": String(world.options[0].intent)})
+		sim.advance(2)
+	assert_true(sim.facts.has(OpeningRules.FACT_LAST_WORD), "she asked")
+	assert_true(sim.facts.has(OpeningRules.GIFT), "and gave you a sliver of what raised you")
+
+
+func test_the_magic_drill_needs_the_bow_and_the_gift() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	sim.facts.add_source(&"drilled:sword", &"test")
+	sim.facts.add_source(&"drilled:bow", &"test")
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	assert_false(_intents(sim).has(&"drill_magic"), "no gift, no lesson in it")
+	sim.submit(&"end_talk")
+	sim.advance(2)
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	assert_true(_intents(sim).has(&"drill_magic"), "with it, and after the bow, it is offered")
+
+
+func test_casting_passes_the_magic_drill() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "magic"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.CAST, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_true(sim.facts.has(&"drilled:magic"), "two spells that land is the lesson")
+	assert_eq(world.player_hp, WorldState.MAX_HP, "and he mends you")
+
+
 func test_only_bram_reads_what_you_have_drilled() -> void:
 	# A drill is a lesson, not a gate: nothing but the master's own next lesson may ask
 	# whether you passed the last one (invariant 4).

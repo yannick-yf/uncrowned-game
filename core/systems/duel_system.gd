@@ -287,9 +287,32 @@ func _player_turn(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	# a strike is a wait: a window asking for a third one is a window out of date with
 	# the design, and the fight answers it with the one action that always exists rather
 	# than by dropping the turn.
-	var action: StringName = DuelRules.STRIKE \
-		if String(event.data.get("action", "")) == String(DuelRules.STRIKE) else DuelRules.WAIT
+	var asked: String = String(event.data.get("action", ""))
+	var action: StringName = DuelRules.WAIT
+	if asked == String(DuelRules.STRIKE):
+		action = DuelRules.STRIKE
+	elif asked == String(DuelRules.CAST):
+		action = DuelRules.CAST
 	var at := StringName(String(event.data.get("target", "")))
+	# **The gift, cast** (O10): only by somebody she gave it to, when it is ready, at
+	# somebody within its reach of where the move ends — anything else is a wait.
+	if action == DuelRules.CAST:
+		var aimed: DuelFighter = duel.get_fighter(at)
+		if not sim.facts.has(OpeningRules.GIFT):
+			action = DuelRules.WAIT
+		else:
+			if aimed == null or not aimed.alive() \
+					or not DuelRules.can_cast(mine, duel.round_number, wanted, aimed.at):
+				aimed = null
+				for foe: DuelFighter in duel.foes_of(mine.who):
+					if DuelRules.can_cast(mine, duel.round_number, wanted, foe.at):
+						aimed = foe
+						break
+			if aimed == null:
+				action = DuelRules.WAIT
+				at = Duel.NOBODY
+			else:
+				at = aimed.who
 	if action == DuelRules.STRIKE:
 		var victim: DuelFighter = duel.get_fighter(at)
 		if victim == null or not victim.alive() or not DuelRules.in_reach(wanted, victim.at):
@@ -377,6 +400,9 @@ func _act_on(sim: Sim, duel: Duel, world: WorldState) -> void:
 	var into: int = duel.into_act()
 	if duel.acting == DuelRules.STRIKE and not duel.struck and into >= DuelRules.strike_at_step():
 		_strike(sim, duel, world, who)
+	# The gift lands at range, through the same door (O10).
+	if duel.acting == DuelRules.CAST and not duel.struck and into >= DuelRules.strike_at_step():
+		_cast(sim, duel, world, who)
 	# The bow drawn and the tile named: the arrow is announced now and lands at the start
 	# of her next turn (O9).
 	if duel.acting == DuelRules.AIM and not duel.struck and into >= DuelRules.strike_at_step():
@@ -448,6 +474,22 @@ func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 		"apart_mm": DuelRules.millimetres_of(DuelRules.apart(who.at, victim.at)),
 		"felled": DuelRules.is_down(victim.hp),
 	})
+
+
+## **The fairy's gift, landing** (O10): at range, for the spell's figure, and not again
+## for `spell_every_rounds` rounds.
+func _cast(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
+	duel.struck = true
+	who.ready_round = duel.round_number + DuelRules.spell_every_rounds()
+	var victim: DuelFighter = duel.get_fighter(duel.target)
+	if victim == null or not victim.alive() \
+			or DuelRules.apart(who.at, victim.at) > DuelRules.spell_reach_tiles():
+		sim.derive(&"blow_missed", {"by": _named_as(who), "move": String(DuelRules.CAST)})
+		return
+	sim.derive(&"spell_cast", {"by": _named_as(who), "x": victim.at.x, "y": victim.at.y})
+	if duel.drill != Duel.NOBODY and who.is_player() and DuelRules.drill_goal(duel.drill) == &"spells":
+		duel.tally += 1
+	_land(sim, duel, world, who, victim, DuelRules.spell_damage(), &"spell")
 
 
 ## **An arrow lands** (O9) on whoever stands on its tile now — or on nobody, and that

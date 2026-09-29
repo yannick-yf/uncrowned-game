@@ -241,7 +241,7 @@ func _draw() -> void:
 		tone.a = _alpha
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
 			whose, Ui.ROW, tone)
-		var keys: String = Text.of(&"duel.keys")
+		var keys: String = keys_line()
 		var colour: Color = Ui.DIM
 		colour.a = _alpha * 0.9
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(keys, Ui.NOTE)) * 0.5, size.y - 12.0),
@@ -338,6 +338,11 @@ func bars_shown() -> int:
 	if not is_up():
 		return 0
 	return 1 + maxi(_foes().size(), 1)
+
+
+## The keys the fight offers: the gift's among them only for somebody she gave it to.
+func keys_line() -> String:
+	return Text.of(&"duel.keys_gift") if bool(_reading.get("can_cast", false)) else Text.of(&"duel.keys")
 
 
 func float_words() -> PackedStringArray:
