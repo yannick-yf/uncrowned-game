@@ -175,6 +175,15 @@ func where_the_game_starts() -> Vector2i:
 	return Region.START
 
 
+## **Past the hail** (O15). A fixture that stands the player where somebody would call
+## out — at the village's edge on the way from the graves — spends the hail first, as a
+## player who has already been called over has. Written as the fact the hail writes, so
+## what follows plays exactly as it would after one. `hails` defaults to the world's.
+func past_the_hail(sim: Sim, hails: Array[Dictionary] = Places.shared().hails()) -> void:
+	for hail: Dictionary in hails:
+		sim.facts.add_source(StringName(HailRules.HAILED % hail["who"]), &"witnessed")
+
+
 ## On the King's Road, in open country, with nobody near.
 ##
 ## **The waypoints first, then the road itself** (2026-09-16). This walked only
@@ -202,10 +211,14 @@ func alone_on_the_road() -> Vector2:
 	return Vector2.ZERO
 
 
-## Open road, outside every settlement, with no one of the cast within 14 tiles.
+## Open road, outside every settlement and every hail's ground (O15), with no one of the
+## cast within 14 tiles.
 func _is_lonely_road(region: Region, cast: Cast, tile: Vector2i) -> bool:
 	if region.zone_at(tile) != &"" or not region.is_passable(tile):
 		return false
+	for hail: Dictionary in Places.shared().hails():
+		if HailRules.in_sight(hail, tile):
+			return false
 	for npc: Npc in cast.in_zone(WorldState.OVERWORLD):
 		if Vector2(npc.tile).distance_to(Vector2(tile)) < 14.0:
 			return false

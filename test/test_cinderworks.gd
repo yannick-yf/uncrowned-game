@@ -483,59 +483,16 @@ func test_it_is_applied_once_and_the_log_replays_to_it() -> void:
 const FACED: StringName = &"cinderworks:faced_them"
 
 
-## Play a fight out with a competent player and hand back the outcome.
-## Walk the player to a tile the way a player does: held directions, through the
-## simulation, so every step of it is in the log.
-##
-## It follows `Navigation.path` rather than steering by eye — a town is full of his
-## buildings and naive "go west, then north" gets wedged in the first doorway, which is
-## what the first draft of this did.
+## Walk the player to a tile the way a player does — held directions, through the
+## simulation, so every step of it is in the log — fighting the wolves the demo's road
+## puts in front of it (W2) and leaving any conversation it did not open. Since O15 the
+## walker is `OpeningPlayer`, shared with the journeys and the route tool, and a walk
+## that does not arrive says where it stood and why instead of *walk failed*.
 func _walk_to(sim: Sim, target: Vector2i, budget: int) -> bool:
-	var world := sim.store(&"world") as WorldState
-	var route: Array[Vector2i] = Navigation.path(
-		world.region(), world.player_tile(), target, true)
-	if route.is_empty():
-		return false
-	var held := Vector2i.ZERO
-	var next: int = 0
-	var fought: bool = false
-	var hands := DuelPlayer.new(DuelPlayer.PRESS)
-	for _step: int in budget:
-		# **The road to the works has wolves on it** (W2), and this is the walk the demo
-		# actually makes — Yannick's own account of the opening: wake, the tutorial, walk
-		# toward the works, fight wolves, start the quest. So a walk that meets a pack
-		# fights it and goes on, rather than the test pretending the wood is empty.
-		var met := sim.store(&"duel") as Duel
-		if met != null and met.on():
-			hands.play(sim, met)
-			sim.advance(1)
-			held = Vector2i.ZERO
-			fought = true
-			continue
-		if fought:
-			# **The route was worked out before the fight and the fight moved us.**
-			# Walking the old one from a new tile wanders; this is the same recovery a
-			# player makes without thinking, which is to look again from where they are.
-			fought = false
-			route = Navigation.path(world.region(), world.player_tile(), target, true)
-			next = 0
-			if route.is_empty():
-				return false
-		while next < route.size() \
-				and world.player_pos.distance_to(Vector2(route[next]) + Vector2(0.5, 0.5)) < 0.9:
-			next += 1
-		if next >= route.size():
-			sim.submit(&"move_intent", {"x": 0, "y": 0})
-			sim.advance(2)
-			return true
-		var gap: Vector2 = Vector2(route[next]) + Vector2(0.5, 0.5) - world.player_pos
-		var wanted := Vector2i(
-			signi(int(round(gap.x))) if absf(gap.x) > 0.4 else 0,
-			signi(int(round(gap.y))) if absf(gap.y) > 0.4 else 0)
-		if wanted != held:
-			held = wanted
-			sim.submit(&"move_intent", {"x": held.x, "y": held.y})
-		sim.advance(1)
+	var walker := OpeningPlayer.new()
+	if walker.walk_to(sim, target, budget, true):
+		return true
+	fail(walker.report)
 	return false
 
 

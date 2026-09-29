@@ -40,63 +40,28 @@ func _at_pace(seconds_at_six: float) -> float:
 	return seconds_at_six * MovementRules.TILES_PER_SECOND / MovementRules.tiles_per_second()
 
 
-## Walk to a tile by an actual path, not by pressing into whatever is in the way.
-##
-## **And fight through what the road puts in front of you** (O12): a pack of the wood
-## squares up with whoever passes within reach, and a walker that cannot fight stalls
-## until its deadline. The fight is played with `DuelPlayer.PRESS` on the world's own
-## clock, which is held while it lasts, and the walk goes on from where it left you.
+## Walk to a tile by an actual path, not by pressing into whatever is in the way —
+## and through what the road puts in front of you: a pack squares up with whoever
+## passes (O12), and since the tutorial the world talks first (O15). `OpeningPlayer`
+## plays the fight with `DuelPlayer.PRESS` on the world's own clock, which is held
+## while it lasts, leaves any conversation it did not open, and on a walk that does not
+## arrive says where it stood and why.
 func _walk_to(target: Vector2i, max_seconds: float) -> bool:
-	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	var duel := _sim.store(&"duel") as Duel
-	var hands := DuelPlayer.new(DuelPlayer.PRESS)
-	while _sim.step < deadline:
-		var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
-		if route.is_empty():
-			return false
-		var fought: bool = false
-		for point: Vector2 in route:
-			while _sim.step < deadline:
-				if duel != null and duel.on():
-					_sim.submit(&"move_intent", {"x": 0, "y": 0})
-					while duel.on():
-						hands.play(_sim, duel)
-						_sim.advance(1)
-						deadline += 1
-					fought = true
-					break
-				var delta: Vector2 = point - _world.player_pos
-				if delta.length() <= 1.0:
-					break
-				_sim.submit(&"move_intent", _aim(delta))
-				_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-			if fought or _sim.step >= deadline:
-				break
-		if fought:
-			continue
-		if _sim.step >= deadline:
-			return false
-		_sim.submit(&"move_intent", {"x": 0, "y": 0})
-		_sim.advance(1)
+	var walker := OpeningPlayer.new()
+	if walker.walk_to(_sim, target, int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))):
 		return true
+	fail(walker.report)
 	return false
 
 
 ## Steer straight through a list of points, without pathfinding. Used for the road,
 ## because a shortest path between two corners cuts the bend onto the verge.
 func _follow(points: Array[Vector2i], max_seconds: float) -> bool:
-	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	for point: Vector2i in points:
-		var target: Vector2 = Vector2(point) + Vector2(0.5, 0.5)
-		while _sim.step < deadline:
-			var delta: Vector2 = target - _world.player_pos
-			if delta.length() <= 1.0:
-				break
-			_sim.submit(&"move_intent", _aim(delta))
-			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
-		if _sim.step >= deadline:
-			return false
-	return true
+	var walker := OpeningPlayer.new()
+	if walker.follow(_sim, points, int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))):
+		return true
+	fail(walker.report)
+	return false
 
 
 ## Push into a target rather than arriving politely beside it, and stop on dying —

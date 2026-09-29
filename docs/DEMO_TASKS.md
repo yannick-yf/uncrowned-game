@@ -1596,7 +1596,7 @@ to offsets open on both worlds (Wren's fire, the workers' fire, Blackcairn's fir
 watchman, the ledger, the tiered law, the 2D gate point); the eighth is the 2D map's
 existing debt, the first pack anchored where his bridge is.
 
-### O15 · Walkers that can be spoken to
+### O15 · Walkers that can be spoken to — **built 2026-09-29**
 
 Est. 5 h. Depends on: O14.
 
@@ -1609,6 +1609,20 @@ chosen: tests that teleport to Brindle's centre are far from it; walkers from th
 start, and fixtures that stand at Bram's post, are not.
 
 **Test first:** a walker facing a dialogue it did not open fails loudly, naming it.
+
+**Built.** `tools/opening_player.gd` (`OpeningPlayer`): `walk_to` along
+`Navigation.waypoints` (with `off_road` for the works), `follow` through a line of
+points, a `DuelPlayer.PRESS` hand for any fight — whose steps are not counted against
+the walk's budget, because the world's clock is held while it lasts, capped at
+`FIGHT_CAP` — and `LEAVE` (default, `end_talk`, remembered in `left`) or `STOP` for a
+conversation it did not open. A walk that does not arrive leaves a `report`: target,
+tile, place, step, why, who is talking, the fight's phase, the last six events. The
+journeys (`_walk_to`, `_follow`), `test_cinderworks`' walk and `tools/measure_routes.gd`
+walk with it now — the route tool had been standing in front of the wolves until its
+deadline since W2, and now fights them and arrives. `TestCase.past_the_hail(sim)`
+writes each hail's fact; `alone_on_the_road` never picks a tile in a hail's ground. The
+short held-direction walks (`test_harrowgate`, `test_zones`, `test_phase_0`,
+`test_saving`) are left as they are: none goes near the hail's ground or a pack.
 
 ### O16 · Bram calls you over
 
