@@ -182,6 +182,24 @@ func test_the_window_stands_on_his_ground() -> void:
 	assert_eq(window.sparks_alive(), 0, "the sparks have burnt out")
 	assert_false(window.fighters_wear_our_paint(), "and his material is back on the player")
 
+	# **O6: every fighter drawn where he fights.** Two wolves in the reading stand on
+	# their own tiles, and the one that is down is not drawn standing.
+	var pack_frame: Dictionary = fight_frame.duplicate(true)
+	var wolf_row: Dictionary = {"kind": "wolf", "facing": Vector2i(-1, 0), "his_face": Vector2(-1, 0),
+		"his_pose": "", "his_lunge": 0.0, "his_dip": 0.0, "his_telegraph": -1.0, "his_max": 10}
+	var first: Dictionary = wolf_row.duplicate()
+	first.merge({"who": "wolf", "at": Vector2(284.5, 315.5), "his_down": false, "his_hp": 10})
+	var second: Dictionary = wolf_row.duplicate()
+	second.merge({"who": "wolf#2", "at": Vector2(283.5, 317.5), "his_down": true, "his_hp": 0})
+	(pack_frame["fight"] as Dictionary)["who"] = "wolf"
+	(pack_frame["fight"] as Dictionary)["fighters"] = [first, second]
+	window.sync(pack_frame, 1.0 / 60.0)
+	assert_true(window.beast_shown(&"wolf"), "the first wolf is drawn")
+	assert_eq(window.beast_at(&"wolf"), Vector2(284.5, 315.5), "on its own tile")
+	assert_false(window.beast_shown(&"wolf#2"), "and the one that is down is not drawn standing")
+	window.sync(over, 1.0 / 60.0)
+	assert_false(window.beast_shown(&"wolf"), "the fight's wolves go with the fight")
+
 	assert_eq(world.fingerprint(), before, "the window read the world and wrote nothing")
 	window.free()
 

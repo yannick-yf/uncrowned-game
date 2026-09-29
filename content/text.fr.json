@@ -35,6 +35,7 @@
   "fight.yielded": "{0} se rend",
   "fight.you_down": "Vous êtes à terre",
   "fight.you_left": "Vous quittez le combat",
+  "beast.wolf": "Loup",
   "duel.keys": "flèches  où se placer        K  frapper        O  attendre",
   "duel.your_turn": "À vous",
   "duel.his_turn": "À {0}",

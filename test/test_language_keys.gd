@@ -17,7 +17,7 @@ const SLOW: bool = true
 const BUILT_AT_RUNTIME: Array[String] = [
 	"place.short.", "place.", "end.", "doc.", "trait.", "rank.crown.", "rank.opposition.",
 	"ground.", "deed.heard.", "relation.", "moment.", "journal.deed.", "journal.phrase.",
-	"journal.elapsed.", "journal.who", "journal.because.",
+	"journal.elapsed.", "journal.who", "journal.because.", "beast.",
 ]
 
 

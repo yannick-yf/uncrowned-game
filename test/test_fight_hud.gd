@@ -88,6 +88,20 @@ func test_walking_out_of_a_fight_does_not_say_you_are_down() -> void:
 	hud.free()
 
 
+func test_every_foe_has_a_bar() -> void:
+	# O6: two wolves, two bars under the one that names the fight.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 10, 10)
+	reading["fighters"] = [
+		{"who": "wolf", "name": "Wolf", "his_hp": 10, "his_max": 10},
+		{"who": "wolf#2", "name": "Wolf", "his_hp": 4, "his_max": 10},
+	]
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.bars_shown(), 3, "yours and one each")
+	assert_eq(hud.pips_shown(&"wolf#2"), 4, "and each shows its own health")
+	hud.free()
+
+
 func test_a_felled_player_is_shown_at_nothing() -> void:
 	# The felling blow is paid at the end of the beat, so the store still says one or
 	# two while you are on the ground. The picture says nothing left, because that is

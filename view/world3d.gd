@@ -257,11 +257,13 @@ var _snap_wanted: float = -1.0
 ## The tilt the lens returns to when nobody is fighting — his 48°, or whatever
 ## `UNCROWNED_LENS` asked for, so the debug tool still wins.
 var _rest_tilt: float = TILT_DEGREES
-## The opponent's walk cycle, kept the same way the player's is. One fight at a time,
-## so one phase.
-var _foe_last: Vector3 = Vector3.ZERO
-var _foe_placed: bool = false
-var _foe_phase: float = 0.0
+## Each opponent's walk cycle, kept the same way the player's is, by who he is — a
+## fight can have several (O6): `{id: {"last": Vector3, "phase": float}}`.
+var _foe_walk: Dictionary = {}
+## **The fight's beasts** (O6): a wolf in a duel is drawn at its own seat, by seat, and
+## its pack's standing figures are hidden while it fights. `_beast_at` is for the suite.
+var _beasts: Dictionary = {}
+var _beast_at: Dictionary = {}
 ## **The fight's picture** (H group). The arena's floor and its marks, the sparks, and
 ## what the two fighters wear for the length of it. All of it is built the first time a
 ## fight needs it and hidden after; nothing here is asked of the simulation.
@@ -1091,7 +1093,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_fight(frame.get("fight", {}) as Dictionary, float(frame.get("fight_lens", 0.0)))
 	_sync_traffic(road, world)
 	_sync_folk(folk, world)
-	_sync_wild(_sim.store(&"wild") as Wild, world)
+	_sync_wild(_sim.store(&"wild") as Wild, world, frame.get("fight", {}) as Dictionary)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
@@ -1135,7 +1137,7 @@ func _sync_player(frame: Dictionary) -> void:
 func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 	var present: Dictionary = {}
 	var fairy_seen: bool = false
-	var foe: StringName = StringName(String(fighting.get("who", "")))
+	var fights: Dictionary = _fighting_people(cast, fighting)
 	for npc: Npc in cast.in_zone(world.current_zone):
 		if OpeningRules.is_gone(npc.id, _sim.facts):
 			continue
@@ -1159,13 +1161,14 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		# Footed every frame, not once: the ground under them is his and is built a
 		# frame after they are, and thirty-three figures are nothing.
 		var stands_at: Vector2 = npc.centre()
-		if npc.id == foe:
-			stands_at = fighting.get("at", stands_at) as Vector2
-			_step_the_foe(figure, stands_at,
-				fighting.get("facing", Vector2i(0, 1)) as Vector2i, fighting)
-			stands_at += _offset_of(fighting, false)
-			_foot_figure(figure, stands_at, _dip_of(fighting, false))
-			_wear_fight_paint(figure, false, fighting)
+		if fights.has(npc.id):
+			var entry: Dictionary = fights[npc.id] as Dictionary
+			stands_at = entry.get("at", stands_at) as Vector2
+			_step_the_foe(npc.id, figure, stands_at,
+				entry.get("facing", Vector2i(0, 1)) as Vector2i, entry)
+			stands_at += _offset_of(entry, false)
+			_foot_figure(figure, stands_at, _dip_of(entry, false))
+			_wear_fight_paint(figure, false, entry, StringName(String(entry.get("who", npc.id))))
 			figure.visible = true
 			continue
 		if figure.material_override != _figure_material and _figure_material != null:
@@ -1179,20 +1182,45 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			(_people[id] as Node3D).visible = false
 
 
-## The man in front of you: walking when the fight moves him, and always looking at
-## you. The cycle is driven by the ground he actually covers, the same rule the player
-## and the road's travellers are drawn by, so nothing about a fight animates on a timer.
-func _step_the_foe(figure: Node3D, at: Vector2, facing: Vector2i, fighting: Dictionary) -> void:
+## **The people in the fight, by who they are** (O6): each cast member fighting, with
+## the reading row the duel drew him from. A person appears once. A reading that
+## carries no rows is the older shape — one foe in its top-level keys — and is read so.
+func _fighting_people(cast: Cast, fighting: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	if fighting.is_empty():
+		return out
+	for row: Variant in fighting.get("fighters", []) as Array:
+		var entry: Dictionary = row as Dictionary
+		var kind := StringName(String(entry.get("kind", "")))
+		if cast != null and cast.get_npc(kind) != null and not out.has(kind):
+			out[kind] = entry
+	if out.is_empty() and not fighting.has("fighters"):
+		var foe := StringName(String(fighting.get("who", "")))
+		if foe != &"":
+			out[foe] = fighting
+	return out
+
+
+## A man in the fight: walking when the fight moves him, and always looking at who he
+## fights. The cycle is driven by the ground he actually covers, the same rule the
+## player and the road's travellers are drawn by, so nothing about a fight animates on
+## a timer. Kept per person, since a fight can have several.
+func _step_the_foe(id: StringName, figure: Node3D, at: Vector2, facing: Vector2i, fighting: Dictionary) -> void:
 	var feet: Vector3 = _feet_of(at)
-	var moved: float = Vector2(feet.x, feet.z).distance_to(
-		Vector2(_foe_last.x, _foe_last.z)) if _foe_placed else 0.0
-	_foe_last = feet
-	_foe_placed = true
+	var walk: Dictionary = _foe_walk.get(id, {}) as Dictionary
+	var moved: float = 0.0
+	if walk.has("last"):
+		var last: Vector3 = walk["last"] as Vector3
+		moved = Vector2(feet.x, feet.z).distance_to(Vector2(last.x, last.z))
+	var phase: float = float(walk.get("phase", 0.0))
+	walk["last"] = feet
+	_foe_walk[id] = walk
 	if _fight_pose(figure, fighting, false, facing):
 		return
 	if moved > 0.002:
-		_foe_phase = fposmod(_foe_phase + moved / WALK_CYCLE_M, 1.0)
-		_walk(figure, facing, _foe_phase)
+		phase = fposmod(phase + moved / WALK_CYCLE_M, 1.0)
+		walk["phase"] = phase
+		_walk(figure, facing, phase)
 	else:
 		_idle(figure, facing)
 
@@ -1366,13 +1394,17 @@ func _wolf() -> Node3D:
 	return wolf
 
 
-func _sync_wild(wild: Wild, world: WorldState) -> void:
+func _sync_wild(wild: Wild, world: WorldState, fighting: Dictionary = {}) -> void:
 	if wild == null or world == null:
 		return
 	var standing: Dictionary = wild.standing(world.region())
 	var seen: Dictionary = {}
+	# The pack in the fight is drawn fighter by fighter below, not standing where it was.
+	var engaged: int = wild.fighting if not fighting.is_empty() else -1
 	for tile: Vector2i in standing.keys():
 		var which: int = int(standing[tile])
+		if which == engaged:
+			continue
 		var count: int = wild.count_of(which)
 		for one: int in count:
 			var id: String = "%d_%d" % [which, one]
@@ -1396,6 +1428,41 @@ func _sync_wild(wild: Wild, world: WorldState) -> void:
 		if not seen.has(id):
 			(_wild_blocks[id] as Node3D).queue_free()
 			_wild_blocks.erase(id)
+	_sync_beasts(fighting)
+
+
+## **Every beast in the fight at its own seat** (O6, 2026-09-29). The two wolves before
+## the bridge used to stand where their pack stood while they fought, and a felled one
+## stayed up. Each is drawn at the tile the duel draws it on, turned the way it faces,
+## thrown forward by its blow, and gone the moment it is down.
+func _sync_beasts(fighting: Dictionary) -> void:
+	var cast := _sim.store(&"cast") as Cast if _sim != null else null
+	var here: Dictionary = {}
+	for row: Variant in fighting.get("fighters", []) as Array:
+		var entry: Dictionary = row as Dictionary
+		var kind := StringName(String(entry.get("kind", "")))
+		if cast != null and cast.get_npc(kind) != null:
+			continue
+		var seat := StringName(String(entry.get("who", "")))
+		here[seat] = true
+		var beast: Node3D = _beasts.get(seat, null) as Node3D
+		if beast == null:
+			beast = _wolf()
+			beast.name = "Fighting_%s" % String(seat).replace("#", "_")
+			add_child(beast)
+			_beasts[seat] = beast
+		var at: Vector2 = entry.get("at", Vector2.ZERO) as Vector2
+		_beast_at[seat] = at
+		beast.position = _feet_of(at + _offset_of(entry, false))
+		var face: Vector2 = entry.get("his_face", Vector2(1, 0)) as Vector2
+		# The model faces +x; a tile's y is the world's z.
+		beast.rotation.y = atan2(-face.y, face.x)
+		beast.visible = not bool(entry.get("his_down", false))
+	for seat: Variant in _beasts.keys():
+		if not here.has(seat):
+			(_beasts[seat] as Node3D).queue_free()
+			_beasts.erase(seat)
+			_beast_at.erase(seat)
 
 
 func _sync_folk(folk: Folk, world: WorldState) -> void:
@@ -1599,11 +1666,14 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 		if kind == &"blow_landed":
 			var guarded: bool = bool(blow.get("guarded", false))
 			var heavy: bool = int(blow.get("damage", 0)) >= 2 and not guarded
-			var target: StringName = &"his" if by_me else &"mine"
+			# Kept by who took it (O6), so the second wolf's hit flashes the second wolf.
+			var took: String = String(blow.get("target", ""))
+			var target: StringName = &"mine" if took == "player" \
+				else (StringName(took) if took != "" else (&"his" if by_me else &"mine"))
 			_struck[target] = {"at": _now, "guarded": guarded}
 			# **A blow does not move you**: the recoil is the flinch frame and nothing
 			# else (Yannick, 2026-09-24).
-			var between: Vector3 = _between(fighting, by_me)
+			var between: Vector3 = _between(fighting, by_me, blow)
 			if guarded:
 				_spark_burst(between, MARK_GUARD, 6, 1.6)
 				_shake_at = _now
@@ -1620,7 +1690,10 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 
 ## Where a blow meets: between the two of them, hip high — which works whichever of
 ## the eight ways the blow is thrown.
-func _between(fighting: Dictionary, _by_me: bool) -> Vector3:
+func _between(fighting: Dictionary, _by_me: bool, blow: Dictionary = {}) -> Vector3:
+	# On the one it landed on, when the blow says which tile that was (O5, O6).
+	if blow.has("at_x"):
+		return _ground(Vector2(float(blow["at_x"]), float(blow["at_y"])) + Vector2(0.5, 0.5), SWIPE_HEIGHT_M)
 	var mine: Vector2 = fighting.get("my_at", Vector2.ZERO) as Vector2
 	var his: Vector2 = fighting.get("at", Vector2.ZERO) as Vector2
 	return _ground(mine.lerp(his, 0.5), SWIPE_HEIGHT_M)
@@ -1628,7 +1701,7 @@ func _between(fighting: Dictionary, _by_me: bool) -> Vector3:
 
 ## The two fighters wear a shader of ours for the length of the fight, and his again
 ## after: it is what lets a hit show on the man who took it.
-func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary) -> void:
+func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary, key: StringName = &"") -> void:
 	var sprite := figure as AnimatedSprite3D
 	if sprite == null or _figure_material == null:
 		return
@@ -1636,7 +1709,7 @@ func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary) -> void
 		if sprite.material_override != _figure_material:
 			sprite.material_override = _figure_material
 		return
-	var who: StringName = &"mine" if mine else &"his"
+	var who: StringName = key if key != &"" else (&"mine" if mine else &"his")
 	var paint: ShaderMaterial = _fight_paint_for(who)
 	if sprite.material_override != paint:
 		sprite.material_override = paint
@@ -1819,7 +1892,7 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		# mark the first design had no need of**: the cap on movement is the whole of
 		# what spacing means here (`docs/COMBAT_V2.md` §4), so the tiles a turn reaches
 		# are the decision, drawn.
-		var acting: Vector2 = me if mine_acting else him
+		var acting: Vector2 = me if mine_acting else _acting_at(fighting, him)
 		var voice: Color = MARK_MINE if mine_acting else MARK_HIS
 		for row: Variant in fighting.get("moves", []) as Array:
 			_tile_patch(row as Vector2, Color(voice.r, voice.g, voice.b, 0.17))
@@ -1846,14 +1919,33 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		his_foot = MARK_HIS if not won else Color(MARK_HIS.r, MARK_HIS.g, MARK_HIS.b, 0.4)
 		thickness = 0.08
 	_ring(me, 0.30, 0.21, thickness, Color(mine_foot.r, mine_foot.g, mine_foot.b, 0.85 * mine_foot.a))
-	_ring(him, 0.30, 0.21, thickness, Color(his_foot.r, his_foot.g, his_foot.b, 0.85 * his_foot.a))
+	# Every foe's feet, telegraph and blow (O6); the older one-foe reading draws its one.
+	var foes: Array = fighting.get("fighters", []) as Array
+	if foes.is_empty():
+		foes = [fighting.merged({"at": him})]
+	for row: Variant in foes:
+		var entry: Dictionary = row as Dictionary
+		if bool(entry.get("his_down", false)) and not settling:
+			continue
+		var at: Vector2 = entry.get("at", him) as Vector2
+		_ring(at, 0.30, 0.21, thickness, Color(his_foot.r, his_foot.g, his_foot.b, 0.85 * his_foot.a))
+		if not settling:
+			_duel_telegraph(at, float(entry.get("his_telegraph", -1.0)), MARK_HIS)
+		_duel_swipe(at, me, entry.merged({"reach_tiles": fighting.get("reach_tiles", 1)}), false, MARK_HIS)
 
 	if not settling:
 		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)), MARK_MINE)
-		_duel_telegraph(him, float(fighting.get("his_telegraph", -1.0)), MARK_HIS)
-	_duel_swipe(me, him, fighting, true, MARK_MINE)
-	_duel_swipe(him, me, fighting, false, MARK_HIS)
+	_duel_swipe(me, fighting.get("target_at", him) as Vector2, fighting, true, MARK_MINE)
 	_arena_mesh.surface_end()
+
+
+## Where whoever is acting stands, when it is one of several foes.
+func _acting_at(fighting: Dictionary, fallback: Vector2) -> Vector2:
+	for row: Variant in fighting.get("fighters", []) as Array:
+		var entry: Dictionary = row as Dictionary
+		if bool(entry.get("acting", false)):
+			return entry.get("at", fallback) as Vector2
+	return fallback
 
 
 ## One tile of the grid, laid flat on his ground. Slightly inset, so a field of them
@@ -2006,6 +2098,16 @@ func sparks_alive() -> int:
 		if not state.is_empty():
 			alive += 1
 	return alive
+
+
+## Whether a beast in the fight is drawn, and on which tile (O6).
+func beast_shown(seat: StringName) -> bool:
+	var beast: Node3D = _beasts.get(seat, null) as Node3D
+	return beast != null and beast.visible
+
+
+func beast_at(seat: StringName) -> Vector2:
+	return _beast_at.get(seat, Vector2(-1, -1)) as Vector2
 
 
 func fighters_wear_our_paint() -> bool:

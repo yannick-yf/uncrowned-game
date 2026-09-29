@@ -212,9 +212,11 @@ func _ready() -> void:
 	var duelling: String = OS.get_environment("UNCROWNED_DUEL")
 	if OS.has_feature("debug") and duelling != "":
 		var asked: PackedStringArray = duelling.strip_edges().split(":")
+		# `wolf,wolf` squares up against several at once (O6), the way a pack does.
+		var against: PackedStringArray = asked[0].split(",", false)
 		# A sparring partner is sparred with, as the game's own line does it (O1).
-		_sim.submit(&"duel_began", {"opponent": asked[0], "by": String(DuelRules.PLAYER),
-			"spar": DuelRules.spares(StringName(asked[0]))})
+		_sim.submit(&"duel_began", {"opponents": Array(against), "by": String(DuelRules.PLAYER),
+			"spar": against.size() == 1 and DuelRules.spares(StringName(against[0]))})
 		_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
 		var playing: DuelPlayer = DuelPlayer.new(StringName(asked[2])) if asked.size() > 2 else null
@@ -333,7 +335,6 @@ func _duel_frame() -> Dictionary:
 	var him: DuelFighter = _duel.foe()
 	if mine == null or him == null:
 		return {}
-	var npc: Npc = _cast.get_npc(him.who) if _cast != null else null
 	var acting: DuelFighter = _duel.acting_fighter()
 	var mine_acting: bool = acting != null and acting.is_player()
 	var into: int = _duel.into_act()
@@ -343,7 +344,7 @@ func _duel_frame() -> Dictionary:
 	var his_at: Vector2 = _duel.drawn_at(him)
 	var reading: Dictionary = {
 		"who": String(him.who),
-		"his_name": npc.display_name if npc != null else String(him.who).capitalize(),
+		"his_name": _fighter_name(him.who),
 		"at": his_at,
 		"my_at": my_at,
 		"facing": him.facing,
@@ -376,9 +377,69 @@ func _duel_frame() -> Dictionary:
 		"his_hp": him.hp,
 		"his_max": him.max_hp,
 	}
+	# **Every opponent, each where the duel draws him** (O6, 2026-09-29). The keys above
+	# describe the one the fight is named for; this is the whole of it, so the second
+	# wolf is drawn where it fights instead of standing with its pack. One row per
+	# fighter in the same words the "his" keys use, so the window draws each with the
+	# helpers it already has.
+	var fighters: Array = []
+	var centroid: Vector2 = my_at
+	var acting_name: String = ""
+	for fighter: DuelFighter in _duel.fighters:
+		if fighter.is_player():
+			continue
+		var act: StringName = _duel.acting if acting == fighter else DuelRules.WAIT
+		var kind: StringName = DuelRules.kind_of(fighter.who)
+		var at: Vector2 = _duel.drawn_at(fighter)
+		centroid += at
+		if acting == fighter:
+			acting_name = _fighter_name(fighter.who)
+		fighters.append({
+			"who": String(fighter.who),
+			"kind": String(kind),
+			"name": _fighter_name(fighter.who),
+			"at": at,
+			"facing": fighter.facing,
+			"his_face": Vector2(fighter.facing).normalized(),
+			"his_pose": String(DuelRules.pose_of(fighter.hurt_left, act, into)),
+			"his_lunge": DuelRules.lunge_at(act, into),
+			"his_dip": DuelRules.dip_at(act, into),
+			"his_telegraph": DuelRules.telegraph_at(act, into),
+			"his_down": DuelRules.is_down(fighter.hp),
+			"his_hp": fighter.hp,
+			"his_max": fighter.max_hp,
+			"acting": acting == fighter,
+			"settling": _duel.settling,
+			"settle_steps": DuelRules.beat_steps(),
+		})
+	reading["fighters"] = fighters
+	# The fight is framed on all of them, not on the first.
+	if not fighters.is_empty():
+		reading["centre"] = centroid / float(fighters.size() + 1)
+		var reach: float = 1.0
+		for row: Variant in fighters:
+			reach = maxf(reach, ((row as Dictionary)["at"] as Vector2).distance_to(reading["centre"] as Vector2))
+		reach = maxf(reach, my_at.distance_to(reading["centre"] as Vector2))
+		reading["radius_tiles"] = reach + float(DuelRules.tiles_per_turn())
+	var targeted: DuelFighter = _duel.get_fighter(_duel.target)
+	if targeted != null:
+		reading["target_at"] = _duel.drawn_at(targeted)
+	if acting_name != "":
+		reading["acting_name"] = acting_name
 	if _duel.waiting_on_player():
 		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
 	return reading
+
+
+## **What a fighter is called on screen**: a person by name, a beast by what it is, in
+## the player's language — never its seat (`wolf#2`) or its id capitalised.
+func _fighter_name(who: StringName) -> String:
+	var kind: StringName = DuelRules.kind_of(who)
+	var person: Npc = _cast.get_npc(kind) if _cast != null else null
+	if person != null:
+		return person.display_name
+	var key := StringName("beast.%s" % kind)
+	return Text.of(key) if Text.has(key) else String(kind).capitalize()
 
 
 ## The tiles whoever is acting can still end their move on, in tile centres for the
@@ -435,7 +496,13 @@ func _place_blows(fresh: Array) -> Array:
 		var by_me: bool = String(blow.get("by", "")) == "player"
 		var about_him: bool = by_me if String(blow.get("type", "")) == "blow_landed" else not by_me
 		if _three_d != null and _duel != null and _duel.on():
-			var who: DuelFighter = _duel.foe() if about_him else _duel.me()
+			# Over the fighter the blow was about, by name (O6): a landed blow is about
+			# its target and a missed one about whoever swung.
+			var named: String = String(blow.get("target", "")) if String(blow.get("type", "")) == "blow_landed" \
+				else String(blow.get("by", ""))
+			var who: DuelFighter = _duel.me() if named == "player" else _duel.get_fighter(StringName(named))
+			if who == null:
+				who = _duel.foe() if about_him else _duel.me()
 			if who != null:
 				blow["at"] = _three_d.screen_of(_duel.drawn_at(who), 1.9)
 		placed.append(blow)

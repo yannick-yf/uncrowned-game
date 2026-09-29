@@ -1322,7 +1322,14 @@ carrying the G clamp, `world.hurt`, the flinch, facing, the felling and `blow_la
 
 **Check:** fast suite unchanged; the replay fingerprint equal.
 
-### O6 · Every fighter drawn where he fights
+### O6 · Every fighter drawn where he fights — **built 2026-09-29**
+
+> Built, and it found a worse defect than the one it was for: **a pack bit its own**
+> (`Duel.foes_of` meant "everybody but me"), fixed in its own commit. Measured after the
+> fix at 100 HP with the PRESS hand: two wolves cost 30 HP — so at S4's 30 the bridge
+> would kill a first-time player, and the figure has to be settled with the wolves.
+> Beasts are named in the player's language (`beast.wolf`), never `Wolf#2`;
+> `UNCROWNED_DUEL=wolf,wolf` squares up against a pack.
 
 Est. 8 h. Depends on: O5.
 

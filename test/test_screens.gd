@@ -282,6 +282,31 @@ func test_the_first_prompt_says_what_e_does() -> void:
 	play.free()
 
 
+func test_the_fight_reading_carries_every_fighter() -> void:
+	# **O6.** The reading named one foe, so a second wolf was never drawn where it
+	# fought. Every opponent is in it now, each at the tile the duel draws it on.
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponents": ["wolf", "wolf"], "by": "wolf", "asked_by": "the_wood"})
+	sim.advance(1)
+	var duel := sim.store(&"duel") as Duel
+	assert_true(duel.on(), "two wolves are on you")
+	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	var fighters: Array = reading.get("fighters", []) as Array
+	assert_eq(fighters.size(), 2, "both of them are in the reading")
+	for row: Variant in fighters:
+		var entry: Dictionary = row as Dictionary
+		var him: DuelFighter = duel.get_fighter(StringName(String(entry["who"])))
+		assert_not_null(him, "%s is a fighter" % entry["who"])
+		assert_eq(entry["at"] as Vector2, duel.drawn_at(him), "%s is drawn where he stands" % entry["who"])
+		assert_eq(String(entry["kind"]), "wolf", "and is a wolf")
+		assert_eq(String(entry["name"]), Text.of(&"beast.wolf"), "named in the player's language")
+	assert_eq(String(reading["his_name"]), Text.of(&"beast.wolf"), "the fight too, not 'Wolf#2'")
+	play.free()
+
+
 func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# The failure this exists for is completely silent: a Label given more lines than
 	# it has room for draws the ones that fit and says nothing about the rest. The

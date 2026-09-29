@@ -33,6 +33,8 @@ const GHOST_SECONDS: float = 0.55
 const FLOAT_SECONDS: float = 0.85
 const FLOAT_RISE: float = 24.0
 const BANNER_IN_SECONDS: float = 0.25
+## How far apart the foes' bars stand when there is more than one (O6).
+const BAR_ROW: float = 30.0
 
 ## Gold is yours and ember is his, here and on the ground — `World3d`'s marks use the
 ## same two, so what the bars say and what the arena says read as one voice.
@@ -80,6 +82,10 @@ func present(reading: Dictionary, delta: float) -> void:
 		_reading = reading
 		_take_health(&"mine", 0 if bool(reading.get("felled", false)) else int(reading.get("my_hp", 0)))
 		_take_health(&"his", int(reading.get("his_hp", 0)))
+		# **A bar for each foe when there is more than one** (O6), kept by who they are,
+		# so the second wolf drains its own bar and not the first one's.
+		for row: Dictionary in _foes():
+			_take_health(StringName(String(row.get("who", ""))), int(row.get("his_hp", 0)))
 		for row: Variant in reading.get("blows", []) as Array:
 			_take_blow(row as Dictionary)
 		# **The banner is read off the state, not off an event.** The outcome is set on
@@ -104,8 +110,20 @@ func present(reading: Dictionary, delta: float) -> void:
 	queue_redraw()
 
 
+## The foes that get a bar of their own: every fighter in the reading when there is
+## more than one, and none when there is one — the "his" bar is that one.
+func _foes() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var rows: Array = _reading.get("fighters", []) as Array
+	if rows.size() < 2:
+		return out
+	for row: Variant in rows:
+		out.append(row as Dictionary)
+	return out
+
+
 func _take_health(side: StringName, hp: int) -> void:
-	var was: int = int(_shown[side])
+	var was: int = int(_shown.get(side, -1))
 	if was < 0:
 		_shown[side] = hp
 		return
@@ -149,7 +167,13 @@ func _draw() -> void:
 	var size: Vector2 = get_viewport_rect().size
 	var his_name: String = String(_reading.get("his_name", ""))
 	_draw_bar(&"mine", int(_reading.get("my_max", 10)), Text.of(&"fight.you"), MINE, false, size)
-	_draw_bar(&"his", int(_reading.get("his_max", 10)), his_name, HIS, true, size)
+	var foes: Array[Dictionary] = _foes()
+	if foes.is_empty():
+		_draw_bar(&"his", int(_reading.get("his_max", 10)), his_name, HIS, true, size)
+	for index: int in foes.size():
+		var row: Dictionary = foes[index]
+		_draw_bar(StringName(String(row.get("who", ""))), int(row.get("his_max", 10)),
+			String(row.get("name", "")), HIS, true, size, TOP + float(index) * BAR_ROW)
 
 	for row: Dictionary in _floats:
 		var age: float = (_now - float(row["born"])) / FLOAT_SECONDS
@@ -172,8 +196,10 @@ func _draw() -> void:
 	elif not settling:
 		# **Whose turn it is** (K4). A turn-based fight that does not say so is a fight
 		# the player stands in wondering why nothing is happening.
+		# Named for whoever is acting, when several are (O6).
+		var acting: String = String(_reading.get("acting_name", his_name))
 		var whose: String = Text.of(&"duel.your_turn") if bool(_reading.get("my_turn", false)) \
-			else Text.of(&"duel.his_turn", [his_name])
+			else Text.of(&"duel.his_turn", [acting])
 		var tone: Color = MINE if bool(_reading.get("my_turn", false)) else HIS
 		tone.a = _alpha
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
@@ -188,8 +214,9 @@ func _draw() -> void:
 ## Ten pips and a name. The remaining health is anchored at the outer edge of the
 ## screen and the loss appears on the inner side, so both bars drain toward the middle
 ## — the genre's convention, kept because it is the one every player already reads.
-func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, right: bool, size: Vector2) -> void:
-	var hp: int = int(_shown[side])
+func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, right: bool,
+		size: Vector2, top: float = TOP) -> void:
+	var hp: int = int(_shown.get(side, 0))
 	var drop: Dictionary = _drops.get(side, {}) as Dictionary
 	var ghost_to: int = hp
 	if not drop.is_empty():
@@ -204,13 +231,13 @@ func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, righ
 	var gone := Color(0.08, 0.08, 0.10, 0.72 * _alpha)
 	var edge := Color(colour.r, colour.g, colour.b, 0.55 * _alpha)
 	if max_hp > MAX_PIPS:
-		_draw_long_bar(hp, ghost_to, max_hp, label, lit, ghost, gone, edge, right, size)
+		_draw_long_bar(hp, ghost_to, max_hp, label, lit, ghost, gone, edge, right, size, top)
 		return
 	for i: int in max_hp:
 		var x: float = MARGIN + float(i) * (PIP.x + PIP_GAP)
 		if right:
 			x = size.x - MARGIN - PIP.x - float(i) * (PIP.x + PIP_GAP)
-		var rect := Rect2(Vector2(x, TOP), PIP)
+		var rect := Rect2(Vector2(x, top), PIP)
 		var fill: Color = lit if i < hp else (ghost if i < ghost_to else gone)
 		draw_rect(rect, fill, true)
 		draw_rect(rect, edge, false, 1.0)
@@ -218,7 +245,7 @@ func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, righ
 	name_colour.a = _alpha
 	var width: float = float(max_hp) * (PIP.x + PIP_GAP) - PIP_GAP
 	var name_x: float = MARGIN if not right else size.x - MARGIN - Ui.width_of(label, Ui.ROW)
-	Ui.write_over(self, Vector2(name_x, TOP + PIP.y + 13.0), label, Ui.ROW, name_colour)
+	Ui.write_over(self, Vector2(name_x, top + PIP.y + 13.0), label, Ui.ROW, name_colour)
 	if right:
 		return
 	# A hairline under the player's pips only, so the two sides are told apart at a glance.
@@ -241,23 +268,24 @@ func _draw_long_bar(
 	edge: Color,
 	right: bool,
 	size: Vector2,
+	top: float = TOP,
 ) -> void:
 	var width: float = float(MAX_PIPS) * (PIP.x + PIP_GAP) - PIP_GAP
 	var left: float = MARGIN if not right else size.x - MARGIN - width
 	var share: float = clampf(float(hp) / float(maxi(max_hp, 1)), 0.0, 1.0)
 	var was: float = clampf(float(ghost_to) / float(maxi(max_hp, 1)), 0.0, 1.0)
-	draw_rect(Rect2(Vector2(left, TOP), Vector2(width, PIP.y)), gone, true)
+	draw_rect(Rect2(Vector2(left, top), Vector2(width, PIP.y)), gone, true)
 	# Both bars drain toward the middle, so the remaining health is anchored at the
 	# outer edge and the loss appears on the inner side — the pips' rule, kept.
 	var lit_x: float = left if not right else left + width * (1.0 - share)
 	var ghost_x: float = left if not right else left + width * (1.0 - was)
-	draw_rect(Rect2(Vector2(ghost_x, TOP), Vector2(width * was, PIP.y)), ghost, true)
-	draw_rect(Rect2(Vector2(lit_x, TOP), Vector2(width * share, PIP.y)), lit, true)
-	draw_rect(Rect2(Vector2(left, TOP), Vector2(width, PIP.y)), edge, false, 1.0)
+	draw_rect(Rect2(Vector2(ghost_x, top), Vector2(width * was, PIP.y)), ghost, true)
+	draw_rect(Rect2(Vector2(lit_x, top), Vector2(width * share, PIP.y)), lit, true)
+	draw_rect(Rect2(Vector2(left, top), Vector2(width, PIP.y)), edge, false, 1.0)
 	var reading: String = "%s  %d" % [label, maxi(hp, 0)]
 	var name_colour: Color = Color(edge.r, edge.g, edge.b, _alpha)
 	var name_x: float = MARGIN if not right else size.x - MARGIN - Ui.width_of(reading, Ui.ROW)
-	Ui.write_over(self, Vector2(name_x, TOP + PIP.y + 13.0), reading, Ui.ROW, name_colour)
+	Ui.write_over(self, Vector2(name_x, top + PIP.y + 13.0), reading, Ui.ROW, name_colour)
 	if not right:
 		draw_rect(Rect2(Vector2(MARGIN, TOP + PIP.y + 2.0), Vector2(width, 1.0)), edge, true)
 
@@ -266,6 +294,13 @@ func _draw_long_bar(
 
 func is_up() -> bool:
 	return visible and not _reading.is_empty()
+
+
+## How many health bars are drawn: yours, and one per foe (O6).
+func bars_shown() -> int:
+	if not is_up():
+		return 0
+	return 1 + maxi(_foes().size(), 1)
 
 
 func pips_shown(side: StringName) -> int:
