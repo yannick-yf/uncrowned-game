@@ -364,7 +364,7 @@
         {
           "intent": "ask_cinderworks",
           "text": "What do you sell, and to who?",
-          "reply": "Scrap metal. I sell it to the ironworks west of here. 2 copper coins a sack. They never ask where it came from.",
+          "reply": "Scrap metal. I sell it to the ironworks north of here, up the road. 2 copper coins a sack. They never ask where it came from.",
           "costs": "goodwill"
         }
       ],

@@ -364,7 +364,7 @@
         {
           "intent": "ask_cinderworks",
           "text": "Vous vendez quoi, et à qui ?",
-          "reply": "De la ferraille. Je la vends aux forges, à l'ouest d'ici. 2 pièces de cuivre le sac. Ils ne demandent jamais d'où ça vient.",
+          "reply": "De la ferraille. Je la vends aux forges, au nord d'ici, en remontant la route. 2 pièces de cuivre le sac. Ils ne demandent jamais d'où ça vient.",
           "costs": "goodwill"
         }
       ],
