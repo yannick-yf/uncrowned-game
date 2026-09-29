@@ -232,8 +232,10 @@ three OFF lines (four until S1 took Attunement and its two terrain tests away; t
 has not drawn** — a blow (`traveler_walk_frames.tres` holds idle and walk in four
 directions and no attack, no guard and no flinch, F5, 2026-09-19), a beast (the wolf, ours,
 2026-09-26) and a grave (the cemetery's stones are his boulder made small, O13,
-2026-09-29). The procedural world prints the same three, plus **twenty-eight** that say
-the works' furnaces, its yard and the wolf packs stand on his map and not on the 2D one.
+2026-09-29). The procedural world prints the same three, plus **thirty-one** that say
+the works' furnaces, its yard, the wolf packs and the opening's last two stages stand on
+his map and not on the 2D one, and five OFF lines — the baked run's three, and two claims
+about the hail's ground that only his map's layout can make.
 
 ### Committing — read this before your first `git commit`
 

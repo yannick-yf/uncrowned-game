@@ -1722,7 +1722,7 @@ north along his road with no marker, the departure for the Cinderworks; Wren's
 *"west of here"* fixed (the works are north on the baked map). The drafts from O1, O8,
 O9, O10 and O16 are replaced — they are marked as drafts so none ships.
 
-### O20 · The first fifteen minutes, played headless
+### O20 · The first fifteen minutes, played headless — **built 2026-09-29** (with draft lines)
 
 Est. 8 h. Depends on: O8 onwards, grown as each step lands; finished after O19.
 
@@ -1733,6 +1733,17 @@ names the stage; a replay and a save round trip equal at the end; a table of wal
 fighting and reading time per stage, and damage taken against 100 HP and against 30.
 **Built from O8 with draft lines**, so stalls surface early rather than at the end. The
 procedural world plays what it has and prints DEBT for the rest.
+
+**Built.** `tools/opening_run.gd` (`OpeningRun`, played by `tools/play_opening.gd`) and
+the SLOW `test/test_first_minutes.gd`: eleven stages, each walk with three times its
+path at the world's pace plus thirty seconds before the watchdog names the stage; the
+night a rest passes is left out of the table, because the person at the keys does not
+spend it. **What the first run says** (2026-09-29, drafts in place): 72 s of walking,
+32 s of fighting, about 56 s of reading — **under three minutes played fast**, against
+the ten to fifteen the demo wants; and **at 30 HP the wolves before the bridge kill
+you** — they take 30 in one fight, the drills' three mended before it. Both are S4's and
+the words' to settle, not this tool's; it says them after every change. It must be run
+again when O19's words are in.
 
 ### O21 · Photographs and a fresh-eyes review
 
