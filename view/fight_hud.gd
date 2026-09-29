@@ -149,6 +149,18 @@ func _foes() -> Array[Dictionary]:
 	return out
 
 
+## **The foes whose bars are drawn**: the ones still standing, and everybody through the
+## beat that ends the fight (T9). At the works' gate the yard sends a man a round and
+## every fallen one kept his empty bar, so the list ran down the screen.
+func _standing_foes() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var settling: bool = int(_reading.get("settling", 0)) > 0
+	for row: Dictionary in _foes():
+		if settling or not bool(row.get("his_down", false)):
+			out.append(row)
+	return out
+
+
 ## The drill's card: what it is, how far you are, its steps, and what to do (O8, T8).
 func _lesson(reading: Dictionary) -> Array[Dictionary]:
 	var drill: String = String(reading.get("drill", ""))
@@ -277,8 +289,8 @@ func _draw() -> void:
 	var size: Vector2 = get_viewport_rect().size
 	var his_name: String = String(_reading.get("his_name", ""))
 	_draw_bar(&"mine", int(_reading.get("my_max", 10)), Text.of(&"fight.you"), MINE, false, size)
-	var foes: Array[Dictionary] = _foes()
-	if foes.is_empty():
+	var foes: Array[Dictionary] = _standing_foes()
+	if _foes().is_empty():
 		_draw_bar(&"his", int(_reading.get("his_max", 10)), his_name, HIS, true, size)
 	for index: int in foes.size():
 		var row: Dictionary = foes[index]
@@ -424,7 +436,7 @@ func is_up() -> bool:
 func bars_shown() -> int:
 	if not is_up():
 		return 0
-	return 1 + maxi(_foes().size(), 1)
+	return 1 + (maxi(_standing_foes().size(), 1) if not _foes().is_empty() else 1)
 
 
 ## The keys the fight offers: the gift's among them only for somebody she gave it to, and

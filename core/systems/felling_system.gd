@@ -63,7 +63,9 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	#    An animal in a wood offends nobody, which is why the wood is where the game
 	#    lets you practise.
 	var cast := sim.store(&"cast") as Cast
-	if cast == null or cast.get_npc(kind) == null:
+	# A person is somebody the cast names — or a man nobody names, a works guard sent from
+	# the yard (T9), whose killing is a killing all the same.
+	if cast == null or (cast.get_npc(kind) == null and not DuelRules.is_person(kind)):
 		return
 	var here: StringName = world.region().zone_at(world.player_tile())
 	if here == &"":

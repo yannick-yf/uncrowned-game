@@ -58,6 +58,7 @@ const AROUND: Array[Vector2i] = [
 static var _table: Dictionary = {}
 static var _fighters: Dictionary = {}
 static var _drills: Dictionary = {}
+static var _reinforcements: Dictionary = {}
 
 
 static func table() -> Dictionary:
@@ -80,6 +81,7 @@ static func _read() -> void:
 	_table = (root.get("table", {}) as Dictionary).duplicate()
 	_fighters = (root.get("fighters", {}) as Dictionary).duplicate(true)
 	_drills = (root.get("drills", {}) as Dictionary).duplicate(true)
+	_reinforcements = (root.get("reinforcements", {}) as Dictionary).duplicate(true)
 
 
 ## **A test seam, and it is only that.** K2's check is that *editing the table alone*
@@ -99,6 +101,7 @@ static func forget() -> void:
 	_table = {}
 	_fighters = {}
 	_drills = {}
+	_reinforcements = {}
 
 
 static func number(key: String, fallback: int = 0) -> int:
@@ -188,12 +191,51 @@ static func kind_of(who: StringName) -> StringName:
 	return StringName(String(who).get_slice("#", 0))
 
 
+## **The trade, with the placing taken off too** (T9): the cast's strangers are
+## `gatekeeper@1`, `watchman@2` — one trade, placed several times — and the table speaks
+## of the trade.
+static func trade_of(who: StringName) -> StringName:
+	return StringName(String(kind_of(who)).get_slice("@", 0))
+
+
 static func _about(who: StringName) -> Dictionary:
 	var all: Dictionary = fighters()
 	var kind: String = String(kind_of(who))
 	if all.has(kind):
 		return all[kind] as Dictionary
+	var trade: String = String(trade_of(who))
+	if all.has(trade):
+		return all[trade] as Dictionary
 	return all.get("_default", {}) as Dictionary
+
+
+## **A man and not a beast, though nobody the cast names** (T9): a works guard. Killing
+## one is a killing, with its deed.
+static func is_person(who: StringName) -> bool:
+	return bool(_about(who).get("person", false))
+
+
+## **Who answers an attack on somebody of this trade** (T9), as its row of
+## `content/duel.json`'s `reinforcements`, or empty.
+static func reinforcement(trade: StringName) -> Dictionary:
+	if _table.is_empty():
+		_read()
+	return _reinforcements.get(String(trade), {}) as Dictionary
+
+
+## **The free tile nearest a point**, searched ring by ring in `AROUND`'s fixed order, so
+## the same ground and the same fighters give the same tile in every replay (T9).
+static func free_near(region: Region, point: Vector2i, taken: Dictionary) -> Vector2i:
+	if region == null:
+		return point
+	if region.is_passable(point) and not taken.has(point):
+		return point
+	for ring: int in range(1, 12):
+		for step: Vector2i in AROUND:
+			var candidate: Vector2i = point + step * ring
+			if region.is_passable(candidate) and not taken.has(candidate):
+				return candidate
+	return point
 
 
 ## How much health somebody brings to a fight. **The player is not asked** — he brings

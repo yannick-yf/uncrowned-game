@@ -77,6 +77,7 @@
   "drill.hint.gift_too_far": "Trop loin pour le don : {0} cases au plus.",
   "drill.hint.gift_resting": "Le don doit se reposer un tour. Appuyez sur O pour attendre, ou déplacez-vous.",
   "drill.hint.cast_now": "Elle est à portée du don. Appuyez sur I.",
+  "fighter.works_guard": "Garde de l'usine",
   "duel.your_turn": "À vous",
   "duel.his_turn": "À {0}",
   "hud.regard": ", {0}",

@@ -92,31 +92,37 @@ static func load_from(path: String) -> Cast:
 				"text": String(alt.get("text", "")),
 			})
 		for entry: Variant in (row.get("options", []) as Array):
-			var data: Dictionary = entry as Dictionary
-			var option := DialogueOption.new()
-			option.intent = StringName(data.get("intent", ""))
-			option.text = String(data.get("text", ""))
-			option.reply = String(data.get("reply", ""))
-			option.tag = StringName(data.get("tag", ""))
-			option.teaches = StringName(data.get("teaches", ""))
-			option.requires = StringName(data.get("requires", ""))
-			option.hides_after = StringName(data.get("hides_after", ""))
-			option.requires_condition = StringName(data.get("requires_condition", ""))
-			option.forbids_condition = StringName(data.get("forbids_condition", ""))
-			option.costs = StringName(data.get("costs", ""))
-			option.repeatable = bool(data.get("repeatable", false))
-			option.causes = StringName(data.get("causes", ""))
-			option.joins = StringName(data.get("joins", ""))
-			option.fights = StringName(data.get("fights", ""))
-			option.spar = bool(data.get("spar", false))
-			option.drill = StringName(data.get("drill", ""))
-			option.gives = StringName(data.get("gives", ""))
-			option.requires_also = StringName(data.get("requires_also", ""))
-			npc.options.append(option)
+			npc.options.append(_option(entry as Dictionary))
 		cast.npcs[npc.id] = npc
 
 	cast._load_strangers(root.get("strangers", {}) as Dictionary)
 	return cast
+
+
+## **One line of a sheet, as an option** — the same reader for the named cast and for
+## the strangers' trades, so a stranger's line can do everything a named person's can
+## (T9: the gatekeeper's line starts a fight; it was read with half the fields before).
+static func _option(data: Dictionary) -> DialogueOption:
+	var option := DialogueOption.new()
+	option.intent = StringName(data.get("intent", ""))
+	option.text = String(data.get("text", ""))
+	option.reply = String(data.get("reply", ""))
+	option.tag = StringName(data.get("tag", ""))
+	option.teaches = StringName(data.get("teaches", ""))
+	option.requires = StringName(data.get("requires", ""))
+	option.hides_after = StringName(data.get("hides_after", ""))
+	option.requires_condition = StringName(data.get("requires_condition", ""))
+	option.forbids_condition = StringName(data.get("forbids_condition", ""))
+	option.costs = StringName(data.get("costs", ""))
+	option.repeatable = bool(data.get("repeatable", false))
+	option.causes = StringName(data.get("causes", ""))
+	option.joins = StringName(data.get("joins", ""))
+	option.fights = StringName(data.get("fights", ""))
+	option.spar = bool(data.get("spar", false))
+	option.drill = StringName(data.get("drill", ""))
+	option.gives = StringName(data.get("gives", ""))
+	option.requires_also = StringName(data.get("requires_also", ""))
+	return option
 
 
 ## Where somebody stands, from their anchor in `content/places.json` (M1a). Resolved
@@ -167,21 +173,7 @@ func _load_strangers(section: Dictionary) -> void:
 				"text": String(alt.get("text", "")),
 			})
 		for option_entry: Variant in (row.get("options", []) as Array):
-			var data: Dictionary = option_entry as Dictionary
-			var option := DialogueOption.new()
-			option.intent = StringName(data.get("intent", ""))
-			option.text = String(data.get("text", ""))
-			option.reply = String(data.get("reply", ""))
-			option.tag = StringName(data.get("tag", ""))
-			option.teaches = StringName(data.get("teaches", ""))
-			option.requires = StringName(data.get("requires", ""))
-			option.hides_after = StringName(data.get("hides_after", ""))
-			option.requires_condition = StringName(data.get("requires_condition", ""))
-			option.forbids_condition = StringName(data.get("forbids_condition", ""))
-			option.costs = StringName(data.get("costs", ""))
-			option.repeatable = bool(data.get("repeatable", false))
-			option.causes = StringName(data.get("causes", ""))
-			npc.options.append(option)
+			npc.options.append(_option(option_entry as Dictionary))
 		npcs[npc.id] = npc
 
 

@@ -88,6 +88,23 @@ func test_walking_out_of_a_fight_does_not_say_you_are_down() -> void:
 	hud.free()
 
 
+func test_the_fallen_lose_their_bars_until_the_beat() -> void:
+	# T9: at the works' gate a man joins every round, and every fallen one kept his bar.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 60, 15)
+	var rows: Array = [{"who": "gatekeeper@1", "name": "Gatekeeper", "his_hp": 0, "his_max": 15, "his_down": true}]
+	for seat: int in 6:
+		rows.append({"who": "works_guard#%d" % (seat + 1), "name": "Works guard", "his_hp": 15, "his_max": 15,
+			"his_down": seat < 2})
+	reading["fighters"] = rows
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.bars_shown(), 1 + 4, "yours and the four still standing")
+	reading["settling"] = 100
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.bars_shown(), 1 + 7, "and every one through the beat that ends it")
+	hud.free()
+
+
 func test_every_foe_has_a_bar() -> void:
 	# O6: two wolves, two bars under the one that names the fight.
 	var hud := FightHud.new()

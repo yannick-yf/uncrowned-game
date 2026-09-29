@@ -588,7 +588,11 @@ func _fighter_name(who: StringName) -> String:
 	if person != null:
 		return person.display_name
 	var key := StringName("beast.%s" % kind)
-	return Text.of(key) if Text.has(key) else String(kind).capitalize()
+	if Text.has(key):
+		return Text.of(key)
+	# A man nobody names, by his trade (T9): *un garde de l'usine*.
+	var trade := StringName("fighter.%s" % kind)
+	return Text.of(trade) if Text.has(trade) else String(kind).capitalize()
 
 
 ## The kind of beast a fighter is, or empty for a person.

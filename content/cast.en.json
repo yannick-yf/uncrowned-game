@@ -1360,6 +1360,14 @@
             "text": "Tom's taking me in.",
             "reply": "I never saw you go in. Be quick about it.",
             "requires": "cinderworks:brought_through"
+          },
+          {
+            "intent": "attack_gatekeeper",
+            "text": "(Draw on him.)",
+            "reply": "Guards! To the gate!",
+            "fights": "self",
+            "repeatable": true,
+            "_p2": "DRAFT wording (T9, 2026-09-29) - for P2. The shape: an attack on him, for real; the yard answers, a guard a round, and the fight cannot be won (QUEST_CINDERWORKS section 9)."
           }
         ],
         "_p2": "placeholder wording, 2026-09-21 (G3): the words are Yannick's (P2). What must stay is the shape - he names what he keeps, he says who gets past him and points at the weighing office, and he acknowledges either key (vouched for, or brought through) without asking about a quest."

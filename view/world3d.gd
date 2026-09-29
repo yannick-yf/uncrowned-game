@@ -1772,13 +1772,29 @@ func _sync_beasts(fighting: Dictionary) -> void:
 			continue
 		var seat := StringName(String(entry.get("who", "")))
 		here[seat] = true
+		var at: Vector2 = entry.get("at", Vector2.ZERO) as Vector2
+		# **A man nobody names is still a man** (T9): a works guard sent from the yard is
+		# his traveller, walked and struck like anybody in a fight, and gone when he falls.
+		if DuelRules.is_person(kind):
+			var man: Node3D = _beasts.get(seat, null) as Node3D
+			if man == null:
+				man = _figure()
+				man.name = "Fighting_%s" % String(seat).replace("#", "_")
+				add_child(man)
+				_beasts[seat] = man
+				_idle(man, Vector2i(0, 1))
+			_beast_at[seat] = at
+			_step_the_foe(seat, man, at, entry.get("facing", Vector2i(0, 1)) as Vector2i, entry)
+			_foot_figure(man, at + _offset_of(entry, false), _dip_of(entry, false))
+			_wear_fight_paint(man, false, entry, seat)
+			man.visible = not bool(entry.get("his_down", false))
+			continue
 		var beast: Node3D = _beasts.get(seat, null) as Node3D
 		if beast == null:
 			beast = _wolf()
 			beast.name = "Fighting_%s" % String(seat).replace("#", "_")
 			add_child(beast)
 			_beasts[seat] = beast
-		var at: Vector2 = entry.get("at", Vector2.ZERO) as Vector2
 		_beast_at[seat] = at
 		beast.position = _feet_of(at + _offset_of(entry, false))
 		var face: Vector2 = entry.get("his_face", Vector2(1, 0)) as Vector2

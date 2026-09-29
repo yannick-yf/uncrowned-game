@@ -71,6 +71,27 @@
       "spares": true,
       "purse": 0,
       "weapon": "bow"
+    },
+    "gatekeeper": {
+      "hp": 15,
+      "spares": false,
+      "purse": 3
+    },
+    "works_guard": {
+      "hp": 15,
+      "spares": false,
+      "purse": 2,
+      "person": true
+    },
+    "_guards_note": "THE WORKS' GUARDS (T9, 2026-09-29). The gatekeeper is a stranger of the cast, read by his trade ('gatekeeper@1' is a gatekeeper). A works guard is nobody the cast names - he comes from the yard - so 'person' says he is a man and not a beast: killing one is a killing, with the deed and the witnesses any killing has."
+  },
+  "_reinforcements_note": "WHO ANSWERS AN ATTACK (T9, 2026-09-29; Yannick: other guards come and must be fought, and the fight cannot be won). Keyed by the trade of the one attacked. At the end of every EVERY_ROUNDS rounds a KIND joins the fight on the free tile nearest FROM_POINT, while fewer than MOST_AT_ONCE of them are standing; each can be killed, and the fight is not won while more are coming - it ends when the player falls or leaves.",
+  "reinforcements": {
+    "gatekeeper": {
+      "kind": "works_guard",
+      "from_point": "cinderworks_gate",
+      "every_rounds": 1,
+      "most_at_once": 5
     }
   },
   "_drills_note": "THE TUTORIAL'S DRILLS (O8, 2026-09-29): Yannick's Bannerlord training grounds, one workshop a weapon. A drill is a spar with a lesson: its MASTER acts first and walks STAND_OFF tiles away before the first turn - further than one turn can close and strike, so the first thing it teaches is to move; the master's blows cost DAMAGE; it is PASSED when the player reaches COUNT of its GOAL (sword blows, arrows or spells that land) and FAILED after ROUNDS rounds without; the master mends you after either. Nothing in a drill can kill anybody: the master's blows mend, and yours stop short of his last point (the review of O21).",

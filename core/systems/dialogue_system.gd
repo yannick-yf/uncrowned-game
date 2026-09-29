@@ -183,8 +183,11 @@ func _choose(
 		# Derived, not submitted: the player's event was the line they chose, and the
 		# fight is the world's answer to it. Replay recomputes this from the choice,
 		# so the log holds one intent rather than an intent and a fight.
+		# `self` is the one speaking (T9): a stranger's trade is one sheet for every placing
+		# of it, so the line cannot name which gatekeeper it is.
+		var against: StringName = npc.id if option.fights == &"self" else option.fights
 		var began: Dictionary = {
-			"opponent": String(option.fights), "asked_by": String(intent),
+			"opponent": String(against), "asked_by": String(intent),
 			"spar": option.spar,
 			# His answer, which the closing box would otherwise swallow (the review of O21).
 			"said": spoken, "said_by": String(npc.id),

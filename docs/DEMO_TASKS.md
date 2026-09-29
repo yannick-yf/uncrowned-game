@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1–T8 are built** (T7's rules with T5, its words with T8). T9 and T10 remain. Then P2, with him, then C2–C4.
+> answers the same evening. **T1–T9 are built** (T7's rules with T5, its words with T8). T10 remains. Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -2067,7 +2067,24 @@ guided. `tools/play_opening.gd` plays the three drills, magic included.
 **Check:** `play_opening` passes all three; frames of each drill's first turn and of a
 hint, in both languages; Yannick plays it.
 
-### T9 · Attack the gatekeeper, and the guards keep coming
+### T9 · Attack the gatekeeper, and the guards keep coming — **built 2026-09-29**
+
+> **Built.** The gatekeeper has a line that draws on him (*(Tirer l'épée contre lui.)*,
+> a draft for P2): `fights: "self"`, because a stranger's trade is one sheet for every
+> placing of it — and the strangers' lines are now read by the same reader as the named
+> cast's (`Cast._option`), which had read them with half the fields. `content/duel.json`
+> gains `reinforcements`, keyed by the trade of the one attacked (`DuelRules.trade_of`):
+> for a gatekeeper, **a works guard joins at the end of every round**, on the free tile
+> nearest the gate (`DuelRules.free_near`), while fewer than five stand. They come
+> through the one-tile passage one at a time, which is what a gate is. Each can be
+> killed, and **a works guard is a person** (`person: true`): killing one is a killing,
+> with its deed. The fight is not won while more are coming; it ends when you fall or
+> leave, and the gate stays shut whoever falls — it is a fact, not a man (`WardRules`).
+> Seen: the guards are his traveller (they were drawn as wolves, being nobody the cast
+> names), named *Garde de l'usine*; the fallen lose their bars until the beat, or the
+> list ran down the screen. Measured with PRESS from (316, 208): a guard a round, five
+> standing from round five, the player losing about ten a round — at 100 HP he falls
+> near round fifteen. Frames at rounds 1, 3 and 6, French and English.
 
 Est. 8–10 h. Depends on: T5.
 

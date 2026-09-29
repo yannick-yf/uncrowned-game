@@ -174,6 +174,17 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	duel.spar = bool(event.data.get("spar", false))
 	duel.drill = StringName(String(event.data.get("drill", "")))
 	duel.tally = 0
+	# **Who answers the attack** (T9): the yard, for a gatekeeper — read from the trade of
+	# the one this fight is against.
+	duel.reinforced_by = Duel.NOBODY
+	var answer: Dictionary = DuelRules.reinforcement(DuelRules.trade_of(against[0]))
+	if not answer.is_empty():
+		duel.reinforced_by = StringName(String(answer.get("kind", "")))
+		duel.reinforce_from = region.resolve({"point": StringName(String(answer.get("from_point", "")))})
+		if duel.reinforce_from == Region.NOWHERE:
+			duel.reinforce_from = duel.fighters[1].at
+		duel.reinforce_every = maxi(int(answer.get("every_rounds", 1)), 1)
+		duel.reinforce_most = maxi(int(answer.get("most_at_once", 1)), 1)
 	duel.said = String(event.data.get("said", ""))
 	duel.said_by = StringName(String(event.data.get("said_by", "")))
 	duel.master_at = Duel.NOWHERE
@@ -560,6 +571,7 @@ func _next_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 				wrapped = true
 				duel.round_number += 1
 				_settle_leaving(sim, duel)
+				_reinforce(sim, duel, world)
 				if _over(sim, duel):
 					return
 				# And failed when its rounds run out first (O8).
@@ -611,6 +623,9 @@ func _over(sim: Sim, duel: Duel) -> bool:
 		_decided(sim, duel, &"lost" if mine.how_out == &"down" else &"left")
 		return true
 	if duel.foes_of(mine.who).is_empty():
+		# **Not won while more are coming** (T9): the yard sends the next at the round's end.
+		if duel.reinforced_by != Duel.NOBODY:
+			return false
 		# A drill won by beating the partner before the lesson is learnt is not passed
 		# (O9): the goal is the lesson, not the yield.
 		var missed: bool = duel.drill != Duel.NOBODY and duel.tally < DuelRules.drill_count(duel.drill)
@@ -673,6 +688,7 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 		world.hurt(owed, sim.step, false)
 	duel.spar = false
 	duel.drill = Duel.NOBODY
+	duel.reinforced_by = Duel.NOBODY
 	duel.master_at = Duel.NOWHERE
 	duel.said = ""
 	duel.said_by = Duel.NOBODY
@@ -688,6 +704,38 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 		"opponent": who, "how": String(how), "asked_by": String(asked_by), "turns": turns,
 		"drill": String(drill), "passed": drill != Duel.NOBODY and how == &"won",
 	})
+
+
+## **A guard joins from the yard** (T9) at the end of every `reinforce_every` rounds, on
+## the free tile nearest where they come from, while fewer than `reinforce_most` stand.
+## Last in the order of play, like anybody who arrives late; seated `works_guard#2`,
+## `#3`… so each is a fighter of his own. Derived: a replay sends the same men.
+func _reinforce(sim: Sim, duel: Duel, world: WorldState) -> void:
+	if duel.reinforced_by == Duel.NOBODY or duel.outcome != Duel.NOBODY or world == null:
+		return
+	if duel.round_number % duel.reinforce_every != 0:
+		return
+	var standing: int = 0
+	var seats: int = 0
+	for fighter: DuelFighter in duel.fighters:
+		if DuelRules.kind_of(fighter.who) != duel.reinforced_by:
+			continue
+		seats += 1
+		if fighter.alive():
+			standing += 1
+	if standing >= duel.reinforce_most:
+		return
+	var him := DuelFighter.new()
+	him.who = duel.reinforced_by if seats == 0 else StringName("%s#%d" % [duel.reinforced_by, seats + 1])
+	him.hp = DuelRules.hp_of(duel.reinforced_by)
+	him.max_hp = him.hp
+	him.weapon = DuelRules.weapon_of(duel.reinforced_by)
+	var taken: Dictionary = _taken(duel, null)
+	him.at = DuelRules.free_near(world.region(), duel.reinforce_from, taken)
+	var mine: DuelFighter = duel.me()
+	him.facing = DuelRules.facing_from(him.at, mine.at if mine != null else him.at)
+	duel.fighters.append(him)
+	sim.derive(&"duel_joined", {"who": String(him.who), "x": him.at.x, "y": him.at.y})
 
 
 ## Every tile somebody is standing on but this one, so nobody walks through anybody.

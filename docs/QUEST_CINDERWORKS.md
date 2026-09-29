@@ -216,6 +216,6 @@ kept under their questions.
    > **Answered: other guards come, and they must be fought — and the fight cannot be
    > won.** A guard joins from the yard every round for as long as it lasts, each one
    > can be killed (nobody is made invulnerable, SPECS §1), and it ends when the player
-   > falls or leaves. Task T9 of `DEMO_TASKS.md`.
+   > falls or leaves. Task T9 of `DEMO_TASKS.md`, **built the same evening**.
 4. **Names.** Tom and Drissa are Yannick's, and the rest of the cast's names have been
    ruled to need review.
