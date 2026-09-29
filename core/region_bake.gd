@@ -574,7 +574,7 @@ static func compose_yards(landscape: Dictionary, heights: PackedFloat32Array,
 		var yard: Dictionary = raw as Dictionary
 		var composed: Dictionary = YardRules.compose(yard, catalog, wet, his)
 		for piece: Dictionary in (composed["pieces"] as Array):
-			piece["yard"] = String(yard.get("place", ""))
+			piece["yard"] = YardRules.name_of(yard)
 			(out["pieces"] as Array).append(piece)
 		(out["report"] as Array).append_array(composed["report"] as Array)
 	return out
@@ -601,6 +601,11 @@ static func compose_yards(landscape: Dictionary, heights: PackedFloat32Array,
 ## ground inside becomes TOWN — the 2D window already draws the works' TOWN as cinder —
 ## and the whole plate, walls and his buildings included, is recorded for the 3D window
 ## to lay his packed earth over.
+##
+## **A yard on a point** (O13, 2026-09-29) is his pieces and nothing else: no gate, no
+## ward, no floor — the cemetery is dressed, not closed. It is stricter about his trail:
+## a place's wall may run along a street's verge, but nothing of a point's stands on a
+## road tile at all, and that includes the earth laid flat over a grave.
 func _yards(brief: Dictionary, pieces: Array) -> void:
 	var by_yard: Dictionary = {}
 	for raw: Variant in pieces:
@@ -611,8 +616,12 @@ func _yards(brief: Dictionary, pieces: Array) -> void:
 		(by_yard[key] as Array).append(piece)
 	for entry: Variant in (brief.get("yards", []) as Array):
 		var row: Dictionary = entry as Dictionary
-		var id := StringName(String(row.get("place", "")))
-		if not places.has(id):
+		var id := StringName(YardRules.name_of(row))
+		var on_a_point: bool = not row.has("place")
+		if on_a_point and not points.has(id):
+			report.append("yard  %-12s no such point, skipped" % id)
+			continue
+		if not on_a_point and not places.has(id):
 			report.append("yard  %-12s no such place, skipped" % id)
 			continue
 		var ward := StringName(String(row.get("ward", "%s_gate" % id)))
@@ -627,17 +636,21 @@ func _yards(brief: Dictionary, pieces: Array) -> void:
 			var yaw: float = float(piece["yaw"])
 			var role := StringName(String(piece["role"]))
 			var origin: Vector2i = BakeRules.tile_for(xz.x, xz.y, origin_m, metres_per_tile)
+			var opens: bool = role == YardRules.ROLE_GATE or role == YardRules.ROLE_GROUND
 			var blocked: Array[Vector2i] = CatalogRules.blocked_tiles(piece.get("obstacles", []) as Array,
-				Region.NOWHERE if role == YardRules.ROLE_GATE else origin, origin_m, metres_per_tile)
+				Region.NOWHERE if opens else origin, origin_m, metres_per_tile)
+			var touched: Array[Vector2i] = blocked.duplicate()
+			if role == YardRules.ROLE_GROUND:
+				touched.append(origin)
 			var wet: Vector2i = Region.NOWHERE
 			var crossing: Vector2i = Region.NOWHERE
-			for tile: Vector2i in blocked:
+			for tile: Vector2i in touched:
 				if not region.in_bounds(tile):
 					continue
 				var here: Region.Terrain = region.terrain_at(tile)
 				if here == Region.Terrain.WATER or here == Region.Terrain.SEA:
 					wet = tile
-				elif here == Region.Terrain.ROAD and not _road_edge(tile):
+				elif here == Region.Terrain.ROAD and (on_a_point or not _road_edge(tile)):
 					crossing = tile
 			if wet != Region.NOWHERE:
 				report.append("YARD %s: %s %s at (%.1f, %.1f) m REFUSED, it stands in his river at %s"
@@ -662,6 +675,9 @@ func _yards(brief: Dictionary, pieces: Array) -> void:
 				"size": last - first + Vector2i.ONE, "xz": xz, "yaw": yaw, "scene": String(piece["scene"]),
 				"piece": String(piece["piece"]), "role": String(role), "yard": String(id),
 				"lift": float(piece.get("lift", 0.0))}
+			var scale: Vector3 = piece.get("scale", Vector3.ONE) as Vector3
+			if scale != Vector3.ONE:
+				prop["scale"] = scale
 			region.props.append(prop)
 			stood[String(piece["piece"])] = int(stood.get(String(piece["piece"]), 0)) + 1
 			if role == YardRules.ROLE_GATE:
@@ -673,8 +689,10 @@ func _yards(brief: Dictionary, pieces: Array) -> void:
 		var counts := PackedStringArray()
 		for piece_id: String in stood.keys():
 			counts.append("%d × %s" % [stood[piece_id], piece_id])
-		report.append("yard  %-12s %s stand from his catalogue%s" % [id, ", ".join(counts),
+		report.append("yard  %-12s %s stand from his catalogue and his library%s" % [id, ", ".join(counts),
 			", %d REFUSED" % refused if refused > 0 else ""])
+		if on_a_point:
+			continue
 		if passage == Region.NOWHERE:
 			report.append("YARD %s: no gate stood, so nothing is warded and the yard is not a yard" % id)
 			continue
@@ -917,6 +935,10 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 			out["xz"] = [(prop["xz"] as Vector2).x, (prop["xz"] as Vector2).y]
 			out["yaw"] = float(prop.get("yaw", 0.0))
 			out["lift"] = float(prop.get("lift", 0.0))
+			# Only when it is not his size (O13), so a piece at his size reads as before.
+			if prop.has("scale"):
+				var scale: Vector3 = prop["scale"] as Vector3
+				out["scale"] = [scale.x, scale.y, scale.z]
 		props_out.append(out)
 	var trunk_out: Array = []
 	for id: StringName in trunk:
@@ -988,6 +1010,9 @@ static func read(data: Dictionary) -> Region:
 			out["xz"] = Vector2(float(xz[0]), float(xz[1]))
 			out["yaw"] = float(prop.get("yaw", 0.0))
 			out["lift"] = float(prop.get("lift", 0.0))
+			if prop.has("scale"):
+				var scale: Array = prop["scale"] as Array
+				out["scale"] = Vector3(float(scale[0]), float(scale[1]), float(scale[2]))
 		region.props.append(out)
 	for entry: Variant in (data.get("yards", []) as Array):
 		var row: Dictionary = entry as Dictionary

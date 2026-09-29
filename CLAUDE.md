@@ -227,11 +227,13 @@ collision shapes cover, and has its catalogue and its scene hashed into the bake
 his catalogue before placing anything of his**: its `placement` note is the only document
 that says how a piece is meant to be used, and the first yard was built without it.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
-commit checks. The current baked run prints **ten** DEBT lines for **six** claims and
-three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Five claims are the map's and the brief's; the sixth is **his brother's
-figures** — `traveler_walk_frames.tres` holds idle and walk in four directions and no
-attack, no guard and no flinch, so a fight's blows are shown by moving the figure he did
-draw (2026-09-19, F5). The procedural world prints one, for the same reason.
+commit checks. The current baked run prints **eleven** DEBT lines for **eight** claims and
+three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Five claims are the map's and the brief's; three are **things his brother
+has not drawn** — a blow (`traveler_walk_frames.tres` holds idle and walk in four
+directions and no attack, no guard and no flinch, F5, 2026-09-19), a beast (the wolf, ours,
+2026-09-26) and a grave (the cemetery's stones are his boulder made small, O13,
+2026-09-29). The procedural world prints the same three, plus **twenty-eight** that say
+the works' furnaces, its yard and the wolf packs stand on his map and not on the 2D one.
 
 ### Committing — read this before your first `git commit`
 

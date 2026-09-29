@@ -89,3 +89,61 @@ func test_a_yard_composes_its_runs_its_gate_and_its_sign() -> void:
 	for piece: Dictionary in pieces:
 		assert_true(String(piece["scene"]).begins_with("res://assets/ironworks/"), "every piece is his scene")
 		assert_true(piece.has("size_m") and piece.has("lift"), "and carries his size and pivot")
+
+
+## **A yard on a point, from his library** (O13, 2026-09-29). The cemetery is no place's
+## yard and his library has no catalogue: a piece may name a library scene instead of a
+## catalogue entry, stand at many points at once, be scaled — his `boulder_round`, small,
+## is an uncut grave stone — and vary from stone to stone by a jitter seeded from the
+## yard's own name, so a re-bake stands every stone exactly where it stood.
+func test_a_library_piece_stands_at_each_of_its_points_scaled_and_jittered() -> void:
+	var yard: Dictionary = {
+		"point": "cemetery",
+		"pieces": [{"id": "graves", "library": "rocks/boulder_round", "scale": 0.3,
+			"jitter": {"yaw": 20, "scale": 0.1, "shift_m": 0.15},
+			"at": [[0.0, 0.0], [2.0, 0.0], [4.0, 0.0]]}],
+	}
+	var out: Dictionary = YardRules.compose(yard, CATALOG, _dry, [])
+	var pieces: Array = out["pieces"]
+	assert_eq(pieces.size(), 3, "one stone at each of its three points")
+	var again: Array = YardRules.compose(yard, CATALOG, _dry, [])["pieces"]
+	var yaws: Dictionary = {}
+	for i: int in pieces.size():
+		var stone: Dictionary = pieces[i]
+		assert_eq(String(stone["scene"]), "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+			"his library's scene, by its path under the library")
+		assert_eq(String(stone["piece"]), "boulder_round", "named as his scene is named")
+		var scale: Vector3 = stone["scale"] as Vector3
+		assert_true(scale.x >= 0.27 and scale.x <= 0.33 and is_equal_approx(scale.x, scale.z)
+			and is_equal_approx(scale.x, scale.y), "scaled evenly, within its jitter: %s" % scale)
+		assert_true(absf(float(stone["yaw"])) <= 20.0, "turned within its jitter")
+		var home := Vector2(2.0 * i, 0.0)
+		assert_true((stone["xz"] as Vector2).distance_to(home) <= 0.15 * sqrt(2.0) + 0.001,
+			"shifted within its jitter of where the brief put it")
+		assert_eq(stone, again[i], "and the same on every bake")
+		yaws[float(stone["yaw"])] = true
+	assert_true(yaws.size() > 1, "and the stones are not all turned alike")
+
+
+func test_a_piece_scaled_unevenly_keeps_each_axis() -> void:
+	var yard: Dictionary = {"point": "cemetery", "pieces": [
+		{"id": "earth", "piece": "enseigne_forge", "scale": [0.3, 1.0, 0.85], "xz": [1.0, 2.0]}]}
+	var stood: Dictionary = (YardRules.compose(yard, CATALOG, _dry, [])["pieces"] as Array)[0]
+	assert_eq(stood["scale"], Vector3(0.3, 1.0, 0.85), "each axis as the brief wrote it")
+	assert_eq(stood["xz"], Vector2(1.0, 2.0), "and no jitter unless asked for")
+
+
+func test_a_piece_laid_on_the_ground_stops_nobody() -> void:
+	# His turned earth is four centimetres of soil: a grave's mound, walked beside and
+	# never refused. The role says so, and the bake blocks nothing for it — not even the
+	# tile it stands on, which every other piece closes.
+	var yard: Dictionary = {"point": "cemetery", "pieces": [
+		{"id": "earth", "piece": "enseigne_forge", "ground": true, "xz": [1.0, 2.0]}]}
+	var stood: Dictionary = (YardRules.compose(yard, CATALOG, _dry, [])["pieces"] as Array)[0]
+	assert_eq(stood["role"], YardRules.ROLE_GROUND, "laid on the ground")
+
+
+func test_a_run_of_his_modules_carries_no_scale() -> void:
+	var run: Dictionary = {"id": "north", "piece": "soubassement_2m", "from_xz": [0.0, 0.0], "to_xz": [4.0, 0.0]}
+	var laid: Array[Dictionary] = YardRules.lay_run(run, CatalogRules.entry(CATALOG, "soubassement_2m"), _dry, [])
+	assert_eq(laid[0]["scale"], Vector3.ONE, "a module stands at his size")

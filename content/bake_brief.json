@@ -24,7 +24,7 @@
     {"terrain": "marsh", "place": "saltmarch", "radii_xz": [64, 44], "scaffold": true, "_why": "the marsh the port is named for"}
   ],
   "_catalogs": "His own asset catalogues, read by the bake (G1, 2026-09-21). A piece placed from one takes its footprint, its facing and what it stops from what he wrote — size_m, front +Z, ground_pivot, its collision shapes — never from a box or a tile. Paths are under prototypes/brindle_3d/.",
-  "catalogs": ["assets/ironworks/catalog.json"],
+  "catalogs": ["assets/ironworks/catalog.json", "assets/farming/catalog.json"],
   "_yards": "A yard is composed, not computed (G2–G4, 2026-09-21; it replaced a two-corner rectangle of tile-sized fence). Everything below is in HIS metres. A run lays one of his modules end marker to end marker from from_xz toward to_xz, as his own placement note says (extrémités à X = ±1 m, dupliquer pour prolonger); a run marked until: water stops on his bank. The gate is his portail_cour, its origin the middle of its 2.6 m passage: that tile stays open ground, warded, and a man stands on it. What each piece stops is what its own collision shapes cover. Two rules the bake enforces and reports: nothing stands in his river, and nothing crosses a road — a wall may run along a road's edge, and the one crossing is the gate.",
   "yards": [
     {
@@ -47,6 +47,36 @@
       "pieces": [
         {"id": "sign", "piece": "enseigne_forge", "xz": [254.6, 30.35], "yaw": -90,
          "_why": "in front of the wall just north of the gate, its post 0.4 m from the north gatepost and its board hung toward the gate, face to the street, as his own note places a sign: à l'entrée d'une cour, façade vers +Z"}
+      ]
+    },
+    {
+      "point": "cemetery",
+      "_why": "O13, 2026-09-29: the burned village's graveyard, where the game begins. The meadow pocket north of the start, between his trail (west and north) and his wood (east); the player wakes at its south-east corner and leaves west along the row below the graves. Dressed, not closed: a point's yard has no ward and no floor. Nothing stands on a tile of his trail — the bake refuses it by name. His pieces only; he has drawn no grave, so a grave is his boulder made small at its head, and a fresh one has his loose earth over it. Tiles are 2 m: a tile's centre is 2t - 383 m.",
+      "runs": [
+        {"id": "north_west", "piece": "cloture_rustique_2m", "from_xz": [167.5, 269], "to_xz": [171.5, 269],
+         "_why": "his meadow fence on the graveyard's north side, from half a metre past the trail's last tile (275, whose centre is 167) to the gate's west post: two modules, tiles 276-277 of row 326"},
+        {"id": "north_east", "piece": "cloture_rustique_2m", "from_xz": [174.06, 269], "to_xz": [178.06, 269],
+         "_why": "from the gate's east post toward his wood: two modules, tiles 279-280"}
+      ],
+      "gate": {"piece": "portail_fermier_ouvert", "xz": [172.78, 269], "yaw": 180,
+        "_why": "his farm gate between the two runs, its 2.02 m passage on tile 278, which opens two tiles north onto his trail toward the ruins. Turned to face the trail, so its open leaves lie inside the graveyard. A point's yard wards nothing: the gate is only the way in"},
+      "pieces": [
+        {"id": "old_graves", "library": "rocks/boulder_round", "scale": [0.4, 0.75, 0.2],
+         "jitter": {"yaw": 12, "scale": 0.12, "shift_m": 0.1},
+         "at": [[169, 270.4], [171, 270.4], [173, 270.4]],
+         "_why": "the village's old dead, along row 327 (tiles 276-278), just inside the fence. His rounded boulder narrowed and stood up — 0.85 m across, 1.2 m high, a hand thick — is an uncut standing stone, set at the head (north) of each 2 m grave, one grave to a tile. Not further east: his tree's crown covers tiles 279-280 from above"},
+        {"id": "old_mounds", "piece": "jachere_irreguliere", "scale": [0.15, 0.6, 0.38], "ground": true,
+         "jitter": {"yaw": 4, "shift_m": 0.05},
+         "at": [[169, 271.4], [171, 271.4], [173, 271.4]],
+         "_why": "his fallow patch (chaumes courts et herbes clairsemées) narrowed to 0.95 x 1.94 m: an old grave gone back to dry grass. Two others were tried and read worse from the game's lens: his three-block scree pressed low looked like pebbles strewn about, and his granite shingle's mesh names his project's material path (MIGRATION_3D 9b) and does not load here"},
+        {"id": "fresh_graves", "library": "rocks/boulder_round", "scale": [0.34, 0.6, 0.17],
+         "jitter": {"yaw": 8, "scale": 0.1, "shift_m": 0.06},
+         "at": [[169, 274.4], [171, 274.4], [173, 274.4]],
+         "_why": "those the burning killed, along row 329 (tiles 276-278), the nearest graves to where the player wakes. Not further west: his hazels stand at (164.9, 276.8), (166.4, 276.6) and (167.0, 271.4), and that corner by the trail is left to them"},
+        {"id": "fresh_earth", "piece": "sol_cultive_raccord", "scale": [0.32, 1, 0.85], "yaw": 180, "ground": true,
+         "jitter": {"yaw": 4, "shift_m": 0.05},
+         "at": [[169, 275.4], [171, 275.4], [173, 275.4]],
+         "_why": "his loose-earth patch (Petit sol meuble, 4 cm) narrowed to 0.93 x 1.96 m over each fresh grave, turned so its ragged end lies under the stone. Laid on the ground: walked beside, never refused. His hazel at (172.5, 277.9) is a metre and a half past the last one's foot"}
       ]
     }
   ],

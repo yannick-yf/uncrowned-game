@@ -21,6 +21,13 @@ extends RefCounted
 const ROLE_RUN: StringName = &"run"
 const ROLE_GATE: StringName = &"gate"
 const ROLE_PIECE: StringName = &"piece"
+## A piece laid flat on his ground — his turned earth over a grave (O13) — stops nobody,
+## not even on the tile it stands on.
+const ROLE_GROUND: StringName = &"ground"
+
+## Where his library lives, in his project's own paths. The library has no catalogue;
+## a brief names a piece of it by its path under here, `rocks/boulder_round`.
+const LIBRARY: String = "res://prototype_3d/assets/library/"
 
 ## A module's axis is tested against his obstacles a little short of its ends, so two
 ## walls that merely touch end to end are not read as one standing on the other.
@@ -35,7 +42,7 @@ static func compose(yard: Dictionary, catalog: Dictionary, wet: Callable,
 		his_obstacles: Array) -> Dictionary:
 	var pieces: Array[Dictionary] = []
 	var report: Array[String] = []
-	var place: String = String(yard.get("place", "?"))
+	var place: String = name_of(yard)
 	for raw: Variant in (yard.get("runs", []) as Array):
 		var run: Dictionary = raw as Dictionary
 		var id: String = String(run.get("id", "run"))
@@ -66,13 +73,63 @@ static func compose(yard: Dictionary, catalog: Dictionary, wet: Callable,
 			pieces.append(_placement(asset, _xz(gate["xz"]), float(gate.get("yaw", 0.0)), ROLE_GATE, "gate"))
 	for raw: Variant in (yard.get("pieces", []) as Array):
 		var single: Dictionary = raw as Dictionary
-		var asset: Dictionary = CatalogRules.entry(catalog, String(single.get("piece", "")))
+		var asset: Dictionary = library_entry(String(single["library"])) if single.has("library") \
+			else CatalogRules.entry(catalog, String(single.get("piece", "")))
 		if asset.is_empty():
 			report.append("YARD %s: no piece '%s' in his catalogue" % [place, single.get("piece", "")])
 			continue
-		pieces.append(_placement(asset, _xz(single["xz"]), float(single.get("yaw", 0.0)), ROLE_PIECE,
-			String(single.get("id", String(asset["id"])))))
+		var id: String = String(single.get("id", String(asset["id"])))
+		var role: StringName = ROLE_GROUND if bool(single.get("ground", false)) else ROLE_PIECE
+		var points: Array = single["at"] as Array if single.has("at") else [single["xz"]]
+		var jitter: Dictionary = single.get("jitter", {}) as Dictionary
+		for i: int in points.size():
+			var seed: String = "%s/%s/%d" % [place, id, i]
+			var xz: Vector2 = _xz(points[i]) + Vector2(
+				_wobble(seed, "x") * float(jitter.get("shift_m", 0.0)),
+				_wobble(seed, "z") * float(jitter.get("shift_m", 0.0)))
+			var yaw: float = float(single.get("yaw", 0.0)) + _wobble(seed, "yaw") * float(jitter.get("yaw", 0.0))
+			var placed: Dictionary = _placement(asset, xz, yaw, role, id)
+			placed["scale"] = _scale(single.get("scale", 1.0)) \
+				* (1.0 + _wobble(seed, "scale") * float(jitter.get("scale", 0.0)))
+			pieces.append(placed)
 	return {"pieces": pieces, "report": report}
+
+
+## What a yard is called: the place it closes, or the point it stands on (O13).
+static func name_of(yard: Dictionary) -> String:
+	return String(yard.get("place", yard.get("point", "?")))
+
+
+## A piece of his library as though his catalogue listed it: its id is his scene's name,
+## and like everything of his it stands on its pivot (`Pivot au sol, façade vers +Z`,
+## his own note on every one). Its size is not known without loading it, and nothing
+## here needs it — what it stops is what its collision shapes cover.
+static func library_entry(path: String) -> Dictionary:
+	if path == "":
+		return {}
+	return {"id": path.get_file(), "scene": LIBRARY + path + ".tscn", "ground_pivot": true}
+
+
+## **A stone's own small difference from the next**, in [-1, 1], from the yard's name,
+## the piece and its index — so the same brief stands every stone where it stood, and
+## no two turn alike. A hash rather than `sim.rng`: this is the bake, not the game, and a
+## hash of a name is the one seed that cannot drift (invariant 12's spirit).
+##
+## Mixed before it is read: two names a digit apart hash a small, even step apart, and
+## the first stones stood turned 2°, 7°, 11°, 16°, 21° — a fan, not a graveyard.
+static func _wobble(seed: String, axis: String) -> float:
+	var h: int = ("%s:%s" % [seed, axis]).hash() & 0xFFFFFFFF
+	h = ((h ^ (h >> 16)) * 0x45d9f3b) & 0xFFFFFFFF
+	h = ((h ^ (h >> 16)) * 0x45d9f3b) & 0xFFFFFFFF
+	h = h ^ (h >> 16)
+	return float(h & 0xFFFF) / 32767.5 - 1.0
+
+
+static func _scale(value: Variant) -> Vector3:
+	if value is Array:
+		var axes: Array = value as Array
+		return Vector3(float(axes[0]), float(axes[1]), float(axes[2]))
+	return Vector3.ONE * float(value)
 
 
 ## One run as modules. Each module is `from` plus a whole number of pitches, so the run
@@ -120,6 +177,7 @@ static func _placement(asset: Dictionary, xz: Vector2, yaw: float, role: StringN
 		"id": id,
 		"size_m": [size.x, size.y, size.z],
 		"lift": CatalogRules.lift_m(asset),
+		"scale": Vector3.ONE,
 	}
 
 

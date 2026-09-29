@@ -23,6 +23,7 @@
     "planning/royal-city.json": "b771137633194e8396e5b8fa4a4b33fd7a1a07e9b9e2567f68dc781b944ba84d",
     "planning/farming-town.json": "418254fa994cac06e3c5007938a98437b3404d0f1cbb77785275a097c2b29da7",
     "assets/ironworks/catalog.json": "ab160c68c83bf56fcd1f03567783695517bb2d7f237c4ac454dfa286f5ade6e0",
+    "assets/farming/catalog.json": "6313a1a4b85699d86ba68a3e752d39b71530f258f9d2a6a6244778a2872e7b82",
     "assets/ironworks/village/logis_porte_basse.tscn": "b469908f6b7fcc7abb4a96f87e4714817c5ea8aefdbf40ec448919f02c0a7f88",
     "assets/ironworks/village/maison_aux_deux_volumes.tscn": "8dba5324e4670715bfffb95bad9ce2b64563c43c948bc7fa38ce9eeb41c53dcb",
     "assets/ironworks/village/baraquement_des_equipes.tscn": "4a1f1b8133fdd9f741b07eb690582d603eff79fa0b305567bdc1e7250260f39e",
@@ -74,7 +75,12 @@
     "assets/ironworks/modules/soubassement_2m.tscn": "9bec1ca4c88fa81c0d83c095bbb161175b8b741989ae438acc00c920dea6766a",
     "assets/ironworks/modules/cloture_2m.tscn": "d24064705308e0e532436d94b39bf352e549b84d85e44536ae40e548ab9e2545",
     "assets/ironworks/modules/portail_cour.tscn": "7a663dbc761bb59b8b44e300a4776627b71f5c6b9462ad8bb2526f95878bbf4b",
-    "content/bake_brief.json": "465b86adda6f0550ecfd2545ddc1284ceee5728e1f00f47dd676055fb45010a4"
+    "assets/farming/modules/cloture_rustique_2m.tscn": "be065ca5e0012dabaf9450156bfd699f0e6e0db330930013117a3a683a14943a",
+    "assets/farming/modules/portail_fermier_ouvert.tscn": "1d24889512b29c3fe8ab85777ea14f7666991bb3d1e8cd11dd5f64a799ff82ae",
+    "prototype_3d/assets/library/rocks/boulder_round.tscn": "3850fc3355a10ea6356ecf7f555d865e84fecd4b956ae8db980ce6eedafc02a6",
+    "assets/farming/champs/jachere_irreguliere.tscn": "167b44a84ddf0ce514afecbaad21f2be62936b9ba177c3ec3ab1d29a5afa566d",
+    "assets/farming/champs/sol_cultive_raccord.tscn": "6056aba6665c6f183afb14c34aefbf64cb5fe7482e35c1e44ae45dbb3aada6dd",
+    "content/bake_brief.json": "64200221c045cdb9d00be649b0c98140f31f64bec09a5e991903ea446057a96a"
   },
   "width": 384,
   "height": 384,
@@ -3525,6 +3531,423 @@
       ],
       "yaw": -90.0,
       "lift": 0.0
+    },
+    {
+      "kind": "cloture_rustique_2m",
+      "at": [
+        276,
+        326
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/modules/cloture_rustique_2m.tscn",
+      "piece": "cloture_rustique_2m",
+      "role": "run",
+      "yard": "cemetery",
+      "xz": [
+        168.5,
+        269.0
+      ],
+      "yaw": 0.0,
+      "lift": 0.0
+    },
+    {
+      "kind": "cloture_rustique_2m",
+      "at": [
+        277,
+        326
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/modules/cloture_rustique_2m.tscn",
+      "piece": "cloture_rustique_2m",
+      "role": "run",
+      "yard": "cemetery",
+      "xz": [
+        170.5,
+        269.0
+      ],
+      "yaw": 0.0,
+      "lift": 0.0
+    },
+    {
+      "kind": "cloture_rustique_2m",
+      "at": [
+        279,
+        326
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/modules/cloture_rustique_2m.tscn",
+      "piece": "cloture_rustique_2m",
+      "role": "run",
+      "yard": "cemetery",
+      "xz": [
+        175.059997558594,
+        269.0
+      ],
+      "yaw": 0.0,
+      "lift": 0.0
+    },
+    {
+      "kind": "cloture_rustique_2m",
+      "at": [
+        280,
+        326
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/modules/cloture_rustique_2m.tscn",
+      "piece": "cloture_rustique_2m",
+      "role": "run",
+      "yard": "cemetery",
+      "xz": [
+        177.059997558594,
+        269.0
+      ],
+      "yaw": 0.0,
+      "lift": 0.0
+    },
+    {
+      "kind": "portail_fermier_ouvert",
+      "at": [
+        278,
+        326
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/modules/portail_fermier_ouvert.tscn",
+      "piece": "portail_fermier_ouvert",
+      "role": "gate",
+      "yard": "cemetery",
+      "xz": [
+        172.779998779297,
+        269.0
+      ],
+      "yaw": 180.0,
+      "lift": 0.0
+    },
+    {
+      "kind": "boulder_round",
+      "at": [
+        276,
+        327
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "piece": "boulder_round",
+      "role": "piece",
+      "yard": "cemetery",
+      "xz": [
+        168.960906982422,
+        270.318023681641
+      ],
+      "yaw": 0.312932021057449,
+      "lift": 0.0,
+      "scale": [
+        0.395169615745544,
+        0.740943014621735,
+        0.197584807872772
+      ]
+    },
+    {
+      "kind": "boulder_round",
+      "at": [
+        277,
+        327
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "piece": "boulder_round",
+      "role": "piece",
+      "yard": "cemetery",
+      "xz": [
+        171.080291748047,
+        270.383239746094
+      ],
+      "yaw": -10.0949416342412,
+      "lift": 0.0,
+      "scale": [
+        0.376073598861694,
+        0.705137968063354,
+        0.188036799430847
+      ]
+    },
+    {
+      "kind": "boulder_round",
+      "at": [
+        278,
+        327
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "piece": "boulder_round",
+      "role": "piece",
+      "yard": "cemetery",
+      "xz": [
+        172.934417724609,
+        270.34130859375
+      ],
+      "yaw": -9.60714122224766,
+      "lift": 0.0,
+      "scale": [
+        0.370845526456833,
+        0.695335328578949,
+        0.185422763228416
+      ]
+    },
+    {
+      "kind": "jachere_irreguliere",
+      "at": [
+        276,
+        327
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/champs/jachere_irreguliere.tscn",
+      "piece": "jachere_irreguliere",
+      "role": "ground",
+      "yard": "cemetery",
+      "xz": [
+        168.998229980469,
+        271.380493164062
+      ],
+      "yaw": -0.715770199130236,
+      "lift": 0.0,
+      "scale": [
+        0.150000005960464,
+        0.600000023841858,
+        0.379999995231628
+      ]
+    },
+    {
+      "kind": "jachere_irreguliere",
+      "at": [
+        277,
+        327
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/champs/jachere_irreguliere.tscn",
+      "piece": "jachere_irreguliere",
+      "role": "ground",
+      "yard": "cemetery",
+      "xz": [
+        171.007064819336,
+        271.449249267578
+      ],
+      "yaw": -1.02046234836347,
+      "lift": 0.0,
+      "scale": [
+        0.150000005960464,
+        0.600000023841858,
+        0.379999995231628
+      ]
+    },
+    {
+      "kind": "jachere_irreguliere",
+      "at": [
+        278,
+        327
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/champs/jachere_irreguliere.tscn",
+      "piece": "jachere_irreguliere",
+      "role": "ground",
+      "yard": "cemetery",
+      "xz": [
+        172.983444213867,
+        271.359466552734
+      ],
+      "yaw": -0.556221866178378,
+      "lift": 0.0,
+      "scale": [
+        0.150000005960464,
+        0.600000023841858,
+        0.379999995231628
+      ]
+    },
+    {
+      "kind": "boulder_round",
+      "at": [
+        276,
+        329
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "piece": "boulder_round",
+      "role": "piece",
+      "yard": "cemetery",
+      "xz": [
+        168.978317260742,
+        274.397216796875
+      ],
+      "yaw": 6.96311894407568,
+      "lift": 0.0,
+      "scale": [
+        0.323763936758041,
+        0.571348190307617,
+        0.161881968379021
+      ]
+    },
+    {
+      "kind": "boulder_round",
+      "at": [
+        277,
+        329
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "piece": "boulder_round",
+      "role": "piece",
+      "yard": "cemetery",
+      "xz": [
+        171.001266479492,
+        274.350524902344
+      ],
+      "yaw": 7.7390096894789,
+      "lift": 0.0,
+      "scale": [
+        0.373053699731827,
+        0.658330082893372,
+        0.186526849865913
+      ]
+    },
+    {
+      "kind": "boulder_round",
+      "at": [
+        278,
+        329
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://prototype_3d/assets/library/rocks/boulder_round.tscn",
+      "piece": "boulder_round",
+      "role": "piece",
+      "yard": "cemetery",
+      "xz": [
+        172.955383300781,
+        274.43310546875
+      ],
+      "yaw": 7.46337071793698,
+      "lift": 0.0,
+      "scale": [
+        0.368931263685226,
+        0.651055216789246,
+        0.184465631842613
+      ]
+    },
+    {
+      "kind": "sol_cultive_raccord",
+      "at": [
+        276,
+        329
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/champs/sol_cultive_raccord.tscn",
+      "piece": "sol_cultive_raccord",
+      "role": "ground",
+      "yard": "cemetery",
+      "xz": [
+        168.951248168945,
+        275.398010253906
+      ],
+      "yaw": 178.812542915999,
+      "lift": 0.0,
+      "scale": [
+        0.319999992847443,
+        1.0,
+        0.850000023841858
+      ]
+    },
+    {
+      "kind": "sol_cultive_raccord",
+      "at": [
+        277,
+        329
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/champs/sol_cultive_raccord.tscn",
+      "piece": "sol_cultive_raccord",
+      "role": "ground",
+      "yard": "cemetery",
+      "xz": [
+        171.010772705078,
+        275.420104980469
+      ],
+      "yaw": 183.363515678645,
+      "lift": 0.0,
+      "scale": [
+        0.319999992847443,
+        1.0,
+        0.850000023841858
+      ]
+    },
+    {
+      "kind": "sol_cultive_raccord",
+      "at": [
+        278,
+        329
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "scene": "res://assets/farming/champs/sol_cultive_raccord.tscn",
+      "piece": "sol_cultive_raccord",
+      "role": "ground",
+      "yard": "cemetery",
+      "xz": [
+        173.012725830078,
+        275.414916992188
+      ],
+      "yaw": 182.317845426108,
+      "lift": 0.0,
+      "scale": [
+        0.319999992847443,
+        1.0,
+        0.850000023841858
+      ]
     }
   ],
   "wards": [
@@ -4607,10 +5030,10 @@
     "4x52 12x2 14x6 12x8 5x2 12x15 9x11 12x4 0x124 11x3 0x1 11x5 0x1 11x26 0x3 11x8 0x3 1x7 11x2 0x9 11x3 0x1 11x35 0x4 5x32 0x8 5x9",
     "4x53 12x2 14x6 12x24 9x11 12x3 0x125 11x4 0x2 11x3 0x3 11x3 0x3 11x20 0x6 11x3 0x2 1x6 0x1 11x3 0x1 11x3 0x5 11x3 0x1 11x21 0x2 11x12 0x4 5x31 0x6 5x12",
     "4x54 12x2 14x6 12x22 9x11 12x3 0x127 11x14 0x3 11x20 0x10 1x6 0x2 11x3 0x1 11x12 0x3 11x18 0x3 11x9 0x6 5x31 0x3 5x15",
-    "4x55 12x2 14x6 12x21 9x11 12x1 0x129 11x14 0x2 11x21 7x2 1x12 0x8 11x12 0x3 11x10 0x1 11x3 0x1 11x3 0x1 11x12 0x5 5x49",
-    "4x56 12x2 14x7 12x19 9x10 12x1 0x132 11x12 0x2 11x19 0x2 7x2 1x11 0x6 11x15 0x1 11x16 0x1 11x3 0x1 11x6 0x1 11x5 0x5 5x49",
+    "4x55 12x2 14x6 12x21 9x11 12x1 0x129 11x14 0x2 11x21 7x2 1x12 7x2 0x1 7x2 0x3 11x12 0x3 11x10 0x1 11x3 0x1 11x3 0x1 11x12 0x5 5x49",
+    "4x56 12x2 14x7 12x19 9x10 12x1 0x132 11x12 0x2 11x19 0x2 7x2 1x11 0x1 7x3 0x2 11x15 0x1 11x16 0x1 11x3 0x1 11x6 0x1 11x5 0x5 5x49",
     "4x57 12x2 14x7 12x17 9x11 0x128 11x11 0x3 11x25 0x3 1x10 0x5 11x8 0x1 11x4 0x1 11x3 0x1 11x10 0x1 11x4 0x1 11x11 0x1 11x5 0x5 5x49",
-    "4x58 12x2 14x7 12x16 9x11 0x128 11x12 0x1 11x26 0x8 1x4 0x6 11x8 0x1 11x4 0x1 11x11 0x1 11x18 0x2 11x3 0x6 5x50",
+    "4x58 12x2 14x7 12x16 9x11 0x128 11x12 0x1 11x26 0x8 1x4 0x3 7x3 11x8 0x1 11x4 0x1 11x11 0x1 11x18 0x2 11x3 0x6 5x50",
     "4x59 0x2 14x7 12x15 9x11 0x128 11x23 0x1 11x15 0x7 1x4 0x7 11x19 0x1 11x5 0x1 11x23 0x5 5x51",
     "4x60 0x2 14x8 12x13 9x10 0x128 11x3 0x1 11x15 0x2 11x18 0x1 11x3 0x4 1x7 0x6 11x8 0x2 11x3 0x1 11x9 0x1 11x25 0x1 5x53",
     "4x61 0x2 14x8 0x3 12x1 0x7 9x11 0x128 11x3 0x1 11x3 5x8 11x7 0x1 11x16 0x1 11x3 0x3 1x5 0x1 1x1 7x2 0x7 11x11 0x1 11x11 0x2 11x21 5x55",

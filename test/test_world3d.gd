@@ -47,6 +47,19 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(window.his_kit_count > 20,
 			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
 		assert_true(window.figures_are_his(), "every person is his traveller, not a pack sprite")
+		# The cemetery's stones are his boulder made small (O13): the window stands each
+		# at the scale the bake gave it, or the graves would be boulders.
+		var stones: int = 0
+		for prop: Dictionary in region.props:
+			if String(prop.get("yard", "")) != "cemetery" or not prop.has("scale"):
+				continue
+			var at: Vector2i = prop["at"] as Vector2i
+			var node: Node3D = window.get_node_or_null("Props/%s_%d_%d" % [prop["kind"], at.x, at.y]) as Node3D
+			assert_true(node != null, "%s stands in the window at %s" % [prop["kind"], at])
+			if node != null:
+				assert_eq(node.scale, prop["scale"], "at its baked scale")
+				stones += 1
+		assert_true(stones >= 6, "the graves stand: %d scaled pieces" % stones)
 	else:
 		assert_true(window.chunk_count >= 60, "his ground is built in chunks: %d" % window.chunk_count)
 		assert_true(window.water_triangles > 1000, "his water is a surface: %d triangles" % window.water_triangles)

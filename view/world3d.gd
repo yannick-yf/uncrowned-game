@@ -733,6 +733,7 @@ func _build_props() -> void:
 			var piece: Node3D = _catalog_piece(String(prop["scene"]))
 			if piece != null:
 				piece.rotation.y = deg_to_rad(float(prop.get("yaw", 0.0)))
+				piece.scale = prop.get("scale", Vector3.ONE) as Vector3
 				entry["node"] = piece
 				entry["placed"] = true
 				entry["lift"] = float(prop.get("lift", 0.0))

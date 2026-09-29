@@ -308,3 +308,126 @@ func _reach(region: Region, from: Vector2i, dam: Dictionary) -> Dictionary:
 				seen[next] = true
 				queue.append(next)
 	return seen
+
+
+# ------------------------------------------------------- the cemetery (O13) ---
+#
+# The game begins among graves (O12), and they have to be seen. His pieces only: his
+# farm fence and gate, his library's boulder made small for each stone, and his loose
+# earth and fallow narrowed over each grave. A yard on a point — dressed, not closed.
+
+func _cemetery(region: Region) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for prop: Dictionary in region.props:
+		if String(prop.get("yard", "")) == "cemetery":
+			out.append(prop)
+	return out
+
+
+func test_the_cemetery_has_graves_a_fence_and_a_gate_all_his() -> void:
+	var data: Dictionary = _baked()
+	if data.is_empty():
+		assert_true(false, "content/region.json exists — run tools/bake_region.gd")
+		return
+	var region: Region = RegionBake.read(data)
+	var count: Dictionary = {}
+	var stones: Dictionary = {}
+	for prop: Dictionary in _cemetery(region):
+		if String(prop["piece"]) == "boulder_round":
+			stones[prop["at"]] = true
+	for prop: Dictionary in _cemetery(region):
+		count[String(prop["piece"])] = int(count.get(String(prop["piece"]), 0)) + 1
+		assert_true(String(prop["scene"]).begins_with("res://assets/")
+			or String(prop["scene"]).begins_with(YardRules.LIBRARY),
+			"%s is one of his scenes: %s" % [prop["piece"], prop["scene"]])
+		var at: Vector2i = prop["at"] as Vector2i
+		if String(prop["piece"]) == "boulder_round":
+			var scale: Vector3 = prop.get("scale", Vector3.ONE) as Vector3
+			assert_true(scale.x < 0.5 and scale.y < 1.0, "a grave's stone is his boulder made small: %s" % scale)
+			assert_eq(region.terrain_at(at), Region.Terrain.WALL, "and you walk round it, at %s" % at)
+		elif String(prop["role"]) == String(YardRules.ROLE_GROUND):
+			# The earth stops nobody; the stone at its head is what the tile is walled for.
+			assert_true(region.is_passable(at) or stones.has(at),
+				"the earth over a grave closes nothing of its own, at %s" % at)
+	assert_true(int(count.get("boulder_round", 0)) >= 6, "six graves at least: %s" % count)
+	assert_true(int(count.get("sol_cultive_raccord", 0)) + int(count.get("jachere_irreguliere", 0))
+		== int(count.get("boulder_round", 0)), "and every stone has its grave under it: %s" % count)
+	assert_true(int(count.get("cloture_rustique_2m", 0)) >= 4, "his meadow fence: %s" % count)
+	assert_eq(int(count.get("portail_fermier_ouvert", 0)), 1, "and his gate in it")
+
+
+func test_nothing_of_the_cemetery_stands_on_his_trail() -> void:
+	var data: Dictionary = _baked()
+	if data.is_empty():
+		assert_true(false, "content/region.json exists — run tools/bake_region.gd")
+		return
+	var region: Region = RegionBake.read(data)
+	var origin := Vector2(float((data["origin_m"] as Array)[0]), float((data["origin_m"] as Array)[1]))
+	var metres: float = float(data["metres_per_tile"])
+	var checked: int = 0
+	for prop: Dictionary in _cemetery(region):
+		var xz: Vector2 = prop["xz"] as Vector2
+		var under: Vector2i = BakeRules.tile_for(xz.x, xz.y, origin, metres)
+		assert_ne(region.terrain_at(under), Region.Terrain.ROAD, "%s at %s is off his trail" % [prop["piece"], under])
+		var at: Vector2i = prop["at"] as Vector2i
+		var size: Vector2i = prop["size"] as Vector2i
+		for dx: int in size.x:
+			for dy: int in size.y:
+				assert_ne(region.terrain_at(at + Vector2i(dx, dy)), Region.Terrain.ROAD,
+					"and so is all it stops")
+		checked += 1
+	assert_true(checked > 0, "the cemetery stands something to check")
+
+
+func test_every_piece_of_the_cemetery_is_part_of_what_a_stale_bake_is_measured_against() -> void:
+	var data: Dictionary = _baked()
+	if data.is_empty():
+		assert_true(false, "content/region.json exists — run tools/bake_region.gd")
+		return
+	var source: Dictionary = data.get("source", {}) as Dictionary
+	assert_true(source.has("assets/farming/catalog.json"), "his farming catalogue is hashed")
+	for prop: Dictionary in _cemetery(RegionBake.read(data)):
+		var relative: String = String(prop["scene"]).trim_prefix("res://")
+		assert_true(source.has(relative), "%s's scene is hashed: %s" % [prop["piece"], relative])
+
+
+func test_a_scaled_piece_reads_back_at_its_scale() -> void:
+	var region: Region = RegionBake.read({"width": 1, "height": 1, "rows": ["0x1"], "props": [
+		{"kind": "boulder_round", "at": [0, 0], "size": [1, 1], "xz": [1.0, 1.0], "yaw": 5.0,
+		 "lift": 0.0, "scale": [0.4, 0.75, 0.2]},
+		{"kind": "fence", "at": [0, 0], "size": [1, 1], "xz": [1.0, 1.0], "yaw": 0.0, "lift": 0.0}]})
+	assert_eq(region.props[0]["scale"], Vector3(0.4, 0.75, 0.2), "each axis as it was baked")
+	assert_false(region.props[1].has("scale"), "and a piece at his size carries none")
+
+
+func test_his_brother_has_drawn_no_grave() -> void:
+	# **A DEBT and not a failure.** Nothing in his library or his catalogues is a grave,
+	# a headstone or a cross, so the cemetery's stones are his boulder made small and its
+	# mounds his loose earth and fallow narrowed — his, and it shows as makeshift.
+	# `docs/POUR_SLOSINIO.md` asks him for a cemetery kit; the day one arrives, this fails
+	# and the brief's cemetery is rebuilt from it.
+	var found: PackedStringArray = PackedStringArray()
+	for folder: String in ["assets", "prototype_3d/assets/library"]:
+		var at: String = "res://view3d/workshop/%s" % folder
+		if DirAccess.dir_exists_absolute(at):
+			for name: String in _files_under(at):
+				var lower: String = name.to_lower()
+				for word: String in ["grave", "tomb", "stele", "stèle", "croix", "cemetery", "cimetiere", "headstone"]:
+					if lower.contains(word):
+						found.append(name)
+	if found.is_empty():
+		debt("his brother has drawn no grave: the cemetery's stones are his boulder made small")
+		return
+	assert_true(false, "he has drawn one — rebuild the cemetery from it: %s" % ", ".join(found))
+
+
+func _files_under(path: String) -> PackedStringArray:
+	var out: PackedStringArray = PackedStringArray()
+	var listing: DirAccess = DirAccess.open(path)
+	if listing == null:
+		return out
+	for name: String in listing.get_files():
+		out.append(name)
+	for sub: String in listing.get_directories():
+		out.append_array(_files_under(path + "/" + sub))
+	return out

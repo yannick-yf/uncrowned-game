@@ -62,7 +62,11 @@ static func pieces_with_collisions(pieces: Array) -> Array:
 			return []
 		var root: Node3D = scene.instantiate() as Node3D
 		var xz: Vector2 = piece["xz"] as Vector2
-		var placement := Transform3D(Basis(Vector3.UP, deg_to_rad(float(piece.get("yaw", 0.0)))),
+		# Scaled as the window scales it (O13: his boulder, small, is a grave stone), so
+		# what a piece stops shrinks with what is drawn.
+		var scale: Vector3 = piece.get("scale", Vector3.ONE) as Vector3
+		var placement := Transform3D(
+			Basis(Vector3.UP, deg_to_rad(float(piece.get("yaw", 0.0)))) * Basis.from_scale(scale),
 			Vector3(xz.x, float(piece.get("lift", 0.0)), xz.y))
 		var polygons: Array = []
 		if not _collect(root, placement, polygons):

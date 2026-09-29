@@ -1529,7 +1529,7 @@ Blackcairn *in minutes*, with bands he rules on at his pace. **Check:** vendor, 
 `--check`; frames of the wake, the map and the procedural start; title → creation →
 wake → the fairy, by hand.
 
-### O13 · The cemetery can be seen
+### O13 · The cemetery can be seen — **built 2026-09-29**
 
 Est. 6–8 h. Depends on: O12.
 
@@ -1544,6 +1544,21 @@ point. Graves adult-sized, never on his trail, tone jitter seeded from the ancho
 
 **Tests first:** the pieces are hashed; every wall on his map is something you can see;
 no piece on a ROAD tile of his; a DEBT *his brother has drawn no grave*.
+
+**Built.** A yard may stand on a point (`YardRules.name_of`); a point's yard has no
+ward and no floor, and nothing of it stands on a road tile at all, verge included. A
+piece may name his library (`"library": "rocks/boulder_round"`) as well as a catalogue
+entry, stand at many points (`at`), be scaled (a number or three axes — the geometry tool
+scales his collision shapes with it, the window the node), lie on the ground
+(`ground`: `ROLE_GROUND`, stops nobody), and vary by `jitter` (yaw, scale, shift) from a
+mixed hash of the yard, the piece and the index. The cemetery, in the brief: his farm
+fence in two runs with his open farm gate between them, facing his trail; three old
+graves (his boulder narrowed and stood up, his fallow narrowed over it) and three fresh
+ones (the same stone, his loose earth), laid round his hazels, which keep the corner by
+the trail. His farming catalogue joins the bake's catalogues. Tried and dropped: his
+boulder at 0.3 even (pebbles, from the game's lens); his three-block scree for the old
+mounds (strewn stones); his coastal granite shingle (its mesh names his material path,
+§9b). The frame is Yannick's to judge; made headstones only if he widens the exception.
 
 ### O14 · Where Bram calls from
 

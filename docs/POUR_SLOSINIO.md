@@ -404,3 +404,42 @@ Deux choses pour toi, si tu veux :
 - Si un jour tu poses toi-même une cour autour des fourneaux dans ton atelier, le bake
   la lira à ta place : les entrées `yards` de `content/bake_brief.json` sont notre
   proposition et disparaissent le jour où tes données nomment la même chose.
+
+
+## 11. Le cimetière est fait de tes pièces, et il te manque une tombe (2026-09-29)
+
+Le jeu commence maintenant dans **le cimetière du village brûlé**, sur la prairie au sud
+de Brindle, entre ton sentier et ton bois, au-dessus de tes falaises. Yannick l'a voulu :
+on se réveille parmi les morts du village, et on sort par les ruines.
+
+Tu n'as dessiné ni tombe, ni stèle, ni croix. Plutôt que d'en inventer, le cimetière est
+**entièrement fait de tes pièces**, posées au mètre près par le bake comme la cour des
+fourneaux :
+
+- ta **clôture rustique** (`cloture_rustique_2m`) au nord, avec ton **portail fermier
+  ouvert** au milieu, qui donne sur ton sentier vers les ruines ;
+- pour chaque pierre tombale, ton **bloc arrondi** (`boulder_round`) **réduit et
+  aminci** — environ 0,85 m de large, 1,2 m de haut pour les anciennes, un peu moins pour
+  les récentes — avec une petite variation d'angle et de taille d'une pierre à l'autre ;
+- sur les trois tombes récentes (les morts de l'incendie), ton **raccord de terre**
+  (`sol_cultive_raccord`) rétréci à la taille d'une tombe ; sur les trois anciennes, ta
+  **jachère** (`jachere_irreguliere`) rétrécie pareil, une tombe retournée à l'herbe sèche.
+
+Tes noisetiers du secteur Brindle sont restés où tu les as mis : le coin ouest, près du
+sentier, leur est laissé, et les tombes sont posées autour.
+
+Ça se lit comme un cimetière à la distance du jeu. De près, ça se voit que ce sont des
+cailloux et de la terre de champ détournés.
+
+**Ce qu'il faudrait :** un petit kit de cimetière de village — deux ou trois pierres
+tombales brutes ou taillées, une croix de bois, un tertre de terre et un tertre herbeux,
+peut-être un muret bas. Le jour où l'un d'eux arrive dans ta bibliothèque ou un de tes
+catalogues, un test le voit (`test_his_brother_has_drawn_no_grave`) et le cimetière est
+refait avec.
+
+**Une chose qu'on a essayée et qui ne marche pas chez nous :** ton amas de galets de la
+côte (`amas_galets_granit`). Son maillage garde le chemin de ton propre projet pour sa
+matière (`res://assets/coastline/materials/coastal_granite.tres`), et notre copie ne peut
+pas réécrire l'intérieur d'un fichier binaire — c'est le même souci que les trois
+secteurs de §9b dans `docs/MIGRATION_3D.md`. Si tu ré-exportes tes pièces de côte avec la
+matière assignée dans la scène plutôt que dans le maillage, on pourra s'en servir.
