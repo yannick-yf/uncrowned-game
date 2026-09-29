@@ -111,9 +111,94 @@ func test_a_drill_shows_its_lesson_and_how_far_you_are() -> void:
 	reading["goal_of"] = 3
 	hud.present(reading, 1.0 / 60.0)
 	var card: PackedStringArray = hud.drill_card()
-	assert_eq(card.size(), 3, "a title, the objective and the hint")
 	assert_eq(card[0], Text.of(&"drill.sword.title"), "named for its weapon")
 	assert_true(card[1].contains("2 / 3"), "the objective counts: '%s'" % card[1])
+	assert_true(card[card.size() - 1] == Text.of(&"drill.sword.instruction"), "and, off your turn, what to do")
+	hud.free()
+
+
+## A drill's reading on the player's own turn, standing `apart` tiles from the nearest foe.
+func _drill_turn(drill: String, apart: int, weapon: String = "sword") -> Dictionary:
+	var reading: Dictionary = _reading(1.0, 100, 15)
+	reading["drill"] = drill
+	reading["goal_done"] = 0
+	reading["goal_of"] = 3
+	reading["my_turn"] = true
+	reading["choosing"] = true
+	reading["nearest_apart"] = apart
+	reading["my_weapon"] = weapon
+	reading["has_bow"] = drill == "bow"
+	reading["spell_ready"] = true
+	reading["spell_reach"] = DuelRules.spell_reach_tiles()
+	return reading
+
+
+func test_each_step_names_its_key_and_is_ticked_when_done() -> void:
+	# T8: Yannick could not shoot and nothing told him why. The bow's lesson is three
+	# steps, each with its key, and the ones done are ticked.
+	var hud := FightHud.new()
+	hud.present(_drill_turn("bow", 1, "sword"), 1.0 / 60.0)
+	var steps: Array[Dictionary] = hud.lesson_steps()
+	assert_eq(steps.size(), 3, "take the bow, keep your distance, shoot")
+	assert_true(String(steps[0]["text"]).begins_with("U"), "the first names U: '%s'" % steps[0]["text"])
+	assert_false(bool(steps[0]["done"]), "and it is not done while you hold the sword")
+	assert_true(bool(steps[0]["current"]), "so it is the step you are on")
+	hud.present(_drill_turn("bow", 3, "bow"), 1.0 / 60.0)
+	steps = hud.lesson_steps()
+	assert_true(bool(steps[0]["done"]) and bool(steps[1]["done"]), "the bow in hand, three tiles off: two done")
+	assert_true(bool(steps[2]["current"]), "and K is next")
+	assert_true(hud.drill_card()[2].begins_with("[x]"), "a done step is ticked: '%s'" % hud.drill_card()[2])
+	hud.free()
+
+
+func test_the_hint_answers_where_you_stand() -> void:
+	var hud := FightHud.new()
+	var cases: Array[Array] = [
+		["bow", 3, "sword", &"drill.hint.take_bow"],
+		["bow", 1, "bow", &"drill.hint.bow_too_close"],
+		["bow", 9, "bow", &"drill.hint.too_far"],
+		["bow", 4, "bow", &"drill.hint.shoot_now"],
+		["sword", 4, "sword", &"drill.hint.sword_too_far"],
+		["sword", 1, "sword", &"drill.hint.strike_now"],
+		["magic", 6, "sword", &"drill.hint.gift_too_far"],
+		["magic", 2, "sword", &"drill.hint.cast_now"],
+	]
+	for row: Array in cases:
+		hud.present(_drill_turn(String(row[0]), int(row[1]), String(row[2])), 1.0 / 60.0)
+		assert_eq(hud.hint_key(), row[3] as StringName, "%s, %d tiles, %s in hand" % [row[0], row[1], row[2]])
+	var resting: Dictionary = _drill_turn("magic", 2)
+	resting["spell_ready"] = false
+	hud.present(resting, 1.0 / 60.0)
+	assert_eq(hud.hint_key(), &"drill.hint.gift_resting", "the gift resting")
+	var theirs: Dictionary = _drill_turn("bow", 1, "bow")
+	theirs["choosing"] = false
+	hud.present(theirs, 1.0 / 60.0)
+	assert_eq(hud.hint_key(), &"", "and nothing is advised while it is not your turn")
+	hud.free()
+
+
+func test_a_long_row_is_broken_and_nothing_is_lost() -> void:
+	var line: String = "Wren, your spare bow. Here, it's yours now. I'll come at you: land three arrows before I close, and don't let me stand next to you."
+	var rows: PackedStringArray = Ui.wrapped(line, Ui.NOTE, 300.0)
+	assert_true(rows.size() > 1, "broken into %d rows" % rows.size())
+	for row: String in rows:
+		assert_true(Ui.width_of(row, Ui.NOTE) <= 300.0, "each within the width: '%s'" % row)
+	assert_eq(" ".join(rows), line, "and every word is kept, in order")
+
+
+func test_what_was_said_does_not_take_the_card_off_the_screen() -> void:
+	# Found by T8: the card had three colours for four lines, so the first round of every
+	# lesson begun by its line — every lesson in play — stopped drawing the HUD at the
+	# fourth, before the whose-turn line and the keys. Every row now carries its own.
+	var hud := FightHud.new()
+	var reading: Dictionary = _drill_turn("sword", 4)
+	reading["said"] = "I'll step back. Come and get me."
+	reading["said_by"] = "Bram"
+	hud.present(reading, 1.0 / 60.0)
+	var rows: Array[Dictionary] = hud.card_rows()
+	assert_true(rows.size() >= 5, "title, count, steps, hint and what he said: %d rows" % rows.size())
+	for row: Dictionary in rows:
+		assert_true(row.has("tone") and row.has("size"), "every row says how it is drawn: '%s'" % row.get("text", ""))
 	hud.free()
 
 
@@ -177,6 +262,11 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 func test_the_fights_words_exist_in_both_languages() -> void:
 	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"drill.passed", &"drill.failed",
 			&"drill.sword.title", &"drill.sword.instruction", &"drill.sword.goal",
+			&"drill.sword.step.close", &"drill.sword.step.strike", &"drill.bow.step.take", &"drill.bow.step.range",
+			&"drill.bow.step.shoot", &"drill.magic.step.close", &"drill.magic.step.cast",
+			&"drill.hint.take_bow", &"drill.hint.bow_too_close", &"drill.hint.too_far", &"drill.hint.shoot_now",
+			&"drill.hint.sword_too_far", &"drill.hint.strike_now", &"drill.hint.gift_too_far",
+			&"drill.hint.gift_resting", &"drill.hint.cast_now",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
 			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
 			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",

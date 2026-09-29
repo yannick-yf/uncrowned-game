@@ -50,9 +50,18 @@ var _drops: Dictionary = {}
 var _floats: Array[Dictionary] = []
 var _banner: String = ""
 var _banner_at: float = -1.0
-## **The lesson, when the fight is a drill** (O8): its title, the objective with how far
-## you are, and a hint. Empty in any other fight.
-var _card: PackedStringArray = PackedStringArray()
+## **The lesson, when the fight is a drill** (O8, T8): its title, the objective with how
+## far you are, its steps each with its key, a hint that answers where you stand, and
+## what was said as it began. **Every row carries its own tone and size**: the card had
+## three colours for four rows, so the first round of every lesson begun by its line
+## stopped drawing the HUD at the fourth. Empty in any other fight.
+var _card: Array[Dictionary] = []
+## How far across the screen the card may run before a row is broken (T8).
+const CARD_WIDTH: float = 0.55
+## The drill's steps as last worked out: `{text, done, current}`.
+var _steps: Array[Dictionary] = []
+## The hint's text key, or empty.
+var _hint: StringName = &""
 
 
 func _init() -> void:
@@ -78,7 +87,9 @@ func present(reading: Dictionary, delta: float) -> void:
 		_floats = []
 		_banner = ""
 		_banner_at = -1.0
-		_card = PackedStringArray()
+		_card = []
+		_steps = []
+		_hint = &""
 		_reading = {}
 		queue_redraw()
 		return
@@ -138,23 +149,87 @@ func _foes() -> Array[Dictionary]:
 	return out
 
 
-## The drill's card: what it is, how far you are, and what to do (O8).
-func _lesson(reading: Dictionary) -> PackedStringArray:
+## The drill's card: what it is, how far you are, its steps, and what to do (O8, T8).
+func _lesson(reading: Dictionary) -> Array[Dictionary]:
 	var drill: String = String(reading.get("drill", ""))
-	var out := PackedStringArray()
+	var out: Array[Dictionary] = []
+	_steps = _steps_of(reading)
+	_hint = _hint_of(reading)
 	if drill != "":
-		out.append_array([
-			Text.of(StringName("drill.%s.title" % drill)),
-			Text.of(StringName("drill.%s.goal" % drill),
-				[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]),
-			Text.of(StringName("drill.%s.instruction" % drill)),
-		])
+		out.append({"text": Text.of(StringName("drill.%s.title" % drill)), "tone": MINE, "size": Ui.ROW})
+		out.append({"text": Text.of(StringName("drill.%s.goal" % drill),
+			[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]), "tone": Ui.INK, "size": Ui.ROW})
+		# Each step with its key, ticked when done; the one you are on in ink.
+		for step: Dictionary in _steps:
+			var mark: String = "[x] " if bool(step["done"]) else "[ ] "
+			out.append({"text": mark + String(step["text"]),
+				"tone": Ui.INK if bool(step["current"]) else Ui.DIM, "size": Ui.NOTE})
+		# On your turn, what to do from where you stand; otherwise the lesson in a line.
+		var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
+		out.append({"text": Text.of(_hint, [spell_reach]) if _hint != &"" \
+			else Text.of(StringName("drill.%s.instruction" % drill)),
+			"tone": MINE if _hint != &"" else Ui.DIM, "size": Ui.NOTE})
 	# And what was said as it began, through the first round (the review of O21): the
 	# answer to the line that squared you up, which the closing box used to swallow.
 	var said: String = String(reading.get("said", ""))
 	if said != "":
-		out.append(Text.of(&"fight.said", [String(reading.get("said_by", "")), said]))
+		out.append({"text": Text.of(&"fight.said", [String(reading.get("said_by", "")), said]),
+			"tone": Ui.DIM, "size": Ui.NOTE})
 	return out
+
+
+## **A lesson's steps** (T8): each names its key, and is done when where you stand and
+## what you hold make it so. The first not done is the one you are on.
+func _steps_of(reading: Dictionary) -> Array[Dictionary]:
+	var apart: int = int(reading.get("nearest_apart", 99))
+	var weapon: String = String(reading.get("my_weapon", "sword"))
+	var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
+	var rows: Array[Array] = []
+	match String(reading.get("drill", "")):
+		"sword":
+			rows = [[&"drill.sword.step.close", apart <= DuelRules.reach_tiles()], [&"drill.sword.step.strike", false]]
+		"bow":
+			rows = [[&"drill.bow.step.take", weapon == String(DuelRules.BOW)],
+				[&"drill.bow.step.range", apart >= DuelRules.bow_min_tiles() and apart <= DuelRules.bow_reach_tiles()],
+				[&"drill.bow.step.shoot", false]]
+		"magic":
+			rows = [[&"drill.magic.step.close", apart <= spell_reach], [&"drill.magic.step.cast", false]]
+	var out: Array[Dictionary] = []
+	var current_found: bool = false
+	for row: Array in rows:
+		var done: bool = bool(row[1])
+		var current: bool = not done and not current_found
+		current_found = current_found or current
+		out.append({"text": Text.of(row[0] as StringName, [spell_reach]), "done": done, "current": current})
+	return out
+
+
+## **What to do from where you stand** (T8), on your own turn and in a lesson only: too
+## close for the bow, too far for the sword, the gift resting — or, in reach, the key.
+func _hint_of(reading: Dictionary) -> StringName:
+	var drill: String = String(reading.get("drill", ""))
+	if drill == "" or not bool(reading.get("choosing", false)):
+		return &""
+	var apart: int = int(reading.get("nearest_apart", 99))
+	var bow: bool = String(reading.get("my_weapon", "sword")) == String(DuelRules.BOW)
+	match drill:
+		"bow":
+			if not bow:
+				return &"drill.hint.take_bow" if bool(reading.get("has_bow", false)) else &""
+			if apart < DuelRules.bow_min_tiles():
+				return &"drill.hint.bow_too_close"
+			if apart > DuelRules.bow_reach_tiles():
+				return &"drill.hint.too_far"
+			return &"drill.hint.shoot_now"
+		"magic":
+			if not bool(reading.get("spell_ready", false)):
+				return &"drill.hint.gift_resting"
+			if apart > int(reading.get("spell_reach", DuelRules.spell_reach_tiles())):
+				return &"drill.hint.gift_too_far"
+			return &"drill.hint.cast_now"
+	if apart > DuelRules.reach_tiles():
+		return &"drill.hint.sword_too_far"
+	return &"drill.hint.strike_now"
 
 
 func _take_health(side: StringName, hp: int) -> void:
@@ -219,16 +294,18 @@ func _draw() -> void:
 		var text_size: int = int(row["size"])
 		Ui.write_over(self, at - Vector2(Ui.width_of(text, text_size) * 0.5, 0.0), text, text_size, colour)
 
-	# The lesson, under the bars on the left: gold title, the count in ink, the hint dim.
+	# The lesson, under the bars on the left, each row in its own tone and size, and a long
+	# one broken into rows short of the middle of the screen (T8).
 	if not _card.is_empty():
 		var top: float = TOP + PIP.y + 34.0
-		var tones: Array[Color] = [MINE, Ui.INK, Ui.DIM]
-		var sizes: Array[int] = [Ui.ROW, Ui.ROW, Ui.NOTE]
-		for i: int in _card.size():
-			var tone: Color = tones[i]
-			tone.a = _alpha
-			Ui.write_over(self, Vector2(MARGIN, top), _card[i], sizes[i], tone)
-			top += 16.0
+		var width: float = size.x * CARD_WIDTH
+		for row: Dictionary in _card:
+			var tone: Color = row["tone"] as Color
+			tone.a *= _alpha
+			var row_size: int = int(row["size"])
+			for line: String in Ui.wrapped(String(row["text"]), row_size, width):
+				Ui.write_over(self, Vector2(MARGIN, top), line, row_size, tone)
+				top += 16.0 if row_size >= Ui.ROW else 13.0
 	var settling: bool = int(_reading.get("settling", 0)) > 0
 	if _banner != "" and _banner_at >= 0.0:
 		var came: float = clampf((_now - _banner_at) / BANNER_IN_SECONDS, 0.0, 1.0)
@@ -373,7 +450,23 @@ func float_words() -> PackedStringArray:
 
 
 func drill_card() -> PackedStringArray:
+	var out := PackedStringArray()
+	for row: Dictionary in _card:
+		out.append(String(row["text"]))
+	return out
+
+
+## The card as it is drawn, row by row (T8).
+func card_rows() -> Array[Dictionary]:
 	return _card
+
+
+func lesson_steps() -> Array[Dictionary]:
+	return _steps
+
+
+func hint_key() -> StringName:
+	return _hint
 
 
 func pips_shown(side: StringName) -> int:

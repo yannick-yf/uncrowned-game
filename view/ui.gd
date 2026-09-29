@@ -83,6 +83,24 @@ static func width_of(line: String, size: int) -> float:
 
 ## Text at a baseline. Every screen draws through here so a change of font or of
 ## default colour is one edit.
+## **A line broken into rows no wider than `width`**, at the spaces (T8): the lesson's card
+## carried a sentence of Bram's that ran off the right of the screen. A word longer than
+## the width keeps its own row rather than being cut.
+static func wrapped(line: String, size: int, width: float) -> PackedStringArray:
+	var rows := PackedStringArray()
+	var row: String = ""
+	for word: String in line.split(" ", false):
+		var longer: String = word if row == "" else row + " " + word
+		if row != "" and width_of(longer, size) > width:
+			rows.append(row)
+			row = word
+		else:
+			row = longer
+	if row != "":
+		rows.append(row)
+	return rows
+
+
 static func write(canvas: CanvasItem, at: Vector2, line: String, size: int,
 		colour: Color = INK, align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT,
 		width: float = -1.0) -> void:

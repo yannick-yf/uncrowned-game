@@ -251,6 +251,13 @@ func _ready() -> void:
 		if drill != "":
 			began.merge({"drill": drill, "by": String(DuelRules.drill_first(StringName(drill))),
 				"spar": true}, true)
+			# And what the master says as the game's line begins it (T8): the first round of
+			# a lesson in play always carries it, and a photograph without it is not of the
+			# game — the card that broke on it had never been photographed.
+			var master: Npc = _cast.get_npc(DuelRules.drill_master(StringName(drill))) if _cast != null else null
+			var line: DialogueOption = DialogueRules.find(master, StringName("drill_%s" % drill)) if master != null else null
+			if line != null:
+				began.merge({"said": line.reply, "said_by": String(master.id)}, true)
 			# The magic drill needs the fairy's gift, and a photograph has no fairy: it is
 			# written straight in, which is one frame and not a save-able state (O10).
 			if drill == "magic":
@@ -447,6 +454,10 @@ func _duel_frame() -> Dictionary:
 		"reach_at": Vector2(_duel_cursor) + Vector2(0.5, 0.5) if choosing else _duel.drawn_at(acting if acting != null else mine),
 		"my_weapon": String(held),
 		"has_bow": _has_bow(),
+		# For the lesson's steps and hint (T8): whether you are choosing your turn, and how
+		# far the nearest foe is from the tile you chose — or from you, off your turn.
+		"choosing": choosing,
+		"nearest_apart": _nearest_foe(mine, _duel_cursor if choosing else mine.at),
 		"in_reach": _reaches_from(mine, held, _duel_cursor) if choosing else _anybody_in_reach(acting if acting != null else mine),
 		"moves": _duel_reach(acting),
 		"centre": my_at.lerp(his_at, 0.5),
@@ -542,6 +553,14 @@ func _duel_frame() -> Dictionary:
 	if _duel.waiting_on_player():
 		reading["cursor"] = Vector2(_duel_cursor) + Vector2(0.5, 0.5)
 	return reading
+
+
+## How far the nearest foe stands from a tile, 8-way.
+func _nearest_foe(who: DuelFighter, tile: Vector2i) -> int:
+	var best: int = 1 << 20
+	for foe: DuelFighter in _duel.foes_of(who.who):
+		best = mini(best, DuelRules.apart(tile, foe.at))
+	return best
 
 
 ## Whether a weapon reaches anybody from a tile — your turn's ring, round the cursor (T6).

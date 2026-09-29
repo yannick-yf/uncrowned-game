@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1–T6 are built** (T7's rules with T5). Then P2, with him, then C2–C4.
+> answers the same evening. **T1–T8 are built** (T7's rules with T5, its words with T8). T9 and T10 remain. Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -2024,7 +2024,7 @@ the blow's spark and number; O9's aimed-tile marks go with the delay. Both langu
 **Check:** frames of the bow in hand with its band, an arrow in flight and the hit, in
 French and English.
 
-### T7 · The bow drill, redone — **its rules are built in T5; its words go to T8**
+### T7 · The bow drill, redone — **built: its rules in T5, its words in T8**
 
 Est. 4–6 h. Depends on: T6.
 
@@ -2036,7 +2036,25 @@ and U. Goal `arrows`; `dodged` goes. The magic drill still follows the bow's.
 **Tests first:** the bow and PRESS pass; standing still with the sword fails at the cap
 with nobody down; `drilled:bow` written once and replayed; the magic drill offered after.
 
-### T8 · Every drill explained, one step at a time
+### T8 · Every drill explained, one step at a time — **built 2026-09-29**
+
+> **Built, and it found why the first round said nothing.** The card had three colours
+> for four rows; every lesson begun by its line — every lesson in play — carries what the
+> master said as its fourth, so the first round's HUD stopped drawing there: no *whose
+> turn*, no keys. No test draws and no photograph began a lesson by its line, so nobody
+> saw it. Every row now carries its own tone and size, and `UNCROWNED_DUEL=drill:…` begins
+> with the master's line as the game does.
+>
+> The card is: the title, the count, **the steps, each naming its key** — *[x] U : prenez
+> l'arc*, *[ ] Flèches : restez à deux cases de lui ou plus*, *[ ] K : tirez* — ticked when
+> where you stand and what you hold make them so, the one you are on in ink; then **a hint
+> that answers where you stand**, on your turn — too close for the bow, too far for the
+> sword, the gift resting, or the key when he is in reach; off your turn, the lesson in a
+> line; then what he said, broken into rows short of the middle of the screen
+> (`Ui.wrapped`). The reading carries `choosing` and `nearest_apart`. `play_opening`
+> passes the three drills, magic included: sword 8.3 s of fighting, bow 6.8 s, magic
+> 6.3 s. Frames of each lesson's first turn and of the bow too close, in French and
+> English. The lines themselves are still drafts, for P2.
 
 Est. 6–8 h. Depends on: T7.
 
