@@ -229,7 +229,7 @@ Cinderworks and shared with nowhere else. English in the same change.
 **Check:** talk to four of them in each state. Nothing repeats twice in a row, and
 none of the four states' lines would make sense in another state.
 
-> **Moved into the tutorial's redo (Yannick, 2026-09-29).** The whole tutorial of the
+> **Moved into the tutorial's redo (Yannick, 2026-09-29)** — group **O**, steps O18 and O19. The whole tutorial of the
 > demo is to be redone — **meeting the fairy, the combat tutorial, the departure for the
 > Cinderworks** — and the dialogue is rewritten then, as part of it, rather than as a
 > task of its own. So P2 is no longer "forty lines for the works" on its own: it is the
@@ -1116,9 +1116,12 @@ finished the tutorial* is invariant 4 broken, in a demo or out of one.
 numbers; **nothing refuses to let the player walk anywhere**; a frame of the road that
 shows why a first-time player takes it.
 
-### W3 · The tutorial fight, against Bram
+### W3 · The tutorial fight, against Bram — **superseded by O8** (2026-09-29)
 
 Est. 4 h. Depends on: K1–K4.
+
+> Its step 2 — Bram walks a few tiles away so the first turn needs a move — is kept,
+> walked rather than teleported, in O8's sword drill.
 
 **The same sparring partner as the first design** (Yannick, 2026-09-24), which keeps
 everything F2 built for getting into a fight from a conversation. The shape he asked
@@ -1174,6 +1177,438 @@ minute one and Pillar 1 is whole again.
 > quests* depends on Q1–Q6, and all six are built. Yannick confirmed the factions go on
 > 2026-09-23. It stays where it is — deletions are last — but J2 and J3 rewire what C3
 > then removes, so the two are read together.
+
+---
+
+## O — the opening, redone: the cemetery, the hail, three drills
+
+**Asked 2026-09-29 (Yannick), planned the same day.** The first ten to fifteen minutes
+of the demo, made to feel finished: the player wakes in a **cemetery south of Brindle**,
+a **path** leads him into the ruined village, **Bram hails him** the way a Pokémon
+trainer spots you (a "!", the player held, Bram walks up, the conversation opens, once),
+and the combat tutorial becomes **three drills** in the manner of *Bannerlord*'s
+training grounds — **sword** (Bram), **bow** (Wren), **magic** (the fairy's gift). The
+dialogue of the fairy and of the tutors is rewritten last, by Yannick (this is where
+**P2** now lives). The turn-based duel is kept and extended, never rewritten.
+
+The plan came out of a read-only analysis of the code (seven readers, a planner and an
+adversarial reviewer); its findings are the reason for each step's shape.
+
+### His rulings, 2026-09-29
+
+| Question | Ruling |
+|---|---|
+| Bow and magic now, against CLAUDE.md's "a later workstream, on its own branch"? | **Now, in a version scoped to the tutorial, on `feat/playable-demo`.** Real depth — AI, ranged balance — is still later |
+| Where does the player's spell come from? (SPECS §5: "magic is the one miracle") | **The fairy's gift**: one spell, taught with her last word, and kept after the tutorial. Its name is his |
+| Who is the archer? (the named cast is full at 27) | **Wren** — already in Brindle, adult, a scavenger who also hunts |
+| Does the bake learn his coast? | **Only around Brindle**, not the whole coast |
+
+**Defaults taken, which he may overturn** (stated to him the same day):
+
+- The hail **forces the conversation to open, not to finish** — "not now" is an answer,
+  and Bram goes back to his post. A hail you cannot leave would be a gate (invariant 4).
+  It is a demo-only scripted beat against SPECS' *"a conversation, not a cutscene"*
+  (2026-09-12), made replayable and removable in one change (the `hails` list).
+- The fairy and her fire move to the cemetery; a death before any rest wakes you among
+  the graves.
+- **A spar never kills, and Bram can still be killed** — Pillar 3 (SPECS §1: nobody is
+  made invulnerable) holds: a partner who yields can still be fought for real, and that
+  is murder.
+- **No downloaded art.** The web research found Kenney, KayKit, Quaternius and Poly Pizza
+  candidates, every one a third artist's hand, and his own catalogues say *no
+  third-party model or texture downloads*. The cemetery is his pieces; the "!", the
+  arrow and the spell are marks of ours drawn in code; the tutors are told apart by a
+  name-and-role plate and their reach mark, not by a drawn weapon.
+- The fifteen minutes end at the works' gate.
+- **The clearing is not deleted by this group.** His "OK to delete once the redo is
+  done" answered C2–C4; deleting the clearing needs its own OK.
+
+**Still his, and flagged:** the player's shipped HP (100 is a development value; at 100
+the bridge wolves carry no threat, so a finished-feeling fifteen minutes needs S4's
+figure first); music and ambience (the pack's tables go in C4 — real tracks or a
+chosen silence); SPECS §5's *"one raising, in the forest"* against waking among graves
+(his writing settles it in O18); §9b, now urgent — the coast's granite dressing is one
+of the three sectors we drop, so the first frame would show bare cliffs until his
+brother fixes the compressed meshes.
+
+### The order, and why combat comes before the map
+
+**The drills do not need the map.** They can be built and tested at Bram's present post
+from `ask_bram_spar`, while the map depends on the riskiest step here (his coast). So:
+foundations, then the fight, then the map, then the hail on the new map, then the
+words, then the check. Every step leaves both suites green and the game launchable, and
+a mechanic lands together with its picture — nothing the player can reach is ever
+invisible.
+
+**Size, honestly: about 130 h of sessions**, not counting his writing. The heavy items
+are the coast (O11), the hail (O16), drawing several opponents (O6) and the bow (O9).
+
+### O1 · A spar never kills — and the partner can still be killed
+
+Est. 3 h. Depends on: —.
+
+**A live defect, and ours (K3).** Winning the spar writes `killed:bram`, a witnessed
+`i_killed_somebody_innocent` in Brindle and a rumour: `FellingSystem` answers every
+`duel_down`, and `spares` only ever protected the player.
+
+- `Duel.spar`, set from `duel_began.spar` and in the fingerprint; `DialogueSystem._choose`
+  passes it when `DuelRules.spares(option.fights)`.
+- In `DuelSystem._end_turn`, an **opponent** of a spar at 0 goes out `yielded` and
+  derives `duel_yielded` — never `duel_down`, so `FellingSystem` does not run. The
+  **player** still goes out `down` (the spar floor in `_end` is unchanged), or a lost
+  spar reads as `left`.
+- A yielded partner's next conversation offers, beside the rest, one option to fight
+  him for real (`fights`, no spar) — which is murder, through `FellingSystem`, as any
+  other killing.
+- `fight.yielded` banner words in both languages. `SaveFile.VERSION` bumped.
+
+**Tests first:** winning a spar kills nobody (no `killed:bram`, no deed, no rumour);
+the partner can be talked to again; **Bram can still be killed** (the real fight, then
+`killed:bram` and the murder deed); a lost spar still reads `lost`
+(`test_a_sparring_partner_stops_when_you_go_down`); test_wild's K3 killings unchanged.
+
+**Check:** both suites; `tools/play_duel.gd -- press 400` ends with Bram yielded; a
+frame of Bram standing after the beat.
+
+### O2 · The first frame says what E does
+
+Est. 1 h. Depends on: —.
+
+The HUD offers the fire ("E, sit down and rest") while E actually opens the fairy:
+`_read_input` tries talk before rest and the prompt checks rest first. The prompt takes
+`_read_input`'s order.
+
+**Test first:** a fresh run's first prompt names the fairy. **Check:** a frame at the wake.
+
+### O3 · Where you wake is its own name
+
+Est. 4–5 h. Depends on: —.
+
+`Region.START` / `start_centre()` split from `Region.CLEARING` (equal to it for now), read
+by `Game.build_world`, the respawn before any rest (`WorldState.hurt`), the map's dot and
+`tools/map_criteria.gd`; `TestCase.where_the_game_starts()`. Every test that means *the
+start* is repointed (test_opening, test_phase_0, test_journeys, test_saving,
+test_collision, test_map, test_duel, test_world3d, test_screens); the claims that mean
+*the fairies' ground* keep reading CLEARING. **No time band changes here** — the walk
+figures are restated in O12 against his pace, with bands he rules on, rather than
+converted and turned into debts.
+
+**Check:** both suites green with the same DEBT and OFF counts; the wake frame unchanged.
+
+### O4 · A re-bake cannot replay an old save onto new ground
+
+Est. 1 h. Depends on: —.
+
+The save's world id is the constant `baked`. It takes the bake's `source` hash, which
+`region.json` already carries, so any re-bake (O11, O12) refuses old logs by itself;
+manual `SaveFile.VERSION` bumps stay for rule changes.
+
+**Test first:** a save written against one bake hash is refused under another.
+
+### O5 · One door for every blow
+
+Est. 1–2 h. Depends on: O1.
+
+A pure refactor: `_land(sim, duel, world, by, victim, damage, move)` out of `_strike`,
+carrying the G clamp, `world.hurt`, the flinch, facing, the felling and `blow_landed`
+(now with `move` and the victim's tile). Arrows and spells inherit all of it.
+
+**Check:** fast suite unchanged; the replay fingerprint equal.
+
+### O6 · Every fighter drawn where he fights
+
+Est. 8 h. Depends on: O5.
+
+**Also a live defect**: the two wolves before the bridge are drawn frozen at the pack's
+spot while they fight, and a felled one does not go down. The fight reading carries
+`fighters[]` (the legacy keys kept); `world3d._sync_people` and `_sync_wild` draw each
+fighter at its seat, per id (walk state, paint, `_struck`); sparks go by the event's
+target; the marks are drawn per fighter; the eye goes to their centroid, `_fight_size_m`
+clamped 15–22 m; the HUD has one bar per foe and names who is acting.
+
+**Tests first:** in a two-wolf fight each figure stands on its seat and a downed one is
+hidden; two foes, two bars. **Check:** shots at several steps; the bridge fight by hand.
+
+### O7 · Where a named person actually stands
+
+Est. 4 h. Depends on: O5.
+
+**The first named people who move** are Bram and Wren — walked out by a drill, left
+where a duel ended, and (O16) walking up to hail you. One store, `Walkers`, owns every
+displaced named person: `DuelSystem._end` writes each non-player fighter's final tile
+into it, and a walker goes home at the table's pace when nothing holds him. **`Npc` and
+`Cast.shared()` are never mutated.** One `where_is(id)` — walkers first, then the anchor
+— is read by `Cast.nearest_to`, the witness positions (`CrimeRules`, `WatchRules`), the
+journal's who-is-where page, `main.gd`'s reach, `DuelSystem._begin` and both windows.
+Registered in `Game.build()` **and** `fresh_stores()`. Pace from
+`MovementRules.tiles_per_second()`, never one figure for both worlds.
+
+**Tests first:** after a duel he is drawn and reached where it ended, not at his anchor;
+he walks home; a theft counts him as a witness where he stands; replay rebuilds it.
+
+### O8 · Drills, the sword drill, and the lesson on screen
+
+Est. 12 h. Depends on: O6, O7.
+
+- `content/duel.json` gets `drills` — `{_order, sword: {master: bram, opponents, first,
+  stand_off, damage: 1, goal: blows, count: 3, rounds: N}}`. Balance stays in that file.
+- `duel_began` carries `drill`; `Duel.drill` and `Duel.tally` are in the fingerprint;
+  `DuelRules.damage_of(who, drill)`; the tally counts in `_land`; `DuelRules.drill_met`
+  after each turn; **a drill that reaches its `rounds` cap is failed**, and a drill can be
+  left as any fight can. `duel_ended` gains `{drill, passed}`.
+- **The stand-off is walked, not teleported**: on round 0 Bram steps out to
+  `stand_off_tiles` through the existing MOVING phase, so the player sees why the first
+  turn needs a move (W3's step 2).
+- A new `DrillSystem`, after `DuelSystem`: `drilled:<id>` when passed; **Bram mends you**
+  after any drill, passed or not, so nobody meets the bridge wolves on one point; the
+  transition is Bram walking back up and the next talk opening within reach.
+- `DialogueOption.drill`; Bram gets a `drill_sword` option (draft words, marked as drafts)
+  and **`ask_bram_spar` stays** — invariant 5, the tutorial starts more than one way.
+- The HUD: a drill card under the bars — title, objective `n / N`, hint — a
+  `drill.passed` banner (today anything but `won` reads *you are down*), the keys line
+  per drill; the lens stays down while Bram speaks between drills. `drill.*` texts in
+  both languages, in the font.
+- `UNCROWNED_DUEL=drill:<id>[:steps[:hand]]`, debug-gated and listed in CLAUDE.md.
+
+**Tests first** (`test_tutorial.gd`, with `DuelRules.override` on the player's HP so the
+fast suite stays fast): PRESS passes; turn 1 cannot strike; STAND ends at the cap with
+no death; `drilled:sword` written once and replayed; a failed drill writes nothing and
+is offered again; only Bram's options read `drilled:*`; `ask_bram_spar` still spars; the
+card shows `2 / 3`.
+
+### O9 · The bow — Wren, the drill, and how an arrow is seen
+
+Est. 14 h. Depends on: O8.
+
+- **Rules.** `fighters.<kind>.weapon` (sword by default); rows `bow_reach_tiles`,
+  `bow_min_tiles`, `bow_keeps_off_tiles`, `arrow_lands_at_step`. On his turn the archer
+  keeps off and **aims at a tile**; the arrow **lands there when his next turn starts**,
+  on whoever stands on it. **Ending your move elsewhere is the dodge.** Range only, no
+  line of sight, no dice. `Duel.volleys` and a LOOSING state in the fingerprint; volleys
+  of a fighter who is out are dropped; `out_of_reach` becomes reach-aware so a kiting
+  archer does not "leave" (test_duel 432 and 445 stay green).
+- **Wren**: `fighters.wren` (bow, spares, purse 0), her drill post as a named point, her
+  sheet line; `drills.bow` {master: bram, opponents [wren], goal: dodged, count: 3,
+  damage: 1}; Bram's `drill_bow` option needs `drilled:sword`.
+- **Seen, in the same change**: the aimed tile marked through the player's turn (a patch,
+  a crosshair ring, a dashed aim line); the arrow a raised ribbon in flight; sparks on a
+  hit, ink dust on a miss; `arrow_aimed` and `arrow_dodged` added to
+  `_fresh_fight_events` (or the view never sees them); a "dodged" float; name-and-role
+  plates over each foe.
+- `DuelPlayer` gets a DODGE hand; `tools/play_duel.gd` takes a drill.
+
+**Tests first:** she keeps off; she stands when she already has a shot; moving off the
+tile dodges and standing still is hit; a bow fight replays to the tile; DODGE passes the
+drill, STAND ends with no death; the volley mark is shown; the float appears. The fast
+suite is timed — whole drills move to a SLOW file if they push it far past 12 s.
+
+### O10 · The spell — the fairy's gift, the drill, and how it is seen
+
+Est. 10 h. Depends on: O9.
+
+- **Rules.** A third action, CAST: `spell_reach_tiles`, `spell_damage`,
+  `spell_every_rounds` (the cooldown is load-bearing — a ranged spell would make the
+  one-tile sword pointless, and the spell is kept after the tutorial, so it changes the
+  wolf, Tom and Harry fights); `DuelFighter.ready_round`; impossible casts become waits;
+  resolved through `_land`. **The spell is a fact the fairy teaches with her last word** —
+  a knowledge gate, legal under invariant 4.
+- `drills.magic` {master: bram, opponents [wren], goal: spells, count: 2}; Bram's
+  `drill_magic` needs `drilled:bow` and the spell.
+- A `cast` input on physical **I** (free since the backstep went); `_read_duel_input`'s
+  third key auto-targets like K; `duel.keys` in both languages.
+- **Seen**: the fairy's sage (`MARK_GUARD`, free since the guard was cut) — a glow at the
+  hand, a flash on the caster, an expanding ring, sparks and a brief light at the target;
+  a spell-reach ring round the cursor while it is ready; a sound cue.
+- **SPECS amended in place**: §5's *magic is the one miracle* gains *and the fairy gives
+  a sliver of it to the one she raised*; the 2026-09-12 row *a register rather than a
+  spell list* is recorded as narrowed to one gift, not reopened as a list; the
+  2026-09-24 *two actions and no guard* becomes *three actions — strike, cast, wait — and
+  no guard, no knockback*.
+
+**Tests first:** a cast lands at range; the cooldown refuses a second cast; a cast with
+nobody in reach is a wait; *guard* is still a wait; a blow still does not move you;
+the actions test rewritten to three; the keys test includes cast; CAST passes the drill.
+
+### O11 · The bake learns his coast round Brindle
+
+Est. 8–10 h. Depends on: O3, O4.
+
+**Ruled: around Brindle only.** Today the simulation reads his raw heights: visible
+cliffs south of Brindle can be walked up, and the southern shore's pocket — whose one
+way out is his own graded path, RaccordBrindle into his chemin_traversant — does not
+exist. **That pocket is the funnel he asked for, already drawn by his brother.**
+
+- **His final ground, not a copy of his formula.** His runtime applies the relief stamps
+  (TerrasseBrindle's covers the exit), the royal ascent, the earthworks and the bridge
+  approaches, *then* lerps the coast edits by weight, *then* repaints rock over the whole
+  grid. So `tools/bake_region.gd` — the one place allowed to load his nodes — instances
+  his terrain headless and takes the final `_height` and `_paint` after
+  `rebuild_ground()`, inside a box round Brindle; core receives plain arrays. His
+  coastline files and scripts are hashed as bake inputs.
+- His coastal trails and the graded approach are ROAD inside the box.
+- vendor, bake, `--check`.
+
+**Tests first** (test_bake): his cliffs south of Brindle are MOUNTAIN; his trails there
+are ROAD; the inputs are hashed; **baked MOUNTAIN equals his runtime paint ≥ 0.85 over
+the box**; baked only, the southern shore is a pocket whose one way out is his approach.
+**Check:** both suites; photographs of the candidate sites (the cove under his
+DescenteDeLaCrique, the cape's end) for him to choose the cemetery from.
+
+### O12 · The game starts at the cemetery
+
+Est. 6–8 h. Depends on: O11 and his choice of site.
+
+`points.cemetery` in the brief (his metres) and in places.json for the procedural world,
+outside every zone; `Region.START` reads it; the fairy and **the fairies' fire** move
+onto it (the fire within reach of the approach, more than 2.2 tiles from the wake tile,
+so the first prompt is still her). Procedural: `_stamp_line(START, BRINDLE, …, ROAD)` in
+`_build_overworld` (not `_stamp_road`, which stamps the fixed route); baked: the road is
+his. `_place_name` and the M map name the cemetery. CLEARING stays as the held ground.
+
+**Tests first:** the start is outside every zone; the fairy is within reach; a ROAD path
+joins the start to Brindle, at most 1.3 times the straight line; the walk to Brindle and
+Blackcairn *in minutes*, with bands he rules on at his pace. **Check:** vendor, bake,
+`--check`; frames of the wake, the map and the procedural start; title → creation →
+wake → the fairy, by hand.
+
+### O13 · The cemetery can be seen
+
+Est. 6–8 h. Depends on: O12.
+
+His pieces only, read from his catalogues' `placement` notes first (G1's lesson): his
+ironworks `soubassement_2m` as a low wall, `portail_cour` (or `portail_fermier_ouvert`)
+as the gate, his library `fence_2m`, bench, spruce and fir, his farming
+`sol_cultive_raccord` as fresh earth, and **his `boulder_round`, scaled small, as uncut
+grave stones** — no exception to the art rule. `_yards` generalised into a yard on a
+point. Graves adult-sized, never on his trail, tone jitter seeded from the anchor.
+**POUR_SLOSINIO asks him for a cemetery kit.** Made headstones in his materials (beside
+`_wolf()`) only if Yannick, seeing the frame, widens the wolf's exception.
+
+**Tests first:** the pieces are hashed; every wall on his map is something you can see;
+no piece on a ROAD tile of his; a DEBT *his brother has drawn no grave*.
+
+### O14 · Where Bram calls from
+
+Est. 3–4 h. Depends on: O12.
+
+The hail's zone and Bram's new post are **named points** — in the brief for the baked
+world and in places.json for the procedural one — **not Brindle + offset**: offsets are
+shared between worlds and Brindle is 35×30 baked but 15×11 procedural, so one offset
+lands in the sea. `test_anchors` is strengthened to **fail on an anchor that resolves
+to impassable ground before being nudged**. A `hails` block (`{who, point, radius}`) with
+its own row reader; `HailRules`: `in_sight`, `calls_out(who, facts)` (not hailed, not met,
+not gone), `approach` (a deterministic path stopping one tile short); `content/hail.json`
+holds the beat. **`hails` stays empty until O17.**
+
+**Tests first:** the anchors resolve on both worlds; the pure rules; the start is outside
+the zone and no pack or fire is in it; baked only — with the zone removed, the start
+cannot reach Brindle's centre or the bridge.
+
+### O15 · Walkers that can be spoken to
+
+Est. 5 h. Depends on: O14.
+
+Every scripted walker — tests and tools — gets through a conversation it did not open.
+`test_cinderworks`' `_walk_to` lifts into `tools/opening_player.gd`: a Navigation path, any
+duel played with PRESS, any unopened dialogue answered, and on a stall a report of tile,
+zone, `talking_to`, duel phase and the last events — instead of *walk failed*.
+`TestCase.past_the_hail(sim)`; `alone_on_the_road` excludes the zone. Sized from the zone
+chosen: tests that teleport to Brindle's centre are far from it; walkers from the new
+start, and fixtures that stand at Bram's post, are not.
+
+**Test first:** a walker facing a dialogue it did not open fails loudly, naming it.
+
+### O16 · Bram calls you over
+
+Est. 10–12 h. Depends on: O7, O15.
+
+A `Hail` store (who, phase: IDLE, SPOTTED, COMING, ARRIVED, TALKING, RETURNING; the walk;
+facing; `holds_player()`) in `Game.build()` and `fresh_stores()`; a `HailSystem` after
+`DuelSystem`, before `WildSystem`: on entering the zone, `hailed:<who>` and a derived
+`hailed`, the player held (a third early return in `MovementSystem`, never a view flag),
+Bram's beat, his walk through `Walkers`, and on arrival a derived `talk`. When the talk
+ends or is refused, he walks home and the player is free. **RETURNING waits while a
+`duel_began` is pending or a drill chain is open** — derived events reach the systems a
+step late, and the reviewer found the race. Wolves never fire while the player is held.
+`DialogueSystem._open` refuses anyone but him while held. The greeting's `called_out`
+reads the **store's phase**, not the fact, or he would open with the hail line forever.
+The clock is not held (`ticks_held` keeps its one writer). The exit slot stays.
+
+**Tests first** (`test_hail.gd`): one hail, the fact written; `move_intent` refused while
+held; he converges within the table's budget; the talk opens with no submitted talk;
+leaving and re-entering gives no second hail; a replay and a save taken mid-approach give
+the same fingerprint and the same talk step; `advance(300)` equals 300 × `advance(1)`;
+`met:bram` or `killed:bram` means no hail; never during a duel or a dialogue; an empty
+`hails` holds nobody, ever (the W4 one-change check); a spar is still offered by an
+ordinary talk.
+
+### O17 · The hail, seen — and switched on
+
+Est. 5–6 h. Depends on: O16.
+
+The `hails` list is filled here, the day it can be seen. A code-made "!" of ours (an
+ember bar and dot with an ink rim, unshaded, no depth test, popping over his head along
+the lens) in the 3D window, and in the flat and procedural window too; Bram visibly
+walks; the keyboard is taken (only Esc passes); prompts hidden; the camera eases between
+the two of them; the existing `seen` cue on `hailed` (pack audio — flagged, not
+extended). `UNCROWNED_HAIL=bram[:steps]`, debug-gated and listed; the gate count in
+CLAUDE.md goes up by one. Debug frames inside Brindle (`UNCROWNED_AT`, `_TALK`, `_DUEL`)
+spend the hail directly — one frame, not a save — and that is written down.
+
+**Check:** frames at the "!", mid-approach and arrived; a new run played by hand.
+
+### O18 · The fairy's words
+
+Est. 3 h of wiring, plus his writing. Depends on: O12, O10.
+
+His rewrite, French first, for a meeting among the graves — and his answer to SPECS
+§5's *"one raising, in the forest"*. It keeps one fairy, once, her last word opening the
+one quest, nothing in `SHE_MAY_NEVER_SAY` — and now **her gift, the spell**. If he changes
+the seven facts, the tests move first.
+
+### O19 · Bram, Wren, and the way on
+
+Est. 4 h of wiring, plus his writing. Depends on: O17, O10.
+
+The hail, each drill's instruction and transition, Wren's lines, a farewell that points
+north along his road with no marker, the departure for the Cinderworks; Wren's
+*"west of here"* fixed (the works are north on the baked map). The drafts from O1, O8,
+O9, O10 and O16 are replaced — they are marked as drafts so none ships.
+
+### O20 · The first fifteen minutes, played headless
+
+Est. 8 h. Depends on: O8 onwards, grown as each step lands; finished after O19.
+
+`tools/play_opening.gd` and a SLOW `test_first_minutes.gd`: creation, the fairy, rest,
+the path, the hail, the three drills, leaving and re-entering, the bridge wolves, the
+works' gate — each stage with a budget at the world's pace and a stall watchdog that
+names the stage; a replay and a save round trip equal at the end; a table of walking,
+fighting and reading time per stage, and damage taken against 100 HP and against 30.
+**Built from O8 with draft lines**, so stalls surface early rather than at the end. The
+procedural world plays what it has and prints DEBT for the rest.
+
+### O21 · Photographs and a fresh-eyes review
+
+Est. 6 h, plus fixes. Depends on: O20.
+
+About 25 frames printed by the player tool — title, creation, the wake, the fairy, the
+path, the hail, each drill's first turn and key moment, the banners, the journal, the
+wolves, the gate, the map, the flat bake, the procedural start — in French and English.
+Then the review sub-agent Yannick allowed walks the route for bugs, stalls and
+incoherence. Each defect gets a failing test first where a suite can see it, and its
+own commit. **The check is Yannick playing the fifteen minutes.**
+
+### O22 · The documents say what the game is
+
+Est. 4 h. Depends on: O21.
+
+CLAUDE.md (the art rule and the new marks, DEBT/OFF counts, the tools and their count,
+the state table, the standing exception), SPECS §4, §5, §10, COMBAT_V2 (a section on
+drills, the three actions), QUEST_CINDERWORKS §6, V3, MIGRATION_3D (the Brindle row, §9b),
+POUR_SLOSINIO, the walkthrough, duel.json's notes.
+
+**Not in this group: deleting the clearing** — its ring, its corridor, its tests. It
+waits for Yannick's own OK.
 
 ---
 

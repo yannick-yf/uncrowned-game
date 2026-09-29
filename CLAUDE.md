@@ -491,6 +491,7 @@ reconstruct it from forty commits will get it wrong.
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
+| **O** | **The opening, redone** (asked and planned 2026-09-29): the cemetery, Bram's hail, three drills (sword, bow, magic), then the words. 22 steps, about 130 h; combat first, then the map. Start at O1 |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
 | **P2** | Folded into **the tutorial's redo** (2026-09-29): the fairy, the combat tutorial, the departure for the works — the dialogue is rewritten then. C2–C4 wait on it |
@@ -608,6 +609,11 @@ without asking.
    having played it several times: good for a v1, and **more versatility — ranged
    combat, magic, a better AI — comes in a later workstream, on its own branch**. So do
    not build that depth onto it here. Fixing what is plainly broken is another matter.
+
+   **Narrowed on 2026-09-29, by him:** a bow and one spell come **now**, in a version
+   scoped to the tutorial's three drills (group **O** of `docs/DEMO_TASKS.md`), on this
+   branch — Wren's bow and the fairy's gift. The depth — an AI worth the name, ranged
+   balance, more spells — is still the later workstream.
 
 **Retired, kept here so the history reads straight:**
 
