@@ -1270,7 +1270,7 @@ the partner can be talked to again; **Bram can still be killed** (the real fight
 **Check:** both suites; `tools/play_duel.gd -- press 400` ends with Bram yielded; a
 frame of Bram standing after the beat.
 
-### O2 · The first frame says what E does
+### O2 · The first frame says what E does — **built 2026-09-29**
 
 Est. 1 h. Depends on: —.
 

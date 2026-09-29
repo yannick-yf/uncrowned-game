@@ -796,17 +796,17 @@ func _read_input() -> void:
 		_sim.submit(&"unkillable", {"on": not _world.unkillable})
 
 	if Input.is_action_just_pressed(&"interact"):
-		var npc: Npc = _nearby_npc()
-		if npc != null:
-			_sim.submit(&"talk", {"npc": String(npc.id)})
-		elif _can_give_back():
-			_sim.submit(&"give_back")
-		elif _can_steal():
-			_sim.submit(&"steal")
-		elif _can_rest():
-			_rest()
-		elif _papers_in_reach() or _site_in_reach() != "" or _watched_site() != "":
-			_sim.submit(&"act")
+		match _what_e_does():
+			&"talk":
+				_sim.submit(&"talk", {"npc": String(_nearby_npc().id)})
+			&"give_back":
+				_sim.submit(&"give_back")
+			&"steal":
+				_sim.submit(&"steal")
+			&"rest":
+				_rest()
+			&"act":
+				_sim.submit(&"act")
 
 	# A second key, because the two kinds of act are different kinds of thing and
 	# were fighting over one. E is what is in front of you; F is what you carry in
@@ -1678,6 +1678,23 @@ func _regard() -> String:
 		% StandingRules.word_for(PlayerRules.regard_in(_player, zone))))])
 
 
+## **What E does where you are standing**, in the one order both the key and the prompt
+## follow (O2): the person in front of you first, then what is on a stall, then the
+## fire, then the act a place offers. Empty when E does nothing.
+func _what_e_does() -> StringName:
+	if _nearby_npc() != null:
+		return &"talk"
+	if _can_give_back():
+		return &"give_back"
+	if _can_steal():
+		return &"steal"
+	if _can_rest():
+		return &"rest"
+	if _papers_in_reach() or _site_in_reach() != "" or _watched_site() != "":
+		return &"act"
+	return &""
+
+
 func _draw_hud() -> void:
 	var walked: int = int(_real_seconds)
 	var where: String = _place_name()
@@ -1725,25 +1742,32 @@ func _draw_hud() -> void:
 	if sign != "":
 		rows.append(sign)
 
-	var npc: Npc = _nearby_npc()
-	if _can_rest():
-		rows.append(Text.of(&"prompt.rest"))
-	elif _papers_in_reach():
-		rows.append(Text.of(&"prompt.papers"))
-	elif npc != null:
-		rows.append(Text.of(&"prompt.talk", [npc.display_name, npc.role.to_lower()]))
-	elif _can_give_back():
-		rows.append(Text.of(&"prompt.put_back"))
-	elif _can_steal():
-		# Who is watching is drawn over their heads, not counted here. The prompt
-		# never says what it will cost: the world shows, the journal explains (§8).
-		rows.append(Text.of(&"prompt.take"))
-	elif _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH) != Region.NOWHERE:
-		rows.append(Text.of(&"prompt.picked_clean"))
-	elif _site_in_reach() != "":
-		rows.append(_site_in_reach())
-	elif _watched_site() != "":
-		rows.append(_watched_site())
+	# **The prompt says what E does, because both read the same answer** (O2). It used
+	# to offer the fire at the wake while E talked to the fairy: two orderings of the
+	# same checks, one in each place, and they drifted.
+	match _what_e_does():
+		&"talk":
+			var npc: Npc = _nearby_npc()
+			rows.append(Text.of(&"prompt.talk", [npc.display_name, npc.role.to_lower()]))
+		&"give_back":
+			rows.append(Text.of(&"prompt.put_back"))
+		&"steal":
+			# Who is watching is drawn over their heads, not counted here. The prompt
+			# never says what it will cost: the world shows, the journal explains (§8).
+			rows.append(Text.of(&"prompt.take"))
+		&"rest":
+			rows.append(Text.of(&"prompt.rest"))
+		&"act":
+			if _papers_in_reach():
+				rows.append(Text.of(&"prompt.papers"))
+			elif _site_in_reach() != "":
+				rows.append(_site_in_reach())
+			else:
+				rows.append(_watched_site())
+		_:
+			# Nothing to do here, but a stall picked clean still says so.
+			if _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH) != Region.NOWHERE:
+				rows.append(Text.of(&"prompt.picked_clean"))
 
 	# Its own row, never an `elif`. What you know is available wherever you are
 	# standing, and burying it behind whatever happens to be nearer would make the

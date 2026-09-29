@@ -266,6 +266,22 @@ func _play_screen() -> Node:
 	return play
 
 
+func test_the_first_prompt_says_what_e_does() -> void:
+	# **O2, a defect in the first frame.** The fire is in reach of where you wake and so
+	# is the fairy; E talks to her, and the prompt used to offer the fire. Both now read
+	# one answer to "what does E do here", so they cannot disagree again.
+	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.call(&"begin", Game.begin_run(TraitRules.at_the_floor()))
+	play.call(&"_ready")
+	assert_eq(play.call(&"_what_e_does") as StringName, &"talk", "E talks to the fairy")
+	play.call(&"_draw_hud")
+	var prompt: String = (play.get(&"_prompt") as Label).text
+	var fairy: Npc = Cast.shared().get_npc(OpeningRules.FAIRY)
+	assert_true(prompt.contains(fairy.display_name), "and the prompt names her: '%s'" % prompt)
+	assert_false(prompt.contains(Text.of(&"prompt.rest")), "not the fire")
+	play.free()
+
+
 func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# The failure this exists for is completely silent: a Label given more lines than
 	# it has room for draws the ones that fit and says nothing about the rest. The
