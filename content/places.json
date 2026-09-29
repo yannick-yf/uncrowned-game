@@ -25,9 +25,9 @@
     "ferry": [52, 150],
     "cinderworks_gate": [245, 168],
     "bram_post": [264, 176],
-    "brindle_hail": [262, 178]
+    "brindle_hail": [257, 180]
   },
-  "_bram_post": "O14, 2026-09-29: where Bram stands and calls from, and brindle_hail the centre of the ground he watches (content/hail.json holds its radius). Named points on each world rather than Brindle plus an offset, because Brindle is 35x30 on his map and 15x11 here and one offset cannot mean the same street on both. On the baked world the brief writes both; these rows are the 2D map's.",
+  "_bram_post": "O14, 2026-09-29: where Bram stands and calls from, and brindle_hail the centre of the ground he watches — the village's edge on the side the graves are, where the road from them comes in (content/hail.json holds its radius). Named points on each world rather than Brindle plus an offset, because Brindle is 35x30 on his map and 15x11 here and one offset cannot mean the same street on both. On the baked world the brief writes both; these rows are the 2D map's.",
   "_hails": "Who calls out to a player walking into their ground, and from which point: {who, point, radius}. EMPTY UNTIL THE HAIL CAN BE SEEN (O17): an empty list holds nobody, ever, which is the one-change way to take it out again.",
   "hails": [],
   "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the road in front of the tile the old guard stood on, which is a wall there (moved a row south on 2026-09-29, when the anchors began to be checked before they are nudged), so the gatekeeper resolves on both worlds.",

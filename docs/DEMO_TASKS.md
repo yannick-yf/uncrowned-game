@@ -1578,9 +1578,11 @@ the zone and no pack or fire is in it; baked only — with the zone removed, the
 cannot reach Brindle's centre or the bridge.
 
 **Built.** `bram_post` (281, 315 baked; 264, 176 on the 2D map — the tiles Brindle+(2,−4)
-already gave him, so nothing he does moved) and `brindle_hail` (280, 318; 262, 178), a
-radius of 6.5 in `content/hail.json` beside the beat's two numbers (the '!' for one
-second, twenty to reach you). `Places.hails()` reads `{who, point, radius}` rows and
+already gave him, so nothing he does moved) and `brindle_hail` (278, 324; 257, 180) —
+the village's edge where the way from the graves comes in, not its heart, so a test or
+a frame standing in Brindle's centre is never called out — a radius of 3.5 in
+`content/hail.json` beside the beat's two numbers (the '!' for one second, twenty to
+reach you). `Places.hails()` reads `{who, point, radius}` rows and
 hands them resolved; `hails` is empty. `HailRules`: `row`, `radius_of`, `in_sight`,
 `calls_out` (not `hailed:`, not `met:`, not `killed:`), `approach` (Navigation, cut at the
 first tile touching the player's). **The dam check changed, and why:** it was written

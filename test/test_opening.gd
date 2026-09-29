@@ -130,7 +130,12 @@ func test_the_hail_is_not_where_you_wake() -> void:
 	var hail: Dictionary = _the_hail()
 	assert_ne(hail["at"], Region.NOWHERE, "the zone resolves")
 	assert_false(HailRules.in_sight(hail, where_the_game_starts()), "you wake outside it")
-	assert_true(HailRules.in_sight(hail, Places.shared().point(&"bram_post")), "and he stands inside it")
+	assert_false(HailRules.in_sight(hail, Region.BRINDLE), "and so is the village's heart, where tests and frames stand")
+	# He walks down from his post to meet you, and has the table's time to do it.
+	var walk: Array[Vector2i] = HailRules.approach(_region(), Places.shared().point(&"bram_post"), hail["at"] as Vector2i)
+	assert_false(walk.is_empty(), "he can walk from his post to where he sees you")
+	assert_true(walk.size() * WalkerRules.steps_per_tile() + HailRules.spotted_steps() <= HailRules.budget_steps(),
+		"within the time he has: %d tiles" % walk.size())
 
 
 func test_no_fire_and_no_pack_stands_in_the_hail() -> void:
