@@ -30,10 +30,126 @@ const INPUTS: Array[String] = [
 	"planning/ironworks-town.json",
 	"planning/river-layout-v2.json",
 	"planning/river-routes-v2.json",
+	# His final ground round Brindle (O11): the coast and the scripts that make it.
+	"planning/coastline.json",
+	"assets/coastline/terrain_edits.f32",
+	"assets/landscape/water_flow.f32",
+	"scripts/flat_ground.gd",
+	"scripts/terrain_stamp.gd",
+	"scenes/relief_godot.tscn",
+	"scripts/coastal_terrain.gd",
+	"scripts/royal_ascent.gd",
+	"scripts/farming_terrain.gd",
+	"planning/royal-city.json",
+	"planning/farming-town.json",
 ]
+
+## The files his runtime reads from the copy in `view3d/workshop/`, which must be the
+## same bytes as his in `prototypes/` or the final ground is somebody else's.
+const RUNTIME_READS: Array[String] = [
+	"assets/landscape/landscape.json",
+	"assets/landscape/height.f32",
+	"assets/landscape/water_level.f32",
+	"assets/landscape/terrain_paint.f32",
+	"assets/landscape/water_flow.f32",
+	"assets/coastline/terrain_edits.f32",
+	"planning/coastline.json",
+	"planning/royal-city.json",
+	"planning/farming-town.json",
+]
+const VENDORED: String = "res://view3d/workshop/"
+
+## His final ground inside the brief's box, once made: {"heights", "paint"} as his
+## runtime leaves them, or empty.
+var _final: Dictionary = {}
 
 
 func _initialize() -> void:
+	# **His final ground needs his runtime, and his runtime needs a frame** (O11): the
+	# relief stamps are placed by their transforms, which only exist inside the tree. So
+	# the plate is stood up now and the bake runs on the first frame.
+	var brief: Dictionary = _json(BRIEF) as Dictionary
+	if brief.has("his_final_ground"):
+		for file: String in RUNTIME_READS:
+			if not _same_as_his(file):
+				push_error("the copy of his workshop is stale (%s); run tools/vendor_workshop.sh" % file)
+				quit(1)
+				return
+		var plate := Node3D.new()
+		plate.name = "Plate"
+		root.add_child(plate)
+		var ground := Node3D.new()
+		ground.set_script(load(VENDORED + "scripts/flat_ground.gd"))
+		ground.name = "Terrain"
+		plate.add_child(ground)
+		var relief: Node = (load(VENDORED + "scenes/relief_godot.tscn") as PackedScene).instantiate()
+		relief.name = "ReliefGodot"
+		plate.add_child(relief)
+		process_frame.connect(_with_his_ground.bind(ground), CONNECT_ONE_SHOT)
+		return
+	_run()
+
+
+## Whether the copy his runtime reads is his file. Byte for byte for his data; for a
+## JSON file once the paths the copy repoints are put back, since repointing them is
+## what the copy is for.
+func _same_as_his(file: String) -> bool:
+	if not file.ends_with(".json"):
+		return FileAccess.get_sha256(WORKSHOP + file) == FileAccess.get_sha256(VENDORED + file)
+	var copied: String = FileAccess.get_file_as_string(VENDORED + file).replace(VENDORED, "res://")
+	return copied == FileAccess.get_file_as_string(WORKSHOP + file)
+
+
+## His runtime makes his ground; the bake takes the heights and the rock inside the box.
+func _with_his_ground(ground: Node3D) -> void:
+	ground.call("rebuild_ground")
+	_final = {
+		"heights": ground.get("_height") as PackedFloat32Array,
+		"paint": ground.get("_paint") as PackedFloat32Array,
+	}
+	ground.get_parent().queue_free()
+	_run()
+
+
+## The landscape the bake reads: his raw files, with his final ground inside the box.
+func _landscape() -> Dictionary:
+	var landscape: Dictionary = RegionBake.read_landscape()
+	if _final.is_empty():
+		return landscape
+	var box: Array = ((_json(BRIEF) as Dictionary).get("his_final_ground", {}) as Dictionary).get("box_tiles", []) as Array
+	if box.size() != 4:
+		return landscape
+	var samples: int = int((landscape["meta"] as Dictionary).get("grid_size", 0))
+	var heights: PackedFloat32Array = (landscape["heights"] as PackedFloat32Array).duplicate()
+	var paint: PackedFloat32Array = (landscape["paint"] as PackedFloat32Array).duplicate()
+	var final_h: PackedFloat32Array = _final["heights"] as PackedFloat32Array
+	var final_p: PackedFloat32Array = _final["paint"] as PackedFloat32Array
+	for z: int in range(maxi(int(box[1]), 0), mini(int(box[3]) + 1, samples)):
+		for x: int in range(maxi(int(box[0]), 0), mini(int(box[2]) + 1, samples)):
+			var i: int = z * samples + x
+			heights[i] = final_h[i]
+			for channel: int in 3:
+				paint[i * 3 + channel] = final_p[i * 3 + channel]
+	landscape["heights"] = heights
+	landscape["paint"] = paint
+	return landscape
+
+
+## His coast's paths, as the bake lays them: `{id, points_xz, width_m}`.
+func _his_paths() -> Array:
+	var coast: Dictionary = _json(WORKSHOP + "planning/coastline.json") as Dictionary
+	var out: Array = []
+	for entry: Variant in (coast.get("trails", []) as Array) + (coast.get("approach_grading", []) as Array):
+		var trail: Dictionary = entry as Dictionary
+		var points: Array = []
+		for p: Variant in trail.get("profile_xzy", []) as Array:
+			points.append([(p as Array)[0], (p as Array)[1]])
+		out.append({"id": String(trail.get("id", "his path")), "points_xz": points,
+			"width_m": float(trail.get("width_m", 0.0))})
+	return out
+
+
+func _run() -> void:
 	var check: bool = OS.get_cmdline_user_args().has("--check")
 	for file: String in INPUTS:
 		if not FileAccess.file_exists(WORKSHOP + file):
@@ -77,7 +193,7 @@ func _initialize() -> void:
 			return
 		var one: Dictionary = _json(WORKSHOP + String(file)) as Dictionary
 		(catalog["assets"] as Array).append_array(one.get("assets", []) as Array)
-	var landscape: Dictionary = RegionBake.read_landscape()
+	var landscape: Dictionary = _landscape()
 	var composed: Dictionary = RegionBake.compose_yards(landscape.get("meta", {}) as Dictionary,
 		landscape.get("heights", PackedFloat32Array()) as PackedFloat32Array,
 		landscape.get("waters", PackedFloat32Array()) as PackedFloat32Array, brief, catalog, geometry)
@@ -142,7 +258,7 @@ func _initialize() -> void:
 
 
 func _bake(town: Dictionary, pieces: Array) -> RegionBake:
-	var landscape: Dictionary = RegionBake.read_landscape()
+	var landscape: Dictionary = _landscape()
 	return RegionBake.bake(
 		landscape.get("meta", {}) as Dictionary,
 		landscape.get("heights", PackedFloat32Array()) as PackedFloat32Array,
@@ -155,6 +271,7 @@ func _bake(town: Dictionary, pieces: Array) -> RegionBake:
 		town,
 		_json(WORKSHOP + "planning/river-routes-v2.json") as Dictionary,
 		pieces,
+		_his_paths(),
 	)
 
 

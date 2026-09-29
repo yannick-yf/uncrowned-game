@@ -1,5 +1,6 @@
 {
   "_note": "What our side proposes on the brother's map where his data is silent (MIGRATION_3D §5, §6 M1b). Everything here is in HIS coordinates: metres, origin at the centre, north = -Z. The bake reads his files first and this second; an entry marked scaffold is a placeholder that disappears the day his data names the same thing. Nothing here is a decision about the map — it is what lets every system and test run on his terrain today, and the bake's report says exactly what is still a proposal.",
+  "his_final_ground": {"box_tiles": [200, 285, 340, 384], "_why": "O11, 2026-09-29 (Yannick: around Brindle only). Inside this box the bake reads his FINAL ground - the heights and the rock paint his own runtime makes after his relief stamps, the royal ascent, the earthworks, the bridge approaches and the coast's edits - instead of his raw files. Outside it the raw files, as before. The box reaches west to take in the cove under his DescenteDeLaCrique, whose cliffs otherwise let the shore leak away along the raw ground. Without it the cliffs he draws south of Brindle could be walked up, and the southern shore's pocket, whose one way out is his graded path into the village, did not exist."},
   "_places_order": "zone order (Region.ZONE_ORDER); the bake keeps it",
   "places": {
     "brindle": {"from": "brindle"},

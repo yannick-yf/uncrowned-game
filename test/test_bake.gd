@@ -217,3 +217,94 @@ func test_the_towns_delivered_door_approaches_are_open() -> void:
 		var at: Vector2i = BakeRules.tile_for(float(approach[0]), float(approach[1]), origin,
 			float(data["metres_per_tile"]))
 		assert_true(region.is_passable(at), "%s's exterior approach remains open" % item["id"])
+
+
+# ------------------------------------------- his final ground round Brindle (O11) ---
+#
+# Yannick, 2026-09-29: the bake learns his coast, around Brindle only. Inside the brief's
+# box the bake reads the ground his own runtime makes — relief stamps, earthworks, the
+# coast's edits, the rock repainted over it all — and not his raw files.
+
+func _brindle_coast() -> Region:
+	var data: Dictionary = _baked()
+	if data.is_empty():
+		return null
+	return RegionBake.read(data)
+
+
+func test_his_cliffs_south_of_brindle_are_rock() -> void:
+	var region: Region = _brindle_coast()
+	assert_not_null(region, "the baked world is there")
+	if region == null:
+		return
+	# Tiles his raw paint calls grass and his runtime paints as cliff: before O11 they
+	# could be walked up while the window drew a rock face.
+	for tile: Vector2i in [Vector2i(229, 333), Vector2i(238, 333), Vector2i(331, 333), Vector2i(232, 336)]:
+		assert_eq(region.terrain_at(tile), Region.Terrain.MOUNTAIN, "%s is his cliff" % tile)
+
+
+func test_his_coastal_paths_are_road() -> void:
+	var region: Region = _brindle_coast()
+	if region == null:
+		assert_true(false, "the baked world is there")
+		return
+	var coast: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		RegionBake.WORKSHOP + "planning/coastline.json")) as Dictionary
+	var trails: Array = (coast.get("trails", []) as Array) + (coast.get("approach_grading", []) as Array)
+	assert_eq(trails.size(), 3, "his two trails and his graded approach")
+	for entry: Variant in trails:
+		var trail: Dictionary = entry as Dictionary
+		for point: Variant in trail["profile_xzy"] as Array:
+			var p: Array = point as Array
+			var tile: Vector2i = BakeRules.tile_for(float(p[0]), float(p[1]), Vector2(-384, -384), 2.0)
+			assert_eq(region.terrain_at(tile), Region.Terrain.ROAD, "%s is walkable at %s" % [trail["id"], tile])
+
+
+func test_the_southern_shore_is_a_pocket_whose_one_way_out_is_his_approach() -> void:
+	# The funnel Yannick asked for, already drawn by his brother: the cove and the cape
+	# below Brindle reach the rest of the world only up his graded approach.
+	var region: Region = _brindle_coast()
+	if region == null:
+		assert_true(false, "the baked world is there")
+		return
+	var coast: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		RegionBake.WORKSHOP + "planning/coastline.json")) as Dictionary
+	var dam: Dictionary = {}
+	var grading: Array = ((coast["approach_grading"] as Array)[0] as Dictionary)["profile_xzy"] as Array
+	for i: int in grading.size() - 1:
+		var from: Vector2 = Vector2(BakeRules.tile_for(float(grading[i][0]), float(grading[i][1]), Vector2(-384, -384), 2.0))
+		var to: Vector2 = Vector2(BakeRules.tile_for(float(grading[i + 1][0]), float(grading[i + 1][1]), Vector2(-384, -384), 2.0))
+		for s: int in 21:
+			var centre: Vector2i = Vector2i(from.lerp(to, float(s) / 20.0).round())
+			for dx: int in range(-3, 4):
+				for dy: int in range(-3, 4):
+					dam[centre + Vector2i(dx, dy)] = true
+	var brindle: Vector2i = region.zone_sites()[&"brindle"] as Vector2i
+	for start: Vector2i in [Vector2i(238, 348), Vector2i(290, 356)]:
+		assert_true(region.is_passable(start), "%s is ground" % start)
+		assert_true(_reach(region, start, {}).has(brindle), "from %s you can walk to Brindle" % start)
+		var sealed: Dictionary = _reach(region, start, dam)
+		assert_false(sealed.has(brindle), "but not without his approach, from %s" % start)
+		assert_true(sealed.size() < 400, "the shore below is a pocket: %d tiles from %s" % [sealed.size(), start])
+
+
+func test_his_coast_is_part_of_what_a_stale_bake_is_measured_against() -> void:
+	var source: Dictionary = _baked().get("source", {}) as Dictionary
+	for file: String in ["planning/coastline.json", "assets/coastline/terrain_edits.f32",
+			"scripts/flat_ground.gd", "scenes/relief_godot.tscn", "scripts/coastal_terrain.gd"]:
+		assert_true(source.has(file), "%s is hashed into the bake" % file)
+
+
+func _reach(region: Region, from: Vector2i, dam: Dictionary) -> Dictionary:
+	var seen: Dictionary = {from: true}
+	var queue: Array[Vector2i] = [from]
+	while not queue.is_empty():
+		var at: Vector2i = queue.pop_back()
+		for dx: int in [-1, 0, 1]:
+			for dy: int in [-1, 0, 1]:
+				var next := at + Vector2i(dx, dy)
+				if seen.has(next) or dam.has(next) or not region.in_bounds(next) or not region.is_passable(next):
+					continue
+				seen[next] = true
+				queue.append(next)
+	return seen

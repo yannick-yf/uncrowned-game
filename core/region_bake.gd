@@ -99,6 +99,7 @@ static func bake(
 	town: Dictionary = {},
 	routes: Dictionary = {},
 	yard_pieces: Array = [],
+	his_paths: Array = [],
 ) -> RegionBake:
 	var out := RegionBake.new()
 	var samples: int = int(landscape.get("grid_size", 0))
@@ -127,6 +128,7 @@ static func bake(
 	out._wound_and_clearing()
 	out._bridges(landscape, brief)
 	out._roads(geography, sectors, brief, routes, town)
+	out._his_paths(his_paths)
 	out._ford()
 	out._buildings(sectors, brief)
 	out._ironworks(town)
@@ -371,6 +373,17 @@ func _roads(geography: Dictionary, sectors: Dictionary, brief: Dictionary,
 		var road: Dictionary = entry as Dictionary
 		_polyline(String(road.get("id", "road")) + " (brief)", road.get("points_xz", []) as Array,
 			ROAD_HALF, Region.Terrain.ROAD)
+
+
+## **His coast's paths** (O11): the trails down to the cove and the cape, and the graded
+## approach into Brindle — painted on his ground by his own shader, so walkable in the
+## simulation too. `{id, points_xz, width_m}`, in his metres.
+func _his_paths(paths: Array) -> void:
+	for entry: Variant in paths:
+		var path: Dictionary = entry as Dictionary
+		var half: int = ROAD_HALF if float(path.get("width_m", 0.0)) >= PATH_WIDE_FROM_M else 0
+		_polyline(String(path.get("id", "his path")), path.get("points_xz", []) as Array, half,
+			Region.Terrain.ROAD)
 
 
 ## Lay one terrain along a polyline in metres. Never over the sea; over rock yes — his

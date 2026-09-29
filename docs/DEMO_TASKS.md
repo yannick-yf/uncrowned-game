@@ -1463,7 +1463,18 @@ Est. 10 h. Depends on: O9.
 nobody in reach is a wait; *guard* is still a wait; a blow still does not move you;
 the actions test rewritten to three; the keys test includes cast; CAST passes the drill.
 
-### O11 · The bake learns his coast round Brindle
+### O11 · The bake learns his coast round Brindle — **built 2026-09-29**
+
+> Built as the reviewer asked: `tools/bake_region.gd` stands up his own terrain node and
+> relief stamps from the copied workshop, lets his runtime make the ground (3 s), and
+> takes the heights and paint inside the brief's `his_final_ground` box; the copy must
+> be his bytes (JSON compared with the repointed paths put back) or the bake refuses.
+> Measured before: in that box his runtime paints **1,646** tiles of rock where the raw
+> files had **300**. His three coastal paths are ROAD. **The box had to reach west to
+> x 200** to take in the cove's cliffs, or the shore leaked away along raw ground. Both
+> pockets now hold: the cove (296 tiles) and the cape (120) reach the world only up his
+> RaccordBrindle. And the first frame there shows his cliffs bare — §9b's dropped
+> CoastlineDecor.
 
 Est. 8–10 h. Depends on: O3, O4.
 
