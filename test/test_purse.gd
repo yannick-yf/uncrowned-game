@@ -18,7 +18,7 @@ func _spend(sim: Sim, amount: int, why: String) -> void:
 
 func test_a_new_player_has_nothing() -> void:
 	var player := Game.build().store(&"player") as PlayerState
-	assert_eq(player.gold, PlayerState.EMPTY, "you woke in a clearing with no purse")
+	assert_eq(player.gold, PlayerState.EMPTY, "you woke among the graves with no purse")
 
 
 func test_nothing_writes_the_purse_except_an_event_in_the_log() -> void:

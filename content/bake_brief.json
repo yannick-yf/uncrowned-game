@@ -15,7 +15,7 @@
   "_kit": "A place marked scaffold gets the whole kit: ground, streets, landmarks, scenery. A place of his gets the kit at kit_footprint_xz only if his data stands no building in it; Brindle has his six ruins and gets nothing of ours.",
   "ignored_sites": ["village_scierie"],
   "woods": [
-    {"id": "thornwood_east", "ellipse_xz": [215, 150], "radii_xz": [110, 120], "scaffold": true, "_why": "§4: the clearing is inside the wood and the road out of Brindle runs along its edge. His map has open grass here; until he plants the Thornwood the bake does, over open ground only"},
+    {"id": "thornwood_east", "ellipse_xz": [215, 150], "radii_xz": [110, 120], "scaffold": true, "_why": "§4: the road out of Brindle runs along the wood's edge. His map has open grass here; until he plants the Thornwood the bake does, over open ground only"},
     {"id": "works_wood", "ellipse_xz": [275, 40], "radii_xz": [100, 130], "scaffold": true, "_why": "§4: the works is a wound in a wood, and the face it is felling has to run into standing trees. Round the furnaces and the mine, over open ground only"},
     {"id": "thornwood_belt", "belt_xz": [[175, 255], [-160, -233]], "half_m": 48, "scaffold": true, "_why": "wood across the shortcut from Brindle to the castle: wood behind the start line is scenery, wood on the shortcut is a decision (MAP_SPEC criterion 7)"}
   ],
@@ -88,7 +88,6 @@
     "his_bridge": {"from_crossing": "PontMine", "_why": "retain the legacy mine bridge point at its delivered location"},
     "bridge": {"from_crossing": "PontRouteRoyale", "_why": "2026-09-15: the main crossing follows his delivered bridge anchor and deck endpoints"},
     "ford": {"xz": [5, 61], "scaffold": true, "_why": "a wade 45 m downstream of his King's Road bridge, where his main river runs straight and seven tiles wide (rivers v4, 2026-09-14). The point follows his river, never the other way round: at (-22, 80) on his old course the band covered half the new one"},
-    "clearing": {"xz": [200, 190], "scaffold": true, "_why": "in the Brindle wood, 65 m north of the ruins and east of his Brindle road, so the ring closes; one corridor leads south"},
     "working_face": {"xz": [290, 150], "scaffold": true, "_why": "the strip the works is felling now, pushed south-east into the works' wood along the flat and away from the fairies — the point being that they have not reached them"},
     "kell_fire": {"xz": [235, 215], "scaffold": true, "_why": "deep in the Brindle wood, east, where nobody goes"},
     "ferry": {"xz": [-145, 138], "scaffold": true, "_why": "beside the Saltmarch spur where the marsh begins; a fire stands by a road, never on it"},
@@ -111,8 +110,7 @@
     {"id": "works_end", "points_xz": [[205, 65], [255, 65]], "scaffold": true, "_why": "his works road stops 50 m short of the steel village's centre; the King's Road has to reach the furnaces"},
     {"id": "brindle_end", "points_xz": [[175, 225], [174, 237]], "scaffold": true, "_why": "his Brindle road stops 12 m short of his own path through the village; one tile of gap is a road that goes nowhere"},
     {"id": "city_and_castle", "points_xz": [[-90, -90], [-150, -180], [-160, -233]], "scaffold": true, "_why": "his city road stops at the city's edge; the King's Road ends at the castle gate"},
-    {"id": "spur_saltmarch", "points_xz": [[-30, 10], [-150, 130], [-236, 236]], "scaffold": true, "_why": "the spur off the junction to the port, west of the river all the way"},
-    {"id": "clearing_corridor", "points_xz": [[200, 204], [200, 232], [182, 246]], "scaffold": true, "_why": "the one way out of the clearing, south and then down to his path through Brindle; it starts at the clearing's edge so the fairies' fire is not on it"}
+    {"id": "spur_saltmarch", "points_xz": [[-30, 10], [-150, 130], [-236, 236]], "scaffold": true, "_why": "the spur off the junction to the port, west of the river all the way"}
   ],
   "_kit_library": "Which of our kit's kinds stand as a piece of his library, and which piece. The window draws from this table and the bake opens the walls around such a piece to the piece's own size. A kind not here stands as a plain block until he draws it. Paths are under prototype_3d/assets/library/.",
   "kit_library": {

@@ -3,7 +3,7 @@ extends RefCounted
 
 ## The opening, as rules rather than as a script.
 ##
-## §4's opening: the player wakes in the fairies' clearing, one of them tells them
+## §4's opening: the player wakes among the graves beside a fairy, she tells them
 ## what only she can tell them, and then she is gone. There is no cutscene and no
 ## flag — she is an ordinary NPC whose seven lines are chained on facts, so the
 ## whole scene is in the event log and replays like a keypress.
@@ -38,7 +38,7 @@ const SHE_MAY_NEVER_SAY: Array[String] = [
 ]
 
 
-## Whether she is still in the clearing.
+## Whether she is still where you woke.
 ##
 ## She leaves when she has finished, and finishing is knowing her last word. No flag,
 ## no removal event, nothing to keep in step — a player who has been told everything

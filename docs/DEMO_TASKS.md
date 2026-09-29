@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1 is built.** Then P2, with him, then C2–C4.
+> answers the same evening. **T1 and T2 are built.** Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -1887,7 +1887,22 @@ bow's, so he never reached it. *« Rajoute du contexte et des explications si n�
 
 Docs only: this group, P2's entry, CLAUDE.md's table, QUEST_CINDERWORKS §9.
 
-### T2 · The clearing comes out
+### T2 · The clearing comes out — **built 2026-09-29**
+
+> **Built.** Gone: the `clearing` point (places.json and the brief), the brief's
+> `clearing_corridor` road, `Region.CLEARING` and its four constants, `scaffold_clearing`,
+> the bake's ring-opening, the deep wood's and the ways' exemptions round it, the
+> `CLEARING` terrain (and its rows in the art and sound tables), `WorldRules.holds`, and
+> seven tests — the ring, the corridor, the stamp, the held ground's geometry, the wound
+> stopping short of the fairies. **Kept, because it is not the clearing**: the fairies'
+> held ground *as a number* (`held_ground`, `HELD_AT_START`), which the journal's wood
+> row shows — it is the fairy's quest, and C2 decides it — and the works' wound, which
+> no longer keeps clear of a ring. **The bake moved 219 tiles**, all of them the clearing
+> and its corridor: 145 of clearing now forest, 74 of corridor road now forest or grass,
+> one road tile a wall his ruin already drew; the wound did not move. Two DEBT lines
+> went with it (baked: nine lines, ten debts, seven claims); the 2D map's counts are
+> unchanged. 713 tests on both worlds. **A re-bake refuses old saves** (O4), so a run
+> saved before this starts fresh.
 
 Est. 4–6 h. Depends on: T1.
 

@@ -11,8 +11,8 @@ extends RefCounted
 ##
 ## Order, and why. Ground first from his samples. Then the brief's woods and grounds,
 ## over open ground only and never inside a place — his map has the works on grass,
-## and §4 needs it in a wound in a wood. His trees close their tiles. The kit's wound
-## and clearing. His bridge decks open their crossings, then roads meet their
+## and §4 needs it in a wound in a wood. His trees close their tiles. The kit's wound.
+## His bridge decks open their crossings, then roads meet their
 ## landings without opening extra water beside them. The ford is a band on the river.
 ## His buildings stand as walls under a prop; the ironworks uses collision polygons
 ## extracted by the build tool, so open halls are not closed by their roof bounds. Then **the kit**: every place marked scaffold gets its ground,
@@ -125,7 +125,7 @@ static func bake(
 	out._woods(brief)
 	out._grounds(brief)
 	out._trees(trees)
-	out._wound_and_clearing()
+	out._wound()
 	out._bridges(landscape, brief)
 	out._roads(geography, sectors, brief, routes, town)
 	out._his_paths(his_paths)
@@ -322,31 +322,13 @@ func _trees(trees: Array) -> void:
 	report.append("trees: %d placed, %d tiles of wood under their crowns" % [trees.size(), planted])
 
 
-## The kit's two pieces of terrain thesis: the works' wound and the fairies' clearing.
-func _wound_and_clearing() -> void:
-	if places.has(&"cinderworks") and points.has(&"clearing") and points.has(&"working_face"):
+## The kit's piece of terrain thesis: the works' wound. It was two until T2
+## (2026-09-29), when the fairies' clearing — its ring, its corridor, its point — was
+## deleted with Yannick's OK.
+func _wound() -> void:
+	if places.has(&"cinderworks") and points.has(&"working_face"):
 		region.scaffold_wound((places[&"cinderworks"] as Dictionary)["centre"] as Vector2i,
-			(points[&"clearing"] as Dictionary)["at"] as Vector2i,
 			(points[&"working_face"] as Dictionary)["at"] as Vector2i)
-	if points.has(&"clearing") and places.has(&"brindle"):
-		var brindle: Dictionary = places[&"brindle"] as Dictionary
-		var walled_to: int = (brindle["centre"] as Vector2i).y - (brindle["size"] as Vector2i).y / 2 \
-			- Region.CORRIDOR_STOPS_SHORT
-		var clearing: Vector2i = (points[&"clearing"] as Dictionary)["at"] as Vector2i
-		region.scaffold_clearing(clearing, walled_to)
-		# The ring of thicket the kit closes the clearing with cannot be seen on his map —
-		# nothing of ours is drawn there — and a wall nobody sees is a wall in the face
-		# (Yannick, 2026-09-14). It stands as open wood until he plants the ring himself;
-		# the corridor's tests say so as a debt.
-		var reach: int = Region.CLEARING_RADIUS + Region.THICKET_DEPTH + 2
-		var opened: int = 0
-		for x: int in range(clearing.x - reach, clearing.x + reach + 1):
-			for y: int in range(clearing.y - reach, walled_to + 2):
-				var tile := Vector2i(x, y)
-				if region.in_bounds(tile) and region.terrain_at(tile) == Region.Terrain.THICKET:
-					region.set_terrain(tile, Region.Terrain.FOREST)
-					opened += 1
-		report.append("clearing: %d tiles of thicket left as open wood, nothing standing there to be seen" % opened)
 
 
 ## His roads, his village paths, his bridge, then the brief's roads.

@@ -25,22 +25,14 @@ const ARMY_DRIFT_PER_DAY: float = 12.0
 
 # ------------------------------------------------------------- the fairies ---
 
-## How many tiles around the clearing the fairies still hold, at the start.
+## How much wood the fairies still hold, at the start, in paces — the number the
+## journal's wood row shows once she has told you the wood is going.
 ##
-## Enough for the clearing (7), the thicket ring that closes it (12), and the
-## corridor south as far as Brindle coming into frame (~20). So the first thing the
-## player loses is the safe walk out, then the ring, then the clearing itself.
+## **A number, not ground any more.** It was the radius of their ground round the
+## clearing — the clearing (7), the thicket ring (12), the corridor south (~20) — and
+## `holds()` answered for a tile. The clearing was deleted in T2 (2026-09-29) and the
+## geometry with it; the number stays until C2 decides what the fairies' quest reads.
 const HELD_AT_START: float = 22.0
-
-
-## Whether a tile is still the fairies' — inside the ground they hold around the
-## clearing. Moved here from the beast rules when the beasts went (2026-09-13): the
-## geometry is a fact about the wood, not about what hunted in it, and it is what
-## the belt (§4) and the opening's tests read.
-static func holds(tile: Vector2i, held: float) -> bool:
-	if held <= 0.0:
-		return false
-	return Vector2(tile).distance_to(Vector2(Region.CLEARING)) <= held
 
 
 ## And how much of it goes in a day, **at full steel output**.

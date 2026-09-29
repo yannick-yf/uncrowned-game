@@ -34,8 +34,8 @@ const MUSIC: bool = false
 
 ## Where you are, and what it sounds like.
 ##
-## The pack's titles do half the work: there is a track called *Clearing* and a track
-## called *Dark Forest*, and the opening happens in one and then the other. What is
+## The pack's titles do half the work: there is a track called *Dark Forest* and one
+## called *Lament*, and the wood and the works' wound are one and the other. What is
 ## chosen rather than given is which of them is the king's world — **the road, the
 ## capital and the castle share nothing with the wood**, because §4's whole argument
 ## is that they are two places and the map should say so without a caption.
@@ -56,13 +56,12 @@ const MUSIC_AT: Dictionary = {
 const MUSIC_ON: Dictionary = {
 	Region.Terrain.FOREST: "37 - Dark Forest.ogg",
 	Region.Terrain.THICKET: "37 - Dark Forest.ogg",
-	Region.Terrain.CLEARING: "11 - Clearing.ogg",
 	Region.Terrain.CLEARED: "29 - Lament.ogg",
 }
 
 const MUSIC_ROAD: String = "23 - Road.ogg"
 const MUSIC_TITLE: String = "38 - Intro.ogg"
-## Character creation: you are deciding who woke up in the clearing with no memory of
+## Character creation: you are deciding who woke up among the graves with no memory of
 ## having been anybody. *Dream* rather than a fanfare.
 const MUSIC_CREATION: String = "22 - Dream.ogg"
 
@@ -72,7 +71,6 @@ const AMBIENT_ON: Dictionary = {
 	Region.Terrain.WILD: "Wind.wav",
 	Region.Terrain.FOREST: "Wind.wav",
 	Region.Terrain.THICKET: "Wind.wav",
-	Region.Terrain.CLEARING: "Wind.wav",
 	Region.Terrain.CLEARED: "Wind2.wav",
 	Region.Terrain.WATER: "River.wav",
 	Region.Terrain.FORD: "River.wav",

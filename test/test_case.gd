@@ -169,8 +169,8 @@ func _is_empty_spot(region: Region, cast: Cast, tile: Vector2i, zone: StringName
 
 
 ## **Where a new run wakes**, in the world's terms (O3). A test that means *the start*
-## says so, and one that means *the fairies' clearing* says `Region.CLEARING` — the two
-## are the same point until O12 moves the start to the cemetery.
+## says so. It was the fairies' clearing until O12 moved it to the cemetery; the clearing
+## itself was deleted in T2.
 func where_the_game_starts() -> Vector2i:
 	return Region.START
 

@@ -142,10 +142,9 @@ func _init() -> void:
 		Region.Terrain.FARMLAND: [&"field", 1, 4],
 		# The thesis, on the ground. Cleared land reads as the road's world — the
 		# same beaten dirt the road and the towns are drawn on — because that is
-		# exactly what it has become. The fairies' clearing keeps the wood's own
-		# floor. The thicket keeps it too and is buried under trees by `scatter_at`.
+		# exactly what it has become. The thicket keeps the wood's own floor and is
+		# buried under trees by `scatter_at`.
 		Region.Terrain.CLEARED: [&"floor", 11, 19],
-		Region.Terrain.CLEARING: [&"floor", 11, 12],
 		Region.Terrain.THICKET: [&"floor", 11, 12],
 	}
 
@@ -307,10 +306,6 @@ const GROUND: Dictionary = {
 	Region.Terrain.WILD: {
 		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 300,
 		"detail": [Vector2i(12, 12), Vector2i(13, 12), Vector2i(14, 12), Vector2i(15, 12)],
-	},
-	Region.Terrain.CLEARING: {
-		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 380,
-		"detail": [Vector2i(12, 12), Vector2i(14, 12), Vector2i(15, 12)],
 	},
 	Region.Terrain.FOREST: {
 		"sheet": &"floor", "base": Vector2i(11, 12), "chance": 220,
@@ -536,8 +531,9 @@ static func ground_tile(terrain: int, x: int, y: int, zone: StringName = &"") ->
 ## The flat colour a terrain falls back to when it has no atlas tile.
 ##
 ## **Keyed, not indexed.** It was a `PackedColorArray` in the window, read by terrain
-## ordinal — so adding `CLEARING` to `core/` in one commit left the table one short
-## and the first frame drawn in the clearing would have read off the end of it. No
+## ordinal — so adding a terrain (the fairies' clearing, deleted since) to `core/` in
+## one commit left the table one short and the first frame drawn on it would have read
+## off the end of it. No
 ## test drew anything, so nothing caught it. A dictionary cannot go out of bounds,
 ## and `colour_for` answers for a terrain nobody has coloured yet.
 const TERRAIN_COLOURS: Dictionary = {
@@ -557,7 +553,6 @@ const TERRAIN_COLOURS: Dictionary = {
 	Region.Terrain.FARMLAND: Color(0.47, 0.45, 0.24),
 	Region.Terrain.SAND: Color(0.68, 0.62, 0.44),
 	Region.Terrain.CLEARED: Color(0.31, 0.40, 0.24),
-	Region.Terrain.CLEARING: Color(0.20, 0.30, 0.19),
 	Region.Terrain.THICKET: Color(0.09, 0.16, 0.10),
 	# Added after the map screen drew Blackcairn in magenta — which is the sentinel
 	# working exactly as intended: a terrain nobody has coloured is impossible to
@@ -592,11 +587,6 @@ func scatter_at(terrain: int, x: int, y: int) -> Array:
 			if roll < 248:
 				return [&"nature", Rect2i(32, 0, 32, 32)]
 			return [&"nature", Rect2i(0, 0, 32, 32)]
-		Region.Terrain.CLEARING:
-			# Open ground. A little scrub at the margins and nothing in the middle,
-			# so it reads as a room rather than a thinner wood.
-			if roll < 26:
-				return [&"nature", Rect2i(96, 0, 32, 32)]
 		Region.Terrain.CLEARED:
 			# What is left standing after the axes: a few dead trees, drawn grey by
 			# the window, and otherwise bare.

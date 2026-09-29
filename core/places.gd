@@ -10,7 +10,7 @@ extends RefCounted
 ##
 ## Three forms, each a Dictionary:
 ##   {"place": "harrowgate", "offset": [dx, dy]}          a place's centre, plus an offset
-##   {"point": "clearing", "offset": [dx, dy]}            a named point, plus an offset
+##   {"point": "cemetery", "offset": [dx, dy]}            a named point, plus an offset
 ##   {"place": "harrowgate", "feature": "inn", "offset": [dx, dy]}
 ##                                                        a prop of that kind standing in the
 ##                                                        place — which only a built Region can
@@ -331,7 +331,7 @@ func locate(anchor: Dictionary) -> Vector2i:
 	return NOWHERE
 
 
-## An anchor as a reader would write it: `harrowgate.inn+(2,-3)`, `clearing+(0,-1)`.
+## An anchor as a reader would write it: `harrowgate.inn+(2,-3)`, `cemetery+(0,-1)`.
 ## For the message that names what did not resolve.
 static func describe(anchor: Dictionary) -> String:
 	if anchor.is_empty():

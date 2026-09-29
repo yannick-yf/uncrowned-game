@@ -33,8 +33,7 @@ func _start(against: String = "bram", by: String = "player", spar: bool = false)
 
 
 ## The same, on open ground. A fight about *walking away* needs somewhere to walk to,
-## and where the player wakes is a clearing in a wood on one map and a hollow on the
-## other. Said in the world's own terms — `alone_on_the_road` — rather than as a tile,
+## and where the player wakes is a graveyard at a village's edge on both maps. Said in the world's own terms — `alone_on_the_road` — rather than as a tile,
 ## so it holds on both. The position is written straight into the store and is
 ## therefore not in the log; nothing below it replays.
 func _start_in_the_open(against: String = "bram", by: String = "player") -> Sim:
@@ -880,7 +879,7 @@ func test_a_player_killed_in_a_fight_wakes_at_the_fire_and_not_where_it_was() ->
 	# **A bug the first design's beat found**, and one any fight could have again:
 	# `WorldState.hurt` respawns on the step it kills, and a fight that went on writing
 	# the player's tile would put them back where they died, whole. Here the fight is
-	# somewhere other than the clearing, so the two places can be told apart.
+	# somewhere other than where you woke, so the two places can be told apart.
 	DuelRules.override({"player_hp": 5})
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState

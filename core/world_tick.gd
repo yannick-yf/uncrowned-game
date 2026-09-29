@@ -26,7 +26,7 @@ var bank_confidence: float = BASELINE
 var army_strength: float = BASELINE
 var faction_tension: float = NEUTRAL
 var rumour_spread: float = 0.0
-## How many tiles around the fairies' clearing are still theirs.
+## How much wood the fairies still hold, in paces (`WorldRules.HELD_AT_START`).
 ##
 ## **Not a thirteenth tracked quantity** — §19 Q11 refused one of those and the
 ## refusal still holds. This is the same kind of thing as `grain_price` and

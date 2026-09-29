@@ -1,6 +1,6 @@
 extends Node2D
 
-## Who you are, before you wake up in the clearing.
+## Who you are, before you wake up among the graves.
 ##
 ## §11's pool, on screen: four traits at the floor, eight points to place, nothing
 ## above five (S1). The screen only ever moves numbers about — the decision is one

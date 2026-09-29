@@ -90,7 +90,7 @@ func test_the_window_stands_on_his_ground() -> void:
 	var sea: float = window.height_at(-370.0, 370.0)
 	assert_true(sea < 0.0, "and the sea floor is below the sea: %.2f m" % sea)
 
-	# A frame from the clearing: the player, the cast and the guards are placed, and
+	# A frame from where the player wakes: the player, the cast and the guards are placed, and
 	# nothing in the simulation moved to do it.
 	var world := sim.store(&"world") as WorldState
 	var before: String = world.fingerprint()

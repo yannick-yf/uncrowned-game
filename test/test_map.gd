@@ -41,9 +41,8 @@ func _reach(region: Region, from: Vector2i, dammed: Dictionary) -> Dictionary:
 # ------------------------------------------------------------ the criteria ---
 
 func test_criterion_1_every_zone_is_reachable_over_ground() -> void:
-	# Checked from the clearing rather than from Brindle, which is stricter: the
-	# clearing is behind the thicket, so this also holds the rule that thicket may
-	# never be the only thing between the player and anything.
+	# Checked from where the player wakes rather than from Brindle, which also holds
+	# the rule that thicket may never be the only thing between the player and anything.
 	var region: Region = _region()
 	var open: Dictionary = _reach(region, where_the_game_starts(), {})
 	for zone: StringName in Region.ZONE_ORDER:
@@ -188,7 +187,7 @@ func test_the_works_is_a_wound_with_a_radius() -> void:
 
 
 func test_the_working_face_pushes_into_the_wood() -> void:
-	# The clearing has to read as a thing happening, not a thing that happened.
+	# The felling has to read as a thing happening, not a thing that happened.
 	var region: Region = _region()
 	var along: int = 0
 	var from := Vector2(Region.CINDERWORKS)
@@ -200,27 +199,8 @@ func test_the_working_face_pushes_into_the_wood() -> void:
 	assert_true(along > 20, "the face runs %d tiles into the Thornwood" % along)
 
 
-func test_the_wound_stops_short_of_the_fairies() -> void:
-	# The smallest and most important number on the map. The works has eaten
-	# everything it can reach and stopped just short of the last of them, so the two
-	# are in the same thought and the gap is what the player is asked to save.
-	var region: Region = _region()
-	var untouched: int = 0
-	var spare: float = float(Region.CLEARING_RADIUS + Region.THICKET_DEPTH)
-	for x: int in range(Region.CLEARING.x - 20, Region.CLEARING.x + 21):
-		for y: int in range(Region.CLEARING.y - 20, Region.CLEARING.y + 21):
-			var tile := Vector2i(x, y)
-			var away: float = Vector2(tile).distance_to(Vector2(Region.CLEARING))
-			if away <= spare or away > spare + float(Region.WOUND_KEEPS_CLEAR):
-				continue
-			if region.terrain_at(tile) == Region.Terrain.FOREST:
-				untouched += 1
-	assert_true(untouched > 0,
-		"there is still wood between the wound and the fairies' ring: %d tiles" % untouched)
-
-
 func test_every_terrain_the_map_lays_down_can_be_drawn() -> void:
-	# The bug this exists for: `Terrain.CLEARING` was added to `core/` and the
+	# The bug this exists for: a clearing terrain (deleted since, T2) was added to `core/` and the
 	# window's colour table still had fifteen entries, so the first frame drawn in
 	# the clearing would have read past the end of it. No test drew anything, so
 	# nothing caught it. Terrain is added in pairs now — the ground and the way it

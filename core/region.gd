@@ -8,7 +8,7 @@ extends RefCounted
 ## portal tiles into it.
 ##
 ## **Where things stand is data, not code** (MIGRATION_3D §6.2, M1a, 2026-09-13). The
-## eight sites, their footprints, the clearing, the crossings, every fire, stall and
+## eight sites, their footprints, the start, the crossings, every fire, stall and
 ## paper, and every person are read from `content/places.json` as *anchors* — a place
 ## or point plus an offset — and resolved by `resolve()`. Nothing that a person stands
 ## next to is a literal in this file any more. What *is* still here are the offsets
@@ -33,8 +33,6 @@ enum Terrain {
 	MARSH,
 	FARMLAND,
 	SAND,
-	## The fairies' clearing, where the player wakes. Open ground inside the wood.
-	CLEARING,
 	## Ground the works has already taken: stumps, bare earth, a working face.
 	##
 	## **The map's thesis, on the ground** (§4). The road is the king's world and the
@@ -115,30 +113,12 @@ const KETTLE_HALF_WIDTH: int = 2
 ## The road's one guarded crossing, and the ford downstream of it. Both are bands
 ## rather than tiles: a walker covers 6 tiles a second and can step clean over a
 ## one-tile trigger (§19 Q28b).
-## **The fairies' clearing** (§4's opening, §5). The player wakes here, and one
-## corridor leads south out of it to Brindle — no maze, no choice, nothing gated.
-##
-## Placed inside the Thornwood 30 tiles north of Brindle, which is about five
-## seconds of walking: long enough to be a walk out of the trees, short enough that
-## §4's rule against empty walking still holds. East of the Kettle, so it sits on
-## Brindle's own side of the river.
-static var CLEARING: Vector2i = Places.shared().point(&"clearing")
-## **Where a new run wakes** (O3, 2026-09-29) — its own name, apart from the fairies'
-## clearing, which is what the fairies hold and the works shrink. The same point for
-## now; O12 moves the start to a cemetery south of Brindle and leaves the clearing its
-## ground. Everything that means *where you woke* reads this, and everything that means
-## *the fairies' ground* keeps reading `CLEARING`. **The cemetery since O12**: the burned
-## village's own graveyard at Brindle's southern edge, so leaving it means crossing the ruins.
+## **Where a new run wakes** (O3, 2026-09-29): **the cemetery since O12**, the burned
+## village's own graveyard at Brindle's southern edge, so leaving it means crossing the
+## ruins. It was the fairies' clearing in the Thornwood until then — a pocket ringed by
+## thicket with one corridor south — and the clearing itself was deleted in T2
+## (Yannick, 2026-09-29): its point, its ring, its corridor and its terrain.
 static var START: Vector2i = Places.shared().point(&"cemetery")
-const CLEARING_RADIUS: int = 7
-## How deep the thicket ring is. Five, because 8-way movement will find a diagonal
-## seam in anything thinner.
-const THICKET_DEPTH: int = 5
-const PATH_HALF_WIDTH: int = 1
-## How far short of Brindle's edge the corridor's walls stop. Below that the ruins and
-## the furnaces are already in frame, and a destination you can see guides better than
-## a wall does. Seven: with Brindle at y 180 and eleven deep, the walls end at 168.
-const CORRIDOR_STOPS_SHORT: int = 7
 
 static var BRIDGE: Vector2i = Places.shared().point(&"bridge")
 static var FORD: Vector2i = Places.shared().point(&"ford")
@@ -244,8 +224,8 @@ static func speed_multiplier(terrain: Terrain) -> float:
 ## the castle is 208 tiles of open ground and 29 of wood, and at 0.80 the road beat a
 ## plain walker by 2.4 s and lost to an attuned one. At 0.65 the road wins by 12 s and
 ## 9 s — a fifth of the walk, noticeable, not a slog. Worked fields keep 0.80: they
-## have paths, and the Wide Acres is a place you walk around in. Cleared ground and the
-## clearing are not in the table and walk at 1.00 — bare earth — until it matters.
+## have paths, and the Wide Acres is a place you walk around in. Cleared ground is
+## not in the table and walks at 1.00 — bare earth — until it matters.
 static func speed_table(terrain: Terrain) -> float:
 	match terrain:
 		Terrain.ROAD, Terrain.TOWN, Terrain.CAMP, Terrain.CASTLE:
@@ -573,13 +553,10 @@ static func _build_overworld() -> Region:
 	region.bake_zones()
 	region._stamp_bounds()
 	region._stamp_thornwood()
-	# The bite the works has taken out of the wood, before the clearing, so that the
-	# fairies' ground wins where the two nearly meet — which is the point: the wound
-	# stops just short of them, and the gap is what is left to lose.
-	region.scaffold_wound(CINDERWORKS, CLEARING, WORKING_FACE)
-	# Before the road, the river and the settlements, so that if any of this
-	# geometry is ever wrong they overwrite it rather than the other way round.
-	region.scaffold_clearing(CLEARING, BRINDLE.y - BRINDLE_SIZE.y / 2 - CORRIDOR_STOPS_SHORT)
+	# The bite the works has taken out of the wood. Before the road, the river and the
+	# settlements, so that if any of this geometry is ever wrong they overwrite it rather
+	# than the other way round.
+	region.scaffold_wound(CINDERWORKS, WORKING_FACE)
 	# And last of the wood: close it up, leaving the ways through.
 	region._stamp_deep_wood()
 	region._stamp_ellipse(WIDE_ACRES, Vector2i(34, 24), Terrain.FARMLAND)
@@ -638,33 +615,20 @@ func _stamp_thornwood() -> void:
 ## not a building standing on grass.
 const WOUND_RADIUS: int = 26
 ## And the face they are working now: a strip pushing north-west into the wood, so
-## the clearing reads as a thing happening rather than a thing that happened. Aimed
-## away from the fairies, because the point below is that they have not reached them.
+## the felling reads as a thing happening rather than a thing that happened.
 static var WORKING_FACE: Vector2i = Places.shared().point(&"working_face")
 const WORKING_FACE_WIDTH: int = 7
 
-## How much untouched wood is left between the wound and the fairies' ring.
-##
-## **The most important number on the map and the smallest.** The works has eaten
-## everything it can reach and stopped four tiles short of the last of them, so the
-## two are in the same thought and the gap is the thing the player is being asked to
-## save. Without it the wound simply swallows the clearing and there is nothing left
-## to lose — which is also what happened the first time this was stamped, and the
-## corridor test caught it.
-const WOUND_KEEPS_CLEAR: int = 4
 
-
-## The wound: the wood eaten around the works, and the face being worked toward the
-## clearing. Part of the kit, so the bake can stamp it on a map that has the works and
-## no wound. Only ever writes over standing wood.
-func scaffold_wound(works: Vector2i, clearing: Vector2i, face: Vector2i) -> void:
-	var spare: float = float(CLEARING_RADIUS + THICKET_DEPTH + WOUND_KEEPS_CLEAR)
+## The wound: the wood eaten around the works, and the face being worked into it. Part
+## of the kit, so the bake can stamp it on a map that has the works and no wound. Only
+## ever writes over standing wood. **It kept clear of the fairies' ring** until the
+## clearing was deleted (T2, 2026-09-29).
+func scaffold_wound(works: Vector2i, face: Vector2i) -> void:
 	for x: int in range(works.x - WOUND_RADIUS, works.x + WOUND_RADIUS + 1):
 		for y: int in range(works.y - WOUND_RADIUS, works.y + WOUND_RADIUS + 1):
 			var tile := Vector2i(x, y)
 			if terrain_at(tile) != Terrain.FOREST:
-				continue
-			if Vector2(tile).distance_to(Vector2(clearing)) <= spare:
 				continue
 			if Vector2(tile).distance_to(Vector2(works)) <= float(WOUND_RADIUS):
 				set_terrain(tile, Terrain.CLEARED)
@@ -681,44 +645,6 @@ func scaffold_wound(works: Vector2i, clearing: Vector2i, face: Vector2i) -> void
 				var tile := Vector2i(int(point.x) + dx, int(point.y) + dy)
 				if terrain_at(tile) == Terrain.FOREST:
 					set_terrain(tile, Terrain.CLEARED)
-
-
-## The clearing, the thicket that closes it, and the one corridor south.
-##
-## Only ever writes over `FOREST`, so the river, the road and every settlement are
-## safe from it by construction rather than by getting the arithmetic right.
-## Part of the kit. `walled_to` is the row where the corridor's walls stop: the
-## procedural map derives it from Brindle's edge, the bake from the baked Brindle's.
-func scaffold_clearing(centre: Vector2i, walled_to: int) -> void:
-	var outer: int = CLEARING_RADIUS + THICKET_DEPTH
-	for x: int in range(centre.x - outer, centre.x + outer + 1):
-		for y: int in range(centre.y - outer, centre.y + outer + 1):
-			var tile := Vector2i(x, y)
-			if terrain_at(tile) != Terrain.FOREST:
-				continue
-			var away: float = Vector2(tile).distance_to(Vector2(centre))
-			if away <= float(CLEARING_RADIUS):
-				set_terrain(tile, Terrain.CLEARING)
-			elif away <= float(outer):
-				set_terrain(tile, Terrain.THICKET)
-
-	# The corridor, cut back through the ring the loop above just laid down, and
-	# walled on both sides until Brindle comes into frame.
-	for y: int in range(centre.y, walled_to + 1):
-		for x: int in range(centre.x - PATH_HALF_WIDTH - THICKET_DEPTH,
-				centre.x + PATH_HALF_WIDTH + THICKET_DEPTH + 1):
-			var tile := Vector2i(x, y)
-			var here: Terrain = terrain_at(tile)
-			if here != Terrain.FOREST and here != Terrain.THICKET and here != Terrain.CLEARING:
-				continue
-			# Inside the clearing nothing is cut: the corridor begins at its edge,
-			# or the open ground the player wakes on has a path stamped through it.
-			if Vector2(tile).distance_to(Vector2(centre)) <= float(CLEARING_RADIUS):
-				continue
-			if absi(x - centre.x) <= PATH_HALF_WIDTH:
-				set_terrain(tile, Terrain.FOREST)
-			else:
-				set_terrain(tile, Terrain.THICKET)
 
 
 ## The ways through the deep wood.
@@ -756,19 +682,11 @@ const WOOD_VERGE: int = 1
 ## would take away the choice it exists to offer; it gets thickets to weave past
 ## instead.
 func _stamp_deep_wood() -> void:
-	var keep_clear: float = float(CLEARING_RADIUS + THICKET_DEPTH + 2)
 	for x: int in range(198, MOUNTAIN_EAST + 1):
 		for y: int in range(MOUNTAIN_NORTH, 176):
 			var tile := Vector2i(x, y)
-			if terrain_at(tile) != Terrain.FOREST:
-				continue
-			if Vector2(tile).distance_to(Vector2(CLEARING)) <= keep_clear:
-				continue
-			# The corridor out of the clearing is a way through like any other.
-			if absi(x - CLEARING.x) <= WOOD_WAY_HALF_WIDTH + WOOD_VERGE \
-					and y >= CLEARING.y and y <= BRINDLE.y:
-				continue
-			set_terrain(tile, Terrain.THICKET)
+			if terrain_at(tile) == Terrain.FOREST:
+				set_terrain(tile, Terrain.THICKET)
 
 	for route: Array in [WOOD_WAYS, WOOD_SPUR_WEST, WOOD_SPUR_KELL]:
 		_carve_way(route as Array[Vector2i])
@@ -793,10 +711,6 @@ func _clump_hash(x: int, y: int) -> int:
 
 
 func _carve_way(route: Array[Vector2i]) -> void:
-	# The fairies' ring is not a wall the wood may open. A way passing near the
-	# clearing cut straight through it, and the corridor test caught it: the pocket
-	# stopped being a pocket and the whole map was reachable with the corridor dammed.
-	var ring: float = float(CLEARING_RADIUS + THICKET_DEPTH + 1)
 	for leg: int in route.size() - 1:
 		var from := Vector2(route[leg])
 		var to := Vector2(route[leg + 1])
@@ -812,8 +726,6 @@ func _carve_way(route: Array[Vector2i]) -> void:
 				for dy: int in range(-WOOD_WAY_HALF_WIDTH - WOOD_VERGE,
 						WOOD_WAY_HALF_WIDTH + WOOD_VERGE + 1):
 					var tile: Vector2i = centre + Vector2i(dx, dy)
-					if Vector2(tile).distance_to(Vector2(CLEARING)) <= ring:
-						continue
 					if terrain_at(tile) == Terrain.THICKET:
 						set_terrain(tile, Terrain.FOREST)
 
@@ -1063,10 +975,8 @@ func open_near(from: Vector2i) -> Vector2i:
 ##
 ## Now each one is a reason, and each reason is written beside its anchor in
 ## `content/places.json` (`_why`): one within reach of every settlement, at the yard
-## or quay or verge that settlement would have one; **the fairies' fire** in the
-## clearing — the first save in the game, on the last protected ground, and the reason
-## to come back and *see* that ground shrink (§8: a change the player cannot perceive
-## is identical to no change); the road's, a day's walk apart where a carter would
+## or quay or verge that settlement would have one; **the fairies' fire** among the
+## graves where you wake — the first save in the game; the road's, a day's walk apart where a carter would
 ## stop; Kell's, the only landmark in the deep wood; the ferryman's. The file's order
 ## is the search order, a place's own fire first.
 func _place_campfires() -> void:

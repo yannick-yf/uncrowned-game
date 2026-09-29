@@ -200,7 +200,7 @@ func test_breaking_and_building_both_cost_somebody_and_the_journal_says_who() ->
 	# player's all the same, and the belt moves whatever the furnaces read.
 	assert_true(ticked.steel_output >= steel, "the furnaces did not cool")
 	assert_true(ticked.handprint_on(&"steel_output") > 0.0, "and the push was the player's")
-	assert_true(ticked.held_ground < wood, "and the belt widened toward the clearing")
+	assert_true(ticked.held_ground < wood, "and the fairies' wood got smaller")
 	assert_true(ticked.hardship_in(&"brindle") >= DialogueRules.HARDSHIP_BITES, CROSSES_THE_LINE)
 	assert_true(ticked.handprint_on(&"hardship") > 0.0, "all of it the player's doing")
 

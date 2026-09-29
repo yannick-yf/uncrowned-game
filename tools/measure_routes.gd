@@ -33,10 +33,7 @@ func _wild_line() -> Array[Vector2i]:
 func _report(label: String, route: Array[Vector2i], attuned: bool) -> void:
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
-	# Both routes are Brindle to the castle by definition. The game starts the player
-	# in the fairies' clearing now, and since the deep wood closed, walking straight
-	# out of it is not a thing anybody can do — which is the point of the wood, and
-	# not something this instrument should be measuring.
+	# Both routes are Brindle to the castle by definition, wherever the game starts.
 	world.player_pos = world.region().brindle_centre()
 	var start_hp: int = world.player_hp
 	var deadline: int = int(400.0 * float(Sim.STEPS_PER_REAL_SECOND))

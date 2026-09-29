@@ -231,11 +231,13 @@ cannot see is a bug*:
   0.85 now — the steepest flanks and the high ranges still close the map, and 6,169
   tiles of bank are walkable again. Where he wants a bank to stop a walker, the paint
   is his.
-- **The kit's ring of thicket round the clearing** — §4's *one corridor out* — stood on
+- ~~**The kit's ring of thicket round the clearing** — §4's *one corridor out* — stood on
   open grass with nothing to show it. The bake leaves it open wood (277 tiles) and says
   so; the ring's two tests record a DEBT. **His to plant**: a ring of wood five tiles
   deep round the clearing at (200, 190 m), open to the south, and the corridor test
-  closes itself.
+  closes itself.~~ **Gone (T2, 2026-09-29):** the player wakes in the cemetery since
+  O12, and the clearing, its ring, its corridor and their two debts were deleted with
+  Yannick's OK. Nothing there is his to plant.
 - **The kit's footprints were twice his cottages.** A 4 × 3-tile footprint (8 × 6 m)
   under a 4.3 m cottage left a strip of wall round every house. The brief's
   `kit_library` says which kinds stand as his pieces; the bake opens the outer ring of
@@ -406,8 +408,8 @@ backgrounds, the endings, fighting. All of it lives in `core/`, `core/rules/` an
 **How the two of you work together, day to day (Yannick's question, 2026-09-14).**
 
 *His delivery.* He works in `prototypes/brindle_3d/` — his own Godot project, his
-branch, his tools — and merges to `main` when a piece is done: a place, a bridge, the
-ring round the clearing, a face. He never needs to open our code. The contract he keeps
+branch, his tools — and merges to `main` when a piece is done: a place, a bridge, a
+face. He never needs to open our code. The contract he keeps
 is his data's names: site ids, building ids and their `kind`, the route lists.
 
 *Our ingestion, the same afternoon.* Three commands and a look. `tools/vendor_workshop.sh`

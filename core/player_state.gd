@@ -21,7 +21,7 @@ const EMPTY: int = 0
 ## and nothing more — no prices, no market, no items. It exists because the fight needs
 ## somewhere for a dead man's gold to go, not because v1 spends it.
 ##
-## A new player starts with nothing. Waking in the fairies' clearing with a purse is a
+## A new player starts with nothing. Waking among the graves with a purse is a
 ## fact about the character nobody has written, and zero is the one reading that claims
 ## nothing.
 var gold: int = EMPTY

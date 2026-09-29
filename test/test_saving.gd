@@ -170,9 +170,8 @@ func test_dying_puts_you_back_at_the_fire() -> void:
 
 func test_a_first_death_before_any_rest_is_not_a_dead_end() -> void:
 	# All that survives of Phase 0's "respawn in Brindle keeping everything": a
-	# player who dies before ever sitting down has to wake up somewhere. Since the
-	# opening that somewhere is the fairies' clearing — where they woke the first
-	# time, and the only ground left that could hold them.
+	# player who dies before ever sitting down has to wake up somewhere, and that
+	# somewhere is where they woke the first time — among the graves since O12.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
 	world.player_pos = alone_on_the_road()

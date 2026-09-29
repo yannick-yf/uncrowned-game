@@ -2,16 +2,15 @@ extends TestCase
 
 ## Phase 7, the opening — stage 1: the ground.
 ##
-## The player wakes in the fairies' clearing inside the Thornwood, and **one
-## corridor** leads south out of it to Brindle. Brindle is ash; the Cinderworks
-## stands in the same frame, on the village's own ground. No maze, no choice in the
-## first minute, and nothing gated anywhere.
+## The player wakes among the graves at Brindle's southern edge (O12), beside the
+## fairy, and walks north into the ruins. No maze, no choice in the first minute, and
+## nothing gated anywhere. **The fairies' clearing** — a pocket in the Thornwood, ringed
+## by thicket, with one corridor south — was where the game began until O12 and was
+## deleted in T2 (Yannick, 2026-09-29), with the tests that described it.
 ##
-## **The thicket is geography, not a gate.** The map already closes itself with sea
-## and mountain, and Pillar 1 is about progression checks rather than walls. The rule
-## that keeps it honest is asserted below: thicket may never be the only thing
-## between the player and anything, which is why every zone must still be reachable
-## with the corridor open.
+## **The thicket is geography, not a gate.** The rule that keeps it honest is asserted
+## below: it may never be the only thing between the player and anything, which is why
+## every zone must be reachable from where the player wakes.
 
 const SLOW: bool = true
 
@@ -44,16 +43,6 @@ func _reachable(region: Region, from: Vector2i, dammed: Array[Vector2i]) -> Dict
 				seen[next] = true
 				queue.append(next)
 	return seen
-
-
-func _corridor_mouth() -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	var from: int = Region.CLEARING.y + Region.CLEARING_RADIUS
-	for x: int in range(Region.CLEARING.x - Region.PATH_HALF_WIDTH,
-			Region.CLEARING.x + Region.PATH_HALF_WIDTH + 1):
-		for y: int in range(from, from + Region.THICKET_DEPTH + 2):
-			out.append(Vector2i(x, y))
-	return out
 
 
 # ------------------------------------------------------- the cemetery (O12) ---
@@ -217,53 +206,7 @@ func test_his_trail_into_the_village_runs_through_the_hail() -> void:
 		"and cannot be walked along out of his sight")
 
 
-# ------------------------------------------------------------- the clearing ---
-
-func test_the_player_wakes_on_open_ground_in_the_wood() -> void:
-	var region: Region = _region()
-	assert_eq(region.terrain_at(Region.CLEARING), Region.Terrain.CLEARING,
-		"the centre of the clearing is clearing, not the corridor cut through it")
-	assert_true(region.is_passable(Region.CLEARING), "and you can stand on it")
-	var sim: Sim = Game.build()
-	var world := sim.store(&"world") as WorldState
-	assert_eq(world.player_pos, region.start_centre(), "and the game starts you there")
-
-
-func test_the_clearing_is_ringed_by_wood_you_cannot_walk_into() -> void:
-	var region: Region = _region()
-	var outer: int = Region.CLEARING_RADIUS + Region.THICKET_DEPTH
-	# North of the clearing, away from the corridor, the ring must be solid.
-	var solid: int = 0
-	for y: int in range(Region.CLEARING.y - outer, Region.CLEARING.y - Region.CLEARING_RADIUS):
-		if not region.is_passable(Vector2i(Region.CLEARING.x, y)):
-			solid += 1
-	if Places.baked() and solid < Region.THICKET_DEPTH - 1:
-		# On his map nothing of ours is drawn, so a ring nobody sees is a wall in the
-		# face (Yannick, 2026-09-14): the bake leaves it open wood until he plants it.
-		debt("the clearing's ring of thicket is his to plant; the bake leaves it open wood (%d tiles solid)" % solid)
-		return
-	assert_true(solid >= Region.THICKET_DEPTH - 1,
-		"the ring north of the clearing is %d tiles deep" % solid)
-
-
-func test_one_corridor_leads_out_and_only_one() -> void:
-	# The whole geography claim, and the only way to check it: block the corridor
-	# and the clearing has to become a closed pocket. If any other way out exists,
-	# Brindle is still reachable and this fails.
-	var region: Region = _region()
-	var open: Dictionary = _reachable(region, Region.CLEARING, [] as Array[Vector2i])
-	assert_true(open.has(Region.BRINDLE), "with the corridor open you can walk to Brindle")
-
-	var sealed: Dictionary = _reachable(region, Region.CLEARING, _corridor_mouth())
-	if Places.baked() and sealed.has(Region.BRINDLE):
-		# The pocket closes only once his ring stands; until then the clearing is open
-		# ground among his trees, on purpose (see the ring test above).
-		debt("the corridor is the only way out once his ring of wood stands; on the baked world the clearing is open")
-		return
-	assert_false(sealed.has(Region.BRINDLE), "with it dammed you cannot")
-	assert_true(sealed.size() < 400,
-		"and what is left is a pocket, not the map: %d tiles" % sealed.size())
-
+# ------------------------------------------------------------ the walk in ---
 
 func test_the_walk_from_the_graves_into_the_ruins_is_short() -> void:
 	# §4's rule against empty walking. Since O12 the graves are the village's own, at
@@ -289,7 +232,7 @@ func test_the_king_is_still_reachable_from_the_first_minute() -> void:
 
 func test_every_zone_is_still_reachable_from_where_the_player_wakes() -> void:
 	# The rule attached to the thicket: it may never be the only thing between the
-	# player and anything. Eight zones, walked from the clearing, over ground.
+	# player and anything. Eight zones, walked from where you wake, over ground.
 	var region: Region = _region()
 	var open: Dictionary = _reachable(region, where_the_game_starts(), [] as Array[Vector2i])
 	for zone: StringName in Region.ZONE_ORDER:
@@ -325,29 +268,6 @@ func test_the_furnaces_are_in_frame_when_you_reach_the_ruins() -> void:
 			% [absf(from.x - near.x), absf(from.y - near.y), half.x * 2.0, half.y * 2.0])
 
 
-func test_the_clearing_never_wrote_over_the_road_the_river_or_a_town() -> void:
-	# `_stamp_clearing` only ever overwrites FOREST, so this cannot fail by
-	# construction — which is the point of asserting it, because the next person to
-	# move the clearing will not know that.
-	# Scanned over what the opening actually stamps, not a box around it. The first
-	# draft swept fourteen tiles either side all the way down to Brindle and caught
-	# the Cinderworks, which the opening never touched.
-	var region: Region = _region()
-	var laid: int = 0
-	for x: int in range(Region.CLEARING.x - 20, Region.CLEARING.x + 21):
-		for y: int in range(Region.CLEARING.y - 20, Region.BRINDLE.y):
-			var here: Region.Terrain = region.terrain_at(Vector2i(x, y))
-			if here != Region.Terrain.CLEARING and here != Region.Terrain.THICKET:
-				continue
-			laid += 1
-			# A tile the opening owns may never be one of these, and the stamp only
-			# ever overwrites FOREST, so this holds by construction — which is why
-			# it is asserted, for whoever moves the clearing next.
-			assert_true(here != Region.Terrain.ROAD and here != Region.Terrain.WATER
-					and here != Region.Terrain.TOWN, "at %d,%d" % [x, y])
-	assert_true(laid > 100, "the opening laid %d tiles of its own" % laid)
-
-
 # ------------------------------------------------- stage 4: the first fire ---
 
 func test_the_fairies_ground_is_the_first_fire() -> void:
@@ -369,18 +289,7 @@ func test_dying_before_you_ever_rest_puts_you_back_where_you_woke() -> void:
 		"back where you woke, not in the ruins")
 
 
-# --------------------------------------------- stage 2: the protected ground ---
-
-func test_the_walk_out_is_protected_too_at_the_start() -> void:
-	# The first walk out of the trees is the last walk on held ground. The corridor
-	# has to be inside it or the claim is only about the clearing.
-	var ticked := WorldTick.new()
-	var mouth := Vector2i(Region.CLEARING.x, Region.CLEARING.y + Region.CLEARING_RADIUS + 2)
-	assert_true(WorldRules.holds(Region.CLEARING, ticked.held_ground), "the clearing")
-	assert_true(WorldRules.holds(mouth, ticked.held_ground), "and the corridor out")
-	assert_false(WorldRules.holds(Region.BRINDLE, ticked.held_ground),
-		"but not the ruins — you step out of the last protected place to reach them")
-
+# ------------------------------------------ stage 2: the wood they still hold ---
 
 func test_the_wood_gets_smaller_while_the_furnaces_run() -> void:
 	var held: float = WorldRules.HELD_AT_START
@@ -393,20 +302,12 @@ func test_the_wood_gets_smaller_while_the_furnaces_run() -> void:
 
 func test_putting_the_furnaces_out_stops_the_wood_shrinking() -> void:
 	# The point of driving it off steel output rather than the calendar. Stopping
-	# the clearing is already something the player can do with the levers they have,
+	# the felling is already something the player can do with the levers they have,
 	# so "save us" is not a request the game cannot answer (§19 Q42/Q43 deferred).
 	var held: float = WorldRules.HELD_AT_START
 	for _tick: int in Game.TICKS_PER_IN_GAME_DAY * 10:
 		held = WorldRules.held_ground_after(held, 0.0)
 	assert_eq(held, WorldRules.HELD_AT_START, "nothing running, nothing taken")
-
-
-func test_the_edge_comes_in_so_a_later_visit_is_different() -> void:
-	# What makes the shrinking something the player walks into rather than is told.
-	var mouth := Vector2i(Region.CLEARING.x, Region.CLEARING.y + Region.CLEARING_RADIUS + 2)
-	assert_true(WorldRules.holds(mouth, WorldRules.HELD_AT_START), "held at the start")
-	assert_false(WorldRules.holds(mouth, 6.0),
-		"and not once the wood has lost most of what it had")
 
 
 func test_the_wood_shrinking_can_never_end_a_reign() -> void:
@@ -503,7 +404,7 @@ func test_she_is_gone_once_she_has_finished_and_stays_gone() -> void:
 
 func test_walking_away_leaves_her_there_because_nothing_is_gated() -> void:
 	# Pillar 1. You may ignore her entirely and walk to Blackcairn, and she will
-	# still be in the clearing when you come back — so the premise is never lost,
+	# still be where you woke when you come back — so the premise is never lost,
 	# and it is never forced on you either.
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState

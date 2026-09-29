@@ -256,9 +256,8 @@ ground.
 
 **What stops you must be seen (2026-09-14).** On the baked world the simulation may
 refuse a tile only where the player can see why: his water, his rock at
-`BakeRules.ROCK_IMPASSABLE` (0.85) and above, his meshes, or a plain block of ours. The
-kit's thicket ring round the clearing is left as open wood until he plants it (a DEBT),
-a footprint shrinks to the piece his library stands for it (`kit_library` in the brief),
+`BakeRules.ROCK_IMPASSABLE` (0.85) and above, his meshes, or a plain block of ours. A
+footprint shrinks to the piece his library stands for it (`kit_library` in the brief),
 and the castle's ramparts stand as blocks. `test_bake` fails on any wall tile the window
 does not draw. Do not fix an invisible wall by drawing something of ours — that is the
 art rule the other way round; open it, report it in the bake, and name the debt.
@@ -276,9 +275,9 @@ collision shapes cover, and has its catalogue and its scene hashed into the bake
 his catalogue before placing anything of his**: its `placement` note is the only document
 that says how a piece is meant to be used, and the first yard was built without it.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
-commit checks. The current baked run prints **eleven** DEBT lines — twelve debts, one test owing two;
-the run's last line counts debts — for **eight** claims and
-three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Five claims are the map's and the brief's; three are **things his brother
+commit checks. The current baked run prints **nine** DEBT lines — ten debts, one test owing two;
+the run's last line counts debts — for **seven** claims and
+three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Four claims are the map's and the brief's (five until T2 deleted the clearing and its ring, 2026-09-29); three are **things his brother
 has not drawn** — a blow (`traveler_walk_frames.tres` holds idle and walk in four
 directions and no attack, no guard and no flinch, F5, 2026-09-19), a beast (the wolf, ours,
 2026-09-26) and a grave (the cemetery's markers are ours, made in his two paints, O13,
@@ -369,8 +368,8 @@ position or the pace. A test says where it stands in the world's terms —
 scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
 the run is the map's or the brief's, not the code's: a claim the spec makes that the
 baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
-apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Eight claims
-stand today — five the map's and the brief's, three things his brother has not drawn;
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Seven claims
+stand today — four the map's and the brief's, three things his brother has not drawn;
 they are listed above, under *Delivery ingestion*. Never turn a failure
 into a debt to get green; a debt names something a person has to settle. A line marked **`OFF`** is the third kind
 (`TestCase.off`): a claim that holds only while one of the testing switches below is
@@ -418,7 +417,7 @@ nobody can see is a switch nobody turns off.
 > reads it, which is the same reason everything else that can hurt you goes through there.
 
 **`M` opens the map of Erileo.** Every tile in its terrain colour, the eight places
-named, the fairies' clearing, and where you are standing. Asked for as a debug tool
+named, the graves where you wake, and where you are standing. Asked for as a debug tool
 and kept as a real one: a game whose argument is *the road against the forest* should
 let you see the shape of the argument. It is painted once into a texture rather than
 redrawn, because 56,000 rectangles a frame is a slideshow. Since O21 it names the graves
@@ -600,9 +599,9 @@ reconstruct it from forty commits will get it wrong.
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
 | **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version. **He played it the same evening**: the combat tutorial is the one finding — group T |
-| **T** | **The work now** (planned 2026-09-29, evening; T1 built). His rulings, the clearing out (T2), a page of tasks for his brother (T3), the fast suite profiled (T4), **the bow redone** — an arrow lands when it is shot, the player carries one and chooses his weapon with U (T5–T7) — every drill explained step by step (T8), and **the gatekeeper's guards, who keep coming** (T9); then frames and a review (T10) |
+| **T** | **The work now** (planned 2026-09-29, evening; T1–T2 built). His rulings, the clearing out (T2), a page of tasks for his brother (T3), the fast suite profiled (T4), **the bow redone** — an arrow lands when it is shot, the player carries one and chooses his weapon with U (T5–T7) — every drill explained step by step (T8), and **the gatekeeper's guards, who keep coming** (T9); then frames and a review (T10) |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
-| **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. Deleting the clearing is approved and is T2 |
+| **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |
 
 **Two things are true of the fight and both matter.** The turn-based design of

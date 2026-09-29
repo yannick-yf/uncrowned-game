@@ -82,7 +82,6 @@ func test_the_sites_are_the_files() -> void:
 	for id: StringName in Region.ZONE_ORDER:
 		assert_eq(Region.zone_sites()[id], places.centre(id), "%s's centre is the file's" % id)
 		assert_eq(Region.zone_footprints()[id], places.size(id), "%s's footprint is the file's" % id)
-	assert_eq(Region.CLEARING, places.point(&"clearing"), "the clearing is the file's")
 	# O3: the start is its own name, and every new run is put on it.
 	assert_ne(Region.START, Region.NOWHERE, "the start resolves")
 	assert_eq(where_the_game_starts(), Region.START, "and the tests mean the same point")

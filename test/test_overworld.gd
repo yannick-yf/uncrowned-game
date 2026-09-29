@@ -266,8 +266,7 @@ func test_every_walkable_terrain_has_a_tile_or_a_deliberate_colour() -> void:
 			Region.Terrain.WATER, Region.Terrain.FORD, Region.Terrain.SAND,
 			Region.Terrain.MARSH, Region.Terrain.FARMLAND, Region.Terrain.SEA,
 			Region.Terrain.RUINS, Region.Terrain.TOWN, Region.Terrain.CAMP,
-			Region.Terrain.CASTLE, Region.Terrain.CLEARED, Region.Terrain.CLEARING,
-			Region.Terrain.THICKET]:
+			Region.Terrain.CASTLE, Region.Terrain.CLEARED, Region.Terrain.THICKET]:
 		assert_true(Art.GROUND.has(terrain) or art.terrain_tiles.has(terrain),
 			"terrain %d would be drawn as a flat rectangle" % terrain)
 

@@ -185,7 +185,7 @@ func _draw_treeline(screen: Vector2) -> void:
 
 
 ## Three of them, over the wood, on their own clocks — the same light the opening
-## puts in the clearing. They are the only thing on the screen that moves.
+## puts beside you when you wake. They are the only thing on the screen that moves.
 func _draw_fairies(screen: Vector2) -> void:
 	var homes: Array[Vector2] = [
 		Vector2(screen.x * 0.16, screen.y - 96.0),
