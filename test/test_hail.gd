@@ -6,8 +6,9 @@ extends TestCase
 ## asking for it. Once. The whole of it is simulation — a store, a system, facts and
 ## events — so it replays, saves and loads like everything else.
 ##
-## `hails` in places.json stays empty until the hail can be seen (O17); these tests
-## hand the store the row the list will hold, and replay into stores given the same.
+## The store is handed its row here rather than read from `content/places.json`, so what
+## is checked is the hail and not the content; the list itself is checked by the tests
+## that build the game as it ships (O17).
 
 const SAVE_UNDER_TEST: String = "user://save_under_test_hail.json"
 
@@ -187,12 +188,22 @@ func test_a_man_you_have_met_or_killed_does_not_call() -> void:
 
 func test_an_empty_list_holds_nobody_ever() -> void:
 	# **The one-change check** (W4's lesson): the hail is on because a list has a row in
-	# it, and off when it has none. The game as it is today.
-	var sim: Sim = Game.build()
+	# it, and off when it has none — emptying `hails` in places.json takes it out whole.
+	var sim: Sim = _build([] as Array[Dictionary])
 	var walker := OpeningPlayer.new(OpeningPlayer.STOP)
 	assert_true(walker.walk_to(sim, Region.BRINDLE, 4000), "the graves to the village's heart: %s" % walker.report)
 	assert_false(sim.facts.has(&"hailed:bram"), "nobody called")
 	assert_eq(_count(sim, &"hailed"), 0, "and nothing was raised")
+
+
+func test_the_game_as_it_ships_calls_you_over() -> void:
+	# O17: the list is filled, and a new run walking up from the graves is called.
+	assert_eq(Places.shared().hails().size(), 2, "his two discs in the content")
+	var sim: Sim = Game.build()
+	var walker := OpeningPlayer.new(OpeningPlayer.STOP)
+	assert_false(walker.walk_to(sim, Region.BRINDLE, 4000), "the walk into the village is interrupted")
+	assert_eq(_world(sim).talking_to, &"bram", "by Bram: %s" % walker.report)
+	assert_true(sim.facts.has(&"hailed:bram"), "who called")
 
 
 func test_never_in_the_middle_of_a_conversation() -> void:
@@ -290,16 +301,20 @@ func test_a_replay_taken_mid_approach_is_the_same_walk_and_the_same_talk() -> vo
 
 
 func test_a_save_taken_mid_approach_loads_into_the_same_walk() -> void:
-	var sim: Sim = _build()
+	# Through the real file and the real loader, on the game as it ships (O17).
+	var sim: Sim = Game.build()
 	_walk_until(sim, func() -> bool: return _hail(sim).phase == Hail.COMING)
 	sim.advance(7)
+	assert_eq(_hail(sim).phase, Hail.COMING, "saved mid-approach")
 	var was: String = SaveFile.path
 	SaveFile.path = SAVE_UNDER_TEST
 	assert_true(SaveFile.write(sim), "saved")
-	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SAVE_UNDER_TEST)) as Dictionary
+	var loaded: Sim = SaveFile.read()
+	SaveFile.discard()
 	SaveFile.path = was
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_UNDER_TEST))
-	var loaded: Sim = _replay_rows(parsed["events"] as Array, int(parsed["seed"]), int(parsed["step"]))
+	assert_not_null(loaded, "and loaded")
+	if loaded == null:
+		return
 	assert_eq(_hail(loaded).fingerprint(), _hail(sim).fingerprint(), "the file carries the hail")
 	assert_eq((loaded.store(&"walkers") as Walkers).fingerprint(), (sim.store(&"walkers") as Walkers).fingerprint(),
 		"and where he had got to")

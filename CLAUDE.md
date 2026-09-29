@@ -428,12 +428,22 @@ open on the title (`Screens.first_screen`, and `test_the_public_build_opens_on_t
 In the Godot editor it goes in the run's environment; from a terminal,
 `UNCROWNED_QUICK=1 godot --path .`.
 
+**`UNCROWNED_HAIL=bram[:steps]`** (2026-09-29, O17) stands the player on the first
+tile of the ground somebody watches, on the way in from the graves, runs that many
+steps and holds the simulation there for the frame `shot.sh` takes: `bram` is the step
+he sees you and the '!' goes up, `bram:90` has him walking over, `bram:400` beside you
+and talking. Same gate and same reason as the others — a '!' that never goes up is
+exactly what `--headless` cannot see. **And the frames that stand you somewhere spend
+the hail first**: `UNCROWNED_AT`, `_TALK` and `_DUEL` write `hailed:<who>` straight into
+the facts, so a photograph of Brindle is of Brindle and not of Bram walking over. One
+frame for one photograph, not a save-able state.
+
 **`UNCROWNED_SCREEN=journal:<page>`** (2026-09-24) is not a ninth tool but the existing
 one extended: the journal is seven pages and the page being photographed is rarely the
 first, so the screen name may carry the page after a colon — `journal:standing`,
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
-**All ten are gated on `OS.has_feature("debug")`**, so they are absent from a
+**All eleven are gated on `OS.has_feature("debug")`**, so they are absent from a
 release export. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 
@@ -493,7 +503,7 @@ reconstruct it from forty commits will get it wrong.
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
-| **O** | **The opening, redone** (asked and planned 2026-09-29): the cemetery, Bram's hail, three drills (sword, bow, magic), then the words. 22 steps, about 130 h; combat first, then the map. Start at O1 |
+| **O** | **The opening, redone** (asked and planned 2026-09-29): the cemetery, Bram's hail, three drills (sword, bow, magic), then the words. **O1–O17 built** (2026-09-29): the drills, the cemetery, the hail seen and switched on. **O18–O19 are the words, and they are Yannick's**; O20–O22 are the checks and the docs |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
 | **P2** | Folded into **the tutorial's redo** (2026-09-29): the fairy, the combat tutorial, the departure for the works — the dialogue is rewritten then. C2–C4 wait on it |

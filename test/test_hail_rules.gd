@@ -61,6 +61,8 @@ func test_he_walks_to_you_and_stops_a_tile_short() -> void:
 	assert_eq(walk[0], from, "from where he stands")
 	var last: Vector2i = walk[walk.size() - 1]
 	assert_eq(maxi(absi(last.x - to.x), absi(last.y - to.y)), 1, "to beside you, not onto you")
+	assert_eq(last, to + Vector2i(-1, 0), "on your own row, on the side he comes from (O17)")
+	assert_false(walk.has(to), "and never through you")
 	for i: int in range(1, walk.size()):
 		var step: Vector2i = walk[i] - walk[i - 1]
 		assert_true(maxi(absi(step.x), absi(step.y)) == 1, "one tile a step")
@@ -90,3 +92,14 @@ func _walled_off() -> Region:
 	for i: int in 10:
 		region.set_terrain(Vector2i(5, i), Region.Terrain.WALL)
 	return region
+
+
+func test_with_your_row_walled_he_stops_where_he_can() -> void:
+	var region: Region = _open_region(12)
+	var to := Vector2i(6, 6)
+	region.set_terrain(to + Vector2i(-1, 0), Region.Terrain.WALL)
+	region.set_terrain(to + Vector2i(1, 0), Region.Terrain.WALL)
+	var walk: Array[Vector2i] = HailRules.approach(region, Vector2i(6, 1), to)
+	assert_false(walk.is_empty(), "there is still a way")
+	var last: Vector2i = walk[walk.size() - 1]
+	assert_eq(maxi(absi(last.x - to.x), absi(last.y - to.y)), 1, "beside you, off your row")

@@ -443,3 +443,20 @@ matière (`res://assets/coastline/materials/coastal_granite.tres`), et notre cop
 pas réécrire l'intérieur d'un fichier binaire — c'est le même souci que les trois
 secteurs de §9b dans `docs/MIGRATION_3D.md`. Si tu ré-exportes tes pièces de côte avec la
 matière assignée dans la scène plutôt que dans le maillage, on pourra s'en servir.
+
+## 12. Bram t'interpelle, et le « ! » est à nous (2026-09-29)
+
+En remontant du cimetière vers le village, le joueur entre dans une petite bande de
+terrain à la lisière sud de Brindle (deux cercles côte à côte, juste au nord du
+cimetière). Bram le voit : un **« ! »** surgit au-dessus de sa tête, le joueur
+est tenu immobile, Bram descend vers lui en marchant (ton voyageur, qui marche comme tu
+l'as animé), s'arrête à côté de lui sur la même rangée, et la conversation s'ouvre toute
+seule. (Il s'arrêtait d'abord juste au nord du joueur — sous ton bouleau, où on ne le
+voyait plus.) Une seule fois. C'est le « dresseur
+Pokémon » que Yannick a demandé pour lancer le tutoriel.
+
+Le « ! » est **dessiné par nous, en code** : une barre et un point couleur braise (la même
+braise que les feux), cerclés d'un trait d'encre, toujours au-dessus du reste de l'image.
+C'est un signe d'interface, comme les petites marques au-dessus des témoins d'un vol, pas
+un objet de ton monde. Si tu veux en dessiner un à ta main — une bulle, un point
+d'exclamation peint —, il remplace le nôtre sans rien changer d'autre.

@@ -25,11 +25,17 @@
     "ferry": [52, 150],
     "cinderworks_gate": [245, 168],
     "bram_post": [264, 176],
-    "brindle_hail": [257, 180]
+    "brindle_hail": [257, 180],
+    "brindle_hail_east": [258, 180]
   },
-  "_bram_post": "O14, 2026-09-29: where Bram stands and calls from, and brindle_hail the centre of the ground he watches — the village's edge on the side the graves are, where the road from them comes in (content/hail.json holds its radius). Named points on each world rather than Brindle plus an offset, because Brindle is 35x30 on his map and 15x11 here and one offset cannot mean the same street on both. On the baked world the brief writes both; these rows are the 2D map's.",
-  "_hails": "Who calls out to a player walking into their ground, and from which point: {who, point, radius}. EMPTY UNTIL THE HAIL CAN BE SEEN (O17): an empty list holds nobody, ever, which is the one-change way to take it out again.",
-  "hails": [],
+  "_bram_post": "O14, 2026-09-29: where Bram stands and calls from, and brindle_hail and brindle_hail_east the two halves of the ground he watches — the village's edge on the side the graves are, where the road from them comes in (content/hail.json holds their radius). Named points on each world rather than Brindle plus an offset, because Brindle is 35x30 on his map and 15x11 here and one offset cannot mean the same street on both. On the baked world the brief writes both; these rows are the 2D map's.",
+  "_hails": "Who calls out to a player walking into their ground, and from which point: {who, point, radius}. Filled on 2026-09-29 (O17), the day the hail could be seen. An empty list holds nobody, ever, which is the one-change way to take it out again.",
+  "hails": [
+    {"who": "bram", "point": "brindle_hail",
+      "_why": "O17, 2026-09-29: the tutorial's way in (Yannick's « dresseur Pokémon »). Walk up from the graves into the village's edge and Bram, at his post up the trail, sees you, calls, and comes over. Once: hailed:bram, and never to somebody who has met him or killed him. Emptying this list takes it out again, whole."},
+    {"who": "bram", "point": "brindle_hail_east",
+      "_why": "the other half of his ground: two discs side by side make the barrier across the village's south edge (content/hail.json). The first row that sees you calls; the second never calls twice, because the fact is his, not the row's."}
+  ],
   "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the road in front of the tile the old guard stood on, which is a wall there (moved a row south on 2026-09-29, when the anchors began to be checked before they are nudged), so the gatekeeper resolves on both worlds.",
   "_wild_note": "WHERE THE WOOD IS DANGEROUS (W2, 2026-09-25). A pack is an anchor and a count, and it stands where it stands until somebody walks into it. NOTHING HERE CLOSES A ROAD: a player who wants one of these fights it or goes round, and the demo's funnel is made of where the wolves are rather than of any check in core/ (PLAYER_MODEL.md section 8, invariant 4). Taking the funnel out again is W4, and it is editing this list. Anchors were checked against the baked world rather than guessed: road_last_stop was tried first and dropped because it resolves INSIDE Cairnwell, and monsters never stand in a town.",
   "wild": [

@@ -120,7 +120,7 @@ func test_bram_calls_from_named_ground_on_both_worlds() -> void:
 	# O14: his post and the zone he calls from are points of their own on each world,
 	# never Brindle plus an offset.
 	var places: Places = Places.shared()
-	for id: StringName in [&"bram_post", &"brindle_hail"]:
+	for id: StringName in [&"bram_post", &"brindle_hail", &"brindle_hail_east"]:
 		assert_true(places.has_point(id), "%s is a named point on this world" % id)
 		var region: Region = Region.build_overworld()
 		var at: Vector2i = places.point(id)

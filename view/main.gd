@@ -67,6 +67,12 @@ var _held_dir: Vector2i = Vector2i.ZERO
 var _duel: Duel = null
 ## Where the named people the world has displaced actually stand (O7).
 var _walkers: Walkers = null
+## **Somebody calling the player over** (O16–O17): read, never written — the keyboard is
+## taken while it holds the player, the camera frames the two of them, and the window
+## draws the '!'.
+var _hail: Hail = null
+## Whether this hail's cue has been sounded.
+var _hail_sounded: bool = false
 ## **Where the player has decided to stand this turn**, and it is a proposal and not
 ## state: only the confirmed turn is an event. Moved by the arrows over the tiles the
 ## turn buys, and forgotten the moment the turn is taken.
@@ -166,6 +172,7 @@ func _ready() -> void:
 	_world = _sim.store(&"world") as WorldState
 	_duel = _sim.store(&"duel") as Duel
 	_walkers = _sim.store(&"walkers") as Walkers
+	_hail = _sim.store(&"hail") as Hail
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
@@ -191,6 +198,12 @@ func _ready() -> void:
 					_journal_wanted = StringName("journal.%s" % asked[1].strip_edges())
 			"pause":
 				_pause_menu()
+	# **The frames that stand you somewhere spend the hail first** (O17): a photograph of
+	# Brindle is of Brindle, not of Bram walking over. One frame, not a save-able state —
+	# the fact is written straight in.
+	for tool: String in ["UNCROWNED_AT", "UNCROWNED_TALK", "UNCROWNED_DUEL"]:
+		if OS.has_feature("debug") and OS.get_environment(tool) != "" and OS.get_environment("UNCROWNED_HAIL") == "":
+			_spend_the_hails()
 	var stand: String = OS.get_environment("UNCROWNED_AT")
 	if OS.has_feature("debug") and stand.contains(","):
 		var parts: PackedStringArray = stand.split(",")
@@ -317,6 +330,31 @@ func _ready() -> void:
 				push_warning("UNCROWNED_TALK: %s carries no standing" % here)
 			_sim.submit(&"talk", {"npc": String(npc.id)})
 			_sim.advance(2)
+	# **`UNCROWNED_HAIL=bram[:steps]`** — the player stood on the first tile of the
+	# ground somebody watches, on the way in from the graves, for the frame `shot.sh`
+	# takes; then that many steps, and the simulation held there. Same gate and same
+	# reason as the others: `--headless` never draws, and a '!' that never goes up is
+	# exactly what it cannot see. `bram` alone is the step he sees you; `bram:120` has
+	# him on his way; `bram:400`, beside you and talking.
+	var hailing: String = OS.get_environment("UNCROWNED_HAIL")
+	if _debug_available and hailing != "" and _hail != null:
+		var asked: PackedStringArray = hailing.strip_edges().split(":")
+		var row: Dictionary = {}
+		for candidate: Dictionary in _hail.rows:
+			if String(candidate.get("who", "")) == asked[0]:
+				row = candidate
+		if row.is_empty():
+			push_warning("UNCROWNED_HAIL: nobody called '%s' calls out (content/places.json hails)" % asked[0])
+		else:
+			var walk: Array[Vector2i] = Navigation.path(_world.region(), Region.START, row["at"] as Vector2i)
+			for tile: Vector2i in walk:
+				if HailRules.in_sight(row, tile):
+					_world.player_pos = Vector2(tile) + Vector2(0.5, 0.5)
+					break
+			_sim.advance(1)
+			var more: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
+			_sim.advance(more)
+			_held_for_shot = not OS.get_environment("UNCROWNED_SHOT").is_empty()
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
 	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
@@ -640,7 +678,44 @@ func _frame(eye: Vector2) -> Dictionary:
 		"witnesses": CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos, WorldTick.NEUTRAL, _walkers)
 			if _can_steal() or _can_give_back() or _can_warn() else [],
 		"now": _real_seconds,
+		"hail": _hail_frame(),
 	}
+
+
+## **The hail's reading** (O17): who is calling, whether the '!' is up and for how long.
+## The mark stands through the beat and half a second of his walk, then goes — he is
+## plainly coming by then. Its age is the simulation's, counted in the hail's own steps,
+## so a photograph taken at a step shows what that step shows.
+func _hail_frame() -> Dictionary:
+	var caller: Npc = _caller()
+	if caller == null:
+		return {}
+	var age: float = float(_hail.spent) / float(Sim.STEPS_PER_REAL_SECOND)
+	var shown: bool = _hail.phase == Hail.SPOTTED \
+		or (_hail.phase == Hail.COMING and age < HailRules.spotted_steps() / float(Sim.STEPS_PER_REAL_SECOND) + HAIL_MARK_LINGERS)
+	return {"who": caller.id, "shown": shown, "age": age}
+
+
+## Every hail written as spent, for a debug frame that stands the player somewhere.
+func _spend_the_hails() -> void:
+	if _hail == null:
+		return
+	for row: Dictionary in _hail.rows:
+		_sim.facts.add_source(StringName(HailRules.HAILED % row.get("who", &"")), &"debug")
+
+
+## Whoever is calling the player over and not yet talking to them, or null.
+func _caller() -> Npc:
+	if _hail == null or _walkers == null:
+		return null
+	if _hail.phase != Hail.SPOTTED and _hail.phase != Hail.COMING and _hail.phase != Hail.ARRIVED:
+		return null
+	return _cast.get_npc(_hail.who)
+
+
+## Whether the hail holds the player and no conversation has taken over yet.
+func _held_by_the_hail() -> bool:
+	return _hail != null and _hail.holds_player() and not _world.in_dialogue()
 
 
 ## Every place that carries the two numbers, and what they read as.
@@ -808,6 +883,15 @@ func _listen() -> void:
 	if _world.last_theft_step > _sounded_theft:
 		_sounded_theft = _world.last_theft_step
 		Sound.cue(&"took" if _world.last_theft_seen == 0 else &"seen")
+	# The pack's `seen` cue when somebody calls you over (O17) — the same noise as a
+	# theft noticed, because it is the same news: somebody has seen you. Flagged rather
+	# than extended; the music and the cues are the pack's until real ones come (C4).
+	if _hail != null and _hail.phase != Hail.IDLE:
+		if not _hail_sounded:
+			_hail_sounded = true
+			Sound.cue(&"seen")
+	else:
+		_hail_sounded = false
 	if _world.in_dialogue() and _world.current_line != _sounded_line:
 		_sounded_line = _world.current_line
 		Sound.cue(&"spoke")
@@ -878,6 +962,17 @@ func _read_input() -> void:
 		_read_duel_input()
 		return
 	_duel_cursor_set = false
+
+	# **Somebody is calling you over** (O17): the keyboard is his until the talk he opens.
+	# Only Escape passes, because a player must always be able to stop. The held key is
+	# let go in the log too, so the walk does not resume by itself when he has finished.
+	if _held_by_the_hail():
+		if _held_dir != Vector2i.ZERO:
+			_held_dir = Vector2i.ZERO
+			_sim.submit(&"move_intent", {"x": 0, "y": 0})
+		if Input.is_action_just_pressed(&"back"):
+			_pause_menu()
+		return
 
 	if _world.in_dialogue():
 		if _held_dir != Vector2i.ZERO:
@@ -1176,6 +1271,8 @@ func _reload() -> void:
 	_world = _sim.store(&"world") as WorldState
 	_duel = _sim.store(&"duel") as Duel
 	_walkers = _sim.store(&"walkers") as Walkers
+	_hail = _sim.store(&"hail") as Hail
+	_hail_sounded = false
 	# The window reads the run too, and must read this one, not the one that died (the
 	# review of O7: it drew people where the discarded run had left them).
 	if _three_d != null:
@@ -1227,6 +1324,8 @@ func _can_give_back() -> bool:
 ## matters on a map whose whole point is choosing a route. Kept small: more than a
 ## tile or two and the player stops being the thing you are looking at.
 const CAMERA_LOOKAHEAD: float = 1.6
+## How long the hail's '!' stays up once he has started walking, in real seconds.
+const HAIL_MARK_LINGERS: float = 0.5
 ## How near the start the readout names the cemetery, in tiles (O12).
 const CEMETERY_NAMED_WITHIN: float = 6.0
 ## How fast the fight's framing comes on and goes off. Slow enough to read as a camera
@@ -1299,6 +1398,11 @@ func _camera_at(delta: float) -> Vector2:
 	if looking.length() > 0.01:
 		looking = looking.normalized()
 	var want: Vector2 = _draw_position() + looking * CAMERA_LOOKAHEAD
+	# **Between the two of them while he calls you over** (O17), eased like any other
+	# move of the eye, so the player sees who shouted and watches him come.
+	var caller: Npc = _caller()
+	if caller != null:
+		want = _draw_position().lerp(_walkers.drawn_at(caller), 0.5)
 	if not _camera_placed or _camera.distance_to(want) > TELEPORT_TILES:
 		_camera = want
 		_camera_placed = true
@@ -1407,6 +1511,7 @@ func _draw() -> void:
 
 	_draw_particles(min_x, max_x, min_y, max_y)
 	_draw_witnesses()
+	_draw_hail_mark()
 	if _map_open:
 		_draw_map()
 	if _paused != null:
@@ -1700,6 +1805,22 @@ func _draw_witnesses() -> void:
 		draw_circle(head, 1.5, Color(0.93, 0.88, 0.68, 0.95))
 
 
+## The '!' over a man calling you over, on the flat map (O17): the 3D window's mark in
+## the same ember and ink, as a bar and a dot over his head.
+func _draw_hail_mark() -> void:
+	var reading: Dictionary = _hail_frame()
+	if not bool(reading.get("shown", false)):
+		return
+	var npc: Npc = _cast.get_npc(reading["who"] as StringName)
+	var top: Vector2 = (_walkers.drawn_at(npc) * float(TILE) - Vector2(0.0, float(FIGURE) + 10.0)).round()
+	var ink := Color(0.12, 0.08, 0.06, 1.0)
+	var ember := Color(1.0, 0.74, 0.40, 1.0)
+	draw_rect(Rect2(top + Vector2(-3.0, -1.0), Vector2(6.0, 12.0)), ink)
+	draw_rect(Rect2(top + Vector2(-2.0, 0.0), Vector2(4.0, 10.0)), ember)
+	draw_rect(Rect2(top + Vector2(-3.0, 12.0), Vector2(6.0, 6.0)), ink)
+	draw_rect(Rect2(top + Vector2(-2.0, 13.0), Vector2(4.0, 4.0)), ember)
+
+
 ## People on the King's Road. Drawn from the crowd's faces, because that is what
 ## they are: nobody, and never the same one twice.
 ##
@@ -1829,6 +1950,8 @@ func _regard() -> String:
 ## follow (O2): the person in front of you first, then what is on a stall, then the
 ## fire, then the act a place offers. Empty when E does nothing.
 func _what_e_does() -> StringName:
+	if _held_by_the_hail():
+		return &""
 	if _nearby_npc() != null:
 		return &"talk"
 	if _can_give_back():
@@ -1875,6 +1998,10 @@ func _draw_hud() -> void:
 	# Nothing to press while a fight is on, and "E, talk to Bram" over the top of a man
 	# swinging at you reads as a bug. The keys a fight offers are its own.
 	if _squared_up():
+		_prompt.text = ""
+		return
+	# Nor while somebody walks over to you: there is nothing you can press (O17).
+	if _held_by_the_hail():
 		_prompt.text = ""
 		return
 

@@ -1580,15 +1580,18 @@ the zone and no pack or fire is in it; baked only — with the zone removed, the
 cannot reach Brindle's centre or the bridge.
 
 **Built.** `bram_post` (281, 315 baked; 264, 176 on the 2D map — the tiles Brindle+(2,−4)
-already gave him, so nothing he does moved) and `brindle_hail` (280, 324; 257, 180) —
-the village's edge where the way from the graves comes in, not its heart, so a test or
-a frame standing in Brindle's centre is never called out — a radius of 4.3 in
-`content/hail.json` beside the beat's two numbers (the '!' for one second, twenty to
-reach you). **The zone was found by search, after the review**: a 3.5 disc grazed the
-one walk it was tested on while an equally short one passed it by. Now the ground is
-dammed and every shortest walk to Brindle's heart and to the bridge must come out
-longer, and his trail cannot be walked from beside the graves to Bram's post out of his
-sight. Fires are allowed inside — to wake at one you must have rested there, and to
+already gave him, so nothing he does moved) and his ground as **two discs of radius 3** —
+`brindle_hail` (277, 322; 257, 180) and `brindle_hail_east` (284, 322; 258, 180), two rows
+for Bram in `hails` — a barrier across the village's south edge, not its heart, so a test
+or a frame standing in Brindle's centre is never called out; the table in
+`content/hail.json` holds the radius beside the beat's two numbers (the '!' for one
+second, twenty to reach you). **The ground was found by search, after the review**: a
+3.5 disc grazed the one walk it was tested on while an equally short one passed it by,
+and one big enough to cut them all reached into the graves, called you three steps from
+where you wake and held the talk behind his pines. Now the ground is dammed and every
+shortest walk to Brindle's heart and to the bridge must come out longer, his trail
+cannot be walked from beside the graves to Bram's post out of his sight, and the start,
+the cemetery and the heart are outside. Fires are allowed inside — to wake at one you must have rested there, and to
 rest there you walked in and were called. `Places.hails()` reads `{who, point, radius}` rows and
 hands them resolved; `hails` is empty. `HailRules`: `row`, `radius_of`, `in_sight`,
 `calls_out` (not `hailed:`, not `met:`, not `killed:`), `approach` (Navigation, cut at the
@@ -1672,7 +1675,7 @@ draft marked `_p2` (O18). **The save test** round-trips the file's rows into sto
 the same hail row, because `SaveFile.read` builds from `places.json`'s list, which is
 empty until O17 — the day it is filled, the same test can load through `SaveFile.read`.
 
-### O17 · The hail, seen — and switched on
+### O17 · The hail, seen — and switched on — **built 2026-09-29**
 
 Est. 5–6 h. Depends on: O16.
 
@@ -1686,6 +1689,20 @@ CLAUDE.md goes up by one. Debug frames inside Brindle (`UNCROWNED_AT`, `_TALK`, 
 spend the hail directly — one frame, not a save — and that is written down.
 
 **Check:** frames at the "!", mid-approach and arrived; a new run played by hand.
+
+**Built.** `hails` holds Bram's two rows. `view/world3d.gd`: the '!' is a `Sprite3D` of a
+code-made 12×32 texture (the hearths' own ember, an ink rim), billboarded, unshaded, no
+depth test, popping to 1.35 and back over 0.2 s along `_lens_up`; Bram faces the player
+from the hail's `facing` outside his walk. `view/main.gd`: the keyboard is the hail's
+while it holds the player (Escape alone opens the pause, and the held key is let go in
+the log), the prompts are empty, the camera eases to the midpoint of the two of them,
+the pack's `seen` cue sounds once, and the flat window draws the same mark as a bar and
+a dot. The mark's age is the hail's own steps, so a photograph at a step shows what that
+step shows. **One change the frames asked for**: `HailRules.approach` now ends beside the
+player on the player's own row where it can — a man stopping north of you stood under
+the birch his brother planted there, and the first photograph of the talk showed one
+person. `UNCROWNED_HAIL=bram[:steps]` is written into CLAUDE.md, and `UNCROWNED_AT`,
+`_TALK` and `_DUEL` spend the hail. Not yet played by hand: that is Yannick's.
 
 ### O18 · The fairy's words
 

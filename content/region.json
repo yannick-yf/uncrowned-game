@@ -80,7 +80,7 @@
     "prototype_3d/assets/library/rocks/boulder_round.tscn": "3850fc3355a10ea6356ecf7f555d865e84fecd4b956ae8db980ce6eedafc02a6",
     "assets/farming/champs/jachere_irreguliere.tscn": "167b44a84ddf0ce514afecbaad21f2be62936b9ba177c3ec3ab1d29a5afa566d",
     "assets/farming/champs/sol_cultive_raccord.tscn": "6056aba6665c6f183afb14c34aefbf64cb5fe7482e35c1e44ae45dbb3aada6dd",
-    "content/bake_brief.json": "fcc921b17658ad2c3da50de0bac7fcac049c5d99a802fdfdb4e3f774b410d81d"
+    "content/bake_brief.json": "63fd358f6f087c174522f41e6a69c025add2018a2f5e2abe999ce9d62c07ef72"
   },
   "width": 384,
   "height": 384,
@@ -245,8 +245,15 @@
     },
     "brindle_hail": {
       "at": [
-        280,
-        324
+        277,
+        322
+      ],
+      "scaffold": true
+    },
+    "brindle_hail_east": {
+      "at": [
+        284,
+        322
       ],
       "scaffold": true
     },

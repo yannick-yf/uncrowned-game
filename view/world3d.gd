@@ -174,6 +174,11 @@ const HIS_FIGURE_PIXEL_SIZE: float = 0.0077832513
 const FIGURE_HEIGHT_M: float = 1.55
 ## His walk cycle turns over every three metres, as his `player_walk_animation` does.
 const WALK_CYCLE_M: float = 3.0
+## The hail's '!' (O17): its pixel size at rest, how far past its size it pops, and how
+## long each half of the pop takes.
+const HAIL_MARK_PIXEL: float = 0.03
+const HAIL_POP_OVER: float = 1.35
+const HAIL_POP_S: float = 0.1
 ## A placeholder block wears his rock paint, so even what is not drawn is in his hand.
 const HIS_BLOCK_MATERIAL: String = "res://view3d/workshop/prototype_3d/materials/styled_rock.tres"
 
@@ -337,6 +342,10 @@ var _fairy_glow: Sprite3D = null
 ## with one soft disc made here, because the pack's art is not allowed in and his has
 ## no such thing yet.
 var _marks: Array[Sprite3D] = []
+## **The '!' over a man calling you over** (O17): ours, made in code — his hand has drawn
+## no speech mark — an ember bar and dot with an ink rim, unshaded and over everything,
+## popping up along the lens.
+var _hail_mark: Sprite3D = null
 var _embers: Array[Dictionary] = []
 var _dot: Texture2D = null
 
@@ -1098,6 +1107,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
+	_sync_hail_mark(cast, frame.get("hail", {}) as Dictionary)
 	_sync_embers(frame)
 	_sync_light(frame, delta)
 	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2,
@@ -1180,6 +1190,11 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		# Walking home when the world has moved him, idle at his post otherwise — never a
 		# still figure sliding (the review of O7).
 		var going: Vector2i = walkers.heading(npc) if walkers != null else Vector2i(0, 1)
+		# A man calling you over looks at you, while he stands and when he has arrived
+		# (O17); walking, he looks where he is going, which is also at you.
+		var hail := _sim.store(&"hail") as Hail
+		if hail != null and hail.who == npc.id and hail.phase != Hail.IDLE and hail.phase != Hail.COMING:
+			going = hail.facing
 		_step_the_foe(npc.id, figure, stands_at, going, {})
 		_foot_figure(figure, stands_at)
 		figure.visible = true
@@ -1557,6 +1572,57 @@ func _sync_marks(cast: Cast, witnesses: Array) -> void:
 		var walkers := _sim.store(&"walkers") as Walkers
 		var head_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
 		mark.position = _feet_of(head_at) + _lens_up * (FIGURE_HEIGHT_M + 0.4)
+
+
+## The '!' over whoever is calling, from the frame's `hail` reading: who, and how long
+## ago he saw you. It pops — up past its size and back — in the first fifth of a second,
+## because a mark that simply appears is read as a glitch and one that jumps is read.
+func _sync_hail_mark(cast: Cast, reading: Dictionary) -> void:
+	if _hail_mark == null:
+		_hail_mark = Sprite3D.new()
+		_hail_mark.name = "HailMark"
+		_hail_mark.texture = _bang_texture()
+		_hail_mark.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		_hail_mark.shaded = false
+		_hail_mark.no_depth_test = true
+		_hail_mark.double_sided = true
+		_hail_mark.render_priority = 10
+		_hail_mark.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		add_child(_hail_mark)
+	var npc: Npc = cast.get_npc(reading.get("who", &"") as StringName) if bool(reading.get("shown", false)) else null
+	_hail_mark.visible = npc != null
+	if npc == null:
+		return
+	var age: float = float(reading.get("age", 0.0))
+	var pop: float = 1.0
+	if age < HAIL_POP_S:
+		pop = HAIL_POP_OVER * sin(clampf(age / HAIL_POP_S, 0.0, 1.0) * PI * 0.5)
+	elif age < HAIL_POP_S * 2.0:
+		pop = lerpf(HAIL_POP_OVER, 1.0, (age - HAIL_POP_S) / HAIL_POP_S)
+	_hail_mark.pixel_size = HAIL_MARK_PIXEL * pop
+	var walkers := _sim.store(&"walkers") as Walkers
+	var head_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
+	_hail_mark.position = _feet_of(head_at) + _lens_up * (FIGURE_HEIGHT_M + 0.55 + 0.1 * pop)
+
+
+## Whether the '!' is up, for the suite.
+func hail_mark_shown() -> bool:
+	return _hail_mark != null and _hail_mark.visible
+
+
+## The '!' itself: 12 by 32 pixels, an ember bar and an ember dot, each ringed in ink,
+## with a clear gap between them. Built once. The ember is the fire's own (the embers
+## over every hearth), so nothing new is coloured.
+static func _bang_texture() -> ImageTexture:
+	var image := Image.create(12, 32, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var ink := Color(0.12, 0.08, 0.06, 1.0)
+	var ember := Color(1.0, 0.74, 0.40, 1.0)
+	image.fill_rect(Rect2i(2, 1, 8, 20), ink)
+	image.fill_rect(Rect2i(3, 2, 6, 18), ember)
+	image.fill_rect(Rect2i(2, 23, 8, 8), ink)
+	image.fill_rect(Rect2i(3, 24, 6, 6), ember)
+	return ImageTexture.create_from_image(image)
 
 
 func _sync_embers(frame: Dictionary) -> void:

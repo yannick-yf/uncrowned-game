@@ -57,6 +57,14 @@ static func in_sight(hail: Dictionary, tile: Vector2i) -> bool:
 	return Vector2(tile).distance_to(Vector2(at)) <= radius_of(hail)
 
 
+## Whether any of these rows sees the tile — somebody's ground made of several discs.
+static func in_sight_of_any(hails: Array, tile: Vector2i) -> bool:
+	for hail: Variant in hails:
+		if in_sight(hail as Dictionary, tile):
+			return true
+	return false
+
+
 ## Whether they still call out: never twice, never to somebody they have already
 ## spoken to, and never once they are dead. Facts, so a replay calls exactly when the
 ## run did.
@@ -68,9 +76,23 @@ static func calls_out(who: StringName, facts: FactBase) -> bool:
 	return not facts.has(StringName(OpeningRules.KILLED % who))
 
 
-## The walk from where they stand to beside the player: the shortest way on open
-## ground, cut at the first tile that touches the player's. Empty when there is no way.
+## The walk from where they stand to beside the player. **Beside on the player's own
+## row where it can be walked** — the nearer side first — so the two of them stand at one
+## depth and face each other; a man stopping north of you stood under whatever his
+## brother planted there, and the first photograph of the talk showed one person (O17).
+## Failing that, the shortest way cut at the first tile that touches the player's. A man
+## already beside you stays where he is. Empty when there is no way.
 static func approach(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	if maxi(absi(from.x - to.x), absi(from.y - to.y)) <= 1:
+		return [from] as Array[Vector2i]
+	var sides: Array[Vector2i] = [to + Vector2i(-1, 0), to + Vector2i(1, 0)]
+	if Vector2(sides[1]).distance_to(Vector2(from)) < Vector2(sides[0]).distance_to(Vector2(from)):
+		sides.reverse()
+	for side: Vector2i in sides:
+		if region.in_bounds(side) and region.is_passable(side):
+			var beside: Array[Vector2i] = Navigation.path(region, from, side)
+			if not beside.is_empty() and not beside.has(to):
+				return beside
 	var walk: Array[Vector2i] = Navigation.path(region, from, to)
 	for i: int in walk.size():
 		if maxi(absi(walk[i].x - to.x), absi(walk[i].y - to.y)) <= 1:

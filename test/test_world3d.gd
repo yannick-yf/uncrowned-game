@@ -88,6 +88,17 @@ func test_the_window_stands_on_his_ground() -> void:
 	}, 1.0 / 60.0)
 	assert_true(window.people_count() >= 30, "the cast stands in the window: %d" % window.people_count())
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
+	# **The hail's '!'** (O17): up while the reading says so, over the man calling, and
+	# gone the frame it does not.
+	assert_false(window.hail_mark_shown(), "no '!' while nobody is calling")
+	# The same towns as the frame above, so the furnaces the checks below read are as it left them.
+	var cold: Dictionary = {&"cinderworks": {"allegiance": 6, "richesse": 0}}
+	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5), "towns": cold,
+		"hail": {"who": &"bram", "shown": true, "age": 0.05}}, 1.0 / 60.0)
+	assert_true(window.hail_mark_shown(), "the '!' goes up over him")
+	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5), "towns": cold,
+		"hail": {"who": &"bram", "shown": false, "age": 2.0}}, 1.0 / 60.0)
+	assert_false(window.hail_mark_shown(), "and comes down when it is over")
 	assert_true(window.embers_lit() > 0, "the fires glow: %d embers" % window.embers_lit())
 	# **Richesse is what burns** (M2, 2026-09-18). It used to be the freed/held flag, and
 	# a works could only be working or dead; now a works at the floor is cold, and the

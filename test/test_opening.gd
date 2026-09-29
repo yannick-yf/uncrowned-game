@@ -113,8 +113,8 @@ func test_she_waits_among_the_graves_and_so_does_her_fire() -> void:
 
 # --------------------------------------------------- where Bram calls from (O14) ---
 #
-# The zone the hail fires in, on each world. `hails` in places.json stays empty until
-# the hail can be seen (O17), so the row is built here the way that list will hold it.
+# The ground the hail fires in, on each world: the rows `hails` in places.json holds —
+# two discs side by side since the review, a barrier across the village's south edge.
 #
 # **Not a wall round the start.** The plan asked that the start could not reach
 # Brindle or the bridge with the zone dammed. That held for the cove it was written
@@ -122,20 +122,24 @@ func test_she_waits_among_the_graves_and_so_does_her_fire() -> void:
 # so no disc could be passed only through. What matters is that the way a person walks
 # out of the graves — the way the walkers and the tests walk it — goes through it.
 
-func _the_hail() -> Dictionary:
-	return HailRules.row(&"bram", &"brindle_hail")
+func _the_hail() -> Array[Dictionary]:
+	return Places.shared().hails()
 
 
 func test_the_hail_is_not_where_you_wake() -> void:
-	var hail: Dictionary = _the_hail()
-	assert_ne(hail["at"], Region.NOWHERE, "the zone resolves")
-	assert_false(HailRules.in_sight(hail, where_the_game_starts()), "you wake outside it")
-	assert_false(HailRules.in_sight(hail, Region.BRINDLE), "and so is the village's heart, where tests and frames stand")
-	# He walks down from his post to meet you, and has the table's time to do it.
-	var walk: Array[Vector2i] = HailRules.approach(_region(), Places.shared().point(&"bram_post"), hail["at"] as Vector2i)
-	assert_false(walk.is_empty(), "he can walk from his post to where he sees you")
-	assert_true(walk.size() * WalkerRules.steps_per_tile() + HailRules.spotted_steps() <= HailRules.budget_steps(),
-		"within the time he has: %d tiles" % walk.size())
+	var hail: Array[Dictionary] = _the_hail()
+	assert_eq(hail.size(), 2, "his ground is two discs")
+	var region: Region = _region()
+	for row: Dictionary in hail:
+		assert_ne(row["at"], Region.NOWHERE, "%s resolves" % row["point"])
+		# He walks down from his post to meet you, and has the table's time to do it.
+		var walk: Array[Vector2i] = HailRules.approach(region, Places.shared().point(&"bram_post"), row["at"] as Vector2i)
+		assert_false(walk.is_empty(), "he can walk from his post to %s" % row["point"])
+		assert_true(walk.size() * WalkerRules.steps_per_tile() + HailRules.spotted_steps() <= HailRules.budget_steps(),
+			"within the time he has: %d tiles" % walk.size())
+	assert_false(HailRules.in_sight_of_any(hail, where_the_game_starts()), "you wake outside it")
+	assert_false(HailRules.in_sight_of_any(hail, Region.BRINDLE), "and so is the village's heart, where tests and frames stand")
+	assert_false(HailRules.in_sight_of_any(hail, Vector2i(in_town(&"brindle"))), "and where a test stands in the village")
 
 
 func test_no_pack_stands_in_the_hail() -> void:
@@ -143,9 +147,9 @@ func test_no_pack_stands_in_the_hail() -> void:
 	# to wake at one you must have rested there, and to rest there you walked in and
 	# were called (content/hail.json).
 	var region: Region = _region()
-	var hail: Dictionary = _the_hail()
+	var hail: Array[Dictionary] = _the_hail()
 	for tile: Vector2i in Wild.new().standing(region).keys():
-		assert_false(HailRules.in_sight(hail, tile), "a pack at %s is out of it" % tile)
+		assert_false(HailRules.in_sight_of_any(hail, tile), "a pack at %s is out of it" % tile)
 
 
 ## Moves from one tile to another by the navigation's own step rule, keeping out of the
@@ -173,7 +177,7 @@ func test_every_shortest_way_out_of_the_graves_walks_into_the_hail() -> void:
 	# 3.5 disc grazed the tested walk while an equally short one passed it by. So the
 	# ground is dammed and the walk must come out longer, or not at all.
 	var region: Region = _region()
-	var hail: Dictionary = _the_hail()
+	var hail: Array[Dictionary] = _the_hail()
 	var goals: Array[Vector2i] = [Region.BRINDLE, Region.BRIDGE]
 	if not Places.baked():
 		# On his map the works lie north through the village; on the 2D map the graves
@@ -181,7 +185,7 @@ func test_every_shortest_way_out_of_the_graves_walks_into_the_hail() -> void:
 		off("on the 2D map the graves lie between Brindle and the bridge")
 		goals = [Region.BRINDLE]
 	var open: Callable = func(_tile: Vector2i) -> bool: return false
-	var watched: Callable = func(tile: Vector2i) -> bool: return HailRules.in_sight(hail, tile)
+	var watched: Callable = func(tile: Vector2i) -> bool: return HailRules.in_sight_of_any(hail, tile)
 	for goal: Vector2i in goals:
 		var shortest: int = _moves(region, where_the_game_starts(), goal, open)
 		assert_true(shortest > 0, "the graves reach %s" % goal)
@@ -197,7 +201,7 @@ func test_his_trail_into_the_village_runs_through_the_hail() -> void:
 		off("the 2D map's road into Brindle is ours, and is the shortest walk already")
 		return
 	var region: Region = _region()
-	var hail: Dictionary = _the_hail()
+	var hail: Array[Dictionary] = _the_hail()
 	# His trail on the start's own row, west of the graves, where it comes up from the coast.
 	var south: Vector2i = where_the_game_starts()
 	while south.x > 0 and region.terrain_at(south) != Region.Terrain.ROAD:
@@ -206,7 +210,7 @@ func test_his_trail_into_the_village_runs_through_the_hail() -> void:
 	assert_eq(region.terrain_at(south), Region.Terrain.ROAD, "his trail passes beside the graves")
 	assert_eq(region.terrain_at(post), Region.Terrain.ROAD, "and through Bram's post")
 	var off_trail_or_watched: Callable = func(tile: Vector2i) -> bool:
-		return region.terrain_at(tile) != Region.Terrain.ROAD or HailRules.in_sight(hail, tile)
+		return region.terrain_at(tile) != Region.Terrain.ROAD or HailRules.in_sight_of_any(hail, tile)
 	assert_true(_moves(region, south, post, func(t: Vector2i) -> bool: return region.terrain_at(t) != Region.Terrain.ROAD) > 0,
 		"the trail runs from beside the graves to his post")
 	assert_eq(_moves(region, south, post, off_trail_or_watched), -1,
