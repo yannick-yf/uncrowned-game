@@ -1312,7 +1312,7 @@ manual `SaveFile.VERSION` bumps stay for rule changes.
 
 **Test first:** a save written against one bake hash is refused under another.
 
-### O5 · One door for every blow
+### O5 · One door for every blow — **built 2026-09-29**
 
 Est. 1–2 h. Depends on: O1.
 

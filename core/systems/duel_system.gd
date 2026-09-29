@@ -347,7 +347,16 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 	if victim == null or not victim.alive() or not DuelRules.in_reach(who.at, victim.at):
 		sim.derive(&"blow_missed", {"by": _named_as(who), "move": String(DuelRules.STRIKE)})
 		return
-	var damage: int = DuelRules.strike_damage()
+	_land(sim, duel, world, who, victim, DuelRules.strike_damage(), DuelRules.STRIKE)
+
+
+## **The one door every hit goes through** (O5, 2026-09-29): a blow, and in time an
+## arrow and a spell. Whatever lands here keeps `G`, the world's bar, the flinch, the
+## facing, the felling and the one `blow_landed` the window reads — so nothing that
+## hurts in a fight can quietly skip a rule the sword obeys.
+func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
+		victim: DuelFighter, amount: int, move: StringName) -> void:
+	var damage: int = amount
 	# **`G` still means what it says.** The one development tool that makes the player
 	# unkillable is read here as well as in `WorldState.hurt`, because a fight that
 	# drained a bar nothing was allowed to empty would be a fight the HUD lied about.
@@ -374,7 +383,8 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 	var foe: DuelFighter = duel.foe()
 	sim.derive(&"blow_landed", {
 		"by": _named_as(who), "target": String(victim.who),
-		"move": String(DuelRules.STRIKE), "damage": damage, "guarded": false,
+		"move": String(move), "damage": damage, "guarded": false,
+		"at_x": victim.at.x, "at_y": victim.at.y,
 		"opponent_hp": foe.hp if foe != null else 0,
 		"player_hp": mine.hp if mine != null else 0,
 		"apart_mm": DuelRules.millimetres_of(DuelRules.apart(who.at, victim.at)),

@@ -633,6 +633,18 @@ func test_losing_a_spar_still_reads_lost() -> void:
 	assert_eq(sim.events.of_type(&"duel_yielded").size(), 0, "and you did not yield")
 
 
+func test_a_blow_says_what_it_was_and_where_it_landed() -> void:
+	# O5: every hit goes through one door, and the event names the move and the tile, so
+	# an arrow or a spell (O9, O10) lands through the same door and reads the same.
+	var sim: Sim = _start()
+	_play(sim, DuelPlayer.PRESS, 400)
+	var blows: Array = sim.events.of_type(&"blow_landed")
+	assert_true(blows.size() > 0, "a blow landed")
+	var first: SimEvent = blows[0] as SimEvent
+	assert_eq(String(first.data.get("move", "")), "strike", "a strike")
+	assert_true(first.data.has("at_x") and first.data.has("at_y"), "on a tile it names")
+
+
 func test_the_first_design_is_gone() -> void:
 	# **K6's other half, 2026-09-26.** Yannick played the turn-based fight, kept it, and
 	# said the real-time one could go. This fails the day any of it comes back by
