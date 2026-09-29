@@ -37,6 +37,7 @@ static func witnesses_to(
 	zone: StringName,
 	at: Vector2,
 	alertness: float = WorldTick.NEUTRAL,
+	walkers: Walkers = null,
 ) -> PackedStringArray:
 	var seen := PackedStringArray()
 	if cast == null:
@@ -46,7 +47,7 @@ static func witnesses_to(
 		# heard about lately (WatchRules). Everybody else sees what anybody sees.
 		var sight: float = WatchRules.sight_for(alertness) \
 			if WatchRules.is_watchman(npc) else WITNESS_SIGHT
-		if npc.centre().distance_to(at) <= sight:
+		if Walkers.centre_of(npc, walkers).distance_to(at) <= sight:
 			seen.append(String(npc.id))
 	return seen
 

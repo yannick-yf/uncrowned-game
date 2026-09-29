@@ -137,7 +137,11 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		him.hp = DuelRules.hp_of(who)
 		him.max_hp = him.hp
 		var npc: Npc = cast.get_npc(who) if cast != null else null
-		var stands: Vector2i = npc.tile if npc != null else mine.at + Vector2i(1, 0)
+		# Where he actually stands, which is not always his post (O7).
+		var walkers := sim.store(&"walkers") as Walkers
+		var stands: Vector2i = mine.at + Vector2i(1, 0)
+		if npc != null:
+			stands = walkers.where(npc) if walkers != null else npc.tile
 		# **Squared up.** Somebody already beside you keeps the ground they are standing
 		# on; somebody who is not is set down a stride away on the side they are already
 		# on, so nobody is spun round and nobody teleports far. A fight begins because
@@ -508,6 +512,16 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 	var turns: int = duel.turns_taken
 	var felled: bool = duel.player_felled
 	var by: StringName = duel.felled_by
+	# **A person stays where the fight left him** (O7), and walks home from there — he is
+	# not drawn back to his post the instant it ends. Beasts belong to their pack, and
+	# the dead to nobody.
+	var walkers := sim.store(&"walkers") as Walkers
+	var cast := sim.store(&"cast") as Cast
+	if walkers != null and cast != null:
+		for fighter: DuelFighter in duel.fighters:
+			var npc: Npc = cast.get_npc(fighter.who) if not fighter.is_player() else null
+			if npc != null and fighter.how_out != &"down":
+				walkers.place(npc.id, fighter.at, npc.tile)
 	duel.fighters = []
 	duel.turn = -1
 	duel.phase = &""

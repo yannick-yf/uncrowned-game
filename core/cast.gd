@@ -227,11 +227,12 @@ func in_zone(zone: StringName) -> Array[Npc]:
 
 ## Nearest NPC within reach in the current zone, or null. Used to decide who the
 ## interact key is aimed at.
-func nearest_to(zone: StringName, pos: Vector2, reach: float) -> Npc:
+func nearest_to(zone: StringName, pos: Vector2, reach: float, walkers: Walkers = null) -> Npc:
 	var best: Npc = null
 	var best_distance: float = reach
 	for npc: Npc in in_zone(zone):
-		var distance: float = pos.distance_to(npc.centre())
+		# Where he stands, which a fight or a walk may have changed (O7).
+		var distance: float = pos.distance_to(Walkers.centre_of(npc, walkers))
 		if distance <= best_distance:
 			best = npc
 			best_distance = distance

@@ -27,7 +27,8 @@ static func perform(
 	var ticked := sim.store(&"worldtick") as WorldTick
 	var witnesses: PackedStringArray = CrimeRules.witnesses_to(
 		cast, world.current_zone, at,
-		ticked.alertness_in(where) if ticked != null else WorldTick.NEUTRAL
+		ticked.alertness_in(where) if ticked != null else WorldTick.NEUTRAL,
+		sim.store(&"walkers") as Walkers,
 	) if cast != null and world != null else PackedStringArray()
 
 	# What it does to the world, and whose doing that is. Through push(), because a

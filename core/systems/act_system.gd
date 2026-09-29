@@ -50,7 +50,8 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var mine := sim.store(&"allegiance") as Allegiance
 	var unwatched: bool = mine != null and PlaceRules.is_free(mine.holder(here_now))
 	if not unwatched and ticked != null and WatchRules.guarded_by(
-			cast, world.current_zone, world.player_pos, ticked.alertness_in(here_now)) != &"":
+			cast, world.current_zone, world.player_pos, ticked.alertness_in(here_now),
+			sim.store(&"walkers") as Walkers) != &"":
 		sim.derive(&"act_prevented", {"town": String(here_now)})
 		return
 

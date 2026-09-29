@@ -65,6 +65,8 @@ var _held_dir: Vector2i = Vector2i.ZERO
 ## **The fight** (K group, `docs/COMBAT_V2.md`), turn-based on the world's grid. Empty
 ## unless something has submitted `duel_began`.
 var _duel: Duel = null
+## Where the named people the world has displaced actually stand (O7).
+var _walkers: Walkers = null
 ## **Where the player has decided to stand this turn**, and it is a proposal and not
 ## state: only the confirmed turn is an event. Moved by the arrows over the tiles the
 ## turn buys, and forgotten the moment the turn is taken.
@@ -163,6 +165,7 @@ func _ready() -> void:
 		_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
 	_duel = _sim.store(&"duel") as Duel
+	_walkers = _sim.store(&"walkers") as Walkers
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_mine = _sim.store(&"allegiance") as Allegiance
@@ -291,7 +294,7 @@ func _ready() -> void:
 			push_warning("UNCROWNED_TALK: nobody called '%s'" % halves[0])
 		else:
 			# A stride south of him, so the two figures do not stand in one tile.
-			_world.player_pos = npc.centre() + Vector2(0.0, 1.2)
+			_world.player_pos = Walkers.centre_of(npc, _walkers) + Vector2(0.0, 1.2)
 			var here: StringName = _world.region().zone_at(_world.player_tile())
 			if halves.size() > 1 and _player != null and _player.has_standing(here):
 				_player.standing[here] = clampf(
@@ -584,7 +587,7 @@ func _frame(eye: Vector2) -> Dictionary:
 		"extra_guards": CastleRules.extra_guards(CastleRules.instability(_mine, _sim.tick)),
 		# §8's immediate register: who would see the act in front of you, when there
 		# is one — the same rule `_draw_witnesses` applies to the 2D marks.
-		"witnesses": CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos)
+		"witnesses": CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos, WorldTick.NEUTRAL, _walkers)
 			if _can_steal() or _can_give_back() or _can_warn() else [],
 		"now": _real_seconds,
 	}
@@ -1020,7 +1023,7 @@ func _read_direction() -> Vector2i:
 
 
 func _nearby_npc() -> Npc:
-	var who: Npc = _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH)
+	var who: Npc = _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH, _walkers)
 	# Somebody who has left is not somebody to prompt about. The simulation refuses
 	# the conversation anyway; this is so the window does not offer it.
 	if who != null and OpeningRules.is_gone(who.id, _sim.facts):
@@ -1053,7 +1056,7 @@ func _can_warn() -> bool:
 	return TellingRules.can_warn(
 		_world.region().zone_at(_world.player_tile()),
 		_world.fraud_told_to,
-		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos),
+		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos, WorldTick.NEUTRAL, _walkers),
 		_sim.facts)
 
 
@@ -1076,7 +1079,7 @@ func _watched_site() -> String:
 	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
 		return ""
 	if WatchRules.guarded_by(_cast, _world.current_zone, _world.player_pos,
-			_ticked.alertness_in(_world.region().zone_at(_world.player_tile()))) == &"":
+			_ticked.alertness_in(_world.region().zone_at(_world.player_tile())), _walkers) == &"":
 		return ""
 	return Text.of(&"prompt.watched")
 
@@ -1106,6 +1109,7 @@ func _reload() -> void:
 	_sim = loaded
 	_world = _sim.store(&"world") as WorldState
 	_duel = _sim.store(&"duel") as Duel
+	_walkers = _sim.store(&"walkers") as Walkers
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
@@ -1136,7 +1140,7 @@ func _papers_in_reach() -> bool:
 func _can_read_out() -> bool:
 	return TellingRules.tellable_document(
 		_world.region().zone_at(_world.player_tile()),
-		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos),
+		CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos, WorldTick.NEUTRAL, _walkers),
 		_world, _sim.facts) != &""
 
 
@@ -1311,7 +1315,7 @@ func _draw() -> void:
 		if npc.id == OpeningRules.FAIRY:
 			_draw_fairy(npc.centre())
 			continue
-		_draw_actor(npc.centre(), npc.id, Art.FACE_DOWN)
+		_draw_actor(_walkers.drawn_at(npc) if _walkers != null else npc.centre(), npc.id, Art.FACE_DOWN)
 
 	_draw_travellers(min_x, max_x, min_y, max_y)
 
@@ -1615,11 +1619,11 @@ func _draw_actor(at: Vector2, role: StringName, column: int) -> void:
 func _draw_witnesses() -> void:
 	if not (_can_steal() or _can_give_back() or _can_warn()):
 		return
-	for id: String in CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos):
+	for id: String in CrimeRules.witnesses_to(_cast, _world.current_zone, _world.player_pos, WorldTick.NEUTRAL, _walkers):
 		var npc: Npc = _cast.get_npc(StringName(id))
 		if npc == null:
 			continue
-		var head: Vector2 = (npc.centre() * float(TILE) - Vector2(0.0, float(FIGURE) * 0.5 + 4.0)).round()
+		var head: Vector2 = (Walkers.centre_of(npc, _walkers) * float(TILE) - Vector2(0.0, float(FIGURE) * 0.5 + 4.0)).round()
 		draw_circle(head, 2.6, Color(0.08, 0.07, 0.10, 0.85))
 		draw_circle(head, 1.5, Color(0.93, 0.88, 0.68, 0.95))
 
@@ -2173,11 +2177,11 @@ func _page_who() -> Array[Array]:
 	# Farthest first, so the cut takes the far end and leaves the people you could
 	# actually walk to.
 	people.sort_custom(func(a: Npc, b: Npc) -> bool:
-		return a.centre().distance_to(_world.player_pos) \
-			> b.centre().distance_to(_world.player_pos))
+		return Walkers.centre_of(a, _walkers).distance_to(_world.player_pos) \
+			> Walkers.centre_of(b, _walkers).distance_to(_world.player_pos))
 	var blocks: Array[Array] = []
 	for npc: Npc in people:
-		var delta: Vector2 = npc.centre() - _world.player_pos
+		var delta: Vector2 = Walkers.centre_of(npc, _walkers) - _world.player_pos
 		var compass: String = ("%s%s" % [
 			"N" if delta.y < -1.0 else ("S" if delta.y > 1.0 else ""),
 			"W" if delta.x < -1.0 else ("E" if delta.x > 1.0 else "")])

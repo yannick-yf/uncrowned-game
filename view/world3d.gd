@@ -1160,7 +1160,9 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			_idle(figure, Vector2i(0, 1))
 		# Footed every frame, not once: the ground under them is his and is built a
 		# frame after they are, and thirty-three figures are nothing.
-		var stands_at: Vector2 = npc.centre()
+		# Where he stands, or is walking, when the world has moved him (O7).
+		var walkers := _sim.store(&"walkers") as Walkers
+		var stands_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
 		if fights.has(npc.id):
 			var entry: Dictionary = fights[npc.id] as Dictionary
 			stands_at = entry.get("at", stands_at) as Vector2
@@ -1547,7 +1549,8 @@ func _sync_marks(cast: Cast, witnesses: Array) -> void:
 		if npc == null:
 			mark.visible = false
 			continue
-		mark.position = _feet_of(npc.centre()) + _lens_up * (FIGURE_HEIGHT_M + 0.4)
+		mark.position = _feet_of(Walkers.centre_of(npc, _sim.store(&"walkers") as Walkers)) \
+			+ _lens_up * (FIGURE_HEIGHT_M + 0.4)
 
 
 func _sync_embers(frame: Dictionary) -> void:

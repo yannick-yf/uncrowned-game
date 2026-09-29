@@ -1343,7 +1343,7 @@ clamped 15–22 m; the HUD has one bar per foe and names who is acting.
 **Tests first:** in a two-wolf fight each figure stands on its seat and a downed one is
 hidden; two foes, two bars. **Check:** shots at several steps; the bridge fight by hand.
 
-### O7 · Where a named person actually stands
+### O7 · Where a named person actually stands — **built 2026-09-29**
 
 Est. 4 h. Depends on: O5.
 

@@ -29,7 +29,8 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 
 	var here: StringName = world.region().zone_at(world.player_tile())
 	var witnesses: PackedStringArray = CrimeRules.witnesses_to(
-		cast, world.current_zone, world.player_pos)
+		cast, world.current_zone, world.player_pos, WorldTick.NEUTRAL,
+		sim.store(&"walkers") as Walkers)
 	# Proof first. A document in your hand outranks a warning you can only give
 	# once, and it is the act §3's `discredited` ending is actually counting.
 	var mine := sim.store(&"allegiance") as Allegiance

@@ -43,20 +43,21 @@ const WATCHING_FROM: float = 70.0
 
 
 ## Whether this watchman is standing over that spot, awake enough to stop you.
-static func is_guarding(npc: Npc, at: Vector2, alertness: float) -> bool:
+static func is_guarding(npc: Npc, at: Vector2, alertness: float, walkers: Walkers = null) -> bool:
 	if not is_watchman(npc) or alertness < WATCHING_FROM:
 		return false
-	return npc.centre().distance_to(at) <= sight_for(alertness)
+	return Walkers.centre_of(npc, walkers).distance_to(at) <= sight_for(alertness)
 
 
 ## Anybody standing over this spot, or "" if the watch is elsewhere or half asleep.
 ## `alertness` is the figure for the town the act is in, not a regional one — the
 ## watch in the Wide Acres has never heard of the Cinderworks.
-static func guarded_by(cast: Cast, zone: StringName, at: Vector2, alertness: float) -> StringName:
+static func guarded_by(cast: Cast, zone: StringName, at: Vector2, alertness: float,
+		walkers: Walkers = null) -> StringName:
 	if cast == null:
 		return &""
 	for npc: Npc in cast.in_zone(zone):
-		if is_guarding(npc, at, alertness):
+		if is_guarding(npc, at, alertness, walkers):
 			return npc.id
 	return &""
 

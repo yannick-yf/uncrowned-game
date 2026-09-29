@@ -36,11 +36,11 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"folk", Folk.new())
 	sim.add_store(&"player", PlayerState.new())
 	sim.add_store(&"wild", Wild.new())
-	# **Beside the first design, not instead of it** (K1). `Duel` is the turn-based
-	# fight of `docs/COMBAT_V2.md`; it holds nothing and does nothing until a
-	# `duel_began` event arrives, which today only its own tests and `UNCROWNED_DUEL`
-	# submit. The cut-over is K6.
+	# The turn-based fight of `docs/COMBAT_V2.md`; it holds nothing and does nothing
+	# until a `duel_began` arrives.
 	sim.add_store(&"duel", Duel.new())
+	# Where the named people the world has displaced actually stand (O7).
+	sim.add_store(&"walkers", Walkers.new())
 	for system: SimSystem in build_systems():
 		sim.add_system(system)
 	return sim
@@ -107,6 +107,9 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(WildSystem.new())
 	# After the duel too: it answers `duel_down`, which the duel raises.
 	systems.append(FellingSystem.new())
+	# After both: whoever a fight left standing somewhere walks home, and whoever it
+	# killed is let go (O7).
+	systems.append(WalkerSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())
@@ -136,6 +139,7 @@ static func fresh_stores() -> Dictionary:
 		&"player": PlayerState.new(),
 		&"wild": Wild.new(),
 		&"duel": Duel.new(),
+		&"walkers": Walkers.new(),
 	}
 
 
