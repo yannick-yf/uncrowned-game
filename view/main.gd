@@ -376,7 +376,8 @@ func _duel_frame() -> Dictionary:
 		"my_telegraph": DuelRules.telegraph_at(my_act, into),
 		"his_telegraph": DuelRules.telegraph_at(his_act, into),
 		"my_turn": mine_acting,
-		"reach_tiles": DuelRules.reach_tiles(),
+		# What whoever is acting reaches with what they carry — a bow's six, a sword's one.
+		"reach_tiles": DuelRules.reach_of(acting.who) if acting != null else DuelRules.reach_tiles(),
 		"in_reach": _anybody_in_reach(acting if acting != null else mine),
 		"moves": _duel_reach(acting),
 		"centre": my_at.lerp(his_at, 0.5),
@@ -476,7 +477,7 @@ func _duel_frame() -> Dictionary:
 ## Asked of their own foes, not of the fight's first opponent (O6's review).
 func _anybody_in_reach(who: DuelFighter) -> bool:
 	for foe: DuelFighter in _duel.foes_of(who.who):
-		if DuelRules.in_reach(who.at, foe.at):
+		if DuelRules.apart(who.at, foe.at) <= DuelRules.reach_of(who.who):
 			return true
 	return false
 
@@ -772,7 +773,12 @@ func _process(delta: float) -> void:
 	# After the window has placed its camera, so a number hung over a fighter is hung
 	# where the fighter is drawn this frame and not where the camera was last frame.
 	if _fight_hud != null:
-		_fight_hud.present(_fight_reading(), delta)
+		# A drill ends in the master's conversation: the fight's picture steps aside at
+		# once rather than fading over his words (the review of O8).
+		var fight_reading: Dictionary = _fight_reading()
+		if _world.in_dialogue() and not _squared_up():
+			fight_reading = {"lens": 0.0, "on": false}
+		_fight_hud.present(fight_reading, delta)
 	# Handed over once. The pause branch above does not read the log, and the same
 	# blow fed to the HUD sixty times a second would hang sixty numbers on him.
 	_fresh_blows = []
@@ -1170,6 +1176,10 @@ func _reload() -> void:
 	_world = _sim.store(&"world") as WorldState
 	_duel = _sim.store(&"duel") as Duel
 	_walkers = _sim.store(&"walkers") as Walkers
+	# The window reads the run too, and must read this one, not the one that died (the
+	# review of O7: it drew people where the discarded run had left them).
+	if _three_d != null:
+		_three_d.rebind(_sim)
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
 	_standing = _sim.store(&"standing") as Standing
@@ -2247,7 +2257,8 @@ func _page_who() -> Array[Array]:
 			"W" if delta.x < -1.0 else ("E" if delta.x > 1.0 else "")])
 		blocks.append(["- " + Text.of(&"journal.who.row", [
 			npc.display_name,
-			Text.of(StringName("place.short.%s" % _world.region().zone_at(npc.tile))),
+			Text.of(StringName("place.short.%s" % _world.region().zone_at(
+				_walkers.where(npc) if _walkers != null else npc.tile))),
 			int(delta.length()), compass])] as Array[String])
 	return blocks
 

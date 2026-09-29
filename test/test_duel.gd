@@ -797,6 +797,26 @@ func test_a_cast_with_nobody_in_reach_is_a_wait() -> void:
 	assert_eq(duel.acting, DuelRules.WAIT, "nobody within the spell's reach")
 
 
+func test_an_archer_does_not_shoot_the_fallen() -> void:
+	# Found by the review of O9: the arrow that felled the player was followed by another
+	# of her turns, aimed at the man already down.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_hp = 5
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.STAND, 4000)
+	var felling: int = -1
+	for row: Variant in sim.events.of_type(&"blow_landed"):
+		if bool((row as SimEvent).data.get("felled", false)):
+			felling = (row as SimEvent).step
+			break
+	assert_true(felling >= 0, "an arrow felled you")
+	for row: Variant in sim.events.of_type(&"arrow_aimed"):
+		var aimed: SimEvent = row as SimEvent
+		assert_true(aimed.step <= felling, "and she aimed no arrow after it (aimed at %d, felled at %d)" % [aimed.step, felling])
+
+
 func test_the_first_design_is_gone() -> void:
 	# **K6's other half, 2026-09-26.** Yannick played the turn-based fight, kept it, and
 	# said the real-time one could go. This fails the day any of it comes back by

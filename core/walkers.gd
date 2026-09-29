@@ -58,6 +58,15 @@ func drawn_at(npc: Npc) -> Vector2:
 	return here.lerp(Vector2(ahead[0] as Vector2i) + Vector2(0.5, 0.5), clampf(through, 0.0, 1.0))
 
 
+## Which way somebody faces: toward the next tile on their way home, or south, as
+## everybody stands at their post.
+func heading(npc: Npc) -> Vector2i:
+	var ahead: Array = path.get(npc.id, []) as Array
+	if ahead.is_empty():
+		return Vector2i(0, 1)
+	return ((ahead[0] as Vector2i) - where(npc)).sign()
+
+
 ## The centre of the tile somebody stands on, for a rule that measures distance to them.
 ## Static, so a rule handed no store reads the anchor exactly as it always did.
 static func centre_of(npc: Npc, walkers: Walkers) -> Vector2:

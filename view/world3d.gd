@@ -1176,6 +1176,10 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		if figure.material_override != _figure_material and _figure_material != null:
 			# The man you fought last time takes his own material back.
 			figure.material_override = _figure_material
+		# Walking home when the world has moved him, idle at his post otherwise — never a
+		# still figure sliding (the review of O7).
+		var going: Vector2i = walkers.heading(npc) if walkers != null else Vector2i(0, 1)
+		_step_the_foe(npc.id, figure, stands_at, going, {})
 		_foot_figure(figure, stands_at)
 		figure.visible = true
 	_fairy.visible = fairy_seen
@@ -1549,8 +1553,9 @@ func _sync_marks(cast: Cast, witnesses: Array) -> void:
 		if npc == null:
 			mark.visible = false
 			continue
-		mark.position = _feet_of(Walkers.centre_of(npc, _sim.store(&"walkers") as Walkers)) \
-			+ _lens_up * (FIGURE_HEIGHT_M + 0.4)
+		var walkers := _sim.store(&"walkers") as Walkers
+		var head_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
+		mark.position = _feet_of(head_at) + _lens_up * (FIGURE_HEIGHT_M + 0.4)
 
 
 func _sync_embers(frame: Dictionary) -> void:
@@ -2157,6 +2162,13 @@ func screen_of(at_tiles: Vector2, height_m: float) -> Vector2:
 
 
 ## For the suite: is the fight's picture up, and how many sparks are in the air.
+## **A new run to read** (the review of O7): after a death the screen reloads its run,
+## and the window must read that one.
+func rebind(sim: Sim) -> void:
+	_sim = sim
+	_foe_walk = {}
+
+
 func arena_shown() -> bool:
 	return _arena != null and _arena.visible and _arena_floor != null and _arena_floor.visible
 

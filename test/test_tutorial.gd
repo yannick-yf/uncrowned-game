@@ -260,6 +260,60 @@ func test_casting_passes_the_magic_drill() -> void:
 	assert_eq(world.player_hp, WorldState.MAX_HP, "and he mends you")
 
 
+# ------------------------------------------------ found by the review of O7-O9 ---
+
+func test_stepping_back_on_your_first_turn_does_not_end_the_drill() -> void:
+	# His opening walk leaves you six apart, which is "out of reach"; counting that as a
+	# round away ended the drill as walked out of when you stepped back once.
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "bram", "spar": true, "drill": "sword"})
+	sim.advance(1)
+	var duel: Duel = _duel(sim)
+	for _step: int in 2000:
+		if duel.waiting_on_player():
+			break
+		sim.advance(1)
+	var mine: DuelFighter = duel.me()
+	var away: Vector2i = mine.at + (mine.at - duel.foe().at).sign() * 2
+	sim.submit(&"duel_turn", {"who": "player", "to_x": away.x, "to_y": away.y, "action": "wait", "target": ""})
+	sim.advance(2)
+	_play(sim, DuelPlayer.PRESS, 6000)
+	assert_ne(duel.outcome, &"left", "one step back is not leaving the lesson")
+
+
+func test_the_master_speaks_only_to_somebody_beside_him() -> void:
+	# The bow drill is Wren's fight; Bram watches from his post, and may be far off. He
+	# does not open a conversation from across the village.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "bow"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.DODGE, 20000)
+	sim.advance(DuelRules.beat_steps() + 5)
+	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
+	var walkers := sim.store(&"walkers") as Walkers
+	var apart: float = world.player_pos.distance_to(Walkers.centre_of(bram, walkers))
+	if apart > DrillSystem.SPEAKS_WITHIN:
+		assert_false(world.talking_to == &"bram", "he is %.0f tiles off and says nothing" % apart)
+	else:
+		assert_eq(world.talking_to, &"bram", "beside him, he speaks")
+
+
+func test_the_arrow_that_decides_it_is_the_last() -> void:
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "bow"})
+	sim.advance(1)
+	_play(sim, DuelPlayer.DODGE, 20000)
+	var dodges: Array = sim.events.of_type(&"arrow_dodged")
+	var aims: Array = sim.events.of_type(&"arrow_aimed")
+	assert_true(dodges.size() >= DuelRules.drill_count(&"bow"), "the drill was passed")
+	var deciding: SimEvent = dodges[DuelRules.drill_count(&"bow") - 1] as SimEvent
+	for row: Variant in aims:
+		assert_true((row as SimEvent).step < deciding.step,
+			"no arrow is aimed after the dodge that passed it (aimed at %d, passed at %d)"
+				% [(row as SimEvent).step, deciding.step])
+
+
 func test_only_bram_reads_what_you_have_drilled() -> void:
 	# A drill is a lesson, not a gate: nothing but the master's own next lesson may ask
 	# whether you passed the last one (invariant 4).

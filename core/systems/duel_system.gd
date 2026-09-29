@@ -86,7 +86,7 @@ func on_step(sim: Sim, _step: int) -> void:
 			duel.phase_left -= 1
 			if duel.phase_left <= 0:
 				_land_volley(sim, duel, world, duel.acting_fighter())
-				if not _over(sim, duel):
+				if not _settle(sim, duel):
 					_choose(sim, duel, world, duel.acting_fighter())
 		Duel.PAUSING:
 			duel.phase_left -= 1
@@ -235,6 +235,9 @@ func _open_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 	if duel.volleys.has(who.who):
 		duel.phase = Duel.LOOSING
 		duel.phase_left = DuelRules.loose_steps()
+		# Nothing of the last turn's act carries into the loosing: she stands while it flies.
+		duel.acting = DuelRules.WAIT
+		duel.target = Duel.NOBODY
 		return
 	_choose(sim, duel, world, who)
 
@@ -521,6 +524,18 @@ func _named_as(who: DuelFighter) -> String:
 func _end_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 	duel.walk = []
 	duel.walked = 0
+	if _settle(sim, duel):
+		return
+	duel.phase = Duel.PAUSING
+	duel.phase_left = DuelRules.pause_steps()
+	if duel.phase_left <= 0:
+		_next_turn(sim, duel, world)
+
+
+## **What a blow leaves settled**, after the end of a turn and after an arrow lands (the
+## review of O9 found the arrow did not): anybody at nothing goes out, a drill whose goal
+## is reached is passed, and a fight with a side empty is decided. True when it is.
+func _settle(sim: Sim, duel: Duel) -> bool:
 	for fighter: DuelFighter in duel.fighters:
 		if fighter.alive() and DuelRules.is_down(fighter.hp):
 			fighter.out = true
@@ -541,13 +556,8 @@ func _end_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 	if duel.drill != Duel.NOBODY and duel.outcome == Duel.NOBODY \
 			and duel.tally >= DuelRules.drill_count(duel.drill):
 		_decided(sim, duel, &"won")
-		return
-	if _over(sim, duel):
-		return
-	duel.phase = Duel.PAUSING
-	duel.phase_left = DuelRules.pause_steps()
-	if duel.phase_left <= 0:
-		_next_turn(sim, duel, world)
+		return true
+	return _over(sim, duel)
 
 
 ## The next living fighter in the fixed order. Wrapping past the end of the list is the
@@ -582,6 +592,10 @@ func _next_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 ## and one round of it is not *staying* — the round is counted first and the ending only
 ## comes when the count is up, or the fight would end for whoever happened to move last.
 func _settle_leaving(sim: Sim, duel: Duel) -> void:
+	# A drill's first round is its master's opening walk, which leaves everybody apart on
+	# purpose; it is not a round anybody spent away (the review of O8).
+	if duel.drill != Duel.NOBODY and duel.round_number <= 1:
+		return
 	for fighter: DuelFighter in duel.fighters:
 		if not fighter.alive():
 			continue

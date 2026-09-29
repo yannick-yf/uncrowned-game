@@ -10,6 +10,10 @@ extends SimSystem
 ## gate.
 
 const DRILLED: String = "drilled:%s"
+## **How near the master must be to speak** (the review of O8), in tiles. Beside you he
+## turns and speaks; across the village he does not, and you walk to him — a talk opened
+## from sixteen tiles away was a voice from nowhere.
+const SPEAKS_WITHIN: float = 4.0
 
 
 func steps() -> bool:
@@ -32,6 +36,11 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	if world != null and world.player_hp > 0:
 		world.player_hp = WorldState.MAX_HP
 	var master: StringName = DuelRules.drill_master(drill)
-	if master != &"" and not OpeningRules.is_gone(master, sim.facts):
-		sim.derive(&"drill_over", {"drill": String(drill), "passed": bool(event.data.get("passed", false))})
+	sim.derive(&"drill_over", {"drill": String(drill), "passed": bool(event.data.get("passed", false))})
+	var cast := sim.store(&"cast") as Cast
+	var him: Npc = cast.get_npc(master) if cast != null else null
+	if him == null or world == null or OpeningRules.is_gone(master, sim.facts):
+		return
+	var where: Vector2 = Walkers.centre_of(him, sim.store(&"walkers") as Walkers)
+	if world.player_pos.distance_to(where) <= SPEAKS_WITHIN:
 		sim.derive(&"talk", {"npc": String(master)})

@@ -377,6 +377,39 @@ func test_the_reading_says_whether_the_gift_can_be_cast() -> void:
 	play.free()
 
 
+func test_an_archer_in_flight_and_in_reach_reads_as_one() -> void:
+	# Found by the review of O9: while her arrow flew she wore the player's last pose,
+	# and her ring was a sword's one tile.
+	var sim: Sim = Game.build()
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true})
+	sim.advance(1)
+	var duel := sim.store(&"duel") as Duel
+	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var hands := DuelPlayer.new(DuelPlayer.PRESS)
+	var saw_loosing: bool = false
+	var saw_aiming: bool = false
+	for _step: int in 3000:
+		hands.play(sim, duel)
+		sim.advance(1)
+		if not duel.on():
+			break
+		var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+		var acting: DuelFighter = duel.acting_fighter()
+		if acting == null or acting.is_player():
+			continue
+		if duel.phase == Duel.LOOSING:
+			saw_loosing = true
+			assert_true(String(reading.get("his_pose", "")) in ["", "hurt"],
+				"loosing, she stands or flinches — never a borrowed wind-up: '%s'" % reading.get("his_pose", ""))
+		if duel.acting == DuelRules.AIM:
+			saw_aiming = true
+			assert_eq(int(reading.get("reach_tiles", 0)), DuelRules.bow_reach_tiles(), "her ring is a bow's")
+	assert_true(saw_loosing and saw_aiming, "both were seen")
+	play.free()
+
+
 func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# The failure this exists for is completely silent: a Label given more lines than
 	# it has room for draws the ones that fit and says nothing about the rest. The
