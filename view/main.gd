@@ -1227,6 +1227,8 @@ func _can_give_back() -> bool:
 ## matters on a map whose whole point is choosing a route. Kept small: more than a
 ## tile or two and the player stops being the thing you are looking at.
 const CAMERA_LOOKAHEAD: float = 1.6
+## How near the start the readout names the cemetery, in tiles (O12).
+const CEMETERY_NAMED_WITHIN: float = 6.0
 ## How fast the fight's framing comes on and goes off. Slow enough to read as a camera
 ## move and not a cut — which is the whole of the decision in `SPECS.md` §10.
 const FIGHT_LENS_SETTLES: float = 3.2
@@ -1774,6 +1776,9 @@ func _clock(tick: int) -> String:
 
 
 func _place_name() -> String:
+	# Where you woke, among the graves (O12) — at Brindle's edge, so asked first.
+	if Vector2(_world.player_tile()).distance_to(Vector2(Region.START)) <= CEMETERY_NAMED_WITHIN:
+		return Text.of(&"place.cemetery")
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
 	if Region.is_place(zone):
 		return Text.of(StringName("place.%s" % zone))

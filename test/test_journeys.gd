@@ -41,23 +41,45 @@ func _at_pace(seconds_at_six: float) -> float:
 
 
 ## Walk to a tile by an actual path, not by pressing into whatever is in the way.
+##
+## **And fight through what the road puts in front of you** (O12): a pack of the wood
+## squares up with whoever passes within reach, and a walker that cannot fight stalls
+## until its deadline. The fight is played with `DuelPlayer.PRESS` on the world's own
+## clock, which is held while it lasts, and the walk goes on from where it left you.
 func _walk_to(target: Vector2i, max_seconds: float) -> bool:
 	var deadline: int = _sim.step + int(max_seconds * float(Sim.STEPS_PER_REAL_SECOND))
-	var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
-	if route.is_empty():
-		return false
-	for point: Vector2 in route:
-		while _sim.step < deadline:
-			var delta: Vector2 = point - _world.player_pos
-			if delta.length() <= 1.0:
+	var duel := _sim.store(&"duel") as Duel
+	var hands := DuelPlayer.new(DuelPlayer.PRESS)
+	while _sim.step < deadline:
+		var route: Array[Vector2] = Navigation.waypoints(_world.region(), _world.player_tile(), target)
+		if route.is_empty():
+			return false
+		var fought: bool = false
+		for point: Vector2 in route:
+			while _sim.step < deadline:
+				if duel != null and duel.on():
+					_sim.submit(&"move_intent", {"x": 0, "y": 0})
+					while duel.on():
+						hands.play(_sim, duel)
+						_sim.advance(1)
+						deadline += 1
+					fought = true
+					break
+				var delta: Vector2 = point - _world.player_pos
+				if delta.length() <= 1.0:
+					break
+				_sim.submit(&"move_intent", _aim(delta))
+				_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
+			if fought or _sim.step >= deadline:
 				break
-			_sim.submit(&"move_intent", _aim(delta))
-			_sim.advance(Sim.STEPS_PER_REAL_SECOND / 10)
+		if fought:
+			continue
 		if _sim.step >= deadline:
 			return false
-	_sim.submit(&"move_intent", {"x": 0, "y": 0})
-	_sim.advance(1)
-	return true
+		_sim.submit(&"move_intent", {"x": 0, "y": 0})
+		_sim.advance(1)
+		return true
+	return false
 
 
 ## Steer straight through a list of points, without pathfinding. Used for the road,

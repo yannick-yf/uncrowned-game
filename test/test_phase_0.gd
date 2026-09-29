@@ -35,15 +35,13 @@ func test_the_region_is_bounded_on_all_four_sides() -> void:
 	assert_false(region.is_passable(Vector2i(-1, -1)), "and outside is not walkable")
 
 
-func test_the_player_wakes_in_the_fairies_clearing_at_full_health() -> void:
-	# **Changed 2026-09-12.** Phase 0 woke the player in Brindle. The opening now
-	# wakes them in the fairies' clearing inside the Thornwood, and the walk out of
-	# the trees into the ruins — with the furnaces in the same frame — is the
-	# opening. The clearing is deliberately not a zone: it is a place in the wood,
-	# not a settlement, so `zone_at` is empty and that is correct.
-	assert_eq(_world.player_tile(), where_the_game_starts(), "on open ground in the wood")
-	assert_eq(_world.region().zone_at(_world.player_tile()), &"",
-		"which belongs to no settlement")
+func test_the_player_wakes_where_the_game_starts_at_full_health() -> void:
+	# **Changed 2026-09-12, and again 2026-09-29 (O12).** Phase 0 woke the player in
+	# Brindle; the opening then woke them in the fairies' clearing in the wood; since
+	# O12 they wake in the burned village's graveyard at its southern edge, and the
+	# walk through the ruins is the opening. `test_opening` says where that is.
+	assert_eq(_world.player_tile(), where_the_game_starts(), "where the game starts")
+	assert_true(_world.region().is_passable(_world.player_tile()), "on open ground")
 	assert_eq(_world.player_hp, WorldState.MAX_HP)
 	assert_eq(_world.player_hp, WorldState.MAX_HP,
 		"SPECS §3: the player wakes at a full bar, whatever the bar is")

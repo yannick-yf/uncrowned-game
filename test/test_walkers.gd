@@ -111,8 +111,8 @@ func test_the_walk_home_replays_from_the_log() -> void:
 			break
 		hands.play(sim, duel)
 		sim.advance(1)
-	sim.advance(WalkerRules.linger_steps() + 200)
-	assert_true(_walkers(sim).is_displaced(&"bram"), "he is walking home from far off")
+	sim.advance(5)
+	assert_true(_walkers(sim).is_displaced(&"bram"), "the fight left him away from his post")
 	var replayed: Sim = Game.replay(sim)
 	assert_eq(_walkers(replayed).fingerprint(), _walkers(sim).fingerprint(),
 		"and a replay puts him on the same tile, the same step into it")

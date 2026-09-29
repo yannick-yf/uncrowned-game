@@ -13,6 +13,7 @@
   },
   "points": {
     "clearing": [261, 150],
+    "cemetery": [244, 186],
     "working_face": [238, 138],
     "bridge": [228, 177],
     "ford": [233, 188],
@@ -35,7 +36,7 @@
       "_why": "The junction toward the Muster, 86 tiles off the demo's road. Same reason, same count. Pillar 1 is untouched: the road is open and Blackcairn is reachable in minute one, at a price."}
   ],
   "cast": {
-    "fairy": {"point": "clearing", "offset": [0, -1]},
+    "fairy": {"point": "cemetery", "offset": [0, -1]},
     "maddox": {"place": "harrowgate", "offset": [-2, -2]},
     "tovin": {"place": "harrowgate", "offset": [2, 3]},
     "bell": {"place": "harrowgate", "offset": [2, -3]},
@@ -87,7 +88,7 @@
     {"place": "saltmarch", "offset": [7, 6], "_why": "the quay, where the boats tie up"},
     {"place": "cairnwell", "offset": [8, 9], "_why": "the carters' yard outside the walls"},
     {"place": "blackcairn", "offset": [8, 9], "_why": "the last verge before the gate"},
-    {"point": "clearing", "offset": [0, 2], "_why": "the fairies' fire: the first save in the game, and the last protected ground"},
+    {"point": "cemetery", "offset": [2, 2], "_why": "the fairies' fire, among the graves since O12: the first save in the game. Two tiles off on both axes, beyond the fire's reach of the wake tile, so the first key hears her before it rests you"},
     {"point": "bridge", "offset": [0, 6], "_why": "short of the bridge, on the Brindle side"},
     {"point": "road_long_stretch", "offset": [0, 0], "_why": "the long empty stretch west of the river"},
     {"point": "road_muster_junction", "offset": [0, 0], "_why": "the Muster junction, outside the camp"},

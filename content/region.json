@@ -74,7 +74,7 @@
     "assets/ironworks/modules/soubassement_2m.tscn": "9bec1ca4c88fa81c0d83c095bbb161175b8b741989ae438acc00c920dea6766a",
     "assets/ironworks/modules/cloture_2m.tscn": "d24064705308e0e532436d94b39bf352e549b84d85e44536ae40e548ab9e2545",
     "assets/ironworks/modules/portail_cour.tscn": "7a663dbc761bb59b8b44e300a4776627b71f5c6b9462ad8bb2526f95878bbf4b",
-    "content/bake_brief.json": "ced6c13c85d185d49191893324f2ac70ed47783df5840f7da799f383232445db"
+    "content/bake_brief.json": "465b86adda6f0550ecfd2545ddc1284ceee5728e1f00f47dd676055fb45010a4"
   },
   "width": 384,
   "height": 384,
@@ -223,6 +223,13 @@
     }
   },
   "points": {
+    "cemetery": {
+      "at": [
+        279,
+        331
+      ],
+      "scaffold": true
+    },
     "ford": {
       "at": [
         194,

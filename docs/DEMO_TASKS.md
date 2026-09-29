@@ -1499,7 +1499,20 @@ the box**; baked only, the southern shore is a pocket whose one way out is his a
 **Check:** both suites; photographs of the candidate sites (the cove under his
 DescenteDeLaCrique, the cape's end) for him to choose the cemetery from.
 
-### O12 · The game starts at the cemetery
+### O12 · The game starts at the cemetery — **built 2026-09-29**
+
+> **Where, settled with Yannick in two passes.** He chose the cove, "but a cemetery is
+> not put on a beach"; the only connected ground in the cove's pocket is its beach, and
+> both grass plateaus of his promontory turned out to be islands his cliffs close all
+> round (a first probe missed it by checking only that they were sealed). So it is **the
+> burned village's own graveyard**, on the meadow at Brindle's southern edge above his
+> cliffs, beside a ruined house: `points.cemetery` at (279, 331), moved two tiles inland
+> because a spike of his cliff hid the player on the first frame. The fairy and her fire
+> are among the graves; `_place_name` says *le cimetière*; the 2D map's cemetery is a
+> point west of Brindle joined by a road. The journey walker learnt to fight through a
+> pack (the Muster road now brushes the climb's wolves), which was O15's and is done.
+> **Seen on the first frame, and his:** pale holes in the ground where sea or coast
+> should be, beside the cliffs §9b leaves bare.
 
 Est. 6–8 h. Depends on: O11 and his choice of site.
 

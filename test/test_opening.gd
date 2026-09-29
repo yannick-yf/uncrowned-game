@@ -56,6 +56,61 @@ func _corridor_mouth() -> Array[Vector2i]:
 	return out
 
 
+# ------------------------------------------------------- the cemetery (O12) ---
+#
+# Yannick, 2026-09-29: the game starts south of the ruined village, in a cemetery, so
+# the player walks through Brindle and meets the tutorial — "not on a beach". His
+# promontory is an island of cliffs, so it is the village's own graveyard, on the
+# meadow at Brindle's southern edge.
+
+func test_the_game_starts_in_a_cemetery_on_open_ground() -> void:
+	var region: Region = _region()
+	var start: Vector2i = where_the_game_starts()
+	assert_eq(start, Places.shared().point(&"cemetery"), "the start is the cemetery")
+	assert_true(region.is_passable(start), "on ground you can stand on")
+	for dx: int in range(-1, 2):
+		for dy: int in range(-1, 2):
+			var here: Region.Terrain = region.terrain_at(start + Vector2i(dx, dy))
+			assert_true(here != Region.Terrain.SAND and here != Region.Terrain.SEA,
+				"not on a beach (Yannick): %s" % Region.Terrain.keys()[here])
+
+
+func test_the_cemetery_is_at_brindles_southern_edge_and_joined_to_it() -> void:
+	if not Places.baked():
+		off("the 2D map's shore is three rows of sand; its cemetery is a point west of Brindle")
+		return
+	var region: Region = _region()
+	var start: Vector2i = where_the_game_starts()
+	var brindle: Vector2i = Region.zone_sites()[&"brindle"] as Vector2i
+	assert_true(start.y >= brindle.y + 10, "at the southern edge of the ruined village: %s" % start)
+	assert_false(Navigation.path(region, start, brindle).is_empty(), "and you can walk into it")
+
+
+func test_a_road_joins_the_cemetery_to_brindle_on_the_2d_map() -> void:
+	if Places.baked():
+		off("on his map the way into Brindle is his own path, drawn and walked")
+		return
+	var region: Region = _region()
+	var route: Array[Vector2i] = Navigation.path(region, where_the_game_starts(), Region.BRINDLE)
+	assert_false(route.is_empty(), "the cemetery reaches Brindle")
+	var roads: int = 0
+	for tile: Vector2i in route:
+		if region.terrain_at(tile) == Region.Terrain.ROAD:
+			roads += 1
+	assert_true(roads * 2 >= route.size(), "along a road: %d of %d tiles" % [roads, route.size()])
+
+
+func test_she_waits_among_the_graves_and_so_does_her_fire() -> void:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var fairy: Npc = (sim.store(&"cast") as Cast).get_npc(OpeningRules.FAIRY)
+	assert_true(fairy.centre().distance_to(world.player_pos) <= Game.TALK_REACH, "she is beside you when you wake")
+	var fire: Vector2i = world.region().nearest_campfire(where_the_game_starts(), 4.0)
+	assert_ne(fire, Region.NOWHERE, "her fire is among the graves")
+	assert_true(Vector2(fire).distance_to(Vector2(where_the_game_starts())) > 2.2,
+		"and not so close that the first key rests you instead of hearing her")
+
+
 # ------------------------------------------------------------- the clearing ---
 
 func test_the_player_wakes_on_open_ground_in_the_wood() -> void:
@@ -104,13 +159,14 @@ func test_one_corridor_leads_out_and_only_one() -> void:
 		"and what is left is a pocket, not the map: %d tiles" % sealed.size())
 
 
-func test_walking_out_takes_about_five_seconds() -> void:
-	# §4's rule against empty walking cuts both ways: long enough to be a walk out
-	# of the trees, short enough that it is not the content.
+func test_the_walk_from_the_graves_into_the_ruins_is_short() -> void:
+	# §4's rule against empty walking. Since O12 the graves are the village's own, at
+	# its edge, so the walk into the ruins is a few seconds at the world's own pace and
+	# never the content.
 	var tiles: float = Vector2(where_the_game_starts()).distance_to(Vector2(Region.BRINDLE))
-	var seconds: float = tiles / 6.0
-	assert_true(seconds >= 3.0 and seconds <= 8.0,
-		"the start to Brindle is %.1f tiles, %.1f seconds" % [tiles, seconds])
+	var seconds: float = tiles / MovementRules.tiles_per_second()
+	assert_true(seconds <= 15.0,
+		"the graves to Brindle's heart is %.1f tiles, %.1f seconds" % [tiles, seconds])
 
 
 # ------------------------------------------------------- what it must not break ---

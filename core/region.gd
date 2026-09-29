@@ -127,8 +127,9 @@ static var CLEARING: Vector2i = Places.shared().point(&"clearing")
 ## clearing, which is what the fairies hold and the works shrink. The same point for
 ## now; O12 moves the start to a cemetery south of Brindle and leaves the clearing its
 ## ground. Everything that means *where you woke* reads this, and everything that means
-## *the fairies' ground* keeps reading `CLEARING`.
-static var START: Vector2i = Places.shared().point(&"clearing")
+## *the fairies' ground* keeps reading `CLEARING`. **The cemetery since O12**: the burned
+## village's own graveyard at Brindle's southern edge, so leaving it means crossing the ruins.
+static var START: Vector2i = Places.shared().point(&"cemetery")
 const CLEARING_RADIUS: int = 7
 ## How deep the thicket ring is. Five, because 8-way movement will find a diagonal
 ## seam in anything thinner.
@@ -831,6 +832,8 @@ func _stamp_road() -> void:
 		_stamp_line(spur[i], spur[i + 1], ROAD_HALF_WIDTH, Terrain.ROAD, false)
 	# Brindle's own track out to the works, so the player starts connected.
 	_stamp_line(BRINDLE, CINDERWORKS, ROAD_HALF_WIDTH, Terrain.ROAD, false)
+	# And the cemetery's into Brindle (O12): on his map the way in is his own path.
+	_stamp_line(START, BRINDLE, ROAD_HALF_WIDTH, Terrain.ROAD, false)
 
 
 ## The bridge carries the road over the Kettle; the ford is a wade downstream of
