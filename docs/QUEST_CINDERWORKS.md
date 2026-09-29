@@ -195,13 +195,27 @@ and what people say afterwards.
 
 ## 9. Still open
 
+Three of the four were answered by Yannick on 2026-09-29 (evening); the answers are
+kept under their questions.
+
 1. **What ties this to the player's own grievance.** The demo opens on a destroyed
    village and a fairy. Tom lived in the works' village before the factory — he is not
    from Brindle. So why does this dispute belong to *this* player rather than being a
    good sidequest? **It needs an answer, and it is a writing question, not a systems
    one.**
+
+   > **Answered: the works was built with the wood of the forest the village stood in,
+   > and that is why Brindle was destroyed.** The player's grievance *is* the works. P2
+   > writes it into the lines — the fairy's, Bram's, Tom's and the works' own.
 2. **Whether the works starts at allégeance 6 or 4** — see §1. Decided by playing.
+
+   > **Answered: 6**, which is what `content/towns.json` already holds.
 3. **What the guard on the gate does if the player simply attacks him**, before
    choosing a side.
+
+   > **Answered: other guards come, and they must be fought — and the fight cannot be
+   > won.** A guard joins from the yard every round for as long as it lasts, each one
+   > can be killed (nobody is made invulnerable, SPECS §1), and it ends when the player
+   > falls or leaves. Task T9 of `DEMO_TASKS.md`.
 4. **Names.** Tom and Drissa are Yannick's, and the rest of the cast's names have been
    ruled to need review.

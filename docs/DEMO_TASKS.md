@@ -3,10 +3,12 @@
 Date: 2026-09-18; J, K and W added on 2026-09-23; O, S and B since. The specs turned into
 work.
 
-> **Where it stands (2026-09-29).** M, P, Q, J, K, W and O are built, with the exceptions
-> their entries give (M3 not accepted, P2 folded into O18–O19, Q6's lines); F was built
-> and deleted in K6; S1–S2 and C1 are built, C3 half. **CLAUDE.md's table *Where the work
-> actually stands* is the short version and is kept current** — read it before this list.
+> **Where it stands (2026-09-29, evening).** M, P, Q, J, K, W and O are built, with the
+> exceptions their entries give (M3 not accepted, P2 below, Q6's lines); F was built and
+> deleted in K6; S1–S2 and C1 are built, C3 half. **Yannick played the opening** and his
+> findings are group **T**, planned the same evening — the work now. Then **P2**, with
+> him, then **C2–C4** as one change. **CLAUDE.md's table *Where the work actually
+> stands* is the short version and is kept current** — read it before this list.
 
 J, K and W came from two designs settled on 2026-09-23 — [the player model](PLAYER_MODEL.md)
 and [combat's second design](COMBAT_V2.md) — and they are the consequence of one idea
@@ -240,6 +242,13 @@ none of the four states' lines would make sense in another state.
 > task of its own. So P2 is no longer "forty lines for the works" on its own: it is the
 > writing of that redo. C2, C3 and C4 still wait on it, because they delete the lines
 > and the readings it replaces.
+>
+> **Widened, and moved after group T (Yannick, 2026-09-29, evening).** O18–O19's drafts
+> stand *for this version*. P2 is now **a review and rewrite of every line of the demo**,
+> done **together, later**: Claude drafts, Yannick validates, French first. It **writes
+> the Cinderworks' forty lines by state** after all (Q6's), and C4 then deletes the old
+> lines they replace. It starts from what T1 records: *the works was built with the wood
+> of the forest the village stood in, and that is why Brindle was destroyed.*
 
 ### P3 · Abandonment is absence
 
@@ -1793,6 +1802,10 @@ Est. 6 h, plus fixes. Depends on: O20.
 > fifteen minutes' length (*« durée parfaite pour cette version »*), the hundred hit
 > points (*« point de vie parfait »*; S4 still settles them for the public build), and
 > the wolves a player can walk round (*« oui parfait »*). The check is still Yannick playing it.
+>
+> **He played it the same evening.** One finding, and it is the combat tutorial: he could
+> not shoot the bow, nothing told him why, there is no choosing a weapon, an arrow can
+> always be dodged, and the magic drill was never reached. It is group **T**.
 
 Twenty-six frames a language, printed by `tools/opening_frames.sh` — title, creation, the wake, the fairy, the
 path, the hail, each drill's first turn and key moment, the banners, the journal, the
@@ -1818,7 +1831,177 @@ drills, the three actions), QUEST_CINDERWORKS §6, V3, MIGRATION_3D (the Brindle
 POUR_SLOSINIO, the walkthrough, duel.json's notes.
 
 **Not in this group: deleting the clearing** — its ring, its corridor, its tests. It
-waits for Yannick's own OK.
+waits for Yannick's own OK. *(Given the same evening: T2.)*
+
+---
+
+## T — after his play: the bow redone, the gate's guards, the clearing out
+
+> **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
+> answers the same evening. **T1 is built.** Then P2, with him, then C2–C4.
+
+**What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
+à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
+the bow drill asked him to dodge Wren's arrows, and nothing said so. And the bow itself
+is wrong: *« tel quel on peut toujours éviter une flèche. Que ce soit un ennemi ou le
+joueur, si je décide de tirer une flèche elle part dans le cadre de l'action. Je tire, ça
+tire. »* O9's arrow landed at the start of the archer's next turn, so the gap between the
+shot and the landing was a dodge anybody could always take. The magic drill asks for the
+bow's, so he never reached it. *« Rajoute du contexte et des explications si nécessaire.
+Ça peut même être un peu scripté. »*
+
+### His rulings, 2026-09-29 (evening)
+
+| Question | Ruling |
+|---|---|
+| The clearing — its ring, its corridor, its tests | **Delete it** — T2 |
+| C2–C4 | **Validated**, as one change, **after P2** |
+| P2 | **A review and rewrite of every line of the demo, together, later.** Claude drafts, Yannick validates. It writes the Cinderworks' lines by state, and C4 deletes the old ones |
+| The fairy at the new start | Confirmed on the wake frames: she stands one tile north of the wake tile, among the graves (`test_she_is_standing_there_when_you_wake`) |
+| The royal city, the sawmill village | **Left as they are** for now: drawn, not read |
+| The way to the king, invariant 7's replacement | Not now: the demo first |
+| His brother | **A list of his tasks, one page in French, ready to send** — T3 |
+| The funnel (W4) | Later |
+| The spell's name | *Le don*, for now |
+| Music | **Silence**, for now; C4 removes the pack's tables |
+| What ties the works to the player | **The works was built with the wood of the forest the village stood in, and that is why Brindle was destroyed** (QUEST_CINDERWORKS §9) |
+| The works' first allégeance | **6**, which `content/towns.json` already says |
+| Attacking the gatekeeper | **Other guards come and must be fought, and the fight cannot be won** — T9 |
+
+**Defaults taken, stated to him the same evening and not contradicted:**
+
+- **A key to change weapon during your own turn, without spending the turn**: physical
+  **U**, beside I and K — free in the input map.
+- **Wren gives the player a bow** when the bow drill begins, and he keeps it
+  (`you:the_bow`, a fact: a possession gate, legal under invariant 4).
+- **An arrow lands when it is shot, on everybody's side**, if the target is within the
+  bow's reach. No delay, no dodge, no dice. What balances it: **the bow cannot shoot a
+  neighbouring tile**, and it costs less than the sword. An archer is answered by closing
+  on him or by staying out of his reach.
+- **The drills are explained step by step**, naming each key; the first turn may be guided.
+- **At the gate, guards keep coming until the player falls.** Each one can be killed, so
+  Pillar 3 (*nobody is made invulnerable*, SPECS §1) holds, and the fight still cannot be
+  won. He chose it over a few very strong guards: *« parfait comme idée »*.
+
+### T1 · The rulings written down — **built 2026-09-29**
+
+Docs only: this group, P2's entry, CLAUDE.md's table, QUEST_CINDERWORKS §9.
+
+### T2 · The clearing comes out
+
+Est. 4–6 h. Depends on: T1.
+
+`Region.CLEARING`, the ring of thicket, its corridor, `scaffold_clearing` and their tests
+— `test_the_clearing_is_ringed_by_wood_you_cannot_walk_into` and
+`test_one_corridor_leads_out_and_only_one`, two of the eight DEBT claims, go with it.
+**What reads `CLEARING` and is not the clearing is found first and given its own name** —
+the felling's direction (`scaffold_wound`), the fairies' fire, the wood's quest — rather
+than deleted by accident. Twenty-seven `.gd` files name it today.
+
+**Check:** both suites green, the DEBT and OFF counts restated in CLAUDE.md; vendor,
+bake, `--check`; the map's frame without it.
+
+### T3 · A page of tasks for his brother
+
+Est. 1–2 h. Depends on: T2, because the thicket ring stops being his to plant.
+
+In French, addressed to him, ready to send: what the demo needs from him and in what
+order — §9b first (his compressed meshes; the first frame shows his cliffs bare), then
+what the DEBT lines name as his (a grave, a beast, a blow, the northern bridge, the
+furnaces' distance and the road), M3b's pieces and the 25 faces, M5's fill, B0's open
+questions, and M3's colour cast to look at with Yannick. Kept beside `POUR_SLOSINIO.md`,
+which stays the long letter.
+
+**Check:** Yannick reads it and sends it.
+
+### T4 · The fast suite, profiled
+
+Est. 2–4 h. Depends on: —.
+
+41 s for the fast suite, and CLAUDE.md says the profile is owed before the next group
+adds a hundred tests — this one will. By suite and by test: what is paid more than once
+(a world built per test, a file read per test, days simulated that a test does not need).
+
+**Check:** the fast suite's time before and after, measured; both suites green with the
+same counts.
+
+### T5 · An arrow lands when it is shot
+
+Est. 6–8 h. Depends on: —.
+
+The rules only. `AIM`, `LOOSING` and `Duel.volleys` go. A bow is a **reach band**,
+`bow_min_tiles` (2: never a neighbouring tile) to `bow_reach_tiles` (6), for `bow_damage`
+(3, under the sword's 5), all in `content/duel.json`. A strike with a bow lands on its act
+step like a blow, through `_land`. The archer's rule keeps off and shoots. **The weapon
+is part of the turn**: the player's `duel_turn` carries `weapon`, a bow only if he has
+one (`you:the_bow`), the sword otherwise; the fighter carries it, in the fingerprint.
+`SaveFile.VERSION` bumped. COMBAT_V2 §9 amended in place.
+
+**Tests first:** an arrow at range lands on the step it is shot, and moving after cannot
+avoid it; never at a neighbour; without the bow the player strikes with the sword
+whatever he asks; with it, at range; Wren keeps off and shoots; a bow fight replays to
+the fingerprint; the sword and the spell unchanged.
+
+### T6 · Choosing the weapon, and seeing the arrow
+
+Est. 6–8 h. Depends on: T5.
+
+Physical **U** switches the proposal between sword and bow during your turn — a proposal
+like the cursor, since only the turn is an event. The HUD names the weapon in hand and
+draws its reach: a ring for the sword, the band for the bow. The keys line names U. The
+arrow is drawn flying from the archer to the target through the wind-up and lands with
+the blow's spark and number; O9's aimed-tile marks go with the delay. Both languages.
+
+**Check:** frames of the bow in hand with its band, an arrow in flight and the hit, in
+French and English.
+
+### T7 · The bow drill, redone
+
+Est. 4–6 h. Depends on: T6.
+
+Wren gives the bow as the drill begins (`you:the_bow`, through the `gives` field the
+fairy's gift uses). The drill: **land three arrows on Bram, who walks at you** — so it
+teaches the reach (too far: step in), the band (too close: step back, or take the sword)
+and U. Goal `arrows`; `dodged` goes. The magic drill still follows the bow's.
+
+**Tests first:** the bow and PRESS pass; standing still with the sword fails at the cap
+with nobody down; `drilled:bow` written once and replayed; the magic drill offered after.
+
+### T8 · Every drill explained, one step at a time
+
+Est. 6–8 h. Depends on: T7.
+
+The drill card becomes a short list of steps, each naming its key and ticked when done —
+*move (arrows), take the bow (U), shoot (K)* — with a hint that answers where you stand:
+out of reach, too close for the bow, the spell not ready. Bram and Wren say the lesson
+before each drill (drafts marked `_p2`, for P2). The first turn of each drill may be
+guided. `tools/play_opening.gd` plays the three drills, magic included.
+
+**Check:** `play_opening` passes all three; frames of each drill's first turn and of a
+hint, in both languages; Yannick plays it.
+
+### T9 · Attack the gatekeeper, and the guards keep coming
+
+Est. 8–10 h. Depends on: T5.
+
+An option to attack him — strangers carry no `fights` today, so their sheet learns it.
+The fight is against him, and **a guard joins from the yard every round** (a number in
+`content/duel.json`) for as long as it lasts: each one can be killed, and the fight ends
+only when you fall or leave. The deeds and the witnesses are the ordinary ones. The
+guards are his traveller. `DuelSystem` learns a fighter who joins mid-fight.
+
+**Tests first:** the gatekeeper can be attacked; a guard joins each round; each can be
+killed; the fight never ends *won*; leaving and falling end it as any fight does; a
+replay to the fingerprint. **Check:** frames at rounds 1, 3 and 6.
+
+### T10 · Photographs and a fresh-eyes review
+
+Est. 4 h, plus fixes. Depends on: T8, T9.
+
+`tools/opening_frames.sh` updated for the new drills, both languages; the review
+sub-agent walks the tutorial and the gate; each defect a failing test first where a
+suite can see it. CLAUDE.md, V3, COMBAT_V2, SPECS §10 and POUR_SLOSINIO (the bow is
+ours: his brother drew none) say what the game now is.
 
 ---
 
@@ -1916,6 +2099,9 @@ destroyed-works pieces are worth the work, and whether the building count comes 
 
 **Nothing here starts before the demo runs on the new model**, except C1.
 
+> **C2–C4 validated (Yannick, 2026-09-29, evening)** — as one change, after P2, which is
+> after group T.
+
 ### C1 · Delete the LLM layer — safe today — **built 2026-09-28**
 
 Est. 1 h. Depends on: —.
@@ -1978,11 +2164,11 @@ and the music tables, with their tests.
 
 > **The order below is the one planned on 2026-09-18, kept for its reasoning.** It was
 > followed through M, P, Q and F; J, K, W, O and S were added and built after it, and F
-> was deleted in K6. What is left is CLAUDE.md's table: the rest of C (C2–C4, as one
-> change, after Yannick says P2 is done), S3 (a Windows machine) and S4 (a stranger), M3's
-> acceptance, B00 with Yannick, and — his to say — the Cinderworks' lines by state (P2's
-> first scope, Q6's), which O18–O19 did not write. Its "63 hours, twenty-seven tasks"
-> predates every group after F.
+> was deleted in K6. What is left is CLAUDE.md's table: **group T**, then **P2** with
+> Yannick (every line of the demo, the Cinderworks' lines by state among them), then the
+> rest of C (C2–C4, as one change), S3 (a Windows machine) and S4 (a stranger), M3's
+> acceptance, and B00 with Yannick. Its "63 hours, twenty-seven tasks" predates every
+> group after F.
 
 **M1 → M2** first: two sessions to the moment the works *looks* like it is going
 badly, with no quest in the game at all. That is the model earning its place before

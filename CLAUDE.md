@@ -599,10 +599,11 @@ reconstruct it from forty commits will get it wrong.
 | **J** | Built. The player's own simulation |
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
-| **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version |
+| **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version. **He played it the same evening**: the combat tutorial is the one finding — group T |
+| **T** | **The work now** (planned 2026-09-29, evening; T1 built). His rulings, the clearing out (T2), a page of tasks for his brother (T3), the fast suite profiled (T4), **the bow redone** — an arrow lands when it is shot, the player carries one and chooses his weapon with U (T5–T7) — every drill explained step by step (T8), and **the gatekeeper's guards, who keep coming** (T9); then frames and a review (T10) |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
-| **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28); see P2 for when. Deleting the clearing needs its own OK |
-| **P2** | Folded into **the tutorial's redo** (2026-09-29), and **that redo is built**: O18–O19's drafts stand *for this version* and keep their `_p2` marks for a later rewrite. His OK to C2–C4 was given *« once the redo is done »* (group O's rulings), so they are open. **One thing is not settled**: the Cinderworks' lines by state — P2's first scope, and Q6's — are not in O18–O19; ask whether they are still wanted before C4 deletes the old lines they would replace |
+| **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. Deleting the clearing is approved and is T2 |
+| **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |
 
 **Two things are true of the fight and both matter.** The turn-based design of
 `docs/COMBAT_V2.md` is the only fight there is — the real-time one was deleted in K6,
@@ -726,7 +727,9 @@ without asking.
    **Narrowed on 2026-09-29, by him:** a bow and one spell come **now**, in a version
    scoped to the tutorial's three drills (group **O** of `docs/DEMO_TASKS.md`), on this
    branch — Wren's bow and the fairy's gift. The depth — an AI worth the name, ranged
-   balance, more spells — is still the later workstream.
+   balance, more spells — is still the later workstream. **And the bow is redone the
+   same evening, having been played** (group **T**): *« je tire, ça tire »* — an arrow
+   lands when it is shot, for everybody, and the player carries a bow of his own.
 
 **Retired, kept here so the history reads straight:**
 
