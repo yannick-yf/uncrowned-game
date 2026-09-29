@@ -23,9 +23,14 @@
     "road_climb": [112, 96],
     "road_last_stop": [78, 44],
     "ferry": [52, 150],
-    "cinderworks_gate": [245, 167]
+    "cinderworks_gate": [245, 168],
+    "bram_post": [264, 176],
+    "brindle_hail": [262, 178]
   },
-  "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the tile the old guard stood on, so the gatekeeper resolves on both worlds.",
+  "_bram_post": "O14, 2026-09-29: where Bram stands and calls from, and brindle_hail the centre of the ground he watches (content/hail.json holds its radius). Named points on each world rather than Brindle plus an offset, because Brindle is 35x30 on his map and 15x11 here and one offset cannot mean the same street on both. On the baked world the brief writes both; these rows are the 2D map's.",
+  "_hails": "Who calls out to a player walking into their ground, and from which point: {who, point, radius}. EMPTY UNTIL THE HAIL CAN BE SEEN (O17): an empty list holds nobody, ever, which is the one-change way to take it out again.",
+  "hails": [],
+  "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the road in front of the tile the old guard stood on, which is a wall there (moved a row south on 2026-09-29, when the anchors began to be checked before they are nudged), so the gatekeeper resolves on both worlds.",
   "_wild_note": "WHERE THE WOOD IS DANGEROUS (W2, 2026-09-25). A pack is an anchor and a count, and it stands where it stands until somebody walks into it. NOTHING HERE CLOSES A ROAD: a player who wants one of these fights it or goes round, and the demo's funnel is made of where the wolves are rather than of any check in core/ (PLAYER_MODEL.md section 8, invariant 4). Taking the funnel out again is W4, and it is editing this list. Anchors were checked against the baked world rather than guessed: road_last_stop was tried first and dropped because it resolves INSIDE Cairnwell, and monsters never stand in a town.",
   "wild": [
     {"kind": "wolf", "count": 2, "place": "brindle", "offset": [27, -57],
@@ -43,8 +48,8 @@
     "ossa": {"place": "harrowgate", "offset": [-3, 7]},
     "garrick": {"place": "harrowgate", "offset": [-13, 2]},
     "wren": {"place": "brindle", "offset": [-4, -3]},
-    "bram": {"place": "brindle", "offset": [2, -4],
-      "_why": "2026-09-19 (F2): the first person the player can fight, a short walk south of the clearing they wake in. The offset was picked by asking BOTH worlds for a prop-free tile: (3, 2) put him behind one of his brother’s trees on the baked map and was not clear on the procedural one at all, and region.props does not know about the kit’s trees — the screenshot did."},
+    "bram": {"point": "bram_post", "offset": [0, 0],
+      "_why": "2026-09-19 (F2): the first person the player can fight. Since O14 (2026-09-29) he stands at a point of his own on each world — the same tile Brindle+(2,-4) gave him, which was picked by asking BOTH worlds for a prop-free tile: (3, 2) put him behind one of his brother’s trees on the baked map and was not clear on the procedural one at all."},
     "harry": {"place": "cinderworks", "feature": "kiln", "offset": [2, 2]},
     "sena": {"place": "cinderworks", "offset": [-12, 3],
       "_why": "2026-09-19 (Q1/Q2, then playing it): she stood at +4,+1, which is where the yard fence now runs — inside her own workplace’s wall. Moved to -7,+5 by eye, and Yannick played it and could not find her: she was standing under his roofs, invisible. Chosen the way Bram’s was now, by asking BOTH worlds for a tile with nothing within two of it, and still by the common kitchen, which is where Tom says to look."},
@@ -72,7 +77,7 @@
     {"kind": "guard", "point": "bridge", "offset": [0, 0], "_why": "2026-09-15: stand on the delivered diagonal deck, not beside its parapet"},
     {"kind": "gatekeeper", "point": "cinderworks_gate", "offset": [0, 0],
       "_why": "2026-09-21 (G3): the man in the passage of his portail_cour, with lines of his own rather than the bridge guard's. Anchored on the gate's point, so wherever the brief puts the gate he stands in it. The passage is open ground with somebody standing in it — see WardRules — and choosing a side is what gets you past him (Q3)."},
-    {"kind": "watchman", "place": "cinderworks", "feature": "kiln", "offset": [2, 3]},
+    {"kind": "watchman", "place": "cinderworks", "feature": "kiln", "offset": [2, 4], "_why": "a row further from the kiln than he stood until 2026-09-29: (2, 3) was a wall on the 2D map"},
     {"kind": "watchman", "place": "cinderworks", "feature": "kiln", "offset": [2, 6]},
     {"kind": "watchman", "place": "wide_acres", "offset": [5, 3]},
     {"kind": "watchman", "place": "wide_acres", "offset": [-3, 3]},
@@ -80,14 +85,14 @@
     {"kind": "watchman", "place": "muster", "offset": [7, 2]}
   ],
   "campfires": [
-    {"place": "brindle", "offset": [-5, 4], "_why": "Wren's, among the ruins she picks over"},
-    {"place": "cinderworks", "offset": [-9, 9], "_why": "the workers', downwind of the kilns"},
+    {"place": "brindle", "offset": [-6, 4], "_why": "Wren's, among the ruins she picks over. A tile west since 2026-09-29: (-5, 4) was a ruin's wall on the 2D map, and it keeps out of the ground Bram watches on both"},
+    {"place": "cinderworks", "offset": [-12, 8], "_why": "the workers', downwind of the kilns. Three tiles west since 2026-09-29: (-9, 9) was in the river on the 2D map"},
     {"place": "harrowgate", "offset": [7, 8], "_why": "the inn yard, outside the gate"},
     {"place": "wide_acres", "offset": [8, 7], "_why": "the tenants', at the field's edge"},
     {"place": "muster", "offset": [7, 7], "_why": "a picket fire, outside the camp proper"},
     {"place": "saltmarch", "offset": [7, 6], "_why": "the quay, where the boats tie up"},
     {"place": "cairnwell", "offset": [8, 9], "_why": "the carters' yard outside the walls"},
-    {"place": "blackcairn", "offset": [8, 9], "_why": "the last verge before the gate"},
+    {"place": "blackcairn", "offset": [8, 10], "_why": "the last verge before the gate. A row south since 2026-09-29: (8, 9) stood on his ramparts"},
     {"point": "cemetery", "offset": [2, 2], "_why": "the fairies' fire, among the graves since O12: the first save in the game. Two tiles off on both axes, beyond the fire's reach of the wake tile, so the first key hears her before it rests you"},
     {"point": "bridge", "offset": [0, 6], "_why": "short of the bridge, on the Brindle side"},
     {"point": "road_long_stretch", "offset": [0, 0], "_why": "the long empty stretch west of the river"},
@@ -106,8 +111,8 @@
   ],
   "documents": {
     "acres:land_grants": {"place": "wide_acres", "offset": [6, -6]},
-    "cairnwell:tiered_law": {"place": "cairnwell", "offset": [-8, 6]},
-    "cinderworks:ledger": {"place": "cinderworks", "offset": [-4, 7]},
+    "cairnwell:tiered_law": {"place": "cairnwell", "offset": [-8, 7]},
+    "cinderworks:ledger": {"place": "cinderworks", "offset": [-3, 7]},
     "bank:debts": {"place": "cairnwell", "offset": [7, -9]},
     "muster:signed_orders": {"place": "muster", "offset": [-7, 4]}
   }

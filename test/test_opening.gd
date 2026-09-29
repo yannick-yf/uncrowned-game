@@ -111,6 +111,63 @@ func test_she_waits_among_the_graves_and_so_does_her_fire() -> void:
 		"and not so close that the first key rests you instead of hearing her")
 
 
+# --------------------------------------------------- where Bram calls from (O14) ---
+#
+# The zone the hail fires in, on each world. `hails` in places.json stays empty until
+# the hail can be seen (O17), so the row is built here the way that list will hold it.
+#
+# **Not a wall round the start.** The plan asked that the start could not reach
+# Brindle or the bridge with the zone dammed. That held for the cove it was written
+# for; O12 put the graves on open meadow instead, and his wood is walkable all round,
+# so no disc could be passed only through. What matters is that the way a person walks
+# out of the graves — the way the walkers and the tests walk it — goes through it.
+
+func _the_hail() -> Dictionary:
+	return HailRules.row(&"bram", &"brindle_hail")
+
+
+func test_the_hail_is_not_where_you_wake() -> void:
+	var hail: Dictionary = _the_hail()
+	assert_ne(hail["at"], Region.NOWHERE, "the zone resolves")
+	assert_false(HailRules.in_sight(hail, where_the_game_starts()), "you wake outside it")
+	assert_true(HailRules.in_sight(hail, Places.shared().point(&"bram_post")), "and he stands inside it")
+
+
+func test_no_fire_and_no_pack_stands_in_the_hail() -> void:
+	# A fire inside it would wake a dead player already in his sight, and a pack would
+	# set upon somebody the hail is holding still.
+	var region: Region = _region()
+	var hail: Dictionary = _the_hail()
+	for prop: Dictionary in region.props:
+		if (prop["kind"] as StringName) == &"campfire":
+			var at: Vector2i = prop["at"] as Vector2i
+			for dx: int in 2:
+				for dy: int in 2:
+					assert_false(HailRules.in_sight(hail, at + Vector2i(dx, dy)), "a fire at %s is out of it" % at)
+	for tile: Vector2i in Wild.new().standing(region).keys():
+		assert_false(HailRules.in_sight(hail, tile), "a pack at %s is out of it" % tile)
+
+
+func test_the_way_out_of_the_graves_walks_into_the_hail() -> void:
+	var region: Region = _region()
+	var hail: Dictionary = _the_hail()
+	var goals: Array[Vector2i] = [Region.BRINDLE, Region.BRIDGE]
+	if not Places.baked():
+		# On his map the works lie north through the village; on the 2D map the graves
+		# are west of Brindle, on the way to the bridge, and the walk there never enters it.
+		off("on the 2D map the graves lie between Brindle and the bridge")
+		goals = [Region.BRINDLE]
+	for goal: Vector2i in goals:
+		var walk: Array[Vector2i] = Navigation.path(region, where_the_game_starts(), goal)
+		assert_false(walk.is_empty(), "the graves reach %s" % goal)
+		var through: bool = false
+		for tile: Vector2i in walk:
+			if HailRules.in_sight(hail, tile):
+				through = true
+				break
+		assert_true(through, "and the walk to %s passes where he can see you" % goal)
+
+
 # ------------------------------------------------------------- the clearing ---
 
 func test_the_player_wakes_on_open_ground_in_the_wood() -> void:

@@ -1197,6 +1197,9 @@ func unresolved_anchors() -> Array[String]:
 		_note_unresolved(out, "stall:%d" % (i + 1), stalls[i])
 	for fact: StringName in DocumentRules.facts():
 		_note_unresolved(out, "document:%s" % fact, places.document(fact))
+	var hails: Array[Dictionary] = places.hail_anchors()
+	for i: int in hails.size():
+		_note_unresolved(out, "hail:%d" % (i + 1), hails[i])
 	return out
 
 
@@ -1204,6 +1207,41 @@ func _note_unresolved(out: Array[String], name: String, anchor: Dictionary) -> v
 	var at: Vector2i = resolve(anchor)
 	if at == NOWHERE or not in_bounds(at):
 		out.append("%s %s" % [name, Places.describe(anchor)])
+
+
+## Every anchor that resolves onto ground nobody can stand on — a wall, the river, the
+## mountain — **by name, before anything nudges it** (O14). `open_near` would quietly
+## move the fire or the man a few tiles; an offset shared between two worlds of
+## different sizes is exactly how one ends up in the river on one of them.
+func anchors_off_ground() -> Array[String]:
+	var out: Array[String] = []
+	var places: Places = Places.shared()
+	var rows: Array = []
+	for id: StringName in places.cast_ids():
+		rows.append(["cast:%s" % id, places.cast_anchor(id)])
+	var strangers: Array[Dictionary] = places.strangers()
+	for i: int in strangers.size():
+		rows.append(["stranger:%s#%d" % [String(strangers[i].get("kind", &"?")), i + 1], strangers[i]])
+	var fires: Array[Dictionary] = places.campfires()
+	for i: int in fires.size():
+		rows.append(["campfire:%d" % (i + 1), fires[i]])
+	var stalls: Array[Dictionary] = places.stalls()
+	for i: int in stalls.size():
+		rows.append(["stall:%d" % (i + 1), stalls[i]])
+	for fact: StringName in DocumentRules.facts():
+		rows.append(["document:%s" % fact, places.document(fact)])
+	var wild: Array[Dictionary] = places.wild()
+	for i: int in wild.size():
+		rows.append(["wild:%d" % (i + 1), wild[i]["anchor"]])
+	var hails: Array[Dictionary] = places.hail_anchors()
+	for i: int in hails.size():
+		rows.append(["hail:%d" % (i + 1), hails[i]])
+	for row: Array in rows:
+		var at: Vector2i = resolve(row[1] as Dictionary)
+		if at != NOWHERE and in_bounds(at) and not is_passable(at):
+			out.append("%s %s on %s" % [row[0], Places.describe(row[1] as Dictionary),
+				Terrain.keys()[terrain_at(at)]])
+	return out
 
 
 func scaffold_crowd(site: Vector2i) -> void:

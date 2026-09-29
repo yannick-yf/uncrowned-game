@@ -59,6 +59,8 @@ var _strangers: Array[Dictionary] = []
 ## The packs of the wood (W2): a kind, a count and an anchor, in the file's order.
 var _wild: Array[Dictionary] = []
 var _campfires: Array[Dictionary] = []
+## Who calls out to a player walking into their ground (O14): `{who, anchor, radius}`.
+var _hails: Array[Dictionary] = []
 var _stalls: Array[Dictionary] = []
 var _documents: Dictionary = {}
 ## Which places are placeholders the bake stamped because the map has not built them.
@@ -153,6 +155,10 @@ static func load_from(path: String) -> Places:
 		})
 	for entry: Variant in (root.get("campfires", []) as Array):
 		places._campfires.append(_anchor(entry))
+	for entry: Variant in (root.get("hails", []) as Array):
+		var row: Dictionary = entry as Dictionary
+		places._hails.append({"who": StringName(String(row.get("who", ""))),
+			"anchor": _anchor(entry), "radius": float(row.get("radius", 0.0))})
 	for entry: Variant in (root.get("stalls", []) as Array):
 		places._stalls.append(_anchor(entry))
 
@@ -278,6 +284,26 @@ func strangers() -> Array[Dictionary]:
 
 func campfires() -> Array[Dictionary]:
 	return _campfires.duplicate()
+
+
+## Who calls out, and from where, resolved on this world: `{who, point, at, radius}`,
+## the shape `HailRules` reads. Resolved when asked rather than when read, because the
+## baked world's points are overlaid after the file is.
+func hails() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for row: Dictionary in _hails:
+		var anchor: Dictionary = row["anchor"] as Dictionary
+		out.append({"who": row["who"], "point": anchor.get("point", &""), "at": locate(anchor),
+			"radius": row["radius"]})
+	return out
+
+
+## The anchors the hails stand on, for the anchor checks.
+func hail_anchors() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for row: Dictionary in _hails:
+		out.append(row["anchor"] as Dictionary)
+	return out
 
 
 func stalls() -> Array[Dictionary]:

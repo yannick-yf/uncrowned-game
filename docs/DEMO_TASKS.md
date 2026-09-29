@@ -1560,7 +1560,7 @@ boulder at 0.3 even (pebbles, from the game's lens); his three-block scree for t
 mounds (strewn stones); his coastal granite shingle (its mesh names his material path,
 §9b). The frame is Yannick's to judge; made headstones only if he widens the exception.
 
-### O14 · Where Bram calls from
+### O14 · Where Bram calls from — **built 2026-09-29**
 
 Est. 3–4 h. Depends on: O12.
 
@@ -1576,6 +1576,23 @@ holds the beat. **`hails` stays empty until O17.**
 **Tests first:** the anchors resolve on both worlds; the pure rules; the start is outside
 the zone and no pack or fire is in it; baked only — with the zone removed, the start
 cannot reach Brindle's centre or the bridge.
+
+**Built.** `bram_post` (281, 315 baked; 264, 176 on the 2D map — the tiles Brindle+(2,−4)
+already gave him, so nothing he does moved) and `brindle_hail` (280, 318; 262, 178), a
+radius of 6.5 in `content/hail.json` beside the beat's two numbers (the '!' for one
+second, twenty to reach you). `Places.hails()` reads `{who, point, radius}` rows and
+hands them resolved; `hails` is empty. `HailRules`: `row`, `radius_of`, `in_sight`,
+`calls_out` (not `hailed:`, not `met:`, not `killed:`), `approach` (Navigation, cut at the
+first tile touching the player's). **The dam check changed, and why:** it was written
+for the cove, a pocket; O12 put the graves on open meadow with his walkable wood all
+round, so no disc could be passed only through. The test now asks that the walk out of
+the graves to Brindle's heart and to the bridge goes through it — on the 2D map, where
+the graves lie between Brindle and the bridge, only the first (OFF, said why).
+**The strengthened anchor test found eight** standing on a wall, the river, the ramparts
+or the mountain and nudged silently: two on his map, six on the 2D one. Seven are moved
+to offsets open on both worlds (Wren's fire, the workers' fire, Blackcairn's fire, a
+watchman, the ledger, the tiered law, the 2D gate point); the eighth is the 2D map's
+existing debt, the first pack anchored where his bridge is.
 
 ### O15 · Walkers that can be spoken to
 

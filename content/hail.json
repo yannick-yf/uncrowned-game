@@ -1,0 +1,9 @@
+{
+  "_note": "The hail's beat (O14, 2026-09-29): Bram sees you walk into the ground round the ruined village, a '!' over his head, you are held, he walks over and the conversation opens (Yannick's « dresseur Pokémon »). Where it happens is content/places.json: the points bram_post and brindle_hail, and the hails list, which stays empty until the hail can be seen (O17). The numbers are real seconds at the simulation's own step, so they read the same on both worlds.",
+  "radius_tiles": 6.5,
+  "_radius_tiles": "How far from the zone's point he sees you, in tiles. 6.5 on both worlds: on his map it reaches from Brindle's heart to the edge of the meadow the graves are on, and stops short of Wren's fire; on the 2D map it covers the village's east half and stops short of hers there too.",
+  "spotted_seconds": 1.0,
+  "_spotted_seconds": "How long the '!' stands over him before he moves: long enough to be read, short enough that the player does not think the game has frozen.",
+  "budget_seconds": 20.0,
+  "_budget_seconds": "How long he has to reach you. A walk that takes longer is a walk that has gone wrong, and the system gives it up rather than hold the player forever."
+}

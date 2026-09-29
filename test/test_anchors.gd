@@ -81,3 +81,39 @@ func test_the_sites_are_the_files() -> void:
 		(sim.store(&"world") as WorldState).region().start_centre(), "a new run wakes on it")
 	assert_eq(Region.BRIDGE, places.point(&"bridge"), "and the bridge")
 	assert_eq(Region.FORD, places.point(&"ford"), "and the ford")
+
+
+## **An anchor stands on ground before anything moves it** (O14, 2026-09-29). Offsets
+## are shared between the two worlds, and Brindle is 35×30 on his map but 15×11 on the
+## 2D one, so an offset that is a verge on one is a wall or the river on the other.
+## `Region.open_near` then moves the fire, the paper or the man somewhere near, quietly —
+## eight of them were standing somewhere nobody chose. This names them instead.
+##
+## One is the 2D map's own debt and says so: the first wolf pack is anchored where his
+## map has a bridge, and on the 2D map that is the mountain.
+func test_every_anchor_stands_on_open_ground_before_it_is_nudged() -> void:
+	var region: Region = Region.build_overworld()
+	var off: Array[String] = region.anchors_off_ground()
+	var owed: Array[String] = []
+	var wrong: Array[String] = []
+	for name: String in off:
+		if not Places.baked() and name.begins_with("wild:"):
+			owed.append(name)
+		else:
+			wrong.append(name)
+	assert_eq(wrong.size(), 0, "anchors on ground nobody can stand on: %s" % ", ".join(wrong))
+	if not owed.is_empty():
+		debt("the packs are anchored to his map; the 2D one stands nothing there: %s" % ", ".join(owed))
+
+
+func test_bram_calls_from_named_ground_on_both_worlds() -> void:
+	# O14: his post and the zone he calls from are points of their own on each world,
+	# never Brindle plus an offset.
+	var places: Places = Places.shared()
+	for id: StringName in [&"bram_post", &"brindle_hail"]:
+		assert_true(places.has_point(id), "%s is a named point on this world" % id)
+		var region: Region = Region.build_overworld()
+		var at: Vector2i = places.point(id)
+		assert_true(region.is_passable(at), "%s stands on open ground: %s" % [id, at])
+		assert_eq(region.zone_at(at), &"brindle", "and in the ruined village")
+	assert_eq(places.cast_anchor(&"bram").get("point", &""), &"bram_post", "Bram stands at his post")
