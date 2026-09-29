@@ -3,6 +3,8 @@
 Écrit en français, pour toi. Mis à jour au fur et à mesure du travail.
 Dernière mise à jour : 2026-09-18 (les gens qui marchent).
 
+**Ta liste de tâches, en une page, est à côté : `docs/TACHES_POUR_SLOSINIO.md`** (2026-09-29).
+
 Ce document n'est pas une commande. C'est ce qu'on découvre en jouant, mesuré plutôt
 que supposé, pour que tu décides de ton côté en sachant ce qui se voit et ce qui ne se
 voit pas.

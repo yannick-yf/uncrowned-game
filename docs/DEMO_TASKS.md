@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1 and T2 are built.** Then P2, with him, then C2–C4.
+> answers the same evening. **T1–T3 are built.** Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -1916,7 +1916,14 @@ than deleted by accident. Twenty-seven `.gd` files name it today.
 **Check:** both suites green, the DEBT and OFF counts restated in CLAUDE.md; vendor,
 bake, `--check`; the map's frame without it.
 
-### T3 · A page of tasks for his brother
+### T3 · A page of tasks for his brother — **built 2026-09-29**
+
+> **Built** as `docs/TACHES_POUR_SLOSINIO.md`, in French, one page in six parts by
+> priority: §9b first, then what he has not drawn and what stands in for it (the blow,
+> the bow to come, the wolf, the graves, the fires, the '!'), the works' four open
+> questions, the map's three gaps, the colour cast to look at with Yannick, and what
+> waits beyond the demo's route. Published as a private page for Yannick to send
+> (claude.ai/artifact/3Ec4bA919TjqaGnx8zeKZ9). **B0 keeps it current with the letter.**
 
 Est. 1–2 h. Depends on: T2, because the thicket ring stops being his to plant.
 
@@ -2095,7 +2102,9 @@ general rule is written from what was learnt rather than guessed in advance.
 
 Owner: Claude, as work happens. Est. minutes each time.
 
-[POUR_SLOSINIO.md](POUR_SLOSINIO.md) — **in French, addressed to him.** Everything this
+[POUR_SLOSINIO.md](POUR_SLOSINIO.md) — **in French, addressed to him** — and, since T3,
+[TACHES_POUR_SLOSINIO.md](TACHES_POUR_SLOSINIO.md), the one page that lists what he owes
+the demo, which changes with it. Everything this
 run is learning that changes what he should draw, measured rather than guessed: which
 signals carry and which do not, what the demo needs from him, what the list in
 `content/towns.json` lets him change without code, the identifier contract, and the
