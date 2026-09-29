@@ -134,6 +134,12 @@ var _map_image: Texture2D = null
 ## and whichever window is open. `UNCROWNED_VIEW=2d` keeps the flat view on the baked
 ## world, for the map and for looking at the bake itself.
 var _three_d: World3d = null
+## **Whether this screen builds the 3D window at all.** Always, in the game. A test of
+## the HUD, the prompts or the fight's reading sets it false before `_ready`, because his
+## scenes cost a second a screen and none of those tests look at them (T4, 2026-09-29:
+## `test_screens` was a quarter of the fast suite). The window itself is built and
+## tested by `test_world3d`.
+var draws_the_world: bool = true
 @onready var _hud: CanvasLayer = $HUD
 @onready var _info: Label = $HUD/Info
 @onready var _box: ColorRect = $HUD/DialogueBox
@@ -361,7 +367,7 @@ func _ready() -> void:
 			_held_for_shot = not OS.get_environment("UNCROWNED_SHOT").is_empty()
 	_render_from = _world.player_pos
 	_render_to = _world.player_pos
-	if Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
+	if draws_the_world and Places.baked() and OS.get_environment("UNCROWNED_VIEW") != "2d":
 		var landscape: Dictionary = RegionBake.read_landscape()
 		if landscape.is_empty():
 			push_error("the baked world is on but his landscape is not at %s; showing it flat" % RegionBake.LANDSCAPE)

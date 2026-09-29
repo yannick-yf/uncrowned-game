@@ -3,6 +3,7 @@ extends SceneTree
 ## The feedback loop.
 ##
 ##   godot --headless --path . -s tools/test_runner.gd
+##   ... -- --fast --profile     every suite's time and the 25 slowest tests (T4)
 ##
 ## Discovers every test/*.gd that extends TestCase, runs every method named test_*
 ## on a fresh instance, and exits non-zero if anything failed.
@@ -37,6 +38,8 @@ func _initialize() -> void:
 	var report := PackedStringArray()
 	var timings: Array[Array] = []
 	var only_fast: bool = OS.get_cmdline_user_args().has("--fast")
+	var profile: bool = OS.get_cmdline_user_args().has("--profile")
+	var suite_ms: Array[Array] = []
 	var skipped_suites: int = 0
 
 	var owed: int = 0
@@ -64,13 +67,14 @@ func _initialize() -> void:
 
 		suites += 1
 		print("%s" % file_name)
+		var suite_began: int = Time.get_ticks_usec()
 		for method: String in methods:
 			var test_case: TestCase = script.new() as TestCase
 			var began: int = Time.get_ticks_usec()
 			test_case.before_each()
 			test_case.call(method)
 			test_case.after_each()
-			timings.append([float(Time.get_ticks_usec() - began) / 1000.0, method])
+			timings.append([float(Time.get_ticks_usec() - began) / 1000.0, method, file_name])
 			assertions += test_case.assertion_count()
 			ran += 1
 
@@ -104,6 +108,7 @@ func _initialize() -> void:
 				print("  FAIL  %s" % method)
 				for message: String in test_case.failures():
 					print("          %s" % message)
+		suite_ms.append([float(Time.get_ticks_usec() - suite_began) / 1000.0, file_name, methods.size()])
 
 	var elapsed_ms: float = float(Time.get_ticks_usec() - started_usec) / 1000.0
 	print("")
@@ -114,6 +119,16 @@ func _initialize() -> void:
 		print("slowest:")
 		for i: int in mini(5, timings.size()):
 			print("  %7.1f ms  %s" % [float(timings[i][0]), String(timings[i][1])])
+	# **Where the time goes** (T4, 2026-09-29): every suite, then the slowest tests with
+	# their suite, so a profile is one flag rather than a script written for the day.
+	if profile:
+		suite_ms.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) > float(b[0]))
+		print("suites, slowest first:")
+		for row: Array in suite_ms:
+			print("  %8.1f ms  %3d tests  %s" % [float(row[0]), int(row[2]), String(row[1])])
+		print("tests, slowest first:")
+		for i: int in mini(25, timings.size()):
+			print("  %8.1f ms  %s  (%s)" % [float(timings[i][0]), String(timings[i][1]), String(timings[i][2])])
 	print("%d suites, %d tests, %d assertions, %d failed%s%s — %.1f ms%s" % [
 		suites, ran, assertions, failed,
 		", %d owed by the map" % owed if owed > 0 else "",

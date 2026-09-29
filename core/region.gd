@@ -170,11 +170,23 @@ func set_terrain(tile: Vector2i, terrain: Terrain) -> void:
 
 
 func is_passable(tile: Vector2i) -> bool:
-	match terrain_at(tile):
+	return passable_kind(terrain_at(tile))
+
+
+## Whether ground of this kind can be walked on — the one list `is_passable` reads, and
+## the table `Navigation` builds its searches from (T4).
+static func passable_kind(kind: Terrain) -> bool:
+	match kind:
 		Terrain.SEA, Terrain.MOUNTAIN, Terrain.WALL, Terrain.WATER, Terrain.THICKET, \
 		Terrain.RAMPART:
 			return false
 	return true
+
+
+## The terrain as one byte a tile, row by row, for a search that reads the whole map
+## (`Navigation`, T4). Read it, never write it: `set_terrain` is the one writer.
+func terrain_bytes() -> PackedByteArray:
+	return _tiles
 
 
 
@@ -184,7 +196,12 @@ func is_passable(tile: Vector2i) -> bool:
 ## the route tests ask this so that a measured "wild" line is actually wild: the
 ## shortest walkable path from Brindle to the castle was 42% road before it did.
 func is_watched(tile: Vector2i) -> bool:
-	match terrain_at(tile):
+	return watched_kind(terrain_at(tile))
+
+
+## Whether ground of this kind is the king's — the one list `is_watched` reads.
+static func watched_kind(kind: Terrain) -> bool:
+	match kind:
 		Terrain.ROAD, Terrain.TOWN, Terrain.CAMP:
 			return true
 	return false

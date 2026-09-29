@@ -38,20 +38,48 @@ static func path(region: Region, from: Vector2i, to: Vector2i, off_road: bool = 
 
 
 ## Breadth-first: every step costs one.
+##
+## **On flat arrays, since T4 (2026-09-29).** It was the same search over Dictionaries
+## keyed by tile and asked `Region.is_passable` for every neighbour, and one walk across
+## the baked world cost a second. The order it looks at tiles in is unchanged — the
+## queue, `DIRECTIONS`, the same refusals — so it finds the very same path, which
+## `test_bake`'s comparison with the plain search holds it to.
 static func _shortest_path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
-	var came_from: Dictionary = {from: from}
-	var queue: Array[Vector2i] = [from]
+	var grid := _Grid.new(region)
+	var start: int = grid.index(from)
+	var goal: int = grid.index(to)
+	if start < 0:
+		return []
+	var w: int = grid.width
+	var h: int = grid.height
+	var tiles: PackedByteArray = grid.tiles
+	var open: PackedByteArray = grid.passable
+	var came_from := PackedInt32Array()
+	came_from.resize(grid.size)
+	came_from.fill(-1)
+	came_from[start] = start
+	var queue := PackedInt32Array([start])
 	var head: int = 0
 	while head < queue.size():
-		var tile: Vector2i = queue[head]
+		var here: int = queue[head]
 		head += 1
-		if tile == to:
-			return _unwind(came_from, from, to)
+		if here == goal:
+			return grid.unwind(came_from, start, goal)
+		var x: int = here % w
+		var y: int = here / w
 		for step: Vector2i in DIRECTIONS:
-			var next: Vector2i = tile + step
-			if came_from.has(next) or not _can_step(region, tile, step):
+			var nx: int = x + step.x
+			var ny: int = y + step.y
+			if nx < 0 or ny < 0 or nx >= w or ny >= h:
 				continue
-			came_from[next] = tile
+			var next: int = ny * w + nx
+			if came_from[next] >= 0 or open[tiles[next]] == 0:
+				continue
+			# No cutting between two shut corners (`_can_step`).
+			if step.x != 0 and step.y != 0 \
+					and (open[tiles[y * w + nx]] == 0 or open[tiles[ny * w + x]] == 0):
+				continue
+			came_from[next] = here
 			queue.append(next)
 	return []
 
@@ -59,32 +87,100 @@ static func _shortest_path(region: Region, from: Vector2i, to: Vector2i) -> Arra
 ## Cheapest-first, with two prices: one for ground nobody watches, WATCHED_COST for
 ## the king's. Integer costs, so the frontier is a row of buckets rather than a heap —
 ## bucket c is finished before anything in c + 1 is looked at, and a tile pushed into
-## a later bucket at a higher price is skipped when its turn comes.
+## a later bucket at a higher price is skipped when its turn comes. On flat arrays since
+## T4, in the same order, for the same path.
 static func _dearest_path(region: Region, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
-	var best: Dictionary = {from: 0}
-	var came_from: Dictionary = {from: from}
-	var buckets: Array[Array] = [[from]]
+	var grid := _Grid.new(region)
+	var start: int = grid.index(from)
+	var goal: int = grid.index(to)
+	if start < 0:
+		return []
+	var w: int = grid.width
+	var h: int = grid.height
+	var tiles: PackedByteArray = grid.tiles
+	var open: PackedByteArray = grid.passable
+	var watched: PackedByteArray = grid.watched_kind
+	var unset: int = 1 << 30
+	var best := PackedInt32Array()
+	best.resize(grid.size)
+	best.fill(unset)
+	var came_from := PackedInt32Array()
+	came_from.resize(grid.size)
+	came_from.fill(-1)
+	best[start] = 0
+	came_from[start] = start
+	var buckets: Array[Array] = [[start]]
 	var cost: int = 0
 	while cost < buckets.size():
-		for tile: Vector2i in buckets[cost]:
-			if int(best[tile]) != cost:
+		for here: int in buckets[cost]:
+			if best[here] != cost:
 				continue
-			if tile == to:
-				return _unwind(came_from, from, to)
+			if here == goal:
+				return grid.unwind(came_from, start, goal)
+			var x: int = here % w
+			var y: int = here / w
 			for step: Vector2i in DIRECTIONS:
-				var next: Vector2i = tile + step
-				if not _can_step(region, tile, step):
+				var nx: int = x + step.x
+				var ny: int = y + step.y
+				if nx < 0 or ny < 0 or nx >= w or ny >= h:
 					continue
-				var price: int = cost + (WATCHED_COST if region.is_watched(next) else 1)
-				if best.has(next) and int(best[next]) <= price:
+				var next: int = ny * w + nx
+				if open[tiles[next]] == 0:
+					continue
+				if step.x != 0 and step.y != 0 \
+						and (open[tiles[y * w + nx]] == 0 or open[tiles[ny * w + x]] == 0):
+					continue
+				var price: int = cost + (WATCHED_COST if watched[tiles[next]] == 1 else 1)
+				if best[next] <= price:
 					continue
 				best[next] = price
-				came_from[next] = tile
+				came_from[next] = here
 				while buckets.size() <= price:
 					buckets.append([])
 				buckets[price].append(next)
 		cost += 1
 	return []
+
+
+## **The world as the searches read it** (T4): the terrain as one array of bytes, a tile
+## as `y * width + x`, and the two questions a search asks of a terrain answered by a
+## table rather than a `match`. Built per search from the region as it is, so a map
+## changed under it is read as changed.
+class _Grid:
+	var width: int = 0
+	var height: int = 0
+	var size: int = 0
+	var tiles: PackedByteArray
+	var passable := PackedByteArray()
+	var watched_kind := PackedByteArray()
+
+	func _init(region: Region) -> void:
+		width = region.width
+		height = region.height
+		size = width * height
+		tiles = region.terrain_bytes()
+		# Read from the region's own two lists, so the table cannot disagree with it.
+		var kinds: int = Region.Terrain.size()
+		passable.resize(kinds)
+		watched_kind.resize(kinds)
+		for kind: int in kinds:
+			passable[kind] = 1 if Region.passable_kind(kind as Region.Terrain) else 0
+			watched_kind[kind] = 1 if Region.watched_kind(kind as Region.Terrain) else 0
+
+	func index(tile: Vector2i) -> int:
+		if tile.x < 0 or tile.y < 0 or tile.x >= width or tile.y >= height:
+			return -1
+		return tile.y * width + tile.x
+
+	func unwind(came_from: PackedInt32Array, start: int, goal: int) -> Array[Vector2i]:
+		var out: Array[Vector2i] = []
+		var at: int = goal
+		out.append(Vector2i(at % width, at / width))
+		while at != start:
+			at = came_from[at]
+			out.append(Vector2i(at % width, at / width))
+		out.reverse()
+		return out
 
 
 ## Whether a walker can take this step: the tile is passable, and a diagonal does not

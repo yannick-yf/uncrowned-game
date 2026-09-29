@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1–T3 are built.** Then P2, with him, then C2–C4.
+> answers the same evening. **T1–T4 are built.** Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -1936,7 +1936,27 @@ which stays the long letter.
 
 **Check:** Yannick reads it and sends it.
 
-### T4 · The fast suite, profiled
+### T4 · The fast suite, profiled — **built 2026-09-29**
+
+> **Built: 41 s to 22 s** on the baked world (2D fast suite 18.5 s); `--all` 91 s to 61 s,
+> and 64 s to 53 s on the 2D map; 716 tests, the counts unchanged. The profile is one
+> flag now (`test_runner.gd -- --fast --profile`) and `tools/profile_parts.gd` times the
+> common steps and a day by system. Three causes, none of them one test:
+> - **`test_screens` built his whole 3D window** for tests that read only the HUD and the
+>   fight's reading: about a second each, 9.9 s in all. The play screen takes
+>   `draws_the_world = false` before `_ready`; 0.2 s. `test_world3d` still builds it.
+> - **`Navigation` searched over Dictionaries** and asked `is_passable` per neighbour: a
+>   walk across the baked world was a second. Flat arrays and a terrain table, the same
+>   queue, the same order, the same refusals — 320 random trips on both worlds gave the
+>   very same paths, 7 times faster, and `test_navigation` keeps the plain search to hold
+>   it to. `Region.passable_kind`/`watched_kind` are the one list both read.
+> - **Every step resolved the wolf packs' anchors again** (`Wild.standing`): now kept per
+>   world. And the road is looked up once a step rather than once a traveller.
+>
+> **What is left is simulated days**, 0.44 s each, spread over the systems that run every
+> step — the drawn walkers (travellers, the works' folk), the wolves' and the hail's
+> looks. The slowest tests now are the ones that need days. Cutting further is the
+> step's cost, not the tests'.
 
 Est. 2–4 h. Depends on: —.
 

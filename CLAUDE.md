@@ -232,6 +232,7 @@ view3d/workshop/  A generated copy of his project with its paths repointed, so h
 godot --headless --path . --import          # once after cloning
 tools/run_tests.sh                          # the feedback loop — after every change
 tools/run_tests.sh --all                    # before committing
+godot --headless --path . -s tools/test_runner.gd -- --fast --profile   # where the suite's time goes
 tools/shot.sh /tmp/a.png play 150,174       # look at it — see "Development tools"
 godot --headless --path . -s tools/sim_runner.gd -- --ticks 5000
 godot --headless --path . -s tools/measure_routes.gd
@@ -337,10 +338,11 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **41 s**, which is too long to be the one you run
-without thinking, and is the next thing to fix (below). `--all` adds the journeys, the
-asset pack and the days of weather, and takes about **91 s** on the baked world and
-**64 s** on the 2D map.
+walks, no asset pack — in about **22 s**. `--all` adds the journeys, the asset pack and
+the days of weather, and takes about **61 s** on the baked world and **53 s** on the 2D
+map. `test_runner.gd -- --fast --profile` prints every suite's time and the 25 slowest
+tests; `tools/profile_parts.gd` times the steps tests take and one in-game day system
+by system.
 (It was 0.9 s and 5.8 s when the map was a greybox and the cast was eight people;
 4.7 s and 18 s when v1 shipped; 9 s and 25 s before the simplified simulation, which
 added a system running sixty times a second and tests that advance whole in-game days.
@@ -352,16 +354,20 @@ actually needs. The 4 s the full suites gained on 2026-09-19 is **not** the figh
 `--all` was measured at 42.2 s with the first design's `CombatSystem` taken out of
 `Game.build()` and 42.8 s with it in, so a system on the step costs the other 478 tests
 nothing measurable. The duel's tests are in the **fast** suite for the same reason.
-**It is 41 s now** (2026-09-29, measured after O21): the full suite has 720 tests where
-it had 479 on 2026-09-19, and no single test is to blame — the five slowest fast tests
-are 10 s between them. Nobody has profiled it yet; that is owed, and it is owed before
-the next group adds another hundred.)
+It was 41 s on 2026-09-29, after O21, and **T4 profiled it the same evening: 22 s.**
+A quarter of it was `test_screens` building his whole 3D window for tests that read
+only the HUD (`draws_the_world`, 9.9 s to 0.2 s); a walk across the baked world cost a
+second in `Navigation` over Dictionaries, now flat arrays in the same order, for the
+same path (`test_navigation` holds it to the plain search); and every simulated step
+resolved the wolf packs' anchors again (`Wild.at` keeps them). **What is left is
+simulated days**, 0.44 s each: the drawn walkers on the road and in the works, the
+wolves' and the hail's looks, every step. That is the next thing to cut, not a test.)
 A suite that declares `const SLOW: bool = true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
-`run_tests.sh` runs on the baked world (about **41 s** fast, **91 s** all);
+`run_tests.sh` runs on the baked world (about **22 s** fast, **61 s** all);
 `tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
-**64 s**), and both have to be green before a commit that touches the map, the kit, a
+**53 s**), and both have to be green before a commit that touches the map, the kit, a
 position or the pace. A test says where it stands in the world's terms —
 `at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
 `TestCase` — and never as a tile; a time budget written for six tiles a second is
@@ -391,8 +397,7 @@ reserved for Claude's map ingestion, so the two agents do not edit the same work
 are out of date, and nothing in it is assigned.)
 
 Write the test first. Run the fast suite after every meaningful change — it is the only
-thing that tells you whether something broke. (It takes 41 s today, which is a debt of
-its own: see *Two speeds*.)
+thing that tells you whether something broke. (It takes 22 s since T4: see *Two speeds*.)
 
 If verifying a change requires opening the editor, ask whether the logic belongs in
 `core/` instead.
@@ -599,7 +604,7 @@ reconstruct it from forty commits will get it wrong.
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
 | **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version. **He played it the same evening**: the combat tutorial is the one finding — group T |
-| **T** | **The work now** (planned 2026-09-29, evening; T1–T3 built). His rulings, the clearing out (T2), a page of tasks for his brother (T3), the fast suite profiled (T4), **the bow redone** — an arrow lands when it is shot, the player carries one and chooses his weapon with U (T5–T7) — every drill explained step by step (T8), and **the gatekeeper's guards, who keep coming** (T9); then frames and a review (T10) |
+| **T** | **The work now** (planned 2026-09-29, evening; T1–T4 built). His rulings, the clearing out (T2), a page of tasks for his brother (T3), the fast suite profiled (T4), **the bow redone** — an arrow lands when it is shot, the player carries one and chooses his weapon with U (T5–T7) — every drill explained step by step (T8), and **the gatekeeper's guards, who keep coming** (T9); then frames and a review (T10) |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

@@ -24,8 +24,12 @@ func on_step(sim: Sim, step: int) -> void:
 	# deciding sixty times a second and doing it there cost more than the rest of
 	# the simulation put together.
 	var seconds: float = Game.seconds_per_step()
+	# The road is looked up once a step rather than once a walker (T4).
+	var line: Array[Vector2i] = world.region().road_waypoints()
+	if line.is_empty():
+		return
 	for walker: Traveller in road.walkers:
-		_walk(world, walker, seconds)
+		_walk(line, walker, seconds)
 
 
 func on_tick(sim: Sim, _tick: int) -> void:
@@ -50,10 +54,7 @@ func _set_out(world: WorldState, road: Travellers) -> void:
 		road.add(Vector2(line[leg]) + Vector2(0.5, 0.5), leg, 1 if i % 2 == 0 else -1)
 
 
-func _walk(world: WorldState, walker: Traveller, seconds: float) -> void:
-	var line: Array[Vector2i] = world.region().road_waypoints()
-	if line.is_empty():
-		return
+func _walk(line: Array[Vector2i], walker: Traveller, seconds: float) -> void:
 	var target: int = clampi(walker.leg + walker.heading, 0, line.size() - 1)
 	# The ends of the road are the ends of the world. Turn round and walk back.
 	if target == walker.leg:

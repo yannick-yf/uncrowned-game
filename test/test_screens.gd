@@ -259,8 +259,16 @@ func test_a_fresh_run_reaches_the_fairy_through_creation() -> void:
 ## enters it and never becomes ready. Calling it directly is exact — GDScript puts the
 ## `@onready` assignments inside `_ready` — and a Label resolves `$HUD/...` out of the
 ## tree just as well as in it.
-func _play_screen() -> Node:
+## The play screen without his 3D window, which none of these tests look at and which
+## costs a second each to build (T4). `test_world3d` builds the window.
+func _flat_play() -> Node:
 	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	play.set(&"draws_the_world", false)
+	return play
+
+
+func _play_screen() -> Node:
+	var play: Node = _flat_play()
 	play.call(&"begin", Game.build())
 	play.call(&"_ready")
 	return play
@@ -270,7 +278,7 @@ func test_the_first_prompt_says_what_e_does() -> void:
 	# **O2, a defect in the first frame.** The fire is in reach of where you wake and so
 	# is the fairy; E talks to her, and the prompt used to offer the fire. Both now read
 	# one answer to "what does E do here", so they cannot disagree again.
-	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var play: Node = _flat_play()
 	play.call(&"begin", Game.begin_run(TraitRules.at_the_floor()))
 	play.call(&"_ready")
 	assert_eq(play.call(&"_what_e_does") as StringName, &"talk", "E talks to the fairy")
@@ -291,7 +299,7 @@ func test_the_fight_reading_carries_every_fighter() -> void:
 	sim.advance(1)
 	var duel := sim.store(&"duel") as Duel
 	assert_true(duel.on(), "two wolves are on you")
-	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var play: Node = _flat_play()
 	play.call(&"begin", sim)
 	play.call(&"_ready")
 	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
@@ -320,7 +328,7 @@ func test_the_reach_ring_speaks_for_whoever_is_acting() -> void:
 	var far: DuelFighter = duel.get_fighter(&"wolf#2")
 	near.at = mine.at + Vector2i(1, 0)
 	far.at = mine.at + Vector2i(4, 0)
-	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var play: Node = _flat_play()
 	play.call(&"begin", sim)
 	play.call(&"_ready")
 	duel.turn = duel.fighters.find(far)
@@ -349,7 +357,7 @@ func test_an_aimed_arrow_is_in_the_reading_until_it_lands() -> void:
 			break
 		sim.advance(1)
 	assert_false(duel.volleys.is_empty(), "she has aimed")
-	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var play: Node = _flat_play()
 	play.call(&"begin", sim)
 	play.call(&"_ready")
 	var volleys: Array = (play.call(&"_fight_frame") as Dictionary).get("volleys", []) as Array
@@ -366,7 +374,7 @@ func test_the_reading_says_whether_the_gift_can_be_cast() -> void:
 	var sim: Sim = Game.build()
 	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
 	sim.advance(1)
-	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var play: Node = _flat_play()
 	play.call(&"begin", sim)
 	play.call(&"_ready")
 	assert_false(bool((play.call(&"_fight_frame") as Dictionary).get("can_cast", true)), "no gift, no spell")
@@ -385,7 +393,7 @@ func test_an_archer_in_flight_and_in_reach_reads_as_one() -> void:
 	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true})
 	sim.advance(1)
 	var duel := sim.store(&"duel") as Duel
-	var play: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var play: Node = _flat_play()
 	play.call(&"begin", sim)
 	play.call(&"_ready")
 	var hands := DuelPlayer.new(DuelPlayer.PRESS)
@@ -443,7 +451,7 @@ func test_the_journal_turns_its_pages_and_comes_back_round() -> void:
 func test_the_dialogue_box_holds_every_row_it_can_be_given() -> void:
 	# The review of O21: a talk offering three lines plus the way out drew its fourth row
 	# below the box, half off the screen.
-	var main: Node = (load("res://view/main.tscn") as PackedScene).instantiate()
+	var main: Node = _flat_play()
 	var box: Control = main.get_node("HUD/DialogueBox") as Control
 	var choices: Label = main.get_node("HUD/DialogueBox/Choices") as Label
 	var font_size: int = choices.get_theme_font_size(&"font_size")

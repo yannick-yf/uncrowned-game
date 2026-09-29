@@ -31,6 +31,11 @@ var fighting: int = -1
 
 static var _packs: Array[Dictionary] = []
 
+## Where each pack stands in the world `_tiles_for`, for the content `_tiles_of` (see `at`).
+var _tiles_for: Region = null
+var _tiles_of: Array[Dictionary] = []
+var _tiles: Array[Vector2i] = []
+
 
 ## The packs, from the content file, in order. Anchors rather than tiles, so a pack that
 ## names the road it watches survives the map moving under it.
@@ -52,7 +57,17 @@ func at(region: Region, which: int) -> Vector2i:
 	var all: Array[Dictionary] = packs()
 	if which < 0 or which >= all.size() or region == null:
 		return Vector2i(-1, -1)
-	return region.resolve(all[which].get("anchor", {}) as Dictionary)
+	# **Resolved once per world, not once per step** (T4, 2026-09-29). `standing` is asked
+	# every step, and resolving the anchors was the largest single cost of a simulated day.
+	# Where a pack stands depends only on the world and the content, so the answer is kept
+	# for as long as both are the same objects. Not state: nothing a replay rebuilds.
+	if region != _tiles_for or not is_same(all, _tiles_of):
+		_tiles_for = region
+		_tiles_of = all
+		_tiles = []
+		for row: Dictionary in all:
+			_tiles.append(region.resolve(row.get("anchor", {}) as Dictionary))
+	return _tiles[which]
 
 
 ## How many of them, and of what. Two fields, which is the whole of a pack.
