@@ -493,7 +493,7 @@ reconstruct it from forty commits will get it wrong.
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | None, and last on purpose. **C3 is unblocked** and is the one the player model waits on |
-| **P2** | Yannick's, in a branch of its own, written with him |
+| **P2** | Folded into **the tutorial's redo** (2026-09-29): the fairy, the combat tutorial, the departure for the works — the dialogue is rewritten then. C2–C4 wait on it |
 
 **Two things are true of the fight and both matter.** The turn-based design of
 `docs/COMBAT_V2.md` is the only fight there is — the real-time one was deleted in K6,

@@ -229,6 +229,13 @@ Cinderworks and shared with nowhere else. English in the same change.
 **Check:** talk to four of them in each state. Nothing repeats twice in a row, and
 none of the four states' lines would make sense in another state.
 
+> **Moved into the tutorial's redo (Yannick, 2026-09-29).** The whole tutorial of the
+> demo is to be redone — **meeting the fairy, the combat tutorial, the departure for the
+> Cinderworks** — and the dialogue is rewritten then, as part of it, rather than as a
+> task of its own. So P2 is no longer "forty lines for the works" on its own: it is the
+> writing of that redo. C2, C3 and C4 still wait on it, because they delete the lines
+> and the readings it replaces.
+
 ### P3 · Abandonment is absence
 
 **Delivered 2026-09-18, and it is not enough on its own — measured.** Below the
