@@ -45,3 +45,7 @@ view3d/workshop/
 # will ever reference. Re-downloadable from the itch.io URL recorded in
 # assets/NinjaAdventure/LICENCE-as-downloaded.md.
 assets/**/*.gif
+
+# Claude Code's agent worktrees: GitKraken lists every worktree, and one committed by
+# mistake would put a nested repository in the tree.
+.claude/worktrees/
