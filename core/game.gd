@@ -110,6 +110,8 @@ static func build_systems() -> Array[SimSystem]:
 	# After both: whoever a fight left standing somewhere walks home, and whoever it
 	# killed is let go (O7).
 	systems.append(WalkerSystem.new())
+	# A drill's aftermath: the fact, the mending, and the master speaking again (O8).
+	systems.append(DrillSystem.new())
 	systems.append(EndingSystem.new())
 	systems.append(ActSystem.new())
 	systems.append(TheftSystem.new())

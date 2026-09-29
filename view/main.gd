@@ -215,11 +215,20 @@ func _ready() -> void:
 	var duelling: String = OS.get_environment("UNCROWNED_DUEL")
 	if OS.has_feature("debug") and duelling != "":
 		var asked: PackedStringArray = duelling.strip_edges().split(":")
+		# `drill:sword` begins a drill of the tutorial as its master's line does (O8).
+		var drill: String = ""
+		if asked.size() > 1 and asked[0] == "drill":
+			drill = asked[1]
+			asked = asked.slice(1)
+			asked[0] = String(DuelRules.drill_master(StringName(drill)))
 		# `wolf,wolf` squares up against several at once (O6), the way a pack does.
 		var against: PackedStringArray = asked[0].split(",", false)
-		# A sparring partner is sparred with, as the game's own line does it (O1).
-		_sim.submit(&"duel_began", {"opponents": Array(against), "by": String(DuelRules.PLAYER),
-			"spar": against.size() == 1 and DuelRules.spares(StringName(against[0]))})
+		var began: Dictionary = {"opponents": Array(against), "by": String(DuelRules.PLAYER),
+			# A sparring partner is sparred with, as the game's own line does it (O1).
+			"spar": against.size() == 1 and DuelRules.spares(StringName(against[0]))}
+		if drill != "":
+			began.merge({"drill": drill, "by": asked[0], "spar": true}, true)
+		_sim.submit(&"duel_began", began)
 		_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
 		var playing: DuelPlayer = DuelPlayer.new(StringName(asked[2])) if asked.size() > 2 else null
@@ -373,6 +382,10 @@ func _duel_frame() -> Dictionary:
 		"settle_steps": DuelRules.beat_steps(),
 		"outcome": String(_duel.outcome),
 		"spar": _duel.spar,
+		# The lesson, when this fight is one (O8).
+		"drill": String(_duel.drill),
+		"goal_done": _duel.tally,
+		"goal_of": DuelRules.drill_count(_duel.drill) if _duel.drill != Duel.NOBODY else 0,
 		"felled": _duel.player_felled,
 		"his_down": DuelRules.is_down(him.hp),
 		"my_hp": mine.hp,

@@ -167,6 +167,8 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	duel.player_felled = false
 	duel.felled_by = Duel.NOBODY
 	duel.spar = bool(event.data.get("spar", false))
+	duel.drill = StringName(String(event.data.get("drill", "")))
+	duel.tally = 0
 	# **Whoever started the fight acts first.** A player who opens on somebody gets the
 	# first blow, which is the right incentive: attacking from a conversation should be
 	# an advantage, and the price should be paid in standing rather than in mechanics.
@@ -220,6 +222,17 @@ func _open_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 	if who.is_player():
 		duel.phase = Duel.WAITING
 		duel.phase_left = 0
+		return
+	# **A drill's opening** (O8): the master's first act is to walk off, further than one
+	# turn can close and strike, so the first thing the lesson teaches is to move. Walked,
+	# not set down — the player sees him step back and why.
+	if duel.drill != Duel.NOBODY and duel.turns_taken == 0 \
+			and DuelRules.kind_of(who.who) == DuelRules.drill_master(duel.drill):
+		var mine: DuelFighter = duel.me()
+		var apart: int = DuelRules.drill_stand_off(duel.drill)
+		var to: Vector2i = DuelRules.step_back(who.at, mine.at, world.region(), apart, _taken(duel, who))
+		_take(sim, duel, world, who, to, DuelRules.WAIT, Duel.NOBODY, true,
+			DuelRules.walk_back_budget(apart))
 		return
 	var chosen: Dictionary = DuelRules.decide(
 		who, duel.foes_of(who.who), world.region(), duel.began_at, _taken(duel, who))
@@ -282,9 +295,11 @@ func _take(
 	action: StringName,
 	at: StringName,
 	record: bool,
+	budget: int = -1,
 ) -> void:
-	var cost: Dictionary = DuelRules.reachable(
-		who.at, world.region(), DuelRules.tiles_per_turn(), _taken(duel, who))
+	# `budget` is a turn's tiles, except for a drill's opening walk (O8).
+	var tiles: int = DuelRules.tiles_per_turn() if budget < 0 else budget
+	var cost: Dictionary = DuelRules.reachable(who.at, world.region(), tiles, _taken(duel, who))
 	duel.walk = DuelRules.path_to(who.at, to, cost)
 	duel.walked = 0
 	duel.acting = action
@@ -351,7 +366,11 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 	if victim == null or not victim.alive() or not DuelRules.in_reach(who.at, victim.at):
 		sim.derive(&"blow_missed", {"by": _named_as(who), "move": String(DuelRules.STRIKE)})
 		return
-	_land(sim, duel, world, who, victim, DuelRules.strike_damage(), DuelRules.STRIKE)
+	# In a drill the master's blow costs the drill's figure, and yours what it always does.
+	var amount: int = DuelRules.strike_damage()
+	if duel.drill != Duel.NOBODY and not who.is_player():
+		amount = DuelRules.drill_damage(duel.drill)
+	_land(sim, duel, world, who, victim, amount, DuelRules.STRIKE)
 
 
 ## **The one door every hit goes through** (O5, 2026-09-29): a blow, and in time an
@@ -377,6 +396,9 @@ func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 		victim.hp = world.player_hp
 	victim.hurt_left = DuelRules.hurt_steps()
 	victim.facing = DuelRules.facing_from(victim.at, who.at)
+	# A drill counts the blows you land, when landing blows is its goal (O8).
+	if duel.drill != Duel.NOBODY and who.is_player() and DuelRules.drill_goal(duel.drill) == &"blows":
+		duel.tally += 1
 	if victim.is_player() and DuelRules.is_down(victim.hp):
 		# Down is down whether or not he finishes it: recorded on the step the blow
 		# lands and **paid when the beat is over**, so the picture can show you down
@@ -420,6 +442,12 @@ func _end_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 				continue
 			fighter.how_out = &"down"
 			sim.derive(&"duel_down", {"who": String(fighter.who)})
+	# **A drill is passed the moment its goal is reached** (O8), whether or not anybody
+	# is down.
+	if duel.drill != Duel.NOBODY and duel.outcome == Duel.NOBODY \
+			and duel.tally >= DuelRules.drill_count(duel.drill):
+		_decided(sim, duel, &"won")
+		return
 	if _over(sim, duel):
 		return
 	duel.phase = Duel.PAUSING
@@ -442,6 +470,10 @@ func _next_turn(sim: Sim, duel: Duel, world: WorldState) -> void:
 				duel.round_number += 1
 				_settle_leaving(sim, duel)
 				if _over(sim, duel):
+					return
+				# And failed when its rounds run out first (O8).
+				if duel.drill != Duel.NOBODY and duel.round_number >= DuelRules.drill_rounds(duel.drill):
+					_decided(sim, duel, &"failed")
 					return
 		if duel.fighters[index].alive():
 			duel.turn = index
@@ -510,6 +542,7 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 	var who: String = String(foe.who) if foe != null else ""
 	var asked_by: StringName = duel.asked_by
 	var turns: int = duel.turns_taken
+	var drill: StringName = duel.drill
 	var felled: bool = duel.player_felled
 	var by: StringName = duel.felled_by
 	# **A person stays where the fight left him** (O7), and walks home from there — he is
@@ -541,6 +574,8 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 			owed = maxi(world.player_hp - 1, 0)
 		world.hurt(owed, sim.step, false)
 	duel.spar = false
+	duel.drill = Duel.NOBODY
+	duel.tally = 0
 	duel.owed_damage = 0
 	duel.player_felled = false
 	duel.felled_by = Duel.NOBODY
@@ -550,6 +585,7 @@ func _end(sim: Sim, duel: Duel, how: StringName, world: WorldState) -> void:
 	# step the last blow lands. The next step turns it off on its own.
 	sim.derive(&"duel_ended", {
 		"opponent": who, "how": String(how), "asked_by": String(asked_by), "turns": turns,
+		"drill": String(drill), "passed": drill != Duel.NOBODY and how == &"won",
 	})
 
 

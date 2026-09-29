@@ -46,6 +46,7 @@ const AROUND: Array[Vector2i] = [
 
 static var _table: Dictionary = {}
 static var _fighters: Dictionary = {}
+static var _drills: Dictionary = {}
 
 
 static func table() -> Dictionary:
@@ -67,6 +68,7 @@ static func _read() -> void:
 	var root: Dictionary = parsed as Dictionary
 	_table = (root.get("table", {}) as Dictionary).duplicate()
 	_fighters = (root.get("fighters", {}) as Dictionary).duplicate(true)
+	_drills = (root.get("drills", {}) as Dictionary).duplicate(true)
 
 
 ## **A test seam, and it is only that.** K2's check is that *editing the table alone*
@@ -85,6 +87,7 @@ static func override(rows: Dictionary) -> void:
 static func forget() -> void:
 	_table = {}
 	_fighters = {}
+	_drills = {}
 
 
 static func number(key: String, fallback: int = 0) -> int:
@@ -196,6 +199,41 @@ static func purse_of(who: StringName) -> int:
 	return int(_about(who).get("purse", 0))
 
 
+## **A drill of the tutorial** (O8), as its row of `content/duel.json`, or empty.
+static func drill(id: StringName) -> Dictionary:
+	if _table.is_empty():
+		_read()
+	return _drills.get(String(id), {}) as Dictionary
+
+
+static func drill_master(id: StringName) -> StringName:
+	return StringName(String(drill(id).get("master", "")))
+
+
+## How far the master walks off before the first turn — further than one turn can close
+## and strike, so the first turn is a move.
+static func drill_stand_off(id: StringName) -> int:
+	return int(drill(id).get("stand_off", tiles_per_turn() + reach_tiles() + 1))
+
+
+## What the master's blows cost in a drill.
+static func drill_damage(id: StringName) -> int:
+	return int(drill(id).get("damage", 1))
+
+
+static func drill_goal(id: StringName) -> StringName:
+	return StringName(String(drill(id).get("goal", "")))
+
+
+static func drill_count(id: StringName) -> int:
+	return int(drill(id).get("count", 1))
+
+
+## Rounds without reaching the goal before the drill is failed.
+static func drill_rounds(id: StringName) -> int:
+	return int(drill(id).get("rounds", 1))
+
+
 ## Whether they are a sparring partner. **Not a mercy of their own since O1** — the
 ## mercy is the line's (`Duel.spar`): a spar line leaves you on one point, and the same
 ## man fought for real does not. Read only where a fight starts without a line, so a
@@ -265,6 +303,46 @@ static func reachable(from: Vector2i, region: Region, cap: int, taken: Dictionar
 		if edge.is_empty():
 			break
 	return cost
+
+
+## **Where a drill's master walks to before the first turn** (O8): the nearest tile he
+## can walk to that is at least `apart` from the player — and when the ground allows
+## none, the furthest he can reach. Searched, not aimed: a straight line away can end
+## in a wall, and a tile beside the wall is a tile one turn can close.
+##
+## Ties go to the lowest cost, then the lowest row, then the lowest column, so the same
+## ground gives the same tile on every machine and in every replay.
+static func step_back(from: Vector2i, away_from: Vector2i, region: Region, apart_tiles: int,
+		taken: Dictionary = {}) -> Vector2i:
+	var cost: Dictionary = reachable(from, region, walk_back_budget(apart_tiles), taken)
+	var best: Vector2i = from
+	var best_far: int = apart(from, away_from)
+	var best_cost: int = 0
+	var found: bool = best_far >= apart_tiles
+	for tile: Vector2i in cost.keys():
+		var far: int = apart(tile, away_from)
+		var spent: int = int(cost[tile])
+		var better: bool = false
+		if far >= apart_tiles:
+			if not found:
+				better = true
+			else:
+				better = spent < best_cost \
+					or (spent == best_cost and (tile.y < best.y or (tile.y == best.y and tile.x < best.x)))
+		elif not found:
+			better = far > best_far or (far == best_far and spent < best_cost)
+		if better:
+			best = tile
+			best_far = far
+			best_cost = spent
+			found = found or far >= apart_tiles
+	return best
+
+
+## How far a master may walk to get there: the distance and a little more, for the way
+## round whatever stands behind him.
+static func walk_back_budget(apart_tiles: int) -> int:
+	return apart_tiles + 2
 
 
 ## The way from one tile to another inside a `reachable` field, as the tiles walked,

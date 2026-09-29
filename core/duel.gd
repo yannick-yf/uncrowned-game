@@ -70,6 +70,10 @@ var felled_by: StringName = NOBODY
 ## **A spar** (O1): nobody dies in it. An opponent brought to 0 yields, and the player
 ## brought to 0 is left on one point, whoever threw the blow.
 var spar: bool = false
+## **The drill this fight is**, or nothing (O8), and how far the player has got with its
+## goal — blows landed, for the sword.
+var drill: StringName = NOBODY
+var tally: int = 0
 
 
 func on() -> bool:
@@ -173,8 +177,8 @@ func fingerprint() -> String:
 	var parts := PackedStringArray()
 	for fighter: DuelFighter in fighters:
 		parts.append(fighter.fingerprint())
-	return "%s turn=%d/%s r=%d n=%d %s->%s %s beat=%d owed=%d fell=%s spar=%s" % [
+	return "%s turn=%d/%s r=%d n=%d %s->%s %s beat=%d owed=%d fell=%s spar=%s drill=%s/%d" % [
 		" ".join(parts), turn, String(phase), round_number, turns_taken,
 		String(acting), String(target), String(outcome), settling, owed_damage,
-		player_felled, spar,
+		player_felled, spar, String(drill), tally,
 	]

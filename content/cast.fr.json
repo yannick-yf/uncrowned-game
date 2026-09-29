@@ -382,8 +382,21 @@
       "options": [
         {
           "intent": "ask_bram_post",
+          "hides_after": "bested:bram",
+          "_why": "O8, 2026-09-29: a conversation holds three lines, and once you have bested him the fight for real takes this one's place.",
           "text": "Pourquoi frapper un poteau ?",
           "reply": "Parce qu'il ne rend pas les coups. C'est reposant. Ça n'apprend rien."
+        },
+        {
+          "intent": "drill_sword",
+          "text": "Une leçon. L'épée.",
+          "reply": "Je recule. Viens me chercher, et touche-moi trois fois.",
+          "fights": "bram",
+          "spar": true,
+          "drill": "sword",
+          "repeatable": true,
+          "hides_after": "drilled:sword",
+          "_p2": "DRAFT wording (O8, 2026-09-29) - the words are Yannick's (O19). What must stay is the shape: the sword drill, repeatable until passed; the old spar line stays beside it."
         },
         {
           "intent": "ask_bram_spar",

@@ -1360,7 +1360,15 @@ Registered in `Game.build()` **and** `fresh_stores()`. Pace from
 **Tests first:** after a duel he is drawn and reached where it ended, not at his anchor;
 he walks home; a theft counts him as a witness where he stands; replay rebuilds it.
 
-### O8 · Drills, the sword drill, and the lesson on screen
+### O8 · Drills, the sword drill, and the lesson on screen — **built 2026-09-29**
+
+> Built as planned, with three findings. **The three-line cap**: Bram's new drill line
+> pushed O1's "for real" line out of his conversation, so his post question now yields
+> its slot once you have bested him. **The step-back is searched, not aimed**: on the
+> 2D map a straight line away ended in a wall and left him in one turn's reach, so he
+> walks to the nearest tile at least `stand_off` from the player that he can reach.
+> **Where he steps can be behind a tree** — his drill post (O14) is to be chosen on open
+> ground. Every word is a marked draft for O19.
 
 Est. 12 h. Depends on: O6, O7.
 

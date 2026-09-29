@@ -50,6 +50,9 @@ var _drops: Dictionary = {}
 var _floats: Array[Dictionary] = []
 var _banner: String = ""
 var _banner_at: float = -1.0
+## **The lesson, when the fight is a drill** (O8): its title, the objective with how far
+## you are, and a hint. Empty in any other fight.
+var _card: PackedStringArray = PackedStringArray()
 
 
 func _init() -> void:
@@ -75,6 +78,7 @@ func present(reading: Dictionary, delta: float) -> void:
 		_floats = []
 		_banner = ""
 		_banner_at = -1.0
+		_card = PackedStringArray()
 		_reading = {}
 		queue_redraw()
 		return
@@ -91,7 +95,13 @@ func present(reading: Dictionary, delta: float) -> void:
 		# **The banner is read off the state, not off an event.** The outcome is set on
 		# the frame the fight is decided and stands for the beat, so a frame that missed
 		# the event — the first one drawn, a photograph — still says who is down.
+		_card = _lesson(reading)
 		var outcome: String = String(reading.get("outcome", ""))
+		var drill: String = String(reading.get("drill", ""))
+		if outcome != "" and _banner == "" and drill != "":
+			# A drill is passed or not yet — nobody is down in a lesson (O8).
+			_banner = Text.of(&"drill.passed") if outcome == "won" else Text.of(&"drill.failed")
+			_banner_at = _now
 		if outcome != "" and _banner == "":
 			# A spar won ends with him yielding, not down: nobody dies in one (O1).
 			var his: String = String(reading.get("his_name", ""))
@@ -120,6 +130,19 @@ func _foes() -> Array[Dictionary]:
 	for row: Variant in rows:
 		out.append(row as Dictionary)
 	return out
+
+
+## The drill's card: what it is, how far you are, and what to do (O8).
+func _lesson(reading: Dictionary) -> PackedStringArray:
+	var drill: String = String(reading.get("drill", ""))
+	if drill == "":
+		return PackedStringArray()
+	return PackedStringArray([
+		Text.of(StringName("drill.%s.title" % drill)),
+		Text.of(StringName("drill.%s.goal" % drill),
+			[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]),
+		Text.of(StringName("drill.%s.instruction" % drill)),
+	])
 
 
 func _take_health(side: StringName, hp: int) -> void:
@@ -184,6 +207,16 @@ func _draw() -> void:
 		var text_size: int = int(row["size"])
 		Ui.write_over(self, at - Vector2(Ui.width_of(text, text_size) * 0.5, 0.0), text, text_size, colour)
 
+	# The lesson, under the bars on the left: gold title, the count in ink, the hint dim.
+	if not _card.is_empty():
+		var top: float = TOP + PIP.y + 34.0
+		var tones: Array[Color] = [MINE, Ui.INK, Ui.DIM]
+		var sizes: Array[int] = [Ui.ROW, Ui.ROW, Ui.NOTE]
+		for i: int in _card.size():
+			var tone: Color = tones[i]
+			tone.a = _alpha
+			Ui.write_over(self, Vector2(MARGIN, top), _card[i], sizes[i], tone)
+			top += 16.0
 	var settling: bool = int(_reading.get("settling", 0)) > 0
 	if _banner != "" and _banner_at >= 0.0:
 		var came: float = clampf((_now - _banner_at) / BANNER_IN_SECONDS, 0.0, 1.0)
@@ -301,6 +334,10 @@ func bars_shown() -> int:
 	if not is_up():
 		return 0
 	return 1 + maxi(_foes().size(), 1)
+
+
+func drill_card() -> PackedStringArray:
+	return _card
 
 
 func pips_shown(side: StringName) -> int:

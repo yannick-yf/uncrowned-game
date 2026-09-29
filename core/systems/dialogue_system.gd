@@ -155,10 +155,15 @@ func _choose(
 		# Derived, not submitted: the player's event was the line they chose, and the
 		# fight is the world's answer to it. Replay recomputes this from the choice,
 		# so the log holds one intent rather than an intent and a fight.
-		sim.derive(&"duel_began", {
+		var began: Dictionary = {
 			"opponent": String(option.fights), "asked_by": String(intent),
 			"spar": option.spar,
-		})
+		}
+		# A drill's master acts first: his first act is to step off (O8).
+		if option.drill != &"":
+			began["drill"] = String(option.drill)
+			began["by"] = String(DuelRules.drill_master(option.drill))
+		sim.derive(&"duel_began", began)
 
 
 func _close(world: WorldState) -> void:

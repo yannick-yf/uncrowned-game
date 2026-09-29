@@ -62,6 +62,8 @@ var fights: StringName = &""
 ## else. Said by the line, not by the person — Bram can be sparred with *and* killed,
 ## and Pillar 3 needs both.
 var spar: bool = false
+## **The drill the fight it starts is** (O8), or nothing.
+var drill: StringName = &""
 
 
 ## An answer already given. Asking Maddox the same question forty times was possible

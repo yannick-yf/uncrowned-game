@@ -102,6 +102,35 @@ func test_every_foe_has_a_bar() -> void:
 	hud.free()
 
 
+func test_a_drill_shows_its_lesson_and_how_far_you_are() -> void:
+	# O8: an instruction, an objective with its count, and a way to tell it is done.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 100, 15)
+	reading["drill"] = "sword"
+	reading["goal_done"] = 2
+	reading["goal_of"] = 3
+	hud.present(reading, 1.0 / 60.0)
+	var card: PackedStringArray = hud.drill_card()
+	assert_eq(card.size(), 3, "a title, the objective and the hint")
+	assert_eq(card[0], Text.of(&"drill.sword.title"), "named for its weapon")
+	assert_true(card[1].contains("2 / 3"), "the objective counts: '%s'" % card[1])
+	hud.free()
+
+
+func test_a_drill_ends_passed_or_not_yet() -> void:
+	var hud := FightHud.new()
+	var passed: Dictionary = _reading(1.0, 100, 5, "won")
+	passed["drill"] = "sword"
+	hud.present(passed, 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"drill.passed"), "passed, not 'Bram is down'")
+	hud.present({"lens": 0.0, "on": false}, 1.0 / 60.0)
+	var failed: Dictionary = _reading(1.0, 100, 15, "failed")
+	failed["drill"] = "sword"
+	hud.present(failed, 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"drill.failed"), "and failing is 'not yet', not 'you are down'")
+	hud.free()
+
+
 func test_a_felled_player_is_shown_at_nothing() -> void:
 	# The felling blow is paid at the end of the beat, so the store still says one or
 	# two while you are on the ground. The picture says nothing left, because that is
@@ -115,7 +144,8 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 
 
 func test_the_fights_words_exist_in_both_languages() -> void:
-	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
+	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"drill.passed", &"drill.failed",
+			&"drill.sword.title", &"drill.sword.instruction", &"drill.sword.goal", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
 			&"duel.keys", &"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)
 		assert_eq(Ui.missing_glyph(Text.of(key, ["Bram"])), "",
