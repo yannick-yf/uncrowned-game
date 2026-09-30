@@ -512,7 +512,7 @@ func _load_his_materials() -> void:
 	_add_our_fight_frames()
 	# **Every look at once, while the world is built** (the review of group L): loaded on
 	# first wear, the archers' came in the middle of the fight at the furnace, a hitch on
-	# the frame the fight began. All thirteen are worn on a walk through the demo anyway.
+	# the frame the fight began. Every one is worn on a walk through the demo anyway.
 	for look: StringName in CastLooks.names():
 		_dress(look)
 	if ResourceLoader.exists(HIS_BLOCK_MATERIAL):

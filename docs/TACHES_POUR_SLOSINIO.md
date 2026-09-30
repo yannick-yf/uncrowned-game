@@ -57,7 +57,7 @@ le tien, un test le voit, et on choisit ensemble lequel garder.
 | **Un animal** | Le loup : onze blocs, peints avec ta roche et ton sombre | Un loup, qui marche et qui mord |
 | **Une tombe** | Des stèles en pierre et des planches en bois, faites avec tes matières | Un petit kit de cimetière : deux ou trois pierres tombales, une croix de bois, un tertre de terre, un tertre herbeux, un muret bas |
 | **Un feu de camp** | Composé de tes pièces (pierres, bûches, braises, fumée) ; seules les flammes sont à nous | Un feu de camp à toi, si tu veux |
-| **Les personnages** | Treize tenues posées sur ton voyageur : couleurs changées (tes ombres gardées), et par-dessus un casque, un bonnet, une capuche, un chapeau, un tablier, une barbe, une épée ou un arc. Le joueur reste ton voyageur | Si tu veux : les vrais personnages, au repos et en marche dans les quatre directions, et pour ceux qui se battent les images de combat (préparation, coup, recul). D'abord un garde du roi, un garde de l'usine, un ouvrier, un villageois, Bram et Wren |
+| **Les personnages** | Quatorze tenues posées sur ton voyageur : couleurs changées (la forme de tes ombres gardée), et par-dessus un casque, un bonnet, une capuche, un chapeau, un tablier, une barbe, une épée ou un arc. Le joueur reste ton voyageur | Si tu veux : les vrais personnages, au repos et en marche dans les quatre directions, et pour ceux qui se battent les images de combat (préparation, coup, recul). D'abord un garde du roi, un garde de l'usine, un ouvrier, un villageois, Bram et Wren |
 | **Le « ! » au-dessus de Bram** | Une barre et un point couleur braise, dessinés en code | Facultatif : un « ! » peint à ta main |
 
 ---

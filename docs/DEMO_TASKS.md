@@ -2461,6 +2461,12 @@ Est. 1 h. A look of his own, `foreman`: the works' colour darker, a coat and no 
 felt hat with a brim — so the man who comes to stop Tom's side is told from the workers he
 watches. **Check:** a frame of him at the furnaces.
 
+> **Built 2026-09-30.** `foreman`: the works' ochre darkened to a coat, no apron, greying
+> hair, and the straw hat's piece made in felt (`"weave": false`, a brass band). Harry
+> wears it; `worker_a` is back in the shift's pool. Framed at the furnaces, talking. There
+> are now fourteen looks and two fight sheets, sixteen sheets in all — about 190 MB of
+> video memory once all are loaded, which the window does while the world is built.
+
 ### L11 · His brother's task page, brought up to date
 
 Est. 30 min. The page Yannick sent him (`docs/TACHES_POUR_SLOSINIO.md`, published) says

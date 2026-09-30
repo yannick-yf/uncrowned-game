@@ -172,8 +172,8 @@ below with the fourth.
 4. **The cast's looks** (2026-09-30, group L of `docs/DEMO_TASKS.md`). Every man was his
    one traveller, six of him in one fight. `tools/draw_cast_looks.gd` dresses him as each
    kind of person the demo shows — the king's guards in blackened plate a fifth taller,
-   the watch, the works' guards and archers, the ironworks' workers, the villagers, Bram
-   and Wren — into `view3d/cast/<look>.png`, one sheet per look in his sheet's layout.
+   the watch, the works' guards and archers, the ironworks' workers and their foreman,
+   the villagers, Bram and Wren — into `view3d/cast/<look>.png`, one sheet per look in his sheet's layout.
    **Recoloured, not repainted**: each region of him moves to another hue with the
    values of his brush scaled, not replaced, so the shape of his shading stays; what he never drew (a helm, a cap, a hood, a hat, an apron,
    a beard, a sword, a bow) is painted over him in his manner and measured on each frame.

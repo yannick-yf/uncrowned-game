@@ -1078,9 +1078,12 @@ static func _piece_headscarf(fig: Fig, params: Dictionary) -> void:
 			shade(c, Rect2(kx - 10, ky - 8, 26, 24), 31), 2)
 
 
-## A wide straw hat, for the fields.
+## A wide straw hat, for the fields — or, woven of nothing and banded in brass, a felt one
+## (`"weave": false`), the foreman's (L10).
 static func _piece_straw_hat(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(44, 0.55, 0.78))
+	var woven: bool = bool(params.get("weave", true))
+	var band: Vector3 = vec(params.get("band"), Vector3(8, 0.55, 0.42))
 	var w: float = fig.head.z - fig.head.x
 	var hh: float = fig.neck - fig.head.y
 	var cx: float = (fig.head.x + fig.head.z) / 2.0
@@ -1100,7 +1103,7 @@ static func _piece_straw_hat(fig: Fig, params: Dictionary) -> void:
 	var straw := func(x: int, y: int) -> Color:
 		var light: float = 1.0 - 0.5 * (x - cx + brim_half) / (2.0 * brim_half) \
 			- 0.3 * (y - crown_top) / (brim_y + 7.0 - crown_top)
-		var weave: float = 0.07 if ((x + 2 * y) / 3) % 2 == 1 else -0.04
+		var weave: float = (0.07 if ((x + 2 * y) / 3) % 2 == 1 else -0.04) if woven else 0.0
 		var v: float = c.z * (0.78 + 0.35 * light) + weave + (noise(x, y, 67) - 0.5) * 0.06
 		if brim.call(x, y) and y > brim_y + 1:
 			v *= 0.78
@@ -1109,7 +1112,7 @@ static func _piece_straw_hat(fig: Fig, params: Dictionary) -> void:
 	for y: int in range(int(brim_y) - 7, int(brim_y) - 3):
 		for x: int in range(int(cx - crown_half) + 3, int(cx + crown_half) - 2):
 			if crown.call(x, y) and fig.colour(x, y) != INK:
-				fig.put(x, y, safe(8, 0.55, 0.42))
+				fig.put(x, y, safe(band.x, band.y, band.z))
 
 
 ## A cloth hood: the head's whole shape changes, and the face looks out of it.

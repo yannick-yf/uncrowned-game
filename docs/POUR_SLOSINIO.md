@@ -537,19 +537,23 @@ voyageur, sans le redessiner** : la couleur des cheveux et des vêtements change
 forme de tes ombres est gardée. Par-dessus, on dessine ce que tu n'as pas fait : un casque,
 un bonnet, une capuche, un chapeau de paille, un tablier, une barbe, une épée, un arc.
 
-Il y a treize tenues :
+Il y a quatorze tenues :
 
 - **les gardes du roi** : armure noircie, casque fermé avec un plumet rouge, tunique
-  rouge à couronne, bouclier dans le dos, 20 % plus grands que les autres. Ils doivent
-  avoir l'air impossibles à battre ;
+  rouge à couronne, bouclier dans le dos, une épée à la main, 20 % plus grands que les
+  autres. Ils doivent avoir l'air impossibles à battre ;
 - **les soldats du roi** (le garde du pont, les sentinelles) : rouge du roi, mais en
-  tissu, avec une calotte de fer et une épée à la ceinture ;
+  tissu, avec une calotte de fer et une épée à la ceinture, qu'ils sortent pour se
+  battre ;
 - **les gardes et les archers de l'usine** : ocre, la couleur de l'usine, un bonnet de
   cuir, une épée ou un arc à la main ;
 - **trois ouvriers** : vêtements sombres, tablier de cuir, gants, foulard ;
+- **Harry, le contremaître** : un manteau de la couleur de l'usine, plus sombre, sans
+  tablier, et un chapeau de feutre à bord ;
 - **quatre villageois** : des vêtements de tous les jours, sans sac à dos ; l'un porte un
   chapeau de paille, un autre un foulard rouge, les deux autres sont tête nue ;
-- **Bram** : cheveux gris, barbe courte, épée à la ceinture ;
+- **Bram** : cheveux gris, barbe courte, épée à la ceinture, et à la main quand il se
+  bat ;
 - **Wren** : capuche verte, un arc et un carquois. De face, elle tient l'arc à la main ;
   de profil, il est dans son dos, pour ne pas passer devant son visage.
 

@@ -102,6 +102,16 @@
       },
       "pieces": [["remove_pack"]]
     },
+    "foreman": {
+      "_why": "Harry, the foreman (L10, Yannick 2026-09-30): the works' colour, darker — a coat and no apron — and a felt hat with a brim and a brass band, so the man who comes to stop Tom's side is told from the workers he watches.",
+      "recolour": {
+        "shirt": [32, 0.75, 0.40, 0.62],
+        "trousers": [25, 1.0, 0.22, 0.7],
+        "hair": [30, 0.30, 0.30, 0.70],
+        "leather": [20, 1.0, 0.45, 0.6]
+      },
+      "pieces": [["remove_pack"], ["straw_hat", {"colour": [22, 0.45, 0.30], "weave": false, "band": [40, 0.7, 0.6]}]]
+    },
     "bram": {
       "_why": "The survivor who teaches the sword: grey hair, a short grey beard, a tunic the colour of old wine, his sword at the belt (Yannick, 2026-09-30).",
       "recolour": {
@@ -129,7 +139,7 @@
   "people": {
     "bram": "bram",
     "wren": "wren",
-    "harry": "worker_a",
+    "harry": "foreman",
     "tom": "worker_b",
     "sena": "worker_c",
     "ivo": "villager_c",

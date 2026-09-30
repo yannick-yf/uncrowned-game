@@ -212,9 +212,11 @@ func test_everybody_the_demo_shows_wears_a_look_of_the_table() -> void:
 func test_the_named_ones_the_demo_needs_wear_their_own() -> void:
 	assert_eq(CastLooks.of_person(&"bram", &"", &"brindle"), &"bram", "Bram")
 	assert_eq(CastLooks.of_person(&"wren", &"", &"brindle"), &"wren", "Wren")
-	for worker: StringName in [&"tom", &"sena", &"harry"]:
+	for worker: StringName in [&"tom", &"sena"]:
 		assert_true(String(CastLooks.of_person(worker, &"", &"cinderworks")).begins_with("worker_"),
 			"%s works the furnaces and dresses for it" % worker)
+	# **The foreman is not one of the men he watches** (L10, Yannick 2026-09-30).
+	assert_eq(CastLooks.of_person(&"harry", &"", &"cinderworks"), &"foreman", "Harry wears his own")
 	assert_eq(CastLooks.of_person(&"gatekeeper@1", &"gatekeeper", &"cinderworks"), &"works_guard",
 		"the works' gatekeeper wears its livery")
 	assert_eq(CastLooks.of_person(&"watchman@1", &"watchman", &"cinderworks"), &"works_guard",

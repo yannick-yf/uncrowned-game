@@ -69,6 +69,56 @@
         ]
       }
     },
+    "foreman": {
+      "_why": "Harry, the foreman (L10, Yannick 2026-09-30): the works' colour, darker — a coat and no apron — and a felt hat with a brim and a brass band, so the man who comes to stop Tom's side is told from the workers he watches.",
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "straw_hat",
+          {
+            "band": [
+              40.0,
+              0.7,
+              0.6
+            ],
+            "colour": [
+              22.0,
+              0.45,
+              0.3
+            ],
+            "weave": false
+          }
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          30.0,
+          0.3,
+          0.3,
+          0.7
+        ],
+        "leather": [
+          20.0,
+          1.0,
+          0.45,
+          0.6
+        ],
+        "shirt": [
+          32.0,
+          0.75,
+          0.4,
+          0.62
+        ],
+        "trousers": [
+          25.0,
+          1.0,
+          0.22,
+          0.7
+        ]
+      }
+    },
     "kings_guard": {
       "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, a sword in the hand (L9), and a fifth taller than anybody.",
       "pieces": [
