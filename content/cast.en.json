@@ -387,8 +387,8 @@
         {"when": "just_failed_a_lesson", "text": "Not yet. Get your breath back, and we go again when you want.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after a lesson failed"},
         {"when": "just_passed_magic", "text": "I have nothing more to teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge. You know what to do now.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the farewell after the last lesson, pointing north with no marker (O19)"},
         {"when": "just_passed_bow_without_gift", "text": "Good. That is all I can teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after the bow, for somebody without the fairy's gift: the farewell"},
-        {"when": "just_passed_bow", "text": "Good. Not one arrow found you. Now what the fairy gave you: show me.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
-        {"when": "just_passed_sword", "text": "Good. You close before you strike, and that is all it takes. Now the bow: Wren shoots, you move.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"}
+        {"when": "just_passed_bow", "text": "Good. You shot without letting me close. Now what the fairy gave you: show me.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
+        {"when": "just_passed_sword", "text": "Good. You close before you strike, and that is all it takes. Now the bow: Wren lends you hers, and I come at you.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"}
       ],
       "options": [
         {
@@ -414,7 +414,7 @@
         {
           "intent": "drill_bow",
           "text": "The bow. Show me.",
-          "reply": "Wren, your spare bow. Here, it's yours now. I'll come at you: land three arrows before I close, and don't let me stand next to you.",
+          "reply": "Wren is lending you her spare bow: keep it. I'll come at you. Land three arrows before I reach you, and keep your distance.",
           "requires": "drilled:sword",
           "fights": "bram",
           "gives": "you:the_bow",

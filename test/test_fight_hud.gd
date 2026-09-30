@@ -105,6 +105,35 @@ func test_the_fallen_lose_their_bars_until_the_beat() -> void:
 	hud.free()
 
 
+func test_a_man_named_with_his_trade_takes_his_turn_in_good_french() -> void:
+	# The review of T9: « À Le portier des Forges », « À Garde de l'usine ». A man the
+	# cast names by his trade has his turn said the way a beast's is, from his noun.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 100, 15)
+	reading["my_turn"] = false
+	reading["acting_name"] = "Le portier des Forges"
+	reading["acting_noun"] = "portier"
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.whose_turn(), Text.of(&"duel.beast_turn", ["portier"]), "from his noun: '%s'" % hud.whose_turn())
+	reading.erase("acting_noun")
+	reading["acting_name"] = "Bram"
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.whose_turn(), Text.of(&"duel.his_turn", ["Bram"]), "and a man by his name")
+	hud.free()
+
+
+func test_a_blow_for_nothing_says_it_landed() -> void:
+	# The review of T9: a lesson's partner stops at one point, so the arrow after it did
+	# nothing and the HUD floated « -0 ». It landed; that is what counts in the lesson.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 100, 1)
+	reading["blows"] = [{"type": "blow_landed", "by": "player", "damage": 0, "at": Vector2(100, 100)}]
+	hud.present(reading, 1.0 / 60.0)
+	assert_true(hud.float_words().has(Text.of(&"fight.touched")), "it says it landed")
+	assert_false(hud.float_words().has("-0"), "and never « -0 »")
+	hud.free()
+
+
 func test_every_foe_has_a_bar() -> void:
 	# O6: two wolves, two bars under the one that names the fight.
 	var hud := FightHud.new()
@@ -283,7 +312,8 @@ func test_the_fights_words_exist_in_both_languages() -> void:
 			&"drill.bow.step.shoot", &"drill.magic.step.close", &"drill.magic.step.cast",
 			&"drill.hint.take_bow", &"drill.hint.bow_too_close", &"drill.hint.too_far", &"drill.hint.shoot_now",
 			&"drill.hint.sword_too_far", &"drill.hint.strike_now", &"drill.hint.gift_too_far",
-			&"drill.hint.gift_resting", &"drill.hint.cast_now",
+			&"drill.hint.gift_resting", &"drill.hint.cast_now", &"fight.touched",
+			&"fighter.works_guard", &"fighter.works_guard.noun", &"fighter.gatekeeper.noun",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
 			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
 			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",

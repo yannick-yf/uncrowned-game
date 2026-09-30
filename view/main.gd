@@ -431,6 +431,7 @@ func _duel_frame() -> Dictionary:
 		# A beast is named with its article in a sentence (the review of O21): "le loup",
 		# and a pack's fall is the pack's.
 		"his_kind": _beast_kind(him.who),
+		"his_noun": _noun_of(him.who),
 		"foes": _duel.fighters.size() - 1,
 		"at": his_at,
 		"my_at": my_at,
@@ -495,6 +496,7 @@ func _duel_frame() -> Dictionary:
 	var fighters: Array = []
 	var centroid: Vector2 = my_at
 	var acting_kind: String = ""
+	var acting_noun: String = ""
 	var acting_name: String = ""
 	for fighter: DuelFighter in _duel.fighters:
 		if fighter.is_player():
@@ -506,6 +508,7 @@ func _duel_frame() -> Dictionary:
 		if acting == fighter:
 			acting_name = _fighter_name(fighter.who)
 			acting_kind = _beast_kind(fighter.who)
+			acting_noun = _noun_of(fighter.who)
 		fighters.append({
 			"who": String(fighter.who),
 			"kind": String(kind),
@@ -540,6 +543,7 @@ func _duel_frame() -> Dictionary:
 	if acting_name != "":
 		reading["acting_name"] = acting_name
 		reading["acting_kind"] = acting_kind
+		reading["acting_noun"] = acting_noun
 	# **The arrow in the air** (T5): loosed half way through the archer's wind-up and landing
 	# on the step her strike does, from her to whoever she shot. Nothing is announced
 	# before it — « je tire, ça tire ».
@@ -593,6 +597,18 @@ func _fighter_name(who: StringName) -> String:
 	# A man nobody names, by his trade (T9): *un garde de l'usine*.
 	var trade := StringName("fighter.%s" % kind)
 	return Text.of(trade) if Text.has(trade) else String(kind).capitalize()
+
+
+## **What a fighter is called in a sentence**, for « Au tour du … » (the review of T9): a
+## beast by its noun, a man the cast names by his trade by his, and anybody else by
+## nothing — his own name is said as it is.
+func _noun_of(who: StringName) -> String:
+	var kind: StringName = DuelRules.kind_of(who)
+	var beast := StringName("beast.%s.noun" % kind)
+	if Text.has(beast):
+		return Text.of(beast)
+	var trade := StringName("fighter.%s.noun" % DuelRules.trade_of(who))
+	return Text.of(trade) if Text.has(trade) else ""
 
 
 ## The kind of beast a fighter is, or empty for a person.

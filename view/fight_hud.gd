@@ -261,7 +261,9 @@ func _take_blow(blow: Dictionary) -> void:
 	if kind == "blow_landed":
 		var damage: int = int(blow.get("damage", 0))
 		var guarded: bool = bool(blow.get("guarded", false))
-		var text: String = "-%d" % damage
+		# A blow for nothing still landed — a lesson's partner stops at one point — and says
+		# so, rather than « -0 » (the review of T9).
+		var text: String = "-%d" % damage if damage > 0 else Text.of(&"fight.touched")
 		if guarded:
 			text = "%s  %s" % [text, Text.of(&"fight.blocked")]
 		# The number is the colour of the one who *threw* it: gold when you hit him,
@@ -330,12 +332,7 @@ func _draw() -> void:
 	elif not settling:
 		# **Whose turn it is** (K4). A turn-based fight that does not say so is a fight
 		# the player stands in wondering why nothing is happening.
-		# Named for whoever is acting, when several are (O6).
-		var acting: String = String(_reading.get("acting_name", his_name))
-		var acting_kind: String = String(_reading.get("acting_kind", _reading.get("his_kind", "")))
-		var whose: String = Text.of(&"duel.your_turn") if bool(_reading.get("my_turn", false)) \
-			else (Text.of(&"duel.beast_turn", [Text.of(StringName("beast.%s.noun" % acting_kind))]) if acting_kind != ""
-				else Text.of(&"duel.his_turn", [acting]))
+		var whose: String = whose_turn()
 		var tone: Color = MINE if bool(_reading.get("my_turn", false)) else HIS
 		tone.a = _alpha
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
@@ -452,6 +449,19 @@ func keys_line() -> String:
 		parts.append(Text.of(&"duel.part.spell"))
 	parts.append(Text.of(&"duel.part.wait"))
 	return "        ".join(parts)
+
+
+## **Whose turn it is, in words** (K4): yours; a beast's or a man's named by his trade
+## from the noun — « Au tour du loup », « Au tour du portier » (the review of T9: it read
+## « À Le portier des Forges ») — and anybody else's by name. Named for whoever is acting,
+## when several are (O6).
+func whose_turn() -> String:
+	if bool(_reading.get("my_turn", false)):
+		return Text.of(&"duel.your_turn")
+	var noun: String = String(_reading.get("acting_noun", _reading.get("his_noun", "")))
+	if noun != "":
+		return Text.of(&"duel.beast_turn", [noun])
+	return Text.of(&"duel.his_turn", [String(_reading.get("acting_name", _reading.get("his_name", "")))])
 
 
 func float_words() -> PackedStringArray:
