@@ -65,7 +65,7 @@
         "hair": [40, 0.65, 0.45, 1.0],
         "leather": [15, 0.7, 0.35, 0.45]
       },
-      "pieces": [["remove_pack"], ["gloves", {"colour": [20, 0.55, 0.30]}], ["apron"], ["headscarf", {"colour": [0, 0.55, 0.35]}]]
+      "pieces": [["remove_pack"], ["gloves", {"colour": [20, 0.55, 0.30]}], ["apron"], ["headscarf", {"colour": [40, 0.28, 0.72]}]]
     },
     "villager_a": {
       "_why": "Civilians, in undyed and plant-dyed cloth, no pack — they are at home. A straw hat, a red headscarf, and two bare heads.",

@@ -2370,6 +2370,17 @@ Frames in Brindle and the quarter.
 Est. 3 h. Bram older and plainer, Wren the hunter — a hood and a bow. Frames of the hail
 and of each lesson.
 
+> **L3–L7 built together, 2026-09-30.** L1's tool dresses every type at once, so what
+> was left of each task was its check: frames of each type where the demo shows it,
+> gathered on one page, `docs/frames/cast/in_game.png` — the king's guards at the gate
+> (three in blackened plate round the player, the gatekeeper in the works' ochre), the
+> quest's guards at a furnace (a sword and a bow, told apart before either acts), the
+> workers outside the works, Sena in the quarter, Bram and Wren at the bow lesson and at
+> the hail. **One change came out of looking:** at the game's size Tom's rust scarf and
+> Sena's dark red one were the same colour, and the player is sent from one to the other;
+> Sena's (`worker_c`) is pale linen now. The tool is deterministic — rebuilding changed
+> that one sheet and no other.
+
 ### L8 · Photographs, a review, the letter
 
 Est. 3 h. The opening's frames and the works' in both languages; the review sub-agent;
