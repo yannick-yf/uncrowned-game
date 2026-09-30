@@ -412,12 +412,11 @@ func test_a_scaled_piece_reads_back_at_its_scale() -> void:
 
 
 func test_his_brother_has_drawn_no_grave() -> void:
-	# **A DEBT and not a failure.** Nothing in his library or his catalogues is a grave,
-	# a headstone or a cross, so the cemetery's markers are ours, made in his materials
-	# (Yannick widened the wolf's exception to them, 2026-09-29), over his loose earth and
-	# fallow narrowed — and it shows.
-	# `docs/POUR_SLOSINIO.md` asks him for a cemetery kit; the day one arrives, this fails
-	# and the brief's cemetery is rebuilt from it.
+	# **A watch, not a debt, since 2026-09-30.** Nothing in his library or his catalogues
+	# is a grave, a headstone or a cross, so the cemetery's markers are ours, made in his
+	# materials. Yannick then widened the art rule (`CLAUDE.md`): we may make what the game
+	# needs as long as it is coherent with his hand, so nothing is owed. This still fails
+	# the day he delivers one, so that somebody chooses between his and ours.
 	var found: PackedStringArray = PackedStringArray()
 	for folder: String in ["assets", "prototype_3d/assets/library"]:
 		var at: String = "res://view3d/workshop/%s" % folder
@@ -427,10 +426,8 @@ func test_his_brother_has_drawn_no_grave() -> void:
 				for word: String in ["grave", "tomb", "stele", "stèle", "croix", "cemetery", "cimetiere", "headstone"]:
 					if lower.contains(word):
 						found.append(name)
-	if found.is_empty():
-		debt("his brother has drawn no grave: the cemetery's markers are ours, made in his materials")
-		return
-	assert_true(false, "he has drawn one — rebuild the cemetery from it: %s" % ", ".join(found))
+	assert_true(found.is_empty(),
+		"he has drawn one — choose between his and ours for the cemetery: %s" % ", ".join(found))
 
 
 func _files_under(path: String) -> PackedStringArray:

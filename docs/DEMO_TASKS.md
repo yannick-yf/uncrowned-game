@@ -2286,22 +2286,40 @@ standing still costs more than moving.
 | **The villagers** | Civilian clothes, distinct from the workers |
 | **Bram and Wren** | A look of their own each, easy to know |
 
-**The method, and the art rule.** This is a fourth exception to the art rule, asked for by
-Yannick like the three before it, and it keeps their first condition as closely as a new
-look allows: **it is his painting, recoloured**. A tool reads his traveller sheet and moves
-each region of it — hair, shirt, trousers, boots, bag — to another colour while keeping
-every value of his brush, so the shading stays his; pieces he never drew (a helmet, an
-apron, a bow on the back, a hood) are painted from his own figure's pixels where possible,
-and are the part that shows another hand. Nothing downloaded. His files untouched. Written
-into CLAUDE.md's art rule and `POUR_SLOSINIO.md` in L1, and a test reports the debt: the day
-he draws the cast, this goes.
+**The method, and the art rule.** It began as a fourth exception to the art rule, and on
+the same day Yannick rewrote the rule: *« On peut dessiner tout ce dont on a besoin. Juste
+on doit avoir une cohérence graphique. »* — we may draw what the game needs, in 2D and 3D,
+as long as it is coherent with his brother's hand (`CLAUDE.md`, *Art rule*). The method
+is the one that keeps it coherent: **his painting, recoloured**. A tool reads his
+traveller sheet and moves each region of it — hair, shirt, trousers, leather, skin — to
+another colour while keeping every value of his brush, so the shading stays his; pieces he
+never drew (a helm, a cap, a hood, a hat, an apron, a beard, a sword, a bow) are painted
+over him in his manner — his outline, his light, a painted grain — and measured on each
+frame. Nothing downloaded. His files untouched. Written into `POUR_SLOSINIO.md` §15.
 
-### L1 · The method, and a board of proposals — **first**
+### L1 · The method, and a board of proposals — **built 2026-09-30**
 
 Est. 4 h. The recolouring tool (`tools/draw_cast_looks.gd`, beside `draw_fight_frames.gd`),
 its region masks tested against his sheet, and **one board**: every type side by side,
 front and side, at the game's size and close up, in the game's light. **Check:** Yannick
 picks or corrects each look from the board before any of it reaches the game.
+
+> **Built.** The board was prototyped first and shown as
+> `docs/frames/cast/L1_proposals.png`; Yannick validated every look (*« je valide
+> tout »*), asked for **Bram's sword at his belt**, kept **the player exactly as his
+> brother drew him**, agreed that villagers and workers lose the backpack, and made the
+> colours and the pieces ours — then rewrote the art rule. The tool is the prototype in
+> GDScript: `content/looks.json` holds thirteen recipes (the king's guards, **the watch** —
+> the king's ordinary men, light, added so that heavy armour means *unbeatable* and
+> nothing else — the works' guards and archers, three workers, four villagers, Bram,
+> Wren) and who wears which; `view/cast_looks.gd` reads it for the window and the tool;
+> `view3d/cast/<look>.png` is one sheet per look in his sheet's layout, his walk frames
+> and our sixteen fight cells dressed alike (a flinch is dressed as its idle frame and cut
+> as `draw_fight_frames.gd` cuts it). `docs/frames/cast/looks.png` is the tool's own
+> board. `test_cast_looks` holds it: every look has a sheet his size and a recipe the tool
+> can follow, his frames measure as the recipes assume, a look keeps his outline, and the
+> room kept round his frames (8 px, above and beside, never below) reaches no neighbour.
+> The three DEBT lines for what his brother had not drawn became watches.
 
 ### L2 · Each person wears their type's look
 

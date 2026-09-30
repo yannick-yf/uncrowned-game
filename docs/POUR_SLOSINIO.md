@@ -1,7 +1,7 @@
 # Pour slosinio — ce qu'on apprend en branchant la simulation sur ta carte
 
 Écrit en français, pour toi. Mis à jour au fur et à mesure du travail.
-Dernière mise à jour : 2026-09-18 (les gens qui marchent).
+Dernière mise à jour : 2026-09-30 (la nouvelle règle des dessins, et les tenues).
 
 **Ta liste de tâches, en une page, est à côté : `docs/TACHES_POUR_SLOSINIO.md`** (2026-09-29).
 
@@ -503,3 +503,54 @@ cimetière. Il n'y a plus d'anneau de bois à planter autour.
 
 Ta liste de tâches à jour est dans `docs/TACHES_POUR_SLOSINIO.md`.
 
+
+## 15. La règle change : on dessine aussi, en restant fidèles à ton style (2026-09-30)
+
+Yannick a changé la règle des dessins. Jusqu'ici, tout ce qu'on voyait dans le jeu venait
+de toi. Quand tu n'avais pas dessiné quelque chose, on posait un bloc peint avec ta roche.
+Il y avait trois exceptions, décidées une par une : les images de combat, le loup, les
+stèles et les feux de camp.
+
+**Maintenant, on peut dessiner nous aussi, en 2D et en 3D, tout ce dont le jeu a besoin.**
+Yannick sait que tu utilises aussi Codex pour tes objets 3D. La seule condition est la
+**cohérence** : ce qu'on fait doit ressembler à ton travail. Pour nous, ça veut dire :
+
+- nos objets 3D sont en low-poly et portent tes matières (`styled_rock`, `styled_wood`,
+  `styled_dark`, tes braises) ;
+- nos images de personnages gardent ton contour sombre, ta lumière venue d'en haut à
+  gauche et ta texture peinte ;
+- on ne télécharge rien : ce serait la main d'un troisième artiste ;
+- on ne touche jamais à tes fichiers ;
+- tout ce qu'on fait est noté ici.
+
+Les trois « exceptions » ne sont donc plus des exceptions. Un test surveille toujours ta
+bibliothèque : le jour où tu livres un coup, un animal ou une tombe, il nous prévient, et
+on choisit entre le tien et le nôtre.
+
+**Les tenues des personnages.** Tout le monde était ton voyageur : cheveux roux, chemise
+bleue, sac à dos. Dans un combat, on voyait six fois le même homme. Yannick a demandé que
+chaque type de personnage se reconnaisse du premier coup d'œil. On a donc **habillé ton
+voyageur, sans le redessiner** : la couleur des cheveux et des vêtements change, mais tes
+ombres restent, pixel par pixel. Par-dessus, on dessine ce que tu n'as pas fait : un casque,
+un bonnet, une capuche, un chapeau de paille, un tablier, une barbe, une épée, un arc.
+
+Il y a treize tenues :
+
+- **les gardes du roi** : armure noircie, casque fermé avec un plumet rouge, tunique
+  rouge à couronne, bouclier dans le dos, 20 % plus grands que les autres. Ils doivent
+  avoir l'air impossibles à battre ;
+- **la garde** (le pont, les soldats) : rouge du roi, mais en tissu, avec une calotte de
+  fer et une épée à la ceinture ;
+- **les gardes et les archers de l'usine** : ocre, la couleur de l'usine, un bonnet de
+  cuir, une épée ou un arc à la main ;
+- **trois ouvriers** : vêtements sombres, tablier de cuir, gants, foulard ;
+- **quatre villageois** : toile claire, un chapeau de paille, un foulard rouge, deux têtes
+  nues, et plus de sac à dos ;
+- **Bram** : cheveux gris, barbe courte, épée à la ceinture ;
+- **Wren** : capuche verte, arc à la main, carquois dans le dos.
+
+**Le joueur reste ton voyageur, exactement.** La planche est dans
+`docs/frames/cast/looks.png`, et l'outil qui les fabrique est `tools/draw_cast_looks.gd`.
+
+Si un jour tu dessines les vrais personnages, on remplace les nôtres, ou on choisit
+ensemble.

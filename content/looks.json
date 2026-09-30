@@ -1,0 +1,171 @@
+{
+  "_note": "Group L (2026-09-30): what each kind of person wears, and who wears which. Each look is a sheet built by tools/draw_cast_looks.gd from his traveller, recoloured region by region ('recolour': hue in degrees, saturation scale, saturation floor, value scale — his values kept) and dressed with pieces drawn in his manner ('pieces', in order). Yannick chose every look from docs/frames/cast/L1_proposals.png. The player wears none: he stays as the brother drew him. view/cast_looks.gd reads this for the window and the tool.",
+  "room_px": 8,
+  "_room_note": "Pixels kept above and beside each of his frames for what stands out of a man (a plume, a bow). The window widens his frames by as much and shrinks their margins to match, so nothing moves.",
+  "looks": {
+    "kings_guard": {
+      "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, and a fifth taller than anybody.",
+      "scale": 1.2,
+      "recolour": {},
+      "pieces": [["iron_body"], ["surcoat"], ["shield_on_back"], ["bascinet"], ["pauldrons"]]
+    },
+    "watch": {
+      "_why": "The king's ordinary men — the bridge, the watch, the Muster: his red, but cloth and an iron cap, a sword at the belt. Light, so beatable, which is what the eye should read.",
+      "recolour": {
+        "shirt": [356, 0.9, 0.45, 0.62],
+        "trousers": [30, 1.0, 0.25, 0.9],
+        "hair": [22, 0.6, 0.35, 0.5],
+        "leather": [22, 1.0, 0.45, 0.7]
+      },
+      "pieces": [["remove_pack"], ["cap", {"colour": [218, 0.24, 0.42]}], ["scabbard"]]
+    },
+    "works_guard": {
+      "_why": "The quest's guards, and the works' own men: ochre, the works' colour, a leather cap, a sword in the hand.",
+      "recolour": {
+        "shirt": [40, 0.95, 0.55, 0.95],
+        "trousers": [28, 1.0, 0.30, 1.0],
+        "hair": [26, 0.6, 0.38, 0.55],
+        "leather": [22, 1.0, 0.45, 0.7]
+      },
+      "pieces": [["remove_pack"], ["cap", {"colour": [26, 0.55, 0.36]}], ["sword_in_hand"]]
+    },
+    "works_archer": {
+      "_why": "The same livery, a bow in the hand and a quiver where the pack was: told from the swordsman before either acts.",
+      "recolour": {
+        "shirt": [40, 0.95, 0.55, 0.95],
+        "trousers": [28, 1.0, 0.30, 1.0],
+        "hair": [35, 0.7, 0.4, 0.95],
+        "leather": [22, 1.0, 0.45, 0.7]
+      },
+      "pieces": [["quiver"], ["cap", {"colour": [26, 0.55, 0.36]}], ["bow_in_hand"]]
+    },
+    "worker_a": {
+      "_why": "The ironworks' workers: sooty clothes, a leather apron, heavy gloves, a cloth over the hair. Three, so a shift is not one man repeated.",
+      "recolour": {
+        "shirt": [205, 0.2, 0.24, 0.42],
+        "trousers": [220, 0.3, 0.12, 0.6],
+        "hair": [20, 0.45, 0.30, 0.35],
+        "leather": [15, 0.7, 0.35, 0.45]
+      },
+      "pieces": [["remove_pack"], ["gloves", {"colour": [20, 0.55, 0.30]}], ["apron"], ["headscarf", {"colour": [215, 0.30, 0.30]}]]
+    },
+    "worker_b": {
+      "recolour": {
+        "shirt": [30, 0.25, 0.22, 0.40],
+        "trousers": [220, 0.3, 0.12, 0.6],
+        "hair": [25, 0.55, 0.35, 0.6],
+        "leather": [15, 0.7, 0.35, 0.45]
+      },
+      "pieces": [["remove_pack"], ["gloves", {"colour": [20, 0.55, 0.30]}], ["apron"], ["headscarf", {"colour": [18, 0.60, 0.42]}]]
+    },
+    "worker_c": {
+      "recolour": {
+        "shirt": [215, 0.2, 0.24, 0.42],
+        "trousers": [220, 0.3, 0.12, 0.6],
+        "hair": [40, 0.65, 0.45, 1.0],
+        "leather": [15, 0.7, 0.35, 0.45]
+      },
+      "pieces": [["remove_pack"], ["gloves", {"colour": [20, 0.55, 0.30]}], ["apron"], ["headscarf", {"colour": [0, 0.55, 0.35]}]]
+    },
+    "villager_a": {
+      "_why": "Civilians, in undyed and plant-dyed cloth, no pack — they are at home. A straw hat, a red headscarf, and two bare heads.",
+      "recolour": {
+        "shirt": [38, 0.40, 0.28, 0.95],
+        "trousers": [95, 0.9, 0.26, 1.1],
+        "hair": [38, 0.70, 0.45, 1.05]
+      },
+      "pieces": [["remove_pack"], ["straw_hat"]]
+    },
+    "villager_b": {
+      "recolour": {
+        "shirt": [150, 0.35, 0.26, 0.70],
+        "trousers": [28, 1.0, 0.26, 0.95],
+        "hair": [18, 0.55, 0.40, 0.45]
+      },
+      "pieces": [["remove_pack"], ["headscarf", {"colour": [4, 0.60, 0.58]}]]
+    },
+    "villager_c": {
+      "recolour": {
+        "shirt": [28, 0.45, 0.30, 0.75],
+        "trousers": [40, 0.8, 0.26, 0.8],
+        "hair": [15, 0.5, 0.35, 0.35]
+      },
+      "pieces": [["remove_pack"]]
+    },
+    "villager_d": {
+      "recolour": {
+        "shirt": [80, 0.35, 0.28, 0.65],
+        "trousers": [25, 1.0, 0.26, 0.8],
+        "hair": [30, 0.6, 0.4, 0.8]
+      },
+      "pieces": [["remove_pack"]]
+    },
+    "bram": {
+      "_why": "The survivor who teaches the sword: grey hair, a short grey beard, a tunic the colour of old wine, his sword at the belt (Yannick, 2026-09-30).",
+      "recolour": {
+        "shirt": [2, 0.70, 0.40, 0.55],
+        "trousers": [25, 1.0, 0.28, 0.85],
+        "hair": [32, 0.26, 0.24, 0.92],
+        "leather": [25, 0.9, 0.45, 0.65]
+      },
+      "pieces": [["remove_pack"], ["beard", {"colour": [32, 0.24, 0.80]}], ["scabbard"]]
+    },
+    "wren": {
+      "_why": "The hunter who teaches the bow: a green hood, a bow in the hand, a quiver on the back.",
+      "recolour": {
+        "shirt": [135, 0.55, 0.32, 0.55],
+        "trousers": [30, 1.0, 0.28, 0.9],
+        "hair": [44, 0.85, 0.50, 1.2],
+        "leather": [28, 1.0, 0.5, 0.8]
+      },
+      "pieces": [["quiver"], ["hood", {"colour": [130, 0.50, 0.40]}], ["bow_in_hand", {"colour": [30, 0.6, 0.5]}]]
+    }
+  },
+  "_people_note": "Named people by id. Anybody not listed is a villager, chosen by their id so it never changes. The fairy has no body and wears nothing.",
+  "people": {
+    "bram": "bram",
+    "wren": "wren",
+    "harry": "worker_a",
+    "tom": "worker_b",
+    "sena": "worker_c",
+    "ivo": "villager_c",
+    "maddox": "villager_c",
+    "tovin": "villager_d",
+    "bell": "villager_b",
+    "ossa": "villager_b",
+    "garrick": "villager_a",
+    "cadan": "villager_d",
+    "nessa": "villager_b",
+    "pell": "villager_a",
+    "ryse": "watch",
+    "odile": "watch",
+    "kell": "watch",
+    "til": "villager_c",
+    "mira": "villager_d",
+    "corvin": "villager_d",
+    "peyre": "villager_c",
+    "anselm": "villager_d",
+    "hesper": "villager_b",
+    "aurel": "villager_d",
+    "arthur": "kings_guard",
+    "dray": "kings_guard"
+  },
+  "strangers": {
+    "trader": "villager_a",
+    "guard": "watch",
+    "gatekeeper": "works_guard",
+    "watchman": "watch"
+  },
+  "strangers_by_place": {
+    "cinderworks": {"watchman": "works_guard"}
+  },
+  "fighters": {
+    "kings_guard": "kings_guard",
+    "works_guard": "works_guard",
+    "works_archer": "works_archer"
+  },
+  "escort": "kings_guard",
+  "crowd": ["villager_a", "villager_b", "villager_c", "villager_d"],
+  "workers": ["worker_a", "worker_b", "worker_c"],
+  "workers_at": ["cinderworks"]
+}

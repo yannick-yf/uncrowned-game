@@ -2,13 +2,12 @@ extends SceneTree
 
 ## Builds `view3d/fight/traveler_sheet.png`: his traveller fighting, in four facings.
 ##
-## **This breaks the art rule, on Yannick's explicit call (2026-09-19, widened
-## 2026-09-24).** `CLAUDE.md` says the figures are his brother's and that what he has not
-## drawn should be *visibly missing*. He has drawn eight animations — idle and walk, four
-## directions — and no attack, no guard and no flinch, so a fight showed three different
-## actions as a person standing still. Yannick was told that a second hand on his
-## brother's character would show, said to do it anyway, and this is it. It is written
-## down in the art rule and in `docs/POUR_SLOSINIO.md` so his brother is not surprised.
+## **It broke the art rule, on Yannick's explicit call (2026-09-19, widened 2026-09-24)**,
+## and since 2026-09-30 it does not: he rewrote the rule — we may draw what the game
+## needs, as long as it is coherent with his brother's hand (`CLAUDE.md`, *Art rule*). His
+## brother has drawn eight animations — idle and walk, four directions — and no attack, no
+## guard and no flinch, so a fight showed three different actions as a person standing
+## still. It is written down in `docs/POUR_SLOSINIO.md` so his brother is not surprised.
 ##
 ## **Twelve frames since K5, and the reason is the grid.** The first pass drew left and
 ## right only, which was enough while a fight ran along one axis. `docs/COMBAT_V2.md`

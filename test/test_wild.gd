@@ -249,11 +249,11 @@ func test_a_pack_you_beat_is_gone_and_one_you_walk_away_from_is_not() -> void:
 
 
 func test_his_brother_has_drawn_no_beast() -> void:
-	# **A DEBT and not a failure** (`CLAUDE.md`: a debt names something a person has to
-	# settle). There is no animal anywhere in his library. A wolf was first a plain block
-	# in his rock paint; since 2026-09-26 it is a low-poly wolf **made here** from two of
-	# his materials, at Yannick's request — ours, and it shows, which is why this is still
-	# owed rather than settled. `docs/POUR_SLOSINIO.md` asks him for the real one.
+	# **A watch, not a debt, since 2026-09-30.** There is no animal anywhere in his library,
+	# and the wolf is a low-poly one **made here** from two of his materials. Yannick then
+	# widened the art rule (`CLAUDE.md`): we may make what the game needs as long as it is
+	# coherent with his hand, so nothing is owed. This still fails the day he delivers a
+	# beast, so that somebody chooses between his and ours.
 	var found: PackedStringArray = PackedStringArray()
 	for folder: String in ["assets", "prototype_3d/assets/library"]:
 		var at: String = "res://view3d/workshop/%s" % folder
@@ -261,10 +261,7 @@ func test_his_brother_has_drawn_no_beast() -> void:
 			for name: String in _under(at):
 				if name.to_lower().contains("wolf") or name.to_lower().contains("beast"):
 					found.append(name)
-	if found.is_empty():
-		debt("his brother has drawn no animal: a wolf is ours, built from his two materials")
-		return
-	assert_true(false, "he has drawn one — delete the block: %s" % ", ".join(found))
+	assert_true(found.is_empty(), "he has drawn one — choose between his and ours: %s" % ", ".join(found))
 
 
 func _under(path: String) -> PackedStringArray:

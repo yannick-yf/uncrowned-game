@@ -110,87 +110,84 @@ rendering layer replaceable. Everything below protects it.
 
 ## Art rule
 
-**Amended 2026-09-13 (v3), sharpened 2026-09-14.** The pack rule below describes the 2D
-map, which is no longer the game. In the 3D world the rule is stricter than "one
-family": **nothing of the 2D pack appears, ever** — no pixel figure, tree, house, stall
-or path, not even as a placeholder (Yannick, on seeing them). The assets are the
-brother's: his library, his traveller for every person until he draws the cast, and a
-plain block in his rock paint where he has not drawn a thing yet. What he has not made
-is *visibly missing*, and the bake's report and the suite's DEBT lines say what. His
-library carries a provenance-and-licence manifest and `test_workshop_provenance` refuses
-a file without one. Mixing artists is the mark of an amateur game in meshes exactly as
-in pixels. (The HUD's font is the pack's, and an open question.)
+**Rewritten 2026-09-30, by Yannick: we draw too, and the rule is coherence.** *« On peut
+dessiner tout ce dont on a besoin. Juste on doit avoir une cohérence graphique. »* His
+brother makes the world's 3D art — with Codex too — and we may now make 2D sprites and 3D
+pieces ourselves wherever the game needs them. What may not happen is a second style:
+anything of ours must read as his hand at fifty paces. Mixing styles is the mark of an
+amateur game, in meshes exactly as in pixels. Until that day the rule was stricter — his
+art only, a plain block in his rock paint where he had drawn nothing, and three
+exceptions Yannick made one by one; those three are simply things we made now, listed
+below with the fourth.
 
-**One exception, and Yannick made it deliberately (2026-09-19, widened 2026-09-24).** His
-brother had drawn no attack and no guard — eight animations, idle and walk in four
-directions — so a fight showed three different actions as a person standing still.
-Yannick was told plainly that a second hand on his brother's character would show, and
-said to do it anyway. So `tools/draw_fight_frames.gd` builds **twelve** frames — a cocked
-arm, a blow and a flinch in all four facings, plus the two guards drawn before the guard
-was cut — and `view3d/fight/traveler_sheet.png` is the result. It was six until Yannick
-played it and said the animation was very slight: the wind-up had no drawing at all,
-which is the half of a blow a person reads.
+**What keeps it coherent** — these stand:
 
-**North and south were added because the grid needed them (K5).** `docs/COMBAT_V2.md`
-puts fights on the world grid, where two fighters stand north and south of each other
-constantly, and Yannick refused the free answer — a blow thrown north drawn side-on —
-twice: *"Ok pour huit images, et même plus si nécessaire. On veut un rendu assez propre
-pour la demo v1."* His figure fills the cell from his hair to his boots, so the axial
-frames cannot lunge up or down the screen at all; what carries the blow is the arm's
-direction and the fact that the northward one goes **behind his hair** and the southward
-one falls past his knee. **The row order in the tool is load-bearing** — right and left
-are the last two rows, so `view/world3d.gd`, which counts our block up from the bottom of
-the sheet, still finds the first eight exactly where it left them.
+- **His style is the reference.** A 3D piece of ours is low-poly and wears his materials
+  (`styled_rock`, `styled_wood`, `styled_dark`, his furnaces' `embers`); a person is his
+  billboard traveller. A sprite of ours keeps his dark outline, his light from the top
+  left, his painted grain, and his shader's rule for what is background — a flat fill
+  beside his figure reads as somebody else's hand at once.
+- **Nothing of the 2D pack appears, ever** (2026-09-14): it is another style. The HUD's
+  font is the pack's, and an open question.
+- **Nothing downloaded.** A third artist's hand is the mix this rule is for; the wolf was
+  *made* rather than found for that reason (2026-09-26), and that stands until Yannick
+  says otherwise.
+- **His files are never touched.** `prototypes/` is his and our tools only read it; what
+  we make lives beside the window (`view3d/fight/`, `view3d/cast/`, the made pieces in
+  `view/world3d.gd`). His library carries a provenance-and-licence manifest and
+  `test_workshop_provenance` refuses a file without one.
+- **What we made is written down for him**, in `docs/POUR_SLOSINIO.md`, so he does not
+  discover it; and a test watches his library for each thing we made in his place (a
+  blow, a beast, a grave): it fails the day he delivers one, so that somebody chooses
+  between his and ours. **These are watches, not debts** — since 2026-09-30 nothing is
+  owed.
 
-Three things keep it honest, and none of them makes it *not* an exception:
+**What we have made:**
 
-- **No colour is invented**, and since K5 that is a test rather than a promise:
-  `test_no_colour_of_ours_is_absent_from_his_own_frame` walks all sixteen cells and fails
-  on one pixel that does not occur in the very frame of his it was built from. His hand
-  is copied to a new place, his sleeve laid down from a cross-section of his own sleeve,
-  his outline sampled from his own line. His figure is painted rather than flat — the
-  hair alone runs to thousands of browns — so a flat rectangle beside it would read as
-  somebody else's hand at fifty paces.
-- **His files are never touched.** `prototypes/` is his, the tool only reads it, and the
-  combined sheet and the extra animations are ours.
-- **It is written down where he will see it**, in `docs/POUR_SLOSINIO.md` §8, so he does
-  not discover it. `test_his_brother_has_not_drawn_a_blow` fails the day his own sheet
-  grows a ninth animation, and on that day this tool and this exception are deleted.
+1. **The fight frames** (2026-09-19, widened 2026-09-24). He had drawn no attack and no
+   guard — eight animations, idle and walk in four directions — so a fight showed three
+   actions as a person standing still. `tools/draw_fight_frames.gd` builds **twelve**
+   frames — a cocked arm, a blow and a flinch in all four facings, plus the two guards
+   drawn before the guard was cut — into `view3d/fight/traveler_sheet.png`. It was six
+   until Yannick played it and said the animation was very slight: the wind-up had no
+   drawing at all, which is the half of a blow a person reads. **North and south were
+   added because the grid needed them (K5)**: his figure fills the cell from hair to
+   boots, so the axial frames cannot lunge up or down the screen; what carries the blow
+   is the arm's direction, and the northward one goes **behind his hair**. **The row
+   order in the tool is load-bearing** — right and left are the last two rows, so
+   `view/world3d.gd`, which counts our block up from the bottom of the sheet, finds the
+   first eight where it left them. **No colour is invented**, and that is a test:
+   `test_no_colour_of_ours_is_absent_from_his_own_frame` walks all sixteen cells.
+2. **The wolf** (2026-09-26). A plain block in his rock paint read as two rocks biting the
+   player; Yannick asked for better, *« créer ou trouver »*, and finding was refused. So
+   `_wolf()` in `view/world3d.gd` is eleven boxes in the low-poly language his props
+   speak, **coloured only with `styled_rock` and `styled_dark`**.
+3. **The graves' markers and the fires** (2026-09-29). `_headstone()` (a rounded stele on
+   a plinth, his `styled_rock` only) and `_grave_board()` (a plank cut to a point, his
+   `styled_wood` only), placed by the brief as `"made"` pieces; and `_campfire()`,
+   **composed from his pieces** — his `boulder_round` small, his `fallen_log` cut to
+   firewood, his `embers`, his `fumee_ruine` smoke — with only the flames ours.
+   `test_world3d` fails on a marker surface that wears anything but his two paints.
+4. **The cast's looks** (2026-09-30, group L of `docs/DEMO_TASKS.md`). Every man was his
+   one traveller, six of him in one fight. `tools/draw_cast_looks.gd` dresses him as each
+   kind of person the demo shows — the king's guards in blackened plate a fifth taller,
+   the watch, the works' guards and archers, the ironworks' workers, the villagers, Bram
+   and Wren — into `view3d/cast/<look>.png`, one sheet per look in his sheet's layout.
+   **Recoloured, not repainted**: each region of him moves to another hue with every
+   value of his brush kept; what he never drew (a helm, a cap, a hood, a hat, an apron,
+   a beard, a sword, a bow) is painted over him in his manner and measured on each frame.
+   The recipes and who wears which are `content/looks.json`, read by `view/cast_looks.gd`.
+   **The player stays exactly as he drew him.** Yannick chose every look from
+   `docs/frames/cast/L1_proposals.png`.
 
-**A second exception, the wolf, and Yannick asked for it too (2026-09-26).** His
-brother has drawn no animal. The rule's usual answer — a plain block in his rock paint —
-was built first, and on a bridge it read as two rocks biting the player. Yannick asked
-for something better, *"créer ou trouver"*. **Finding was refused**: a downloaded wolf
-is a third artist's hand, and mixing artists is exactly what this rule is for. So it is
-**made** — `_wolf()` in `view/world3d.gd`, eleven boxes in the low-poly language his own
-props speak — and it keeps the same first condition as the frames: **coloured only with
-two of his materials**, `styled_rock` and `styled_dark`, nothing invented. It is ours
-and it shows; `test_his_brother_has_drawn_no_beast` still reports the debt, and the day
-he draws one this goes. `docs/POUR_SLOSINIO.md` tells him.
-
-**A third, the graves' markers and the fires (Yannick, 2026-09-29).** He has drawn no
-grave and no campfire. The cemetery's stones were first his `boulder_round` made small,
-and read as pebbles close to; a campfire was a 2×2 block in his rock paint, and it was
-the first thing the player saw on waking. Yannick widened the wolf's exception to the
-markers (*« pour les stèles je valide »*) and asked for a fire *« simple mais beau et
-visuel »*. So `view/world3d.gd` makes `_headstone()` (a rounded stele on a plinth, his
-`styled_rock` only) and `_grave_board()` (a plank cut to a point, his `styled_wood`
-only), placed by the brief as `"made"` pieces; and `_campfire()` is **composed from his
-pieces** — a ring of his `boulder_round` small, a teepee of his `fallen_log` cut to
-firewood, a bed in his furnaces' `embers` material, his `fumee_ruine` smoke, a light in
-his forge's colour — with only the flames ours, made the way his smoke is and coloured
-from fire already on the screen. `test_world3d` fails on a marker surface that wears
-anything but his two paints; `test_his_brother_has_drawn_no_grave` still reports the
-debt, and the day he draws one the brief names his piece.
-
-The sheet is **not** in `assets/`: that folder is the approved 2D pack's family and
+The sheets are **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
 has never lived there — his own sheet is in `prototypes/`.
 
-Free assets may be used, but only from the packs approved in `docs/SPECS.md` §13.
-**Never mix packs from different artists** — palettes, pixel densities and light
-angles do not reconcile, and mixing them is the clearest mark of an amateur game.
-Anything off-palette or off-grid should fail a validator, not reach the screen.
+**The 2D map** (the procedural world, kept for its tests and its history) still follows
+the pack rule it was built on: free assets only from the packs approved in
+`docs/SPECS.md` §13, never two packs from different artists, and anything off-palette or
+off-grid fails a validator rather than reaching the screen.
 
 ## Naming
 
@@ -224,6 +221,9 @@ prototypes/  The Brindle 3D workshop: a separate Godot project, kept out of the 
            import by `.gdignore`. His; open its own `project.godot`. Never edited by us.
 view3d/workshop/  A generated copy of his project with its paths repointed, so his
            scenes load in ours (tools/vendor_workshop.sh). Never committed, never edited.
+view3d/fight/, view3d/cast/  His traveller's sheet with our fight frames, and one sheet per
+           look of the cast — ours, made by tools/draw_fight_frames.gd and
+           tools/draw_cast_looks.gd (see *Art rule*). Committed; re-run the tool, never edit.
 ```
 
 ## Commands
@@ -260,8 +260,9 @@ refuse a tile only where the player can see why: his water, his rock at
 `BakeRules.ROCK_IMPASSABLE` (0.85) and above, his meshes, or a plain block of ours. A
 footprint shrinks to the piece his library stands for it (`kit_library` in the brief),
 and the castle's ramparts stand as blocks. `test_bake` fails on any wall tile the window
-does not draw. Do not fix an invisible wall by drawing something of ours — that is the
-art rule the other way round; open it, report it in the bake, and name the debt.
+does not draw. An invisible wall is never the answer: open it, report it in the bake and
+name the debt — or, since the art rule was rewritten (2026-09-30), draw what stands
+there, coherent with his hand.
 
 **Delivery ingestion (2026-09-15).** Run `tools/vendor_workshop.sh` before baking or
 checking a bake: `tools/workshop_geometry.gd` reads the copied ironworks collision
@@ -276,18 +277,18 @@ collision shapes cover, and has its catalogue and its scene hashed into the bake
 his catalogue before placing anything of his**: its `placement` note is the only document
 that says how a piece is meant to be used, and the first yard was built without it.
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
-commit checks. The current baked run prints **nine** DEBT lines — ten debts, one test owing two;
-the run's last line counts debts — for **seven** claims and
-three OFF lines (four until S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's road into Brindle, which the baked world does not claim). Four claims are the map's and the brief's (five until T2 deleted the clearing and its ring, 2026-09-29); three are **things his brother
-has not drawn** — a blow (`traveler_walk_frames.tres` holds idle and walk in four
-directions and no attack, no guard and no flinch, F5, 2026-09-19), a beast (the wolf, ours,
-2026-09-26) and a grave (the cemetery's markers are ours, made in his two paints, O13,
-2026-09-29). The procedural world prints the same three, plus **thirty-one** (34 lines, 35
-debts in all) that say
-the works' furnaces, its yard, the wolf packs and the opening's last two stages stand on
-his map and not on the 2D one, and five OFF lines — the two switches', one saying the 2D
-map's shore is sand and not his cliffs, and two claims about the hail's ground that only
-his map's layout can make.
+commit checks. The current baked run prints **six** DEBT lines — seven debts, one test owing two; the
+run's last line counts debts — for **four** claims, all the map's and the brief's (five
+until T2 deleted the clearing and its ring, 2026-09-29), and three OFF lines (four until
+S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's
+road into Brindle, which the baked world does not claim). **Three more were things his
+brother had not drawn** — a blow, a beast, a grave — and since the art rule was rewritten
+on 2026-09-30 they are watches and not debts: nothing is owed. The procedural world
+prints **thirty-one** DEBT lines (thirty-two debts) that say the works' furnaces, its
+yard, the wolf packs and the opening's last two stages stand on his map and not on the
+2D one, and five OFF lines — the two switches', one saying the 2D map's shore is sand and
+not his cliffs, and two claims about the hail's ground that only his map's layout can
+make.
 
 ### Committing — read this before your first `git commit`
 
@@ -374,9 +375,9 @@ position or the pace. A test says where it stands in the world's terms —
 scaled by the world's pace (`_at_pace`), never hard-coded. A line marked **`DEBT`** in
 the run is the map's or the brief's, not the code's: a claim the spec makes that the
 baked world does not yet meet (`TestCase.debt`), printed so it is read and counted
-apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Seven claims
-stand today — four the map's and the brief's, three things his brother has not drawn;
-they are listed above, under *Delivery ingestion*. Never turn a failure
+apart so the suite stays green while `docs/MIGRATION_3D.md` §5 is open. Four claims
+stand today, all the map's and the brief's; they are counted above, under *Delivery
+ingestion*. Never turn a failure
 into a debt to get green; a debt names something a person has to settle. A line marked **`OFF`** is the third kind
 (`TestCase.off`): a claim that holds only while one of the testing switches below is
 on, printed so the switch is not forgotten and counted apart so the claim is not lost —
@@ -611,7 +612,7 @@ reconstruct it from forty commits will get it wrong.
 | **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version. **He played it the same evening**: the combat tutorial is the one finding — group T |
 | **T** | **Built, T1–T10** (2026-09-29/30), from Yannick's first play of the opening: his rulings written down, the clearing out, a page of tasks for his brother (`docs/TACHES_POUR_SLOSINIO.md`), the fast suite profiled (41 s to about 25), **the bow redone** — an arrow lands when it is shot, Bram's line hands you a bow, **U** changes the weapon in your hands — every lesson's card with **its steps and keys and a hint for where you stand** (and the first round's HUD, which drew no keys, fixed), and **the gatekeeper's guards, who keep coming**: that fight cannot be won, and the gate stays manned and shut. A fresh-eyes review walked it; its seven findings are fixed. **The check is Yannick playing the tutorial again** |
 | **V** | **Built, V0–V5** (2026-09-30): Yannick's revision of the gate — three very strong king's guards (40 points, blows of 10) answer an attack; beating the four forces the gate, open and empty; then the furnaces are the player's — putting one out brings three more guards, lighting one brings Tom. A review walked it and its five findings are fixed. **The check is Yannick playing it, with G** |
-| **L** | **The work now** (2026-09-30): after V6, every type of person told apart at a glance — the king's guards heavy, the quest's guards light, workers, villagers, Bram and Wren — by recolouring his traveller. L1 is a board of proposals for Yannick to choose from. **P2 comes after L** |
+| **L** | **The work now** (2026-09-30): every type of person told apart at a glance — the king's guards heavy, the quest's guards light, workers, villagers, Bram and Wren. **L1 built**: the tool (`tools/draw_cast_looks.gd`), the recipes (`content/looks.json`), thirteen looks Yannick chose from a board, and **the art rule rewritten the same day** — we may draw what the game needs, coherent with his brother's hand. L2 puts them on the people. **P2 comes after L** |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

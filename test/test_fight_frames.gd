@@ -1,20 +1,19 @@
 extends TestCase
 
-## The twelve frames of the fight, and the three conditions the exception stands on.
+## The twelve frames of the fight, and the three promises they were made under.
 ##
 ## `tools/draw_fight_frames.gd` draws on his brother's character, which `CLAUDE.md`'s art
-## rule forbids and which Yannick allowed anyway, twice: eight frames on 2026-09-19 and
-## six more on 2026-09-24, when the fight moved onto the world grid and two fighters
-## started standing north and south of each other. The exception is only tolerable
-## because of three promises, and two of them can be checked by a machine rather than
-## remembered by a person:
+## rule forbade until 2026-09-30 and which Yannick allowed anyway, twice: eight frames on
+## 2026-09-19 and six more on 2026-09-24, when the fight moved onto the world grid. Since
+## 2026-09-30 the rule is coherence with his hand, and these three promises are how the
+## frames keep it; two of them can be checked by a machine rather than remembered:
 ##
 ## - **No colour is invented.** Every pixel of ours occurs in the very frame of his it was
 ##   built from. `test_no_colour_of_ours_is_absent_from_his_own_frame` walks all sixteen
 ##   cells and says so pixel by pixel.
 ## - **His files are never touched, and ours is not in `assets/`.**
 ##   `test_the_tool_reads_his_folder_and_writes_ours`.
-## - **It is deleted the day he draws his own.** `test_his_brother_has_not_drawn_a_blow`,
+## - **His, the day he draws his own — or ours, by choice.** `test_his_brother_has_not_drawn_a_blow`,
 ##   below, fails on a ninth animation of his. It lived in `test_combat.gd` until that
 ##   file went with the first design (K6, 2026-09-26).
 ##
@@ -227,7 +226,9 @@ func _differing(sheet: Image, one: Vector2i, other: Vector2i) -> int:
 
 func test_his_brother_has_not_drawn_a_blow() -> void:
 	# Written down as a test rather than as a note, so the day the sheet gains an
-	# `attack_left` this fails and somebody goes and uses it.
+	# `attack_left` this fails and somebody chooses between his and ours. **A watch and not
+	# a debt since 2026-09-30**, when Yannick widened the art rule: we may draw what the
+	# game needs, coherent with his hand, so our frames owe nobody anything.
 	var frames: SpriteFrames = load(World3d.HIS_FRAMES) as SpriteFrames
 	if frames == null:
 		debt("his workshop is not copied in; run tools/vendor_workshop.sh")
@@ -239,8 +240,6 @@ func test_his_brother_has_not_drawn_a_blow() -> void:
 	for way: String in ["up", "down", "left", "right"]:
 		assert_true(names.has("idle_" + way), "idle_%s" % way)
 		assert_true(names.has("walk_" + way), "walk_%s" % way)
-	debt("he has drawn no attack, guard or flinch; ours are built from his own pixels by "
-		+ "tools/draw_fight_frames.gd — delete both the day he draws them")
 
 
 func test_the_frames_we_drew_are_there() -> void:
