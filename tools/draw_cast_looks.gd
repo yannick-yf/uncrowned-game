@@ -14,8 +14,8 @@ extends SceneTree
 ## **How it stays coherent.** A look is his figure first and ours second:
 ##
 ## - **Recoloured, not repainted.** Each region of his figure — hair, shirt, trousers,
-##   leather, skin — is moved to another hue while every value of his brush is kept, so
-##   the shading, the outline and the grain under a look are his, pixel for pixel.
+##   leather, skin — is moved to another hue with the values of his brush scaled rather
+##   than replaced, so the shape of his shading, his outline and his grain stay his.
 ## - **Pieces drawn in his manner.** What he never drew — a helm, a cap, a hood, a hat,
 ##   an apron, a beard, a sword, a bow — is painted over him with his dark outline, his
 ##   light from the top left and a painted grain, never a flat fill.
@@ -40,6 +40,9 @@ extends SceneTree
 ##     godot --headless --path . -s tools/draw_cast_looks.gd
 ##     godot --headless --path . -s tools/draw_cast_looks.gd -- --board
 ##     godot --headless --path . -s tools/draw_cast_looks.gd -- --only bram
+##
+## A full run also writes `view3d/cast/recipes_drawn.json`, the recipes the sheets were
+## drawn from; `test_cast_looks` fails when `content/looks.json` has moved on without them.
 ##
 ## `--board` also writes `docs/frames/cast/looks.png`: every look standing in three
 ## facings, close up and at the size the game shows it, with his shader's discard applied.
@@ -86,6 +89,8 @@ class Fig:
 	var has_legs: bool = false
 	var hands: Array[Vector2i] = []
 	var hand: PackedByteArray
+	## In one of our cells: what the cell has that its idle frame had not — the arm moved.
+	var moved: PackedByteArray
 	var pack: PackedByteArray
 	var lo: PackedInt32Array
 	var hi: PackedInt32Array
@@ -101,6 +106,8 @@ class Fig:
 		pack.resize(w * h)
 		hand = PackedByteArray()
 		hand.resize(w * h)
+		moved = PackedByteArray()
+		moved.resize(w * h)
 
 	func at(x: int, y: int) -> int:
 		if x < 0 or y < 0 or x >= w or y >= h:
@@ -123,6 +130,9 @@ class Fig:
 	func put(x: int, y: int, c: Color) -> void:
 		if x >= 0 and y >= 0 and x < w and y < h:
 			img.set_pixel(x, y, c)
+
+	func is_moved(x: int, y: int) -> bool:
+		return x >= 0 and y >= 0 and x < w and y < h and moved[y * w + x] == 1
 
 	func in_pack(x: int, y: int) -> bool:
 		return x >= 0 and y >= 0 and x < w and y < h and pack[y * w + x] == 1
@@ -195,6 +205,13 @@ func _initialize() -> void:
 			return
 		dressed[look] = out
 		print("wrote %s" % path)
+	if only == "":
+		# **What the sheets were drawn from**, so the suite can tell a recipe edited in
+		# `content/looks.json` from a sheet rebuilt after it (the review of group L).
+		var made := FileAccess.open(CastLooks.RECIPES_DRAWN, FileAccess.WRITE)
+		made.store_string(JSON.stringify({"room_px": _room, "looks": _looks}, "  ", true) + "\n")
+		made.close()
+		print("wrote %s" % CastLooks.RECIPES_DRAWN)
 	if board:
 		_board(dressed, frames)
 	quit(0)
@@ -254,12 +271,21 @@ func _our_cells(sheet: Image, frames: SpriteFrames) -> Array[Dictionary]:
 
 func _dress_his(sheet: Image, out: Image, frame: Dictionary, recipe: Dictionary) -> void:
 	var region: Rect2i = frame["region"] as Rect2i
-	var rect: Rect2i = CastLooks.with_room(region, _room)
+	_stamp(out, dress_region(sheet, region, frame["way"] as StringName, recipe, _room),
+		CastLooks.with_room(region, _room).position)
+
+
+## One of his frames dressed in a look, with `room` kept above and beside it: exactly the
+## pixels a look's sheet holds at `CastLooks.with_room(region, room)`. Static, so the
+## suite can dress a frame and hold it against the committed sheet.
+static func dress_region(sheet: Image, region: Rect2i, way: StringName, recipe: Dictionary,
+		room: int) -> Image:
+	var rect: Rect2i = CastLooks.with_room(region, room)
 	var img: Image = _crop(sheet, rect, Rect2i(region.position - rect.position, region.size))
-	var fig := Fig.new(img, frame["way"] as StringName)
+	var fig := Fig.new(img, way)
 	_measure(fig, null)
 	_wear(fig, recipe)
-	_stamp(out, img, rect.position)
+	return img
 
 
 func _dress_ours(sheet: Image, out: Image, cell: Dictionary, recipe: Dictionary) -> void:
@@ -275,7 +301,9 @@ func _dress_ours(sheet: Image, out: Image, cell: Dictionary, recipe: Dictionary)
 	_measure(idle, null)
 	if cell["pose"] == &"hurt":
 		# **The flinch is the idle frame cut at the waist and the halves moved**, so it is
-		# dressed as the idle frame and then cut and moved the same way.
+		# dressed as the idle frame and then cut and moved the same way — the whole cell,
+		# so that a bow or a plume standing out of his rectangle goes with the half it
+		# belongs to (the review of group L).
 		_wear(idle, recipe)
 		_stamp(out, _flinch(idle_img, at, base.size, way), rect.position)
 		return
@@ -291,29 +319,30 @@ func _dress_ours(sheet: Image, out: Image, cell: Dictionary, recipe: Dictionary)
 ## `draw_fight_frames.gd`'s `_recoil` and `_fold`, on a dressed frame: seen from the side
 ## the legs go back six and the shoulders eleven; from the front or behind, the legs slip
 ## four one way and the shoulders eleven the other and eight down.
-func _flinch(img: Image, at: Vector2i, size: Vector2i, way: StringName) -> Image:
-	var whole: Image = img.get_region(Rect2i(at, size))
-	var cell: Image = Image.create(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
+static func _flinch(img: Image, at: Vector2i, size: Vector2i, way: StringName) -> Image:
+	var w: int = img.get_width()
+	var h: int = img.get_height()
+	var cell: Image = Image.create(w, h, false, Image.FORMAT_RGBA8)
 	cell.fill(CLEAR)
-	var waist: int = int(float(size.y) * 0.62)
+	var waist: int = at.y + int(float(size.y) * 0.62)
 	var legs: Vector2i
 	var upper: Vector2i
 	if way == &"right" or way == &"left":
 		var forward: int = 1 if way == &"right" else -1
-		legs = at + Vector2i(-6 * forward, waist + 2)
-		upper = at + Vector2i(-11 * forward, 1)
+		legs = Vector2i(-6 * forward, 2)
+		upper = Vector2i(-11 * forward, 1)
 	else:
 		var aside: int = 1 if way == &"down" else -1
-		legs = at + Vector2i(4 * aside, waist + 1)
-		upper = at + Vector2i(-11 * aside, 8)
-	cell.blit_rect(whole, Rect2i(0, waist, size.x, size.y - waist), legs)
-	cell.blit_rect(whole, Rect2i(0, 0, size.x, waist), upper)
+		legs = Vector2i(4 * aside, 1)
+		upper = Vector2i(-11 * aside, 8)
+	cell.blit_rect(img, Rect2i(0, waist, w, h - waist), Vector2i(0, waist) + legs)
+	cell.blit_rect(img, Rect2i(0, 0, w, waist), upper)
 	return cell
 
 
 ## A copy of `rect`, with only what his shader would keep inside `keep` (in the copy's
 ## coordinates) and nothing anywhere else.
-func _crop(sheet: Image, rect: Rect2i, keep: Rect2i) -> Image:
+static func _crop(sheet: Image, rect: Rect2i, keep: Rect2i) -> Image:
 	var img: Image = Image.create(rect.size.x, rect.size.y, false, Image.FORMAT_RGBA8)
 	img.fill(CLEAR)
 	for y: int in range(keep.position.y, keep.end.y):
@@ -328,7 +357,7 @@ func _crop(sheet: Image, rect: Rect2i, keep: Rect2i) -> Image:
 	return img
 
 
-func _stamp(out: Image, img: Image, at: Vector2i) -> void:
+static func _stamp(out: Image, img: Image, at: Vector2i) -> void:
 	for y: int in img.get_height():
 		for x: int in img.get_width():
 			var c: Color = img.get_pixel(x, y)
@@ -397,6 +426,9 @@ static func _measure(fig: Fig, from: Fig) -> void:
 		fig.legs = from.legs
 		fig.has_legs = from.has_legs
 		fig.pack = from.pack.duplicate()
+		for i: int in fig.kind.size():
+			if fig.kind[i] != 0 and fig.kind[i] != from.kind[i]:
+				fig.moved[i] = 1
 		_find_hands(fig, from)
 		return
 	# The neck is the first row with a band of shirt across it. (Our cells, whose arm can
@@ -496,7 +528,7 @@ static func _find_pack(fig: Fig) -> void:
 			elif fig.way == &"up":
 				var cx: float = (x0 + x1) / 2.0
 				yes = absf(x - cx) < (x1 - x0) * 0.32 and y >= fig.neck and y <= y1 - 4 \
-					and (k == K.LEATHER or k == K.INK or k == K.SKIN or k == K.OTHER)
+					and (k == K.LEATHER or k == K.INK or k == K.SKIN or k == K.OTHER or k == K.TROUSERS)
 			if yes:
 				fig.pack[y * fig.w + x] = 1
 
@@ -524,7 +556,7 @@ static func noise(x: int, y: int, seed: int) -> float:
 	return float((n >> 3) % 1000) / 1000.0
 
 
-func _recolour(fig: Fig, table: Dictionary) -> void:
+static func _recolour(fig: Fig, table: Dictionary) -> void:
 	for region: String in table.keys():
 		if not REGIONS.has(region):
 			continue
@@ -553,7 +585,7 @@ static func vec(value: Variant, fallback: Vector3) -> Vector3:
 
 ## A shape given as a predicate, painted with his dark outline round it. `box` bounds
 ## the search; `against`, when given, says which neighbours an outline is drawn against.
-func _fill(fig: Fig, box: Rect2i, inside: Callable, colour_at: Callable, outline: int = 3,
+static func _fill(fig: Fig, box: Rect2i, inside: Callable, colour_at: Callable, outline: int = 3,
 		against: Callable = Callable()) -> PackedByteArray:
 	var mask := PackedByteArray()
 	mask.resize(fig.w * fig.h)
@@ -605,10 +637,10 @@ static func metal(c: Vector3, box: Rect2, seed: int, hi: Vector2 = Vector2(0.28,
 		return safe(c.x, c.y if val <= 0.35 else maxf(c.y, 0.24), val)
 
 
-func _erase_where(fig: Fig, keep: Callable) -> void:
+static func _erase_where(fig: Fig, keep: Callable) -> void:
 	for y: int in fig.h:
 		for x: int in fig.w:
-			if fig.at(x, y) != K.NONE and not keep.call(x, y):
+			if fig.at(x, y) != K.NONE and not fig.is_moved(x, y) and not keep.call(x, y):
 				fig.put(x, y, CLEAR)
 				fig.set_kind(x, y, K.NONE)
 
@@ -619,17 +651,53 @@ static func _box(x0: float, y0: float, x1: float, y1: float) -> Rect2i:
 
 # ------------------------------------------------------------------- the recipes ---
 
-func _wear(fig: Fig, recipe: Dictionary) -> void:
+static func _wear(fig: Fig, recipe: Dictionary) -> void:
 	_recolour(fig, recipe.get("recolour", {}) as Dictionary)
 	for step: Variant in recipe.get("pieces", []) as Array:
 		var row: Array = step as Array
 		var params: Dictionary = row[1] as Dictionary if row.size() > 1 else {}
-		call("_piece_" + String(row[0]), fig, params)
+		match String(row[0]):
+			"apron":
+				_piece_apron(fig, params)
+			"bascinet":
+				_piece_bascinet(fig, params)
+			"beard":
+				_piece_beard(fig, params)
+			"bow_in_hand":
+				_piece_bow_in_hand(fig, params)
+			"cap":
+				_piece_cap(fig, params)
+			"gloves":
+				_piece_gloves(fig, params)
+			"headscarf":
+				_piece_headscarf(fig, params)
+			"hood":
+				_piece_hood(fig, params)
+			"iron_body":
+				_piece_iron_body(fig, params)
+			"pauldrons":
+				_piece_pauldrons(fig, params)
+			"quiver":
+				_piece_quiver(fig, params)
+			"remove_pack":
+				_piece_remove_pack(fig, params)
+			"scabbard":
+				_piece_scabbard(fig, params)
+			"shield_on_back":
+				_piece_shield_on_back(fig, params)
+			"straw_hat":
+				_piece_straw_hat(fig, params)
+			"surcoat":
+				_piece_surcoat(fig, params)
+			"sword_in_hand":
+				_piece_sword_in_hand(fig, params)
+			_:
+				push_error("no piece called %s" % row[0])
 
 
 ## His backpack goes. From behind it sat on the shirt, so the shirt is carried on under
 ## it from the median of his own shirt; from the side it stood clear of the body and goes.
-func _piece_remove_pack(fig: Fig, _params: Dictionary) -> void:
+static func _piece_remove_pack(fig: Fig, _params: Dictionary) -> void:
 	var any: bool = false
 	for i: int in fig.pack.size():
 		if fig.pack[i] == 1:
@@ -648,14 +716,9 @@ func _piece_remove_pack(fig: Fig, _params: Dictionary) -> void:
 	var hs: Array[float] = []
 	var ss: Array[float] = []
 	var vs: Array[float] = []
-	var y0: int = fig.h
-	var y1: int = -1
 	for y: int in fig.h:
 		for x: int in fig.w:
-			if fig.in_pack(x, y):
-				y0 = mini(y0, y)
-				y1 = maxi(y1, y)
-			elif fig.at(x, y) == K.SHIRT:
+			if not fig.in_pack(x, y) and fig.at(x, y) == K.SHIRT:
 				var c: Color = fig.colour(x, y)
 				hs.append(c.h)
 				ss.append(c.s)
@@ -666,17 +729,25 @@ func _piece_remove_pack(fig: Fig, _params: Dictionary) -> void:
 	ss.sort()
 	vs.sort()
 	var m: int = hs.size() / 2
-	for y: int in range(y0, y1 + 1):
-		var t: float = float(y - y0) / float(maxi(y1 - y0, 1))
-		for x: int in fig.w:
-			if fig.in_pack(x, y):
-				var g: float = (noise(x / 2, y / 2, 81) - 0.5) * 0.06
-				fig.put(x, y, safe(hs[m] * 360.0, ss[m], vs[m] * (1.05 - 0.25 * t) + g))
-				fig.set_kind(x, y, K.SHIRT)
+	# **The whole of the pack's box, a pixel past it, repainted evenly** (the review of
+	# group L): filling only the pack's own pixels left its notched outline on his back,
+	# and the buckle, which is dark enough to read as trousers, stayed as a square.
+	var box: Vector4i = _pack_box(fig)
+	var cx: float = (box.x + box.z) / 2.0
+	var half: float = maxf((box.z - box.x) / 2.0 + 1.0, 1.0)
+	for y: int in range(box.y, box.w + 1):
+		var t: float = float(y - box.y) / float(maxi(box.w - box.y, 1))
+		for x: int in range(box.x - 1, box.z + 2):
+			if not fig.has(x, y) or fig.at(x, y) == K.SKIN or fig.at(x, y) == K.PIECE:
+				continue
+			var rounded: float = 1.04 - 0.10 * absf(x - cx) / half
+			var g: float = (noise(x / 2, y / 2, 81) - 0.5) * 0.03
+			fig.put(x, y, safe(hs[m] * 360.0, ss[m], vs[m] * rounded * (1.05 - 0.22 * t) + g))
+			fig.set_kind(x, y, K.SHIRT)
 	fig.pack.fill(0)
 
 
-func _pack_box(fig: Fig) -> Vector4i:
+static func _pack_box(fig: Fig) -> Vector4i:
 	var box := Vector4i(fig.w, fig.h, -1, -1)
 	for y: int in fig.h:
 		for x: int in fig.w:
@@ -686,11 +757,13 @@ func _pack_box(fig: Fig) -> Vector4i:
 
 
 ## His shirt becomes a breastplate, his trousers greaves, his hands gauntlets.
-func _piece_iron_body(fig: Fig, _params: Dictionary) -> void:
-	for y: int in range(maxi(fig.neck - 2, 0), fig.h):
+static func _piece_iron_body(fig: Fig, _params: Dictionary) -> void:
+	# His sleeve anywhere — an arm raised by his head included — but trousers and leather
+	# only below the neck, because the darkest of his hair reads as either.
+	for y: int in fig.h:
 		for x: int in fig.w:
 			var k: int = fig.at(x, y)
-			if k == K.SHIRT or k == K.TROUSERS or k == K.LEATHER:
+			if k == K.SHIRT or (y >= fig.neck - 2 and (k == K.TROUSERS or k == K.LEATHER)):
 				var v2: float = minf(1.0, 0.10 + fig.colour(x, y).v * (0.75 if k == K.SHIRT else 0.55))
 				fig.put(x, y, safe(IRON.x, IRON.y if v2 <= 0.35 else 0.24, v2))
 	for q: Vector2i in fig.hands:
@@ -699,7 +772,7 @@ func _piece_iron_body(fig: Fig, _params: Dictionary) -> void:
 
 
 ## Leather or steel over his hands.
-func _piece_gloves(fig: Fig, params: Dictionary) -> void:
+static func _piece_gloves(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), STEEL)
 	for q: Vector2i in fig.hands:
 		var was: Color = fig.colour(q.x, q.y)
@@ -708,7 +781,7 @@ func _piece_gloves(fig: Fig, params: Dictionary) -> void:
 
 
 ## A tabard over the chest and down between the legs, with the king's crown on it.
-func _piece_surcoat(fig: Fig, params: Dictionary) -> void:
+static func _piece_surcoat(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), KING_RED)
 	var x0: int = fig.shirt.x
 	var x1: int = fig.shirt.z
@@ -728,7 +801,7 @@ func _piece_surcoat(fig: Fig, params: Dictionary) -> void:
 		_crown(fig, cx, int(top + (y1 - top) * 0.45), true)
 
 
-func _crown(fig: Fig, cx: float, ey: int, outlined: bool) -> void:
+static func _crown(fig: Fig, cx: float, ey: int, outlined: bool) -> void:
 	for y: int in range(ey - 7, ey + 4):
 		for x: int in range(int(cx) - 7, int(cx) + 8):
 			var dx: float = x - cx
@@ -744,7 +817,7 @@ func _crown(fig: Fig, cx: float, ey: int, outlined: bool) -> void:
 				fig.put(x, y, INK if rim else safe(GOLD.x, GOLD.y, GOLD.z))
 
 
-func _piece_pauldrons(fig: Fig, _params: Dictionary) -> void:
+static func _piece_pauldrons(fig: Fig, _params: Dictionary) -> void:
 	var x0: int = fig.shirt.x
 	var x1: int = fig.shirt.z
 	var top: int = fig.neck
@@ -767,7 +840,7 @@ func _piece_pauldrons(fig: Fig, _params: Dictionary) -> void:
 
 
 ## The king's guard's helm: rounded, visor down. No face shows, no hair, no ears.
-func _piece_bascinet(fig: Fig, _params: Dictionary) -> void:
+static func _piece_bascinet(fig: Fig, _params: Dictionary) -> void:
 	var w: float = fig.head.z - fig.head.x
 	var cx: float = (fig.head.x + fig.head.z) / 2.0 + {&"left": -w * 0.03, &"right": w * 0.03}.get(fig.way, 0.0)
 	var top: float = fig.head.y + (fig.neck - fig.head.y) * 0.14
@@ -819,10 +892,55 @@ func _piece_bascinet(fig: Fig, _params: Dictionary) -> void:
 				fig.put(int(cx), y, safe(IRON.x, 0.24, 0.55))
 				fig.put(int(cx) + 1, y, safe(IRON.x, 0.12, 0.22))
 	_plume(fig, cx, top, half)
+	_bridge_arm(fig)
+
+
+## **An arm raised beside the head keeps its whole length** (the review of group L). In
+## our blow thrown away from us the arm rises behind his hair, which is stamped back over
+## it; a helm or a hood narrower than his hair uncovers where the arm was hidden and
+## leaves a fist floating. So the arm is laid again, in its own sleeve's colour, from the
+## shoulder to the fist, behind whatever already stands there.
+static func _bridge_arm(fig: Fig) -> void:
+	var fist := Vector2.ZERO
+	var n: int = 0
+	for q: Vector2i in fig.hands:
+		if q.y < fig.neck and fig.is_moved(q.x, q.y):
+			fist += Vector2(q)
+			n += 1
+	if n < 10:
+		return
+	fist /= float(n)
+	var sleeve: Array[Color] = []
+	for y: int in fig.h:
+		for x: int in fig.w:
+			if fig.at(x, y) == K.SHIRT and (fig.is_moved(x, y) or sleeve.is_empty()):
+				sleeve.append(fig.colour(x, y))
+	if sleeve.is_empty():
+		return
+	sleeve.sort_custom(func(a: Color, b: Color) -> bool: return a.v < b.v)
+	var tone: Color = sleeve[sleeve.size() / 2]
+	var right: bool = fist.x > (fig.shirt.x + fig.shirt.z) / 2.0
+	var shoulder := Vector2(fig.shirt.z - 3.0 if right else fig.shirt.x + 3.0,
+		fig.shirt.y + (fig.shirt.w - fig.shirt.y) * 0.34)
+	var dir: Vector2 = fist - shoulder
+	var length: float = dir.length()
+	if length < 4.0:
+		return
+	dir /= length
+	var across := Vector2(-dir.y, dir.x)
+	var arm := func(x: int, y: int) -> bool:
+		var d: Vector2 = Vector2(x, y) - shoulder
+		var t: float = d.dot(dir)
+		return t >= 0.0 and t <= length - 3.0 and absf(d.dot(across)) <= 6.0 and not fig.has(x, y)
+	var paint := func(x: int, y: int) -> Color:
+		var u: float = (Vector2(x, y) - shoulder).dot(across) / 6.0
+		return safe(tone.h * 360.0, tone.s, tone.v * (1.0 - 0.18 * u))
+	_fill(fig, _box(minf(shoulder.x, fist.x) - 8, minf(shoulder.y, fist.y) - 8,
+		maxf(shoulder.x, fist.x) + 8, maxf(shoulder.y, fist.y) + 8), arm, paint, 2)
 
 
 ## A tuft of the king's red, falling back — no higher than the frame has room for.
-func _plume(fig: Fig, cx: float, top: float, half: float) -> void:
+static func _plume(fig: Fig, cx: float, top: float, half: float) -> void:
 	var back: int = {&"left": 1, &"right": -1}.get(fig.way, 0)
 	var inside: Callable
 	var box: Rect2
@@ -855,7 +973,7 @@ func _plume(fig: Fig, cx: float, top: float, half: float) -> void:
 
 
 ## Where his backpack was: a shield, carried — its face from behind, its edge from the side.
-func _piece_shield_on_back(fig: Fig, _params: Dictionary) -> void:
+static func _piece_shield_on_back(fig: Fig, _params: Dictionary) -> void:
 	var p: Vector4i = _pack_box(fig)
 	if p.z < 0:
 		return
@@ -897,7 +1015,7 @@ func _piece_shield_on_back(fig: Fig, _params: Dictionary) -> void:
 
 
 ## A close cap, leather or iron: his hair shows under it.
-func _piece_cap(fig: Fig, params: Dictionary) -> void:
+static func _piece_cap(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(28, 0.55, 0.36))
 	var w: float = fig.head.z - fig.head.x
 	var hh: float = fig.neck - fig.head.y
@@ -925,7 +1043,7 @@ func _piece_cap(fig: Fig, params: Dictionary) -> void:
 
 
 ## A cloth tied over the hair, knotted at the back.
-func _piece_headscarf(fig: Fig, params: Dictionary) -> void:
+static func _piece_headscarf(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(215, 0.30, 0.30))
 	var w: float = fig.head.z - fig.head.x
 	var hh: float = fig.neck - fig.head.y
@@ -953,7 +1071,7 @@ func _piece_headscarf(fig: Fig, params: Dictionary) -> void:
 
 
 ## A wide straw hat, for the fields.
-func _piece_straw_hat(fig: Fig, params: Dictionary) -> void:
+static func _piece_straw_hat(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(44, 0.55, 0.78))
 	var w: float = fig.head.z - fig.head.x
 	var hh: float = fig.neck - fig.head.y
@@ -987,7 +1105,7 @@ func _piece_straw_hat(fig: Fig, params: Dictionary) -> void:
 
 
 ## A cloth hood: the head's whole shape changes, and the face looks out of it.
-func _piece_hood(fig: Fig, params: Dictionary) -> void:
+static func _piece_hood(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(130, 0.50, 0.40))
 	var w: float = fig.head.z - fig.head.x
 	var cx: float = (fig.head.x + fig.head.z) / 2.0
@@ -1071,10 +1189,11 @@ func _piece_hood(fig: Fig, params: Dictionary) -> void:
 					if opening.call(x + d.x, y + d.y):
 						fig.put(x, y, safe(c.x, c.y, c.z * 0.55))
 						break
+	_bridge_arm(fig)
 
 
 ## A smith's leather apron, chest to knees, on a strap round the neck; from behind, its ties.
-func _piece_apron(fig: Fig, params: Dictionary) -> void:
+static func _piece_apron(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(24, 0.50, 0.40))
 	var x0: int = fig.shirt.x
 	var y0: int = fig.shirt.y
@@ -1115,7 +1234,7 @@ func _piece_apron(fig: Fig, params: Dictionary) -> void:
 
 
 ## A short beard along the jaw, and a moustache.
-func _piece_beard(fig: Fig, params: Dictionary) -> void:
+static func _piece_beard(fig: Fig, params: Dictionary) -> void:
 	if not fig.has_face:
 		return
 	var c: Vector3 = vec(params.get("colour"), Vector3(32, 0.24, 0.80))
@@ -1172,9 +1291,26 @@ func _piece_beard(fig: Fig, params: Dictionary) -> void:
 ## **The weapon hand**: the one he strikes with in our fight frames — screen left seen
 ## from the front, screen right from behind, the hand ahead seen from the side — so a
 ## sword or a bow drawn in it goes out with the blow.
-func _weapon_hand(fig: Fig) -> Array[Vector2i]:
+static func _weapon_hand(fig: Fig) -> Array[Vector2i]:
 	if fig.hands.is_empty():
 		return []
+	if fig.way == &"left" or fig.way == &"right":
+		# **Seen from the side, the hand in front** (the review of group L): both his arms
+		# swing in the walk, so the hand furthest ahead changes every few frames and the
+		# weapon jumped from one to the other. The hand in front is the whole one, drawn
+		# over his body — the larger blob — and in one of our cells it is the one that moved.
+		var best: Array[Vector2i] = []
+		var best_moved: bool = false
+		for blob: Array[Vector2i] in _blobs(fig, fig.hands):
+			var moved: bool = false
+			for q: Vector2i in blob:
+				if fig.is_moved(q.x, q.y):
+					moved = true
+					break
+			if (moved and not best_moved) or (moved == best_moved and blob.size() > best.size()):
+				best = blob
+				best_moved = moved
+		return best
 	var pick: Vector2i = fig.hands[0]
 	for q: Vector2i in fig.hands:
 		if fig.way == &"down" or fig.way == &"left":
@@ -1189,20 +1325,46 @@ func _weapon_hand(fig: Fig) -> Array[Vector2i]:
 	return out
 
 
+## The pieces `points` falls into, touching by an edge or a corner.
+static func _blobs(fig: Fig, points: Array[Vector2i]) -> Array:
+	var left := PackedByteArray()
+	left.resize(fig.w * fig.h)
+	for q: Vector2i in points:
+		left[q.y * fig.w + q.x] = 1
+	var out: Array = []
+	for start: Vector2i in points:
+		if left[start.y * fig.w + start.x] == 0:
+			continue
+		left[start.y * fig.w + start.x] = 0
+		var blob: Array[Vector2i] = [start]
+		var todo: Array[Vector2i] = [start]
+		while not todo.is_empty():
+			var p: Vector2i = todo.pop_back()
+			for dy: int in range(-1, 2):
+				for dx: int in range(-1, 2):
+					var q := Vector2i(p.x + dx, p.y + dy)
+					if q.x >= 0 and q.y >= 0 and q.x < fig.w and q.y < fig.h and left[q.y * fig.w + q.x] == 1:
+						left[q.y * fig.w + q.x] = 0
+						blob.append(q)
+						todo.append(q)
+		out.append(blob)
+	return out
+
+
 ## Where an arm comes from, for the weapon to point along it; and whether the hand is
 ## at rest by his side, in which case the weapon hangs.
-func _shoulder(fig: Fig, fist: Vector2) -> Vector2:
+static func _shoulder(fig: Fig, fist: Vector2) -> Vector2:
 	var side: float = fig.shirt.x + 4.0 if fist.x < (fig.shirt.x + fig.shirt.z) / 2.0 else fig.shirt.z - 4.0
 	return Vector2(side, fig.neck + 12.0)
 
 
-func _at_rest(fig: Fig, fist: Vector2) -> bool:
+static func _at_rest(fig: Fig, fist: Vector2) -> bool:
 	return fist.y > fig.shirt.y + (fig.shirt.w - fig.shirt.y) * 0.55 \
 		and fist.x >= fig.shirt.x - 10 and fist.x <= fig.shirt.z + 10
 
 
 ## A sword held in the weapon hand: hanging point down at rest, along the arm in a blow.
-func _piece_sword_in_hand(fig: Fig, params: Dictionary) -> void:
+static func _piece_sword_in_hand(fig: Fig, params: Dictionary) -> void:
 	var hs: Array[Vector2i] = _weapon_hand(fig)
 	if hs.is_empty():
 		return
@@ -1222,7 +1384,7 @@ func _piece_sword_in_hand(fig: Fig, params: Dictionary) -> void:
 	_blade(fig, start, dir, length, fig.way == &"up")
 
 
-func _blade(fig: Fig, start: Vector2, dir: Vector2, length: float, behind: bool) -> void:
+static func _blade(fig: Fig, start: Vector2, dir: Vector2, length: float, behind: bool) -> void:
 	var across := Vector2(-dir.y, dir.x)
 	var mask := PackedByteArray()
 	mask.resize(fig.w * fig.h)
@@ -1261,7 +1423,7 @@ func _blade(fig: Fig, start: Vector2, dir: Vector2, length: float, behind: bool)
 
 
 ## A sword at the belt, in its scabbard: the hilt at the hip, the scabbard down the thigh.
-func _piece_scabbard(fig: Fig, params: Dictionary) -> void:
+static func _piece_scabbard(fig: Fig, params: Dictionary) -> void:
 	var c: Vector3 = vec(params.get("colour"), Vector3(24, 0.55, 0.28))
 	var x0: int = fig.shirt.x
 	var x1: int = fig.shirt.z
@@ -1309,7 +1471,7 @@ func _piece_scabbard(fig: Fig, params: Dictionary) -> void:
 
 
 ## A longbow in the weapon hand, upright — at his side at rest, held out in a shot.
-func _piece_bow_in_hand(fig: Fig, params: Dictionary) -> void:
+static func _piece_bow_in_hand(fig: Fig, params: Dictionary) -> void:
 	var hs: Array[Vector2i] = _weapon_hand(fig)
 	if hs.is_empty():
 		return
@@ -1318,6 +1480,13 @@ func _piece_bow_in_hand(fig: Fig, params: Dictionary) -> void:
 	for q: Vector2i in hs:
 		fist += Vector2(q)
 	fist /= float(hs.size())
+	var side_on: bool = fig.way == &"left" or fig.way == &"right"
+	if side_on and _at_rest(fig, fist):
+		# **Seen from the side and at rest, the bow is slung on the back** (the review of
+		# group L): held in the hand it stood taller than his face, which sticks out
+		# further than his fist, and its limb and string crossed his cheek.
+		_bow_slung(fig, c)
+		return
 	var out: float = -1.0 if fig.way == &"down" or fig.way == &"left" else 1.0
 	var up_len: float = minf(58.0, fist.y - 2.0)
 	var down_len: float = minf(58.0, float(fig.h - 2) - fist.y)
@@ -1344,8 +1513,38 @@ func _piece_bow_in_hand(fig: Fig, params: Dictionary) -> void:
 		fig.put(sx, y, safe(40, 0.30, 0.78))
 
 
+## A bow carried across the back, seen from the side: behind him from the shoulder to
+## the back of the knee, bowed away from his back, only where he does not hide it.
+static func _bow_slung(fig: Fig, c: Vector3) -> void:
+	var back: float = 1.0 if fig.way == &"left" else -1.0
+	var edge: float = -1.0
+	for y: int in range(fig.neck, mini(fig.neck + 15, fig.h)):
+		for x: int in fig.w:
+			if fig.at(x, y) == K.SHIRT:
+				edge = float(x) if edge < 0.0 else (maxf(edge, x) if back > 0.0 else minf(edge, x))
+	if edge < 0.0:
+		return
+	var top := Vector2(edge + back * 2.0, fig.neck - 16.0)
+	var bottom := Vector2(edge + back * 4.0, (fig.legs.w if fig.has_legs else fig.h - 4) - 16.0)
+	var along := func(y: int) -> float:
+		return clampf((y - top.y) / (bottom.y - top.y), 0.0, 1.0)
+	var limb := func(x: int, y: int) -> bool:
+		if y < top.y or y > bottom.y or fig.has(x, y):
+			return false
+		var t: float = along.call(y)
+		var mid: float = lerpf(top.x, bottom.x, t) + back * 10.0 * sin(PI * t)
+		return absf(x - mid) <= 2.6 - absf(t - 0.5) * 1.2
+	var mask: PackedByteArray = _fill(fig, _box(minf(top.x, bottom.x) - 16, top.y, maxf(top.x, bottom.x) + 16, bottom.y),
+		limb, shade(c, Rect2(top.x - 12, top.y, 24, bottom.y - top.y), 47, 0.4), 1)
+	for y: int in range(int(top.y) + 2, int(bottom.y) - 1):
+		var x: int = int(round(lerpf(top.x, bottom.x, along.call(y))))
+		if x >= 0 and y >= 0 and x < fig.w and y < fig.h and mask[y * fig.w + x] == 0 and not fig.has(x, y):
+			fig.put(x, y, safe(40, 0.30, 0.78))
+			fig.set_kind(x, y, K.PIECE)
+
+
 ## Where his backpack was: a quiver, and the fletchings over its mouth.
-func _piece_quiver(fig: Fig, params: Dictionary) -> void:
+static func _piece_quiver(fig: Fig, params: Dictionary) -> void:
 	if fig.way == &"down":
 		return
 	var p: Vector4i = _pack_box(fig)

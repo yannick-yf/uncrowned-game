@@ -508,6 +508,11 @@ func _load_his_materials() -> void:
 		_figure_material = load(HIS_FIGURE_MATERIAL) as Material
 	# After both, because it re-points his frames *and* his material at one sheet.
 	_add_our_fight_frames()
+	# **Every look at once, while the world is built** (the review of group L): loaded on
+	# first wear, the archers' came in the middle of the fight at the furnace, a hitch on
+	# the frame the fight began. All thirteen are worn on a walk through the demo anyway.
+	for look: StringName in CastLooks.names():
+		_dress(look)
 	if ResourceLoader.exists(HIS_BLOCK_MATERIAL):
 		_block_material = load(HIS_BLOCK_MATERIAL) as Material
 
@@ -992,6 +997,15 @@ func _sheet_worn(figure: Node3D) -> Texture2D:
 		return _look_sheet[look] as Texture2D
 	var his := _figure_material as ShaderMaterial
 	return his.get_shader_parameter("sprite_sheet") as Texture2D if his != null else null
+
+
+## How tall a person of the cast is drawn: a man's height, a fifth more in the king's plate
+## — so a mark over his head clears his plume (the review of group L).
+func _height_of(id: StringName) -> float:
+	var sprite := _people.get(id, null) as AnimatedSprite3D
+	if sprite == null:
+		return FIGURE_HEIGHT_M
+	return FIGURE_HEIGHT_M * sprite.pixel_size / HIS_FIGURE_PIXEL_SIZE
 
 
 ## Which look a person of the cast wears: by name, by trade, by where they stand.
@@ -1948,7 +1962,7 @@ func _sync_marks(cast: Cast, witnesses: Array) -> void:
 			continue
 		var walkers := _sim.store(&"walkers") as Walkers
 		var head_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
-		mark.position = _feet_of(head_at) + _lens_up * (FIGURE_HEIGHT_M + 0.4)
+		mark.position = _feet_of(head_at) + _lens_up * (_height_of(npc.id) + 0.4)
 
 
 ## The '!' over whoever is calling, from the frame's `hail` reading: who, and how long
@@ -1974,7 +1988,7 @@ func _sync_hail_mark(cast: Cast, reading: Dictionary) -> void:
 	_hail_mark.pixel_size = HAIL_MARK_PIXEL * pop
 	var walkers := _sim.store(&"walkers") as Walkers
 	var head_at: Vector2 = walkers.drawn_at(npc) if walkers != null else npc.centre()
-	_hail_mark.position = _feet_of(head_at) + _lens_up * (FIGURE_HEIGHT_M + 0.55 + 0.1 * pop)
+	_hail_mark.position = _feet_of(head_at) + _lens_up * (_height_of(npc.id) + 0.55 + 0.1 * pop)
 
 
 ## How big the '!' is, against its size at rest, `age` seconds after he saw you: from

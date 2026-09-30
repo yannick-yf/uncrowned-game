@@ -239,7 +239,8 @@ Ce qu'on a fait, exactement :
   lire. La planche combinée et les animations en plus sont chez nous, dans `view3d/`.
 - **L'outil est `tools/draw_fight_frames.gd`** et il se relance. Le jour où tu dessines
   les tiennes, on supprime l'outil et le fichier, et un test nous force la main : il
-  échoue dès que ta planche gagne une neuvième animation.
+  échoue dès que ta planche gagne une neuvième animation. *(Depuis le 30 septembre, la
+  règle a changé : on choisit ensemble entre les tiennes et les nôtres. Voir le §15.)*
 
 C'est grossier, et Yannick l'a dit après avoir joué. On a fait une deuxième passe : il y
 a maintenant **quatre** poses, parce que la préparation du coup n'en avait aucune — le
@@ -283,7 +284,9 @@ boîtes, dans le style facetté de tes accessoires — et **coloré uniquement a
 tes matières**, `styled_rock` pour le pelage et `styled_dark` pour le dos, le museau,
 les oreilles et la queue. Aucune couleur inventée, comme pour les images de combat.
 
-Ça se voit que c'est nous, et c'est normal. Ton loup le remplacera.
+Ça se voit que c'est nous, et c'est normal. Ton loup le remplacera. *(Depuis le 30
+septembre, la règle a changé : on choisit ensemble entre ton loup et le nôtre. Voir le
+§15.)*
 
 **Ce qu'il faudrait :** un loup, vu de dessus comme tes autres personnages, dans les
 quatre orientations si tu peux, une seule de profil si tu ne peux pas. Une posture
@@ -524,14 +527,14 @@ Yannick sait que tu utilises aussi Codex pour tes objets 3D. La seule condition 
 - tout ce qu'on fait est noté ici.
 
 Les trois « exceptions » ne sont donc plus des exceptions. Un test surveille toujours ta
-bibliothèque : le jour où tu livres un coup, un animal ou une tombe, il nous prévient, et
-on choisit entre le tien et le nôtre.
+bibliothèque : le jour où tu livres des images de coup, un animal ou une tombe, il nous
+prévient, et on choisit ensemble entre ta version et la nôtre.
 
 **Les tenues des personnages.** Tout le monde était ton voyageur : cheveux roux, chemise
 bleue, sac à dos. Dans un combat, on voyait six fois le même homme. Yannick a demandé que
 chaque type de personnage se reconnaisse du premier coup d'œil. On a donc **habillé ton
-voyageur, sans le redessiner** : la couleur des cheveux et des vêtements change, mais tes
-ombres restent, pixel par pixel. Par-dessus, on dessine ce que tu n'as pas fait : un casque,
+voyageur, sans le redessiner** : la couleur des cheveux et des vêtements change, mais la
+forme de tes ombres est gardée. Par-dessus, on dessine ce que tu n'as pas fait : un casque,
 un bonnet, une capuche, un chapeau de paille, un tablier, une barbe, une épée, un arc.
 
 Il y a treize tenues :
@@ -539,18 +542,30 @@ Il y a treize tenues :
 - **les gardes du roi** : armure noircie, casque fermé avec un plumet rouge, tunique
   rouge à couronne, bouclier dans le dos, 20 % plus grands que les autres. Ils doivent
   avoir l'air impossibles à battre ;
-- **la garde** (le pont, les soldats) : rouge du roi, mais en tissu, avec une calotte de
-  fer et une épée à la ceinture ;
+- **les soldats du roi** (le garde du pont, les sentinelles) : rouge du roi, mais en
+  tissu, avec une calotte de fer et une épée à la ceinture ;
 - **les gardes et les archers de l'usine** : ocre, la couleur de l'usine, un bonnet de
   cuir, une épée ou un arc à la main ;
 - **trois ouvriers** : vêtements sombres, tablier de cuir, gants, foulard ;
-- **quatre villageois** : toile claire, un chapeau de paille, un foulard rouge, deux têtes
-  nues, et plus de sac à dos ;
+- **quatre villageois** : des vêtements de tous les jours, sans sac à dos ; l'un porte un
+  chapeau de paille, un autre un foulard rouge, les deux autres sont tête nue ;
 - **Bram** : cheveux gris, barbe courte, épée à la ceinture ;
-- **Wren** : capuche verte, arc à la main, carquois dans le dos.
+- **Wren** : capuche verte, un arc et un carquois. De face, elle tient l'arc à la main ;
+  de profil, il est dans son dos, pour ne pas passer devant son visage.
 
 **Le joueur reste ton voyageur, exactement.** La planche est dans
 `docs/frames/cast/looks.png`, et l'outil qui les fabrique est `tools/draw_cast_looks.gd`.
 
-Si un jour tu dessines les vrais personnages, on remplace les nôtres, ou on choisit
-ensemble.
+**Ce qui est à nous sur ton voyageur**, pour que tu le voies d'un coup d'œil : les
+couleurs des tenues, et les pièces dessinées par-dessus. Un casque, une capuche ou un
+chapeau changent la forme de la tête, et le sac à dos est enlevé. Tes animations, ton
+contour et la forme de tes ombres restent les tiens. Les images dans le jeu sont dans
+`docs/frames/cast/in_game.png`.
+
+**Ce que tu pourrais dessiner à la place**, si tu veux : les vrais personnages, au repos
+et en marche dans les quatre directions, comme ton voyageur. Ceux qui se battent ont
+aussi besoin des images de combat : la préparation du coup, le coup et le recul, dans les
+quatre directions. D'abord un garde du roi, un garde de l'usine, un ouvrier, un
+villageois, Bram et Wren. Ta liste de tâches
+(`docs/TACHES_POUR_SLOSINIO.md`, §2) le reprend. Le jour où tu en livres un, on choisit
+ensemble lequel garder.

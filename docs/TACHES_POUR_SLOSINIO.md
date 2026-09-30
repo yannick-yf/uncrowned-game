@@ -1,6 +1,11 @@
 # Pour slosinio — ta liste de tâches pour la démo
 
-Écrit le 2026-09-29, pour toi. Une page, dans l'ordre de priorité.
+Écrit le 2026-09-29, pour toi. Une page, dans l'ordre de priorité. Mis à jour le
+2026-09-30.
+
+**Nouvelle règle (2026-09-30).** Yannick a décidé qu'on peut dessiner nous aussi, en 2D
+et en 3D, tout ce dont le jeu a besoin, à une condition : rester fidèles à ton style.
+La lettre l'explique au §15.
 
 La longue lettre (`docs/POUR_SLOSINIO.md`) explique le pourquoi de chaque point. Ici, il
 n'y a que le quoi. Rien de cette liste n'est une commande : tu dis oui, non ou plus
@@ -39,18 +44,20 @@ On saura que c'est réglé quand ces trois secteurs se chargent chez nous sans e
 
 ---
 
-## 2. Ce que tu n'as pas dessiné, et qu'on a remplacé en attendant
+## 2. Ce que tu n'as pas dessiné, et qu'on a fait nous-mêmes
 
-Pour chacun, on a fait une version à nous. Elle utilise seulement tes couleurs et tes
-matières. Le jour où tu dessines le tien, un test le voit et on retire le nôtre.
+Pour chacun, on a fait une version à nous, dans ton style : tes matières, ton contour,
+tes ombres. Tu n'as rien à faire ici : c'est seulement si tu veux. Le jour où tu dessines
+le tien, un test le voit, et on choisit ensemble lequel garder.
 
-| Quoi | Ce qu'on a fait en attendant | Ce qu'il faudrait |
+| Quoi | Ce qu'on a fait | Ce que tu pourrais faire à la place |
 |---|---|---|
 | **Le combat du voyageur** | 12 images tirées de tes images : bras armé, coup, recul, dans les quatre directions | La préparation du coup, le coup et le recul, dans les quatre directions |
 | **L'arc** | Le joueur tire à l'arc dans le tutoriel : on réutilise la pose « bras armé », et la flèche est un trait clair dessiné en code | Une pose « arc bandé » dans les quatre directions, et une flèche |
 | **Un animal** | Le loup : onze blocs, peints avec ta roche et ton sombre | Un loup, qui marche et qui mord |
 | **Une tombe** | Des stèles en pierre et des planches en bois, faites avec tes matières | Un petit kit de cimetière : deux ou trois pierres tombales, une croix de bois, un tertre de terre, un tertre herbeux, un muret bas |
 | **Un feu de camp** | Composé de tes pièces (pierres, bûches, braises, fumée) ; seules les flammes sont à nous | Un feu de camp à toi, si tu veux |
+| **Les personnages** | Treize tenues posées sur ton voyageur : couleurs changées (tes ombres gardées), et par-dessus un casque, un bonnet, une capuche, un chapeau, un tablier, une barbe, une épée ou un arc. Le joueur reste ton voyageur | Si tu veux : les vrais personnages, au repos et en marche dans les quatre directions, et pour ceux qui se battent les images de combat (préparation, coup, recul). D'abord un garde du roi, un garde de l'usine, un ouvrier, un villageois, Bram et Wren |
 | **Le « ! » au-dessus de Bram** | Une barre et un point couleur braise, dessinés en code | Facultatif : un « ! » peint à ta main |
 
 ---
@@ -92,8 +99,9 @@ ce que toi tu peux dessiner.
 
 ## 6. Plus tard, hors du trajet de la démo
 
-- **Les visages**, dans ton style. Aujourd'hui, tout le monde a le même. Pour la démo
-  d'abord : Bram, Wren, Tom, Sena et Harry.
+- **Les visages**, dans ton style. Aujourd'hui, chaque type de personnage a sa tenue
+  (voir le §2), mais tout le monde a encore ton visage, le joueur compris ; seul Bram a
+  une barbe en plus. Pour la démo d'abord : Bram, Wren, Tom, Sena et Harry.
 - **Tes pièces à la place de nos blocs gris** : les tentes, les bateaux, les étals,
   le donjon et ses tours, les corps de garde, un panneau à l'entrée de chaque ville.
 - **Le remplissage de la carte** : Harrowgate, le Rassemblement, Saltmarch, les

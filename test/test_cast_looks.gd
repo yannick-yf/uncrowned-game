@@ -134,17 +134,20 @@ func test_the_room_round_his_frames_reaches_no_other_frame() -> void:
 			var region := Rect2i((frames.get_frame_texture(named, i) as AtlasTexture).region)
 			if not regions.has(region):
 				regions.append(region)
+	# Widened against widened, as the tool checks: two rooms that overlap would have one
+	# frame's plume written over another's boots.
 	for a: Rect2i in regions:
 		for b: Rect2i in regions:
 			if a != b:
-				assert_false(CastLooks.with_room(a, room).intersects(b),
-					"%s widened by %d reaches %s — a frame would show its neighbour's boots" % [a, room, b])
-	# And the margins give the room back, so a widened frame is exactly as large.
+				assert_false(CastLooks.with_room(a, room).intersects(CastLooks.with_room(b, room)),
+					"%s and %s widened by %d overlap — a frame would show its neighbour's pixels" % [a, b, room])
+	# And every frame's margin gives the room back, so a widened frame is exactly as large.
 	for named: StringName in frames.get_animation_names():
-		var slice := frames.get_frame_texture(named, 0) as AtlasTexture
-		assert_true(slice.margin.position.x >= room and slice.margin.position.y >= room
-			and slice.margin.size.x >= room * 2 and slice.margin.size.y >= room,
-			"%s's margin %s has room for %d" % [named, slice.margin, room])
+		for i: int in frames.get_frame_count(named):
+			var slice := frames.get_frame_texture(named, i) as AtlasTexture
+			assert_true(slice.margin.position.x >= room and slice.margin.position.y >= room
+				and slice.margin.size.x >= room * 2 and slice.margin.size.y >= room,
+				"%s %d's margin %s has room for %d" % [named, i, slice.margin, room])
 
 
 func test_the_tool_reads_ours_and_writes_beside_the_window() -> void:
@@ -161,18 +164,25 @@ func test_everybody_the_demo_shows_wears_a_look_of_the_table() -> void:
 	var sim: Sim = Game.build()
 	var cast := sim.store(&"cast") as Cast
 	var region: Region = (sim.store(&"world") as WorldState).region()
+	# **Named in the table, not fallen back on** (the review of group L): `of_person` gives
+	# anybody unlisted a villager, which always resolves — so the check is that nobody
+	# the cast names, and no trade a stranger has, relies on it.
+	var table: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CastLooks.FILE)) as Dictionary
+	var people: Dictionary = table.get("people", {}) as Dictionary
+	var strangers: Dictionary = table.get("strangers", {}) as Dictionary
 	var dressed: int = 0
 	for id: StringName in cast.npcs.keys():
 		var npc: Npc = cast.npcs[id] as Npc
 		if id == OpeningRules.FAIRY:
 			continue
+		if npc.generic:
+			assert_true(strangers.has(String(npc.kind)), "a %s stranger has a look of his trade" % npc.kind)
+		else:
+			assert_true(people.has(String(id)), "%s is dressed by name in content/looks.json" % id)
 		var look: StringName = CastLooks.of_person(npc.id, npc.kind, region.zone_at(npc.tile))
 		assert_true(names.has(look), "%s wears %s, which is a look" % [id, look])
 		dressed += 1
 	assert_true(dressed >= 30, "the cast and its strangers: %d" % dressed)
-	for kind: String in ["trader", "guard", "gatekeeper", "watchman"]:
-		assert_true(names.has(CastLooks.of_person(StringName(kind + "@1"), StringName(kind), &"")),
-			"a %s stranger has a look" % kind)
 
 
 func test_the_named_ones_the_demo_needs_wear_their_own() -> void:
@@ -187,6 +197,25 @@ func test_the_named_ones_the_demo_needs_wear_their_own() -> void:
 		"the works dress their own watchmen")
 	assert_eq(CastLooks.of_person(&"watchman@3", &"watchman", &"wide_acres"), &"watch",
 		"and everywhere else a watchman is the king's")
+
+
+func test_the_works_watchmen_where_they_stand_wear_its_livery() -> void:
+	# The place comes from their own tiles, not from a name written into the test.
+	var sim: Sim = Game.build()
+	var cast := sim.store(&"cast") as Cast
+	var region: Region = (sim.store(&"world") as WorldState).region()
+	var at_the_works: int = 0
+	for npc: Npc in cast.npcs.values():
+		if npc.kind != &"watchman":
+			continue
+		var place: StringName = region.zone_at(npc.tile)
+		var look: StringName = CastLooks.of_person(npc.id, npc.kind, place)
+		if place == &"cinderworks":
+			at_the_works += 1
+			assert_eq(look, &"works_guard", "%s stands in the works and wears its livery" % npc.id)
+		else:
+			assert_eq(look, &"watch", "%s stands in %s and is the king's" % [npc.id, place])
+	assert_eq(at_the_works, 2, "the works' two watchmen stand in the works")
 
 
 func test_a_fighter_s_look_follows_his_kind() -> void:
@@ -240,3 +269,63 @@ func test_a_look_s_frames_keep_his_frames_sizes() -> void:
 			assert_eq(ours.get_size(), his.get_size(), "%s %d: the same size" % [named, i])
 			assert_eq(ours.region.end.y, his.region.end.y, "%s %d: his feet on the same edge" % [named, i])
 			assert_true(ours.atlas != his.atlas, "%s %d: drawn from the look's sheet" % [named, i])
+
+
+# ------------------------------------------------------------------- fresh sheets ---
+
+func test_the_sheets_were_drawn_from_the_recipes_as_they_stand() -> void:
+	# **A recipe edited without the tool rerun** (the review of group L) leaves every
+	# other test green and the old look on the screen. The tool's full run writes the
+	# recipes it drew from; they have to be the ones in the content.
+	assert_true(FileAccess.file_exists(CastLooks.RECIPES_DRAWN), "the tool says what it drew from")
+	var drawn: Variant = JSON.parse_string(FileAccess.get_file_as_string(CastLooks.RECIPES_DRAWN))
+	assert_true(drawn is Dictionary, "and it reads")
+	if not drawn is Dictionary:
+		return
+	assert_eq(float((drawn as Dictionary).get("room_px", -1)), float(CastLooks.room_px()), "with the same room")
+	var then: Dictionary = (drawn as Dictionary).get("looks", {}) as Dictionary
+	for look: String in CastLooks.looks().keys():
+		assert_true(then.has(look), "%s was drawn — run tools/draw_cast_looks.gd" % look)
+		if then.has(look):
+			assert_true(then[look] == CastLooks.looks()[look],
+				"%s's recipe changed since its sheet was drawn — run tools/draw_cast_looks.gd" % look)
+	assert_eq(then.size(), CastLooks.looks().size(), "and no look was drawn that is not in the content")
+
+
+func test_a_frame_dressed_now_is_the_one_on_disk() -> void:
+	# And the tool itself: two frames dressed in memory, the pieces that do the most,
+	# held pixel for pixel against the committed sheets.
+	var frames: SpriteFrames = _his_frames()
+	var base: Image = _base()
+	if frames == null or base == null:
+		debt("his workshop is not copied in; run tools/vendor_workshop.sh")
+		return
+	var made: GDScript = _tool()
+	var room: int = CastLooks.room_px()
+	var region := Rect2i((frames.get_frame_texture(&"idle_left", 0) as AtlasTexture).region)
+	var rect: Rect2i = CastLooks.with_room(region, room)
+	for look: StringName in [&"kings_guard", &"wren"]:
+		var fresh: Image = made.dress_region(base, region, &"left", CastLooks.looks()[String(look)] as Dictionary, room)
+		var disk: Image = (load(CastLooks.sheet_path(look)) as Texture2D).get_image()
+		disk.convert(Image.FORMAT_RGBA8)
+		var differ: int = 0
+		for y: int in rect.size.y:
+			for x: int in rect.size.x:
+				var a: Color = fresh.get_pixel(x, y)
+				var b: Color = disk.get_pixel(rect.position.x + x, rect.position.y + y)
+				if (a.a > 0.0 or b.a > 0.0) and not a.is_equal_approx(b):
+					differ += 1
+		assert_eq(differ, 0, "%s idle_left dressed now matches its sheet — run tools/draw_cast_looks.gd" % look)
+
+
+func test_our_fight_cells_are_not_widened() -> void:
+	# `frames_for` widens his frames only; ours have no margin to give the room back.
+	var cell := AtlasTexture.new()
+	cell.region = Rect2(0, 887, 160, 200)
+	var frames := SpriteFrames.new()
+	frames.add_animation(&"attack_left")
+	frames.add_frame(&"attack_left", cell)
+	var dressed: SpriteFrames = CastLooks.frames_for(frames, ImageTexture.new())
+	var ours := dressed.get_frame_texture(&"attack_left", 0) as AtlasTexture
+	assert_eq(ours.region, cell.region, "a fight cell keeps its rectangle")
+	assert_eq(ours.margin, Rect2(), "and has no margin")

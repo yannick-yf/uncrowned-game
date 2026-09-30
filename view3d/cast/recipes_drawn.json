@@ -1,0 +1,560 @@
+{
+  "looks": {
+    "bram": {
+      "_why": "The survivor who teaches the sword: grey hair, a short grey beard, a tunic the colour of old wine, his sword at the belt (Yannick, 2026-09-30).",
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "beard",
+          {
+            "colour": [
+              32.0,
+              0.24,
+              0.8
+            ]
+          }
+        ],
+        [
+          "scabbard"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          32.0,
+          0.26,
+          0.24,
+          0.92
+        ],
+        "leather": [
+          25.0,
+          0.9,
+          0.45,
+          0.65
+        ],
+        "shirt": [
+          2.0,
+          0.7,
+          0.4,
+          0.55
+        ],
+        "trousers": [
+          25.0,
+          1.0,
+          0.28,
+          0.85
+        ]
+      }
+    },
+    "kings_guard": {
+      "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, and a fifth taller than anybody.",
+      "pieces": [
+        [
+          "iron_body"
+        ],
+        [
+          "surcoat"
+        ],
+        [
+          "shield_on_back"
+        ],
+        [
+          "bascinet"
+        ],
+        [
+          "pauldrons"
+        ]
+      ],
+      "recolour": {},
+      "scale": 1.2
+    },
+    "villager_a": {
+      "_why": "Civilians, in undyed and plant-dyed cloth, no pack — they are at home. A straw hat, a red headscarf, and two bare heads.",
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "straw_hat"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          38.0,
+          0.7,
+          0.45,
+          1.05
+        ],
+        "shirt": [
+          38.0,
+          0.4,
+          0.28,
+          0.95
+        ],
+        "trousers": [
+          95.0,
+          0.9,
+          0.26,
+          1.1
+        ]
+      }
+    },
+    "villager_b": {
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "headscarf",
+          {
+            "colour": [
+              4.0,
+              0.6,
+              0.58
+            ]
+          }
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          18.0,
+          0.55,
+          0.4,
+          0.45
+        ],
+        "shirt": [
+          150.0,
+          0.35,
+          0.26,
+          0.7
+        ],
+        "trousers": [
+          28.0,
+          1.0,
+          0.26,
+          0.95
+        ]
+      }
+    },
+    "villager_c": {
+      "pieces": [
+        [
+          "remove_pack"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          15.0,
+          0.5,
+          0.35,
+          0.35
+        ],
+        "shirt": [
+          28.0,
+          0.45,
+          0.3,
+          0.75
+        ],
+        "trousers": [
+          40.0,
+          0.8,
+          0.26,
+          0.8
+        ]
+      }
+    },
+    "villager_d": {
+      "pieces": [
+        [
+          "remove_pack"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          30.0,
+          0.6,
+          0.4,
+          0.8
+        ],
+        "shirt": [
+          80.0,
+          0.35,
+          0.28,
+          0.65
+        ],
+        "trousers": [
+          25.0,
+          1.0,
+          0.26,
+          0.8
+        ]
+      }
+    },
+    "watch": {
+      "_why": "The king's ordinary men — the bridge, the watch, the Muster: his red, but cloth and an iron cap, a sword at the belt. Light, so beatable, which is what the eye should read.",
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "cap",
+          {
+            "colour": [
+              218.0,
+              0.24,
+              0.42
+            ]
+          }
+        ],
+        [
+          "scabbard"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          22.0,
+          0.6,
+          0.35,
+          0.5
+        ],
+        "leather": [
+          22.0,
+          1.0,
+          0.45,
+          0.7
+        ],
+        "shirt": [
+          356.0,
+          0.9,
+          0.45,
+          0.62
+        ],
+        "trousers": [
+          30.0,
+          1.0,
+          0.25,
+          0.9
+        ]
+      }
+    },
+    "worker_a": {
+      "_why": "The ironworks' workers: sooty clothes, a leather apron, heavy gloves, a cloth over the hair. Three, so a shift is not one man repeated.",
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "gloves",
+          {
+            "colour": [
+              20.0,
+              0.55,
+              0.3
+            ]
+          }
+        ],
+        [
+          "apron"
+        ],
+        [
+          "headscarf",
+          {
+            "colour": [
+              215.0,
+              0.3,
+              0.3
+            ]
+          }
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          20.0,
+          0.45,
+          0.3,
+          0.35
+        ],
+        "leather": [
+          15.0,
+          0.7,
+          0.35,
+          0.45
+        ],
+        "shirt": [
+          205.0,
+          0.2,
+          0.24,
+          0.42
+        ],
+        "trousers": [
+          220.0,
+          0.3,
+          0.12,
+          0.6
+        ]
+      }
+    },
+    "worker_b": {
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "gloves",
+          {
+            "colour": [
+              20.0,
+              0.55,
+              0.3
+            ]
+          }
+        ],
+        [
+          "apron"
+        ],
+        [
+          "headscarf",
+          {
+            "colour": [
+              18.0,
+              0.6,
+              0.42
+            ]
+          }
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          25.0,
+          0.55,
+          0.35,
+          0.6
+        ],
+        "leather": [
+          15.0,
+          0.7,
+          0.35,
+          0.45
+        ],
+        "shirt": [
+          30.0,
+          0.25,
+          0.22,
+          0.4
+        ],
+        "trousers": [
+          220.0,
+          0.3,
+          0.12,
+          0.6
+        ]
+      }
+    },
+    "worker_c": {
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "gloves",
+          {
+            "colour": [
+              20.0,
+              0.55,
+              0.3
+            ]
+          }
+        ],
+        [
+          "apron"
+        ],
+        [
+          "headscarf",
+          {
+            "colour": [
+              40.0,
+              0.28,
+              0.72
+            ]
+          }
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          40.0,
+          0.65,
+          0.45,
+          1.0
+        ],
+        "leather": [
+          15.0,
+          0.7,
+          0.35,
+          0.45
+        ],
+        "shirt": [
+          215.0,
+          0.2,
+          0.24,
+          0.42
+        ],
+        "trousers": [
+          220.0,
+          0.3,
+          0.12,
+          0.6
+        ]
+      }
+    },
+    "works_archer": {
+      "_why": "The same livery, a bow in the hand and a quiver where the pack was: told from the swordsman before either acts.",
+      "pieces": [
+        [
+          "quiver"
+        ],
+        [
+          "cap",
+          {
+            "colour": [
+              26.0,
+              0.55,
+              0.36
+            ]
+          }
+        ],
+        [
+          "bow_in_hand"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          35.0,
+          0.7,
+          0.4,
+          0.95
+        ],
+        "leather": [
+          22.0,
+          1.0,
+          0.45,
+          0.7
+        ],
+        "shirt": [
+          40.0,
+          0.95,
+          0.55,
+          0.95
+        ],
+        "trousers": [
+          28.0,
+          1.0,
+          0.3,
+          1.0
+        ]
+      }
+    },
+    "works_guard": {
+      "_why": "The quest's guards, and the works' own men: ochre, the works' colour, a leather cap, a sword in the hand.",
+      "pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "cap",
+          {
+            "colour": [
+              26.0,
+              0.55,
+              0.36
+            ]
+          }
+        ],
+        [
+          "sword_in_hand"
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          26.0,
+          0.6,
+          0.38,
+          0.55
+        ],
+        "leather": [
+          22.0,
+          1.0,
+          0.45,
+          0.7
+        ],
+        "shirt": [
+          40.0,
+          0.95,
+          0.55,
+          0.95
+        ],
+        "trousers": [
+          28.0,
+          1.0,
+          0.3,
+          1.0
+        ]
+      }
+    },
+    "wren": {
+      "_why": "The hunter who teaches the bow: a green hood, a bow in the hand, a quiver on the back.",
+      "pieces": [
+        [
+          "quiver"
+        ],
+        [
+          "hood",
+          {
+            "colour": [
+              130.0,
+              0.5,
+              0.4
+            ]
+          }
+        ],
+        [
+          "bow_in_hand",
+          {
+            "colour": [
+              30.0,
+              0.6,
+              0.5
+            ]
+          }
+        ]
+      ],
+      "recolour": {
+        "hair": [
+          44.0,
+          0.85,
+          0.5,
+          1.2
+        ],
+        "leather": [
+          28.0,
+          1.0,
+          0.5,
+          0.8
+        ],
+        "shirt": [
+          135.0,
+          0.55,
+          0.32,
+          0.55
+        ],
+        "trousers": [
+          30.0,
+          1.0,
+          0.28,
+          0.9
+        ]
+      }
+    }
+  },
+  "room_px": 8
+}

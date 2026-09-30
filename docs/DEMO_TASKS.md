@@ -2381,11 +2381,53 @@ and of each lesson.
 > Sena's (`worker_c`) is pale linen now. The tool is deterministic — rebuilding changed
 > that one sheet and no other.
 
-### L8 · Photographs, a review, the letter
+### L8 · Photographs, a review, the letter — **built 2026-09-30**
 
 Est. 3 h. The opening's frames and the works' in both languages; the review sub-agent;
 CLAUDE.md, V3 and `POUR_SLOSINIO.md` (what is ours on his figure, and what he could draw
 instead).
+
+> **Built.** `tools/opening_frames.sh` took the opening in French and English — 56 frames,
+> 0 script errors — and `docs/frames/cast/in_game.png` was retaken after the fixes below.
+> V3 has *Everybody told apart*; `POUR_SLOSINIO.md` §15 and his task page say what is ours
+> on his figure and what he could draw instead, fight poses included.
+>
+> **The review** (a fresh-eyes sub-agent, sixteen findings) and what became of each:
+>
+> 1. **Seen from the side, the weapon jumped between hands as he walked** — the hand
+>    furthest ahead changes with the swing. The weapon hand seen from the side is now the
+>    hand in front (the larger blob), and in a fight cell the one that moved. Fixed.
+> 2. **Seen from the side, the bow crossed Wren's and the archers' faces** — his face
+>    sticks out further than his fist. At rest and seen from the side the bow is slung on
+>    the back, behind him; held out in a shot it is still in the hand. Fixed.
+> 3. **The king's guard's blow thrown away from us showed a floating gauntlet** — the helm
+>    uncovered where his hair had hidden the arm. What a fight cell moved is never erased,
+>    a raised sleeve is recoloured like the rest of him, and the arm is laid again from the
+>    shoulder to the fist behind the helm or the hood. Fixed.
+> 4. **Nothing told a recipe edited from a sheet rebuilt.** A full run writes
+>    `view3d/cast/recipes_drawn.json`; `test_the_sheets_were_drawn_from_the_recipes_as_they_stand`
+>    fails when the content has moved on, and `test_a_frame_dressed_now_is_the_one_on_disk`
+>    dresses two frames in memory (the tool's painting is static for it) and holds them
+>    against the sheets — it caught a stale import on its first run. Fixed.
+> 5. **Tests that could not fail.** Named people must be dressed by name and strangers by
+>    trade, not by the villager fallback; the works' watchmen are found from their own
+>    tiles; rooms are checked widened against widened and every frame's margin; our fight
+>    cells are shown not to be widened. Fixed.
+> 6. **Who wears what** — the king dressed as his guards, the king's guards unarmed, Bram
+>    fighting with his sword sheathed, Kell the deserter in the king's red, Harry the
+>    foreman dressed as a worker. **Yannick's to decide**; asked.
+> 7.–13. **Docs**: V3's stale counts, CLAUDE.md's state table (V6, L3–L8), two claims in
+>    the letter that were not true (his silhouette does change under a helm; his values are
+>    scaled, not kept), the same face for everybody, fight poses in what he could draw, the
+>    older sections of the letter pointing at §15, and the French made plainer. Fixed.
+> 14. **Traces of the pack on the back.** The whole of the pack's box is repainted evenly,
+>     buckle included. Fixed; a pixel or two can remain on two side-view walk frames.
+> 15. **The flinch dropped what stood outside his rectangle.** The whole dressed cell is
+>     cut and moved now. Fixed; the waist cut slicing a quiver or a pauldron is the cut
+>     his own body takes, and stays.
+> 16. **Loading.** Every look is loaded while the world is built rather than on first wear,
+>     which was in the middle of the fight at the furnace; the marks over a head are lifted
+>     over the taller figures. The 156 MB of video memory stands, as L2 says.
 
 ---
 

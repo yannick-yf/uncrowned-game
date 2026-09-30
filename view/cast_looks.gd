@@ -17,6 +17,8 @@ extends RefCounted
 
 const FILE: String = "res://content/looks.json"
 const DIR: String = "res://view3d/cast/"
+## The recipes the sheets in `DIR` were drawn from, written by the tool's full run.
+const RECIPES_DRAWN: String = "res://view3d/cast/recipes_drawn.json"
 
 static var _table: Dictionary = {}
 
