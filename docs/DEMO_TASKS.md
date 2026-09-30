@@ -2472,6 +2472,11 @@ watches. **Check:** a frame of him at the furnaces.
 Est. 30 min. The page Yannick sent him (`docs/TACHES_POUR_SLOSINIO.md`, published) says
 nothing yet of the new art rule or of the looks. Republished at the same link.
 
+> **Built 2026-09-30.** Republished at the same link (version 3): the date, the new rule
+> in its header, point 2 renamed *what we made ourselves* with the looks' row and its
+> table's headings changed, a picture of the looks in play (`docs/frames/cast/in_game.png`),
+> and the faces' line made true. The page is private until shared from its Share menu.
+
 ---
 
 ## S — the shell
