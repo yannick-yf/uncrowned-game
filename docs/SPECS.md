@@ -691,8 +691,9 @@ an ending reads either figure; a test holds that.
 > is the game's first save. Walking north into the village, the player is **called
 > over by Bram**: a '!' over him, the player held, Bram walks down and the conversation
 > opens without being asked for — once (O16–O17, Yannick's *« dresseur Pokémon »*).
-> He teaches three drills, the sword, the bow with Wren shooting and magic with the
-> fairy's gift (O8–O10, and §5's amendment below), and then the road runs north to the
+> He teaches three drills, the sword, the bow — Wren hands you one and you shoot Bram as he
+> comes at you (redone in T5, 2026-09-29) — and magic with the fairy's gift (O8–O10,
+> and §5's amendment below), and then the road runs north to the
 > Cinderworks, with two wolves before the bridge. What stands below still holds: one
 > fairy, once; the seven things; what she must not say. **What no longer holds** is the
 > Cinderworks *in the first frame*: on his map the works are well north of Brindle, and
@@ -2737,8 +2738,10 @@ words.
 > real-time fight described here, rejected it, and the fight became **turn-based on the
 > world grid** — `docs/COMBAT_V2.md` is the design, and the real-time one is deleted
 > (`docs/COMBAT.md` records it). On **2026-09-29 (group O)** it gained, for the
-> tutorial's three drills only, **a bow** — Wren's: she aims at a tile and looses when
-> her next turn comes, and stepping off the tile in between dodges — and **one spell**, the fairy's gift
+> tutorial's three drills only, **a bow** — Wren's, and since T5 (2026-09-29, Yannick
+> having played it: *« je tire, ça tire »*) the player's too: an arrow lands on the
+> archer's own act, from two tiles to six, and **U** changes the weapon in your hands —
+> and **one spell**, the fairy's gift
 > (§5). A drill is a spar with a goal, a master and a round limit, and nothing in it
 > can kill you (`COMBAT_V2.md` §9). *Where* it happens — in place, the camera dropping
 > and never turning — still stands as settled below; the depth (an AI worth the name,

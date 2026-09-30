@@ -338,8 +338,8 @@ see its own stderr**. The script fails on any `SCRIPT ERROR` in the run, which i
 the only thing that closes the gap.
 
 Two speeds. `run_tests.sh` runs the **fast suite** — bare simulations, no map
-walks, no asset pack — in about **22 s**. `--all` adds the journeys, the asset pack and
-the days of weather, and takes about **61 s** on the baked world and **53 s** on the 2D
+walks, no asset pack — in about **25 s**. `--all` adds the journeys, the asset pack and
+the days of weather, and takes about **63 s** on the baked world and **55 s** on the 2D
 map. `test_runner.gd -- --fast --profile` prints every suite's time and the 25 slowest
 tests; `tools/profile_parts.gd` times the steps tests take and one in-game day system
 by system.
@@ -354,7 +354,7 @@ actually needs. The 4 s the full suites gained on 2026-09-19 is **not** the figh
 `--all` was measured at 42.2 s with the first design's `CombatSystem` taken out of
 `Game.build()` and 42.8 s with it in, so a system on the step costs the other 478 tests
 nothing measurable. The duel's tests are in the **fast** suite for the same reason.
-It was 41 s on 2026-09-29, after O21, and **T4 profiled it the same evening: 22 s.**
+It was 41 s on 2026-09-29, after O21, and **T4 profiled it the same evening: 22 s** (about 25 s once T9's gate tests joined it).
 A quarter of it was `test_screens` building his whole 3D window for tests that read
 only the HUD (`draws_the_world`, 9.9 s to 0.2 s); a walk across the baked world cost a
 second in `Navigation` over Dictionaries, now flat arrays in the same order, for the
@@ -365,9 +365,9 @@ wolves' and the hail's looks, every step. That is the next thing to cut, not a t
 A suite that declares `const SLOW: bool = true` is in the second group.
 
 **Two worlds, since M1 (2026-09-13); the baked one is the game since M4 (2026-09-14).**
-`run_tests.sh` runs on the baked world (about **22 s** fast, **61 s** all);
+`run_tests.sh` runs on the baked world (about **25 s** fast, **63 s** all);
 `tools/run_tests.sh --procedural --all` runs the same suite on the 2D map (about
-**53 s**), and both have to be green before a commit that touches the map, the kit, a
+**55 s**), and both have to be green before a commit that touches the map, the kit, a
 position or the pace. A test says where it stands in the world's terms —
 `at_a_stall()`, `in_town(&"harrowgate")`, `alone_on_the_road()`, `in_the_wood()`, all on
 `TestCase` — and never as a tile; a time budget written for six tiles a second is
@@ -397,7 +397,7 @@ reserved for Claude's map ingestion, so the two agents do not edit the same work
 are out of date, and nothing in it is assigned.)
 
 Write the test first. Run the fast suite after every meaningful change — it is the only
-thing that tells you whether something broke. (It takes 22 s since T4: see *Two speeds*.)
+thing that tells you whether something broke. (About 25 s since T4: see *Two speeds*.)
 
 If verifying a change requires opening the editor, ask whether the logic belongs in
 `core/` instead.
@@ -478,7 +478,7 @@ step is a photograph of two people standing about. (It replaced `UNCROWNED_FIGHT
 first design's, deleted with it in K6 on 2026-09-26.) `bram` alone squares up and waits on the
 player, which is the frame that shows the tiles a turn buys; `bram:19:press` runs
 nineteen steps with one of `tools/duel_player.gd`'s hands on the keys — `press`, `hold`,
-`stand`, `leave`, `cast`, `bow` — which is the step a blow lands on. `wolf,wolf` squares up against several at once (O6); `drill:sword[:steps[:hand]]` begins a drill of the tutorial as its master's line does (O8); `drill:magic` also writes the fairy's gift straight in, and `drill:bow` a bow of your own, one frame and not a save-able state (O10, T5). **When a picture is being
+`stand`, `leave`, `cast`, `bow` — which is the step a blow lands on. `wolf,wolf` squares up against several at once (O6); `gatekeeper@1` against a stranger, and the yard answers as it does in play (T9); `drill:sword[:steps[:hand]]` begins a drill of the tutorial as its master's line does (O8); `drill:magic` also writes the fairy's gift straight in, and `drill:bow` a bow of your own, one frame and not a save-able state (O10, T5). **When a picture is being
 taken the simulation is held on the step asked for**, or the twelve frames before the
 shutter would carry the fight past it; and only the last ten steps' events are fresh, so
 the picture carries one blow's spark and number and not every blow's.
@@ -530,7 +530,7 @@ first, so the screen name may carry the page after a colon — `journal:standing
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
 **`tools/opening_frames.sh [out_dir] [languages…]`** (2026-09-29, O21) photographs the
-opening for a review: twenty-six frames a language, from the title to the works' gate,
+opening for a review: twenty-eight frames a language, from the title to the fight at the works' gate,
 through the tools above, with one line per frame giving its count of `SCRIPT ERROR`s — 0,
 and then look at them. A shot plays the run on disk and the language is a setting on
 disk, so it moves the player's `save.json` aside (every frame is then a fresh run) and
@@ -591,7 +591,7 @@ player is shaped like a town — an allégeance he chooses, a standing per town 
 only with witnessed deeds, and a richesse that is gold. **The town is the unit of
 account**: a theft moves the town it happened in and not the person it happened to.
 
-### Where the work actually stands — 2026-09-29
+### Where the work actually stands — 2026-09-30
 
 The task list is the record; this is the short version, because a session that has to
 reconstruct it from forty commits will get it wrong.
@@ -604,7 +604,7 @@ reconstruct it from forty commits will get it wrong.
 | **K** | Built, K3 included. **K6 is done** (2026-09-26): Yannick played the turn-based fight and the real-time one is deleted |
 | **W** | Built. W4 found there is no funnel; **building one is deferred** to a game-design pass once the first tasks are done (Yannick, 2026-09-26) |
 | **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version. **He played it the same evening**: the combat tutorial is the one finding — group T |
-| **T** | **The work now** (planned 2026-09-29, evening; T1–T9 built, T10 to do). His rulings, the clearing out (T2), a page of tasks for his brother (T3), the fast suite profiled (T4), **the bow redone** — an arrow lands when it is shot, the player carries one and chooses his weapon with U (T5–T7) — every drill explained step by step (T8), and **the gatekeeper's guards, who keep coming** (T9); then frames and a review (T10) |
+| **T** | **Built, T1–T10** (2026-09-29/30), from Yannick's first play of the opening: his rulings written down, the clearing out, a page of tasks for his brother (`docs/TACHES_POUR_SLOSINIO.md`), the fast suite profiled (41 s to about 25), **the bow redone** — an arrow lands when it is shot, Bram's line hands you a bow, **U** changes the weapon in your hands — every lesson's card with **its steps and keys and a hint for where you stand** (and the first round's HUD, which drew no keys, fixed), and **the gatekeeper's guards, who keep coming**: that fight cannot be won, and the gate stays manned and shut. A fresh-eyes review walked it; its seven findings are fixed. **The check is Yannick playing the tutorial again** |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

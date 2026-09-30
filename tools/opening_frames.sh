@@ -4,7 +4,7 @@
 #   tools/opening_frames.sh [out_dir] [languages...]
 #   tools/opening_frames.sh /tmp/opening fr en      # the default
 #
-# Twenty-six frames a language, from the title to the works' gate, each through the
+# Twenty-eight frames a language, from the title to the works' gate and the fight there, each through the
 # debug tools CLAUDE.md lists (UNCROWNED_TALK, _AT, _HAIL, _DUEL, _VIEW, _WORLD), then
 # one line per frame: its name and how many SCRIPT ERRORs its run printed — which has to
 # be 0, and which says nothing about whether the picture is right: look at them.
@@ -53,13 +53,14 @@ for LANG_ID in $LANGS; do
   shoot 07_hail_mark play UNCROWNED_HAIL=bram:6
   shoot 08_hail_walk play UNCROWNED_HAIL=bram:100
   shoot 09_hail_talk play UNCROWNED_HAIL=bram:400
-  shoot 10_sword_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword
+  shoot 10_sword_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword:67
   shoot 11_sword_blow play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword:160:press
   shoot 12_sword_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword:700:press
-  shoot 13_bow_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow
+  shoot 13_bow_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:47
+  shoot 13b_bow_in_hand play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:153:bow
   shoot 14_bow_arrow play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:60:bow
   shoot 15_bow_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:900:bow
-  shoot 16_magic_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic
+  shoot 16_magic_first play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic:47
   shoot 17_magic_spell play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic:220:cast
   shoot 18_magic_end play UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic:900:cast
   shoot 19_journal_quests journal:quests
@@ -70,5 +71,6 @@ for LANG_ID in $LANGS; do
   shoot 24_flat_bake play UNCROWNED_VIEW=2d
   shoot 25_procedural_start play UNCROWNED_WORLD=procedural
   shoot 26_pause pause
+  shoot 27_gate_fight play UNCROWNED_AT=316,208 UNCROWNED_DUEL=gatekeeper@1:340:press
 done
 echo "frames in $OUT"

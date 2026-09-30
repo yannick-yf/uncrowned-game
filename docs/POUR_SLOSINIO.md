@@ -480,3 +480,24 @@ dans les couleurs de tes braises et de ta forge). Tous les feux de camp du jeu s
 maintenant comme ça.
 
 Le jour où tu dessines une tombe ou un feu de camp, on remplace les nôtres par les tiens.
+
+## 14. L'arc du joueur, les gardes de l'usine, et la clairière (2026-09-29)
+
+Yannick a joué le tutoriel. Trois changements te concernent.
+
+**Le joueur tire à l'arc.** Wren lui donne un arc pendant l'entraînement, et la touche U
+passe de l'épée à l'arc. Une flèche touche au moment du tir, de deux à six cases. Tu n'as
+dessiné ni arc ni tir : on réutilise la pose « bras armé » tirée de tes images, et la flèche
+est un trait clair dessiné par nous, en code. Si tu dessines une pose d'arc bandé dans les
+quatre directions, et une flèche, on remplace les nôtres.
+
+**Les gardes de l'usine.** Si le joueur attaque le portier, un garde sort de la cour à
+chaque tour, jusqu'à cinq à la fois, et le combat ne peut pas être gagné. Ces gardes sont
+ton voyageur, comme tout le monde. Aujourd'hui, on ne distingue plus le joueur des gardes
+qu'à l'anneau sous ses pieds : c'est la dette des visages, qui devient plus visible ici.
+
+**La clairière des fées est supprimée.** Le joueur ne s'y réveille plus depuis le
+cimetière. Il n'y a plus d'anneau de bois à planter autour.
+
+Ta liste de tâches à jour est dans `docs/TACHES_POUR_SLOSINIO.md`.
+

@@ -3,11 +3,11 @@
 Date: 2026-09-18; J, K and W added on 2026-09-23; O, S and B since. The specs turned into
 work.
 
-> **Where it stands (2026-09-29, evening).** M, P, Q, J, K, W and O are built, with the
+> **Where it stands (2026-09-30).** M, P, Q, J, K, W, O and T are built, with the
 > exceptions their entries give (M3 not accepted, P2 below, Q6's lines); F was built and
 > deleted in K6; S1–S2 and C1 are built, C3 half. **Yannick played the opening** and his
-> findings are group **T**, planned the same evening — the work now. Then **P2**, with
-> him, then **C2–C4** as one change. **CLAUDE.md's table *Where the work actually
+> findings were group **T**, built by 2026-09-30. Next **P2**, with him, then **C2–C4**
+> as one change. **CLAUDE.md's table *Where the work actually
 > stands* is the short version and is kept current** — read it before this list.
 
 J, K and W came from two designs settled on 2026-09-23 — [the player model](PLAYER_MODEL.md)
@@ -1838,7 +1838,7 @@ waits for Yannick's own OK. *(Given the same evening: T2.)*
 ## T — after his play: the bow redone, the gate's guards, the clearing out
 
 > **Planned 2026-09-29 (evening)**, from Yannick's first play of the opening and his
-> answers the same evening. **T1–T9 are built** (T7's rules with T5, its words with T8). T10 remains. Then P2, with him, then C2–C4.
+> answers the same evening. **All ten are built** (2026-09-30; T7's rules with T5, its words with T8). Then P2, with him, then C2–C4.
 
 **What he found, playing it.** *« Le tuto combat est imparfait. Je n'arrive pas à tirer
 à l'arc et rien ne me l'explique. Pas de sélection d'arme. »* The player never had a bow:
@@ -2098,7 +2098,22 @@ guards are his traveller. `DuelSystem` learns a fighter who joins mid-fight.
 killed; the fight never ends *won*; leaving and falling end it as any fight does; a
 replay to the fingerprint. **Check:** frames at rounds 1, 3 and 6.
 
-### T10 · Photographs and a fresh-eyes review
+### T10 · Photographs and a fresh-eyes review — **built 2026-09-30**
+
+> **Built.** `tools/opening_frames.sh` now takes each lesson's first turn with the card
+> and its hint, the bow in hand, and the fight at the gate: twenty-eight frames a
+> language, zero script errors in all fifty-six, the player's save and settings put back
+> as they were. The review sub-agent (stopped once by the session's limit, then resumed)
+> walked the tutorial and the gate and confirmed seven defects, all fixed in two commits:
+> **the gate** — killing the gatekeeper left his ward refusing a tile nobody was drawn on,
+> so the works keeps the post manned (`OpeningRules.KEPT_POSTS`); a fight's moves ignored
+> wards (`WardRules.shut_tiles`); the window offered the tile where a lesson's master
+> watches; the gate tests stood inside the wall — and **the words** — Bram still spoke of
+> the old bow lesson, « À Le portier des Forges », a too-close hint that sent you to a
+> sword that does not count, « -0 », and *flèches* meaning both the arrows and the keys.
+> SPECS §10, V3, COMBAT_V2 §9 and POUR_SLOSINIO §14 say what the game now is. One frame
+> taken during the review drew a hint for a tile one to the right: a real key press
+> reached the window while it was open on the desktop; retaken, it was right.
 
 Est. 4 h, plus fixes. Depends on: T8, T9.
 

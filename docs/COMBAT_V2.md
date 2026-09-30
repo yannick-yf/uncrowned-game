@@ -310,6 +310,18 @@ in your hands** on your turn (T6), and the keys line says what K does with it.
 **The spell.** `CAST` with the fairy's gift (`you:the_gift`): reach 3, damage 5, every
 2 rounds. Only the player has it.
 
+**What a drill says** (T8). The card is the title, the count, the steps each naming its
+key — ticked when where you stand and what you hold make them so — and on your turn a
+hint that answers where you stand: too close for the bow, too far for the sword, the
+gift resting, or the key when he is in reach.
+
+**The works' gate** (T9, 2026-09-29). Attacking the gatekeeper is a real fight, and the
+yard answers it: `reinforcements` in `content/duel.json`, keyed by the trade of the one
+attacked, sends **a works guard at the end of every round**, on the free tile nearest the
+gate, while fewer than five stand. Each can be killed — a works guard is a person, and
+killing one is a killing — and the fight is not won while more are coming: it ends when
+the player falls or leaves. Yannick's ruling: *the fight cannot be won*.
+
 **What it is not.** No AI worth the name, no balance between reach and cover, no second
 spell: those are the later workstream the standing exception in CLAUDE.md keeps for its
 own branch. The bow and the spell exist so the tutorial can teach three things, and the

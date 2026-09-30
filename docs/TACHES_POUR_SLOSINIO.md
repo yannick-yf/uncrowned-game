@@ -47,7 +47,7 @@ matières. Le jour où tu dessines le tien, un test le voit et on retire le nôt
 | Quoi | Ce qu'on a fait en attendant | Ce qu'il faudrait |
 |---|---|---|
 | **Le combat du voyageur** | 12 images tirées de tes images : bras armé, coup, recul, dans les quatre directions | La préparation du coup, le coup et le recul, dans les quatre directions |
-| **L'arc** (bientôt) | Rien encore. Le joueur va tirer à l'arc dans le tutoriel | Une pose « arc bandé » dans les quatre directions, et une flèche |
+| **L'arc** | Le joueur tire à l'arc dans le tutoriel : on réutilise la pose « bras armé », et la flèche est un trait clair dessiné en code | Une pose « arc bandé » dans les quatre directions, et une flèche |
 | **Un animal** | Le loup : onze blocs, peints avec ta roche et ton sombre | Un loup, qui marche et qui mord |
 | **Une tombe** | Des stèles en pierre et des planches en bois, faites avec tes matières | Un petit kit de cimetière : deux ou trois pierres tombales, une croix de bois, un tertre de terre, un tertre herbeux, un muret bas |
 | **Un feu de camp** | Composé de tes pièces (pierres, bûches, braises, fumée) ; seules les flammes sont à nous | Un feu de camp à toi, si tu veux |
