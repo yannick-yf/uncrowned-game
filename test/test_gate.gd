@@ -309,15 +309,33 @@ func _foe_kinds(duel: Duel) -> Array[StringName]:
 	return out
 
 
-func test_reaching_to_put_a_furnace_out_brings_three_kings_guards() -> void:
+func test_reaching_to_put_a_furnace_out_brings_the_quests_guards() -> void:
+	# V6 (Yannick): the guards at a furnace are the quest's — a sword and two bows, easy.
 	var sim: Sim = _forced_beside(true)
 	sim.submit(&"act")
 	sim.advance(3)
 	var duel: Duel = _duel(sim)
 	assert_true(duel.on(), "somebody comes")
-	assert_eq(_foe_kinds(duel), [&"kings_guard", &"kings_guard", &"kings_guard"] as Array[StringName],
-		"three king's guards")
+	assert_eq(_foe_kinds(duel), [&"works_guard", &"works_archer", &"works_archer"] as Array[StringName],
+		"a sword and two bows")
 	assert_false(sim.facts.has(DeedRules.DEED_DOUSE), "and the furnace still burns")
+
+
+func test_the_quests_guards_are_easy_and_the_archers_shoot_from_afar() -> void:
+	for kind: StringName in [&"works_guard", &"works_archer"]:
+		assert_true(DuelRules.hp_of(kind) < DuelRules.hp_of(&"_default"), "%s has fewer points than a man" % kind)
+	assert_true(DuelRules.damage_of(&"works_guard", DuelRules.SWORD) < DuelRules.strike_damage(), "and a lighter blow")
+	assert_eq(DuelRules.weapon_of(&"works_archer"), DuelRules.BOW, "the archers carry bows")
+	var sim: Sim = _forced_beside(true)
+	sim.submit(&"act")
+	sim.advance(3)
+	_play(sim, DuelPlayer.STAND, 3000)
+	var from_afar: int = 0
+	for row: SimEvent in sim.events.of_type(&"blow_landed"):
+		if String(row.data.get("by", "")).begins_with("works_archer") \
+				and int(row.data.get("apart_mm", 0)) >= DuelRules.millimetres_of(DuelRules.bow_min_tiles()):
+			from_afar += 1
+	assert_true(from_afar > 0, "standing still, the archers hit you from afar: %d" % from_afar)
 
 
 func test_reaching_to_light_one_brings_tom() -> void:
@@ -332,11 +350,16 @@ func test_reaching_to_light_one_brings_tom() -> void:
 
 func test_beating_them_lets_the_act_go_through() -> void:
 	var sim: Sim = _forced_beside(true)
-	(sim.store(&"world") as WorldState).unkillable = true
+	var world := sim.store(&"world") as WorldState
+	world.unkillable = true
+	var beside: Vector2 = world.player_pos
 	sim.submit(&"act")
 	sim.advance(3)
 	_play(sim, DuelPlayer.PRESS, 60000)
 	sim.advance(3)
+	assert_true(sim.facts.sources_of(SiteRules.FACED).has(SiteRules.QUEST_GUARD), "the guards were beaten")
+	# Chasing the archers moves you: back to the furnace, as a player walks back to it.
+	world.player_pos = beside
 	sim.submit(&"act")
 	sim.advance(3)
 	assert_true(sim.facts.has(DeedRules.DEED_DOUSE), "the furnace is put out")
@@ -427,7 +450,7 @@ func test_beating_the_guards_is_not_facing_tom() -> void:
 	# The review of group V: the guards beaten at a burning furnace, then Sena's side taken,
 	# and relighting went through with nobody to stop it.
 	var sim: Sim = _forced_beside(true)
-	sim.facts.add_source(SiteRules.FACED, SiteRules.KINGS_GUARD)
+	sim.facts.add_source(SiteRules.FACED, SiteRules.QUEST_GUARD)
 	sim.facts.add_source(SiteRules.VOUCHED_FOR, &"sena")
 	sim.submit(&"act")
 	sim.advance(3)

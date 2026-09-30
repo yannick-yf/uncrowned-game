@@ -84,6 +84,21 @@
       "purse": 5,
       "person": true
     },
+    "works_guard": {
+      "hp": 10,
+      "damage": 3,
+      "spares": false,
+      "purse": 2,
+      "person": true
+    },
+    "works_archer": {
+      "hp": 8,
+      "spares": false,
+      "purse": 2,
+      "person": true,
+      "weapon": "bow"
+    },
+    "_works_guards_note": "THE QUEST'S GUARDS (V6, 2026-09-30; Yannick: 'ces gardes font partie de la quete, ils doivent etre faciles a battre : 1 garde a l'epee, 2 gardes archers ; ce melange doit obliger le joueur a se deplacer'). They come when a furnace is put out on a run that forced the gate. Fewer points and smaller blows than a man; the archers shoot the bow's band, so a player who stands still is hit every turn.",
     "_guards_note": "THE KING'S GUARDS (V1, 2026-09-30; Yannick: 'des types d'ennemis que l'on peut retrouver dans la cite du chateau ... tres tres forts, trop forts pour le joueur au debut du jeu'). Forty points and blows of ten where a man has fifteen and five: at 100 HP three of them kill the player in about four rounds, and each takes eight sword blows. 'damage' is a fighter's own blow, the table's strike_damage otherwise. Nobody the cast names, so 'person' says they are men: killing one is a killing, with its deed. The gatekeeper is a stranger of the cast, read by his trade."
   },
   "_reinforcements_note": "WHO ANSWERS AN ATTACK (T9, revised in V1, 2026-09-30). Keyed by the trade of the one attacked. At the end of round AFTER_ROUNDS, TOTAL of KIND join the fight together, from round about: on the free tiles APART tiles from the player (Yannick: 'des gardes aux alentours arrivent'). They came from the yard first and stood behind the gatekeeper, who fills the one-tile gateway, for ever. The fight cannot be won before they have come; once every one of them is down, it is.",

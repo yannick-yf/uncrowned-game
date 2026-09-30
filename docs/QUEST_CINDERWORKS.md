@@ -113,7 +113,7 @@ let in, both of which are things the world already models.
 | | With Tom | With Drissa | By force (2026-09-30) |
 |---|---|---|---|
 | **Get in** | he brings you through | she vouches for you | the gatekeeper and three king's guards, beaten |
-| **Face** | a foreman, or the gate's guard | **Tom**, come to stop the shift | **three more king's guards** at a furnace put out; **Tom** at one lit |
+| **Face** | a foreman, or the gate's guard | **Tom**, come to stop the shift | **the quest's guards** at a furnace put out — a sword and two bows, easy (V6); **Tom** at one lit |
 | **Act** | put out the furnaces still burning | relight the cold ones | whatever you want: a burning furnace put out, a cold one lit |
 
 The fight is not an addition: it is the moment somebody puts themselves physically

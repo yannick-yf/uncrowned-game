@@ -322,7 +322,8 @@ round**, three tiles from the player. A king's guard has 40 points and blows of 
 fighter's own `damage` row — where a man has 15 and 5; he is a person, and killing one is
 a killing. The fight cannot be won before they have come; if by a miracle all four fall,
 it is, and the gate is taken by force. At the furnaces afterwards, putting one out brings
-three more of them and lighting one brings Tom (`SiteRules.who_stops`).
+**the quest's guards** — a swordsman and two archers, easy, so the player has to move
+(V6) — and lighting one brings Tom (`SiteRules.who_stops`).
 
 **What it is not.** No AI worth the name, no balance between reach and cover, no second
 spell: those are the later workstream the standing exception in CLAUDE.md keeps for its

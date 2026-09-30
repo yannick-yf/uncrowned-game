@@ -64,20 +64,22 @@ static func stands_in_the_way(who: StringName, facts: FactBase) -> bool:
 	if facts.has(VOUCHED_FOR):
 		return who == &"tom"
 	# With the gate forced (V4), whoever comes for the act reached for: Tom for a furnace
-	# lit, the king's guards for one put out.
+	# lit, the quest's guards for one put out (V6).
 	if facts.has(FORCED):
-		return who == &"tom" or DuelRules.trade_of(who) == KINGS_GUARD
+		return who == &"tom" or DuelRules.trade_of(who) == QUEST_GUARD
 	return false
 
 
-## The king's guards, who come for a furnace put out once the gate is forced (V4).
-const KINGS_GUARD: StringName = &"kings_guard"
+## The quest's guards, who come for a furnace put out once the gate is forced (V6): the
+## swordsman leads, and two archers come with him.
+const QUEST_GUARD: StringName = &"works_guard"
+const QUEST_ARCHER: StringName = &"works_archer"
 
 
 ## **Who comes to stop this act** (F6, V4): the fighters a `duel_began` is sent against.
 ## Tom's side is stopped by the foreman, Sena's by Tom; with the gate forced, **putting a
-## furnace out brings three king's guards** and **lighting one brings Tom** (Yannick,
-## 2026-09-30).
+## furnace out brings the quest's guards** — a sword and two bows, easy (V6) — and
+## **lighting one brings Tom** (Yannick, 2026-09-30).
 static func who_stops(deed: StringName, facts: FactBase) -> Array[StringName]:
 	if facts == null:
 		return []
@@ -88,7 +90,7 @@ static func who_stops(deed: StringName, facts: FactBase) -> Array[StringName]:
 	if facts.has(FORCED):
 		if deed == DeedRules.DEED_RELIGHT:
 			return [&"tom"]
-		return [KINGS_GUARD, KINGS_GUARD, KINGS_GUARD]
+		return [QUEST_GUARD, QUEST_ARCHER, QUEST_ARCHER]
 	return []
 
 
@@ -100,11 +102,11 @@ static func faced_for(deed: StringName, facts: FactBase, cast: Cast = null) -> b
 	if facts == null:
 		return false
 	if not facts.has(FORCED) or facts.has(BROUGHT_THROUGH) or facts.has(VOUCHED_FOR):
-		# On a side, having faced its man is enough — but the king's guards beaten at a
-		# furnace on a forced run are nobody's side (the review of group V: beat them, take
-		# Sena's side, and Tom never came).
+		# On a side, having faced its man is enough — but the guards beaten at a furnace on
+		# a forced run are nobody's side (the review of group V: beat them, take Sena's side,
+		# and Tom never came).
 		for source: StringName in facts.sources_of(FACED):
-			if source != KINGS_GUARD:
+			if source != QUEST_GUARD:
 				return true
 		return false
 	var first: StringName = who_stops(deed, facts)[0]

@@ -2251,7 +2251,12 @@ Est. 3 h. Depends on: V4.
 Frames of the gate fight, the forced gate, both reaches and their fights, in French and
 English; the review sub-agent; QUEST_CINDERWORKS §3, §4 and §9, COMBAT_V2, V3 and CLAUDE.md.
 
-### V6 · The quest's guards at the furnace: a sword and two bows, easy
+### V6 · The quest's guards at the furnace: a sword and two bows, easy — **built 2026-09-30**
+
+> **Built.** `works_guard` (10 points, blows of 3) and `works_archer` (8 points, a bow),
+> people both; `SiteRules.QUEST_GUARD` leads them and is the one `FACED` remembers. They
+> fall as a band, *Les gardes de l'usine sont à terre*. Chasing the archers moves the
+> player, so the act is done from beside the furnace again, as a player walks back to it.
 
 Est. 2 h. Depends on: V5. **Asked by Yannick, 2026-09-30**, answering V's first question:
 *« Ces gardes font partie de la quête. Ils doivent être faciles à battre : 1 garde à

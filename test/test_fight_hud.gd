@@ -112,14 +112,31 @@ func test_a_man_named_with_his_trade_takes_his_turn_in_good_french() -> void:
 	var reading: Dictionary = _reading(1.0, 100, 15)
 	reading["my_turn"] = false
 	reading["acting_name"] = "Le portier des Forges"
-	reading["acting_noun"] = "portier"
+	reading["acting_noun"] = Text.of(&"fighter.gatekeeper.of")
 	hud.present(reading, 1.0 / 60.0)
-	assert_eq(hud.whose_turn(), Text.of(&"duel.beast_turn", ["portier"]), "from his noun: '%s'" % hud.whose_turn())
+	assert_eq(hud.whose_turn(), Text.of(&"duel.beast_turn", [Text.of(&"fighter.gatekeeper.of")]),
+		"from his noun: '%s'" % hud.whose_turn())
 	reading.erase("acting_noun")
 	reading["acting_name"] = "Bram"
 	hud.present(reading, 1.0 / 60.0)
 	assert_eq(hud.whose_turn(), Text.of(&"duel.his_turn", ["Bram"]), "and a man by his name")
 	hud.free()
+
+
+func test_the_french_turn_lines_elide_before_a_vowel() -> void:
+	# V6's frame: « Au tour du archer de l'usine ». The article and its elision are in the
+	# words themselves, one per kind, checked here in the French file.
+	var fr: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://content/text.fr.json")) as Dictionary
+	for key: String in fr.keys():
+		if not key.ends_with(".of"):
+			continue
+		var words: String = String(fr[key])
+		var noun: String = words.trim_prefix("du ").trim_prefix("de l'").trim_prefix("de la ").trim_prefix("des ")
+		var vowel: bool = "aeiouhéèàâ".contains(noun.substr(0, 1).to_lower())
+		assert_true(not (vowel and words.begins_with("du ")), "%s: « %s » elides before a vowel" % [key, words])
+		assert_true(words.begins_with("du ") or words.begins_with("de l'") or words.begins_with("de la ") or words.begins_with("des "),
+			"%s: « %s » carries its article" % [key, words])
+	assert_eq(String(fr.get("fighter.works_archer.of", "")), "de l'archer de l'usine", "the archer's")
 
 
 func test_a_blow_for_nothing_says_it_landed() -> void:
@@ -325,7 +342,9 @@ func test_the_fights_words_exist_in_both_languages() -> void:
 			&"drill.hint.take_bow", &"drill.hint.bow_too_close", &"drill.hint.too_far", &"drill.hint.shoot_now",
 			&"drill.hint.sword_too_far", &"drill.hint.strike_now", &"drill.hint.gift_too_far",
 			&"drill.hint.gift_resting", &"drill.hint.cast_now", &"fight.touched",
-			&"fighter.kings_guard", &"fighter.kings_guard.noun", &"fighter.kings_guard.many", &"fighter.gatekeeper.noun",
+			&"fighter.kings_guard", &"fighter.kings_guard.of", &"fighter.kings_guard.many",
+			&"fighter.works_guard", &"fighter.works_guard.of", &"fighter.works_guard.many",
+			&"fighter.works_archer", &"fighter.works_archer.of", &"fighter.works_archer.many", &"fighter.gatekeeper.of", &"beast.wolf.of",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
 			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
 			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",

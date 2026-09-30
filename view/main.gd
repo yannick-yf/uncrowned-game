@@ -611,31 +611,36 @@ func _fighter_name(who: StringName) -> String:
 	return Text.of(trade) if Text.has(trade) else String(kind).capitalize()
 
 
-## **What a fighter is called in a sentence**, for « Au tour du … » (the review of T9): a
-## beast by its noun, a man the cast names by his trade by his, and anybody else by
-## nothing — his own name is said as it is.
+## **Whose turn it is, said of a fighter** (the review of T9, V6): the words that follow
+## « Au tour » — « du loup », « du portier », « de l'archer de l'usine », with the article
+## and its elision written in the text, since « du » before a vowel is wrong — for a beast
+## or a man the cast names by his trade; empty for anybody else, whose own name is said.
 func _noun_of(who: StringName) -> String:
 	var kind: StringName = DuelRules.kind_of(who)
-	var beast := StringName("beast.%s.noun" % kind)
+	var beast := StringName("beast.%s.of" % kind)
 	if Text.has(beast):
 		return Text.of(beast)
-	var trade := StringName("fighter.%s.noun" % DuelRules.trade_of(who))
+	var trade := StringName("fighter.%s.of" % DuelRules.trade_of(who))
 	return Text.of(trade) if Text.has(trade) else ""
 
 
-## **The plural of the one trade every foe shares**, « gardes du roi », or empty when they
-## are not all men of one trade with a plural written for it (the review of group V).
+## **What the band every foe belongs to is called**, « gardes du roi », « gardes de
+## l'usine » — each trade's `.many` says which band it is in, so a swordsman and two
+## archers of the works fall together (V6) — or empty when they are not one band (the
+## review of group V).
 func _band_of() -> String:
-	var trade: StringName = &""
+	var band: String = ""
 	for fighter: DuelFighter in _duel.fighters:
 		if fighter.is_player():
 			continue
-		var this: StringName = DuelRules.trade_of(fighter.who)
-		if trade != &"" and this != trade:
+		var key := StringName("fighter.%s.many" % DuelRules.trade_of(fighter.who))
+		if not Text.has(key):
 			return ""
-		trade = this
-	var key := StringName("fighter.%s.many" % trade)
-	return Text.of(key) if trade != &"" and Text.has(key) else ""
+		var this: String = Text.of(key)
+		if band != "" and this != band:
+			return ""
+		band = this
+	return band
 
 
 ## The kind of beast a fighter is, or empty for a person.

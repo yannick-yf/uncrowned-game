@@ -3,8 +3,8 @@ extends TestCase
 ## **The works taken by force, the whole way, replayed** (V4, 2026-09-30).
 ##
 ## Yannick's third way into the Cinderworks: attack the gatekeeper, beat him and the three
-## king's guards who answer, and the furnaces are yours — putting one out brings three more
-## guards, lighting one brings Tom. This walks it from where the game begins, with nothing
+## king's guards who answer, and the furnaces are yours — putting one out brings the quest's
+## guards, a sword and two bows (V6), lighting one brings Tom. This walks it from where the game begins, with nothing
 ## set outside the log but G, which is itself an event, and rebuilds the same works from the
 ## log alone.
 
@@ -58,7 +58,7 @@ func test_the_gate_forced_and_a_furnace_put_out_replay_from_the_log() -> void:
 
 	sim.submit(&"act")
 	sim.advance(3)
-	assert_true(_duel(sim).on(), "reaching for it brings the king's guards")
+	assert_true(_duel(sim).on(), "reaching for it brings the quest's guards")
 	_fight(sim)
 	# The fight moves you; back to the furnace, as a player would walk back to it.
 	assert_true(walker.walk_to(sim, beside, 200000, true), "back to it: %s" % walker.report)
