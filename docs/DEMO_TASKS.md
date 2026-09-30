@@ -2160,7 +2160,14 @@ getting in.
 
 ### V0 · The ruling and this plan written down — **built 2026-09-30**
 
-### V1 · Three king's guards answer the gatekeeper
+### V1 · Three king's guards answer the gatekeeper — **built 2026-09-30**
+
+> **Built**, with one change the tests asked for: the guards came first from the yard,
+> on the free tiles nearest the gate, and stood for ever behind the gatekeeper, who fills
+> the one-tile gateway. His words were *des gardes aux alentours* — they now come **from
+> round about**, three tiles from the player (`DuelRules.free_around`). *Garde du roi* /
+> *King's guard*; « Au tour du garde du roi ». Frames at steps 150 and 400: three bars of
+> 40, the player at 60.
 
 Est. 4 h. Depends on: —.
 

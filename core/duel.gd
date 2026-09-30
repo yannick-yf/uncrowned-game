@@ -74,12 +74,12 @@ var spar: bool = false
 ## goal — blows landed for the sword, arrows for the bow, spells for the gift.
 var drill: StringName = NOBODY
 var tally: int = 0
-## **Who answers the attack, and from where** (T9): the kind the yard sends, the tile it
-## comes from, how often, and how many may stand at once. `NOBODY` in any other fight.
+## **Who answers the attack, and from where** (T9, V1): the kind that comes, the tile it
+## comes from, the round at whose end it comes, and how many. `NOBODY` in any other fight.
 var reinforced_by: StringName = NOBODY
-var reinforce_from: Vector2i = Vector2i.ZERO
-var reinforce_every: int = 1
-var reinforce_most: int = 0
+var reinforce_apart: int = 0
+var reinforce_after: int = 1
+var reinforce_total: int = 0
 ## **Where a drill's master stands when he is not one of its fighters** (the review of
 ## O21): in Wren's drills Bram watches. Nobody walks onto him, and nothing walks him
 ## home until the lesson is over. `Duel.NOWHERE` otherwise.
@@ -198,5 +198,15 @@ func fingerprint() -> String:
 		" ".join(parts), turn, String(phase), round_number, turns_taken,
 		String(acting), String(target), String(outcome), settling, owed_damage,
 		player_felled, spar, String(drill), tally,
-	] + (" reinforced=%s@%s/%d/%d" % [reinforced_by, reinforce_from, reinforce_every, reinforce_most]
+	] + (" reinforced=%s@%d/%d/%d" % [reinforced_by, reinforce_apart, reinforce_after, reinforce_total]
 		if reinforced_by != NOBODY else "") + (" master@%s" % master_at if master_at != NOWHERE else "")
+
+
+## **How many of the answer have come** (V1): its seats, standing or down.
+func reinforcements_come() -> int:
+	var count: int = 0
+	for fighter: DuelFighter in fighters:
+		if reinforced_by != NOBODY and DuelRules.kind_of(fighter.who) == reinforced_by:
+			count += 1
+	return count
+

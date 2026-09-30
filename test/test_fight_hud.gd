@@ -94,7 +94,7 @@ func test_the_fallen_lose_their_bars_until_the_beat() -> void:
 	var reading: Dictionary = _reading(1.0, 60, 15)
 	var rows: Array = [{"who": "gatekeeper@1", "name": "Gatekeeper", "his_hp": 0, "his_max": 15, "his_down": true}]
 	for seat: int in 6:
-		rows.append({"who": "works_guard#%d" % (seat + 1), "name": "Works guard", "his_hp": 15, "his_max": 15,
+		rows.append({"who": "kings_guard#%d" % (seat + 1), "name": "King's guard", "his_hp": 15, "his_max": 15,
 			"his_down": seat < 2})
 	reading["fighters"] = rows
 	hud.present(reading, 1.0 / 60.0)
@@ -313,7 +313,7 @@ func test_the_fights_words_exist_in_both_languages() -> void:
 			&"drill.hint.take_bow", &"drill.hint.bow_too_close", &"drill.hint.too_far", &"drill.hint.shoot_now",
 			&"drill.hint.sword_too_far", &"drill.hint.strike_now", &"drill.hint.gift_too_far",
 			&"drill.hint.gift_resting", &"drill.hint.cast_now", &"fight.touched",
-			&"fighter.works_guard", &"fighter.works_guard.noun", &"fighter.gatekeeper.noun",
+			&"fighter.kings_guard", &"fighter.kings_guard.noun", &"fighter.gatekeeper.noun",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
 			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
 			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",

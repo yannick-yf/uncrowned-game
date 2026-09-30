@@ -1,13 +1,11 @@
 extends TestCase
 
-## **Attack the gatekeeper, and the guards keep coming** (T9, 2026-09-29).
+## **Attack the gatekeeper, and the king's guards answer** (T9, revised in V1, 2026-09-30).
 ##
-## Yannick's answer to QUEST_CINDERWORKS §9's third question — *what does the guard on the
-## gate do if the player simply attacks him* — was: other guards come and must be fought,
-## and the fight cannot be won. A guard joins from the yard every round for as long as it
-## lasts. Each one can be killed, so nobody is made invulnerable (SPECS §1); it ends when
-## the player falls or leaves. And killing the gatekeeper opens nothing: the gate is a
-## fact (`WardRules`), never a man.
+## Yannick's answer to QUEST_CINDERWORKS §9's third question, revised the day after T9
+## built it as an endless flow: three guards of the castle city come, **very strong**, too
+## strong for the player at the start of the game. If by a miracle he kills the four, the
+## gate is his (V2) and so are the furnaces (V3, V4).
 
 func after_each() -> void:
 	DuelRules.forget()
@@ -58,44 +56,62 @@ func test_the_gatekeeper_can_be_attacked() -> void:
 	assert_true(duel.on(), "saying it is a fight")
 	assert_not_null(duel.get_fighter(_gatekeeper(sim).id), "against him")
 	assert_false(duel.spar, "and a real one")
-	assert_eq(duel.reinforced_by, &"works_guard", "which the yard answers")
+	assert_eq(duel.reinforced_by, &"kings_guard", "which the king's guards answer")
 
 
-func test_a_guard_joins_every_round_and_never_too_many_at_once() -> void:
+func test_three_kings_guards_come_together_and_no_more() -> void:
 	var sim: Sim = Game.build()
 	(sim.store(&"world") as WorldState).unkillable = true
 	_attack(sim)
 	var duel: Duel = _duel(sim)
-	var most: int = int(DuelRules.reinforcement(&"gatekeeper").get("most_at_once", 0))
-	assert_true(most > 0, "the yard sends a limited number at once")
-	var joined_by_round: Dictionary = {}
 	var hands := DuelPlayer.new(DuelPlayer.STAND)
-	for _step: int in 6000:
+	var round_two_began: int = -1
+	for _step: int in 8000:
 		if not duel.on():
 			break
 		hands.play(sim, duel)
 		sim.advance(1)
-		joined_by_round[duel.round_number] = sim.events.of_type(&"duel_joined").size()
-		assert_true(duel.foes_of(DuelRules.PLAYER).size() <= most + 1,
-			"no more than %d guards beside the gatekeeper" % most)
-	assert_true(sim.events.of_type(&"duel_joined").size() >= 2, "guards came: %d" % sim.events.of_type(&"duel_joined").size())
-	var first: SimEvent = sim.events.of_type(&"duel_joined")[0] as SimEvent
-	assert_true(String(first.data.get("who", "")).begins_with("works_guard"), "a works guard: %s" % first.data)
+		if round_two_began < 0 and duel.round_number >= 2:
+			round_two_began = sim.step
+	var joined: Array[SimEvent] = sim.events.of_type(&"duel_joined")
+	assert_eq(joined.size(), 3, "three came, and no more")
+	for row: SimEvent in joined:
+		assert_true(String(row.data.get("who", "")).begins_with("kings_guard"), "a king's guard: %s" % row.data)
+		assert_true(round_two_began < 0 or row.step < round_two_began, "all at the end of the first round")
 
 
-func test_each_one_can_be_killed_and_it_is_never_won() -> void:
-	# Unkillable (G), pressing for a long time: guards go down, and the fight is never won.
+func test_a_kings_guard_is_far_stronger_than_a_man() -> void:
+	assert_true(DuelRules.hp_of(&"kings_guard") >= 2 * DuelRules.hp_of(&"_default"),
+		"he takes %d where a man takes %d" % [DuelRules.hp_of(&"kings_guard"), DuelRules.hp_of(&"_default")])
+	assert_true(DuelRules.damage_of(&"kings_guard", DuelRules.SWORD) >= 2 * DuelRules.strike_damage(),
+		"and strikes for %d" % DuelRules.damage_of(&"kings_guard", DuelRules.SWORD))
+	var sim: Sim = Game.build()
+	_attack(sim)
+	_play(sim, DuelPlayer.STAND, 8000)
+	var theirs: int = 0
+	for row: SimEvent in sim.events.of_type(&"blow_landed"):
+		if String(row.data.get("by", "")).begins_with("kings_guard"):
+			theirs += 1
+			assert_eq(int(row.data.get("damage", 0)), DuelRules.damage_of(&"kings_guard", DuelRules.SWORD),
+				"a king's guard's blow")
+	assert_true(theirs > 0, "they struck")
+
+
+func test_by_a_miracle_the_four_can_be_beaten() -> void:
+	# Unkillable (G), pressing: each can be killed, and once all four are down it is won.
 	var sim: Sim = Game.build()
 	(sim.store(&"world") as WorldState).unkillable = true
 	_attack(sim)
-	_play(sim, DuelPlayer.PRESS, 30000)
+	_play(sim, DuelPlayer.PRESS, 60000)
 	var downs: int = 0
 	for row: SimEvent in sim.events.of_type(&"duel_down"):
 		if String(row.data.get("who", "")) != "player":
 			downs += 1
-	assert_true(downs >= 3, "they fall: %d down" % downs)
+	assert_eq(downs, 4, "the gatekeeper and the three")
+	var won: bool = false
 	for row: SimEvent in sim.events.of_type(&"duel_decided"):
-		assert_ne(String(row.data.get("how", "")), "won", "and the fight is never won")
+		won = won or String(row.data.get("how", "")) == "won"
+	assert_true(won, "and the fight is won")
 
 
 func test_falling_ends_it() -> void:
@@ -118,12 +134,11 @@ func test_leaving_ends_it() -> void:
 	assert_ne(_duel(sim).outcome, &"won", "and not won")
 
 
-func test_the_gate_is_a_fact_not_a_man() -> void:
+func test_a_lost_fight_leaves_the_gate_shut() -> void:
 	var sim: Sim = Game.build()
-	(sim.store(&"world") as WorldState).unkillable = true
 	_attack(sim)
-	_play(sim, DuelPlayer.PRESS, 30000)
-	assert_false(WardRules.opens(&"cinderworks_gate", sim.facts), "whoever fell, the gate is still shut")
+	_play(sim, DuelPlayer.STAND, 40000)
+	assert_false(WardRules.opens(&"cinderworks_gate", sim.facts), "you fell, and the gate is shut")
 
 
 func test_the_fight_at_the_gate_replays_from_the_log() -> void:

@@ -223,6 +223,26 @@ static func reinforcement(trade: StringName) -> Dictionary:
 	return _reinforcements.get(String(trade), {}) as Dictionary
 
 
+## **A free tile `apart` tiles from somebody, or further** (V1): searched ring by ring from
+## `apart` outwards, each ring in `AROUND`'s fixed order and then along its sides, so the
+## same ground and the same fighters give the same tile in every replay.
+static func free_around(region: Region, centre: Vector2i, apart_tiles: int, taken: Dictionary) -> Vector2i:
+	if region == null:
+		return centre
+	for ring: int in range(maxi(apart_tiles, 1), apart_tiles + 8):
+		for x: int in range(-ring, ring + 1):
+			for y: int in [-ring, ring]:
+				var candidate := centre + Vector2i(x, y)
+				if region.is_passable(candidate) and not taken.has(candidate):
+					return candidate
+		for y: int in range(-ring + 1, ring):
+			for x: int in [-ring, ring]:
+				var candidate := centre + Vector2i(x, y)
+				if region.is_passable(candidate) and not taken.has(candidate):
+					return candidate
+	return free_near(region, centre, taken)
+
+
 ## **The free tile nearest a point**, searched ring by ring in `AROUND`'s fixed order, so
 ## the same ground and the same fighters give the same tile in every replay (T9).
 static func free_near(region: Region, point: Vector2i, taken: Dictionary) -> Vector2i:
@@ -333,6 +353,15 @@ static func reaches(weapon: StringName, from: Vector2i, to: Vector2i) -> bool:
 ## What a strike thrown with this weapon costs.
 static func damage_with(weapon: StringName) -> int:
 	return bow_damage() if weapon == BOW else strike_damage()
+
+
+## **What this fighter's strike costs** (V1): an arrow the bow's figure, a blow his own
+## `damage` row where he has one — a king's guard strikes for ten — and the table's
+## otherwise.
+static func damage_of(who: StringName, weapon: StringName) -> int:
+	if weapon == BOW:
+		return bow_damage()
+	return int(_about(who).get("damage", strike_damage()))
 
 
 ## The furthest a weapon reaches, for the ring drawn round whoever holds it and for
