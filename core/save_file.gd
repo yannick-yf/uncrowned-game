@@ -32,7 +32,9 @@ const PATH: String = "user://save.json"
 ## 2 since O1 (2026-09-29): a won spar used to replay as a killing, and now yields.
 ## 3 since T5 (2026-09-29): an arrow lands when it is shot, so a fight against a bow
 ## replays differently.
-const VERSION: int = 3
+## 4 since group V (2026-09-30): the gate's answer, where a foe is set down, and what is
+## within reach of a furnace all changed, so a run through any of them replays otherwise.
+const VERSION: int = 4
 ## Where the save is written. `PATH`, except under test: the suite shares `user://`
 ## with the game, and a test that discards its save must not discard the player's (O4).
 static var path: String = PATH
