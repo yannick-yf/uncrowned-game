@@ -42,3 +42,17 @@ static func opens(ward: StringName, facts: FactBase) -> bool:
 		if facts.has(key as StringName):
 			return true
 	return false
+
+
+## **Every warded tile shut to somebody with these facts** (the review of T9): the fight's
+## moves read it as the walk does, or a turn could end in the gateway and a fight left
+## from there left you inside the yard.
+static func shut_tiles(region: Region, facts: FactBase) -> Dictionary:
+	var out: Dictionary = {}
+	if region == null:
+		return out
+	for tile: Variant in region.wards.keys():
+		if not opens(region.wards[tile] as StringName, facts):
+			out[tile as Vector2i] = true
+	return out
+

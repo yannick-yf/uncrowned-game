@@ -29,7 +29,12 @@ func _attack(sim: Sim) -> void:
 	var world := sim.store(&"world") as WorldState
 	past_the_hail(sim)
 	var him: Npc = _gatekeeper(sim)
-	world.player_pos = him.centre() + Vector2(0.0, 1.0)
+	# From the street in front of the gate — the tile beside him outside the yard — and
+	# not from inside its wall, which is where the first draft of this suite stood (T10's
+	# review).
+	var outside: Vector2i = world.region().open_near(him.tile + Vector2i(-1, 0))
+	assert_true(world.region().is_passable(outside), "the player stands on open ground: %s" % outside)
+	world.player_pos = Vector2(outside) + Vector2(0.5, 0.5)
 	sim.submit(&"talk", {"npc": String(him.id)})
 	sim.advance(2)
 	sim.submit(&"choose_intent", {"intent": "attack_gatekeeper"})
@@ -134,3 +139,52 @@ func test_the_fight_at_the_gate_replays_from_the_log() -> void:
 	assert_true(sim.events.of_type(&"duel_joined").size() > 0, "guards joined")
 	var replayed: Sim = Game.replay(sim)
 	assert_eq(_duel(replayed).fingerprint(), _duel(sim).fingerprint(), "the same fight, guard for guard")
+
+
+# ------------------------------------------------------- the review of T9 (T10) ---
+
+func test_whoever_falls_at_the_gate_another_man_stands_in_it() -> void:
+	# The review of T9: killing the gatekeeper stopped the window drawing him, and the ward
+	# went on refusing his tile — a wall nobody could see. The works keeps its post manned.
+	var sim: Sim = Game.build()
+	(sim.store(&"world") as WorldState).unkillable = true
+	_attack(sim)
+	var him: Npc = _gatekeeper(sim)
+	var duel: Duel = _duel(sim)
+	var hands := DuelPlayer.new(DuelPlayer.PRESS)
+	for _step: int in 30000:
+		if not duel.on() or sim.facts.has(StringName("killed:%s" % him.id)):
+			break
+		hands.play(sim, duel)
+		sim.advance(1)
+	assert_true(sim.facts.has(StringName("killed:%s" % him.id)), "the gatekeeper was killed")
+	assert_false(OpeningRules.is_gone(him.id, sim.facts), "and another man stands at the gate")
+	assert_false(WardRules.opens(&"cinderworks_gate", sim.facts), "which is still shut")
+
+
+func test_a_fight_does_not_walk_you_through_a_shut_gate() -> void:
+	# Latent, found by the review of T9: the fight's own moves ignored the ward, so a turn
+	# could end in the gateway, and a fight left from there left you inside the yard.
+	var region: Region = Region.build_overworld()
+	if region.wards.is_empty():
+		assert_false(Places.baked(), "only the 2D map has no yard, and so no gate to keep")
+		return
+	var gate: Vector2i = region.wards.keys()[0] as Vector2i
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	past_the_hail(sim)
+	var beside: Vector2i = region.open_near(gate + Vector2i(-1, 0))
+	world.player_pos = Vector2(beside) + Vector2(0.5, 0.5)
+	sim.submit(&"duel_began", {"opponents": ["wolf"], "by": "player"})
+	sim.advance(1)
+	var duel: Duel = _duel(sim)
+	# The wolf is set down beside you, which here is the gateway itself: stand it off to
+	# the west, so the gate is free and only the ward can refuse it.
+	duel.foe().at = region.open_near(beside + Vector2i(-3, 0))
+	assert_ne(duel.foe().at, gate, "the gateway is free")
+	assert_true(duel.waiting_on_player(), "your turn, beside the gate")
+	assert_false(WardRules.shut_tiles(region, sim.facts).is_empty(), "the gate is shut to you")
+	sim.submit(&"duel_turn", {"who": "player", "to_x": gate.x, "to_y": gate.y, "action": "wait", "target": ""})
+	sim.advance(200)
+	assert_ne(duel.me().at, gate, "and a turn aimed into it ends outside")
+

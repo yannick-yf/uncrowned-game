@@ -74,9 +74,17 @@ const WORKS_RELIT: StringName = &"i_lit_them_again"
 const KILLED: String = "killed:%s"
 
 
+## The trades whose post is never left empty (the review of T9, 2026-09-29): killing the
+## man in it is a killing like any other, and another stands there after. Without it the
+## gate's ward went on refusing a tile the window no longer drew anyone on.
+const KEPT_POSTS: Array[StringName] = [&"gatekeeper"]
+
+
 static func is_gone(who: StringName, facts: FactBase) -> bool:
 	if facts != null and facts.has(StringName(KILLED % who)):
-		return true
+		# **A post the works keeps manned** (the review of T9): whoever falls at the gate,
+		# the yard puts another man in it — the ward that stops you is somebody you see.
+		return not KEPT_POSTS.has(StringName(String(who).get_slice("@", 0)))
 	if who == FAIRY:
 		return not fairy_is_here(facts)
 	if who == TOM:

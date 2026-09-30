@@ -421,6 +421,34 @@ func test_without_a_bow_u_changes_nothing() -> void:
 	play.free()
 
 
+func test_the_tiles_offered_are_the_tiles_the_rules_take() -> void:
+	# The review of T9: in Wren's lesson Bram watches from beside you, the window offered
+	# his tile, and the rules refused it — the turn stayed where it was and the spell became
+	# a wait.
+	var sim: Sim = Game.build()
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	var world := sim.store(&"world") as WorldState
+	var walkers := sim.store(&"walkers") as Walkers
+	var bram: Npc = (sim.store(&"cast") as Cast).get_npc(&"bram")
+	var his: Vector2i = walkers.where(bram)
+	world.player_pos = Vector2(world.region().open_near(his + Vector2i(-1, 0))) + Vector2(0.5, 0.5)
+	sim.submit(&"duel_began", {"opponent": "wren", "by": "wren", "spar": true, "drill": "magic"})
+	sim.advance(1)
+	var duel := sim.store(&"duel") as Duel
+	for _step: int in 2000:
+		if duel.waiting_on_player():
+			break
+		sim.advance(1)
+	assert_eq(duel.master_at, his, "Bram watches from his post")
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var offered: Array = play.call(&"_duel_reach", duel.me()) as Array
+	assert_true(offered.size() > 1, "tiles are offered")
+	assert_false(offered.has(Vector2(his) + Vector2(0.5, 0.5)), "and his is not one of them")
+	play.free()
+
+
 func test_the_reading_says_whether_the_gift_can_be_cast() -> void:
 	# O10: the keys line offers the spell only to somebody she gave it to, and the ring
 	# of its reach is drawn only while it is ready.

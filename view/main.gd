@@ -621,6 +621,12 @@ func _duel_reach(acting: DuelFighter) -> Array:
 	for fighter: DuelFighter in _duel.fighters:
 		if fighter != acting and fighter.alive():
 			taken[fighter.at] = true
+	# The tiles the rules refuse too: where a lesson's master stands watching, and a gate
+	# shut to you (the review of T9). Offered here and refused there, the turn was lost.
+	if _duel.master_at != Duel.NOWHERE:
+		taken[_duel.master_at] = true
+	if acting.is_player():
+		taken.merge(WardRules.shut_tiles(_world.region(), _sim.facts))
 	var cost: Dictionary = DuelRules.reachable(
 		acting.at, _world.region(), DuelRules.tiles_per_turn(), taken)
 	for row: Variant in cost.keys():

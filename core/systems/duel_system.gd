@@ -290,8 +290,12 @@ func _player_turn(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		return
 	var mine: DuelFighter = duel.acting_fighter()
 	var wanted := Vector2i(int(event.data.get("to_x", mine.at.x)), int(event.data.get("to_y", mine.at.y)))
+	# Nor through a gate that is shut to you (the review of T9): a fight is walked on the
+	# same ground as the world, wards included.
+	var closed: Dictionary = _taken(duel, mine)
+	closed.merge(WardRules.shut_tiles(world.region(), sim.facts))
 	var cost: Dictionary = DuelRules.reachable(
-		mine.at, world.region(), DuelRules.tiles_per_turn(), _taken(duel, mine))
+		mine.at, world.region(), DuelRules.tiles_per_turn(), closed)
 	if not cost.has(wanted):
 		wanted = mine.at
 	# **What he strikes with is his turn's to say** (T5), and a bow only if he has one of
@@ -360,7 +364,10 @@ func _take(
 ) -> void:
 	# `budget` is a turn's tiles, except for a drill's opening walk (O8).
 	var tiles: int = DuelRules.tiles_per_turn() if budget < 0 else budget
-	var cost: Dictionary = DuelRules.reachable(who.at, world.region(), tiles, _taken(duel, who))
+	var blocked: Dictionary = _taken(duel, who)
+	if who.is_player():
+		blocked.merge(WardRules.shut_tiles(world.region(), sim.facts))
+	var cost: Dictionary = DuelRules.reachable(who.at, world.region(), tiles, blocked)
 	duel.walk = DuelRules.path_to(who.at, to, cost)
 	duel.walked = 0
 	duel.acting = action
