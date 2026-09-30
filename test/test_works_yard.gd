@@ -299,6 +299,9 @@ func test_somebody_is_standing_in_it() -> void:
 		if option.requires != &"":
 			keys[option.requires] = true
 	for key: Variant in (WardRules.KEYS[&"cinderworks_gate"] as Array):
+		# Every key but force (V2), which leaves nobody in the gate to answer it.
+		if key == OpeningRules.KEPT_POSTS.get(&"gatekeeper", &""):
+			continue
 		assert_true(keys.has(key), "he answers to the key %s" % key)
 
 

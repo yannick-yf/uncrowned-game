@@ -114,6 +114,31 @@ func test_by_a_miracle_the_four_can_be_beaten() -> void:
 	assert_true(won, "and the fight is won")
 
 
+func test_winning_forces_the_gate() -> void:
+	# V2: if by a miracle the four fall, the gate is the player's — open, and nobody in it.
+	var sim: Sim = Game.build()
+	(sim.store(&"world") as WorldState).unkillable = true
+	_attack(sim)
+	var him: Npc = _gatekeeper(sim)
+	assert_false(sim.facts.has(SiteRules.FORCED), "not before")
+	_play(sim, DuelPlayer.PRESS, 60000)
+	# The ending is said as the fight closes, and heard on the next step.
+	sim.advance(2)
+	assert_true(sim.facts.has(SiteRules.FORCED), "won, the gate is forced")
+	assert_eq(sim.events.of_type(&"gate_forced").size(), 1, "and it is said once")
+	assert_true(WardRules.opens(&"cinderworks_gate", sim.facts), "it opens")
+	assert_true(OpeningRules.is_gone(him.id, sim.facts), "and nobody stands in it now")
+
+
+func test_leaving_forces_nothing() -> void:
+	var sim: Sim = Game.build()
+	_attack(sim)
+	_play(sim, DuelPlayer.LEAVE, 40000)
+	sim.advance(2)
+	assert_false(sim.facts.has(SiteRules.FORCED), "walking away takes no gate")
+	assert_false(WardRules.opens(&"cinderworks_gate", sim.facts), "it stays shut")
+
+
 func test_falling_ends_it() -> void:
 	var sim: Sim = Game.build()
 	var world := sim.store(&"world") as WorldState
@@ -139,6 +164,7 @@ func test_a_lost_fight_leaves_the_gate_shut() -> void:
 	_attack(sim)
 	_play(sim, DuelPlayer.STAND, 40000)
 	assert_false(WardRules.opens(&"cinderworks_gate", sim.facts), "you fell, and the gate is shut")
+	assert_false(sim.facts.has(SiteRules.FORCED), "not forced")
 
 
 func test_the_fight_at_the_gate_replays_from_the_log() -> void:

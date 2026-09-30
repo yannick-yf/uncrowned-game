@@ -2177,7 +2177,13 @@ endless flow and its cap gone. **Tests first**: three join at the end of round o
 more; each can be killed; a king's guard's blow costs 10; the fight is won once all four
 are down (played with G), lost when the player falls. **Check:** frames of the fight.
 
-### V2 · The gate taken by force
+### V2 · The gate taken by force — **built 2026-09-30**
+
+> **Built.** `SiteRules.FORCED` (`cinderworks:forced`) is written by `OutcomeSystem` when
+> the fight against the gatekeeper is won — which is only once the three king's guards
+> are down too — with a `gate_forced` event; `WardRules` opens with it, and
+> `OpeningRules.KEPT_POSTS` now names the fact that empties the post, so nobody stands in
+> the gateway once it is taken. A loss or a leaving forces nothing.
 
 Est. 3 h. Depends on: V1.
 

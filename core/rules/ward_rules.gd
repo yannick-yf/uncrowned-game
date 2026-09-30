@@ -21,7 +21,9 @@ extends RefCounted
 ## Which fact opens which ward. Content names the ward; this names the key, so that a
 ## place cannot invent its own way of being entered.
 const KEYS: Dictionary = {
-	&"cinderworks_gate": [&"cinderworks:vouched_for", &"cinderworks:brought_through"],
+	&"cinderworks_gate": [&"cinderworks:vouched_for", &"cinderworks:brought_through",
+		# Or taken by force (V2): the four who held it, down.
+		&"cinderworks:forced"],
 }
 
 

@@ -45,6 +45,9 @@ static func deed_at(kind: StringName) -> StringName:
 const FACED: StringName = &"cinderworks:faced_them"
 const BROUGHT_THROUGH: StringName = &"cinderworks:brought_through"
 const VOUCHED_FOR: StringName = &"cinderworks:vouched_for"
+## **The gate taken by force** (V2, 2026-09-30): the gatekeeper and the three king's
+## guards who answered him, all down. A third way in, beside being brought and vouched for.
+const FORCED: StringName = &"cinderworks:forced"
 
 
 ## **Who puts themselves between the player and the furnaces** (F6). Whose side you

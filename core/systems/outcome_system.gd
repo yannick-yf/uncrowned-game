@@ -59,6 +59,13 @@ func _faced(sim: Sim, event: SimEvent) -> void:
 	if String(event.data.get("how", "")) != "won":
 		return
 	var who := StringName(String(event.data.get("opponent", "")))
+	# **The gate taken by force** (V2): a fight against the gatekeeper is won only once the
+	# king's guards who answered him are down too, so winning it is taking the gate.
+	if DuelRules.trade_of(who) == &"gatekeeper":
+		if not sim.facts.has(SiteRules.FORCED):
+			sim.facts.add_source(SiteRules.FORCED, &"witnessed")
+			sim.derive(&"gate_forced", {"by": "player"})
+		return
 	if not SiteRules.stands_in_the_way(who, sim.facts):
 		return
 	if sim.facts.has(SiteRules.FACED):
