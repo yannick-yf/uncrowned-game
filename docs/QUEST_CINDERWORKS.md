@@ -217,5 +217,11 @@ kept under their questions.
    > won.** A guard joins from the yard every round for as long as it lasts, each one
    > can be killed (nobody is made invulnerable, SPECS §1), and it ends when the player
    > falls or leaves. Task T9 of `DEMO_TASKS.md`, **built the same evening**.
+   >
+   > **Revised the next day (Yannick, 2026-09-30):** three guards of the castle city
+   > come, **very strong**, too strong for the player at the start of the game. If by a
+   > miracle he kills the gatekeeper and the three, **he may do what he wants with the
+   > furnaces**: putting them out brings more guards, lighting them brings Tom to fight.
+   > The gate is a third way in — force. Group V of `DEMO_TASKS.md`.
 4. **Names.** Tom and Drissa are Yannick's, and the rest of the cast's names have been
    ruled to need review.

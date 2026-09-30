@@ -2124,6 +2124,89 @@ ours: his brother drew none) say what the game now is.
 
 ---
 
+## V — the gate taken by force
+
+> **Asked 2026-09-30 (Yannick), after group T.** It replaces T9's endless flow of works
+> guards. **V0 is built** (this plan).
+
+**His ruling.** *« Si on attaque le portier, des gardes aux alentours arrivent. On va dire
+3. Ce sont des types d'ennemis que l'on peut retrouver dans la cité du château. Ils sont
+très très forts et trop forts pour le joueur au début du jeu. Si par miracle le joueur
+arrive à tuer le portier plus les trois gardes, alors il peut faire ce qu'il veut avec
+les fours. En restant simple : s'il éteint les fours, alors d'autres gardes arrivent ; si
+on allume les fours, Tom arrive et bagarre. »* And the bow stays as T5 made it: two to six
+tiles, three points (*« parfait »*).
+
+**So the gate becomes a third way in**, beside Tom's and Sena's: force. §4's spine holds
+on it — *get in, face whoever stands in the way, act* — with the gate itself as the
+getting in.
+
+**Defaults taken, which he may overturn:**
+
+- **The king's guards** are a new kind of fighter (*Garde du roi*), the castle city's, not
+  placed anywhere yet but the gate's answer: **40 points and blows of 10**, where a man has
+  15 and 5 — at 100 HP three of them kill the player in about four rounds, and each takes
+  eight sword blows. Numbers in `content/duel.json`.
+- The three **arrive together at the end of the first round**, on the free tiles nearest
+  the gate. Until they have come the fight cannot be won; once all four are down it is.
+- **Winning forces the gate** (`cinderworks:forced`): the ward opens, and nobody stands in
+  the gateway any more. Losing or leaving leaves it shut and manned, as T10 made it.
+- **Whatever he wants with the furnaces**, for somebody who forced the gate without taking a
+  side: **a burning furnace offers to put it out, a cold one to light it** — richesse
+  decides which burn, the window's own count. A side taken keeps its own act.
+- **Who comes**: putting a furnace out brings **three more king's guards**; lighting one
+  brings **Tom**. The act goes through only after beating the one who came **for that act**,
+  as the spine asks.
+
+### V0 · The ruling and this plan written down — **built 2026-09-30**
+
+### V1 · Three king's guards answer the gatekeeper
+
+Est. 4 h. Depends on: —.
+
+`fighters.kings_guard` (40, blows of 10, a person), and a fighter's own `damage` row; the
+gatekeeper's `reinforcements` become `{kind, from_point, after_rounds: 1, total: 3}`, the
+endless flow and its cap gone. **Tests first**: three join at the end of round one and no
+more; each can be killed; a king's guard's blow costs 10; the fight is won once all four
+are down (played with G), lost when the player falls. **Check:** frames of the fight.
+
+### V2 · The gate taken by force
+
+Est. 3 h. Depends on: V1.
+
+Winning the gate fight writes `cinderworks:forced` (`OutcomeSystem`); `WardRules` opens
+with it; the gatekeeper's post is empty once it is written (`KEPT_POSTS`). **Tests first**:
+a win forces the gate and he is gone; a loss or a leaving does neither.
+
+### V3 · At the furnaces, whatever you want
+
+Est. 4 h. Depends on: V2.
+
+`Region.kiln_index` in core — the order the window already lights them in, which then
+reads it rather than counting on its own; `SiteRules.quest_deed_at` asks the site and
+whether it burns: with the gate forced and no side, a burning furnace offers *éteindre*, a
+cold one *rallumer*. **Tests first**: both offers on a forced run, by furnace; a side taken
+keeps its one act; the window and the rules agree on which furnaces burn.
+
+### V4 · Who comes, for which act
+
+Est. 4 h. Depends on: V3.
+
+Reaching to put a furnace out brings three king's guards; reaching to light one brings
+Tom. `FACED` remembers who was faced (its sources), and an act goes through only after
+beating the one who came for it. **Tests first**: each reach brings the right fight;
+beating Tom does not let you put a furnace out unopposed; both acts replay from the log.
+**Check:** `play_opening`-style walk of the forced path headless; frames.
+
+### V5 · Photographs, a review, the documents
+
+Est. 3 h. Depends on: V4.
+
+Frames of the gate fight, the forced gate, both reaches and their fights, in French and
+English; the review sub-agent; QUEST_CINDERWORKS §3, §4 and §9, COMBAT_V2, V3 and CLAUDE.md.
+
+---
+
 ## S — the shell
 
 ### S1 · Four traits, a pool of 8 — **built 2026-09-28**
