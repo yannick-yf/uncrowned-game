@@ -2429,6 +2429,43 @@ instead).
 >     which was in the middle of the fight at the furnace; the marks over a head are lifted
 >     over the taller figures. The 156 MB of video memory stands, as L2 says.
 
+### After L8: Yannick's answers (2026-09-30)
+
+> He answered the review's questions by number: **the king's own look is a task of its
+> own, later** (he is outside the demo); **the king's guards carry a weapon**, *« bien
+> sûr »*; **Bram has his sword in his hand** when he fights; **Harry gets a look of his
+> own**; Kell may stay in the king's red; **his brother's task page is updated**; and
+> **nothing downloaded — only drawings made here**. Three tasks follow.
+
+### L9 · Armed: the king's guards always, Bram and the watch in a fight
+
+Est. 2 h. The king's guards carry a sword in the hand, walking and fighting. Bram and the
+watch keep theirs at the belt and **draw it when they fight**: a recipe may name
+`fight_pieces`, the tool then draws a second sheet, `<look>_fight.png`, in the same layout,
+and the window hands a fighter that sheet for the length of a fight. **Check:** frames of
+the gate fight and of the sword lesson; tests that every fight sheet exists and that the
+window hands it to Bram in a fight and not outside one.
+
+> **Built 2026-09-30.** `kings_guard` carries a 52-pixel sword in the hand; `bram` and
+> `watch` name `fight_pieces` — their scabbard stays at the belt and the sword is drawn —
+> and the tool writes `bram_fight.png` and `watch_fight.png`. `World3d._sheet_worn(figure,
+> true)` hands a fighter his look's fight sheet, which the fight's paint wears for the
+> length of the fight; the same frames read it, so nothing else moves. A light square left
+> in the middle of the back went too: it was the pack's buckle, kept as a hand.
+> `test_the_armed_ones_are_armed`, the fight sheets in `test_every_look_has_a_sheet_the_size_of_his`,
+> and `test_world3d` (Bram's sheet about the village and in a fight) hold it.
+
+### L10 · Harry, the foreman
+
+Est. 1 h. A look of his own, `foreman`: the works' colour darker, a coat and no apron, a
+felt hat with a brim — so the man who comes to stop Tom's side is told from the workers he
+watches. **Check:** a frame of him at the furnaces.
+
+### L11 · His brother's task page, brought up to date
+
+Est. 30 min. The page Yannick sent him (`docs/TACHES_POUR_SLOSINIO.md`, published) says
+nothing yet of the new art rule or of the looks. Republished at the same link.
+
 ---
 
 ## S — the shell

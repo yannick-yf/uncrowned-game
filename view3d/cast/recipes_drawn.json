@@ -1,7 +1,29 @@
 {
   "looks": {
     "bram": {
+      "_fight_note": "L9 (Yannick, 2026-09-30): in a fight his sword is in his hand.",
       "_why": "The survivor who teaches the sword: grey hair, a short grey beard, a tunic the colour of old wine, his sword at the belt (Yannick, 2026-09-30).",
+      "fight_pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "beard",
+          {
+            "colour": [
+              32.0,
+              0.24,
+              0.8
+            ]
+          }
+        ],
+        [
+          "scabbard"
+        ],
+        [
+          "sword_in_hand"
+        ]
+      ],
       "pieces": [
         [
           "remove_pack"
@@ -48,7 +70,7 @@
       }
     },
     "kings_guard": {
-      "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, and a fifth taller than anybody.",
+      "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, a sword in the hand (L9), and a fifth taller than anybody.",
       "pieces": [
         [
           "iron_body"
@@ -64,6 +86,12 @@
         ],
         [
           "pauldrons"
+        ],
+        [
+          "sword_in_hand",
+          {
+            "length": 52.0
+          }
         ]
       ],
       "recolour": {},
@@ -192,7 +220,29 @@
       }
     },
     "watch": {
+      "_fight_note": "L9: a fight draws the sword; the scabbard stays at the belt.",
       "_why": "The king's ordinary men — the bridge, the watch, the Muster: his red, but cloth and an iron cap, a sword at the belt. Light, so beatable, which is what the eye should read.",
+      "fight_pieces": [
+        [
+          "remove_pack"
+        ],
+        [
+          "cap",
+          {
+            "colour": [
+              218.0,
+              0.24,
+              0.42
+            ]
+          }
+        ],
+        [
+          "scabbard"
+        ],
+        [
+          "sword_in_hand"
+        ]
+      ],
       "pieces": [
         [
           "remove_pack"

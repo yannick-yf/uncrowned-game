@@ -112,6 +112,12 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(absf(window.drawn_pixel("Guard_0") - window.drawn_pixel("Player") * 1.2) < 1e-6,
 			"and stands a fifth taller than the player")
 		assert_eq(window.drawn_pixel("Person_bram"), window.drawn_pixel("Player"), "Bram at a man's height")
+		# **His sword in his hand when he fights, at his belt otherwise** (L9).
+		assert_eq(window.worn_sheet("Person_bram", false), CastLooks.sheet_path(&"bram"), "Bram about the village")
+		assert_eq(window.worn_sheet("Person_bram", true), CastLooks.fight_sheet_path(&"bram"), "Bram in a fight")
+		assert_eq(window.worn_sheet("Person_wren", true), CastLooks.sheet_path(&"wren"),
+			"Wren's bow is always in her hand: one sheet")
+		assert_eq(window.worn_sheet("Player", true), window.worn_sheet("Player", false), "the player is as he was")
 	# The player seen through what covers him (O21): his own frames, drawn over everything.
 	if window.figures_are_his():
 		var ghost: AnimatedSprite3D = window.player_ghost()

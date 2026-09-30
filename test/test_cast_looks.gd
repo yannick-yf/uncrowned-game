@@ -42,6 +42,12 @@ func test_every_look_has_a_sheet_the_size_of_his() -> void:
 		if sheet != null and base != null:
 			assert_eq(Vector2i(sheet.get_size()), base.get_size(),
 				"%s has his sheet's size, so every frame lands where it did" % look)
+		if CastLooks.fights_armed(look):
+			var armed: String = CastLooks.fight_sheet_path(look)
+			assert_true(ResourceLoader.exists(armed), "%s has a sheet to fight in" % look)
+			var fighting: Texture2D = load(armed) as Texture2D if ResourceLoader.exists(armed) else null
+			if fighting != null and base != null:
+				assert_eq(Vector2i(fighting.get_size()), base.get_size(), "%s's fight sheet has his size too" % look)
 
 
 func test_every_piece_a_recipe_names_is_one_the_tool_draws() -> void:
@@ -51,13 +57,31 @@ func test_every_piece_a_recipe_names_is_one_the_tool_draws() -> void:
 	var regions: Array = ["shirt", "skin", "hair", "trousers", "leather"]
 	for look: String in CastLooks.looks().keys():
 		var recipe: Dictionary = CastLooks.looks()[look] as Dictionary
-		for step: Variant in recipe.get("pieces", []) as Array:
+		for step: Variant in (recipe.get("pieces", []) as Array) + (recipe.get("fight_pieces", []) as Array):
 			var piece: String = String((step as Array)[0])
 			assert_true(methods.has("_piece_" + piece), "%s wears %s, which the tool draws" % [look, piece])
 		for region: String in (recipe.get("recolour", {}) as Dictionary).keys():
 			assert_true(regions.has(region), "%s recolours %s, which is a region of him" % [look, region])
 			assert_eq(((recipe["recolour"] as Dictionary)[region] as Array).size(), 4,
 				"%s's %s: hue, saturation scale, saturation floor, value scale" % [look, region])
+
+
+func test_the_armed_ones_are_armed() -> void:
+	# L9 (Yannick, 2026-09-30): the king's guards carry a sword, *bien sûr*; Bram and the
+	# watch draw theirs when they fight, and wear it at the belt otherwise.
+	var pieces := func(look: String, key: String) -> Array:
+		var out: Array = []
+		for step: Variant in (CastLooks.looks()[look] as Dictionary).get(key, []) as Array:
+			out.append(String((step as Array)[0]))
+		return out
+	assert_true(pieces.call("kings_guard", "pieces").has("sword_in_hand"), "the king's guards, sword in hand")
+	for look: String in ["bram", "watch"]:
+		assert_true(pieces.call(look, "pieces").has("scabbard"), "%s wears his sword at the belt" % look)
+		assert_false(pieces.call(look, "pieces").has("sword_in_hand"), "%s does not walk about with it drawn" % look)
+		assert_true(pieces.call(look, "fight_pieces").has("sword_in_hand"), "%s draws it in a fight" % look)
+		assert_eq(CastLooks.fight_recipe(StringName(look))["pieces"], (CastLooks.looks()[look] as Dictionary)["fight_pieces"],
+			"%s fights in his fight's pieces" % look)
+	assert_false(CastLooks.fights_armed(&"villager_a"), "a villager has no second sheet")
 
 
 func test_the_king_s_guards_stand_taller_and_nobody_else_does() -> void:

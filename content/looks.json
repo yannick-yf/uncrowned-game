@@ -4,10 +4,10 @@
   "_room_note": "Pixels kept above and beside each of his frames for what stands out of a man (a plume, a bow). The window widens his frames by as much and shrinks their margins to match, so nothing moves.",
   "looks": {
     "kings_guard": {
-      "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, and a fifth taller than anybody.",
+      "_why": "Invincible: blackened plate, a closed helm with a red plume, the king's red tabard and crown, a shield on the back, a sword in the hand (L9), and a fifth taller than anybody.",
       "scale": 1.2,
       "recolour": {},
-      "pieces": [["iron_body"], ["surcoat"], ["shield_on_back"], ["bascinet"], ["pauldrons"]]
+      "pieces": [["iron_body"], ["surcoat"], ["shield_on_back"], ["bascinet"], ["pauldrons"], ["sword_in_hand", {"length": 52}]]
     },
     "watch": {
       "_why": "The king's ordinary men — the bridge, the watch, the Muster: his red, but cloth and an iron cap, a sword at the belt. Light, so beatable, which is what the eye should read.",
@@ -17,7 +17,9 @@
         "hair": [22, 0.6, 0.35, 0.5],
         "leather": [22, 1.0, 0.45, 0.7]
       },
-      "pieces": [["remove_pack"], ["cap", {"colour": [218, 0.24, 0.42]}], ["scabbard"]]
+      "pieces": [["remove_pack"], ["cap", {"colour": [218, 0.24, 0.42]}], ["scabbard"]],
+      "_fight_note": "L9: a fight draws the sword; the scabbard stays at the belt.",
+      "fight_pieces": [["remove_pack"], ["cap", {"colour": [218, 0.24, 0.42]}], ["scabbard"], ["sword_in_hand"]]
     },
     "works_guard": {
       "_why": "The quest's guards, and the works' own men: ochre, the works' colour, a leather cap, a sword in the hand.",
@@ -108,7 +110,9 @@
         "hair": [32, 0.26, 0.24, 0.92],
         "leather": [25, 0.9, 0.45, 0.65]
       },
-      "pieces": [["remove_pack"], ["beard", {"colour": [32, 0.24, 0.80]}], ["scabbard"]]
+      "pieces": [["remove_pack"], ["beard", {"colour": [32, 0.24, 0.80]}], ["scabbard"]],
+      "_fight_note": "L9 (Yannick, 2026-09-30): in a fight his sword is in his hand.",
+      "fight_pieces": [["remove_pack"], ["beard", {"colour": [32, 0.24, 0.80]}], ["scabbard"], ["sword_in_hand"]]
     },
     "wren": {
       "_why": "The hunter who teaches the bow: a green hood, a bow in the hand, a quiver on the back.",

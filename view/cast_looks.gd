@@ -46,6 +46,24 @@ static func sheet_path(look: StringName) -> String:
 	return DIR + String(look) + ".png"
 
 
+## **Armed in a fight** (L9): a look whose recipe names `fight_pieces` has a second sheet,
+## the same layout, worn for the length of a fight — Bram and the watch draw the sword
+## they carry at the belt.
+static func fights_armed(look: StringName) -> bool:
+	return (looks().get(String(look), {}) as Dictionary).has("fight_pieces")
+
+
+static func fight_sheet_path(look: StringName) -> String:
+	return DIR + String(look) + "_fight.png"
+
+
+## The recipe a look fights in: its own, with the fight's pieces in place of its pieces.
+static func fight_recipe(look: StringName) -> Dictionary:
+	var recipe: Dictionary = (looks().get(String(look), {}) as Dictionary).duplicate()
+	recipe["pieces"] = recipe.get("fight_pieces", recipe.get("pieces", []))
+	return recipe
+
+
 ## How much taller than a man this look is drawn: the king's guards stand a fifth over
 ## everybody, which is half of what makes them look unbeatable.
 static func scale_of(look: StringName) -> float:

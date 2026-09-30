@@ -130,8 +130,9 @@ below with the fourth.
 - **Nothing of the 2D pack appears, ever** (2026-09-14): it is another style. The HUD's
   font is the pack's, and an open question.
 - **Nothing downloaded.** A third artist's hand is the mix this rule is for; the wolf was
-  *made* rather than found for that reason (2026-09-26), and that stands until Yannick
-  says otherwise.
+  *made* rather than found for that reason (2026-09-26), and Yannick confirmed it when
+  he widened the rule: *« que des dessins faits par toi, pas de dessins téléchargés »*
+  (2026-09-30).
 - **His files are never touched.** `prototypes/` is his and our tools only read it; what
   we make lives beside the window (`view3d/fight/`, `view3d/cast/`, the made pieces in
   `view/world3d.gd`). His library carries a provenance-and-licence manifest and

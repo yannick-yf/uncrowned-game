@@ -349,6 +349,8 @@ var _figure_material: Material = null
 var _look_frames: Dictionary = {}
 var _look_paint: Dictionary = {}
 var _look_sheet: Dictionary = {}
+## And the sheet a look fights in, for the looks that draw a weapon when they do (L9).
+var _look_fight_sheet: Dictionary = {}
 var _block_material: Material = null
 var _zoom: float = CAMERA_SIZE
 
@@ -981,6 +983,9 @@ func _dress(look: StringName) -> bool:
 	_look_sheet[look] = sheet
 	_look_paint[look] = paint
 	_look_frames[look] = CastLooks.frames_for(_frames, sheet)
+	var armed: String = CastLooks.fight_sheet_path(look)
+	if CastLooks.fights_armed(look) and ResourceLoader.exists(armed):
+		_look_fight_sheet[look] = load(armed) as Texture2D
 	return true
 
 
@@ -990,9 +995,12 @@ func _worn(figure: Node3D) -> Material:
 	return _look_paint.get(look, _figure_material) as Material
 
 
-## The sheet a figure is drawn from: its look's, or the one his frames read.
-func _sheet_worn(figure: Node3D) -> Texture2D:
+## The sheet a figure is drawn from: its look's — the armed one in a fight, if its look
+## draws a weapon then (L9) — or the one his frames read.
+func _sheet_worn(figure: Node3D, fighting: bool = false) -> Texture2D:
 	var look: StringName = figure.get_meta(&"look", &"") as StringName
+	if fighting and _look_fight_sheet.has(look):
+		return _look_fight_sheet[look] as Texture2D
 	if _look_sheet.has(look):
 		return _look_sheet[look] as Texture2D
 	var his := _figure_material as ShaderMaterial
@@ -2196,7 +2204,7 @@ func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary, key: St
 	var paint: ShaderMaterial = _fight_paint_for(who)
 	# **A seat is not a man** (L2): the same seat holds Bram in one fight and a guard in the
 	# next, so the paint is handed this figure's own sheet every time it is worn.
-	var sheet: Texture2D = _sheet_worn(sprite)
+	var sheet: Texture2D = _sheet_worn(sprite, true)
 	if sheet != null and paint.get_shader_parameter("sprite_sheet") != sheet:
 		paint.set_shader_parameter("sprite_sheet", sheet)
 	if sprite.material_override != paint:
@@ -2665,6 +2673,15 @@ func beast_at(seat: StringName) -> Vector2:
 func worn(name: String) -> StringName:
 	var figure: Node = get_node_or_null(name)
 	return figure.get_meta(&"look", &"") as StringName if figure != null else &"none"
+
+
+## The sheet a figure is drawn from, in a fight or not, by its resource path (L9).
+func worn_sheet(name: String, fighting: bool) -> String:
+	var figure: Node3D = get_node_or_null(name) as Node3D
+	if figure == null:
+		return ""
+	var sheet: Texture2D = _sheet_worn(figure, fighting)
+	return sheet.resource_path if sheet != null else ""
 
 
 func drawn_pixel(name: String) -> float:

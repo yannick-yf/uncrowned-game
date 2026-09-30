@@ -191,20 +191,26 @@ func _initialize() -> void:
 	for look: String in _looks.keys():
 		if only != "" and look != only:
 			continue
-		var out: Image = Image.create(sheet.get_width(), sheet.get_height(), false, Image.FORMAT_RGBA8)
-		out.fill(CLEAR)
-		var recipe: Dictionary = _looks[look] as Dictionary
-		for frame: Dictionary in his:
-			_dress_his(sheet, out, frame, recipe)
-		for cell: Dictionary in ours:
-			_dress_ours(sheet, out, cell, recipe)
-		var path: String = CastLooks.sheet_path(StringName(look))
-		if out.save_png(path) != OK:
-			push_error("could not write %s" % path)
-			quit(1)
-			return
-		dressed[look] = out
-		print("wrote %s" % path)
+		# A look, and when it fights armed (L9) the same look with its fight's pieces.
+		var sheets: Dictionary = {look: CastLooks.sheet_path(StringName(look))}
+		if CastLooks.fights_armed(StringName(look)):
+			sheets[look + "_fight"] = CastLooks.fight_sheet_path(StringName(look))
+		for name: String in sheets.keys():
+			var out: Image = Image.create(sheet.get_width(), sheet.get_height(), false, Image.FORMAT_RGBA8)
+			out.fill(CLEAR)
+			var recipe: Dictionary = _looks[look] as Dictionary if name == look \
+				else CastLooks.fight_recipe(StringName(look))
+			for frame: Dictionary in his:
+				_dress_his(sheet, out, frame, recipe)
+			for cell: Dictionary in ours:
+				_dress_ours(sheet, out, cell, recipe)
+			var path: String = sheets[name]
+			if out.save_png(path) != OK:
+				push_error("could not write %s" % path)
+				quit(1)
+				return
+			dressed[name] = out
+			print("wrote %s" % path)
 	if only == "":
 		# **What the sheets were drawn from**, so the suite can tell a recipe edited in
 		# `content/looks.json` from a sheet rebuilt after it (the review of group L).
@@ -738,7 +744,9 @@ static func _piece_remove_pack(fig: Fig, _params: Dictionary) -> void:
 	for y: int in range(box.y, box.w + 1):
 		var t: float = float(y - box.y) / float(maxi(box.w - box.y, 1))
 		for x: int in range(box.x - 1, box.z + 2):
-			if not fig.has(x, y) or fig.at(x, y) == K.SKIN or fig.at(x, y) == K.PIECE:
+			# His hands hang beside the pack, outside its box; the light square inside it is
+			# the pack's buckle, and goes with it.
+			if not fig.has(x, y) or fig.at(x, y) == K.PIECE:
 				continue
 			var rounded: float = 1.04 - 0.10 * absf(x - cx) / half
 			var g: float = (noise(x / 2, y / 2, 81) - 0.5) * 0.03
