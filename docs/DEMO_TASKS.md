@@ -2127,7 +2127,7 @@ ours: his brother drew none) say what the game now is.
 ## V — the gate taken by force
 
 > **Asked 2026-09-30 (Yannick), after group T.** It replaces T9's endless flow of works
-> guards. **Built, V0–V5, 2026-09-30.**
+> guards. **Built, V0–V5, 2026-09-30.** V6 (the quest's guards at the furnace) was asked the same day.
 
 **His ruling.** *« Si on attaque le portier, des gardes aux alentours arrivent. On va dire
 3. Ce sont des types d'ennemis que l'on peut retrouver dans la cité du château. Ils sont
@@ -2250,6 +2250,90 @@ Est. 3 h. Depends on: V4.
 
 Frames of the gate fight, the forced gate, both reaches and their fights, in French and
 English; the review sub-agent; QUEST_CINDERWORKS §3, §4 and §9, COMBAT_V2, V3 and CLAUDE.md.
+
+### V6 · The quest's guards at the furnace: a sword and two bows, easy
+
+Est. 2 h. Depends on: V5. **Asked by Yannick, 2026-09-30**, answering V's first question:
+*« Ces gardes font partie de la quête. Ils doivent être faciles à battre : 1 garde à
+l'épée, 2 gardes archers. Ce mélange doit obliger le joueur à se déplacer. »* The king's
+guards stay for the gate, their numbers kept (*« on les garde »*).
+
+`fighters.works_guard` (a sword) and `fighters.works_archer` (a bow) — people, easy: fewer
+points and smaller blows than a man. Putting a furnace out on a forced run brings one of
+each kind and a second archer (`SiteRules.who_stops`). **Tests first**: the three who come;
+both kinds weaker than a man; beaten, the act goes through; the archers shoot at range, so
+standing still costs more than moving.
+
+---
+
+## L — the cast, told apart at a glance
+
+> **Asked 2026-09-30 (Yannick), before P2.** *« Pour l'instant tous les personnages se
+> ressemblent. Il faut que chaque type de personnage se reconnaisse du premier coup
+> d'œil. »* Every person is his brother's one traveller — red hair, blue shirt, grey
+> trousers, a brown bag — and the demo now puts six of them in one fight.
+
+| Who | His direction |
+|---|---|
+| **The king's guards** (invincible) | Heavy, imposing armour: they must look plainly impossible to beat |
+| **The quest's guards** (sword and bows) | Simple, light clothes: they must look beatable |
+| **The ironworks' workers** | Working clothes of the ironworks |
+| **The villagers** | Civilian clothes, distinct from the workers |
+| **Bram and Wren** | A look of their own each, easy to know |
+
+**The method, and the art rule.** This is a fourth exception to the art rule, asked for by
+Yannick like the three before it, and it keeps their first condition as closely as a new
+look allows: **it is his painting, recoloured**. A tool reads his traveller sheet and moves
+each region of it — hair, shirt, trousers, boots, bag — to another colour while keeping
+every value of his brush, so the shading stays his; pieces he never drew (a helmet, an
+apron, a bow on the back, a hood) are painted from his own figure's pixels where possible,
+and are the part that shows another hand. Nothing downloaded. His files untouched. Written
+into CLAUDE.md's art rule and `POUR_SLOSINIO.md` in L1, and a test reports the debt: the day
+he draws the cast, this goes.
+
+### L1 · The method, and a board of proposals — **first**
+
+Est. 4 h. The recolouring tool (`tools/draw_cast_looks.gd`, beside `draw_fight_frames.gd`),
+its region masks tested against his sheet, and **one board**: every type side by side,
+front and side, at the game's size and close up, in the game's light. **Check:** Yannick
+picks or corrects each look from the board before any of it reaches the game.
+
+### L2 · Each person wears their type's look
+
+Est. 4 h. A `look` per person and per fighter kind in the content, one sheet per look, read
+by the window for walking, standing and fighting alike; the fight frames made for every
+look. **Tests first**: everybody the demo shows has a look; a fighter's look follows his
+kind; the window loads every sheet.
+
+### L3 · The king's guards — heavy armour
+
+Est. 4 h. Steel where his shirt and trousers are, a closed helmet over the hair, a dark
+tabard; drawn a little larger than a man. Frames at the gate.
+
+### L4 · The quest's guards — a sword and two bows
+
+Est. 3 h. Light leather and cloth; the archers carry a bow on the back, so a sword and a
+bow are told apart before either acts. Frames at a furnace.
+
+### L5 · The ironworks' workers
+
+Est. 3 h. Sooty working clothes and a leather apron. Frames in the yard.
+
+### L6 · The villagers
+
+Est. 3 h. Civilian clothes in two or three palettes, so a street is not one man repeated.
+Frames in Brindle and the quarter.
+
+### L7 · Bram and Wren
+
+Est. 3 h. Bram older and plainer, Wren the hunter — a hood and a bow. Frames of the hail
+and of each lesson.
+
+### L8 · Photographs, a review, the letter
+
+Est. 3 h. The opening's frames and the works' in both languages; the review sub-agent;
+CLAUDE.md, V3 and `POUR_SLOSINIO.md` (what is ours on his figure, and what he could draw
+instead).
 
 ---
 
