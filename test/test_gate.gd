@@ -229,3 +229,57 @@ func test_a_fight_does_not_walk_you_through_a_shut_gate() -> void:
 	sim.advance(200)
 	assert_ne(duel.me().at, gate, "and a turn aimed into it ends outside")
 
+
+# ------------------------------------------ V3: at the furnaces, whatever you want ---
+
+func _kilns(region: Region) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for prop: Dictionary in region.props:
+		if (prop["kind"] as StringName) == &"kiln" and region.zone_at(prop["at"] as Vector2i) == &"cinderworks":
+			out.append(prop)
+	return out
+
+
+func test_the_furnaces_are_counted_in_one_order() -> void:
+	# The window lights the first N of a place's furnaces, N from richesse; the rules must
+	# count them in the same order or a furnace drawn cold would offer to be put out.
+	var region: Region = Region.build_overworld()
+	var kilns: Array[Dictionary] = _kilns(region)
+	assert_true(kilns.size() > 1, "the works has furnaces: %d" % kilns.size())
+	assert_eq(region.kilns_in(&"cinderworks"), kilns.size(), "all of them counted")
+	for i: int in kilns.size():
+		assert_eq(region.kiln_index(kilns[i]["at"] as Vector2i), i, "in the order they stand")
+
+
+func test_with_the_gate_forced_a_burning_furnace_can_be_put_out_and_a_cold_one_lit() -> void:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(SiteRules.FORCED, &"witnessed")
+	var region: Region = (sim.store(&"world") as WorldState).region()
+	var towns := sim.store(&"towns") as TownState
+	var burning: int = 0
+	var cold: int = 0
+	for kiln: Dictionary in _kilns(region):
+		var lit: bool = SiteRules.burns(region, towns, kiln)
+		var deed: StringName = SiteRules.quest_deed_at(kiln, sim.facts, lit)
+		assert_eq(deed, DeedRules.DEED_DOUSE if lit else DeedRules.DEED_RELIGHT,
+			"%s, %s" % [kiln.get("source_id", kiln["at"]), "burning" if lit else "cold"])
+		burning += 1 if lit else 0
+		cold += 0 if lit else 1
+	assert_true(burning > 0 and cold > 0, "both kinds stand in the works when you arrive: %d burning, %d cold" % [burning, cold])
+
+
+func test_a_side_taken_keeps_its_one_act() -> void:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(SiteRules.FORCED, &"witnessed")
+	sim.facts.add_source(SiteRules.BROUGHT_THROUGH, &"tom")
+	var region: Region = (sim.store(&"world") as WorldState).region()
+	for kiln: Dictionary in _kilns(region):
+		assert_eq(SiteRules.quest_deed_at(kiln, sim.facts, false), DeedRules.DEED_DOUSE, "Tom's way puts them out")
+
+
+func test_one_act_once_whichever_it_was() -> void:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(SiteRules.FORCED, &"witnessed")
+	sim.facts.add_source(DeedRules.DEED_DOUSE, &"witnessed")
+	assert_true(SiteRules.works_story_told(sim.facts), "the works' story is told")
+

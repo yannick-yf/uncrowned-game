@@ -1404,9 +1404,10 @@ func _site_in_reach() -> String:
 	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
 		return ""
 	# The quest's act, where the quest has one to offer (Q4).
-	var quest: StringName = SiteRules.quest_deed_at(site["kind"] as StringName, _sim.facts)
+	var quest: StringName = SiteRules.quest_deed_at(site, _sim.facts,
+		SiteRules.burns(_world.region(), _sim.store(&"towns") as TownState, site))
 	if quest != &"":
-		return "" if _sim.facts.has(quest) else Text.of(SiteRules.quest_label_key(quest))
+		return "" if SiteRules.works_story_told(_sim.facts) else Text.of(SiteRules.quest_label_key(quest))
 	return Text.of(SiteRules.label_key(site["kind"] as StringName))
 
 

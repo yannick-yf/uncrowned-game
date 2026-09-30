@@ -2191,7 +2191,15 @@ Winning the gate fight writes `cinderworks:forced` (`OutcomeSystem`); `WardRules
 with it; the gatekeeper's post is empty once it is written (`KEPT_POSTS`). **Tests first**:
 a win forces the gate and he is gone; a loss or a leaving does neither.
 
-### V3 · At the furnaces, whatever you want
+### V3 · At the furnaces, whatever you want — **built 2026-09-30**
+
+> **Built.** `Region.kiln_index` and `kilns_in` count a place's furnaces in the order they
+> stand, and the window now reads them from there. `SiteRules.burns` answers whether one
+> burns — richesse's `lit_of`, the first N — and `quest_deed_at` takes the site and that
+> answer: with the gate forced and no side, *éteindre* at a burning furnace, *rallumer* at a
+> cold one; a side taken keeps its one act. One act, once, whichever it was
+> (`SiteRules.works_story_told` — a fact read, and not named like a progress flag, which
+> `test_wild` rightly refuses).
 
 Est. 4 h. Depends on: V2.
 

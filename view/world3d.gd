@@ -1077,9 +1077,11 @@ func _build_embers() -> void:
 			"at": Vector2(at) + Vector2(float(size.x) * 0.5, float(size.y) * 0.5)}
 		if kind == &"kiln":
 			# Only production carries a place: a hearth without one always burns.
+			# Counted by the region, which the rules count by too (V3): a furnace drawn cold
+			# must be the one that offers to be lit.
 			var place: StringName = _region.zone_at(at)
-			var index: int = int(_kilns_in.get(place, 0))
-			_kilns_in[place] = index + 1
+			var index: int = _region.kiln_index(at)
+			_kilns_in[place] = _region.kilns_in(place)
 			_kiln_index[at] = index
 			hearth["place"] = place
 			hearth["index"] = index

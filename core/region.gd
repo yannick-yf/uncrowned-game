@@ -1033,6 +1033,30 @@ func _stall_at(at: Vector2i) -> void:
 ## The landmark you are standing next to that something can be done to, or an empty
 ## dictionary. Returns the whole prop, because the caller needs its position to know
 ## which one was used and its kind to know what the act is.
+## **A furnace's place among its place's furnaces** (V3): 0 for the first, in the order they
+## stand in `props` — the order the window lights them in, which reads it from here.
+## -1 for a tile that is no furnace.
+func kiln_index(at: Vector2i) -> int:
+	var place: StringName = zone_at(at)
+	var index: int = 0
+	for prop: Dictionary in props:
+		if (prop["kind"] as StringName) != &"kiln" or zone_at(prop["at"] as Vector2i) != place:
+			continue
+		if (prop["at"] as Vector2i) == at:
+			return index
+		index += 1
+	return -1
+
+
+## How many furnaces stand in a place.
+func kilns_in(place: StringName) -> int:
+	var count: int = 0
+	for prop: Dictionary in props:
+		if (prop["kind"] as StringName) == &"kiln" and zone_at(prop["at"] as Vector2i) == place:
+			count += 1
+	return count
+
+
 func nearest_site(tile: Vector2i, reach: float) -> Dictionary:
 	var best: Dictionary = {}
 	var best_distance: float = reach

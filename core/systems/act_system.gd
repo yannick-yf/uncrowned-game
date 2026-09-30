@@ -32,7 +32,8 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	# player has taken a side and faced whoever stood in the way, this is what the
 	# furnace offers instead of the old crown-lever sabotage.
 	var kind: StringName = site["kind"] as StringName
-	var quest: StringName = SiteRules.quest_deed_at(kind, sim.facts)
+	var quest: StringName = SiteRules.quest_deed_at(site, sim.facts,
+		SiteRules.burns(world.region(), sim.store(&"towns") as TownState, site))
 	if quest != &"":
 		_the_quests_act(sim, world, quest, at)
 		return
@@ -74,7 +75,7 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 ## in `world_effects`, so nothing of the old twelve quantities moves — and buys the thing
 ## that does matter: **who saw you do it.**
 func _the_quests_act(sim: Sim, world: WorldState, deed: StringName, at: Vector2i) -> void:
-	if sim.facts.has(deed):
+	if SiteRules.works_story_told(sim.facts):
 		return
 	# **Somebody comes out to stop you** (Yannick, 2026-09-19). Reaching for the furnace
 	# is the moment, not a fight you went looking for: the quest document always said

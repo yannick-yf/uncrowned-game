@@ -73,14 +73,41 @@ static func stands_in_the_way(who: StringName, facts: FactBase) -> bool:
 ## That is Yannick's, 2026-09-19, and it is what the quest document always said: *Tom,
 ## **come** to stop the shift*. He arrives. Sending the player off to find him and pick a
 ## fight was the weaker half of F6 and it is gone.
-static func quest_deed_at(kind: StringName, facts: FactBase) -> StringName:
+##
+## **And with the gate forced** (V3, Yannick 2026-09-30: *il peut faire ce qu'il veut avec
+## les fours*): for somebody who took no side, a furnace that burns offers to be put out
+## and a cold one to be lit. `site` is the site's row, or only its kind; `burning` is
+## `burns`' answer for it.
+static func quest_deed_at(site: Variant, facts: FactBase, burning: bool = true) -> StringName:
+	var kind: StringName = (site as Dictionary).get("kind", &"") as StringName if site is Dictionary \
+		else StringName(String(site))
 	if kind != &"kiln" or facts == null:
 		return &""
 	if facts.has(BROUGHT_THROUGH):
 		return DeedRules.DEED_DOUSE
 	if facts.has(VOUCHED_FOR):
 		return DeedRules.DEED_RELIGHT
+	if facts.has(FORCED):
+		return DeedRules.DEED_DOUSE if burning else DeedRules.DEED_RELIGHT
 	return &""
+
+
+## **One act, once, whichever it was** (Q4, V3): the works' story is told by the first.
+static func works_story_told(facts: FactBase) -> bool:
+	return facts != null and (facts.has(DeedRules.DEED_DOUSE) or facts.has(DeedRules.DEED_RELIGHT))
+
+
+## **Whether a furnace burns**, as the window lights it (V3): the first of a place's
+## furnaces, as many as its richesse pays for (`TownRules.lit_of`), counted in the order
+## they stand (`Region.kiln_index`). Anything that is not a place's furnace burns.
+static func burns(region: Region, towns: TownState, site: Dictionary) -> bool:
+	if region == null or towns == null or (site.get("kind", &"") as StringName) != &"kiln":
+		return true
+	var at: Vector2i = site["at"] as Vector2i
+	var place: StringName = region.zone_at(at)
+	if not towns.has_state(place):
+		return true
+	return region.kiln_index(at) < TownRules.lit_of(region.kilns_in(place), towns.richesse_of(place))
 
 
 ## And its prompt. A verb and a thing, like every other one: the window never says what
