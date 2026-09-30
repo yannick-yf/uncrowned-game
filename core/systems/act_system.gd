@@ -23,7 +23,8 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 		return
 
 	var site: Dictionary = world.region().nearest_site(world.player_tile(), SiteRules.REACH)
-	if site.is_empty():
+	# Near it, and on its side of any wall (the review of group V).
+	if site.is_empty() or not SiteRules.within_reach(world.region(), world.player_tile(), site):
 		return
 	var at: Vector2i = site["at"] as Vector2i
 	if world.spent_sites.has(at):

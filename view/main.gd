@@ -309,6 +309,16 @@ func _ready() -> void:
 		# An hour is what the population is matched on.
 		_sim.advance(Sim.STEPS_PER_WORLD_TICK * 61)
 
+	# **`UNCROWNED_FACTS=cinderworks:forced`** (V5, 2026-09-30) — facts written straight in,
+	# for the frame `shot.sh` takes: the gate taken by force is four men beaten with G on,
+	# and a photograph of what comes after it — the empty gateway, the furnaces' offers —
+	# had no other way to be taken. Like `UNCROWNED_TOWN`, one frame for one photograph and
+	# not a save-able state.
+	var facts_set: String = OS.get_environment("UNCROWNED_FACTS")
+	if _debug_available and facts_set != "":
+		for fact: String in facts_set.split(",", false):
+			_sim.facts.add_source(StringName(fact.strip_edges()), &"debug")
+
 	# **`UNCROWNED_DID=i_stole_in_public,i_killed_somebody_innocent`** — deeds done where
 	# the player is standing, for the frame `shot.sh` takes, through the one pipe every
 	# deed in the game uses. Same gate and same reason as the others, plus its own: J6's
@@ -431,6 +441,8 @@ func _duel_frame() -> Dictionary:
 		# A beast is named with its article in a sentence (the review of O21): "le loup",
 		# and a pack's fall is the pack's.
 		"his_kind": _beast_kind(him.who),
+		# And men of one trade fallen together, as a band (the review of group V).
+		"foes_many": _band_of(),
 		"his_noun": _noun_of(him.who),
 		"foes": _duel.fighters.size() - 1,
 		"at": his_at,
@@ -609,6 +621,21 @@ func _noun_of(who: StringName) -> String:
 		return Text.of(beast)
 	var trade := StringName("fighter.%s.noun" % DuelRules.trade_of(who))
 	return Text.of(trade) if Text.has(trade) else ""
+
+
+## **The plural of the one trade every foe shares**, « gardes du roi », or empty when they
+## are not all men of one trade with a plural written for it (the review of group V).
+func _band_of() -> String:
+	var trade: StringName = &""
+	for fighter: DuelFighter in _duel.fighters:
+		if fighter.is_player():
+			continue
+		var this: StringName = DuelRules.trade_of(fighter.who)
+		if trade != &"" and this != trade:
+			return ""
+		trade = this
+	var key := StringName("fighter.%s.many" % trade)
+	return Text.of(key) if trade != &"" and Text.has(key) else ""
 
 
 ## The kind of beast a fighter is, or empty for a person.
@@ -1401,7 +1428,8 @@ func _can_warn() -> bool:
 ## The prompt for whatever can be done to the landmark you are beside, or "".
 func _site_in_reach() -> String:
 	var site: Dictionary = _world.region().nearest_site(_world.player_tile(), SiteRules.REACH)
-	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
+	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i) \
+			or not SiteRules.within_reach(_world.region(), _world.player_tile(), site):
 		return ""
 	# The quest's act, where the quest has one to offer (Q4).
 	var quest: StringName = SiteRules.quest_deed_at(site, _sim.facts,
@@ -1415,7 +1443,8 @@ func _site_in_reach() -> String:
 ## simply fall silent — an absent prompt is indistinguishable from a bug.
 func _watched_site() -> String:
 	var site: Dictionary = _world.region().nearest_site(_world.player_tile(), SiteRules.REACH)
-	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i):
+	if site.is_empty() or _world.spent_sites.has(site["at"] as Vector2i) \
+			or not SiteRules.within_reach(_world.region(), _world.player_tile(), site):
 		return ""
 	if WatchRules.guarded_by(_cast, _world.current_zone, _world.player_pos,
 			_ticked.alertness_in(_world.region().zone_at(_world.player_tile())), _walkers) == &"":

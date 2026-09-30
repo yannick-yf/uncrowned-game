@@ -96,7 +96,10 @@ The inhabited quarter is open: the player walks in, meets Tom and Drissa, hears 
 are out of reach.
 
 **The quest is the key.** Choosing a side is what gets the player inside — Tom brings
-them through a way he knows, Drissa vouches for them.
+them through a way he knows, Drissa vouches for them. **Or force** (Yannick, 2026-09-30):
+attack the gatekeeper, and three king's guards answer — very strong, too strong for the
+player early on; beat all four and the gate is taken (`cinderworks:forced`), open and
+empty.
 
 This is why the player cannot put out a furnace before any of this happens. It is not
 gated by a flag: **it is simply unreachable**, which is a wall and a guard rather than
@@ -107,11 +110,11 @@ let in, both of which are things the world already models.
 
 > **Get in** → **face whoever stands in the way** → **act**
 
-| | With Tom | With Drissa |
-|---|---|---|
-| **Get in** | he brings you through | she vouches for you |
-| **Face** | a foreman, or the gate's guard | **Tom**, come to stop the shift |
-| **Act** | put out the furnaces still burning | relight the cold ones |
+| | With Tom | With Drissa | By force (2026-09-30) |
+|---|---|---|---|
+| **Get in** | he brings you through | she vouches for you | the gatekeeper and three king's guards, beaten |
+| **Face** | a foreman, or the gate's guard | **Tom**, come to stop the shift | **three more king's guards** at a furnace put out; **Tom** at one lit |
+| **Act** | put out the furnaces still burning | relight the cold ones | whatever you want: a burning furnace put out, a cold one lit |
 
 The fight is not an addition: it is the moment somebody puts themselves physically
 between the player and the act.

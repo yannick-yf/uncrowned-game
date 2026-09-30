@@ -122,6 +122,10 @@ func present(reading: Dictionary, delta: float) -> void:
 				_banner = Text.of(&"fight.pack_down", [Text.of(StringName("beast.%s.many" % beast))]) \
 					if int(reading.get("foes", 1)) > 1 \
 					else Text.of(&"fight.beast_down", [Text.of(StringName("beast.%s.noun" % beast))])
+			elif outcome == "won" and String(reading.get("foes_many", "")) != "" and int(reading.get("foes", 1)) > 1:
+				# Men of one trade, fallen together, as a band (the review of group V): « Les
+				# gardes du roi sont à terre », not « Garde du roi est à terre ».
+				_banner = Text.of(&"fight.pack_down", [String(reading["foes_many"])])
 			elif outcome == "won":
 				_banner = Text.of(&"fight.yielded", [his]) if bool(reading.get("spar", false)) \
 					else Text.of(&"fight.down", [his])

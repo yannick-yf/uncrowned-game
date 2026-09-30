@@ -79,6 +79,7 @@
   "drill.hint.cast_now": "Elle est à portée du don. Appuyez sur I.",
   "fighter.kings_guard": "Garde du roi",
   "fighter.kings_guard.noun": "garde du roi",
+  "fighter.kings_guard.many": "gardes du roi",
   "fighter.gatekeeper.noun": "portier",
   "fight.touched": "Touché",
   "duel.your_turn": "À vous",

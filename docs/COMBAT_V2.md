@@ -315,12 +315,14 @@ key — ticked when where you stand and what you hold make them so — and on yo
 hint that answers where you stand: too close for the bow, too far for the sword, the
 gift resting, or the key when he is in reach.
 
-**The works' gate** (T9, 2026-09-29). Attacking the gatekeeper is a real fight, and the
-yard answers it: `reinforcements` in `content/duel.json`, keyed by the trade of the one
-attacked, sends **a works guard at the end of every round**, on the free tile nearest the
-gate, while fewer than five stand. Each can be killed — a works guard is a person, and
-killing one is a killing — and the fight is not won while more are coming: it ends when
-the player falls or leaves. Yannick's ruling: *the fight cannot be won*.
+**The works' gate** (T9, revised in group V, 2026-09-30). Attacking the gatekeeper is a
+real fight, and the king answers it: `reinforcements` in `content/duel.json`, keyed by the
+trade of the one attacked, brings **three king's guards together at the end of the first
+round**, three tiles from the player. A king's guard has 40 points and blows of 10 — a
+fighter's own `damage` row — where a man has 15 and 5; he is a person, and killing one is
+a killing. The fight cannot be won before they have come; if by a miracle all four fall,
+it is, and the gate is taken by force. At the furnaces afterwards, putting one out brings
+three more of them and lighting one brings Tom (`SiteRules.who_stops`).
 
 **What it is not.** No AI worth the name, no balance between reach and cover, no second
 spell: those are the later workstream the standing exception in CLAUDE.md keeps for its

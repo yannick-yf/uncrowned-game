@@ -491,9 +491,11 @@ dessiné ni arc ni tir : on réutilise la pose « bras armé » tirée de tes im
 est un trait clair dessiné par nous, en code. Si tu dessines une pose d'arc bandé dans les
 quatre directions, et une flèche, on remplace les nôtres.
 
-**Les gardes de l'usine.** Si le joueur attaque le portier, un garde sort de la cour à
-chaque tour, jusqu'à cinq à la fois, et le combat ne peut pas être gagné. Ces gardes sont
-ton voyageur, comme tout le monde. Aujourd'hui, on ne distingue plus le joueur des gardes
+**Les gardes du roi.** Si le joueur attaque le portier, trois gardes du roi arrivent :
+très forts, trop forts pour le joueur au début du jeu. Si par miracle il bat les quatre, la
+porte est à lui, et il peut éteindre ou rallumer les fours ; éteindre fait venir trois
+autres gardes, rallumer fait venir Tom. Ces gardes sont ton voyageur, comme tout le monde
+(mis à jour le 2026-09-30). Aujourd'hui, on ne distingue plus le joueur des gardes
 qu'à l'anneau sous ses pieds : c'est la dette des visages, qui devient plus visible ici.
 
 **La clairière des fées est supprimée.** Le joueur ne s'y réveille plus depuis le

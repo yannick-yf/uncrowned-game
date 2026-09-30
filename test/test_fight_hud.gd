@@ -134,6 +134,18 @@ func test_a_blow_for_nothing_says_it_landed() -> void:
 	hud.free()
 
 
+func test_three_guards_down_are_said_as_three() -> void:
+	# The review of group V: « Garde du roi est à terre » for all three.
+	var hud := FightHud.new()
+	var reading: Dictionary = _reading(1.0, 60, 0, "won")
+	reading["his_name"] = "Garde du roi"
+	reading["foes"] = 3
+	reading["foes_many"] = "gardes du roi"
+	hud.present(reading, 1.0 / 60.0)
+	assert_eq(hud.banner(), Text.of(&"fight.pack_down", ["gardes du roi"]), "as a band: '%s'" % hud.banner())
+	hud.free()
+
+
 func test_every_foe_has_a_bar() -> void:
 	# O6: two wolves, two bars under the one that names the fight.
 	var hud := FightHud.new()
@@ -313,7 +325,7 @@ func test_the_fights_words_exist_in_both_languages() -> void:
 			&"drill.hint.take_bow", &"drill.hint.bow_too_close", &"drill.hint.too_far", &"drill.hint.shoot_now",
 			&"drill.hint.sword_too_far", &"drill.hint.strike_now", &"drill.hint.gift_too_far",
 			&"drill.hint.gift_resting", &"drill.hint.cast_now", &"fight.touched",
-			&"fighter.kings_guard", &"fighter.kings_guard.noun", &"fighter.gatekeeper.noun",
+			&"fighter.kings_guard", &"fighter.kings_guard.noun", &"fighter.kings_guard.many", &"fighter.gatekeeper.noun",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
 			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
 			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",

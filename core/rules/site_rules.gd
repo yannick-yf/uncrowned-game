@@ -100,7 +100,13 @@ static func faced_for(deed: StringName, facts: FactBase, cast: Cast = null) -> b
 	if facts == null:
 		return false
 	if not facts.has(FORCED) or facts.has(BROUGHT_THROUGH) or facts.has(VOUCHED_FOR):
-		return facts.has(FACED)
+		# On a side, having faced its man is enough — but the king's guards beaten at a
+		# furnace on a forced run are nobody's side (the review of group V: beat them, take
+		# Sena's side, and Tom never came).
+		for source: StringName in facts.sources_of(FACED):
+			if source != KINGS_GUARD:
+				return true
+		return false
 	var first: StringName = who_stops(deed, facts)[0]
 	if cast != null and cast.get_npc(first) != null and OpeningRules.is_gone(first, facts):
 		return true
@@ -185,3 +191,22 @@ static func label_key(kind: StringName) -> StringName:
 ## How close you must be, measured to the building's footprint rather than to its
 ## corner — the same lesson the market stalls taught (§20, 2026-09-11).
 const REACH: float = 2.4
+
+## **And on its side of any wall** (the review of group V, 2026-09-30): the west furnaces
+## are 2 tiles from the street through the yard's wall, and E put one out from outside —
+## which undid the gate, force included. A site is within reach when a tile beside it can
+## be walked to in `REACH_WALK` steps, which a wall between makes impossible.
+const REACH_WALK: int = 3
+
+
+static func within_reach(region: Region, tile: Vector2i, site: Dictionary) -> bool:
+	if region == null or site.is_empty():
+		return false
+	var at: Vector2i = site["at"] as Vector2i
+	var size: Vector2i = site.get("size", Vector2i(1, 1)) as Vector2i
+	var walk: Dictionary = DuelRules.reachable(tile, region, REACH_WALK)
+	for x: int in range(at.x - 1, at.x + size.x + 1):
+		for y: int in range(at.y - 1, at.y + size.y + 1):
+			if walk.has(Vector2i(x, y)):
+				return true
+	return false

@@ -82,11 +82,15 @@ const KEPT_POSTS: Dictionary = {&"gatekeeper": &"cinderworks:forced"}
 
 
 static func is_gone(who: StringName, facts: FactBase) -> bool:
+	var trade := StringName(String(who).get_slice("@", 0))
+	# **A post taken is empty** (V2, the review of group V): once the gate is forced, nobody
+	# stands in it, whatever else the facts say.
+	if facts != null and KEPT_POSTS.has(trade) and facts.has(KEPT_POSTS[trade] as StringName):
+		return true
 	if facts != null and facts.has(StringName(KILLED % who)):
 		# **A post the works keeps manned** (the review of T9): whoever falls at the gate,
 		# the yard puts another man in it — the ward that stops you is somebody you see.
-		var trade := StringName(String(who).get_slice("@", 0))
-		return not KEPT_POSTS.has(trade) or facts.has(KEPT_POSTS[trade] as StringName)
+		return not KEPT_POSTS.has(trade)
 	if who == FAIRY:
 		return not fairy_is_here(facts)
 	if who == TOM:

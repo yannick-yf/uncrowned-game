@@ -353,3 +353,90 @@ func test_beating_tom_does_not_let_you_put_a_furnace_out_unopposed() -> void:
 	assert_true(_duel(sim).on(), "the guards come all the same")
 	assert_false(sim.facts.has(DeedRules.DEED_DOUSE), "and it is not put out")
 
+
+# ------------------------------------------------------ the review of group V (V5) ---
+
+## A forced run beside one furnace in particular, reaching for it.
+func _reach_for(kiln: Dictionary) -> Sim:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(SiteRules.FORCED, &"witnessed")
+	past_the_hail(sim)
+	var world := sim.store(&"world") as WorldState
+	var region: Region = world.region()
+	world.player_pos = Vector2(_inside_beside(region, kiln)) + Vector2(0.5, 0.5)
+	sim.submit(&"act")
+	sim.advance(3)
+	return sim
+
+
+## The open tile beside a furnace that a player inside the works would stand on: one it
+## can be reached from in a step or two.
+func _inside_beside(region: Region, kiln: Dictionary) -> Vector2i:
+	var at: Vector2i = kiln["at"] as Vector2i
+	for step: Vector2i in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(1, 1)]:
+		var tile: Vector2i = at + step
+		if region.is_passable(tile) and SiteRules.within_reach(region, tile, kiln):
+			return tile
+	return region.open_near(at + Vector2i(0, 1))
+
+
+func test_whoever_comes_to_a_furnace_can_walk_to_you() -> void:
+	# The review of group V: Tom was set down beyond the yard's wall, two tiles from the
+	# player through it, and waited there for ever — the fight never ended.
+	var region: Region = Region.build_overworld()
+	for kiln: Dictionary in _kilns(region):
+		var sim: Sim = _reach_for(kiln)
+		var duel: Duel = _duel(sim)
+		assert_true(duel.on(), "somebody comes to %s" % kiln["at"])
+		if not duel.on():
+			continue
+		var mine: Vector2i = duel.me().at
+		for fighter: DuelFighter in duel.fighters:
+			if fighter.is_player():
+				continue
+			var walk: Array[Vector2i] = Navigation.path(region, fighter.at, mine)
+			assert_true(not walk.is_empty() and walk.size() <= 3 * DuelRules.tiles_per_turn(),
+				"%s, come to %s, can walk to you: %d tiles" % [fighter.who, kiln["at"], walk.size()])
+
+
+func test_a_furnace_is_not_reached_through_a_wall() -> void:
+	# The review of group V: from the street, through the yard's wall, the west furnaces
+	# offered their act — and with no way in at all, E wrecked one.
+	var region: Region = Region.build_overworld()
+	for kiln: Dictionary in _kilns(region):
+		for dx: int in range(-3, 4):
+			for dy: int in range(-3, 4):
+				var tile: Vector2i = (kiln["at"] as Vector2i) + Vector2i(dx, dy)
+				if not region.is_passable(tile) or region.nearest_site(tile, SiteRules.REACH) != kiln:
+					continue
+				if SiteRules.within_reach(region, tile, kiln):
+					continue
+				var sim: Sim = Game.build()
+				past_the_hail(sim)
+				var world := sim.store(&"world") as WorldState
+				world.player_pos = Vector2(tile) + Vector2(0.5, 0.5)
+				sim.submit(&"act")
+				sim.advance(3)
+				assert_false(world.spent_sites.has(kiln["at"] as Vector2i), "nothing is done from %s" % tile)
+				assert_false(_duel(sim).on(), "and nobody comes")
+				return
+	assert_false(Places.baked(), "only the 2D map has no furnace behind a wall from the street")
+
+
+func test_beating_the_guards_is_not_facing_tom() -> void:
+	# The review of group V: the guards beaten at a burning furnace, then Sena's side taken,
+	# and relighting went through with nobody to stop it.
+	var sim: Sim = _forced_beside(true)
+	sim.facts.add_source(SiteRules.FACED, SiteRules.KINGS_GUARD)
+	sim.facts.add_source(SiteRules.VOUCHED_FOR, &"sena")
+	sim.submit(&"act")
+	sim.advance(3)
+	assert_eq(_foe_kinds(_duel(sim)), [&"tom"] as Array[StringName], "Tom comes all the same")
+	assert_false(sim.facts.has(DeedRules.DEED_RELIGHT), "and it is not lit")
+
+
+func test_once_the_gate_is_taken_nobody_stands_in_it() -> void:
+	var facts := FactBase.new()
+	facts.add_source(SiteRules.FORCED, &"witnessed")
+	assert_true(OpeningRules.is_gone(&"gatekeeper@1", facts), "the gate taken, its post is empty")
+

@@ -152,8 +152,12 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		# on, so nobody is spun round and nobody teleports far. A fight begins because
 		# there is a person in front of you — a debug photograph taken in a town where
 		# the man is three hundred tiles away would otherwise be a picture of nothing.
-		if npc == null or DuelRules.apart(stands, mine.at) > DuelRules.tiles_per_turn():
-			stands = DuelRules.stand_off(mine.at, stands, region, DuelRules.stand_off_tiles())
+		# **And never behind a wall from you** (the review of group V): Tom was set down beyond
+		# the yard's wall, two tiles off through it, and waited there for ever.
+		var near: bool = npc != null and DuelRules.apart(stands, mine.at) <= DuelRules.tiles_per_turn() \
+			and DuelRules.reachable(mine.at, region, DuelRules.tiles_per_turn() + DuelRules.reach_tiles()).has(stands)
+		if not near:
+			stands = DuelRules.set_down(mine.at, stands, region, DuelRules.stand_off_tiles(), taken)
 		while taken.has(stands):
 			stands += Vector2i(0, 1)
 		taken[stands] = true

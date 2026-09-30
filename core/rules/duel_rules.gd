@@ -224,23 +224,38 @@ static func reinforcement(trade: StringName) -> Dictionary:
 
 
 ## **A free tile `apart` tiles from somebody, or further** (V1): searched ring by ring from
-## `apart` outwards, each ring in `AROUND`'s fixed order and then along its sides, so the
-## same ground and the same fighters give the same tile in every replay.
+## `apart` outwards, each ring along its top and bottom rows and then its sides, so the
+## same ground and the same fighters give the same tile in every replay — and **one that
+## can be walked to from him** (the review of group V), never a tile beyond a wall.
 static func free_around(region: Region, centre: Vector2i, apart_tiles: int, taken: Dictionary) -> Vector2i:
 	if region == null:
 		return centre
+	var walk: Dictionary = reachable(centre, region, apart_tiles + 8)
 	for ring: int in range(maxi(apart_tiles, 1), apart_tiles + 8):
 		for x: int in range(-ring, ring + 1):
 			for y: int in [-ring, ring]:
 				var candidate := centre + Vector2i(x, y)
-				if region.is_passable(candidate) and not taken.has(candidate):
+				if walk.has(candidate) and not taken.has(candidate):
 					return candidate
 		for y: int in range(-ring + 1, ring):
 			for x: int in [-ring, ring]:
 				var candidate := centre + Vector2i(x, y)
-				if region.is_passable(candidate) and not taken.has(candidate):
+				if walk.has(candidate) and not taken.has(candidate):
 					return candidate
 	return free_near(region, centre, taken)
+
+
+## **Where somebody is set down to fight you** (the review of group V, 2026-09-30): a
+## stride off on the side they are already on, as `stand_off` has it — unless a wall
+## stands between, and then the nearest tile that far off that can be walked to from you.
+## Tom was set down beyond the yard's wall, two tiles off through it, and waited for ever.
+static func set_down(mine: Vector2i, theirs: Vector2i, region: Region, apart_tiles: int, taken: Dictionary) -> Vector2i:
+	var wanted: Vector2i = stand_off(mine, theirs, region, apart_tiles)
+	if region == null:
+		return wanted
+	if reachable(mine, region, apart_tiles + walk_back_budget(0)).has(wanted) and not taken.has(wanted):
+		return wanted
+	return step_back(mine, mine, region, apart_tiles, taken)
 
 
 ## **The free tile nearest a point**, searched ring by ring in `AROUND`'s fixed order, so

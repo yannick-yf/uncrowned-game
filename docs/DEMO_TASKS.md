@@ -2127,7 +2127,7 @@ ours: his brother drew none) say what the game now is.
 ## V — the gate taken by force
 
 > **Asked 2026-09-30 (Yannick), after group T.** It replaces T9's endless flow of works
-> guards. **V0 is built** (this plan).
+> guards. **Built, V0–V5, 2026-09-30.**
 
 **His ruling.** *« Si on attaque le portier, des gardes aux alentours arrivent. On va dire
 3. Ce sont des types d'ennemis que l'on peut retrouver dans la cité du château. Ils sont
@@ -2229,7 +2229,22 @@ beating the one who came for it. **Tests first**: each reach brings the right fi
 beating Tom does not let you put a furnace out unopposed; both acts replay from the log.
 **Check:** `play_opening`-style walk of the forced path headless; frames.
 
-### V5 · Photographs, a review, the documents
+### V5 · Photographs, a review, the documents — **built 2026-09-30**
+
+> **Built.** Frames in French and English of the fight at the gate, the gate taken
+> (empty), a burning furnace offering *éteindre les fours* and a cold one *rallumer les
+> fours*, the three king's guards at a furnace and Tom at another — through a new debug
+> tool, `UNCROWNED_FACTS`, listed in CLAUDE.md. The review sub-agent walked the forced path
+> and both sides and confirmed five defects, all fixed here with a test each: **Tom set
+> down beyond the yard's wall**, two tiles off through it, and the fight never ended
+> (`DuelRules.set_down` and `free_around` now only choose tiles that can be walked to from
+> the player); **the west furnaces could be reached from the street through the wall** —
+> older than V, and it undid the gate (`SiteRules.within_reach`: a tile beside the site
+> within three steps' walk); **the guards beaten, then Sena's side taken, and Tom never
+> came** (on a side, a `FACED` from the king's guards is nobody's); **« Garde du roi est à
+> terre »** for all three (a band of one trade falls as a band, *Les gardes du roi sont à
+> terre*); and the debug tool drew the gatekeeper in a taken gate (a post taken is empty,
+> whatever else the facts say). 754 tests on both worlds.
 
 Est. 3 h. Depends on: V4.
 
