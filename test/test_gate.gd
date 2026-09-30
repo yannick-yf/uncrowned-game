@@ -283,3 +283,73 @@ func test_one_act_once_whichever_it_was() -> void:
 	sim.facts.add_source(DeedRules.DEED_DOUSE, &"witnessed")
 	assert_true(SiteRules.works_story_told(sim.facts), "the works' story is told")
 
+
+# --------------------------------------------------- V4: who comes, for which act ---
+
+## A run whose gate is forced, the player beside a furnace that burns — or a cold one.
+func _forced_beside(burning: bool) -> Sim:
+	var sim: Sim = Game.build()
+	sim.facts.add_source(SiteRules.FORCED, &"witnessed")
+	past_the_hail(sim)
+	var world := sim.store(&"world") as WorldState
+	var region: Region = world.region()
+	var towns := sim.store(&"towns") as TownState
+	for kiln: Dictionary in _kilns(region):
+		if SiteRules.burns(region, towns, kiln) == burning:
+			world.player_pos = Vector2(region.open_near((kiln["at"] as Vector2i) + Vector2i(0, 1))) + Vector2(0.5, 0.5)
+			break
+	return sim
+
+
+func _foe_kinds(duel: Duel) -> Array[StringName]:
+	var out: Array[StringName] = []
+	for fighter: DuelFighter in duel.fighters:
+		if not fighter.is_player():
+			out.append(DuelRules.kind_of(fighter.who))
+	return out
+
+
+func test_reaching_to_put_a_furnace_out_brings_three_kings_guards() -> void:
+	var sim: Sim = _forced_beside(true)
+	sim.submit(&"act")
+	sim.advance(3)
+	var duel: Duel = _duel(sim)
+	assert_true(duel.on(), "somebody comes")
+	assert_eq(_foe_kinds(duel), [&"kings_guard", &"kings_guard", &"kings_guard"] as Array[StringName],
+		"three king's guards")
+	assert_false(sim.facts.has(DeedRules.DEED_DOUSE), "and the furnace still burns")
+
+
+func test_reaching_to_light_one_brings_tom() -> void:
+	var sim: Sim = _forced_beside(false)
+	sim.submit(&"act")
+	sim.advance(3)
+	var duel: Duel = _duel(sim)
+	assert_true(duel.on(), "somebody comes")
+	assert_eq(_foe_kinds(duel), [&"tom"] as Array[StringName], "Tom, to fight")
+	assert_false(sim.facts.has(DeedRules.DEED_RELIGHT), "and it is still cold")
+
+
+func test_beating_them_lets_the_act_go_through() -> void:
+	var sim: Sim = _forced_beside(true)
+	(sim.store(&"world") as WorldState).unkillable = true
+	sim.submit(&"act")
+	sim.advance(3)
+	_play(sim, DuelPlayer.PRESS, 60000)
+	sim.advance(3)
+	sim.submit(&"act")
+	sim.advance(3)
+	assert_true(sim.facts.has(DeedRules.DEED_DOUSE), "the furnace is put out")
+	assert_eq(sim.events.of_type(&"works_act").size(), 1, "once")
+
+
+func test_beating_tom_does_not_let_you_put_a_furnace_out_unopposed() -> void:
+	# `FACED` remembers who: having beaten Tom for the cold furnace is not having beaten
+	# the guards for the burning one.
+	var sim: Sim = _forced_beside(true)
+	sim.facts.add_source(SiteRules.FACED, &"tom")
+	sim.submit(&"act")
+	sim.advance(3)
+	assert_true(_duel(sim).on(), "the guards come all the same")
+	assert_false(sim.facts.has(DeedRules.DEED_DOUSE), "and it is not put out")
+

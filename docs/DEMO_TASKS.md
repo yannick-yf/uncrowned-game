@@ -2209,7 +2209,17 @@ whether it burns: with the gate forced and no side, a burning furnace offers *é
 cold one *rallumer*. **Tests first**: both offers on a forced run, by furnace; a side taken
 keeps its one act; the window and the rules agree on which furnaces burn.
 
-### V4 · Who comes, for which act
+### V4 · Who comes, for which act — **built 2026-09-30**
+
+> **Built.** `SiteRules.who_stops(deed, facts)` names who is sent: the foreman on Tom's
+> side, Tom on Sena's; with the gate forced, **three king's guards** for a furnace put out
+> and **Tom** for one lit. `FACED` now keeps who was faced among its sources, and
+> `faced_for(deed)` asks for the right one on a forced run — beating Tom for a cold furnace
+> does not let you put a burning one out unopposed; a Tom already dead sends nobody. The
+> SLOW `test_forced_path` walks the whole of it from where the game begins — G, the
+> gatekeeper and his three, the walk through the gate, the guards at the furnace, the
+> act — and a replay rebuilds the same works. The fight moves you, so the walk goes back
+> to the furnace before the act, as a player would.
 
 Est. 4 h. Depends on: V3.
 

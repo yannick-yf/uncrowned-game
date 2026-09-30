@@ -63,7 +63,48 @@ static func stands_in_the_way(who: StringName, facts: FactBase) -> bool:
 		return who == &"harry"
 	if facts.has(VOUCHED_FOR):
 		return who == &"tom"
+	# With the gate forced (V4), whoever comes for the act reached for: Tom for a furnace
+	# lit, the king's guards for one put out.
+	if facts.has(FORCED):
+		return who == &"tom" or DuelRules.trade_of(who) == KINGS_GUARD
 	return false
+
+
+## The king's guards, who come for a furnace put out once the gate is forced (V4).
+const KINGS_GUARD: StringName = &"kings_guard"
+
+
+## **Who comes to stop this act** (F6, V4): the fighters a `duel_began` is sent against.
+## Tom's side is stopped by the foreman, Sena's by Tom; with the gate forced, **putting a
+## furnace out brings three king's guards** and **lighting one brings Tom** (Yannick,
+## 2026-09-30).
+static func who_stops(deed: StringName, facts: FactBase) -> Array[StringName]:
+	if facts == null:
+		return []
+	if facts.has(BROUGHT_THROUGH):
+		return [&"harry"]
+	if facts.has(VOUCHED_FOR):
+		return [&"tom"]
+	if facts.has(FORCED):
+		if deed == DeedRules.DEED_RELIGHT:
+			return [&"tom"]
+		return [KINGS_GUARD, KINGS_GUARD, KINGS_GUARD]
+	return []
+
+
+## **Whether the one who came for this act has been beaten** (V4). On a side, having faced
+## anybody is enough, as F6 built it. With the gate forced, `FACED` must name him among
+## its sources: beating Tom for a cold furnace is not beating the guards for a burning one.
+## Nobody left to send — Tom dead — is nobody to beat.
+static func faced_for(deed: StringName, facts: FactBase, cast: Cast = null) -> bool:
+	if facts == null:
+		return false
+	if not facts.has(FORCED) or facts.has(BROUGHT_THROUGH) or facts.has(VOUCHED_FOR):
+		return facts.has(FACED)
+	var first: StringName = who_stops(deed, facts)[0]
+	if cast != null and cast.get_npc(first) != null and OpeningRules.is_gone(first, facts):
+		return true
+	return facts.sources_of(FACED).has(first)
 
 
 ## **What the furnaces offer, to somebody who got in.** Whose side you took decides the

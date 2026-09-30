@@ -68,9 +68,12 @@ func _faced(sim: Sim, event: SimEvent) -> void:
 		return
 	if not SiteRules.stands_in_the_way(who, sim.facts):
 		return
-	if sim.facts.has(SiteRules.FACED):
+	# **Who was faced, remembered** (V4): with the gate forced, beating Tom and beating the
+	# king's guards are two different things, so each is a source of its own.
+	var kind: StringName = DuelRules.kind_of(who)
+	if sim.facts.sources_of(SiteRules.FACED).has(kind):
 		return
-	sim.facts.add_source(SiteRules.FACED, who)
+	sim.facts.add_source(SiteRules.FACED, kind)
 	sim.derive(&"faced_them", {"opponent": String(who)})
 
 
