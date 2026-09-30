@@ -344,6 +344,11 @@ var _his_pieces: Dictionary = {}
 var _kit_library: Dictionary = {}
 var _frames: SpriteFrames = null
 var _figure_material: Material = null
+## **The cast's looks** (L2): per look, his frames re-pointed at its sheet, his material
+## handed it, and the sheet itself — loaded the first time somebody wears it.
+var _look_frames: Dictionary = {}
+var _look_paint: Dictionary = {}
+var _look_sheet: Dictionary = {}
 var _block_material: Material = null
 var _zoom: float = CAMERA_SIZE
 
@@ -777,7 +782,7 @@ func _build_props() -> void:
 			continue
 		var entry: Dictionary = {"prop": prop, "node": null, "lift": 0.0, "figure": false}
 		if kind == &"townsfolk":
-			entry["node"] = _figure()
+			entry["node"] = _figure(CastLooks.crowd(hash(prop["at"])))
 			entry["figure"] = true
 		elif _his != null and prop.has("made") and MADE.has(kind):
 			# A grave marker he has not drawn, made here in his materials (O13): stood like
@@ -923,9 +928,10 @@ func _prop_centre(prop: Dictionary) -> Vector2:
 
 # ------------------------------------------------------------------ figures ---
 
-## A person: his traveller, standing, facing the lens — the one figure he has drawn.
-## Without his frames (a clone without the copy), a plain capsule in his rock paint.
-func _figure() -> Node3D:
+## A person: his traveller, standing, facing the lens — the one figure he has drawn —
+## wearing `look` if one is given and its sheet is there (L2, `CastLooks`). Without his
+## frames (a clone without the copy), a plain capsule in his rock paint.
+func _figure(look: StringName = &"") -> Node3D:
 	if _frames == null:
 		var capsule := CapsuleMesh.new()
 		capsule.radius = 0.3
@@ -935,16 +941,62 @@ func _figure() -> Node3D:
 		body.material_override = _block_material if _block_material != null else _plain_grey()
 		return body
 	var sprite := AnimatedSprite3D.new()
-	sprite.sprite_frames = _frames
+	var dressed: bool = _dress(look)
+	sprite.sprite_frames = _look_frames[look] as SpriteFrames if dressed else _frames
 	sprite.animation = &"idle_down"
-	sprite.pixel_size = HIS_FIGURE_PIXEL_SIZE
+	# The king's guards stand a fifth taller: a larger pixel, the same frames, and his
+	# feet still on the ground, because `_foot_figure` lifts by the size drawn.
+	sprite.pixel_size = HIS_FIGURE_PIXEL_SIZE * (CastLooks.scale_of(look) if dressed else 1.0)
 	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
 	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	if _figure_material != null:
-		sprite.material_override = _figure_material
+	sprite.set_meta(&"look", look if dressed else &"")
+	var paint: Material = _worn(sprite)
+	if paint != null:
+		sprite.material_override = paint
 	sprite.pause()
 	return sprite
+
+
+## A look's frames, paint and sheet, loaded the first time somebody wears it. False for
+## no look, for a look whose sheet is not there, and without his frames and material.
+func _dress(look: StringName) -> bool:
+	if look == &"" or _frames == null or not (_figure_material is ShaderMaterial):
+		return false
+	if _look_frames.has(look):
+		return true
+	var path: String = CastLooks.sheet_path(look)
+	if not ResourceLoader.exists(path):
+		return false
+	var sheet: Texture2D = load(path) as Texture2D
+	if sheet == null:
+		return false
+	var paint := (_figure_material as ShaderMaterial).duplicate(true) as ShaderMaterial
+	paint.set_shader_parameter("sprite_sheet", sheet)
+	_look_sheet[look] = sheet
+	_look_paint[look] = paint
+	_look_frames[look] = CastLooks.frames_for(_frames, sheet)
+	return true
+
+
+## The paint a figure wears when nothing is happening to it: its look's, or his.
+func _worn(figure: Node3D) -> Material:
+	var look: StringName = figure.get_meta(&"look", &"") as StringName
+	return _look_paint.get(look, _figure_material) as Material
+
+
+## The sheet a figure is drawn from: its look's, or the one his frames read.
+func _sheet_worn(figure: Node3D) -> Texture2D:
+	var look: StringName = figure.get_meta(&"look", &"") as StringName
+	if _look_sheet.has(look):
+		return _look_sheet[look] as Texture2D
+	var his := _figure_material as ShaderMaterial
+	return his.get_shader_parameter("sprite_sheet") as Texture2D if his != null else null
+
+
+## Which look a person of the cast wears: by name, by trade, by where they stand.
+func _look_of(npc: Npc) -> StringName:
+	return CastLooks.of_person(npc.id, npc.kind, _region.zone_at(npc.tile) if _region != null else &"")
 
 
 ## Which of his four facings a direction is, with the 2D window's precedence.
@@ -1287,7 +1339,7 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		present[npc.id] = true
 		var figure: Node3D = _people.get(npc.id, null) as Node3D
 		if figure == null:
-			figure = _figure()
+			figure = _figure(_look_of(npc))
 			figure.name = "Person_%s" % npc.id
 			add_child(figure)
 			_people[npc.id] = figure
@@ -1307,9 +1359,10 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			_wear_fight_paint(figure, false, entry, StringName(String(entry.get("who", npc.id))))
 			figure.visible = true
 			continue
-		if figure.material_override != _figure_material and _figure_material != null:
+		var own: Material = _worn(figure)
+		if own != null and figure.material_override != own:
 			# The man you fought last time takes his own material back.
-			figure.material_override = _figure_material
+			figure.material_override = own
 		# Walking home when the world has moved him, idle at his post otherwise — never a
 		# still figure sliding (the review of O7).
 		var going: Vector2i = walkers.heading(npc) if walkers != null else Vector2i(0, 1)
@@ -1430,7 +1483,7 @@ func _sync_traffic(road: Travellers, world: WorldState) -> void:
 		seen[walker.id] = true
 		var figure: Node3D = _traffic.get(walker.id, null) as Node3D
 		if figure == null:
-			figure = _figure()
+			figure = _figure(CastLooks.crowd(walker.id))
 			figure.name = "Traffic_%d" % walker.id
 			add_child(figure)
 			_traffic[walker.id] = figure
@@ -1455,7 +1508,7 @@ func _sync_guards(world: WorldState, escort: int, extra: int) -> void:
 	var posts: Array[Vector2] = [Vector2(-5.0, 9.0), Vector2(3.0, 9.0), Vector2(-8.0, 9.0), Vector2(11.0, 9.0)]
 	var wanted: int = escort + mini(extra, posts.size())
 	while _guards.size() < wanted:
-		var guard: Node3D = _figure()
+		var guard: Node3D = _figure(CastLooks.escort())
 		guard.name = "Guard_%d" % _guards.size()
 		add_child(guard)
 		_idle(guard, Vector2i(0, 1))
@@ -1780,7 +1833,7 @@ func _sync_beasts(fighting: Dictionary) -> void:
 		if DuelRules.is_person(kind):
 			var man: Node3D = _beasts.get(seat, null) as Node3D
 			if man == null:
-				man = _figure()
+				man = _figure(CastLooks.of_fighter(kind))
 				man.name = "Fighting_%s" % String(seat).replace("#", "_")
 				add_child(man)
 				_beasts[seat] = man
@@ -1819,7 +1872,8 @@ func _sync_folk(folk: Folk, world: WorldState) -> void:
 		seen[id] = true
 		var figure: Node3D = _folk.get(id, null) as Node3D
 		if figure == null:
-			figure = _figure()
+			var place: StringName = walker["place"] as StringName
+			figure = _figure(CastLooks.worker(id) if CastLooks.works_at(place) else CastLooks.crowd(id))
 			figure.name = "Folk_%d" % id
 			add_child(figure)
 			_folk[id] = figure
@@ -2120,11 +2174,17 @@ func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary, key: St
 	if sprite == null or _figure_material == null:
 		return
 	if fighting.is_empty():
-		if sprite.material_override != _figure_material:
-			sprite.material_override = _figure_material
+		var own: Material = _worn(sprite)
+		if sprite.material_override != own:
+			sprite.material_override = own
 		return
 	var who: StringName = key if key != &"" else (&"mine" if mine else &"his")
 	var paint: ShaderMaterial = _fight_paint_for(who)
+	# **A seat is not a man** (L2): the same seat holds Bram in one fight and a guard in the
+	# next, so the paint is handed this figure's own sheet every time it is worn.
+	var sheet: Texture2D = _sheet_worn(sprite)
+	if sheet != null and paint.get_shader_parameter("sprite_sheet") != sheet:
+		paint.set_shader_parameter("sprite_sheet", sheet)
 	if sprite.material_override != paint:
 		sprite.material_override = paint
 	var flash: float = 0.0
@@ -2585,10 +2645,23 @@ func beast_at(seat: StringName) -> Vector2:
 	return _beast_at.get(seat, Vector2(-1, -1)) as Vector2
 
 
+## Which look a figure is drawn in (L2), by its node's name — `Player`, `Person_bram`,
+## `Guard_0`, `Fighting_works_guard_1` — and how large its pixel is, for the suite.
+## `&"none"` for no such figure; `&""` for his traveller as he drew him.
+func worn(name: String) -> StringName:
+	var figure: Node = get_node_or_null(name)
+	return figure.get_meta(&"look", &"") as StringName if figure != null else &"none"
+
+
+func drawn_pixel(name: String) -> float:
+	var sprite := get_node_or_null(name) as AnimatedSprite3D
+	return sprite.pixel_size if sprite != null else 0.0
+
+
 func fighters_wear_our_paint() -> bool:
 	var sprite := _player as AnimatedSprite3D
 	return sprite != null and sprite.material_override != null \
-		and sprite.material_override != _figure_material
+		and sprite.material_override != _worn(sprite)
 
 
 # ------------------------------------------------------------------ counting ---

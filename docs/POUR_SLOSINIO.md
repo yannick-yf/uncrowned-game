@@ -494,9 +494,9 @@ quatre directions, et une flèche, on remplace les nôtres.
 **Les gardes du roi.** Si le joueur attaque le portier, trois gardes du roi arrivent :
 très forts, trop forts pour le joueur au début du jeu. Si par miracle il bat les quatre, la
 porte est à lui, et il peut éteindre ou rallumer les fours ; éteindre fait venir les gardes
-de l'usine (un à l'épée, deux archers, faciles à battre), rallumer fait venir Tom. Ces gardes sont ton voyageur, comme tout le monde
-(mis à jour le 2026-09-30). Aujourd'hui, on ne distingue plus le joueur des gardes
-qu'à l'anneau sous ses pieds : c'est la dette des visages, qui devient plus visible ici.
+de l'usine (un à l'épée, deux archers, faciles à battre), rallumer fait venir Tom.
+Depuis le 2026-09-30, chacun porte une tenue qui le distingue (voir le §15) : les gardes
+du roi en armure noire, ceux de l'usine en ocre.
 
 **La clairière des fées est supprimée.** Le joueur ne s'y réveille plus depuis le
 cimetière. Il n'y a plus d'anneau de bois à planter autour.

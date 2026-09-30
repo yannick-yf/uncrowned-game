@@ -2321,12 +2321,30 @@ picks or corrects each look from the board before any of it reaches the game.
 > room kept round his frames (8 px, above and beside, never below) reaches no neighbour.
 > The three DEBT lines for what his brother had not drawn became watches.
 
-### L2 · Each person wears their type's look
+### L2 · Each person wears their type's look — **built 2026-09-30**
 
 Est. 4 h. A `look` per person and per fighter kind in the content, one sheet per look, read
 by the window for walking, standing and fighting alike; the fight frames made for every
 look. **Tests first**: everybody the demo shows has a look; a fighter's look follows his
 kind; the window loads every sheet.
+
+> **Built.** `World3d._figure(look)` dresses every figure the window makes — the cast by
+> name, trade and place (`CastLooks.of_person`), the fighters nobody names by kind, the
+> king's escort, the road's traffic and the towns' crowds as villagers, and the people
+> who walk to the works as its workers. A look is loaded the first time somebody wears
+> it: its sheet, his frames re-pointed at it (`CastLooks.frames_for`, built afresh so the
+> player's are never touched) and his material handed it. The king's guards are drawn with
+> a pixel a fifth larger, and stand on the ground because the window lifts a figure by
+> the size it is drawn. **A fight's seat is not a man**: the same seat holds Bram in one
+> fight and a guard in the next, so the fight's paint is handed the figure's own sheet
+> each time it is worn. `test_cast_looks` holds who wears what (everybody the demo shows
+> wears a look of the table, the works dress their own watchmen, a fighter's look follows
+> his kind, every look is worn by somebody, a look's frames keep his frames' sizes);
+> `test_world3d` holds the window (Bram, Wren, the gatekeeper, the escort a fifth taller,
+> the player in none). **One cost, said plainly:** a sheet is 12 MB of video memory once
+> worn, and a walk through the whole demo wears all thirteen — about 156 MB. The sheets
+> keep his layout so that nothing about his frames moves; packing them tighter is a
+> later saving if the Windows machine asks for it.
 
 ### L3 · The king's guards — heavy armour
 

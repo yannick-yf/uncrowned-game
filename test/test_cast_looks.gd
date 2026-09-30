@@ -152,3 +152,91 @@ func test_the_tool_reads_ours_and_writes_beside_the_window() -> void:
 	assert_eq(made.get("BASE_SHEET", ""), "view3d/fight/traveler_sheet.png",
 		"it dresses his sheet with our fight frames under it, so a look can fight")
 	assert_true(CastLooks.DIR.begins_with("res://view3d/"), "the looks live beside the 3D window, not in assets/")
+
+
+# ------------------------------------------------------------------- who wears what (L2) ---
+
+func test_everybody_the_demo_shows_wears_a_look_of_the_table() -> void:
+	var names: Array[StringName] = CastLooks.names()
+	var sim: Sim = Game.build()
+	var cast := sim.store(&"cast") as Cast
+	var region: Region = (sim.store(&"world") as WorldState).region()
+	var dressed: int = 0
+	for id: StringName in cast.npcs.keys():
+		var npc: Npc = cast.npcs[id] as Npc
+		if id == OpeningRules.FAIRY:
+			continue
+		var look: StringName = CastLooks.of_person(npc.id, npc.kind, region.zone_at(npc.tile))
+		assert_true(names.has(look), "%s wears %s, which is a look" % [id, look])
+		dressed += 1
+	assert_true(dressed >= 30, "the cast and its strangers: %d" % dressed)
+	for kind: String in ["trader", "guard", "gatekeeper", "watchman"]:
+		assert_true(names.has(CastLooks.of_person(StringName(kind + "@1"), StringName(kind), &"")),
+			"a %s stranger has a look" % kind)
+
+
+func test_the_named_ones_the_demo_needs_wear_their_own() -> void:
+	assert_eq(CastLooks.of_person(&"bram", &"", &"brindle"), &"bram", "Bram")
+	assert_eq(CastLooks.of_person(&"wren", &"", &"brindle"), &"wren", "Wren")
+	for worker: StringName in [&"tom", &"sena", &"harry"]:
+		assert_true(String(CastLooks.of_person(worker, &"", &"cinderworks")).begins_with("worker_"),
+			"%s works the furnaces and dresses for it" % worker)
+	assert_eq(CastLooks.of_person(&"gatekeeper@1", &"gatekeeper", &"cinderworks"), &"works_guard",
+		"the works' gatekeeper wears its livery")
+	assert_eq(CastLooks.of_person(&"watchman@1", &"watchman", &"cinderworks"), &"works_guard",
+		"the works dress their own watchmen")
+	assert_eq(CastLooks.of_person(&"watchman@3", &"watchman", &"wide_acres"), &"watch",
+		"and everywhere else a watchman is the king's")
+
+
+func test_a_fighter_s_look_follows_his_kind() -> void:
+	# Heavy plate means unbeatable, and nothing else wears it among the fighters.
+	var table: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://content/duel.json")) as Dictionary
+	for kind: String in (table["fighters"] as Dictionary).keys():
+		if kind.begins_with("_") or not DuelRules.is_person(StringName(kind)):
+			continue
+		var look: StringName = CastLooks.of_fighter(StringName(kind))
+		assert_true(CastLooks.names().has(look), "a %s fights in a look: %s" % [kind, look])
+	assert_eq(CastLooks.of_fighter(&"kings_guard"), &"kings_guard", "the king's guards in plate")
+	assert_eq(CastLooks.of_fighter(&"works_guard"), &"works_guard", "the quest's swordsman")
+	assert_eq(CastLooks.of_fighter(&"works_archer"), &"works_archer", "and its archers")
+	assert_eq(CastLooks.of_fighter(&"wolf"), &"", "a wolf is not a man")
+	assert_eq(CastLooks.escort(), &"kings_guard", "the escort is the king's guards")
+
+
+func test_every_look_is_worn_by_somebody() -> void:
+	var table: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CastLooks.FILE)) as Dictionary
+	var worn: Dictionary = {}
+	for section: String in ["people", "strangers", "fighters"]:
+		for who: String in (table.get(section, {}) as Dictionary).keys():
+			worn[String((table[section] as Dictionary)[who])] = true
+	for place: String in (table.get("strangers_by_place", {}) as Dictionary).keys():
+		for look: Variant in ((table["strangers_by_place"] as Dictionary)[place] as Dictionary).values():
+			worn[String(look)] = true
+	for pool: String in ["crowd", "workers"]:
+		for look: Variant in table.get(pool, []) as Array:
+			worn[String(look)] = true
+	worn[String(table.get("escort", ""))] = true
+	for look: StringName in CastLooks.names():
+		assert_true(worn.has(String(look)), "%s is worn by somebody, or it is a sheet for nothing" % look)
+	for look: String in worn.keys():
+		assert_true(CastLooks.names().has(StringName(look)), "%s, worn, is a look with a recipe" % look)
+
+
+func test_a_look_s_frames_keep_his_frames_sizes() -> void:
+	# His feet stand where they stood: a look's frame is widened by the room kept round it
+	# and its margin gives the room back, so the frame is exactly as large.
+	var frames: SpriteFrames = _his_frames()
+	var path: String = CastLooks.sheet_path(&"wren")
+	if frames == null or not ResourceLoader.exists(path):
+		debt("his workshop or the looks are missing; run tools/vendor_workshop.sh and tools/draw_cast_looks.gd")
+		return
+	var dressed: SpriteFrames = CastLooks.frames_for(frames, load(path) as Texture2D)
+	for named: StringName in frames.get_animation_names():
+		assert_eq(dressed.get_frame_count(named), frames.get_frame_count(named), "%s: every frame" % named)
+		for i: int in frames.get_frame_count(named):
+			var his := frames.get_frame_texture(named, i) as AtlasTexture
+			var ours := dressed.get_frame_texture(named, i) as AtlasTexture
+			assert_eq(ours.get_size(), his.get_size(), "%s %d: the same size" % [named, i])
+			assert_eq(ours.region.end.y, his.region.end.y, "%s %d: his feet on the same edge" % [named, i])
+			assert_true(ours.atlas != his.atlas, "%s %d: drawn from the look's sheet" % [named, i])

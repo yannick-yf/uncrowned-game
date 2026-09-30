@@ -101,6 +101,17 @@ func test_the_window_stands_on_his_ground() -> void:
 		"extra_guards": 0, "witnesses": ["maddox", "bell"], "now": 3.2,
 	}, 1.0 / 60.0)
 	assert_true(window.people_count() >= 30, "the cast stands in the window: %d" % window.people_count())
+	# **Each wears his type's look** (L2): Bram and Wren their own, the works' gatekeeper
+	# its livery, the king's escort his plate a fifth taller — and the player none.
+	if window.figures_are_his():
+		assert_eq(window.worn("Player"), &"", "the player is the traveller his brother drew")
+		assert_eq(window.worn("Person_bram"), &"bram", "Bram wears his own")
+		assert_eq(window.worn("Person_wren"), &"wren", "Wren wears her own")
+		assert_eq(window.worn("Person_gatekeeper_1"), &"works_guard", "the gatekeeper wears the works' livery")
+		assert_eq(window.worn("Guard_0"), &"kings_guard", "the king's escort wears his plate")
+		assert_true(absf(window.drawn_pixel("Guard_0") - window.drawn_pixel("Player") * 1.2) < 1e-6,
+			"and stands a fifth taller than the player")
+		assert_eq(window.drawn_pixel("Person_bram"), window.drawn_pixel("Player"), "Bram at a man's height")
 	# The player seen through what covers him (O21): his own frames, drawn over everything.
 	if window.figures_are_his():
 		var ghost: AnimatedSprite3D = window.player_ghost()
