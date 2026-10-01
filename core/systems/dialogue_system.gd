@@ -36,6 +36,13 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var speaker: StringName = StringName(String(event.data.get("npc", ""))) \
 		if event.type == &"talk" else world.talking_to
 	conditions[&"called_out"] = hail != null and hail.called_out(speaker)
+	# **Empty-handed** (E6): a character made at creation who owns no weapon walked past
+	# the sword on the grave, and Bram says where it lies. Owns, not holds: a sword put
+	# away in the bag is not lying on a grave.
+	var bag := sim.store(&"inventory") as Inventory
+	var unarmed: bool = bag != null and bag.made and not bag.owns_a_weapon()
+	conditions[&"unarmed"] = unarmed
+	conditions[&"called_out_unarmed"] = unarmed and bool(conditions[&"called_out"])
 	# **Right after a lesson** (the review of O21): the talk a drill's end opens says
 	# which lesson and how it went, so his first words are about it — a way on, a
 	# "not yet", a farewell — and not his everyday greeting after every lesson.

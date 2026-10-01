@@ -55,6 +55,14 @@ func weapon_in_hand() -> StringName:
 	return held if held != &"" else DuelRules.FISTS
 
 
+## Whether anything he owns goes in the weapon slot, worn or in the bag.
+func owns_a_weapon() -> bool:
+	for item: StringName in owned:
+		if ItemRules.slot_of(item) == ItemRules.WEAPON:
+			return true
+	return false
+
+
 func has_bow() -> bool:
 	return ItemRules.weapon_of(in_slot(ItemRules.BOW)) == DuelRules.BOW
 

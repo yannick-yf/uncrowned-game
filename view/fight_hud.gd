@@ -295,6 +295,14 @@ func _draw() -> void:
 	var size: Vector2 = get_viewport_rect().size
 	var his_name: String = String(_reading.get("his_name", ""))
 	_draw_bar(&"mine", int(_reading.get("my_max", 10)), Text.of(&"fight.you"), MINE, false, size)
+	# **What his armour takes off every blow** (E6), on his name's row at the bar's inner
+	# end, so a looted helmet is a number in the fight and not only a picture.
+	var armour: String = armour_line()
+	if armour != "":
+		var tone: Color = Ui.DIM
+		tone.a = _alpha
+		var bar_end: float = MARGIN + float(MAX_PIPS) * (PIP.x + PIP_GAP) - PIP_GAP
+		Ui.write_over(self, Vector2(bar_end - Ui.width_of(armour, Ui.NOTE), TOP + PIP.y + 13.0), armour, Ui.NOTE, tone)
 	var foes: Array[Dictionary] = _standing_foes()
 	if _foes().is_empty():
 		_draw_bar(&"his", int(_reading.get("his_max", 10)), his_name, HIS, true, size)
@@ -428,6 +436,12 @@ func _draw_long_bar(
 
 
 # ------------------------------------------------------------- for the suite ---
+
+## The armour's line under the player's bar, or nothing when he wears none.
+func armour_line() -> String:
+	var armour: int = int(_reading.get("my_armour", 0))
+	return Text.of(&"fight.armour", [armour]) if armour > 0 else ""
+
 
 func is_up() -> bool:
 	return visible and not _reading.is_empty()

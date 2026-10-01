@@ -532,8 +532,8 @@ first, so the screen name may carry the page after a colon — `journal:standing
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
 **`tools/opening_frames.sh [out_dir] [languages…]`** (2026-09-29, O21) photographs the
-opening for a review: thirty frames a language, from the title to the fight at the works' gate and
-the inventory (`ONLY=<regex>` takes only the frames whose name matches),
+opening for a review: thirty-four frames a language, from the title to the fight at the works' gate,
+the inventory and the equipment in play (`ONLY=<regex>` takes only the frames whose name matches),
 through the tools above, with one line per frame giving its count of `SCRIPT ERROR`s — 0,
 and then look at them. A shot plays the run on disk and the language is a setting on
 disk, so it moves the player's `save.json` aside (every frame is then a fresh run) and

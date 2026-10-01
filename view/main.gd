@@ -512,6 +512,8 @@ func _duel_frame() -> Dictionary:
 		"his_down": DuelRules.is_down(him.hp),
 		"my_hp": mine.hp,
 		"my_max": mine.max_hp,
+		# What his armour takes off every blow (E6), said under his bar.
+		"my_armour": (_sim.store(&"inventory") as Inventory).protection() if _sim.store(&"inventory") != null else 0,
 		"his_hp": him.hp,
 		"his_max": him.max_hp,
 	}
@@ -2375,14 +2377,38 @@ func _find_item(id: StringName) -> StringName:
 ## **What was just come by** (group E): the last `item_gained` within a moment, read off the
 ## log — the sword picked up, the bow given, what a beaten man left.
 func _just_gained() -> String:
+	var items: Array[String] = gained_lately()
+	if items.is_empty():
+		return ""
+	var named: Array[String] = []
+	for item: String in items:
+		named.append(Text.of(StringName("item.%s.a" % item)))
+	var all: String = named[named.size() - 1]
+	if named.size() > 1:
+		all = Text.of(&"moment.gained_and", [", ".join(named.slice(0, named.size() - 1)), all])
+	return Text.of(&"moment.gained", [all])
+
+
+## **What came into the bag lately, in the order it came** (E6): an item picked up in the
+## last few seconds, or — a fight over in that time — everything its fallen left, said
+## together once it is over rather than one name at a time under the fight's banner.
+## Public, so the suite can read it.
+func gained_lately() -> Array[String]:
+	var items: Array[String] = []
 	var events: Array[SimEvent] = _sim.events.all()
+	var since: int = _sim.step - MOMENT_STEPS * 3
+	var in_fight: bool = false
 	for i: int in range(events.size() - 1, -1, -1):
 		var event: SimEvent = events[i]
-		if _sim.step - event.step > MOMENT_STEPS * 3:
+		if not in_fight and event.step < since:
 			break
-		if event.type == &"item_gained" and String(event.data.get("from", "")) != "start":
-			return Text.of(&"moment.gained", [Text.of(StringName("item.%s.a" % String(event.data.get("item", ""))))])
-	return ""
+		if event.type == &"duel_ended" and not in_fight:
+			in_fight = true
+		elif event.type == &"duel_began" and in_fight:
+			break
+		elif event.type == &"item_gained" and String(event.data.get("from", "")) != "start":
+			items.push_front(String(event.data.get("item", "")))
+	return items
 
 
 func _just_happened() -> String:

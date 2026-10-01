@@ -180,3 +180,57 @@ func test_the_bag_replays() -> void:
 	sim.advance(1)
 	var again: Sim = Game.replay(sim)
 	assert_eq(_bag(again).fingerprint(), _bag(sim).fingerprint(), "the same bag, the same clothes")
+
+
+func _talk_to_bram(sim: Sim) -> String:
+	var world := sim.store(&"world") as WorldState
+	if world.in_dialogue():
+		sim.submit(&"end_talk")
+		sim.advance(1)
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre()
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(1)
+	return world.current_line
+
+
+func test_bram_says_where_the_sword_lies_to_somebody_without_one() -> void:
+	# E6, the design's promise (CREATION_AND_GEAR.md section 4): a player who walked past
+	# the sword is told where it lies, and is weaker rather than stuck.
+	var bram: Npc = Cast.shared().get_npc(&"bram")
+	var sim: Sim = _made()
+	var unarmed: String = bram.alt_greeting_for({&"unarmed": true})
+	assert_true(unarmed != "" and unarmed != bram.greeting, "he has a line for it")
+	assert_eq(_talk_to_bram(sim), unarmed, "empty-handed, he says where the sword lies")
+	# At the hail, the hail's own words and the sword in one.
+	var hail := sim.store(&"hail") as Hail
+	sim.submit(&"end_talk")
+	sim.advance(1)
+	hail.who = &"bram"
+	hail.phase = Hail.ARRIVED
+	assert_eq(_talk_to_bram(sim), bram.alt_greeting_for({&"called_out_unarmed": true}), "called out, the same in his shout")
+	assert_ne(bram.alt_greeting_for({&"called_out_unarmed": true}), bram.alt_greeting_for({&"called_out": true}),
+		"which is not the hail's line for an armed man")
+	hail.phase = Hail.IDLE
+	hail.who = &""
+	# With it, his everyday greeting again — even put away in the bag.
+	(sim.store(&"world") as WorldState).player_pos = Vector2(_sword_tile(sim)) + Vector2(0.5, 1.5)
+	sim.submit(&"end_talk")
+	sim.advance(1)
+	sim.submit(&"pick_up", {"find": "graves_sword"})
+	sim.advance(1)
+	assert_true(_bag(sim).owns_a_weapon(), "the sword picked up")
+	assert_ne(_talk_to_bram(sim), unarmed, "armed, nothing about it")
+	sim.submit(&"end_talk")
+	sim.advance(1)
+	sim.submit(&"unequip", {"slot": "weapon"})
+	sim.advance(1)
+	assert_ne(_talk_to_bram(sim), unarmed, "a sword in the bag is not lying on a grave")
+	# A run never made has the sword it always had, and he never mentions one.
+	assert_ne(_talk_to_bram(Game.build()), unarmed, "a bare run is armed")
+
+
+func test_a_lesson_s_end_speaks_before_the_sword() -> void:
+	# Fists pass the sword drill too; what he says after it is the lesson's, not the grave's.
+	var bram: Npc = Cast.shared().get_npc(&"bram")
+	var conditions: Dictionary = {&"unarmed": true, &"just_passed_sword": true}
+	assert_eq(bram.alt_greeting_for(conditions), bram.alt_greeting_for({&"just_passed_sword": true}), "the lesson first")

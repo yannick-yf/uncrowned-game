@@ -5,9 +5,9 @@
 #   tools/opening_frames.sh /tmp/opening fr en      # the default
 #   ONLY='inventory' tools/opening_frames.sh /tmp/o  # only the frames whose name matches
 #
-# Thirty frames a language, from the title to the works' gate and the fight there, and what
-# you carry, each through the debug tools CLAUDE.md lists (UNCROWNED_TALK, _AT, _HAIL, _DUEL,
-# _VIEW, _WORLD, _GEAR), then
+# Thirty-four frames a language, from the title to the works' gate and the fight there, and what
+# you carry and what it does in play, each through the debug tools CLAUDE.md lists
+# (UNCROWNED_TALK, _AT, _HAIL, _DUEL, _VIEW, _WORLD, _GEAR, _LOOK), then
 # one line per frame: its name and how many SCRIPT ERRORs its run printed — which has to
 # be 0, and which says nothing about whether the picture is right: look at them.
 #
@@ -44,6 +44,7 @@ shoot() { # name, screen, env...
   rm -f "$DATA/save.json"
   echo "$LANG_ID/$name $(grep -c 'SCRIPT ERROR' "$OUT/$LANG_ID/$name.log")"
 }
+PLATE=royal_helm,royal_breastplate,royal_leggings,short_sword,hunting_bow
 CARRIED=leather_cap,ochre_gambeson,royal_breastplate,cloth_tunic,royal_leggings,cloth_trousers,short_sword,hunting_bow
 for LANG_ID in $LANGS; do
   mkdir -p "$OUT/$LANG_ID"
@@ -80,5 +81,12 @@ for LANG_ID in $LANGS; do
   # bag — an item listed after another of its slot puts the first back in the bag.
   shoot 28_inventory inventory UNCROWNED_GEAR=$CARRIED
   shoot 29_inventory_bag inventory:bag UNCROWNED_GEAR=$CARRIED
+  # Seen in play (E6): the king's guards' set worn on the road and in a fight, where the card
+  # says what it takes off; a works' guard beaten, and what he left said once it is over;
+  # and Bram's hail to somebody who walked past the sword (a look makes the run a made one).
+  shoot 30_gear_world play UNCROWNED_AT=281,318 UNCROWNED_GEAR=$PLATE
+  shoot 31_gear_fight play UNCROWNED_AT=281,318 UNCROWNED_GEAR=$PLATE UNCROWNED_DUEL=bram
+  shoot 32_loot play UNCROWNED_AT=317,208 UNCROWNED_GEAR=short_sword UNCROWNED_DUEL=works_guard:340:press
+  shoot 33_hail_unarmed play UNCROWNED_HAIL=bram:400 UNCROWNED_LOOK=hair_style=spiky
 done
 echo "frames in $OUT"

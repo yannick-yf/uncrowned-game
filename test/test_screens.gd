@@ -670,3 +670,68 @@ func test_every_line_of_the_inventory_fits_its_column() -> void:
 				"%s: '%s' fits under the slots" % [language, line])
 		assert_true(Ui.width_of(Text.of(&"inventory.help"), Ui.NOTE) <= 640.0 - 32.0, "%s: the keys fit the screen" % language)
 	Text.set_locale(was)
+
+
+# ------------------------------------------------------------ seen in play (E6) ---
+
+func test_the_fight_card_says_what_his_armour_takes_off() -> void:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	for seat: String in ["kings_guard", "kings_guard#2"]:
+		sim.submit(&"duel_down", {"who": seat})
+		sim.advance(1)
+	# The helm goes on an empty head; the breastplate waits in the bag over the tunic.
+	sim.submit(&"equip", {"item": "royal_breastplate"})
+	sim.advance(1)
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	sim.advance(1)
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	var armour: int = (sim.store(&"inventory") as Inventory).protection()
+	assert_eq(armour, 3, "the helm and the breastplate, on")
+	assert_eq(int(reading.get("my_armour", -1)), armour, "the reading carries it")
+	var hud := FightHud.new()
+	reading["on"] = true
+	reading["lens"] = 1.0
+	hud.present(reading, 0.016)
+	assert_eq(hud.armour_line(), Text.of(&"fight.armour", [3]), "and the card says it")
+	reading["my_armour"] = 0
+	hud.present(reading, 0.016)
+	assert_eq(hud.armour_line(), "", "nothing when he wears none")
+	hud.free()
+	play.free()
+
+
+func test_what_a_fight_leaves_is_said_together_once_it_is_over() -> void:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	sim.submit(&"duel_began", {"opponents": ["works_guard"], "by": "works_guard"})
+	sim.advance(1)
+	sim.submit(&"duel_down", {"who": "works_guard"})
+	sim.advance(1)
+	# A long fight: the fall is more than the moment's few seconds before its end.
+	sim.advance(Sim.STEPS_PER_REAL_SECOND * 10)
+	sim.submit(&"duel_ended", {"how": "won"})
+	sim.advance(1)
+	assert_eq(play.call(&"gained_lately") as Array[String], ["leather_cap", "ochre_gambeson"] as Array[String],
+		"both, in the order they came")
+	var line: String = play.call(&"_just_gained") as String
+	assert_eq(line, Text.of(&"moment.gained", [Text.of(&"moment.gained_and",
+		[Text.of(&"item.leather_cap.a"), Text.of(&"item.ochre_gambeson.a")])]), "in one sentence: '%s'" % line)
+	sim.advance(Sim.STEPS_PER_REAL_SECOND * 8)
+	assert_eq(play.call(&"_just_gained") as String, "", "and then it is gone")
+	# The start kit is never news.
+	assert_eq(_carried_news(Game.begin_run(TraitRules.at_the_floor())), "", "the clothes he wakes in")
+	play.free()
+
+
+func _carried_news(sim: Sim) -> String:
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var line: String = play.call(&"_just_gained") as String
+	play.free()
+	return line

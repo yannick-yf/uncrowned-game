@@ -2732,6 +2732,19 @@ Est. 2 h. Equipment worn in the world and in a fight; the fight's card says the
 protection; loot taken from the works' guards. **Check:** frames; both suites green; the
 game launches and plays.
 
+> **Built 2026-10-01.** What E4 drew and E5 changes, seen where it matters. **In the
+> fight**, the player's bar carries *Protection N* at its inner end whenever he wears any
+> (`FightHud.armour_line`, fed `my_armour` by the reading), so a looted helmet is a number
+> as well as a picture. **Loot is said once the fight is over, all of it**: `gained_lately`
+> walks back from a fight that ended in the last few seconds to the one that began it, and
+> the HUD says *Vous avez maintenant un bonnet de cuir et un gambison ocre* — before, it
+> named only the last item, and under the fight's banner nobody read it. **Bram says where
+> the sword lies** to a made character who owns no weapon, as the design promised: in his
+> hail's shout (`called_out_unarmed`) and in his everyday greeting (`unarmed`, last, so a
+> lesson's end speaks first) — two drafted lines with their `_p2` marks, French and
+> English. *Owns*, not holds: a sword put away in the bag is not lying on a grave.
+> `tools/opening_frames.sh` frames 30–33; `docs/frames/gear/seen_in_play.png`.
+
 ### E7 · Photographs, a review, the letter
 
 Est. 3 h. The opening and the works in both languages; a fresh-eyes review walking
