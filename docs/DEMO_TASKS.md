@@ -2709,6 +2709,23 @@ Est. 6 h. **Tab**: the player in the middle by the paper-doll shader, the six sl
 him, what he carries on the right with its numbers and the difference against what he
 wears; equip and unequip. French and English. **Check:** frames in both languages.
 
+> **Built 2026-10-01.** `view/inventory_screen.gd`, over a stopped world like the pause
+> menu, on a layer of its own above the HUD. On the left the six slots and what is in
+> them, then what they add up to — the protection taken off every blow, light or heavy,
+> the blow and what strikes it; in the middle the player turning on the spot, drawn by
+> the canvas paper-doll shader from the same slots the world uses; on the right the bag,
+> eight rows and scrolling past them, with the item under the cursor's numbers and **what
+> it would take the place of**. Left and right change column, up and down choose, Enter
+> (or E) puts on or takes off — **an `equip` or `unequip` event**, answered on the spot so
+> the figure changes at once; Tab or Escape closes. **Not in a fight**: Tab is refused and
+> the HUD says *Pas pendant un combat* for two seconds; `InventorySystem` refuses the
+> events anyway. The window reads the keys for the screen, so the Tab that opens it is not
+> also the Tab that closes it. The HUD lists `[Tab] inventaire`. The columns were widened
+> to 208 px when the suite measured two French lines two pixels too long:
+> `test_every_line_of_the_inventory_fits_its_column` measures every item, slot and total in
+> both languages. `UNCROWNED_SCREEN=inventory[:bag]` opens it for a photograph, and
+> `tools/opening_frames.sh` takes it (frames 28–29). `docs/frames/gear/inventory.png`.
+
 ### E6 · Seen in play
 
 Est. 2 h. Equipment worn in the world and in a fight; the fight's card says the

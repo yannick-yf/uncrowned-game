@@ -19,6 +19,9 @@
 #   UNCROWNED_DID=i_stole_in_public tools/shot.sh out.png journal:standing 236,208
 #                                             deeds done where you stand, and the page
 #                                             that says what they cost (J6)
+#   UNCROWNED_GEAR=royal_helm tools/shot.sh out.png inventory:bag
+#                                             what you carry and wear, the cursor in the
+#                                             bag (E5)
 #
 # The check that "zero script errors" is not. Looking at the output is cheap, and
 # every bug the first two nights shipped would have been caught by one of these.

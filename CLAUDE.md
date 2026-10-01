@@ -432,7 +432,7 @@ where you wake, keeps every name off every other, and is bound to the **letter**
 rather than the key's place — the moving keys are physical so WASD sits under an AZERTY
 hand, but a key the HUD names by its letter has to be found by its letter.
 
-**`tools/shot.sh out.png [title|creation|play|pause|journal[:page]|map] [x,y]`** renders one
+**`tools/shot.sh out.png [title|creation|play|pause|journal[:page]|map|inventory[:bag]] [x,y]`** renders one
 frame of a screen to a file and quits. It is the only check that catches what the
 suite cannot see — the ocean shipped covered in shoreline tiles because "300 frames,
 zero script errors" was reported as though it meant the picture was right. Under it:
@@ -532,7 +532,8 @@ first, so the screen name may carry the page after a colon — `journal:standing
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
 **`tools/opening_frames.sh [out_dir] [languages…]`** (2026-09-29, O21) photographs the
-opening for a review: twenty-eight frames a language, from the title to the fight at the works' gate,
+opening for a review: thirty frames a language, from the title to the fight at the works' gate and
+the inventory (`ONLY=<regex>` takes only the frames whose name matches),
 through the tools above, with one line per frame giving its count of `SCRIPT ERROR`s — 0,
 and then look at them. A shot plays the run on disk and the language is a setting on
 disk, so it moves the player's `save.json` aside (every frame is then a fresh run) and
@@ -554,7 +555,10 @@ creation's second page.
 
 **`UNCROWNED_GEAR=royal_helm,short_sword`** (2026-10-01, E4) puts items in the player's
 bag and on him for a photograph — the run a shot carrying `UNCROWNED_LOOK` or `_GEAR`
-starts is made, so it begins with the start kit and no sword. Written straight into the
+starts is made, so it begins with the start kit and no sword. Each is put on as it comes,
+so an item listed after another of its slot puts the first back in the bag.
+`UNCROWNED_SCREEN=inventory[:bag]` opens the inventory (Tab), the cursor in the bag after
+the colon. Written straight into the
 store, like `UNCROWNED_TOWN`: one frame for one photograph, not a save-able state.
 
 **All fifteen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the

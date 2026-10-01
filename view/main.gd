@@ -121,6 +121,13 @@ var _map_open: bool = false
 ## the point: the simulation only advances from `_process`, so not calling it is a
 ## complete pause with nothing to remember to re-enable.
 var _paused: Menu = null
+## **What you carry and wear** (E5), over a stopped world like the pause menu, or null.
+## On a layer of its own above the HUD, so it draws in screen coordinates whichever
+## window is open; the world waits while it is up, and it is never open in a fight.
+var _inventory: InventoryScreen = null
+var _inventory_layer: CanvasLayer = null
+## When Tab was last refused in a fight, in real seconds, so the HUD can say why.
+var _inventory_refused_at: float = -10.0
 ## The last thing the world made a noise about, so one event makes one noise. Steps
 ## rather than booleans: the simulation already stamps when each of these happened.
 var _sounded_take: int = -1
@@ -191,6 +198,9 @@ func _ready() -> void:
 	_seen_events = _sim.events.size()
 	_fight_hud = FightHud.new()
 	_hud.add_child(_fight_hud)
+	_inventory_layer = CanvasLayer.new()
+	_inventory_layer.layer = _hud.layer + 10
+	add_child(_inventory_layer)
 	# Which of this screen's own overlays to open before the first frame, for the
 	# screenshot tool. `screens.gd` routes all three of these here, so there is one
 	# variable naming every screen in the game rather than one per overlay.
@@ -207,6 +217,11 @@ func _ready() -> void:
 					_journal_wanted = StringName("journal.%s" % asked[1].strip_edges())
 			"pause":
 				_pause_menu()
+			"inventory":
+				# `inventory:bag` puts the cursor in the bag, on its first row.
+				_open_inventory()
+				if asked.size() > 1 and asked[1].strip_edges() == "bag":
+					_inventory.point(1, 0)
 	# **The frames that stand you somewhere spend the hail first** (O17): a photograph of
 	# Brindle is of Brindle, not of Bram walking over. One frame, not a save-able state —
 	# the fact is written straight in.
@@ -964,6 +979,11 @@ func _process(delta: float) -> void:
 		# that is no longer anybody's.
 		if not is_inside_tree():
 			return
+	elif _inventory != null:
+		# The world waits, as it does for the pause menu; the screen answers its own
+		# changes on the spot (`InventoryScreen.act`). Escape and Tab close it.
+		if _inventory.read_input():
+			_close_inventory()
 	else:
 		_read_input()
 		_accumulator += delta
@@ -983,7 +1003,7 @@ func _process(delta: float) -> void:
 	# The HUD is a CanvasLayer and therefore draws *over* everything this node draws,
 	# including the map and the pause panel. Anything that takes the whole screen
 	# takes the HUD with it.
-	_hud.visible = _paused == null and not _map_open
+	_hud.visible = _paused == null and not _map_open and _inventory == null
 	# The journal is itself inside the HUD, so only the two readouts drawn over the
 	# world step aside for it.
 	_info.visible = not _journal_open
@@ -1127,6 +1147,11 @@ func _read_input() -> void:
 		if Input.is_action_just_pressed(&"back"):
 			_pause_menu()
 			return
+		# What you wear is changed before a fight, not in one (`InventorySystem` refuses
+		# it too); the HUD says so for a moment rather than the key doing nothing.
+		if Input.is_action_just_pressed(&"inventory"):
+			_inventory_refused_at = _real_seconds
+			Sound.cue(&"refused")
 		_read_duel_input()
 		return
 	_duel_cursor_set = false
@@ -1168,6 +1193,10 @@ func _read_input() -> void:
 			_draw_journal()
 		else:
 			_pause_menu()
+		return
+
+	if Input.is_action_just_pressed(&"inventory"):
+		_open_inventory()
 		return
 
 	# Left and right turn the journal's pages while it is open, so they cannot also
@@ -1247,9 +1276,35 @@ func _read_input() -> void:
 ## box and the fight's text sat hidden under the map with nothing that could close it.
 func _close_overlays() -> void:
 	_map_open = false
+	_close_inventory()
 	if _journal_open:
 		_journal_open = false
 		_draw_journal()
+
+
+## **Tab: what you carry** (E5). The map and the journal step aside for it, and the key
+## held down is let go in the log, or the walk would resume by itself when it closes.
+func _open_inventory() -> void:
+	if _inventory != null or _inventory_layer == null or (_duel != null and _duel.on()):
+		return
+	_map_open = false
+	if _journal_open:
+		_journal_open = false
+		_draw_journal()
+	if _held_dir != Vector2i.ZERO:
+		_held_dir = Vector2i.ZERO
+		_sim.submit(&"move_intent", {"x": 0, "y": 0})
+	_inventory = InventoryScreen.new()
+	_inventory.begin(_sim)
+	_inventory_layer.add_child(_inventory)
+	Sound.cue(&"accept")
+
+
+func _close_inventory() -> void:
+	if _inventory == null:
+		return
+	_inventory.queue_free()
+	_inventory = null
 
 
 ## The slot that leaves the conversation. One function, used by both the keybind
@@ -2208,6 +2263,7 @@ func _draw_hud() -> void:
 	lines.append(Text.of(&"hud.clock",
 		[_clock(_sim.tick), walked / 60, "%02d" % (walked % 60)]))
 	lines.append(Text.of(&"hud.language", [Text.locale().to_upper()]))
+	lines.append(Text.of(&"hud.inventory"))
 	if _debug_available:
 		lines.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
 		if _world.unkillable:
@@ -2229,7 +2285,7 @@ func _draw_hud() -> void:
 	# Nothing to press while a fight is on, and "E, talk to Bram" over the top of a man
 	# swinging at you reads as a bug. The keys a fight offers are its own.
 	if _squared_up():
-		_prompt.text = ""
+		_prompt.text = Text.of(&"inventory.in_fight") if _real_seconds - _inventory_refused_at < 2.0 else ""
 		return
 	# Nor while somebody walks over to you: there is nothing you can press (O17).
 	if _held_by_the_hail():

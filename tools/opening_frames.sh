@@ -3,9 +3,11 @@
 #
 #   tools/opening_frames.sh [out_dir] [languages...]
 #   tools/opening_frames.sh /tmp/opening fr en      # the default
+#   ONLY='inventory' tools/opening_frames.sh /tmp/o  # only the frames whose name matches
 #
-# Twenty-eight frames a language, from the title to the works' gate and the fight there, each through the
-# debug tools CLAUDE.md lists (UNCROWNED_TALK, _AT, _HAIL, _DUEL, _VIEW, _WORLD), then
+# Thirty frames a language, from the title to the works' gate and the fight there, and what
+# you carry, each through the debug tools CLAUDE.md lists (UNCROWNED_TALK, _AT, _HAIL, _DUEL,
+# _VIEW, _WORLD, _GEAR), then
 # one line per frame: its name and how many SCRIPT ERRORs its run printed — which has to
 # be 0, and which says nothing about whether the picture is right: look at them.
 #
@@ -37,10 +39,12 @@ rm -f "$DATA/save.json"
 
 shoot() { # name, screen, env...
   local name=$1 screen=$2; shift 2
+  [[ -n "${ONLY:-}" && ! "$name" =~ $ONLY ]] && return
   env "$@" UNCROWNED_SHOT="$OUT/$LANG_ID/$name.png" UNCROWNED_SCREEN="$screen" godot --path . > "$OUT/$LANG_ID/$name.log" 2>&1
   rm -f "$DATA/save.json"
   echo "$LANG_ID/$name $(grep -c 'SCRIPT ERROR' "$OUT/$LANG_ID/$name.log")"
 }
+CARRIED=leather_cap,ochre_gambeson,royal_breastplate,cloth_tunic,royal_leggings,cloth_trousers,short_sword,hunting_bow
 for LANG_ID in $LANGS; do
   mkdir -p "$OUT/$LANG_ID"
   printf '[player]\n\nlanguage="%s"\n' $LANG_ID > "$DATA/settings.cfg"
@@ -72,5 +76,9 @@ for LANG_ID in $LANGS; do
   shoot 25_procedural_start play UNCROWNED_WORLD=procedural
   shoot 26_pause pause
   shoot 27_gate_fight play UNCROWNED_AT=316,208 UNCROWNED_DUEL=gatekeeper@1:340:press
+  # What you carry (E5): a works' guard's leavings and the king's, some worn and some in the
+  # bag — an item listed after another of its slot puts the first back in the bag.
+  shoot 28_inventory inventory UNCROWNED_GEAR=$CARRIED
+  shoot 29_inventory_bag inventory:bag UNCROWNED_GEAR=$CARRIED
 done
 echo "frames in $OUT"

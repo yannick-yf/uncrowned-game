@@ -312,7 +312,8 @@ func _loop_ambient() -> void:
 # --------------------------------------------------------------------- cues ---
 
 func _say(what: StringName) -> void:
-	if muted() or not CUES.has(what):
+	# Not yet in the tree (a screen the suite builds by hand): no player to say it with.
+	if muted() or not CUES.has(what) or _cue == null:
 		return
 	var stream: AudioStream = _stream(String(CUES[what]))
 	if stream == null:

@@ -583,3 +583,90 @@ func test_every_option_has_a_name_in_both_languages() -> void:
 			assert_true(known.has("look.%s" % choice), "%s names the %s row" % [language, choice])
 			for option: StringName in AppearanceRules.options(choice):
 				assert_true(known.has("look.%s.%s" % [choice, option]), "%s names %s %s" % [language, choice, option])
+
+
+# ------------------------------------------------------------ what he carries (E5) ---
+
+func _carrying_screen(sim: Sim) -> InventoryScreen:
+	var screen := InventoryScreen.new()
+	screen.begin(sim)
+	return screen
+
+
+func test_the_inventory_screen_takes_off_and_puts_on_through_events() -> void:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	var bag := sim.store(&"inventory") as Inventory
+	var screen: InventoryScreen = _carrying_screen(sim)
+	screen.point(0, ItemRules.SLOTS.find(ItemRules.TORSO))
+	assert_true(screen.act(), "Enter on the torso takes the tunic off")
+	assert_eq(bag.in_slot(ItemRules.TORSO), &"", "off")
+	assert_eq(screen.carried(), [&"cloth_tunic"] as Array[StringName], "and into the bag")
+	screen.point(1, 0)
+	assert_eq(screen.under_cursor(), &"cloth_tunic", "the bag's first row")
+	assert_true(screen.act(), "Enter on it puts it back on")
+	assert_eq(bag.in_slot(ItemRules.TORSO), &"cloth_tunic", "on")
+	var asked: Array[StringName] = []
+	for event: SimEvent in sim.events.all():
+		if event.type == &"equip" or event.type == &"unequip":
+			asked.append(event.type)
+	assert_eq(asked, [&"unequip", &"equip"] as Array[StringName], "each change is an event in the log")
+	screen.point(0, ItemRules.SLOTS.find(ItemRules.HEAD))
+	assert_false(screen.act(), "an empty slot has nothing to take off")
+	screen.free()
+
+
+func test_what_the_bag_offers_says_what_it_would_replace() -> void:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	sim.submit(&"duel_down", {"who": "works_guard"})
+	sim.advance(1)
+	var screen: InventoryScreen = _carrying_screen(sim)
+	screen.point(1, screen.carried().find(&"ochre_gambeson"))
+	var told: Array[String] = screen.about(&"ochre_gambeson")
+	assert_eq(told[0], Text.of(&"inventory.item_protection", [1]), "what it turns")
+	assert_eq(told[1], Text.of(&"inventory.replaces", [Text.of(&"item.cloth_tunic")]), "and what it takes the place of")
+	screen.act()
+	assert_eq((sim.store(&"inventory") as Inventory).in_slot(ItemRules.TORSO), &"ochre_gambeson", "worn")
+	assert_true(screen.carried().has(&"cloth_tunic"), "the tunic in the bag")
+	assert_eq(screen.totals()[0], Text.of(&"inventory.protection", [2]), "cap and gambeson: two")
+	screen.free()
+
+
+func test_the_inventory_does_not_open_in_a_fight() -> void:
+	var play: Node = _flat_play()
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	play.call(&"_open_inventory")
+	assert_not_null(play.get(&"_inventory"), "Tab opens it in the world")
+	play.call(&"_close_inventory")
+	assert_null(play.get(&"_inventory"), "and closes it")
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	sim.advance(1)
+	play.call(&"_open_inventory")
+	assert_null(play.get(&"_inventory"), "not in a fight")
+	play.free()
+
+
+func test_every_line_of_the_inventory_fits_its_column() -> void:
+	var was: String = Text.locale()
+	for language: String in ["fr", "en"]:
+		Text.set_locale(language)
+		for item: StringName in ItemRules.items():
+			assert_true(Ui.width_of(Text.of(StringName("item.%s" % item)), Ui.NOTE)
+				<= InventoryScreen.SLOTS.size.x - InventoryScreen.NAME_AT - 8.0, "%s: %s fits its slot's row" % [language, item])
+			assert_true(Ui.width_of(Text.of(StringName("item.%s" % item)), Ui.ROW) <= InventoryScreen.BAG.size.x - 30.0,
+				"%s: %s fits the bag's row" % [language, item])
+			assert_true(Ui.width_of(InventoryScreen.describe(item), Ui.NOTE) <= InventoryScreen.BAG.size.x - 24.0,
+				"%s: what %s does fits one line: '%s'" % [language, item, InventoryScreen.describe(item)])
+			assert_true(Ui.width_of(Text.of(&"inventory.replaces", [Text.of(StringName("item.%s" % item))]), Ui.NOTE)
+				<= InventoryScreen.BAG.size.x - 24.0, "%s: what %s replaces fits one line" % [language, item])
+		for slot: StringName in ItemRules.SLOTS:
+			assert_true(Ui.width_of(Text.of(StringName("slot.%s" % slot)), Ui.ROW) <= InventoryScreen.NAME_AT - 26.0,
+				"%s: the %s slot's name ends before its item" % [language, slot])
+		var lines: Array[String] = [Text.of(&"inventory.heavy"), Text.of(&"inventory.protection", [9]),
+			Text.of(&"inventory.strikes", [Text.of(&"item.hunting_bow"), 10])]
+		for line: String in lines:
+			assert_true(Ui.width_of(line, Ui.NOTE) <= InventoryScreen.SLOTS.size.x - 24.0,
+				"%s: '%s' fits under the slots" % [language, line])
+		assert_true(Ui.width_of(Text.of(&"inventory.help"), Ui.NOTE) <= 640.0 - 32.0, "%s: the keys fit the screen" % language)
+	Text.set_locale(was)

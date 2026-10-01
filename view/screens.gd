@@ -86,10 +86,10 @@ static func first_screen(debug: bool, screen: String, shot: String, quick: Strin
 			return &"title"
 		"creation":
 			return &"creation"
-		# "pause", "journal" and "map" are the world with one of its overlays already
-		# open; the play screen reads the same variable and opens it. One knob naming
-		# every screen, because a variable per overlay is one more thing to forget.
-		"play", "pause", "journal", "map":
+		# "pause", "journal", "map" and "inventory" are the world with one of its overlays
+		# already open; the play screen reads the same variable and opens it. One knob
+		# naming every screen, because a variable per overlay is one more thing to forget.
+		"play", "pause", "journal", "map", "inventory":
 			return &"play"
 	if not shot.is_empty():
 		return &"play"
