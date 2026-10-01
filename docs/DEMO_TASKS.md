@@ -2479,6 +2479,116 @@ nothing yet of the new art rule or of the looks. Republished at the same link.
 
 ---
 
+## A — who you are: the appearance chosen at creation
+
+> **Asked 2026-10-01 (Yannick), before P2**, as part of the demo and its tutorial, with
+> group E. The design and the advice are `docs/CREATION_AND_GEAR.md`. **Proposed; waiting
+> for his go.** Block 1 is finished and the game launched before group E begins.
+
+### A1 · The options, settled on paper
+
+Est. 1 h. `content/appearance.json`: six hair styles, eight hair colours, five skin
+tones, four beards, six colours for the starting clothes, each with its recolouring
+numbers; the default is his traveller. **Check:** Yannick's answers to the questions in
+`docs/CREATION_AND_GEAR.md` written into it.
+
+### A2 · His traveller, split into layers
+
+Est. 5 h. `tools/draw_cast_looks.gd -- --layers` writes `view3d/layers/`: body (skin,
+outline, eyes), trousers, feet, tunic, backpack, his hair — every frame of his and every
+fight cell — plus the shaved head his hair hides. **Tests first:** the default layers,
+stacked, give his traveller **pixel for pixel**; every layer has his sheet's size; no
+pixel of a layer is one his shader throws away.
+
+### A3 · The paper-doll shader
+
+Est. 4 h. One compositing function (`view3d/layers/paper_doll.gdshaderinc`) — layers in
+order, live recolouring, the head gear's hair mask — in a spatial shader for the world
+(with the fight's flash and tint, and the player's ghost) and a canvas shader for the
+screens. The player is drawn by it in `view/world3d.gd`. **Check:** with the default
+appearance the game's frames are the same as today's, side by side; both suites green.
+
+### A4 · Hair styles and beards — a board first
+
+Est. 5 h. Five new hair styles and three beards, painted from his own hair's texture by
+new pieces of the tool, in every frame. **Check:** a board like L1's — every style and
+beard in three facings, close up and at the game's size — for Yannick to choose or
+correct before they go further.
+
+### A5 · The appearance in the simulation
+
+Est. 2 h. `create_character` carries the five choices; an `Appearance` store holds them;
+`AppearanceRules` refuses what does not exist. **Tests first:** a run replays to the same
+appearance; a save from before A5 loads as his traveller; an unknown style is refused
+with the traits untouched.
+
+### A6 · The creation screen, redone
+
+Est. 6 h. Two pages: **Appearance** (the five choices, a large preview turning through his
+four facings and walking, the figure at the game's size beside it) and **Talents** (the
+four traits, as today), then Begin. Keyboard throughout, French and English, the same
+`Ui` as every other screen. **Check:** frames of both pages in both languages; a choice
+changes the preview on the same frame.
+
+### A7 · Seen in play
+
+Est. 2 h. The chosen appearance in the world, in a fight, through a save and a load.
+**Check:** the opening's frames with a non-default player in both languages; both suites
+green; the game launches and plays from the title to the works.
+
+---
+
+## E — what you carry: inventory and equipment
+
+> Group A first (Yannick: *« termine le bloc 1 avant d'attaquer le bloc 2 »*). Design in
+> `docs/CREATION_AND_GEAR.md` §4. **Proposed; waiting for his go.**
+
+### E1 · The items, settled on paper
+
+Est. 1 h. `content/items.json`: slot, protection, weight, weapon numbers, and the layer
+each item is drawn with. Cloth tunic and trousers (dyed), walking boots, short sword,
+Wren's bow; a leather cap and an ochre gambeson (the works' guards); a helmet, a
+breastplate and leggings (the king's guards); a hood.
+
+### E2 · The inventory in the simulation
+
+Est. 4 h. An `Inventory` store; `equip` and `unequip` events; `item_gained` derived from
+the start kit, from Wren's gift (the `you:the_bow` fact becomes the bow) and from a beaten
+fighter's table. **Save version 5.** **Tests first:** a run replays to the same
+inventory; nothing equips into the wrong slot; nothing is equipped during a fight.
+
+### E3 · What equipment does in a fight
+
+Est. 3 h. Protection off every blow taken, never below one; two heavy pieces cost one tile
+a turn; **U** switches between the weapon slot and the bow slot, and an empty bow slot
+cannot be switched to. **Tests first**, in `test_duel`: each rule, and the tutorial's
+drills still pass with the start kit.
+
+### E4 · The items' layers
+
+Est. 5 h. Every item of E1 baked as a layer by the tool, from the pieces group L made —
+the head gear with its hair mask. **Check:** a board of every item worn, three facings,
+close up and at the game's size.
+
+### E5 · The inventory screen
+
+Est. 6 h. **Tab**: the player in the middle by the paper-doll shader, the six slots round
+him, what he carries on the right with its numbers and the difference against what he
+wears; equip and unequip. French and English. **Check:** frames in both languages.
+
+### E6 · Seen in play
+
+Est. 2 h. Equipment worn in the world and in a fight; the fight's card says the
+protection; loot taken from the works' guards. **Check:** frames; both suites green; the
+game launches and plays.
+
+### E7 · Photographs, a review, the letter
+
+Est. 3 h. The opening and the works in both languages; a fresh-eyes review walking
+creation → equipment in play; `CLAUDE.md`, V3 and `POUR_SLOSINIO.md`.
+
+---
+
 ## S — the shell
 
 ### S1 · Four traits, a pool of 8 — **built 2026-09-28**
