@@ -39,11 +39,15 @@ func _ready() -> void:
 	var carrying: Variant = null
 	# The quick launch is a fresh run at the floor, saved as Begin saves it, so dying
 	# still puts you back at a fire.
+	var look: Dictionary = (load("res://view/creation.gd") as GDScript).look_asked()
 	if first == &"play" and quick == "1" and shot.is_empty():
-		var run: Sim = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED,
-			(load("res://view/creation.gd") as GDScript).look_asked())
+		var run: Sim = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED, look)
 		SaveFile.write(run)
 		carrying = run
+	elif first == &"play" and not shot.is_empty() and not look.is_empty():
+		# A photograph of somebody who chose a look (A7): a fresh run carrying it, not
+		# written to disk — a photograph is not a save.
+		carrying = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED, look)
 	_go(first, carrying)
 
 

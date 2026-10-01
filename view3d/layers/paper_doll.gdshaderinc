@@ -66,6 +66,24 @@ vec3 doll_moved(vec3 c, vec4 r) {
 	return doll_rgb(vec3(r.x, s, v));
 }
 
+// **The recolouring is done on the colours as they are painted** (A7). A 3D shader reads
+// a `source_color` texture already converted to linear light, and the recipes' numbers —
+// hue, saturation, value — are numbers about the painted colours, the ones the tool and
+// the 2D screens work in. Moved in linear light, a brown skin came out yellow in the world
+// while the creation screen showed it brown. So the world's two shaders define
+// `DOLL_LINEAR`, and a recoloured pixel goes back to sRGB, is moved, and comes back.
+vec3 doll_srgb(vec3 c) {
+	vec3 lo = c * 12.92;
+	vec3 hi = 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055;
+	return mix(lo, hi, step(vec3(0.0031308), c));
+}
+
+vec3 doll_linear(vec3 c) {
+	vec3 lo = c / 12.92;
+	vec3 hi = pow((max(c, vec3(0.0)) + 0.055) / 1.055, vec3(2.4));
+	return mix(lo, hi, step(vec3(0.04045), c));
+}
+
 // One slot laid over what is under it. `hidden` is the head gear's mask, for the hair
 // and the beard.
 vec4 doll_over(vec4 under, sampler2D layer, vec4 r, vec2 uv, bool hidden) {
@@ -73,7 +91,15 @@ vec4 doll_over(vec4 under, sampler2D layer, vec4 r, vec2 uv, bool hidden) {
 	if (c.a < 0.5 || hidden) {
 		return under;
 	}
-	return vec4(r.w > 0.0 ? doll_moved(c.rgb, r) : c.rgb, 1.0);
+	vec3 rgb = c.rgb;
+	if (r.w > 0.0) {
+#ifdef DOLL_LINEAR
+		rgb = doll_linear(doll_moved(doll_srgb(c.rgb), r));
+#else
+		rgb = doll_moved(c.rgb, r);
+#endif
+	}
+	return vec4(rgb, 1.0);
 }
 
 vec4 doll(vec2 uv) {

@@ -2609,6 +2609,18 @@ Est. 2 h. The chosen appearance in the world, in a fight, through a save and a l
 **Check:** the opening's frames with a non-default player in both languages; both suites
 green; the game launches and plays from the title to the works.
 
+> **Built 2026-10-01.** **Looking found a bug the suite could not:** the first in-game
+> frames of a chosen look showed a brown skin, and the scalp between cornrows, yellow,
+> while the creation screen showed them brown. A 3D shader reads its textures in linear
+> light, and the recipes' numbers are about painted colours, so the world's two shaders
+> now define `DOLL_LINEAR` and move a pixel in sRGB and back (`paper_doll.gdshaderinc`);
+> `test_the_three_shaders_compile_with_the_slots` holds it. A photograph can carry a look
+> (`UNCROWNED_LOOK` on a shot starts a fresh run with it, never written to disk);
+> `test_saving` writes a run with a look and reads it back as the same person. The opening
+> photographed in both languages with a chosen player — braids, black, brown skin, a full
+> beard, wine clothes — 56 frames, 0 script errors; `docs/frames/creation/in_play.png`
+> shows four looks in the world.
+
 ---
 
 ## E — what you carry: inventory and equipment

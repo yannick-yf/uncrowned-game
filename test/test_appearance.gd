@@ -69,3 +69,4 @@ func test_the_window_draws_what_was_chosen() -> void:
 	assert_eq(slots[&"hair"]["part"], &"hair_long", "the long hair")
 	assert_eq(slots[&"beard"]["part"], &"beard_short", "the short beard")
 	assert_eq(slots[&"beard"]["recolour"], slots[&"hair"]["recolour"], "in the hair's colour")
+

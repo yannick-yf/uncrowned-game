@@ -2,6 +2,8 @@ shader_type spatial;
 render_mode unshaded, cull_disabled, depth_test_disabled, blend_mix;
 // The player's ghost (O21), from the same layers: the shape of him through a crown or a
 // wall, at a third of himself.
+// The world reads its textures in linear light; the recolouring is done in sRGB.
+#define DOLL_LINEAR
 #include "res://view3d/layers/paper_doll.gdshaderinc"
 
 uniform float ghost_alpha : hint_range(0.0, 1.0) = 0.32;

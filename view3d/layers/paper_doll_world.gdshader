@@ -3,6 +3,8 @@ render_mode unshaded, cull_disabled;
 // The player in the world (group A): his brother's billboard trick and his rule for what
 // is background, drawn from the stacked layers — and the fight's flash and tint, which
 // `view/world3d.gd` used to swap in a second material for.
+// The world reads its textures in linear light; the recolouring is done in sRGB.
+#define DOLL_LINEAR
 #include "res://view3d/layers/paper_doll.gdshaderinc"
 
 uniform float flash : hint_range(0.0, 1.0) = 0.0;

@@ -150,6 +150,14 @@ func test_the_three_shaders_compile_with_the_slots() -> void:
 			for i: int in PaperDoll.ORDER.size():
 				assert_true(names.has("doll_l%d" % i) and names.has("doll_r%d" % i), "%s has slot %d" % [path, i])
 			assert_true(names.has("doll_head_mask"), "%s has the head gear's mask" % path)
+	# **The world recolours the painted colours, not the light** (A7): a 3D shader reads its
+	# textures in linear light, and the recipes' numbers are about the painted colours. The
+	# first in-game frames showed a brown skin yellow while the creation screen showed it
+	# brown. The world's two shaders convert; the screens' does not need to.
+	for path: String in [PaperDoll.WORLD_SHADER, PaperDoll.GHOST_SHADER]:
+		assert_true((load(path) as Shader).code.contains("#define DOLL_LINEAR"), "%s recolours in sRGB" % path)
+	assert_false((load(PaperDoll.CANVAS_SHADER) as Shader).code.contains("DOLL_LINEAR"),
+		"the screens' shader already works on the painted colours")
 
 
 func test_every_style_and_beard_is_drawn_where_it_shows() -> void:

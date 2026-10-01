@@ -177,3 +177,18 @@ func test_a_first_death_before_any_rest_is_not_a_dead_end() -> void:
 	world.player_pos = alone_on_the_road()
 	world.hurt(WorldState.MAX_HP, sim.step)
 	assert_eq(world.player_tile(), where_the_game_starts(), "you wake where you first woke")
+
+
+func test_a_saved_run_loads_as_the_same_person() -> void:
+	# A7: the save is the event log, so loading is replaying, and the look rides on the
+	# first event — written, read back, the same person.
+	var looks: Dictionary = {&"hair_style": &"braided", &"hair_colour": &"black", &"skin": &"dark",
+		&"beard": &"full", &"clothes": &"wine"}
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED, looks)
+	sim.advance(30)
+	assert_true(SaveFile.write(sim), "the run is written")
+	var loaded: Sim = SaveFile.read()
+	assert_not_null(loaded, "and read back")
+	if loaded != null:
+		assert_eq((loaded.store(&"appearance") as Appearance).chosen(), AppearanceRules.completed(looks),
+			"the same person")
