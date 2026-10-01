@@ -150,3 +150,35 @@ func test_the_three_shaders_compile_with_the_slots() -> void:
 			for i: int in PaperDoll.ORDER.size():
 				assert_true(names.has("doll_l%d" % i) and names.has("doll_r%d" % i), "%s has slot %d" % [path, i])
 			assert_true(names.has("doll_head_mask"), "%s has the head gear's mask" % path)
+
+
+func test_every_style_and_beard_is_drawn_where_it_shows() -> void:
+	# A4: five more hair styles and three beards, painted from his hair's texture. Each hair
+	# style stands on the head in all four facings; a beard shows from the front and the
+	# side, and from behind there is none to see.
+	var frames: SpriteFrames = _his_frames()
+	if frames == null:
+		debt("his workshop is not copied in; run tools/vendor_workshop.sh")
+		return
+	for part: StringName in PaperDoll.STYLE_PARTS:
+		var img: Image = _part(part)
+		assert_not_null(img, "%s is there — run tools/draw_player_layers.gd" % part)
+		if img == null:
+			continue
+		for way: String in ["down", "left", "right", "up"]:
+			var region := Rect2i((frames.get_frame_texture(StringName("idle_" + way), 0) as AtlasTexture).region)
+			var used: int = 0
+			for y: int in range(region.position.y, region.end.y):
+				for x: int in range(region.position.x, region.end.x):
+					if img.get_pixel(x, y).a > 0.0:
+						used += 1
+			var beard: bool = String(part).begins_with("beard_")
+			if beard and way == "up":
+				assert_eq(used, 0, "%s: no beard seen from behind" % part)
+			else:
+				assert_true(used > (40 if beard else 800), "%s stands on him seen %s: %d pixels" % [part, way, used])
+	for style: StringName in PaperDoll.options(&"hair_style"):
+		assert_true(PaperDoll.sheet(StringName("hair_" + String(style))) != null, "the %s style has its layer" % style)
+	for beard: StringName in PaperDoll.options(&"beard"):
+		if beard != &"none":
+			assert_true(PaperDoll.sheet(StringName("beard_" + String(beard))) != null, "the %s beard has its layer" % beard)

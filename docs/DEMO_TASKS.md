@@ -2546,6 +2546,19 @@ new pieces of the tool, in every frame. **Check:** a board like L1's — every s
 beard in three facings, close up and at the game's size — for Yannick to choose or
 correct before they go further.
 
+> **Drawn 2026-10-01; waiting for Yannick's choice.** Five styles (short, long, tied,
+> braided, shaved) and three beards (stubble, short, full) as layers of
+> `tools/draw_player_layers.gd`: each shape stands on the head `skull_of` finds, in every
+> frame, and is **filled from his own hair in the same frame**, mapped across the new shape
+> and taken only from real strands (saturated, not his outline), so it carries his
+> brushwork. The outer edge rises and falls in uneven locks; the fringe falls in pointed
+> locks with a one-pixel line on the face, as his own does; from behind and from the side a
+> cut covers the head down to the nape. Stubble is every other pixel, darkened, so at the
+> game's size it reads as a shadow. A beard stays on the face — his hands are skin too.
+> Boards: `docs/frames/creation/hair_and_beards.png` (each style and beard, three facings)
+> and `docs/frames/creation/mixes.png` (eight players combining the choices).
+> `test_every_style_and_beard_is_drawn_where_it_shows`.
+
 ### A5 · The appearance in the simulation
 
 Est. 2 h. `create_character` carries the five choices; an `Appearance` store holds them;

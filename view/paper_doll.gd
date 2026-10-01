@@ -26,6 +26,12 @@ const ORDER: Array[StringName] = [
 const HIS_PARTS: Array[StringName] = [
 	&"body", &"skin", &"trousers", &"boots", &"tunic", &"pack", &"hair_spiky",
 ]
+## **Painted, not his** (A4): the other hair styles and the beards, made from his own
+## hair's texture by the same tool, on the head it paints under his hair.
+const STYLE_PARTS: Array[StringName] = [
+	&"hair_short", &"hair_long", &"hair_tied", &"hair_braided", &"hair_shaved",
+	&"beard_stubble", &"beard_short", &"beard_full",
+]
 
 
 static func sheet_path(part: StringName) -> String:

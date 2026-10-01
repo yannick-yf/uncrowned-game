@@ -44,7 +44,7 @@ func _initialize() -> void:
 	sheet.convert(Image.FORMAT_RGBA8)
 	_room = CastLooks.room_px()
 	var outs: Dictionary = {}
-	for part: StringName in PaperDoll.HIS_PARTS:
+	for part: StringName in PaperDoll.HIS_PARTS + PaperDoll.STYLE_PARTS:
 		var out: Image = Image.create(sheet.get_width(), sheet.get_height(), false, Image.FORMAT_RGBA8)
 		out.fill(CLEAR)
 		outs[part] = out
@@ -141,7 +141,7 @@ static func split_cell(sheet: Image, cell: Dictionary) -> Dictionary:
 
 static func _split(fig: Looks.Fig) -> Dictionary:
 	var parts: Dictionary = {}
-	for part: StringName in PaperDoll.HIS_PARTS:
+	for part: StringName in PaperDoll.HIS_PARTS + PaperDoll.STYLE_PARTS:
 		var img: Image = Image.create(fig.w, fig.h, false, Image.FORMAT_RGBA8)
 		img.fill(CLEAR)
 		parts[part] = img
@@ -162,6 +162,7 @@ static func _split(fig: Looks.Fig) -> Dictionary:
 			if part == &"hair_spiky":
 				hair[y * fig.w + x] = 1
 	_skull(fig, hair, parts[&"skin"] as Image)
+	_styles(fig, parts)
 	return parts
 
 
@@ -240,18 +241,23 @@ static func _in_the_face(fig: Looks.Fig, x: int, y: int) -> bool:
 ## traveller is unchanged, and a shorter cut has a skull to sit on. Seen from the front
 ## it rises from the face; from the side it reaches back behind the face; from behind it
 ## fills the back of the head down to the neck.
-static func _skull(fig: Looks.Fig, hair: PackedByteArray, skin: Image) -> void:
+## **Where his head is under his hair**, in this frame: its centre and half-width, the top
+## of the skull, where its dome meets its sides, how far down its sides go, and the tone of
+## his skin. Seen from the front it rises from the face; from the side it reaches back
+## behind the face; from behind it fills the back of the head down to the neck. The hair
+## styles and the beards (A4) are placed on it.
+static func skull_of(fig: Looks.Fig) -> Dictionary:
 	var tones: Array[Color] = []
 	for y: int in fig.h:
 		for x: int in fig.w:
 			if fig.at(x, y) == Looks.K.SKIN and y < fig.neck:
 				tones.append(fig.colour(x, y))
 	if tones.is_empty():
-		return
+		return {}
 	tones.sort_custom(func(a: Color, b: Color) -> bool: return a.v < b.v)
-	var tone: Color = tones[tones.size() * 3 / 5]
 	var hw: float = fig.head.z - fig.head.x
 	var hh: float = fig.neck - fig.head.y
+	var back: float = {&"left": 1.0, &"right": -1.0}.get(fig.way, 0.0)
 	var cx: float
 	var rx: float
 	var top: float
@@ -260,7 +266,6 @@ static func _skull(fig: Looks.Fig, hair: PackedByteArray, skin: Image) -> void:
 	if fig.has_face:
 		var fw: float = fig.face.z - fig.face.x
 		var fh: float = fig.face.w - fig.face.y
-		var back: float = {&"left": 1.0, &"right": -1.0}.get(fig.way, 0.0)
 		cx = (fig.face.x + fig.face.z) / 2.0 + back * fw * 0.30
 		rx = fw * (0.58 if back == 0.0 else 0.80)
 		top = fig.face.y - fh * 0.80
@@ -285,6 +290,20 @@ static func _skull(fig: Looks.Fig, hair: PackedByteArray, skin: Image) -> void:
 			if not in_face and _count(fig, x, y, Looks.K.SKIN, 2) > _count(fig, x, y, Looks.K.HAIR, 2):
 				ear_reach = maxf(ear_reach, absf(x - cx) - 4.0)
 	rx = maxf(rx, minf(ear_reach, hw * 0.45))
+	return {"cx": cx, "rx": rx, "top": top, "waist": waist, "bottom": bottom, "back": back,
+		"tone": tones[tones.size() * 3 / 5]}
+
+
+static func _skull(fig: Looks.Fig, hair: PackedByteArray, skin: Image) -> void:
+	var geo: Dictionary = skull_of(fig)
+	if geo.is_empty():
+		return
+	var tone: Color = geo["tone"] as Color
+	var cx: float = geo["cx"]
+	var rx: float = geo["rx"]
+	var top: float = geo["top"]
+	var waist: float = geo["waist"]
+	var bottom: float = geo["bottom"]
 	var inside := func(x: int, y: int) -> bool:
 		if y < top or y > bottom:
 			return false
@@ -348,3 +367,283 @@ func _board(outs: Dictionary, frames: SpriteFrames) -> void:
 	DirAccess.make_dir_recursive_absolute(BOARD_PNG.get_base_dir())
 	board.save_png(BOARD_PNG)
 	print("wrote %s — his traveller restacked, then the same without his hair" % BOARD_PNG)
+
+
+# ------------------------------------------------------------------- the styles ---
+
+## **The other hair styles and the beards** (A4), painted on the head `skull_of` finds and
+## filled from his own hair's pixels in the same frame, mapped across the new shape — so a
+## short cut or a braid carries his strands, his highlights and his outline.
+static func _styles(fig: Looks.Fig, parts: Dictionary) -> void:
+	var geo: Dictionary = skull_of(fig)
+	var his: Image = parts[&"hair_spiky"] as Image
+	var source: Rect2i = his.get_used_rect()
+	if geo.is_empty() or source.size.x < 8:
+		return
+	var cx: float = geo["cx"]
+	var rx: float = geo["rx"]
+	var top: float = geo["top"]
+	var waist: float = geo["waist"]
+	var bottom: float = geo["bottom"]
+	var back: float = geo["back"]
+	var neck: float = fig.neck
+	var face: bool = fig.has_face
+	var fx0: float = fig.face.x
+	var fx1: float = fig.face.z
+	var fy0: float = fig.face.y
+	var fh: float = fig.face.w - fig.face.y
+	var fw: float = fx1 - fx0
+	# Seen from behind, a cut covers the head down to the nape; from the front it stops
+	# above the ears.
+	var ear_line: float = fy0 + fh * 0.30 if face else bottom - 3.0
+	# **Tufts, not a bowl** (the first board): the outer edge rises and falls in uneven
+	# locks, as his own hair's does, rather than following the skull's smooth dome.
+	var tuft := func(x: int, y: int) -> float:
+		var angle: float = atan2(waist - y, (x - cx) * 0.8)
+		var lock: int = int(floor(angle * 7.0 + 20.0))
+		return 3.0 * Looks.noise(lock, 3, 101) + 2.0 * Looks.noise(lock, 5, 103)
+	var dome := func(x: int, y: int, grow: float) -> bool:
+		var g: float = grow + (tuft.call(x, y) if grow > 0.0 else 0.0)
+		return y <= waist and pow((x - cx) / (rx + g), 2) + pow((waist - y) / (waist - top + g), 2) <= 1.0
+	var sides := func(x: int, y: int, grow: float, low: float) -> bool:
+		return y > waist and y <= low and absf(x - cx) <= rx + grow
+	# The face stays clear below a fringe of uneven strands, each a few pixels wide and
+	# pointed, as his own fringe falls.
+	var in_face := func(x: int, y: int) -> bool:
+		if not face or x < fx0 - 1 or x > fx1 + 1:
+			return false
+		var strand: int = int(floor((x - fx0 + 3.0) / 10.0))
+		var within: float = fposmod(x - fx0 + 3.0, 10.0) / 10.0
+		var depth: float = fh * (0.10 + 0.26 * Looks.noise(strand, 7, 107))
+		var point: float = depth * (1.0 - pow(absf(within - 0.5) * 2.0, 1.5) * 0.85)
+		return y > fy0 + maxf(point, fh * 0.04)
+	# Seen from the side, the back of the head is hair down to the nape, behind the ear.
+	var behind_face: float = (fx1 + 3.0) if back > 0.0 else (fx0 - 3.0)
+	var nape := func(x: int, y: int) -> bool:
+		return back != 0.0 and (x - behind_face) * back > 0.0 and sides.call(x, y, 5.0, bottom - 3.0)
+	var short := func(x: int, y: int) -> bool:
+		return (dome.call(x, y, 5.0) or sides.call(x, y, 5.0, ear_line) or nape.call(x, y)) and not in_face.call(x, y)
+	var hair_against := func(_x: int, _y: int) -> bool: return true
+	# Short: close to the skull, the ears showing.
+	_paint(fig, parts[&"hair_short"] as Image, short, his, source, 3, hair_against)
+	# Long: the short cut, and hair falling past the jaw to the shoulders.
+	var long_hair := func(x: int, y: int) -> bool:
+		if short.call(x, y):
+			return true
+		if y <= waist or y > neck + 20.0 or in_face.call(x, y):
+			return false
+		var d: float = absf(x - cx)
+		var t: float = (y - waist) / (neck + 20.0 - waist)
+		var reach: float = (rx + 7.0) * (1.0 - 0.12 * t * t)
+		if back == 0.0 and face:
+			return d >= fw * 0.42 and d <= reach
+		if back != 0.0:
+			return (x - cx) * back >= -rx * 0.15 and d <= reach
+		return d <= reach
+	_paint(fig, parts[&"hair_long"] as Image, long_hair, his, source, 3, hair_against)
+	# Tied: the short cut, and a tail at the back of the head.
+	var tail_from := Vector2(cx + back * (rx + 2.0), waist - 2.0) if back != 0.0 else Vector2(cx, waist - 4.0)
+	var tail_to := Vector2(cx + back * (rx + 9.0), neck + 22.0) if back != 0.0 else Vector2(cx, neck + 30.0)
+	var tail := func(x: int, y: int) -> bool:
+		if face and back == 0.0:
+			return false
+		var t: float = clampf((Vector2(x, y) - tail_from).dot(tail_to - tail_from) / (tail_to - tail_from).length_squared(), 0.0, 1.0)
+		var on: Vector2 = tail_from.lerp(tail_to, t)
+		return Vector2(x, y).distance_to(on) <= 8.0 - 3.5 * t
+	var tied := func(x: int, y: int) -> bool:
+		return short.call(x, y) or (tail.call(x, y) and not in_face.call(x, y))
+	_paint(fig, parts[&"hair_tied"] as Image, tied, his, source, 3, hair_against)
+	_band(parts[&"hair_tied"] as Image, tail_from.lerp(tail_to, 0.12), tail_to - tail_from, 6.0)
+	# Braided: the short cut, and braids — two in front of the shoulders, one behind.
+	var braids: Array[Array] = []
+	if face and back == 0.0:
+		braids = [[Vector2(cx - fw * 0.52, fy0 + fh * 0.45), Vector2(cx - fw * 0.55, neck + 24.0)],
+			[Vector2(cx + fw * 0.52, fy0 + fh * 0.45), Vector2(cx + fw * 0.55, neck + 24.0)]]
+	elif back != 0.0:
+		braids = [[Vector2(cx + back * rx * 0.75, waist), Vector2(cx + back * (rx * 0.75 + 6.0), neck + 22.0)]]
+	else:
+		braids = [[Vector2(cx, waist - 2.0), Vector2(cx, neck + 30.0)]]
+	var on_braid := func(x: int, y: int) -> bool:
+		for b: Array in braids:
+			var a: Vector2 = b[0]
+			var z: Vector2 = b[1]
+			var t: float = clampf((Vector2(x, y) - a).dot(z - a) / (z - a).length_squared(), 0.0, 1.0)
+			if Vector2(x, y).distance_to(a.lerp(z, t)) <= 8.0 - 2.5 * t:
+				return true
+		return false
+	var braided := func(x: int, y: int) -> bool:
+		return short.call(x, y) or (on_braid.call(x, y) and not (in_face.call(x, y) and y < fy0 + fh * 0.9))
+	_paint(fig, parts[&"hair_braided"] as Image, braided, his, source, 3, hair_against)
+	_plait(parts[&"hair_braided"] as Image, braids)
+	# Shaved: an even stubble on the skull — every other pixel, so at the game's size it
+	# reads as a shadow of hair rather than as specks — his outline left as the skull's.
+	var shaved := func(x: int, y: int) -> bool:
+		return (dome.call(x, y, -2.0) or sides.call(x, y, -2.0, ear_line)) and not (face and x >= fx0 - 1 and x <= fx1 + 1 and y > fy0 + 2.0) \
+			and (x + y) % 2 == 0 and (x + 2 * y) % 5 != 0
+	_paint(fig, parts[&"hair_shaved"] as Image, shaved, his, source, 0, hair_against, 0.68)
+	if not face:
+		return
+	_beards(fig, parts, his, source)
+
+
+## The beards, seen from the front and the side: stubble, a short beard along the jaw, a
+## full one below the chin. In the hair's colour, since they share its recolouring.
+static func _beards(fig: Looks.Fig, parts: Dictionary, his: Image, source: Rect2i) -> void:
+	var fx0: float = fig.face.x
+	var fx1: float = fig.face.z
+	var fy0: float = fig.face.y
+	var fy1: float = fig.face.w
+	var fh: float = fy1 - fy0
+	var mouth: float = fy0 + fh * 0.80
+	var lo := PackedInt32Array()
+	var hi := PackedInt32Array()
+	lo.resize(fig.h)
+	hi.resize(fig.h)
+	lo.fill(fig.w)
+	hi.fill(-1)
+	for y: int in fig.neck:
+		for x: int in range(maxi(int(fx0) - 4, 0), mini(int(fx1) + 5, fig.w)):
+			if fig.at(x, y) == Looks.K.SKIN:
+				lo[y] = mini(lo[y], x)
+				hi[y] = maxi(hi[y], x)
+	# His face only: his hands are skin too, and a beard on the knuckles is not a beard.
+	var skin_at := func(x: int, y: int) -> bool:
+		return y >= 0 and y < fig.neck and x >= fx0 - 4.0 and x <= fx1 + 4.0 and fig.at(x, y) == Looks.K.SKIN
+	var not_skin := func(x: int, y: int) -> bool:
+		var k: int = fig.at(x, y)
+		return k != Looks.K.SKIN
+	var cx: float = (fx0 + fx1) / 2.0 + {&"left": -(fx1 - fx0) * 0.18, &"right": (fx1 - fx0) * 0.18}.get(fig.way, 0.0)
+	var stubble := func(x: int, y: int) -> bool:
+		return skin_at.call(x, y) and y >= fy0 + fh * 0.64 and (x + y) % 2 == 0 and (x / 2 + y) % 3 != 0
+	_paint(fig, parts[&"beard_stubble"] as Image, stubble, his, source, 0, not_skin, 0.70)
+	var short := func(x: int, y: int) -> bool:
+		if not skin_at.call(x, y) and not (skin_at.call(x, y - 3) and y <= fy1 + 4):
+			return false
+		if y >= mouth + 1.0:
+			return true
+		if y < fy0 + fh * 0.55 or hi[y] < 0:
+			return false
+		var jaw: float = 3.0 + (y - (fy0 + fh * 0.55)) / (fh * 0.25) * 4.0
+		return (fig.way != &"left" and x - lo[y] < jaw) or (fig.way != &"right" and hi[y] - x < jaw)
+	_paint(fig, parts[&"beard_short"] as Image, short, his, source, 2, not_skin, 0.95)
+	_mouth(parts[&"beard_short"] as Image, cx, mouth, (fx1 - fx0))
+	var full := func(x: int, y: int) -> bool:
+		if y < fy0 + fh * 0.66 or y > fy1 + 10.0 or x < fx0 - 4.0 or x > fx1 + 4.0:
+			return false
+		if y <= fy1 and hi[y] >= 0:
+			# Round the cheeks: the beard climbs the sides of the face, not its middle.
+			var side: float = minf(x - lo[y], hi[y] - x)
+			return x >= lo[y] and x <= hi[y] and (y >= mouth or side < 7.0)
+		var t: float = (y - fy1) / 10.0
+		if t > 1.0:
+			return false
+		var half: float = (fx1 - fx0) * 0.42 * (1.0 - t * t * 0.6)
+		return absf(x - cx) <= half
+	_paint(fig, parts[&"beard_full"] as Image, full, his, source, 2, not_skin, 0.95)
+	_mouth(parts[&"beard_full"] as Image, cx, mouth, (fx1 - fx0))
+
+
+## A shape filled from his hair: each pixel takes the strand at the same place in his hair's
+## box, and the edge — where the shape meets what `against` says — takes his dark line.
+## `darken` below one is for stubble, which is hair seen through skin.
+static func _paint(fig: Looks.Fig, img: Image, inside: Callable, his: Image, source: Rect2i, outline: int,
+		against: Callable, darken: float = 1.0) -> void:
+	# Against his face the line is one pixel, as his own fringe's is; against the world it
+	# is his full outline.
+	var mask := PackedByteArray()
+	mask.resize(fig.w * fig.h)
+	var box := Rect2i()
+	var first: bool = true
+	for y: int in fig.h:
+		for x: int in fig.w:
+			if inside.call(x, y):
+				mask[y * fig.w + x] = 1
+				box = Rect2i(x, y, 1, 1) if first else box.expand(Vector2i(x, y)).expand(Vector2i(x + 1, y + 1))
+				first = false
+	if first:
+		return
+	for y: int in range(box.position.y, box.end.y):
+		for x: int in range(box.position.x, box.end.x):
+			if mask[y * fig.w + x] == 0:
+				continue
+			var edge: bool = false
+			if outline > 0:
+				for dy: int in range(-outline, outline + 1):
+					for dx: int in range(-outline, outline + 1):
+						if dx * dx + dy * dy > outline * outline:
+							continue
+						var qx: int = x + dx
+						var qy: int = y + dy
+						var outside: bool = qx < 0 or qy < 0 or qx >= fig.w or qy >= fig.h or mask[qy * fig.w + qx] == 0
+						var on_face: bool = fig.at(qx, qy) == Looks.K.SKIN
+						if outside and on_face and dx * dx + dy * dy > 1:
+							continue
+						if outside and against.call(qx, qy):
+							edge = true
+							break
+					if edge:
+						break
+			if edge:
+				img.set_pixel(x, y, INK)
+				continue
+			var u: float = float(x - box.position.x) / maxf(box.size.x - 1, 1.0)
+			var v: float = float(y - box.position.y) / maxf(box.size.y - 1, 1.0)
+			var c: Color = _strand(his, source, u, v)
+			if darken < 1.0:
+				c = Color.from_hsv(c.h, c.s, c.v * darken)
+			img.set_pixel(x, y, c)
+
+
+## His hair at a place in its box, or the nearest strand of it that is not his outline.
+static func _strand(his: Image, source: Rect2i, u: float, v: float) -> Color:
+	var at := Vector2i(int(source.position.x + u * (source.size.x - 1)),
+		int(source.position.y + (0.08 + v * 0.55) * (source.size.y - 1)))
+	for r: int in range(0, 9):
+		for dy: int in range(-r, r + 1):
+			for dx: int in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var q: Vector2i = at + Vector2i(dx, dy)
+				if q.x < 0 or q.y < 0 or q.x >= his.get_width() or q.y >= his.get_height():
+					continue
+				var c: Color = his.get_pixelv(q)
+				if c.a > 0.5 and c.v >= 0.2 and c.s >= 0.35:
+					return c
+	return Color8(150, 60, 30)
+
+
+## The tie round a tail: two dark rows and leather between, across it.
+static func _band(img: Image, at: Vector2, along: Vector2, half: float) -> void:
+	var dir: Vector2 = along.normalized()
+	var across := Vector2(-dir.y, dir.x)
+	for t: int in range(-1, 3):
+		for s: int in range(-int(half), int(half) + 1):
+			var p := Vector2i((at + dir * t + across * s).round())
+			if p.x < 0 or p.y < 0 or p.x >= img.get_width() or p.y >= img.get_height() or img.get_pixelv(p).a < 0.5:
+				continue
+			img.set_pixelv(p, INK if t == -1 or t == 2 else Color8(92, 52, 30))
+
+
+## A braid's crossings: a dark notch every few pixels down it.
+static func _plait(img: Image, braids: Array[Array]) -> void:
+	for b: Array in braids:
+		var a: Vector2 = b[0]
+		var z: Vector2 = b[1]
+		var length: float = a.distance_to(z)
+		var dir: Vector2 = (z - a) / maxf(length, 1.0)
+		var across := Vector2(-dir.y, dir.x)
+		var t: float = 6.0
+		while t < length:
+			for s: int in range(-3, 4):
+				var p := Vector2i((a + dir * (t + absf(s) * 0.6) + across * s).round())
+				if p.x >= 0 and p.y >= 0 and p.x < img.get_width() and p.y < img.get_height() and img.get_pixelv(p).a > 0.5:
+					img.set_pixelv(p, INK)
+			t += 6.0
+
+
+static func _mouth(img: Image, cx: float, mouth: float, fw: float) -> void:
+	var half: float = fw * 0.08
+	for x: int in range(int(cx - half), int(cx + half) + 1):
+		var y: int = int(mouth) - 1
+		if x >= 0 and y >= 0 and x < img.get_width() and y < img.get_height():
+			img.set_pixel(x, y, INK)
