@@ -245,7 +245,14 @@ func _the_wolves() -> bool:
 		return _stop("the demo's pack is not standing")
 	var began: int = sim.events.of_type(&"duel_began").size()
 	var walker := OpeningPlayer.new()
-	walker.walk_to(sim, pack, _budget(pack))
+	# **To where it is, not where it was** (R2): the pack wanders its ground while he walks
+	# up, so he aims again at its leader until it sets on him — as a player walks toward
+	# wolves he can see.
+	for _attempt: int in 8:
+		pack = wild.now_at(_world().region(), 0)
+		walker.walk_to(sim, pack, _budget(pack))
+		if sim.events.of_type(&"duel_began").size() != began:
+			break
 	if sim.events.of_type(&"duel_began").size() == began:
 		return _stop("walked to the pack and it never set on you: %s" % walker.report)
 	if wild.cleared.is_empty():

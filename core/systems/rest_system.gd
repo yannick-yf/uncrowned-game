@@ -21,6 +21,11 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var fire: Vector2i = world.region().nearest_campfire(world.player_tile(), RecoveryRules.FIRE_REACH)
 	if fire == Region.NOWHERE:
 		return
+	# **Not where a pack will find him** (the review of R): a fire a pack watches is no
+	# place to sleep until the pack is beaten.
+	if WildSystem.threatens(sim.store(&"wild") as Wild, world.region(), fire):
+		sim.derive(&"rest_refused", {"at": fire, "why": "the_wild"})
+		return
 
 	world.rested_at = fire
 	world.rested_tick = sim.tick

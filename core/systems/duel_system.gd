@@ -8,8 +8,8 @@ extends SimSystem
 ## the first design was deleted.
 ##
 ## **Turn-based, on the world grid.** Everybody in the fight acts once per round in a
-## fixed order, and **whoever started it acts first** — there is no initiative roll,
-## because there are no dice anywhere in this design. On their turn a fighter **moves
+## fixed order, and **whoever started it acts first** — there is no initiative roll; the
+## one die is whether a blow lands (R4). On their turn a fighter **moves
 ## and acts**: up to `tiles_per_turn` tiles of the game's own 8-way movement, then one
 ## of two actions — **strike** or **wait**. There is no guard (Yannick, 2026-09-24):
 ## Baldur's Gate 3 has no block button and neither does this. Defence is position and
@@ -467,7 +467,7 @@ func _act_on(sim: Sim, duel: Duel, world: WorldState) -> void:
 ## **A blow lands for a fixed number and does not move anybody** (Yannick, 2026-09-24).
 ## The one who takes it plays the flinch and stays on their tile: no knockback, no
 ## pushbox, no shove. A hit that moved you would make position depend on the enemy's
-## dice, and there are no dice.
+## dice; the one die there is (R4) decides whether it lands, never where anybody stands.
 ##
 ## **An arrow is a strike with a bow** (T5): it lands on this act, like a blow, on whoever
 ## the archer shot — « je tire, ça tire » — and is named `arrow` where it lands.

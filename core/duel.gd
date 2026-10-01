@@ -48,8 +48,8 @@ var struck: bool = false
 
 ## Where the fight began, which is what an opponent will not chase you far from.
 var began_at: Vector2i = Vector2i.ZERO
-## **Whoever started the fight acts first** — there is no initiative roll, because
-## there are no dice.
+## **Whoever started the fight acts first** — there is no initiative roll; the one die is
+## whether a blow lands (R4).
 var started_by: StringName = NOBODY
 ## Who asked for this fight, so the answer can be handed back to them.
 var asked_by: StringName = NOBODY

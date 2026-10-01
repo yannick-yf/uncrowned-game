@@ -1081,3 +1081,28 @@ func test_a_surprise_attack_never_misses() -> void:
 				break
 		assert_eq(first.get("type", &""), &"blow_landed", "seed %d: the opening blow lands" % run_seed)
 		assert_true(bool(first.get("surprise", false)), "seed %d: as a surprise" % run_seed)
+
+
+func test_the_dice_spread_over_every_face() -> void:
+	# The review of R: `String.hash()` moved by one with its last character, so a pack's
+	# goal's x and y were one apart and every pack walked one diagonal of its ground, and
+	# blows a few steps apart missed together less often than chance.
+	var goals: Dictionary = {}
+	for pace: int in 2000:
+		goals[Vector2i(DiceRules.mixed([1, 0, pace, 10]) % 7, DiceRules.mixed([1, 0, pace, 11]) % 7)] = true
+	assert_eq(goals.size(), 49, "every tile of a pack's ground is a goal")
+	var under: int = 0
+	var near: int = 0
+	var both: int = 0
+	var n: int = 10000
+	for step: int in n:
+		var a: int = DuelRules.roll(7, step, &"player", &"wolf")
+		if a < 70:
+			under += 1
+		if absi(a - DuelRules.roll(7, step + 1, &"player", &"wolf")) <= 1:
+			near += 1
+		if a >= 70 and DuelRules.roll(7, step + 38, &"player", &"wolf") >= 70:
+			both += 1
+	assert_true(absf(float(under) / n - 0.70) < 0.02, "70 %% means 70 %%: %.3f" % (float(under) / n))
+	assert_true(absf(float(near) / n - 0.03) < 0.01, "two steps' rolls are strangers: %.3f within one" % (float(near) / n))
+	assert_true(absf(float(both) / n - 0.09) < 0.015, "two misses 38 steps apart as often as chance: %.3f" % (float(both) / n))

@@ -1981,7 +1981,7 @@ func _sync_wild(wild: Wild, world: WorldState, fighting: Dictionary = {}) -> voi
 			block.position = _feet_of(drawn)
 			# The model faces +x; a tile's y is the world's z. A little apart each, so three
 			# do not stand like one wolf pasted three times.
-			block.rotation.y = atan2(-float(look.y), float(look.x)) + deg_to_rad(-14.0 + 14.0 * float(one % 3))
+			block.rotation.y = _beast_turn(Vector2(look), one)
 		_sync_cone(which, wild, region, world.player_pos, fighting.is_empty())
 	# A pack that has been killed is gone, not hidden.
 	for id: Variant in _wild_blocks.keys():
@@ -1990,6 +1990,18 @@ func _sync_wild(wild: Wild, world: WorldState, fighting: Dictionary = {}) -> voi
 			_wild_blocks.erase(id)
 			_wild_drawn.erase(id)
 	_sync_beasts(fighting)
+
+
+## **How a beast is turned to face `face`** — the model faces +x and a tile's y is the
+## world's z — and a little apart each, by its place in the pack. **Never head-on** (the
+## review of R): seen from the camera's side, straight up or down the screen, a wolf of
+## boxes is a grey post — the "two rocks" Yannick saw once already — so it stands
+## three-quarters instead.
+func _beast_turn(face: Vector2, one: int) -> float:
+	var angle: float = atan2(-face.y, face.x) + deg_to_rad(-14.0 + 14.0 * float(one % 3))
+	if absf(face.x) < 0.01 and face != Vector2.ZERO:
+		angle += deg_to_rad(38.0 if one % 2 == 0 else -38.0)
+	return angle
 
 
 ## **What a pack sees, drawn on the ground** (R2): the cone `WildSystem.seen_by` asks
@@ -2141,8 +2153,7 @@ func _sync_beasts(fighting: Dictionary) -> void:
 		_beast_at[seat] = at
 		beast.position = _feet_of(at + _offset_of(entry, false))
 		var face: Vector2 = entry.get("his_face", Vector2(1, 0)) as Vector2
-		# The model faces +x; a tile's y is the world's z.
-		beast.rotation.y = atan2(-face.y, face.x)
+		beast.rotation.y = _beast_turn(face, 0)
 		beast.visible = not bool(entry.get("his_down", false))
 	for seat: Variant in _beasts.keys():
 		if not here.has(seat):

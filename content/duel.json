@@ -1,5 +1,5 @@
 {
-  "_note": "THE WHOLE OF THE SECOND FIGHT'S BALANCE (docs/COMBAT_V2.md §7, task K2). One small table, which is the one rule worth keeping from the first design: change a number here and nothing else. There are no dice anywhere in this file and none in the code that reads it — determinism comes from there being nothing random, which is stronger than seeding.",
+  "_note": "THE WHOLE OF THE SECOND FIGHT'S BALANCE (docs/COMBAT_V2.md §7, task K2). One small table, which is the one rule worth keeping from the first design: change a number here and nothing else. Since R4 (2026-10-01) one die: whether a blow lands, by agility (the hit_ numbers below), mixed from the run's seed so a replay misses the same blows; everything else is fixed.",
   "_units_note": "Distances are TILES of the world grid, measured 8-way, so a diagonal is one tile like any other (BakeRules.METRES_PER_TILE says a tile is 2 m). Times are COUNTS OF SIM STEPS, 60 to the real second, because the world clock is held for the length of a fight and a turn still has to take a readable amount of time.",
   "table": {
     "hit_base": 80,

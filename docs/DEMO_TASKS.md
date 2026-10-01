@@ -2884,10 +2884,36 @@ fairy's gift and the surprise attack always land. A replay misses the same blows
 > The lessons pass at 95 %. Save version 7. `docs/COMBAT_V2.md` records the reversal of
 > *no dice*. Frames 21e and 21f.
 
+### R5 · A fresh-eyes review, and its findings — **built 2026-10-01**
+
+A review walked R1–R4 and the tutorial end to end (the bow lesson passed 10 times in 10
+for every way of playing it but random keys, 9 in 10). **Fixed:** **a rest at a fire a pack
+watches** woke into a wolf fight, the save written in the middle of it — a fire on a pack's
+ground (`WildSystem.threatens`: its wandering, its sight and two tiles) is no place to sleep
+until the pack is beaten, the HUD says *une meute rôde trop près pour dormir ici*,
+`RestSystem` refuses it too, and a rest stops without saving if a fight begins anyway;
+**the junction's pack walked into the Muster** a quarter of the time — a pack never steps
+on a town's tile and never sees a player standing in one (`WildSystem.walkable`,
+`in_a_town`); **the dice were poorly mixed** — `String.hash()` moves by one with its last
+character, so every pack walked one diagonal of its ground and blows a few steps apart
+missed together less often than chance; `DiceRules.mixed` (MurmurHash3's finaliser) now
+mixes every part, every tile of a pack's ground is a goal and the rolls behave as chance;
+**a wolf seen head-on** read as a grey post — never drawn straight up or down the screen,
+three-quarters instead; **an ambush in a conversation** is refused by the simulation too;
+Bram's *Place-lui trois flèches* is *Touche-la trois fois*, and *Wren te prête le sien, et
+elle tire aussi* is *Wren t'en prête un, et elle tire avec le sien*; the comments that
+still said *no dice*. Save version 8. **Noted for Yannick:** at the thirty hit points S4
+recommends, a clumsy player meeting the bridge's wolves head-on can die — 25 to 65 points
+lost at 100; from behind, 10 to 20.
+
 ---
 
 ## Later — known gaps, kept so they are not forgotten
 
+- **More than wolves in the wild** (the review of R): sight and wandering are content for
+  any kind, but the window draws every beast of a pack as a wolf, a pack's prompt needs a
+  `beast.<kind>.the` line, and sight and arrows pass over walls and water — none of which
+  bites the three packs there are.
 - **Blows by the traits** (Yannick, 2026-10-01). Force's description says *vous frappez
   fort*, and a blow is five whatever Force is. The text stays: later, how hard a blow lands
   depends on the traits' values. Not designed yet — with the combat workstream.

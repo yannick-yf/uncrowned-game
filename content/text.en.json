@@ -213,6 +213,7 @@
   "doc.bank:debts": "the book of debts",
   "doc.muster:signed_orders": "the signed orders",
   "prompt.rest": "E, sit down and rest",
+  "prompt.rest_watched": "a pack prowls too near to sleep here",
   "inventory.title": "INVENTORY",
   "inventory.worn": "What you wear",
   "inventory.bag": "In your bag",

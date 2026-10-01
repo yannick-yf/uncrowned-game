@@ -109,6 +109,10 @@ func on_step(sim: Sim, step: int) -> void:
 ## blade is brought to it unseen (R3). Public, so the window and the suite ask the very
 ## question the simulation does.
 static func seen_by(wild: Wild, region: Region, which: int, here: Vector2i) -> bool:
+	# **Never in the towns** (`docs/COMBAT_V2.md` §6, the review of R): a pack at a town's
+	# edge does not see into it.
+	if in_a_town(region, here):
+		return false
 	var kind: StringName = wild.kind_of(which)
 	var sight: Dictionary = DuelRules.sight_of(kind)
 	var lead: Vector2i = wild.now_at(region, which)
@@ -135,6 +139,12 @@ func _ambush(sim: Sim, event: SimEvent) -> void:
 	if wild == null or world == null or duel == null:
 		return
 	if duel.on() or duel.settling > 0 or wild.fighting >= 0:
+		return
+	# Not in the middle of a conversation, nor while somebody holds him to talk (the review
+	# of R): the window does not offer it then, and the simulation does not take it.
+	var hail := sim.store(&"hail") as Hail
+	if world.in_dialogue() or (hail != null and hail.holds_player()):
+		sim.derive(&"ambush_refused", {"pack": int(event.data.get("pack", -1)), "why": "busy"})
 		return
 	var region: Region = world.region()
 	var aim: Dictionary = ambush_target(wild, region, world.player_tile(), sim.store(&"inventory") as Inventory)
@@ -238,15 +248,44 @@ func _wander(sim: Sim, wild: Wild, region: Region) -> void:
 		wild.spot[which] = next
 
 
-## A free tile of its ground, within `roams` of its anchor, or where it is.
+## A free tile of its ground, within `roams` of its anchor, out of every town, or where it
+## is.
 static func _new_goal(sim: Sim, region: Region, which: int, home: Vector2i, roams: int, pace: int) -> Vector2i:
 	for attempt: int in 8:
 		var span: int = roams * 2 + 1
 		var tile: Vector2i = home + Vector2i(dice(sim, which, pace, 10 + attempt * 2) % span - roams,
 			dice(sim, which, pace, 11 + attempt * 2) % span - roams)
-		if region.is_passable(tile):
+		if walkable(region, tile):
 			return tile
 	return home
+
+
+## **Ground a pack may stand on**: walkable, and in no town — the junction's pack stood a
+## row south of the Muster and wandered into it a quarter of the time (the review of R).
+static func walkable(region: Region, tile: Vector2i) -> bool:
+	return region.is_passable(tile) and not in_a_town(region, tile)
+
+
+static func in_a_town(region: Region, tile: Vector2i) -> bool:
+	return region.zone_at(tile) != &""
+
+
+## **Whether a pack's ground reaches here**: as far as it wanders and sees, and a little
+## more for the animals round its leader — so nobody lies down to sleep where a pack will
+## find him (the review of R: the save was written in the middle of the fight that woke
+## him). Never in a town, where no pack sees.
+static func threatens(wild: Wild, region: Region, tile: Vector2i) -> bool:
+	if wild == null or region == null or in_a_town(region, tile):
+		return false
+	for which: int in Wild.packs().size():
+		if wild.cleared.has(which):
+			continue
+		var kind: StringName = wild.kind_of(which)
+		var reach: int = DuelRules.roams_of(kind) + int(DuelRules.sight_of(kind)["tiles"]) + 2
+		var home: Vector2i = wild.at(region, which)
+		if maxi(absi(tile.x - home.x), absi(tile.y - home.y)) <= reach:
+			return true
+	return false
 
 
 ## One tile toward `goal`, diagonals included, on ground that can be walked; where it is
@@ -254,7 +293,7 @@ static func _new_goal(sim: Sim, region: Region, which: int, home: Vector2i, roam
 static func _step_toward(region: Region, here: Vector2i, goal: Vector2i) -> Vector2i:
 	var way := Vector2i(signi(goal.x - here.x), signi(goal.y - here.y))
 	for step: Vector2i in [way, Vector2i(way.x, 0), Vector2i(0, way.y)]:
-		if step != Vector2i.ZERO and region.is_passable(here + step):
+		if step != Vector2i.ZERO and walkable(region, here + step):
 			return here + step
 	return here
 
@@ -263,4 +302,4 @@ static func _step_toward(region: Region, here: Vector2i, goal: Vector2i) -> Vect
 ## Not `sim.rng`, on purpose — a pack that drew from it every half-second would move every
 ## other draw in the game, and a replay of an old save would wander into new weather.
 static func dice(sim: Sim, which: int, pace: int, salt: int) -> int:
-	return absi(("%d/%d/%d/%d" % [sim.rng_seed, which, pace, salt]).hash())
+	return DiceRules.mixed([sim.rng_seed, which, pace, salt])

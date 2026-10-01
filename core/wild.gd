@@ -101,7 +101,7 @@ func members(region: Region, which: int) -> Array[Vector2i]:
 			break
 		# The others stand behind him, the way he looks being his front.
 		var tile: Vector2i = lead + _behind(offset, look)
-		if offset == Vector2i.ZERO or region.is_passable(tile):
+		if offset == Vector2i.ZERO or (region.is_passable(tile) and region.zone_at(tile) == &""):
 			out.append(tile)
 	while out.size() < count_of(which):
 		out.append(lead)

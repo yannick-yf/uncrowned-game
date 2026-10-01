@@ -706,3 +706,84 @@ func test_no_surprise_where_they_see_you_or_nothing_is_in_reach() -> void:
 	sim.advance(2)
 	assert_false((sim.store(&"duel") as Duel).on(), "K there begins nothing")
 	assert_eq(sim.events.of_type(&"ambush_refused").size(), 1, "and the simulation says so")
+
+
+# ------------------------------------------- the review of group R ---
+
+func test_no_pack_ever_sets_foot_in_a_town_nor_sees_into_one() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	# The review: the junction's pack stood a row south of the Muster and walked into it a
+	# quarter of the time. Every pace of a long walk, every animal, out of every town.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	world.player_pos = Vector2(region.start_centre())
+	for _pace: int in 400:
+		sim.advance(WildSystem.PACE)
+		for which: int in Wild.packs().size():
+			for animal: Vector2i in wild.members(region, which):
+				assert_eq(region.zone_at(animal), &"", "pack %d stands out of every town: %s" % [which, animal])
+	# And a player in a town is not seen, even in front of a pack, near.
+	var checked: int = 0
+	for which: int in Wild.packs().size():
+		var lead: Vector2i = wild.now_at(region, which)
+		for dy: int in range(-5, 6):
+			for dx: int in range(-5, 6):
+				var tile: Vector2i = lead + Vector2i(dx, dy)
+				if region.zone_at(tile) != &"" and DuelRules.sees(lead, wild.looks(which), tile, DuelRules.sight_of(wild.kind_of(which))):
+					checked += 1
+					assert_false(WildSystem.seen_by(wild, region, which, tile), "pack %d does not see into a town at %s" % [which, tile])
+
+
+func test_nobody_sleeps_where_a_pack_will_find_him() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	# The review: a rest by the climb's fire woke into a wolf fight, and the save was written
+	# in the middle of it. A fire a pack watches is no place to sleep until it is beaten.
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	var watched: Array[Vector2i] = []
+	var safe_in_town: int = 0
+	for prop: Dictionary in region.props:
+		if (prop["kind"] as StringName) != &"campfire":
+			continue
+		var fire: Vector2i = prop["at"] as Vector2i
+		if WildSystem.threatens(wild, region, fire):
+			watched.append(fire)
+		elif region.zone_at(fire) != &"":
+			safe_in_town += 1
+	assert_true(watched.size() >= 1, "some fires stand on a pack's ground: %s" % [watched])
+	assert_true(safe_in_town >= 5, "and every town's fire is a safe one")
+	world.player_hp = 40
+	world.player_pos = Vector2(watched[0]) + Vector2(0.5, 1.5)
+	sim.submit(&"rest")
+	sim.advance(1)
+	assert_eq(sim.events.of_type(&"rest_refused").size(), 1, "the rest is refused")
+	assert_eq(sim.events.of_type(&"rested").size(), 0, "nobody slept")
+	# Once the pack is beaten, the fire is a fire again.
+	for which: int in Wild.packs().size():
+		wild.cleared[which] = true
+	assert_false(WildSystem.threatens(wild, region, watched[0]), "a beaten pack watches nothing")
+
+
+func test_no_surprise_in_the_middle_of_a_conversation() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var animals: Array[Vector2i] = wild.members(world.region(), 0)
+	world.player_pos = Vector2(animals[animals.size() - 1] - wild.looks(0)) + Vector2(0.5, 0.5)
+	sim.advance(2)
+	world.talking_to = &"bram"
+	sim.submit(&"ambush", {"pack": 0})
+	sim.advance(2)
+	assert_false((sim.store(&"duel") as Duel).on(), "talking, K begins nothing")
+	assert_eq(sim.events.of_type(&"ambush_refused").size(), 1, "and the simulation says so")

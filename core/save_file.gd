@@ -39,7 +39,9 @@ const PATH: String = "user://save.json"
 ## 6 since R2 (2026-10-01): the packs see ahead of them and wander their ground — a walk
 ## past a pack replays into a fight it never had, or out of one it had.
 ## 7 since R4 (2026-10-01): a blow may miss — a fight from before replays otherwise.
-const VERSION: int = 7
+## 8 since the review of R (2026-10-01): the dice are mixed otherwise and the packs keep out
+## of the towns — the same run wanders and misses otherwise.
+const VERSION: int = 8
 ## Where the save is written. `PATH`, except under test: the suite shares `user://`
 ## with the game, and a test that discards its save must not discard the player's (O4).
 static var path: String = PATH

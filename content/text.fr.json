@@ -213,6 +213,7 @@
   "doc.bank:debts": "le livre des dettes",
   "doc.muster:signed_orders": "les ordres signés",
   "prompt.rest": "E, s'asseoir et se reposer",
+  "prompt.rest_watched": "une meute rôde trop près pour dormir ici",
   "inventory.title": "INVENTAIRE",
   "inventory.worn": "Ce que vous portez",
   "inventory.bag": "Dans votre sac",

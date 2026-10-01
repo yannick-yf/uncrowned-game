@@ -7,11 +7,11 @@ extends RefCounted
 ## `CombatSystem`, a real-time fighting game — was played, replaced, and deleted in K6
 ## (2026-09-26). `docs/COMBAT.md` records what it was.
 ##
-## **There are no dice.** Not a seeded roll, not a coin, nothing: damage is fixed, the
-## order of play is fixed, and whoever started the fight acts first. Determinism here
-## comes from there being nothing random, which is stronger than seeding — it removes
-## every question about saving and re-rolling, and it makes a fight a puzzle of
-## position and order rather than a gamble.
+## **One die, since R4** (Yannick, 2026-10-01): whether a blow lands, by agility
+## (`hit_chance`). Everything else is fixed — damage, the order of play, whoever started the
+## fight acting first — and the die itself is no `sim.rng` draw but a mix of the run's seed,
+## the step and the two fighters (`roll`, `DiceRules`), so a replay misses the same blows.
+## Until R4 there were no dice at all, and a fight was a pure puzzle of position and order.
 ##
 ## **Tiles, not millimetres.** A fight happens on the world grid the rest of the game
 ## walks on, so a position is a `Vector2i` and a distance is 8-way — the Chebyshev
@@ -243,7 +243,7 @@ static func hit_chance(who: StringName, victim: StringName, traits: Traits, dril
 ## misses the same blows — and not from `sim.rng`, which a fight's every blow would shift
 ## for the whole game.
 static func roll(run_seed: int, step: int, who: StringName, victim: StringName) -> int:
-	return absi(("%d/%d/%s/%s" % [run_seed, step, who, victim]).hash()) % 100
+	return DiceRules.die(100, [run_seed, step, who, victim])
 
 
 ## **What an enemy of this kind sees** (R2, 2026-10-01): `tiles` ahead of it, in a cone

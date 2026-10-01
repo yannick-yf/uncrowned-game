@@ -297,9 +297,9 @@ S1 took Attunement and its two terrain tests away; the third since O12 is the 2D
 road into Brindle, which the baked world does not claim). **Three more were things his
 brother had not drawn** — a blow, a beast, a grave — and since the art rule was rewritten
 on 2026-09-30 they are watches and not debts: nothing is owed. The procedural world
-prints **thirty-eight** DEBT lines (thirty-nine debts) that say the works' furnaces, its
+prints **forty-one** DEBT lines (forty-two debts) that say the works' furnaces, its
 yard, the wolf packs — where they stand, what they see, how they wander, how they are
-surprised (seven since R2–R4) —
+surprised, where they may not go (ten since group R) —
 and the opening's last two stages stand on his map and not on the 2D one, and five OFF lines — the two switches', one saying the 2D map's shore is sand and
 not his cliffs, and two claims about the hail's ground that only his map's layout can
 make.

@@ -1586,8 +1586,15 @@ func _watched_site() -> String:
 
 
 func _can_rest() -> bool:
-	return _world.region().nearest_campfire(
-		_world.player_tile(), RecoveryRules.FIRE_REACH) != Region.NOWHERE
+	var fire: Vector2i = _world.region().nearest_campfire(_world.player_tile(), RecoveryRules.FIRE_REACH)
+	return fire != Region.NOWHERE and not WildSystem.threatens(_sim.store(&"wild") as Wild, _world.region(), fire)
+
+
+## A fire within reach that a pack watches (the review of R): said, so E doing nothing there
+## is not a mystery.
+func _fire_watched() -> bool:
+	var fire: Vector2i = _world.region().nearest_campfire(_world.player_tile(), RecoveryRules.FIRE_REACH)
+	return fire != Region.NOWHERE and WildSystem.threatens(_sim.store(&"wild") as Wild, _world.region(), fire)
 
 
 ## Sitting down: the world moves eight hours while you do not, and then the run is
@@ -1595,7 +1602,16 @@ func _can_rest() -> bool:
 ## both are about the *run* — and a system that wrote a file could not be replayed.
 func _rest() -> void:
 	_sim.submit(&"rest")
-	_sim.advance(Sim.STEPS_PER_WORLD_TICK * RecoveryRules.REST_TICKS)
+	# In pieces, and stopped by a fight (the review of R): eight hours slept through while a
+	# fight is waiting on the player, and a save written in the middle of it, would wake him
+	# into it for good.
+	var left: int = Sim.STEPS_PER_WORLD_TICK * RecoveryRules.REST_TICKS
+	while left > 0:
+		var piece: int = mini(left, Sim.STEPS_PER_WORLD_TICK)
+		_sim.advance(piece)
+		left -= piece
+		if _duel != null and _duel.on():
+			return
 	SaveFile.write(_sim)
 	_deaths_seen = _world.deaths
 	Sound.cue(&"rested")
@@ -2391,6 +2407,8 @@ func _draw_hud() -> void:
 			rows.append(Text.of(&"prompt.take"))
 		&"rest":
 			rows.append(Text.of(&"prompt.rest"))
+		_ when _fire_watched():
+			rows.append(Text.of(&"prompt.rest_watched"))
 		&"pick_up":
 			rows.append(Text.of(&"prompt.pick_up", [Text.of(StringName("item.%s.a" % _find_item(_find_in_reach())))]))
 		&"act":

@@ -115,8 +115,8 @@ than eight**.
 
 **A blow does not move you.** The one who takes it plays a recoil — the flinch frame,
 which is drawn — and stays on their tile (Yannick, 2026-09-24). No knockback, no
-pushbox, no shove. A hit that moved you would make position depend on the enemy's dice,
-and there are no dice.
+pushbox, no shove. A hit that moved you would make position depend on the enemy's dice;
+the one die since R4 decides whether a blow lands, never where anybody stands.
 
 Movement is the game's own 8-way movement on the world grid, so diagonals count and a
 tile is 2 m. Reach is one tile; a bow or a spear is a later reach, not a later system.
@@ -126,7 +126,7 @@ same turn is the faster game to play, and it would make the grid meaningless if 
 fighter could cross it — so the tiles per turn is not a comfort number, it is the whole
 of what spacing means here. It belongs in the balance table with everything else.
 
-**Order is deterministic and there is no initiative roll** — there are no dice. Whoever
+**Order is deterministic and there is no initiative roll** — the one die (R4) is whether a blow lands. Whoever
 started the fight acts first, then the others in a fixed order. A player who opens on
 somebody gets the first blow, which is the right incentive: attacking from
 conversation should be an advantage, and the price should be paid in standing rather

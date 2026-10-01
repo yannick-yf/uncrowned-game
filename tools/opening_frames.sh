@@ -86,7 +86,7 @@ for LANG_ID in $LANGS; do
   shoot 21c_wolves_behind play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257
   shoot 21d_surprise play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257 UNCROWNED_DUEL=ambush:0:25
   # The chance to miss (R4): a blow the dice made miss, then the chance before the next blow.
-  shoot 21e_miss play $ARMED UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf:43:press
+  shoot 21e_miss play $ARMED UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf:119:press
   shoot 21f_chance play $ARMED UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf:96:press
   shoot 22_works_gate play $ARMED UNCROWNED_AT=317,208
   shoot 23_map map $ARMED

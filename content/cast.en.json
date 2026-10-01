@@ -389,7 +389,7 @@
         {"when": "just_passed_magic", "text": "I have nothing more to teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge. You know what to do now.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the farewell after the last lesson, pointing north with no marker (O19)"},
         {"when": "just_passed_bow_without_gift", "text": "Good. That is all I can teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after the bow, for somebody without the fairy's gift: the farewell"},
         {"when": "just_passed_bow", "text": "Good. You hit Wren three times. Now what the fairy gave you: show me.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
-        {"when": "just_passed_sword", "text": "Good. You close before you strike, and that is all it takes. Now the bow: Wren lends you hers, and she shoots too.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"},
+        {"when": "just_passed_sword", "text": "Good. You close before you strike, and that is all it takes. Now the bow: Wren lends you one, and shoots with her own.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"},
         {"when": "unarmed", "text": "No sword? There is one on a grave in the graveyard, where you woke. Bare-handed, you hit for less.", "_p2": "E6 draft (2026-10-01), for P2: his everyday greeting to somebody who owns no sword - last, so a lesson's end speaks first"}
       ],
       "options": [
@@ -416,7 +416,7 @@
         {
           "intent": "drill_bow",
           "text": "The bow. Show me.",
-          "reply": "Wren is lending you her spare bow: keep it. She is the one you face: she keeps her distance, and she shoots too. Land three arrows on her.",
+          "reply": "Wren is lending you her spare bow: keep it. She is the one you face: she keeps her distance, and she shoots too. Hit her three times.",
           "requires": "drilled:sword",
           "fights": "wren",
           "gives": "you:the_bow",
