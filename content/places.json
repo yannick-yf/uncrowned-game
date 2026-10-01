@@ -89,6 +89,9 @@
     {"kind": "watchman", "place": "cairnwell", "offset": [6, -7]},
     {"kind": "watchman", "place": "muster", "offset": [7, 2]}
   ],
+  "finds": [
+    {"id": "graves_sword", "item": "short_sword", "point": "cemetery", "offset": [-2, -1], "_why": "Group E (Yannick, 2026-10-01): the first sword lies on a grave just past the fairy - across the loose earth of one of the fire's dead, two tiles from where he wakes - so every player can have one, the lesson refused or not."}
+  ],
   "campfires": [
     {"place": "brindle", "offset": [-6, 4], "_why": "Wren's, among the ruins she picks over. A tile west since 2026-09-29: (-5, 4) was a ruin's wall on the 2D map, and it keeps out of the ground Bram watches on both"},
     {"place": "cinderworks", "offset": [-12, 8], "_why": "the workers', downwind of the kilns. Three tiles west since 2026-09-29: (-9, 9) was in the river on the 2D map"},

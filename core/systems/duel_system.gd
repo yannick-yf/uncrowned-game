@@ -296,14 +296,16 @@ func _player_turn(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	# same ground as the world, wards included.
 	var closed: Dictionary = _taken(duel, mine)
 	closed.merge(WardRules.shut_tiles(world.region(), sim.facts))
+	var inventory := sim.store(&"inventory") as Inventory
 	var cost: Dictionary = DuelRules.reachable(
-		mine.at, world.region(), DuelRules.tiles_per_turn(), closed)
+		mine.at, world.region(), DuelRules.player_tiles(inventory), closed)
 	if not cost.has(wanted):
 		wanted = mine.at
-	# **What he strikes with is his turn's to say** (T5), and a bow only if he has one of
-	# his own: asked for without it, it is the sword in his hand.
-	mine.weapon = DuelRules.SWORD
-	if String(event.data.get("weapon", "")) == String(DuelRules.BOW) and sim.facts.has(DuelRules.THE_BOW):
+	# **What he strikes with is his turn's to say** (T5), and only what he carries (group
+	# E): the bow on his back if he asks for it and has one, else what is in his hand — the
+	# sword, or his fists.
+	mine.weapon = inventory.weapon_in_hand() if inventory != null else DuelRules.SWORD
+	if String(event.data.get("weapon", "")) == String(DuelRules.BOW) and inventory != null and inventory.has_bow():
 		mine.weapon = DuelRules.BOW
 	# **Two actions, and there is no guard** (Yannick, 2026-09-24). Anything that is not
 	# a strike is a wait: a window asking for a third one is a window out of date with
@@ -364,8 +366,11 @@ func _take(
 	record: bool,
 	budget: int = -1,
 ) -> void:
-	# `budget` is a turn's tiles, except for a drill's opening walk (O8).
-	var tiles: int = DuelRules.tiles_per_turn() if budget < 0 else budget
+	# `budget` is a turn's tiles, except for a drill's opening walk (O8) — and the player's
+	# turn is a tile shorter under heavy armour (group E).
+	var allowance: int = DuelRules.player_tiles(sim.store(&"inventory") as Inventory) if who.is_player() \
+		else DuelRules.tiles_per_turn()
+	var tiles: int = allowance if budget < 0 else budget
 	var blocked: Dictionary = _taken(duel, who)
 	if who.is_player():
 		blocked.merge(WardRules.shut_tiles(world.region(), sim.facts))
@@ -458,6 +463,11 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 		victim: DuelFighter, amount: int, move: StringName) -> void:
 	var damage: int = amount
+	# **What he wears takes its share** (group E): each piece's protection off the blow,
+	# never below one — a king's guard's ten is five through full royal plate.
+	var inventory := sim.store(&"inventory") as Inventory
+	if victim.is_player() and inventory != null:
+		damage = ItemRules.after_armour(damage, inventory.protection())
 	# **`G` still means what it says.** The one development tool that makes the player
 	# unkillable is read here as well as in `WorldState.hurt`, because a fight that
 	# drained a bar nothing was allowed to empty would be a fight the HUD lied about.

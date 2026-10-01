@@ -7,6 +7,8 @@
     "reach_tiles": 1,
     "_reach_note": "Adjacent, diagonals included, because the game's movement is 8-way. A bow or a spear is a later reach, not a later system.",
     "strike_damage": 5,
+    "fists_damage": 2,
+    "_fists_note": "Group E (2026-10-01): a player with no weapon in hand strikes with his fists, at a tile like the sword, for less. The first sword lies on a grave past the fairy; a player who walks past it is weaker, not stuck.",
     "_damage_note": "Fixed. A blow that lands takes five, always, from anybody, and that is why a fight is a thing the player can reason about rather than gamble on.",
     "stand_off_tiles": 3,
     "_stand_off_note": "How far away somebody is set down when a fight begins and they were not already beside you. Three is out of reach and inside one turn's move, so the first turn is a real move-and-act rather than a stand-off. Ours, not the design's: a fight begins because there is a person in front of you, and a photograph taken where the man is three hundred tiles away would otherwise be a picture of nothing.",

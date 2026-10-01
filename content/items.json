@@ -1,0 +1,68 @@
+{
+  "_note": "Group E (2026-10-01): what the player can carry and wear. Design and Yannick's answers: docs/CREATION_AND_GEAR.md section 4. Six slots; two numbers on armour - protection (taken off every blow received, never below one) and heavy (two heavy pieces or more cost one tile of movement a turn); weapons keep content/duel.json's numbers. Each item names how it is drawn: a layer of view3d/layers/ in a slot of PaperDoll.ORDER, with an optional recolouring in the recipes' terms (hue, saturation scale, saturation floor, value scale). Items are unique: a second of the same is nothing more.",
+  "slots": ["head", "torso", "legs", "feet", "weapon", "bow"],
+  "_slots_note": "The hands are two slots, not one with gloves (Yannick, 2026-10-01): the fight's two ways to strike and its U key stay as the tutorial teaches them; a glove is three pixels on screen.",
+  "empty": {
+    "_note": "What shows in a slot nothing fills: the linen he wears under everything, and bare feet. Not items - nothing to carry, nothing to take off.",
+    "torso": {"layer": "tunic", "recolour": [40, 0.30, 0.26, 0.92]},
+    "legs": {"layer": "trousers", "recolour": [38, 0.35, 0.26, 1.6]},
+    "feet": {"layer": "boots", "recolour": "skin"}
+  },
+  "items": {
+    "cloth_tunic": {
+      "slot": "torso", "protection": 0, "heavy": false,
+      "layer": "tunic", "recolour": "clothes",
+      "_why": "What he wakes in, in the colour chosen at creation."
+    },
+    "cloth_trousers": {
+      "slot": "legs", "protection": 0, "heavy": false,
+      "layer": "trousers"
+    },
+    "walking_boots": {
+      "slot": "feet", "protection": 0, "heavy": false,
+      "layer": "boots"
+    },
+    "short_sword": {
+      "slot": "weapon", "weapon": "sword",
+      "layer": "item_sword_belt", "fighting_layer": "item_sword_hand",
+      "_why": "Lies on a grave just past the fairy (Yannick, 2026-10-01): at the belt walking, in the hand fighting."
+    },
+    "hunting_bow": {
+      "slot": "bow", "weapon": "bow", "from_fact": "you:the_bow",
+      "layer": "item_bow_back", "fighting_layer": "item_bow_hand",
+      "_why": "Wren's spare, handed over as the bow lesson begins - the fact that gave it since T5 is now the item. On the back, and in the hand when it is the weapon in use."
+    },
+    "leather_cap": {
+      "slot": "head", "protection": 1, "heavy": false,
+      "layer": "item_leather_cap", "hides_hair": true,
+      "_why": "The works' guards wear it (group L); a beaten one leaves it."
+    },
+    "ochre_gambeson": {
+      "slot": "torso", "protection": 1, "heavy": false,
+      "layer": "tunic", "recolour": [40, 0.95, 0.55, 0.95],
+      "_why": "The works' livery, padded."
+    },
+    "royal_helm": {
+      "slot": "head", "protection": 1, "heavy": true,
+      "layer": "item_royal_helm", "hides_hair": true,
+      "_why": "The king's guards' closed helm, by a miracle."
+    },
+    "royal_breastplate": {
+      "slot": "torso", "protection": 2, "heavy": true,
+      "layer": "item_royal_breastplate"
+    },
+    "royal_leggings": {
+      "slot": "legs", "protection": 1, "heavy": true,
+      "layer": "trousers", "recolour": [218, 0.14, 0.12, 0.62]
+    }
+  },
+  "start": ["cloth_tunic", "cloth_trousers", "walking_boots"],
+  "_start_note": "No weapon: the first sword is picked up by the graves.",
+  "_bare_hands_note": "A player with nothing in the weapon slot strikes with his fists: content/duel.json's fists_damage, weaker than the sword's, so a player who walked past the sword is weaker, not stuck.",
+  "loot": {
+    "_note": "What a beaten fighter leaves: what you saw on him. A king's guard leaves one piece each, in the order they fall.",
+    "works_guard": ["leather_cap", "ochre_gambeson"],
+    "works_archer": ["leather_cap"],
+    "kings_guard": ["royal_helm", "royal_breastplate", "royal_leggings"]
+  }
+}

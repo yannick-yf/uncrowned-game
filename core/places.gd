@@ -59,6 +59,8 @@ var _strangers: Array[Dictionary] = []
 ## The packs of the wood (W2): a kind, a count and an anchor, in the file's order.
 var _wild: Array[Dictionary] = []
 var _campfires: Array[Dictionary] = []
+## **Things lying where they can be picked up** (group E): `{id, item, anchor}`.
+var _finds: Array[Dictionary] = []
 ## Who calls out to a player walking into their ground (O14): `{who, anchor, radius}`.
 var _hails: Array[Dictionary] = []
 var _stalls: Array[Dictionary] = []
@@ -155,6 +157,10 @@ static func load_from(path: String) -> Places:
 		})
 	for entry: Variant in (root.get("campfires", []) as Array):
 		places._campfires.append(_anchor(entry))
+	for entry: Variant in (root.get("finds", []) as Array):
+		var found: Dictionary = entry as Dictionary
+		places._finds.append({"id": StringName(String(found.get("id", ""))),
+			"item": StringName(String(found.get("item", ""))), "anchor": _anchor(entry)})
 	for entry: Variant in (root.get("hails", []) as Array):
 		var row: Dictionary = entry as Dictionary
 		places._hails.append({"who": StringName(String(row.get("who", ""))),
@@ -284,6 +290,10 @@ func strangers() -> Array[Dictionary]:
 
 func campfires() -> Array[Dictionary]:
 	return _campfires.duplicate()
+
+
+func finds() -> Array[Dictionary]:
+	return _finds.duplicate()
 
 
 ## Who calls out, and from where, resolved on this world: `{who, point, at, radius}`,

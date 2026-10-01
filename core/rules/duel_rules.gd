@@ -44,6 +44,9 @@ const CAST: StringName = &"cast"
 ## turn later — is gone: Yannick played it and ruled « je tire, ça tire ».
 const SWORD: StringName = &"sword"
 const BOW: StringName = &"bow"
+## **Bare hands** (group E, 2026-10-01): what a player strikes with who has nothing in his
+## weapon slot. A tile, like the sword, for `fists_damage`.
+const FISTS: StringName = &"fists"
 ## **A bow of the player's own**, which Wren gives as the bow drill begins (T5): a fact,
 ## so shooting is gated by having one and by nothing else (invariant 4).
 const THE_BOW: StringName = &"you:the_bow"
@@ -365,8 +368,22 @@ static func reaches(weapon: StringName, from: Vector2i, to: Vector2i) -> bool:
 	return gap <= reach_tiles()
 
 
+## **The tiles the player's turn buys** (group E): the table's, a tile less under two heavy
+## pieces or more. Nobody else wears what they wear by choice.
+static func player_tiles(inventory: Inventory) -> int:
+	if inventory == null:
+		return tiles_per_turn()
+	return ItemRules.tiles_with(inventory.equipped, tiles_per_turn())
+
+
+static func fists_damage() -> int:
+	return number("fists_damage", 2)
+
+
 ## What a strike thrown with this weapon costs.
 static func damage_with(weapon: StringName) -> int:
+	if weapon == FISTS:
+		return fists_damage()
 	return bow_damage() if weapon == BOW else strike_damage()
 
 
@@ -376,6 +393,8 @@ static func damage_with(weapon: StringName) -> int:
 static func damage_of(who: StringName, weapon: StringName) -> int:
 	if weapon == BOW:
 		return bow_damage()
+	if weapon == FISTS:
+		return fists_damage()
 	return int(_about(who).get("damage", strike_damage()))
 
 

@@ -34,6 +34,8 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"traits", Traits.new())
 	# What the player chose to look like (group A).
 	sim.add_store(&"appearance", Appearance.new())
+	# What he carries and wears (group E).
+	sim.add_store(&"inventory", Inventory.new())
 	sim.add_store(&"towns", TownState.new())
 	sim.add_store(&"folk", Folk.new())
 	sim.add_store(&"player", PlayerState.new())
@@ -63,7 +65,9 @@ static func begin_run(levels: Dictionary, p_seed: int = Sim.DEFAULT_SEED, looks:
 	for choice: StringName in AppearanceRules.ALL:
 		data[String(choice)] = String(whole[choice])
 	sim.submit(&"create_character", data)
-	sim.advance(1)
+	# Two steps, not one: what creation derives — the start kit (group E) — is answered on
+	# the step after, and a run must begin with its character whole.
+	sim.advance(2)
 	return sim
 
 
@@ -117,6 +121,10 @@ static func build_systems() -> Array[SimSystem]:
 	systems.append(WildSystem.new())
 	# After the duel too: it answers `duel_down`, which the duel raises.
 	systems.append(FellingSystem.new())
+	# **What the player carries** (group E): the start kit on `character_made`, a find
+	# picked up, a fact's gift, a beaten fighter's leavings, and what he puts on. After the
+	# duel and the felling, which raise what it answers.
+	systems.append(InventorySystem.new())
 	# After both: whoever a fight left standing somewhere walks home, and whoever it
 	# killed is let go (O7).
 	systems.append(WalkerSystem.new())
@@ -147,6 +155,7 @@ static func fresh_stores() -> Dictionary:
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(),
 		&"allegiance": Allegiance.new(), &"traits": Traits.new(), &"appearance": Appearance.new(),
+		&"inventory": Inventory.new(),
 		&"towns": TownState.new(), &"folk": Folk.new(),
 		&"player": PlayerState.new(),
 		&"wild": Wild.new(),

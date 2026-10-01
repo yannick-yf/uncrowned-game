@@ -127,6 +127,14 @@ func test_the_window_stands_on_his_ground() -> void:
 			assert_eq(ghost.animation, (ghost.get_parent() as AnimatedSprite3D).animation, "in the pose he stands in")
 			assert_true(ghost.modulate.a < 0.5, "and faint")
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
+	# **The first sword lies on a grave** (group E), drawn until it is taken.
+	if window.figures_are_his():
+		assert_true(window.find_shown(&"graves_sword"), "the sword lies by the graves")
+		sim.facts.add_source(&"found:graves_sword", &"debug")
+		window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
+			"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},
+			"witnesses": ["maddox", "bell"], "now": 3.2}, 1.0 / 60.0)
+		assert_false(window.find_shown(&"graves_sword"), "and is gone once taken")
 	# The lens opens with the fight (O6): a wide one is framed wider, never past the cap.
 	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
 		"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},

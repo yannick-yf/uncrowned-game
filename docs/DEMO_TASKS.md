@@ -2635,6 +2635,12 @@ each item is drawn with. Cloth tunic and trousers (dyed), walking boots, short s
 pick up by the graves, past the fairy), bare hands' numbers, Wren's bow; a leather cap and an ochre gambeson (the works' guards); a helmet, a
 breastplate and leggings (the king's guards); a hood.
 
+> **Built 2026-10-01, with E2 and E3** — the fight reads the bag, so the three went in
+> together. `content/items.json`: ten items, the six slots, what shows in an empty slot,
+> the start kit, the loot. The fists' number is the fight table's (`fists_damage` 2 in
+> `content/duel.json`), and the first sword is a **find** of `content/places.json`, on the
+> loose earth of a grave two tiles from where he wakes.
+
 ### E2 · The inventory in the simulation
 
 Est. 4 h. An `Inventory` store; `equip` and `unequip` events; `item_gained` derived from
@@ -2642,12 +2648,37 @@ the start kit, from the sword picked up by the graves, from Wren's gift (the `yo
 fighter's table. **Save version 5.** **Tests first:** a run replays to the same
 inventory; nothing equips into the wrong slot; nothing is equipped during a fight.
 
+> **Built 2026-10-01.** `ItemRules` reads the table; `Inventory` is the store (owned, in
+> order; what is in each slot; **`made`**, false for a run that never went through
+> creation, which is as the player was before group E — a sword in hand, no armour —
+> so the suite's bare runs and a photograph's still fight as they did);
+> `InventorySystem` answers `character_made` (the start kit), `pick_up` (a find, from
+> within 1.6 tiles, once), a fact that grants an item (Wren's `you:the_bow` is now the
+> hunting bow), `duel_down` (a king's guard leaves the piece of his seat, so three leave
+> the set) and `equip`/`unequip` (refused in a fight); every gain derives `item_gained`.
+> An item gained goes on at once when its slot is free. `Game.begin_run` advances two
+> steps, so a run begins with its start kit on. **Save version 5.** The window: E picks up
+> what lies within reach (*« E, ramasser une épée courte »*), a moment says what was just
+> come by (*« Vous avez maintenant un bonnet de cuir. »*), the bow's key reads the bow
+> slot, and the sword lies on the grave — made like the steles, from his stone, wood and
+> dark, larger than life so it does not read as a stick — until it is taken.
+
 ### E3 · What equipment does in a fight
 
 Est. 3 h. Protection off every blow taken, never below one; two heavy pieces cost one tile
 a turn; **U** switches between the weapon slot and the bow slot, and an empty bow slot
 cannot be switched to. **Tests first**, in `test_duel`: each rule, and the tutorial's
 drills still pass with the start kit.
+
+> **Built 2026-10-01.** In `DuelSystem._land`, the one door every hit goes through, the
+> player's armour takes its share (`ItemRules.after_armour`: never below one); his turn's
+> tiles are `DuelRules.player_tiles` (a tile less under two heavy pieces), in the rules and
+> in the window's drawn reach; his weapon is what he carries — the bow if he asks and has
+> one, else the sword in his hand, else his fists (`DuelRules.FISTS`, a tile like the
+> sword). `test_inventory`: the kit, a run never made, the sword picked up once and from
+> beside it, Wren's bow, equipping and not in a fight, the loot, armour and weight in the
+> rules and in a real blow of Harry's, and the bag replaying. Both worlds green; the drills
+> pass with the start kit.
 
 ### E4 · The items' layers
 

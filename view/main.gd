@@ -675,8 +675,9 @@ func _duel_reach(acting: DuelFighter) -> Array:
 		taken[_duel.master_at] = true
 	if acting.is_player():
 		taken.merge(WardRules.shut_tiles(_world.region(), _sim.facts))
-	var cost: Dictionary = DuelRules.reachable(
-		acting.at, _world.region(), DuelRules.tiles_per_turn(), taken)
+	var tiles: int = DuelRules.player_tiles(_sim.store(&"inventory") as Inventory) if acting.is_player() \
+		else DuelRules.tiles_per_turn()
+	var cost: Dictionary = DuelRules.reachable(acting.at, _world.region(), tiles, taken)
 	for row: Variant in cost.keys():
 		_duel_moves.append(Vector2(row as Vector2i) + Vector2(0.5, 0.5))
 	return _duel_moves
@@ -1195,6 +1196,8 @@ func _read_input() -> void:
 				_sim.submit(&"steal")
 			&"rest":
 				_rest()
+			&"pick_up":
+				_sim.submit(&"pick_up", {"find": String(_find_in_reach())})
 			&"act":
 				_sim.submit(&"act")
 
@@ -1320,9 +1323,10 @@ func _read_duel_input() -> void:
 		_submit_duel_turn(DuelRules.CAST)
 
 
-## Whether you hold a bow of your own (T5).
+## Whether you carry a bow of your own (T5) — on your back, in the bow's slot (group E).
 func _has_bow() -> bool:
-	return _sim.facts.has(DuelRules.THE_BOW)
+	var inventory := _sim.store(&"inventory") as Inventory
+	return inventory != null and inventory.has_bow()
 
 
 ## The sword for the bow and back — and only the sword for somebody who has no bow.
@@ -2183,6 +2187,8 @@ func _what_e_does() -> StringName:
 		return &"give_back"
 	if _can_steal():
 		return &"steal"
+	if _find_in_reach() != &"":
+		return &"pick_up"
 	if _can_rest():
 		return &"rest"
 	if _papers_in_reach() or _site_in_reach() != "" or _watched_site() != "":
@@ -2260,6 +2266,8 @@ func _draw_hud() -> void:
 			rows.append(Text.of(&"prompt.take"))
 		&"rest":
 			rows.append(Text.of(&"prompt.rest"))
+		&"pick_up":
+			rows.append(Text.of(&"prompt.pick_up", [Text.of(StringName("item.%s.a" % _find_item(_find_in_reach())))]))
 		&"act":
 			if _papers_in_reach():
 				rows.append(Text.of(&"prompt.papers"))
@@ -2289,7 +2297,42 @@ func _draw_hud() -> void:
 ## because the cost has not happened yet and will not happen here — that is the
 ## ambient register's business, three days' walk away, and the player is meant to
 ## be the one who joins them up. Push the ambient, pull the attribution.
+## **Something lying within reach that can be picked up** (group E): a find of
+## `content/places.json` not yet taken, as near as `InventorySystem` lets you reach.
+func _find_in_reach() -> StringName:
+	for find: Dictionary in Places.shared().finds():
+		if _sim.facts.has(StringName(InventorySystem.FOUND % find["id"])):
+			continue
+		var at: Vector2i = _world.region().resolve(find["anchor"] as Dictionary)
+		if _world.player_pos.distance_to(Vector2(at) + Vector2(0.5, 0.5)) <= InventorySystem.REACH:
+			return find["id"] as StringName
+	return &""
+
+
+func _find_item(id: StringName) -> StringName:
+	for find: Dictionary in Places.shared().finds():
+		if find["id"] == id:
+			return find["item"] as StringName
+	return &""
+
+
+## **What was just come by** (group E): the last `item_gained` within a moment, read off the
+## log — the sword picked up, the bow given, what a beaten man left.
+func _just_gained() -> String:
+	var events: Array[SimEvent] = _sim.events.all()
+	for i: int in range(events.size() - 1, -1, -1):
+		var event: SimEvent = events[i]
+		if _sim.step - event.step > MOMENT_STEPS * 3:
+			break
+		if event.type == &"item_gained" and String(event.data.get("from", "")) != "start":
+			return Text.of(&"moment.gained", [Text.of(StringName("item.%s.a" % String(event.data.get("item", ""))))])
+	return ""
+
+
 func _just_happened() -> String:
+	var gained: String = _just_gained()
+	if gained != "":
+		return gained
 	# Papers first: picking one up is the quieter act and the one that was silent.
 	# Taking a document told the player nothing at all — no line, no name, nothing
 	# to say what they now had (found in play, 2026-09-12).

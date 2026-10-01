@@ -1270,6 +1270,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
 	_sync_hail_mark(cast, frame.get("hail", {}) as Dictionary)
+	_sync_finds()
 	_sync_embers(frame)
 	_sync_light(frame, delta)
 	_sync_camera(frame.get("camera", frame.get("player", Vector2.ZERO)) as Vector2,
@@ -1798,6 +1799,58 @@ func _grave_board() -> Node3D:
 	point.size = Vector3(0.269, 0.269, 0.06)
 	_made_part(board, point, Vector3(0.0, 0.78, 0.0), HIS_WOOD_PAINT, Vector3(0.0, 0.0, PI * 0.25))
 	return board
+
+
+## **What lies where it can be picked up** (group E): the first sword, on a grave past the
+## fairy. Made, like the steles, from his materials — the blade in his stone, the grip in
+## his wood, the guard and the pommel in his dark — and gone the moment it is taken.
+var _finds: Dictionary = {}
+
+
+func _sync_finds() -> void:
+	if _sim == null or _region == null:
+		return
+	for find: Dictionary in Places.shared().finds():
+		var id: StringName = find["id"] as StringName
+		var taken: bool = _sim.facts.has(StringName(InventorySystem.FOUND % id))
+		var piece: Node3D = _finds.get(id, null) as Node3D
+		if piece == null and not taken:
+			piece = _lying_sword()
+			piece.name = "Find_%s" % id
+			add_child(piece)
+			_finds[id] = piece
+		if piece != null:
+			piece.visible = not taken
+			var at: Vector2i = _region.resolve(find["anchor"] as Dictionary)
+			piece.position = _feet_of(Vector2(at) + Vector2(0.5, 0.5)) + Vector3.UP * 0.03
+
+
+## Whether a find is drawn in the world, for the suite.
+func find_shown(id: StringName) -> bool:
+	var piece: Node3D = _finds.get(id, null) as Node3D
+	return piece != null and piece.visible
+
+
+## A short sword lying flat: blade, guard, grip and pommel, turned a little off the grid
+## so it reads as dropped rather than placed.
+func _lying_sword() -> Node3D:
+	var sword := Node3D.new()
+	sword.rotation.y = deg_to_rad(28.0)
+	# Larger than life, as everything a player must find on his own is: at the lens's
+	# distance a sword of true size reads as a stick in the grass.
+	var blade := BoxMesh.new()
+	blade.size = Vector3(0.15, 0.04, 1.05)
+	_made_part(sword, blade, Vector3(0.0, 0.0, -0.30), HIS_STONE_PAINT)
+	var guard := BoxMesh.new()
+	guard.size = Vector3(0.46, 0.06, 0.08)
+	_made_part(sword, guard, Vector3(0.0, 0.015, 0.26), WOLF_DARK)
+	var grip := BoxMesh.new()
+	grip.size = Vector3(0.08, 0.06, 0.24)
+	_made_part(sword, grip, Vector3(0.0, 0.015, 0.42), HIS_WOOD_PAINT)
+	var pommel := BoxMesh.new()
+	pommel.size = Vector3(0.12, 0.08, 0.09)
+	_made_part(sword, pommel, Vector3(0.0, 0.02, 0.58), WOLF_DARK)
+	return sword
 
 
 ## One part of the wolf: a box of a size, at a place, in one of the two materials.
