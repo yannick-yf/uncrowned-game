@@ -103,7 +103,7 @@ for LANG_ID in $LANGS; do
   # and Bram's hail to somebody who walked past the sword.
   shoot 30_gear_world play UNCROWNED_AT=281,318 UNCROWNED_GEAR=$PLATE
   shoot 31_gear_fight play UNCROWNED_AT=281,318 UNCROWNED_GEAR=$PLATE UNCROWNED_DUEL=bram
-  shoot 32_loot play UNCROWNED_AT=317,208 UNCROWNED_GEAR=short_sword UNCROWNED_DUEL=works_guard:340:press
+  shoot 32_loot play UNCROWNED_AT=317,208 UNCROWNED_GEAR=short_sword UNCROWNED_DUEL=works_guard:570:press
   shoot 33_hail_unarmed play UNCROWNED_HAIL=bram:400
 done
 echo "frames in $OUT"
