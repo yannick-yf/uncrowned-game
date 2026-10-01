@@ -98,7 +98,10 @@ func _turn(mine: DuelFighter, foes: Array[DuelFighter], region: Region, duel: Du
 						return {"who": String(mine.who), "to_x": tile.x, "to_y": tile.y,
 							"action": String(DuelRules.STRIKE), "target": String(foe.who),
 							"weapon": String(DuelRules.BOW)}
-	var chosen: Dictionary = DuelRules.decide(mine, foes, region, duel.began_at, _taken(duel, mine))
+	# **Unleashed** (R4): the opponents' rule will not follow past `follows_tiles` from where
+	# the fight began, which is what lets a player walk out of a fight. A player is not held
+	# by it — and a scripted one that was lost every archer that misses gave time to run.
+	var chosen: Dictionary = DuelRules.decide(mine, foes, region, mine.at, _taken(duel, mine))
 	var to: Vector2i = chosen["to"] as Vector2i
 	return {
 		"who": String(mine.who), "to_x": to.x, "to_y": to.y,

@@ -283,8 +283,10 @@ func _take_blow(blow: Dictionary) -> void:
 			_floats.append({"text": Text.of(&"fight.surprise"), "at": _place(at, not by_me) + Vector2(0.0, -18.0),
 				"born": _now, "colour": MINE, "size": Ui.ROW})
 	elif kind == "blow_missed":
-		_floats.append({"text": Text.of(&"fight.miss"), "at": _place(at, by_me), "born": _now,
-			"colour": Ui.DIM, "size": Ui.NOTE})
+		# A miss by the dice (R4) is said as loudly as a hit, over whoever it missed.
+		var dice: bool = bool(blow.get("missed", false))
+		_floats.append({"text": Text.of(&"fight.miss"), "at": _place(at, not by_me if dice else by_me), "born": _now,
+			"colour": (MINE if by_me else HIS) if dice else Ui.DIM, "size": Ui.ROW if dice else Ui.NOTE})
 
 
 ## A screen point to hang a word on, or the bar's corner when the window gave none.
@@ -466,8 +468,12 @@ func bars_shown() -> int:
 ## for somebody with a bow of their own (T6 — Yannick could not shoot and nothing said why).
 func keys_line() -> String:
 	var bow: bool = String(_reading.get("my_weapon", "")) == String(DuelRules.BOW)
-	var parts: Array[String] = [Text.of(&"duel.part.move"),
-		Text.of(&"duel.part.shoot" if bow else &"duel.part.strike")]
+	var strike: String = Text.of(&"duel.part.shoot" if bow else &"duel.part.strike")
+	# **The chance it lands, before the blow** (R4), when it would strike somebody.
+	var chance: int = int(_reading.get("hit_chance", -1))
+	if chance >= 0:
+		strike = Text.of(&"duel.chance", [strike, chance])
+	var parts: Array[String] = [Text.of(&"duel.part.move"), strike]
 	if bool(_reading.get("has_bow", false)):
 		var fists: bool = String(_reading.get("close_weapon", "")) == String(DuelRules.FISTS)
 		parts.append(Text.of(&"duel.part.take_bow" if not bow

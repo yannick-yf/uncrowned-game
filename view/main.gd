@@ -490,6 +490,8 @@ func _duel_frame() -> Dictionary:
 		"reach_at": Vector2(_duel_cursor) + Vector2(0.5, 0.5) if choosing else _duel.drawn_at(acting if acting != null else mine),
 		"my_weapon": String(held),
 		"has_bow": _has_bow(),
+		# The chance K's blow lands, on whoever it would strike from the tile chosen (R4).
+		"hit_chance": _hit_chance(mine) if choosing else -1,
 		# What U puts back in his hands from the bow: the sword, or his fists (E).
 		"close_weapon": String(_close_weapon()),
 		# For the lesson's steps and hint (T8): whether you are choosing your turn, and how
@@ -743,7 +745,8 @@ func _place_blows(fresh: Array) -> Array:
 			# Over the fighter the blow was about, by name (O6): a landed blow is about
 			# its target and a missed one about whoever swung.
 			var kind: String = String(blow.get("type", ""))
-			var named: String = String(blow.get("target", "")) if kind == "blow_landed" \
+			# A blow the dice made miss (R4) is about its target: *Raté !* over him.
+			var named: String = String(blow.get("target", "")) if kind == "blow_landed" or bool(blow.get("missed", false)) \
 				else String(blow.get("by", ""))
 			var who: DuelFighter = _duel.me() if named == "player" else _duel.get_fighter(StringName(named))
 			if who == null:
@@ -1431,6 +1434,16 @@ func _read_duel_input() -> void:
 func _has_bow() -> bool:
 	var inventory := _sim.store(&"inventory") as Inventory
 	return inventory != null and inventory.has_bow()
+
+
+## **The chance K's blow lands** (R4), on the first foe it would strike from the tile the
+## cursor is on with the weapon in hand — the one `_submit_duel_turn` would pick — or -1
+## when it would strike nobody.
+func _hit_chance(mine: DuelFighter) -> int:
+	for foe: DuelFighter in _duel.foes_of(mine.who):
+		if DuelRules.reaches(_duel_weapon, _duel_cursor, foe.at):
+			return DuelRules.hit_chance(DuelRules.PLAYER, foe.who, _sim.store(&"traits") as Traits, _duel.drill)
+	return -1
 
 
 ## What he strikes with when it is not the bow: his sword, or his fists without one (E).

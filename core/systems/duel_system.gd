@@ -478,15 +478,24 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 	if victim == null or not victim.alive() or not DuelRules.reaches(who.weapon, who.at, victim.at):
 		sim.derive(&"blow_missed", {"by": _named_as(who), "move": String(move)})
 		return
+	# The surprise attack's blow (R3): twice what it costs, once, and it cannot miss.
+	var surprised: bool = duel.surprise and who.is_player()
+	if surprised:
+		duel.surprise = false
+	else:
+		# **Every other blow may miss** (R4): the chance by agility, the roll by the run.
+		var chance: int = DuelRules.hit_chance(StringName(_named_as(who)), StringName(_named_as(victim)),
+			sim.store(&"traits") as Traits, duel.drill)
+		if DuelRules.roll(sim.rng_seed, sim.step, who.who, victim.who) >= chance:
+			sim.derive(&"blow_missed", {"by": _named_as(who), "move": String(move),
+				"target": String(victim.who), "chance": chance, "missed": true})
+			return
 	# In a drill the master's blow costs the drill's figure, and yours what it always does.
 	var amount: int = DuelRules.damage_of(who.who, who.weapon)
 	if duel.drill != Duel.NOBODY and not who.is_player():
 		amount = DuelRules.drill_damage(duel.drill)
-	# The surprise attack's blow (R3): twice what it costs, once.
-	var surprised: bool = duel.surprise and who.is_player()
 	if surprised:
 		amount *= DuelRules.SURPRISE_TIMES
-		duel.surprise = false
 	_land(sim, duel, world, who, victim, amount, move, surprised)
 
 

@@ -2,6 +2,12 @@
   "_note": "THE WHOLE OF THE SECOND FIGHT'S BALANCE (docs/COMBAT_V2.md §7, task K2). One small table, which is the one rule worth keeping from the first design: change a number here and nothing else. There are no dice anywhere in this file and none in the code that reads it — determinism comes from there being nothing random, which is stronger than seeding.",
   "_units_note": "Distances are TILES of the world grid, measured 8-way, so a diagonal is one tile like any other (BakeRules.METRES_PER_TILE says a tile is 2 m). Times are COUNTS OF SIM STEPS, 60 to the real second, because the world clock is held for the length of a fight and a turn still has to take a readable amount of time.",
   "table": {
+    "hit_base": 80,
+    "hit_per_agility": 5,
+    "hit_low": 50,
+    "hit_high": 95,
+    "hit_in_a_lesson": 95,
+    "_hit_note": "THE CHANCE TO HIT (R4, Yannick 2026-10-01: a la Baldur's Gate 3, every attack may miss, by agility). Chance = hit_base + hit_per_agility x (the attacker's agility - the defender's), never below hit_low nor above hit_high, in percent. The player's agility is his trait, 1 to 5; everybody else's is 'agility' in his row here, 2 when it says nothing. In a lesson the player hits at hit_in_a_lesson, so nobody learning is made to fail by the dice. The fairy's gift and a surprise attack always land. Until this day the rule was the opposite - no dice, a blow that is thrown lands - and Yannick changed it on purpose.",
     "tiles_per_turn": 4,
     "_tiles_note": "8 m. Settled 2026-09-24 after ten was proposed and measured out: the fight camera shows about six tiles across, so ten tiles is three screen-widths in one turn and position stops existing. Baldur's Gate 3 gives 9 m, four to five tiles here. THE CAP IS THE WHOLE OF WHAT SPACING MEANS in this design — a turn is move AND act, so without it a fighter crosses the grid and the grid means nothing.",
     "reach_tiles": 1,
@@ -47,21 +53,25 @@
       "purse": 4
     },
     "bram": {
+      "agility": 3,
       "hp": 15,
       "spares": true,
       "purse": 0
     },
     "harry": {
+      "agility": 2,
       "hp": 15,
       "spares": false,
       "purse": 12
     },
     "tom": {
+      "agility": 2,
       "hp": 15,
       "spares": false,
       "purse": 3
     },
     "wolf": {
+      "agility": 3,
       "hp": 10,
       "spares": false,
       "purse": 0,
@@ -72,17 +82,20 @@
     "_wolf_note": "TEN, WHERE A MAN IS FIFTEEN (W1, 2026-09-25). Two blows rather than three, and the difference is the whole point: a wolf that took as long to kill as Harry would be a man in a fur coat. What makes the wood dangerous is not that one wolf is hard, it is that wolves come in more than one — the duel takes a list of opponents and W2 uses it. It never spares: a sparring partner stops when you go down and an animal does not, which is the only line in this file that is about what something *is* rather than what it costs.",
     "_purse_note": "WHAT A BODY CARRIES (K3, 2026-09-25), and it is the only source of gold in the game so far. A wolf carries none, which is the point of the wood: it is where you learn to fight and not where you get rich. Bram carries none either - he is a sparring partner and robbing him would make the tutorial a mugging. Harry has twelve because he is the works' foreman and the one man here anybody would expect to have a purse; Tom has three because he has been on strike. Nobody has to be killed for any of it: PLAYER_MODEL.md section 3 prices a murder at -80 of a town's regard, so this is a trade the player makes with open eyes and rarely a good one.",
     "wren": {
+      "agility": 4,
       "hp": 15,
       "spares": true,
       "purse": 0,
       "weapon": "bow"
     },
     "gatekeeper": {
+      "agility": 2,
       "hp": 15,
       "spares": false,
       "purse": 3
     },
     "kings_guard": {
+      "agility": 3,
       "hp": 40,
       "damage": 10,
       "spares": false,
@@ -90,6 +103,7 @@
       "person": true
     },
     "works_guard": {
+      "agility": 2,
       "hp": 10,
       "damage": 3,
       "spares": false,
@@ -97,6 +111,7 @@
       "person": true
     },
     "works_archer": {
+      "agility": 2,
       "hp": 8,
       "spares": false,
       "purse": 2,

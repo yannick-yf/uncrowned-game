@@ -216,6 +216,36 @@ static func _about(who: StringName) -> Dictionary:
 	return all.get("_default", {}) as Dictionary
 
 
+## **How nimble somebody is** (R4): the player's trait, 1 to 5; everybody else's row, 2
+## when it says nothing.
+static func agility_of(who: StringName, traits: Traits = null) -> int:
+	if who == PLAYER:
+		return traits.level_of(TraitRules.AGILITY) if traits != null else TraitRules.FLOOR
+	return int(_about(who).get("agility", 2))
+
+
+## **The chance a blow lands, in percent** (R4, Yannick 2026-10-01): 80 and 5 a point of
+## agility between the two, between 50 and 95 — `content/duel.json`'s `hit_` numbers.
+static func chance_to_hit(attacker: int, defender: int) -> int:
+	return clampi(number("hit_base", 80) + number("hit_per_agility", 5) * (attacker - defender),
+		number("hit_low", 50), number("hit_high", 95))
+
+
+## **The chance of this blow**: the formula — or, for the player in a lesson, the lessons'
+## own, so that nobody learning is made to fail by the dice.
+static func hit_chance(who: StringName, victim: StringName, traits: Traits, drill: StringName) -> int:
+	if who == PLAYER and drill != &"":
+		return number("hit_in_a_lesson", 95)
+	return chance_to_hit(agility_of(who, traits), agility_of(victim, traits))
+
+
+## **The roll**, 0 to 99: from the run's seed, the step and who swings at whom, so a replay
+## misses the same blows — and not from `sim.rng`, which a fight's every blow would shift
+## for the whole game.
+static func roll(run_seed: int, step: int, who: StringName, victim: StringName) -> int:
+	return absi(("%d/%d/%s/%s" % [run_seed, step, who, victim]).hash()) % 100
+
+
 ## **What an enemy of this kind sees** (R2, 2026-10-01): `tiles` ahead of it, in a cone
 ## of `cone` degrees round the way it faces — Yannick: *« le joueur peut s'approcher par
 ## derrière ou par les côtés sans être repéré »*. A kind whose row says nothing sees only

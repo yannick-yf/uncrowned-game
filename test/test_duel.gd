@@ -237,6 +237,7 @@ func test_whoever_started_the_fight_acts_first() -> void:
 
 
 func test_a_turn_is_move_and_act() -> void:
+	sure_hits()  # about the blow's mechanics, not the dice (R4)
 	# Yannick, 2026-09-24: both, not one or the other.
 	var sim: Sim = _start()
 	var duel: Duel = _duel(sim)
@@ -264,6 +265,7 @@ func test_a_fighter_cannot_cross_the_grid_and_strike_in_the_same_turn() -> void:
 
 
 func test_a_blow_does_not_move_you() -> void:
+	sure_hits()  # about the blow's mechanics, not the dice (R4)
 	# No knockback, no pushbox, no shove (Yannick, 2026-09-24). A hit that moved you
 	# would make position depend on the enemy's dice, and there are no dice.
 	var sim: Sim = _start()
@@ -399,6 +401,7 @@ func test_the_end_is_held_for_a_beat_before_the_world_comes_back() -> void:
 
 
 func test_nobody_flees_on_the_shipped_table_and_the_machinery_still_works() -> void:
+	sure_hits()  # about the blow's mechanics, not the dice (R4)
 	# **Two claims, because the behaviour is deferred rather than deleted** (Yannick,
 	# 2026-09-24). He cut the threshold: it was five, and against ten points and five
 	# damage that made everything run after exactly one hit — Bram included, who is the
@@ -695,6 +698,7 @@ func test_a_bow_shoots_a_band_never_a_neighbour() -> void:
 
 
 func test_an_arrow_lands_on_the_act_that_shoots_it() -> void:
+	sure_hits()  # about the blow's mechanics, not the dice (R4)
 	# No delay and no dodge: between her turn and her arrow landing there is no turn of
 	# yours, so nothing you do can take you out of its way.
 	var sim: Sim = _against_the_bow()
@@ -728,6 +732,7 @@ func _turn_now(sim: Sim, action: String, weapon: String) -> void:
 
 
 func test_the_player_shoots_only_with_a_bow_of_his_own() -> void:
+	sure_hits()  # about the blow's mechanics, not the dice (R4)
 	var without: Sim = Game.build()
 	without.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
 	without.advance(1)
@@ -997,3 +1002,82 @@ func test_the_walk_is_drawn_between_two_tiles() -> void:
 		return
 	assert_ne(duel.drawn_at(mine), mine.centre(),
 		"a fighter half way across a tile is drawn half way across it")
+
+
+# ------------------------------------------------------ R4, the chance to miss ---
+
+func test_the_chance_to_hit_is_eighty_and_five_a_point_of_agility() -> void:
+	# Yannick's formula (2026-10-01), and the three examples he approved, against a wolf.
+	assert_eq(DuelRules.agility_of(&"wolf"), 3, "a wolf's agility")
+	assert_eq(DuelRules.chance_to_hit(1, 3), 70, "a clumsy player hits a wolf at 70 %")
+	assert_eq(DuelRules.chance_to_hit(3, 3), 80, "an ordinary one at 80 %")
+	assert_eq(DuelRules.chance_to_hit(5, 3), 90, "a nimble one at 90 %")
+	assert_eq(DuelRules.chance_to_hit(3, 1), 90, "and the wolf hits the clumsy one at 90 %")
+	assert_eq(DuelRules.chance_to_hit(3, 5), 70, "the nimble one at 70 %")
+	assert_eq(DuelRules.chance_to_hit(1, 9), 50, "never below 50")
+	assert_eq(DuelRules.chance_to_hit(9, 1), 95, "never above 95")
+	var nimble := Traits.new()
+	nimble.levels[TraitRules.AGILITY] = 5
+	assert_eq(DuelRules.agility_of(DuelRules.PLAYER, nimble), 5, "the player's is his trait")
+	assert_eq(DuelRules.hit_chance(DuelRules.PLAYER, &"wolf", nimble, &""), 90, "so he hits a wolf at 90 %")
+	assert_eq(DuelRules.hit_chance(DuelRules.PLAYER, &"bram", Traits.new(), &"sword"), 95,
+		"and in a lesson at 95 %, whatever his agility")
+	assert_eq(DuelRules.hit_chance(&"bram", DuelRules.PLAYER, Traits.new(), &"sword"), 90,
+		"the master's own blow is the formula: Bram 3 against him 1")
+
+
+func _wolves_fought() -> Array:
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = alone_on_the_road()
+	sim.submit(&"duel_began", {"opponents": ["wolf", "wolf"], "by": "player"})
+	sim.advance(1)
+	var duel := sim.store(&"duel") as Duel
+	var hands := DuelPlayer.new(DuelPlayer.PRESS)
+	for _step: int in 30000:
+		if not duel.on():
+			break
+		hands.play(sim, duel)
+		sim.advance(1)
+	var misses: Array = []
+	var landed: int = 0
+	for event: SimEvent in sim.events.all():
+		if event.type == &"blow_missed" and bool(event.data.get("missed", false)):
+			misses.append([event.step, event.data.get("by", "")])
+		elif event.type == &"blow_landed":
+			landed += 1
+	return [misses, landed]
+
+
+func test_blows_miss_and_the_same_fight_misses_the_same_ones() -> void:
+	var first: Array = _wolves_fought()
+	var misses: Array = first[0] as Array
+	assert_true(misses.size() > 0, "some blows miss: %d of %d" % [misses.size(), misses.size() + int(first[1])])
+	assert_true(int(first[1]) > misses.size(), "and more land than miss")
+	assert_eq(_wolves_fought()[0], misses, "the same fight, fought again, misses the very same blows")
+
+
+func test_a_surprise_attack_never_misses() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	# Over many runs, whatever the dice: the opening blow lands, doubled.
+	for run_seed: int in range(1, 13):
+		var sim: Sim = Game.build(run_seed)
+		var world := sim.store(&"world") as WorldState
+		var wild := sim.store(&"wild") as Wild
+		var animals: Array[Vector2i] = wild.members(world.region(), 0)
+		var spot: Vector2i = animals[animals.size() - 1] - wild.looks(0)
+		world.player_pos = Vector2(spot) + Vector2(0.5, 0.5)
+		sim.advance(2)
+		sim.submit(&"ambush", {"pack": 0})
+		var first: Dictionary = {}
+		for _step: int in 300:
+			sim.advance(1)
+			for event: SimEvent in sim.events.all():
+				if (event.type == &"blow_landed" or event.type == &"blow_missed") and first.is_empty():
+					first = {"type": event.type, "surprise": event.data.get("surprise", false)}
+			if not first.is_empty():
+				break
+		assert_eq(first.get("type", &""), &"blow_landed", "seed %d: the opening blow lands" % run_seed)
+		assert_true(bool(first.get("surprise", false)), "seed %d: as a surprise" % run_seed)

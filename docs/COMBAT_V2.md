@@ -45,7 +45,7 @@ Baldur's Gate's default mode, reduced to what this game needs.
 |---|---|
 | **Turn-based** | Yes. Not real-time, not real-time-with-pause |
 | **Party** | None. The player fights alone |
-| **Dice** | None. **Fixed damage.** A blow that lands takes a known number |
+| **Dice** | ~~None.~~ **A chance to miss, since 2026-10-01** (R4, below). **Fixed damage**: a blow that lands takes a known number |
 | **Where** | **On the world grid.** No separate screen, no arena, no cut |
 | **Who can be killed** | Everyone |
 
@@ -54,6 +54,15 @@ question about saving and re-rolling, it makes a fight something the player can 
 about rather than gamble on, and it makes the simulation deterministic *by
 construction* rather than by seeding an RNG. A fight becomes a puzzle of position and
 order, which is what the grid is for.
+
+> **Changed by Yannick on 2026-10-01** (group R, R4): *« chaque attaque a une chance de
+> rater, calculée selon l'agilité »*, à la Baldur's Gate 3. **Chance = 80 % + 5 % × (the
+> attacker's agility − the defender's), between 50 % and 95 %**; 95 % for the player in the
+> lessons; the fairy's gift and a surprise attack always land. What stays of the reasoning
+> above: damage is still fixed, the chance is shown before the blow (*K frapper (80 %)*),
+> and the fight is still deterministic — the roll is made from the run's seed, the step and
+> who swings at whom, so a replay misses the very same blows. What goes: a fight is no
+> longer a pure puzzle; the agility trait now counts in it.
 
 ## 3. What survives of the first design
 

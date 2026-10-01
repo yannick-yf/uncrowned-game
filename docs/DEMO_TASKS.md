@@ -2857,13 +2857,32 @@ where everybody stands, the player's blow its first act; **doubled, and it canno
 > also cannot miss. `UNCROWNED_DUEL=ambush:0:25` presses K for a photograph; frames 21c
 > and 21d.
 
-### R4 · The chance to miss — **after R3**
+### R4 · The chance to miss — **built 2026-10-01**
 
 *Chance to hit = 80 % + 5 % × (the attacker's agility − the defender's)*, between 50 % and
 95 % (Yannick, 2026-10-01: *« Parfait »*). The player's agility is his trait (1 to 5); every
 other fighter's is a row of `content/duel.json`. A miss reads *Raté !* over the target; the
 chance shows in the keys' line before the blow; **95 % for the player in the lessons**; the
 fairy's gift and the surprise attack always land. A replay misses the same blows.
+
+> **Built.** The numbers are the table's (`hit_base` 80, `hit_per_agility` 5, `hit_low` 50,
+> `hit_high` 95, `hit_in_a_lesson` 95) and each fighter's `agility` its row's — wolves 3,
+> the works' guards and archers 2, the gatekeeper 2, the king's guards 3, Bram 3, Wren 4,
+> Harry and Tom 2. `DuelRules.hit_chance` is the one rule; the strike rolls
+> `DuelRules.roll` — a hash of the run's seed, the step and the two fighters, not
+> `sim.rng` — and a miss is a `blow_missed` with `missed`, *Raté !* floated over its target
+> in the striker's colour. The keys' line reads *K frapper (70 %)* when the blow would
+> strike somebody from the tile chosen. The gift is not rolled; the surprise attack's blow
+> is not. **Measured** on two wolves, pressing: some blows miss, more land, and the same
+> fight fought again misses the very same ones. Five tests about how a blow works (a turn
+> is move and act, an arrow lands on its act, a blow does not move you…) and the furnace
+> guards' aftermath now ask for sure hits (`TestCase.sure_hits`): they are about something
+> else than the dice — and the furnace one showed the scripted hand, which will not chase
+> past the fight's leash, losing an archer the misses gave time to run. That hand is now
+> unleashed (`tools/duel_player.gd`): the leash is how a player walks out of a fight, and
+> holds nobody playing him — the long journey through the gate and a furnace ended again.
+> The lessons pass at 95 %. Save version 7. `docs/COMBAT_V2.md` records the reversal of
+> *no dice*. Frames 21e and 21f.
 
 ---
 

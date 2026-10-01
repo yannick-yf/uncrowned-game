@@ -349,6 +349,10 @@ func test_reaching_to_light_one_brings_tom() -> void:
 
 
 func test_beating_them_lets_the_act_go_through() -> void:
+	# What beating them lets through, not whether the dice let you beat them: the scripted
+	# hand does not chase past the fight's leash, and an archer given time by misses got
+	# there (R4).
+	sure_hits()
 	var sim: Sim = _forced_beside(true)
 	var world := sim.store(&"world") as WorldState
 	world.unkillable = true
