@@ -426,35 +426,61 @@ static func _styles(fig: Looks.Fig, parts: Dictionary) -> void:
 	var hair_against := func(_x: int, _y: int) -> bool: return true
 	# Short: close to the skull, the ears showing.
 	_paint(fig, parts[&"hair_short"] as Image, short, his, source, 3, hair_against)
-	# Long: the short cut, and hair falling past the jaw to the shoulders.
+	# Long: the short cut, and hair falling past the jaw to the shoulders — **in disorder**
+	# (Yannick, on the first board): locks of uneven length, an edge that comes and goes.
 	var long_hair := func(x: int, y: int) -> bool:
 		if short.call(x, y):
 			return true
-		if y <= waist or y > neck + 20.0 or in_face.call(x, y):
+		if y <= waist or in_face.call(x, y):
+			return false
+		var lock: int = int(floor((x - cx) / 5.0)) + 40
+		var low: float = neck + 14.0 + 14.0 * Looks.noise(lock, 11, 109)
+		if y > low:
 			return false
 		var d: float = absf(x - cx)
 		var t: float = (y - waist) / (neck + 20.0 - waist)
-		var reach: float = (rx + 7.0) * (1.0 - 0.12 * t * t)
+		var band: int = int(floor((y - waist) / 6.0))
+		var reach: float = (rx + 6.0) * (1.0 - 0.10 * t * t) + 5.0 * Looks.noise(band, 13 + int(signf(x - cx)), 111) - 1.0
 		if back == 0.0 and face:
 			return d >= fw * 0.42 and d <= reach
 		if back != 0.0:
 			return (x - cx) * back >= -rx * 0.15 and d <= reach
 		return d <= reach
 	_paint(fig, parts[&"hair_long"] as Image, long_hair, his, source, 3, hair_against)
-	# Tied: the short cut, and a tail at the back of the head.
-	var tail_from := Vector2(cx + back * (rx + 2.0), waist - 2.0) if back != 0.0 else Vector2(cx, waist - 4.0)
-	var tail_to := Vector2(cx + back * (rx + 9.0), neck + 22.0) if back != 0.0 else Vector2(cx, neck + 30.0)
+	# **Tied: every hair pulled back** (Yannick, on the first board): close to the skull, the
+	# forehead bare under a clean hairline, combed back, and the tail behind.
+	var hairline := func(x: int, y: int) -> bool:
+		if not face or x < fx0 - 1 or x > fx1 + 1:
+			return false
+		var u: float = (x - (fx0 + fx1) / 2.0) / maxf(fw / 2.0, 1.0)
+		return y > fy0 - fh * 0.06 + fh * 0.10 * u * u
+	var slick := func(x: int, y: int) -> bool:
+		var close: bool = dome.call(x, y, -1.0) or sides.call(x, y, 1.0, ear_line) \
+			or (back != 0.0 and (x - behind_face) * back > 0.0 and sides.call(x, y, 1.0, bottom - 3.0))
+		return close and not hairline.call(x, y)
+	var tail_from := Vector2(cx + back * (rx + 1.0), waist - 4.0) if back != 0.0 else Vector2(cx, waist - 2.0)
+	var tail_to := Vector2(cx + back * (rx + 8.0), neck + 24.0) if back != 0.0 else Vector2(cx, neck + 30.0)
 	var tail := func(x: int, y: int) -> bool:
 		if face and back == 0.0:
 			return false
 		var t: float = clampf((Vector2(x, y) - tail_from).dot(tail_to - tail_from) / (tail_to - tail_from).length_squared(), 0.0, 1.0)
 		var on: Vector2 = tail_from.lerp(tail_to, t)
-		return Vector2(x, y).distance_to(on) <= 8.0 - 3.5 * t
+		return Vector2(x, y).distance_to(on) <= 8.0 - 3.0 * t
 	var tied := func(x: int, y: int) -> bool:
-		return short.call(x, y) or (tail.call(x, y) and not in_face.call(x, y))
+		return slick.call(x, y) or (tail.call(x, y) and not hairline.call(x, y))
 	_paint(fig, parts[&"hair_tied"] as Image, tied, his, source, 3, hair_against)
-	_band(parts[&"hair_tied"] as Image, tail_from.lerp(tail_to, 0.12), tail_to - tail_from, 6.0)
-	# Braided: the short cut, and braids — two in front of the shoulders, one behind.
+	_combed(parts[&"hair_tied"] as Image, slick, fig, cx, top, back)
+	_band(parts[&"hair_tied"] as Image, tail_from.lerp(tail_to, 0.10), tail_to - tail_from, 7.0)
+	# **Braided: cornrows** (Yannick, on the first board: *« comme Allen Iverson »*) — rows
+	# plaited flat to the skull from the hairline to the nape, the scalp showing between
+	# them — and the braids that hang from them.
+	var row_of := func(x: int, y: int) -> float:
+		# From the front or behind the rows run up and over; from the side, front to back.
+		return float(x) - cx if back == 0.0 else float(y) - top
+	var cornrow := func(x: int, y: int) -> bool:
+		var close: bool = dome.call(x, y, 0.0) or sides.call(x, y, 0.0, ear_line) \
+			or (back != 0.0 and (x - behind_face) * back > 0.0 and sides.call(x, y, 0.0, bottom - 3.0))
+		return close and not hairline.call(x, y) and fposmod(row_of.call(x, y) + 3.0, 9.0) < 6.0
 	var braids: Array[Array] = []
 	if face and back == 0.0:
 		braids = [[Vector2(cx - fw * 0.52, fy0 + fh * 0.45), Vector2(cx - fw * 0.55, neck + 24.0)],
@@ -462,19 +488,21 @@ static func _styles(fig: Looks.Fig, parts: Dictionary) -> void:
 	elif back != 0.0:
 		braids = [[Vector2(cx + back * rx * 0.75, waist), Vector2(cx + back * (rx * 0.75 + 6.0), neck + 22.0)]]
 	else:
-		braids = [[Vector2(cx, waist - 2.0), Vector2(cx, neck + 30.0)]]
+		braids = [[Vector2(cx - 9.0, waist), Vector2(cx - 10.0, neck + 26.0)],
+			[Vector2(cx + 9.0, waist), Vector2(cx + 10.0, neck + 26.0)]]
 	var on_braid := func(x: int, y: int) -> bool:
 		for b: Array in braids:
 			var a: Vector2 = b[0]
 			var z: Vector2 = b[1]
 			var t: float = clampf((Vector2(x, y) - a).dot(z - a) / (z - a).length_squared(), 0.0, 1.0)
-			if Vector2(x, y).distance_to(a.lerp(z, t)) <= 8.0 - 2.5 * t:
+			if Vector2(x, y).distance_to(a.lerp(z, t)) <= 7.0 - 2.0 * t:
 				return true
 		return false
 	var braided := func(x: int, y: int) -> bool:
-		return short.call(x, y) or (on_braid.call(x, y) and not (in_face.call(x, y) and y < fy0 + fh * 0.9))
-	_paint(fig, parts[&"hair_braided"] as Image, braided, his, source, 3, hair_against)
+		return cornrow.call(x, y) or (on_braid.call(x, y) and not (in_face.call(x, y) and y < fy0 + fh * 0.9))
+	_paint(fig, parts[&"hair_braided"] as Image, braided, his, source, 2, hair_against)
 	_plait(parts[&"hair_braided"] as Image, braids)
+	_cornrow_plaits(parts[&"hair_braided"] as Image, cornrow, row_of, fig, back)
 	# Shaved: an even stubble on the skull — every other pixel, so at the game's size it
 	# reads as a shadow of hair rather than as specks — his outline left as the skull's.
 	var shaved := func(x: int, y: int) -> bool:
@@ -610,6 +638,36 @@ static func _strand(his: Image, source: Rect2i, u: float, v: float) -> Color:
 				if c.a > 0.5 and c.v >= 0.2 and c.s >= 0.35:
 					return c
 	return Color8(150, 60, 30)
+
+
+## Combed back: a darker stroke every few pixels, running toward the crown seen from the
+## front and behind, toward the back of the head seen from the side.
+static func _combed(img: Image, inside: Callable, fig: Looks.Fig, cx: float, top: float, back: float) -> void:
+	for y: int in fig.h:
+		for x: int in fig.w:
+			if not inside.call(x, y) or img.get_pixel(x, y).a < 0.5 or img.get_pixel(x, y) == INK:
+				continue
+			var stroke: bool
+			if back == 0.0:
+				var spread: float = (x - cx) / maxf((y - top) * 0.35 + 6.0, 1.0)
+				stroke = fposmod(spread * 4.0, 2.0) < 0.35
+			else:
+				stroke = (y - int(top) + int(x * 0.25 * back)) % 5 == 0
+			if stroke:
+				var c: Color = img.get_pixel(x, y)
+				img.set_pixel(x, y, Color.from_hsv(c.h, c.s, c.v * 0.62))
+
+
+## The cornrows' plaits: a dark notch across each row every few pixels along it.
+static func _cornrow_plaits(img: Image, inside: Callable, row_of: Callable, fig: Looks.Fig, back: float) -> void:
+	for y: int in fig.h:
+		for x: int in fig.w:
+			if not inside.call(x, y) or img.get_pixel(x, y).a < 0.5:
+				continue
+			var across: float = fposmod(row_of.call(x, y) + 3.0, 9.0)
+			var along: int = y if back == 0.0 else x
+			if (along + int(absf(across - 3.0))) % 5 == 0:
+				img.set_pixel(x, y, INK)
 
 
 ## The tie round a tail: two dark rows and leather between, across it.

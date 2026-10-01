@@ -2558,6 +2558,14 @@ correct before they go further.
 > Boards: `docs/frames/creation/hair_and_beards.png` (each style and beard, three facings)
 > and `docs/frames/creation/mixes.png` (eight players combining the choices).
 > `test_every_style_and_beard_is_drawn_where_it_shows`.
+>
+> **His answers, the same day:** short, shaved, the beards and the fringe validated; three
+> reworked. **Long** is in disorder now — locks of uneven length, an edge that comes and
+> goes. **Tied** pulls every hair back: close to the skull, the forehead bare under a clean
+> hairline, combed back with a darker stroke every few pixels, the tail behind. **Braided**
+> is cornrows (*« comme Allen Iverson »*): rows plaited flat to the skull from the hairline
+> to the nape with the scalp showing between them, a notch across each row every few
+> pixels, and the braids hanging from them. Both boards redrawn.
 
 ### A5 · The appearance in the simulation
 
