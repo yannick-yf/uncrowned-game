@@ -5,7 +5,13 @@ the player's appearance chosen at creation; **block 2**, an inventory with equip
 He asked to be advised on the game design as well as for a plan. This is the advice and
 the architecture; the tasks are groups **A** and **E** of `docs/DEMO_TASKS.md`.
 
-**Status: proposed, awaiting his go.** Nothing below is built.
+**Status: approved 2026-10-01.** Yannick answered every question by number: the options
+and their counts as proposed, the backpack stays the player's mark, two weapon slots and
+no gloves (*« plus tard on ajoutera plein d'armes »*), protection and weight as proposed,
+loot as proposed, the hair board before going further, Tab for the inventory. On where the
+first weapon comes from he offered two answers — Bram hands it over at the lesson, *or* a
+weapon lies to be picked up just past the fairy — and the second is taken, §4: a lesson can
+be refused, and a player who refuses it must not walk to the wolves with nothing.
 
 ---
 
@@ -133,7 +139,11 @@ combat numbers is a design of its own.
 ### Where things come from, in the demo
 
 - **At the start**: a cloth tunic and cloth trousers in the colour chosen at creation,
-  walking boots, a short sword — what the player already carries today, now as items.
+  and walking boots. **No weapon.**
+- **The first sword lies by the graves, just past the fairy** (Yannick, 2026-10-01): a
+  short sword on a fallen villager's grave, picked up with the key that picks anything up.
+  Bram's line points at it if you come to him without it. **Bare hands** strike for less
+  than a sword, so a player who walks past it is weaker, not stuck.
 - **Wren's bow**: given at the bow lesson as today, now an item in the bow slot.
 - **Loot — recommended**: a beaten fighter leaves **what you saw on him**. The works'
   guards: a leather cap, an ochre gambeson. Each king's guard, by a miracle: a helmet, a

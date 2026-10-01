@@ -2482,8 +2482,9 @@ nothing yet of the new art rule or of the looks. Republished at the same link.
 ## A — who you are: the appearance chosen at creation
 
 > **Asked 2026-10-01 (Yannick), before P2**, as part of the demo and its tutorial, with
-> group E. The design and the advice are `docs/CREATION_AND_GEAR.md`. **Proposed; waiting
-> for his go.** Block 1 is finished and the game launched before group E begins.
+> group E. The design and the advice are `docs/CREATION_AND_GEAR.md`. **Approved the same
+> day, question by question.** Block 1 is finished and the game launched before group E
+> begins.
 
 ### A1 · The options, settled on paper
 
@@ -2491,6 +2492,10 @@ Est. 1 h. `content/appearance.json`: six hair styles, eight hair colours, five s
 tones, four beards, six colours for the starting clothes, each with its recolouring
 numbers; the default is his traveller. **Check:** Yannick's answers to the questions in
 `docs/CREATION_AND_GEAR.md` written into it.
+
+> **Built 2026-10-01.** `content/appearance.json` holds the five lists and the default;
+> `docs/CREATION_AND_GEAR.md` records his eight answers, and the first weapon is a sword
+> to pick up past the fairy rather than Bram's to give (E1, E2).
 
 ### A2 · His traveller, split into layers
 
@@ -2546,14 +2551,14 @@ green; the game launches and plays from the title to the works.
 ### E1 · The items, settled on paper
 
 Est. 1 h. `content/items.json`: slot, protection, weight, weapon numbers, and the layer
-each item is drawn with. Cloth tunic and trousers (dyed), walking boots, short sword,
-Wren's bow; a leather cap and an ochre gambeson (the works' guards); a helmet, a
+each item is drawn with. Cloth tunic and trousers (dyed), walking boots, short sword (to
+pick up by the graves, past the fairy), bare hands' numbers, Wren's bow; a leather cap and an ochre gambeson (the works' guards); a helmet, a
 breastplate and leggings (the king's guards); a hood.
 
 ### E2 · The inventory in the simulation
 
 Est. 4 h. An `Inventory` store; `equip` and `unequip` events; `item_gained` derived from
-the start kit, from Wren's gift (the `you:the_bow` fact becomes the bow) and from a beaten
+the start kit, from the sword picked up by the graves, from Wren's gift (the `you:the_bow` fact becomes the bow) and from a beaten
 fighter's table. **Save version 5.** **Tests first:** a run replays to the same
 inventory; nothing equips into the wrong slot; nothing is equipped during a fight.
 
