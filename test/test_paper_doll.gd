@@ -233,7 +233,10 @@ func test_what_he_wears_fills_its_slot() -> void:
 	assert_false(fighting.has(&"back"), "and the bow put away")
 	var shooting: Dictionary = PaperDoll.slots_for(his, armed, DuelRules.BOW)
 	assert_eq(shooting[&"weapon"]["part"], &"item_sword_belt", "the sword back at the belt, shooting")
-	assert_eq(shooting[&"back"]["part"], &"item_bow", "and the bow in use")
+	assert_eq(shooting[&"back"]["part"], &"item_bow_hand", "and the bow in his hand, in use")
+	assert_eq(PaperDoll.slots_for(his, armed)[&"back"]["part"], &"item_bow", "walking, on his back (the review of group E)")
+	var with_fists: Dictionary = PaperDoll.slots_for(his, {ItemRules.BOW: &"hunting_bow"}, DuelRules.FISTS)
+	assert_eq(with_fists[&"back"]["part"], &"item_bow", "and fists leave it on his back")
 	var bare: Dictionary = PaperDoll.slots_for(his, {})
 	assert_eq(bare[&"tunic"]["part"], &"tunic", "with nothing on, his linen")
 	assert_true((bare[&"boots"]["recolour"] as Array).size() == 4, "and bare feet")
@@ -250,3 +253,22 @@ func test_a_mask_hides_the_head_under_a_helm() -> void:
 	for i: int in [2, 3, 4, 5, 8, 9, 10]:
 		assert_true(code.contains("c = doll_over(c, doll_l%d, doll_r%d, uv, false);" % [i, i]),
 			"slot %d does not" % i)
+
+
+
+func test_every_cut_but_his_wears_the_skin_without_his_fringe_s_shadow() -> void:
+	# The review of group E: his shading under the fringe read as an orange line across
+	# the forehead of every other cut. His own cut keeps his own skin, pixel for pixel.
+	var his: Dictionary = PaperDoll.default_appearance()
+	assert_eq(PaperDoll.slots_for(his)[&"skin"]["part"], &"skin", "his cut, his skin")
+	for style: StringName in AppearanceRules.options(&"hair_style"):
+		if style == &"spiky":
+			continue
+		var looks: Dictionary = his.duplicate()
+		looks[&"hair_style"] = style
+		assert_eq(PaperDoll.slots_for(looks)[&"skin"]["part"], PaperDoll.BARE_SKIN, "%s: the bare skin" % style)
+	var bare: Texture2D = PaperDoll.sheet(PaperDoll.BARE_SKIN)
+	var own: Texture2D = PaperDoll.sheet(&"skin")
+	assert_not_null(bare, "the bare skin is drawn — run tools/draw_player_layers.gd")
+	if bare != null and own != null:
+		assert_eq(bare.get_size(), own.get_size(), "the same sheet, his size")

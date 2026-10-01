@@ -383,14 +383,14 @@
       "zone": "overworld",
       "greeting": "I was out in the wood the day it happened. I came back to a village of ash. I have hit that post every morning since.",
       "alt_greetings": [
-        {"when": "called_out_unarmed", "text": "You! Coming up from the graveyard? Nobody has taken that path since the fire. And you carry no weapon. There is a sword on a grave, near the fairy: go and take it.", "_p2": "E6 draft (2026-10-01), for P2: the hail's first words to somebody who walked past the sword on the grave (CREATION_AND_GEAR.md section 4)"},
+        {"when": "called_out_unarmed", "text": "You! Coming up from the graveyard? Nobody has taken that path since the fire. And you have no sword. There is one on a grave, where you woke: go and take it.", "_p2": "E6 draft (2026-10-01), for P2: the hail's first words to somebody who walked past the sword on the grave (CREATION_AND_GEAR.md section 4)"},
         {"when": "called_out", "text": "You! Coming up from the graveyard? Nobody has taken that path since the fire. Let me look at you.", "_p2": "O16 draft, for Yannick to rewrite in O18: his first words when his hail opens the talk (condition called_out, read from the hail's phase)"},
         {"when": "just_failed_a_lesson", "text": "Not yet. Get your breath back, and we go again when you want.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after a lesson failed"},
         {"when": "just_passed_magic", "text": "I have nothing more to teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge. You know what to do now.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the farewell after the last lesson, pointing north with no marker (O19)"},
         {"when": "just_passed_bow_without_gift", "text": "Good. That is all I can teach you. The works are north: follow the road up and cross the river. Wolves keep the bridge.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after the bow, for somebody without the fairy's gift: the farewell"},
         {"when": "just_passed_bow", "text": "Good. You shot without letting me close. Now what the fairy gave you: show me.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
         {"when": "just_passed_sword", "text": "Good. You close before you strike, and that is all it takes. Now the bow: Wren lends you hers, and I come at you.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"},
-        {"when": "unarmed", "text": "No weapon? There is a sword on a grave in the graveyard, near the fairy. With your fists you hit for less.", "_p2": "E6 draft (2026-10-01), for P2: his everyday greeting to somebody who owns no weapon - last, so a lesson's end speaks first"}
+        {"when": "unarmed", "text": "No sword? There is one on a grave in the graveyard, where you woke. Bare-handed, you hit for less.", "_p2": "E6 draft (2026-10-01), for P2: his everyday greeting to somebody who owns no sword - last, so a lesson's end speaks first"}
       ],
       "options": [
         {

@@ -2626,7 +2626,7 @@ green; the game launches and plays from the title to the works.
 ## E — what you carry: inventory and equipment
 
 > Group A first (Yannick: *« termine le bloc 1 avant d'attaquer le bloc 2 »*). Design in
-> `docs/CREATION_AND_GEAR.md` §4. **Proposed; waiting for his go.**
+> `docs/CREATION_AND_GEAR.md` §4. **Approved and built, E1–E7 (2026-10-01).**
 
 ### E1 · The items, settled on paper
 
@@ -2749,6 +2749,32 @@ game launches and plays.
 
 Est. 3 h. The opening and the works in both languages; a fresh-eyes review walking
 creation → equipment in play; `CLAUDE.md`, V3 and `POUR_SLOSINIO.md`.
+
+> **Built 2026-10-01.** `tools/opening_frames.sh` now photographs **a made run**, as every
+> run is since creation — the start kit, no sword — and the frames past the graves carry the
+> sword picked up there (`UNCROWNED_GEAR` spends the find it came from, so it is not also
+> lying on its grave): thirty-seven frames a language, 0 script errors. A fresh-eyes review
+> walked creation to equipment in play and found sixteen things; fixed:
+> **loot went on mid-fight** — it now waits in the bag and goes on when the fight is over
+> (`Inventory.waiting`); **U from the fists** went to a sword he did not own, and the keys
+> offered *prendre l'épée* — now the bow and back to the fists, *ranger l'arc*;
+> **Enter down the look page** landed on *Au hasard* and threw the choices away — from the
+> last choice it goes to *Suivant*; **a bow taken off** could not be shot in its lesson —
+> the lesson puts it back on; **the gatekeeper left nothing** — loot is read by trade too;
+> **an orange line across the forehead** of every cut but his — his shading under the
+> fringe, now repainted in a second skin (`skin_bare`) worn with every other cut, his own
+> skin kept pixel for pixel; **the bow walked in his hand** — it is on his back
+> (`bow_on_back`), in his hand only in a fight, and fists leave it there; **the sword on the
+> grave** lay under a tuft — drawn at its tile's north edge, across the grave's earth
+> (`lies`); the inventory says a worn item's numbers, what a change does (*Protection
+> totale : 1, puis 2*), names in lower case mid-sentence, and Enter sounds a refusal;
+> the screen closes if a fight begins; Bram says *épée* and *là où tu t'es réveillé*;
+> *Fournie*, *Vert mousse*, *Calotte de cuir*, *Hairstyle*, *Random*; **the royal set**
+> takes a guard's 10 to 5, as the design said (the leggings are plate, 2). New tests for
+> each; the drills pass with fists, now in the suite. **Left to Yannick**: whether the
+> trousers take the clothes' colour, whether the player in the king's set should look like
+> a king's guard, and Force's *vous frappez fort* (P2). `docs/frames/creation/mixes.png` and
+> `docs/frames/gear/items.png` are redrawn from the game's own screens.
 
 ---
 

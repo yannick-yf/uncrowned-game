@@ -12,6 +12,9 @@ extends RefCounted
 var owned: Array[StringName] = []
 var equipped: Dictionary = {}
 var made: bool = false
+## Taken in a fight and not yet put on: worn when it is over, where the slot is still free.
+## A fight is turns, and a helmet that goes on mid-blow would make loot a move.
+var waiting: Array[StringName] = []
 
 
 func has(item: StringName) -> bool:
@@ -22,14 +25,29 @@ func in_slot(slot: StringName) -> StringName:
 	return equipped.get(slot, &"") as StringName
 
 
-## Taken into the bag; worn at once when its slot is free. False when already owned.
-func gain(item: StringName) -> bool:
+## Taken into the bag; worn at once when its slot is free, unless `wear` says not yet.
+## False when already owned.
+func gain(item: StringName, wear: bool = true) -> bool:
 	if not ItemRules.exists(item) or owned.has(item):
 		return false
 	owned.append(item)
-	if in_slot(ItemRules.slot_of(item)) == &"":
+	if not wear:
+		waiting.append(item)
+	elif in_slot(ItemRules.slot_of(item)) == &"":
 		equipped[ItemRules.slot_of(item)] = item
 	return true
+
+
+## What waited for the fight to end goes on where its slot is free, in the order it came.
+## The items put on.
+func wear_what_waited() -> Array[StringName]:
+	var worn: Array[StringName] = []
+	for item: StringName in waiting:
+		if in_slot(ItemRules.slot_of(item)) == &"":
+			equipped[ItemRules.slot_of(item)] = item
+			worn.append(item)
+	waiting.clear()
+	return worn
 
 
 func equip(item: StringName) -> bool:
@@ -75,4 +93,5 @@ func fingerprint() -> String:
 	var worn := PackedStringArray()
 	for slot: StringName in ItemRules.SLOTS:
 		worn.append("%s=%s" % [slot, in_slot(slot)])
-	return "%s|%s|%s" % [",".join(PackedStringArray(owned)), ";".join(worn), made]
+	return "%s|%s|%s|%s" % [",".join(PackedStringArray(owned)), ";".join(worn), made,
+		",".join(PackedStringArray(waiting))]

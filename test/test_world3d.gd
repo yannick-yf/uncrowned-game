@@ -130,6 +130,12 @@ func test_the_window_stands_on_his_ground() -> void:
 	# **The first sword lies on a grave** (group E), drawn until it is taken.
 	if window.figures_are_his():
 		assert_true(window.find_shown(&"graves_sword"), "the sword lies by the graves")
+		# Made by us, and in his paints only: his stone, his wood, his dark (the review of E).
+		var paints: Array[String] = window.find_paints(&"graves_sword")
+		assert_eq(paints.size(), 4, "blade, guard, grip and pommel")
+		for paint: String in paints:
+			assert_true(paint in [World3d.HIS_STONE_PAINT, World3d.HIS_WOOD_PAINT, World3d.WOLF_DARK],
+				"the lying sword wears his paint, not ours: %s" % paint)
 		sim.facts.add_source(&"found:graves_sword", &"debug")
 		window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
 			"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},

@@ -623,7 +623,10 @@ func test_what_the_bag_offers_says_what_it_would_replace() -> void:
 	screen.point(1, screen.carried().find(&"ochre_gambeson"))
 	var told: Array[String] = screen.about(&"ochre_gambeson")
 	assert_eq(told[0], Text.of(&"inventory.item_protection", [1]), "what it turns")
-	assert_eq(told[1], Text.of(&"inventory.replaces", [Text.of(&"item.cloth_tunic")]), "and what it takes the place of")
+	assert_eq(told[1], Text.of(&"inventory.replaces", [InventoryScreen.in_a_sentence(&"cloth_tunic")]), "and what it takes the place of")
+	assert_eq(told[2], Text.of(&"inventory.protection_then", [1, 2]), "and what it changes")
+	assert_true(InventoryScreen.in_a_sentence(&"short_sword").begins_with(Text.of(&"item.short_sword").left(1).to_lower()),
+		"a name in a sentence is not capitalised")
 	screen.act()
 	assert_eq((sim.store(&"inventory") as Inventory).in_slot(ItemRules.TORSO), &"ochre_gambeson", "worn")
 	assert_true(screen.carried().has(&"cloth_tunic"), "the tunic in the bag")
@@ -669,6 +672,8 @@ func test_every_line_of_the_inventory_fits_its_column() -> void:
 			assert_true(Ui.width_of(line, Ui.NOTE) <= InventoryScreen.SLOTS.size.x - 24.0,
 				"%s: '%s' fits under the slots" % [language, line])
 		assert_true(Ui.width_of(Text.of(&"inventory.help"), Ui.NOTE) <= 640.0 - 32.0, "%s: the keys fit the screen" % language)
+		for line: String in [Text.of(&"inventory.protection_then", [10, 10]), Text.of(&"inventory.blow_then", [10, 10])]:
+			assert_true(Ui.width_of(line, Ui.NOTE) <= InventoryScreen.BAG.size.x - 24.0, "%s: '%s' fits the bag" % [language, line])
 	Text.set_locale(was)
 
 
@@ -735,3 +740,42 @@ func _carried_news(sim: Sim) -> String:
 	var line: String = play.call(&"_just_gained") as String
 	play.free()
 	return line
+
+
+
+# ------------------------------------------------------------ the review of group E ---
+
+func test_u_with_fists_goes_to_the_bow_and_back_to_the_fists() -> void:
+	# The review: from the fists the first press went to a sword he did not own, and the
+	# keys offered « prendre l'épée ».
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
+	sim.advance(1)
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	play.set(&"_duel_weapon", DuelRules.FISTS)
+	play.call(&"_toggle_weapon")
+	assert_eq(play.get(&"_duel_weapon") as StringName, DuelRules.BOW, "fists to the bow at once")
+	play.call(&"_toggle_weapon")
+	assert_eq(play.get(&"_duel_weapon") as StringName, DuelRules.FISTS, "and back to the fists, not a sword")
+	var hud := FightHud.new()
+	hud.present({"on": true, "lens": 1.0, "my_weapon": "bow", "has_bow": true, "close_weapon": "fists"}, 0.016)
+	assert_true(hud.keys_line().contains(Text.of(&"duel.part.put_bow_away")), "the bow is put away, not swapped for a sword")
+	assert_false(hud.keys_line().contains(Text.of(&"duel.part.take_sword")), "no sword offered")
+	hud.free()
+	play.free()
+
+
+func test_enter_down_the_look_page_never_lands_on_random() -> void:
+	# The review: Enter on « Tenue » went to « Au hasard », and the next Enter threw away
+	# every choice made.
+	var creation: Node = _screen("res://view/creation.gd")
+	creation.call(&"_build")
+	var menu: Menu = creation.get(&"_look_menu") as Menu
+	menu.point_at(AppearanceRules.ALL[0])
+	for _press: int in AppearanceRules.ALL.size():
+		creation.call(&"_confirm", menu.chosen())
+	assert_eq(menu.chosen(), &"next", "Enter from the last choice goes to « Suivant »")
+	creation.free()

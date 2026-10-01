@@ -136,6 +136,7 @@ func act() -> bool:
 	var bag: Inventory = _bag()
 	if bag == null:
 		return false
+	var before: String = bag.fingerprint()
 	if _column == 0:
 		var slot: StringName = ItemRules.SLOTS[_slot_at]
 		if bag.in_slot(slot) == &"":
@@ -149,10 +150,12 @@ func act() -> bool:
 			return false
 		_sim.submit(&"equip", {"item": String(item)})
 	_sim.advance(1)
-	Sound.cue(&"accept")
+	# The simulation may have refused it: the sound says which.
+	var changed: bool = bag.fingerprint() != before
+	Sound.cue(&"accept" if changed else &"refused")
 	_bag_at = clampi(_bag_at, 0, maxi(carried().size() - 1, 0))
 	_dress()
-	return true
+	return changed
 
 
 ## Where the cursor is, for the suite and for a photograph: the column (0 worn, 1 bag)
@@ -228,6 +231,12 @@ func _draw_worn() -> void:
 	for i: int in lines.size():
 		Ui.write_over(self, Vector2(SLOTS.position.x + 12.0, top + 8.0 + float(i) * 15.0), lines[i],
 			Ui.NOTE, Ui.INK if i == 0 else Ui.DIM)
+	# The numbers of what is worn in the slot under the cursor.
+	var worn: StringName = bag.in_slot(ItemRules.SLOTS[_slot_at]) if bag != null and _column == 0 else &""
+	if worn != &"":
+		draw_line(Vector2(SLOTS.position.x + 10.0, SLOTS.end.y - 30.0), Vector2(SLOTS.end.x - 10.0, SLOTS.end.y - 30.0),
+			Color(0.75, 0.70, 0.55, 0.28), 1.0)
+		Ui.write_over(self, Vector2(SLOTS.position.x + 12.0, SLOTS.end.y - 14.0), describe(worn), Ui.NOTE, Ui.DIM)
 
 
 ## **What it adds up to**: the protection taken off every blow, whether he is weighed
@@ -244,11 +253,11 @@ func totals() -> Array[String]:
 	var held: StringName = bag.in_slot(ItemRules.WEAPON)
 	var with: String = Text.of(&"inventory.fists")
 	if held != &"":
-		with = Text.of(StringName("item.%s" % held))
+		with = in_a_sentence(held)
 	elif weapon != DuelRules.FISTS:
 		# A run never made at creation (the suite's, a scene opened alone) holds the
 		# sword it always had without carrying it.
-		with = Text.of(&"item.short_sword")
+		with = in_a_sentence(&"short_sword")
 	lines.append(Text.of(&"inventory.strikes", [with, DuelRules.damage_with(weapon)]))
 	return lines
 
@@ -277,11 +286,11 @@ func _draw_bag() -> void:
 	if item == &"":
 		return
 	var told: Array[String] = about(item)
-	draw_line(Vector2(BAG.position.x + 10.0, BAG.end.y - 46.0), Vector2(BAG.end.x - 10.0, BAG.end.y - 46.0),
+	draw_line(Vector2(BAG.position.x + 10.0, BAG.end.y - 60.0), Vector2(BAG.end.x - 10.0, BAG.end.y - 60.0),
 		Color(0.75, 0.70, 0.55, 0.28), 1.0)
 	for i: int in told.size():
-		Ui.write_over(self, Vector2(BAG.position.x + 12.0, BAG.end.y - 30.0 + float(i) * 14.0), told[i],
-			Ui.NOTE, Ui.DIM)
+		Ui.write_over(self, Vector2(BAG.position.x + 12.0, BAG.end.y - 44.0 + float(i) * 14.0), told[i],
+			Ui.NOTE, Ui.INK if i == told.size() - 1 and told.size() > 2 else Ui.DIM)
 
 
 ## A small triangle saying there is more of the bag above (-1) or below (1).
@@ -292,14 +301,37 @@ func _arrow(at: Vector2, way: float) -> void:
 
 
 ## **An item's numbers, in the screen's words**: what it protects or strikes for and
-## whether it is heavy, then what it would take the place of.
+## whether it is heavy, what it would take the place of, and **what changes** if it does —
+## the whole protection, or the blow (the design's "difference against what he wears").
 func about(item: StringName) -> Array[String]:
 	var out: Array[String] = [describe(item)]
 	var bag: Inventory = _bag()
-	var worn: StringName = bag.in_slot(ItemRules.slot_of(item)) if bag != null else &""
+	if bag == null:
+		return out
+	var slot: StringName = ItemRules.slot_of(item)
+	var worn: StringName = bag.in_slot(slot)
 	if worn != &"" and worn != item:
-		out.append(Text.of(&"inventory.replaces", [Text.of(StringName("item.%s" % worn))]))
+		out.append(Text.of(&"inventory.replaces", [in_a_sentence(worn)]))
+	var weapon: StringName = ItemRules.weapon_of(item)
+	if slot == ItemRules.WEAPON and weapon != &"":
+		var now: int = DuelRules.damage_with(bag.weapon_in_hand())
+		var then: int = DuelRules.damage_with(weapon)
+		if then != now:
+			out.append(Text.of(&"inventory.blow_then", [now, then]))
+	elif slot != ItemRules.BOW:
+		var dressed: Dictionary = bag.equipped.duplicate()
+		dressed[slot] = item
+		var now: int = bag.protection()
+		var then: int = ItemRules.protection(dressed)
+		if then != now:
+			out.append(Text.of(&"inventory.protection_then", [now, then]))
 	return out
+
+
+## An item's name inside a sentence: « (épée courte) », not « (Épée courte) ».
+static func in_a_sentence(item: StringName) -> String:
+	var name: String = Text.of(StringName("item.%s" % item))
+	return name.left(1).to_lower() + name.substr(1)
 
 
 static func describe(item: StringName) -> String:

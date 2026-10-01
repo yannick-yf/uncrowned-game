@@ -127,9 +127,9 @@ func test_armour_takes_its_share_and_weight_its_tile() -> void:
 	assert_eq(ItemRules.after_armour(3, 9), 1, "never below one")
 	var plate: Dictionary = {ItemRules.HEAD: &"royal_helm", ItemRules.TORSO: &"royal_breastplate",
 		ItemRules.LEGS: &"royal_leggings"}
-	assert_eq(ItemRules.protection(plate), 4, "the royal set turns four points of every blow")
-	assert_eq(ItemRules.after_armour(DuelRules.damage_of(&"kings_guard", DuelRules.SWORD), ItemRules.protection(plate)), 6,
-		"a king's guard's ten is six through it")
+	assert_eq(ItemRules.protection(plate), 5, "the royal set turns five points of every blow")
+	assert_eq(ItemRules.after_armour(DuelRules.damage_of(&"kings_guard", DuelRules.SWORD), ItemRules.protection(plate)), 5,
+		"a king's guard's ten is five through it, as the design says (CREATION_AND_GEAR.md section 4)")
 	assert_eq(ItemRules.tiles_with(plate, DuelRules.tiles_per_turn()), DuelRules.tiles_per_turn() - 1,
 		"and three heavy pieces cost a tile a turn")
 	assert_eq(ItemRules.tiles_with({ItemRules.HEAD: &"royal_helm"}, DuelRules.tiles_per_turn()), DuelRules.tiles_per_turn(),
@@ -154,7 +154,7 @@ func test_a_blow_on_the_player_goes_through_his_armour() -> void:
 		sim.submit(&"equip", {"item": item})
 		sim.advance(1)
 	var armour: int = _bag(sim).protection()
-	assert_eq(armour, 4, "helm, breastplate and leggings")
+	assert_eq(armour, 5, "helm, breastplate and leggings")
 	sim.submit(&"duel_began", {"opponent": "harry", "by": "harry"})
 	sim.advance(1)
 	var landed: Array[int] = []
@@ -234,3 +234,75 @@ func test_a_lesson_s_end_speaks_before_the_sword() -> void:
 	var bram: Npc = Cast.shared().get_npc(&"bram")
 	var conditions: Dictionary = {&"unarmed": true, &"just_passed_sword": true}
 	assert_eq(bram.alt_greeting_for(conditions), bram.alt_greeting_for({&"just_passed_sword": true}), "the lesson first")
+
+
+# ------------------------------------------------------------ the review of group E ---
+
+func test_loot_taken_in_a_fight_goes_on_when_it_is_over() -> void:
+	# The review: felling the swordsman put his cap on the player while the archers still
+	# shot — protection changed mid-fight, which equipping is refused for.
+	var sim: Sim = _made()
+	sim.submit(&"duel_began", {"opponents": ["works_guard", "works_archer"], "by": "works_guard"})
+	sim.advance(1)
+	sim.submit(&"duel_down", {"who": "works_guard"})
+	sim.advance(1)
+	assert_true(_bag(sim).has(&"leather_cap"), "the cap taken")
+	assert_eq(_bag(sim).in_slot(ItemRules.HEAD), &"", "but not on while the fight goes on")
+	assert_eq(_bag(sim).protection(), 0, "nor counted")
+	sim.submit(&"duel_ended", {"how": "won"})
+	sim.advance(1)
+	assert_eq(_bag(sim).in_slot(ItemRules.HEAD), &"leather_cap", "on, once it is over")
+	assert_eq(_bag(sim).in_slot(ItemRules.TORSO), &"cloth_tunic", "the gambeson stays in the bag over the tunic")
+	assert_true(_bag(sim).waiting.is_empty(), "nothing left waiting")
+	assert_eq(_bag(Game.replay(sim)).fingerprint(), _bag(sim).fingerprint(), "and it replays")
+
+
+func test_the_gatekeeper_leaves_what_he_wore() -> void:
+	# The review: he wears the works' guards' look and left nothing, read by his placing.
+	var sim: Sim = _made()
+	sim.submit(&"duel_down", {"who": "gatekeeper@1"})
+	sim.advance(1)
+	assert_true(_bag(sim).has(&"leather_cap"), "his cap")
+	assert_true(_bag(sim).has(&"ochre_gambeson"), "and his gambeson")
+
+
+func test_the_bow_lesson_puts_a_bow_taken_off_back_in_its_place() -> void:
+	# The review: a bow taken off before trying the lesson again could never be shot.
+	var sim: Sim = _made()
+	sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
+	sim.submit(&"tick_noop", {})
+	sim.advance(1)
+	sim.submit(&"unequip", {"slot": "bow"})
+	sim.advance(1)
+	assert_false(_bag(sim).has_bow(), "taken off")
+	sim.submit(&"duel_began", {"opponent": "bram", "by": "bram", "spar": true, "drill": "bow"})
+	sim.advance(1)
+	assert_true(_bag(sim).has_bow(), "the lesson puts it back on")
+
+
+func test_every_lesson_passes_with_the_start_kit() -> void:
+	# The design: a player who walked past the sword is weaker, not stuck. Every drill
+	# test elsewhere runs on a bare run, which has the sword; this one has fists.
+	for drill: String in ["sword", "bow", "magic"]:
+		var sim: Sim = _made()
+		assert_eq(_bag(sim).weapon_in_hand(), DuelRules.FISTS, "%s: fists" % drill)
+		if drill == "magic":
+			sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+		if drill == "bow":
+			sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
+		var master: StringName = DuelRules.drill_master(StringName(drill))
+		var world := sim.store(&"world") as WorldState
+		world.player_pos = (sim.store(&"cast") as Cast).get_npc(master).centre() + Vector2(0.0, 2.0)
+		sim.submit(&"duel_began", {"opponent": String(DuelRules.drill_first(StringName(drill))),
+			"by": String(DuelRules.drill_first(StringName(drill))), "spar": true, "drill": drill})
+		sim.advance(1)
+		var hands := DuelPlayer.new(DuelPlayer.CAST if drill == "magic" else (DuelPlayer.BOW if drill == "bow" else DuelPlayer.PRESS))
+		var duel := sim.store(&"duel") as Duel
+		for _step: int in 30000:
+			if not duel.on():
+				break
+			hands.play(sim, duel)
+			sim.advance(1)
+		# The lesson's end is written the step after the fight goes off.
+		sim.advance(5)
+		assert_true(sim.facts.has(StringName("drilled:%s" % drill)), "%s: passed with the start kit" % drill)

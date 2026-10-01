@@ -151,6 +151,7 @@ static func split_cell(sheet: Image, cell: Dictionary) -> Dictionary:
 ## masks (E4).
 static func all_parts() -> Array[StringName]:
 	var out: Array[StringName] = PaperDoll.HIS_PARTS + PaperDoll.STYLE_PARTS
+	out.append(PaperDoll.BARE_SKIN)
 	var items: Dictionary = item_layers()
 	for layer: StringName in items.keys():
 		out.append(layer)
@@ -225,7 +226,22 @@ static func _split(fig: Looks.Fig) -> Dictionary:
 			(parts[part] as Image).set_pixel(x, y, fig.colour(x, y))
 			if part == &"hair_spiky":
 				hair[y * fig.w + x] = 1
+	# **Bare skin, for every cut but his** (the review of group E): his face is shaded
+	# darker where his fringe falls on it, and its warm rim runs along the fringe's edge.
+	# Under his own hair that is the shadow of his hair; under a shorter cut it read as an
+	# orange line across the forehead and down the cheeks. A second skin, worn with every
+	# other style, gives what lies within two pixels of his hair to the head painted under
+	# it — and his own skin, worn with his own hair, stays his, pixel for pixel.
+	var bare: Image = (parts[&"skin"] as Image).duplicate() as Image
+	var shaded := hair.duplicate()
+	for y: int in fig.neck:
+		for x: int in fig.w:
+			var i: int = y * fig.w + x
+			if hair[i] == 0 and bare.get_pixel(x, y).a > 0.0 and _near(fig, x, y, Looks.K.HAIR, 2):
+				shaded[i] = 1
 	_skull(fig, hair, parts[&"skin"] as Image)
+	_skull(fig, shaded, bare)
+	parts[PaperDoll.BARE_SKIN] = bare
 	_styles(fig, parts)
 	return parts
 

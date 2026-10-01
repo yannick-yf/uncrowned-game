@@ -159,8 +159,10 @@ static func load_from(path: String) -> Places:
 		places._campfires.append(_anchor(entry))
 	for entry: Variant in (root.get("finds", []) as Array):
 		var found: Dictionary = entry as Dictionary
+		var lies: Array = found.get("lies", [0.0, 0.0]) as Array
 		places._finds.append({"id": StringName(String(found.get("id", ""))),
-			"item": StringName(String(found.get("item", ""))), "anchor": _anchor(entry)})
+			"item": StringName(String(found.get("item", ""))), "anchor": _anchor(entry),
+			"lies": Vector2(float(lies[0]), float(lies[1]))})
 	for entry: Variant in (root.get("hails", []) as Array):
 		var row: Dictionary = entry as Dictionary
 		places._hails.append({"who": StringName(String(row.get("who", ""))),

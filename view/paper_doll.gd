@@ -34,6 +34,11 @@ const STYLE_PARTS: Array[StringName] = [
 ]
 
 
+## **His skin without the shadow of his fringe** (the review of group E): worn with every
+## cut but his own, under which his shading read as an orange line across the forehead.
+const BARE_SKIN: StringName = &"skin_bare"
+
+
 static func sheet_path(part: StringName) -> String:
 	return DIR + String(part) + ".png"
 
@@ -100,6 +105,8 @@ static func slots_for(appearance: Dictionary, worn: Variant = null, in_hand: Str
 	if sheet(hair) == null:
 		hair = &"hair_spiky"
 	slots[&"hair"] = {"part": hair, "recolour": hair_colour}
+	if hair != &"hair_spiky" and sheet(BARE_SKIN) != null:
+		slots[&"skin"] = {"part": BARE_SKIN, "recolour": skin}
 	var beard := StringName("beard_" + String(appearance.get(&"beard", &"none")))
 	if sheet(beard) != null:
 		slots[&"beard"] = {"part": beard, "recolour": hair_colour}
@@ -132,8 +139,8 @@ static func _wear(slots: Dictionary, worn: Dictionary, in_hand: StringName, clot
 		var layer: String = String(row.get("layer", ""))
 		if in_hand != &"" and ItemRules.weapon_of(item) == in_hand:
 			layer = String(row.get("fighting_layer", layer))
-		elif in_hand != &"" and slot == ItemRules.BOW:
-			# A sword out, the bow is put away.
+		elif in_hand == DuelRules.SWORD and slot == ItemRules.BOW:
+			# A sword out, the bow is put away; fists leave it where it was (the review of E).
 			slots.erase(drawn)
 			continue
 		slots[drawn] = {"part": StringName(layer), "recolour": _named_recolour(row.get("recolour", []), clothes, skin)}

@@ -482,6 +482,8 @@ func _duel_frame() -> Dictionary:
 		"reach_at": Vector2(_duel_cursor) + Vector2(0.5, 0.5) if choosing else _duel.drawn_at(acting if acting != null else mine),
 		"my_weapon": String(held),
 		"has_bow": _has_bow(),
+		# What U puts back in his hands from the bow: the sword, or his fists (E).
+		"close_weapon": String(_close_weapon()),
 		# For the lesson's steps and hint (T8): whether you are choosing your turn, and how
 		# far the nearest foe is from the tile you chose — or from you, off your turn.
 		"choosing": choosing,
@@ -983,8 +985,10 @@ func _process(delta: float) -> void:
 			return
 	elif _inventory != null:
 		# The world waits, as it does for the pause menu; the screen answers its own
-		# changes on the spot (`InventoryScreen.act`). Escape and Tab close it.
-		if _inventory.read_input():
+		# changes on the spot (`InventoryScreen.act`). Escape and Tab close it — and so
+		# does a fight the step it answers on began (a pack beside you), or the screen
+		# would stand over a fight in which nothing it offers can be done.
+		if (_duel != null and _duel.on()) or _inventory.read_input():
 			_close_inventory()
 	else:
 		_read_input()
@@ -1356,7 +1360,7 @@ func _read_duel_input() -> void:
 	if not _duel_cursor_set:
 		_duel_cursor = mine.at
 		_duel_cursor_set = true
-		_duel_weapon = mine.weapon if _has_bow() else DuelRules.SWORD
+		_duel_weapon = mine.weapon if _has_bow() else _close_weapon()
 	var dir: Vector2i = _read_direction_pressed()
 	if dir != Vector2i.ZERO:
 		var wanted: Vector2i = _duel_cursor + dir
@@ -1386,12 +1390,19 @@ func _has_bow() -> bool:
 	return inventory != null and inventory.has_bow()
 
 
-## The sword for the bow and back — and only the sword for somebody who has no bow.
+## What he strikes with when it is not the bow: his sword, or his fists without one (E).
+func _close_weapon() -> StringName:
+	var inventory := _sim.store(&"inventory") as Inventory
+	return inventory.weapon_in_hand() if inventory != null else DuelRules.SWORD
+
+
+## The bow and back to what he holds — the sword, or his fists (the review of group E: from
+## the fists, the first press went to a sword he did not own) — and only that without a bow.
 func _toggle_weapon() -> void:
 	if not _has_bow():
-		_duel_weapon = DuelRules.SWORD
+		_duel_weapon = _close_weapon()
 		return
-	_duel_weapon = DuelRules.BOW if _duel_weapon == DuelRules.SWORD else DuelRules.SWORD
+	_duel_weapon = DuelRules.BOW if _duel_weapon != DuelRules.BOW else _close_weapon()
 
 
 ## **The turn, taken**: where you stand, what you do there, and with what. K strikes, with
@@ -2407,6 +2418,10 @@ func gained_lately() -> Array[String]:
 		elif event.type == &"duel_began" and in_fight:
 			break
 		elif event.type == &"item_gained" and String(event.data.get("from", "")) != "start":
+			# A fight's batch is what its fallen left; Wren's bow, handed over as her lesson
+			# begins, is not news an hour of arrows later.
+			if in_fight and String(event.data.get("from", "")) in ["given", "find"]:
+				continue
 			items.push_front(String(event.data.get("item", "")))
 	return items
 

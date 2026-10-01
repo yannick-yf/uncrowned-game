@@ -231,7 +231,10 @@ func _hint_of(reading: Dictionary) -> StringName:
 	match drill:
 		"bow":
 			if not bow:
-				return &"drill.hint.take_bow" if bool(reading.get("has_bow", false)) else &""
+				if not bool(reading.get("has_bow", false)):
+					return &""
+				return &"drill.hint.take_bow_fists" if String(reading.get("close_weapon", "")) == String(DuelRules.FISTS) \
+					else &"drill.hint.take_bow"
 			if apart < DuelRules.bow_min_tiles():
 				return &"drill.hint.bow_too_close"
 			if apart > DuelRules.bow_reach_tiles():
@@ -462,7 +465,9 @@ func keys_line() -> String:
 	var parts: Array[String] = [Text.of(&"duel.part.move"),
 		Text.of(&"duel.part.shoot" if bow else &"duel.part.strike")]
 	if bool(_reading.get("has_bow", false)):
-		parts.append(Text.of(&"duel.part.take_sword" if bow else &"duel.part.take_bow"))
+		var fists: bool = String(_reading.get("close_weapon", "")) == String(DuelRules.FISTS)
+		parts.append(Text.of(&"duel.part.take_bow" if not bow
+			else (&"duel.part.put_bow_away" if fists else &"duel.part.take_sword")))
 	if bool(_reading.get("can_cast", false)):
 		parts.append(Text.of(&"duel.part.spell"))
 	parts.append(Text.of(&"duel.part.wait"))

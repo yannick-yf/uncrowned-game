@@ -212,8 +212,12 @@ func _confirm(row: StringName) -> void:
 		_:
 			if _page == LOOK and AppearanceRules.ALL.has(row):
 				# Enter on a choice moves on to the next one, so a player can walk down the
-				# list with one key.
-				_look_menu.move(1)
+				# list with one key — and from the last, past « Au hasard » to « Suivant »:
+				# two presses on it threw away every choice made (the review of group E).
+				if row == AppearanceRules.ALL[AppearanceRules.ALL.size() - 1]:
+					_look_menu.point_at(&"next")
+				else:
+					_look_menu.move(1)
 				Sound.cue(&"move")
 
 

@@ -178,8 +178,19 @@ below with the fourth.
    values of his brush scaled, not replaced, so the shape of his shading stays; what he never drew (a helm, a cap, a hood, a hat, an apron,
    a beard, a sword, a bow) is painted over him in his manner and measured on each frame.
    The recipes and who wears which are `content/looks.json`, read by `view/cast_looks.gd`.
-   **The player stays exactly as he drew him.** Yannick chose every look from
+   The player stayed exactly as he drew him, until group A. Yannick chose every look from
    `docs/frames/cast/L1_proposals.png`.
+5. **The player's layers** (2026-10-01, groups A and E). His traveller split by
+   `tools/draw_player_layers.gd` into body, skin, hair, tunic, trousers, boots and pack —
+   **his pixels, cut apart, not redrawn** — plus what he never drew: a head under his hair,
+   five hair styles and three beards painted from his own hair's texture, and the items
+   (a sword at the belt and in the hand, a bow, the works' guards' cap, the king's guards'
+   helm and breastplate), each baked from the very piece group L dresses the cast in, a
+   helm's hiding of the hair kept as a mask, and a second skin (`skin_bare`) without the
+   shadow his fringe casts, for every cut but his. `view3d/layers/`, stacked and coloured
+   live by the paper-doll shader; his traveller is the default look, exactly. And **the
+   sword lying on a grave** (`_lying_sword()` in `view/world3d.gd`), four boxes in his stone,
+   wood and dark paints — `test_world3d` fails on any other.
 
 The sheets are **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
@@ -222,9 +233,10 @@ prototypes/  The Brindle 3D workshop: a separate Godot project, kept out of the 
            import by `.gdignore`. His; open its own `project.godot`. Never edited by us.
 view3d/workshop/  A generated copy of his project with its paths repointed, so his
            scenes load in ours (tools/vendor_workshop.sh). Never committed, never edited.
-view3d/fight/, view3d/cast/  His traveller's sheet with our fight frames, and one sheet per
-           look of the cast — ours, made by tools/draw_fight_frames.gd and
-           tools/draw_cast_looks.gd (see *Art rule*). Committed; re-run the tool, never edit.
+view3d/fight/, view3d/cast/, view3d/layers/  His traveller's sheet with our fight frames, one
+           sheet per look of the cast, and the player's layers — ours, made by
+           tools/draw_fight_frames.gd, tools/draw_cast_looks.gd and tools/draw_player_layers.gd
+           (see *Art rule*). Committed; re-run the tool, never edit.
 ```
 
 ## Commands
@@ -532,8 +544,8 @@ first, so the screen name may carry the page after a colon — `journal:standing
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
 **`tools/opening_frames.sh [out_dir] [languages…]`** (2026-09-29, O21) photographs the
-opening for a review: thirty-four frames a language, from the title to the fight at the works' gate,
-the inventory and the equipment in play (`ONLY=<regex>` takes only the frames whose name matches),
+opening for a review: thirty-seven frames a language, on a made run, from the title to the fight at
+the works' gate, the inventory and the equipment in play (`ONLY=<regex>` takes only the frames whose name matches),
 through the tools above, with one line per frame giving its count of `SCRIPT ERROR`s — 0,
 and then look at them. A shot plays the run on disk and the language is a setting on
 disk, so it moves the player's `save.json` aside (every frame is then a fresh run) and
@@ -556,7 +568,8 @@ creation's second page.
 **`UNCROWNED_GEAR=royal_helm,short_sword`** (2026-10-01, E4) puts items in the player's
 bag and on him for a photograph — the run a shot carrying `UNCROWNED_LOOK` or `_GEAR`
 starts is made, so it begins with the start kit and no sword. Each is put on as it comes,
-so an item listed after another of its slot puts the first back in the bag.
+so an item listed after another of its slot puts the first back in the bag; a find whose
+item he now carries is spent, so the sword is not also lying on its grave.
 `UNCROWNED_SCREEN=inventory[:bag]` opens the inventory (Tab), the cursor in the bag after
 the colon. Written straight into the
 store, like `UNCROWNED_TOWN`: one frame for one photograph, not a save-able state.
@@ -614,7 +627,7 @@ player is shaped like a town — an allégeance he chooses, a standing per town 
 only with witnessed deeds, and a richesse that is gold. **The town is the unit of
 account**: a theft moves the town it happened in and not the person it happened to.
 
-### Where the work actually stands — 2026-09-30
+### Where the work actually stands — 2026-10-01
 
 The task list is the record; this is the short version, because a session that has to
 reconstruct it from forty commits will get it wrong.
@@ -629,9 +642,9 @@ reconstruct it from forty commits will get it wrong.
 | **O** | **Built, O1–O22** (2026-09-29): the cemetery south of Brindle, Bram's hail, three drills (sword, bow with Wren, the fairy's gift) in which nobody falls, then the words. Yannick validated the drafted lines (O18–O19) *for now*, French and English; O21's route review is done and its findings fixed. `docs/V3.md` *The opening, redone* is the short version. **He played it the same evening**: the combat tutorial is the one finding — group T |
 | **T** | **Built, T1–T10** (2026-09-29/30), from Yannick's first play of the opening: his rulings written down, the clearing out, a page of tasks for his brother (`docs/TACHES_POUR_SLOSINIO.md`), the fast suite profiled (41 s to about 25), **the bow redone** — an arrow lands when it is shot, Bram's line hands you a bow, **U** changes the weapon in your hands — every lesson's card with **its steps and keys and a hint for where you stand** (and the first round's HUD, which drew no keys, fixed), and **the gatekeeper's guards, who keep coming**: that fight cannot be won, and the gate stays manned and shut. A fresh-eyes review walked it; its seven findings are fixed. **The check is Yannick playing the tutorial again** |
 | **V** | **Built, V0–V6** (2026-09-30): Yannick's revision of the gate — three very strong king's guards (40 points, blows of 10) answer an attack; beating the four forces the gate, open and empty; then the furnaces are the player's — putting one out brings the quest's guards, a sword and two bows, easy (V6), lighting one brings Tom. A review walked it and its five findings are fixed. **The check is Yannick playing it, with G** |
-| **L** | **The work now** (2026-09-30): every type of person told apart at a glance — the king's guards heavy, the quest's guards light, workers, villagers, Bram and Wren. **L1 built**: the tool (`tools/draw_cast_looks.gd`), the recipes (`content/looks.json`), thirteen looks Yannick chose from a board, and **the art rule rewritten the same day** — we may draw what the game needs, coherent with his brother's hand. **L2 built**: every figure the window makes wears its type's look, the player none. **L3–L8 built**: each type checked in play, the opening photographed in both languages, a fresh-eyes review walked it and its findings are fixed. **L9–L11 built**, from Yannick's answers: the king's guards armed, Bram and the watch draw their swords in a fight, Harry has a look of his own, his brother's task page republished. **The king's own look is a task for later.** **P2 comes after L** |
+| **L** | **Built, L1–L11** (2026-09-30): every type of person told apart at a glance — the king's guards heavy and armed, the quest's guards light, workers, Harry, villagers, Bram and Wren — by `tools/draw_cast_looks.gd` and `content/looks.json`, thirteen looks Yannick chose from a board; **the art rule rewritten the same day** — we may draw what the game needs, coherent with his brother's hand. Reviewed, findings fixed, his brother's task page republished. **The king's own look is a task for later** |
 | **A** | **Built, A1–A7** (2026-10-01): **who you are** — the player's appearance chosen at creation (six hair styles, eight colours, five skins, four beards, six colours of clothes), drawn in layers: his traveller split by `tools/draw_player_layers.gd`, stacked and coloured live by the paper-doll shader (`view3d/layers/`, `view/paper_doll.gd`), the same drawing on the two-page creation screen and in the world. Design and Yannick's answers: `docs/CREATION_AND_GEAR.md` |
-| **E** | **Next**: **what you carry** — inventory and equipment slots on the same layers, the first sword picked up by the graves. Then P2 |
+| **E** | **Built, E1–E7** (2026-10-01): **what you carry** — six slots on the same layers, ten items drawn from group L's pieces (`content/items.json`), the start kit and no weapon, **the first sword on a grave** two tiles from where you wake, fists for less without it, Wren's bow an item, a beaten fighter leaving what he wore; armour's protection off every blow and weight a tile a turn (save version 5); **Tab** opens the inventory over a stopped world. A fresh-eyes review walked creation to equipment in play. **Yannick has not yet seen the reworked long, tied and braided hair.** **P2 is next**, with Yannick |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

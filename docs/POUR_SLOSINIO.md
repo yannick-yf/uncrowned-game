@@ -535,7 +535,7 @@ bleue, sac à dos. Dans un combat, on voyait six fois le même homme. Yannick a 
 chaque type de personnage se reconnaisse du premier coup d'œil. On a donc **habillé ton
 voyageur, sans le redessiner** : la couleur des cheveux et des vêtements change, mais la
 forme de tes ombres est gardée. Par-dessus, on dessine ce que tu n'as pas fait : un casque,
-un bonnet, une capuche, un chapeau de paille, un tablier, une barbe, une épée, un arc.
+une calotte, une capuche, un chapeau de paille, un tablier, une barbe, une épée, un arc.
 
 Il y a quatorze tenues :
 
@@ -545,7 +545,7 @@ Il y a quatorze tenues :
 - **les soldats du roi** (le garde du pont, les sentinelles) : rouge du roi, mais en
   tissu, avec une calotte de fer et une épée à la ceinture, qu'ils sortent pour se
   battre ;
-- **les gardes et les archers de l'usine** : ocre, la couleur de l'usine, un bonnet de
+- **les gardes et les archers de l'usine** : ocre, la couleur de l'usine, une calotte de
   cuir, une épée ou un arc à la main ;
 - **trois ouvriers** : vêtements sombres, tablier de cuir, gants, foulard ;
 - **Harry, le contremaître** : un manteau de la couleur de l'usine, plus sombre, sans
@@ -557,8 +557,9 @@ Il y a quatorze tenues :
 - **Wren** : capuche verte, un arc et un carquois. De face, elle tient l'arc à la main ;
   de profil, il est dans son dos, pour ne pas passer devant son visage.
 
-**Le joueur reste ton voyageur, exactement.** La planche est dans
-`docs/frames/cast/looks.png`, et l'outil qui les fabrique est `tools/draw_cast_looks.gd`.
+**Le joueur reste ton voyageur, exactement** (jusqu'au 1er octobre : voir le §16). La
+planche est dans `docs/frames/cast/looks.png`, et l'outil qui les fabrique est
+`tools/draw_cast_looks.gd`.
 
 **Ce qui est à nous sur ton voyageur**, pour que tu le voies d'un coup d'œil : les
 couleurs des tenues, et les pièces dessinées par-dessus. Un casque, une capuche ou un
@@ -573,3 +574,45 @@ quatre directions. D'abord un garde du roi, un garde de l'usine, un ouvrier, un
 villageois, Bram et Wren. Ta liste de tâches
 (`docs/TACHES_POUR_SLOSINIO.md`, §2) le reprend. Le jour où tu en livres un, on choisit
 ensemble lequel garder.
+
+## 16. Le joueur se choisit, et il s'équipe (2026-10-01)
+
+Avant la relecture des textes, Yannick a demandé deux choses pour la démo : **choisir
+l'apparence du joueur** à la création du personnage, et **un inventaire** avec de
+l'équipement qu'on voit sur lui.
+
+**Ton voyageur est toujours le joueur par défaut, exactement.** Mais on l'a **découpé en
+calques** : le corps, la peau, les cheveux, la tunique, le pantalon, les bottes et le sac
+à dos. Un calque est une image à part, posée sur les autres. Un shader les empile et les
+colore pendant le jeu. C'est le même dessin sur l'écran de création, dans le monde et
+pendant un combat. L'outil est `tools/draw_player_layers.gd`, et les calques sont dans
+`view3d/layers/`.
+
+**Ce qu'on a peint nous-mêmes, sur ton voyageur :**
+
+- une tête sous tes cheveux, là où on ne la voyait jamais (pour le crâne rasé) ;
+- cinq coiffures (courte, longue, attachée, tressée, rasée) et trois barbes, peintes
+  avec la texture de tes propres cheveux ;
+- des pièces d'équipement, prises sur les tenues du §15 : une épée à la ceinture et à la
+  main, un arc, la calotte de cuir des gardes de l'usine, le heaume et la cuirasse des
+  gardes du roi. Un casque cache les cheveux avec un masque : une image qui dit où les
+  cheveux ne doivent pas se voir.
+
+Le joueur choisit sa coiffure, la couleur de ses cheveux, sa peau, sa barbe et la couleur
+de ses vêtements. Il commence en tunique et pantalon de toile. **La première épée est
+posée sur une tombe**, juste après la fée. Un garde battu laisse ce qu'il portait.
+
+**Une épée posée sur une tombe**, en 3D : quatre blocs (lame, garde, poignée, pommeau),
+peints seulement avec ta roche, ton bois et ton sombre. Un test le vérifie.
+
+**Ce qui reste à toi :** tes animations, ton contour, la forme de tes ombres, ton visage.
+Une seule retouche : sous tes cheveux, ton visage est plus sombre là où tombe la frange.
+Avec une autre coiffure, cette ombre faisait un trait orange sur le front. On utilise donc
+une deuxième peau, sans cette ombre, pour toutes les coiffures sauf la tienne. Avec tes
+cheveux, ta peau reste exactement la tienne.
+On n'a rien redessiné de tout ça : on a découpé et recoloré.
+
+**Ce que tu pourrais dessiner à la place**, si tu veux : des coiffures, des barbes et des
+pièces d'équipement dans ton style, chacune comme un calque à part, au repos, en marche
+et au combat, dans les quatre directions. Les planches sont dans
+`docs/frames/creation/` et `docs/frames/gear/`.

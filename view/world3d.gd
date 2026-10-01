@@ -1851,7 +1851,22 @@ func _sync_finds() -> void:
 		if piece != null:
 			piece.visible = not taken
 			var at: Vector2i = _region.resolve(find["anchor"] as Dictionary)
-			piece.position = _feet_of(Vector2(at) + Vector2(0.5, 0.5)) + Vector3.UP * 0.03
+			# Drawn where in its tile the content says it lies (`lies`), on the ground there.
+			piece.position = _feet_of(Vector2(at) + Vector2(0.5, 0.5) + (find.get("lies", Vector2.ZERO) as Vector2)) \
+				+ Vector3.UP * 0.06
+
+
+## The paints a find is drawn in, for the suite: his, and nothing else (the review of E).
+func find_paints(id: StringName) -> Array[String]:
+	var out: Array[String] = []
+	var piece: Node3D = _finds.get(id, null) as Node3D
+	if piece == null:
+		return out
+	for part: Node in piece.get_children():
+		var mesh := part as MeshInstance3D
+		if mesh != null:
+			out.append(mesh.material_override.resource_path if mesh.material_override != null else "")
+	return out
 
 
 ## Whether a find is drawn in the world, for the suite.

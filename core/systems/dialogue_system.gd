@@ -36,9 +36,9 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 	var speaker: StringName = StringName(String(event.data.get("npc", ""))) \
 		if event.type == &"talk" else world.talking_to
 	conditions[&"called_out"] = hail != null and hail.called_out(speaker)
-	# **Empty-handed** (E6): a character made at creation who owns no weapon walked past
-	# the sword on the grave, and Bram says where it lies. Owns, not holds: a sword put
-	# away in the bag is not lying on a grave.
+	# **Empty-handed** (E6): a character made at creation who owns nothing for the weapon's
+	# slot walked past the sword on the grave, and Bram says where it lies. Owns, not holds:
+	# a sword put away in the bag is not lying on a grave. Wren's bow is not a sword.
 	var bag := sim.store(&"inventory") as Inventory
 	var unarmed: bool = bag != null and bag.made and not bag.owns_a_weapon()
 	conditions[&"unarmed"] = unarmed

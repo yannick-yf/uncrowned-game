@@ -53,11 +53,16 @@ func on_event(sim: Sim, event: SimEvent) -> void:
 			_pick_up(sim, inventory, StringName(String(event.data.get("find", ""))))
 		&"duel_down":
 			_loot(sim, inventory, StringName(String(event.data.get("who", ""))))
+		&"duel_began":
+			_ready_the_bow(sim, inventory, String(event.data.get("drill", "")))
+		&"duel_ended":
+			for item: StringName in inventory.wear_what_waited():
+				sim.derive(&"equipped", {"item": String(item), "slot": String(ItemRules.slot_of(item))})
 	_granted(sim, inventory)
 
 
-func _give(sim: Sim, inventory: Inventory, item: StringName, from: StringName) -> void:
-	if inventory.gain(item):
+func _give(sim: Sim, inventory: Inventory, item: StringName, from: StringName, wear: bool = true) -> void:
+	if inventory.gain(item, wear):
 		sim.derive(&"item_gained", {"item": String(item), "from": String(from),
 			"worn": inventory.in_slot(ItemRules.slot_of(item)) == item})
 
@@ -113,8 +118,26 @@ func _loot(sim: Sim, inventory: Inventory, who: StringName) -> void:
 	var parts: PackedStringArray = String(who).split("#")
 	if parts.size() > 1:
 		seat = int(parts[1])
-	for item: StringName in ItemRules.loot_of(kind, seat):
-		_give(sim, inventory, item, kind)
+	var left: Array[StringName] = ItemRules.loot_of(kind, seat)
+	if left.is_empty():
+		# A stranger of the cast is read by his trade: `gatekeeper@1` is a gatekeeper.
+		kind = DuelRules.trade_of(who)
+		left = ItemRules.loot_of(kind, seat)
+	# Into the bag while the fight goes on, on once it is over (`wear_what_waited`).
+	for item: StringName in left:
+		_give(sim, inventory, item, kind, not _fighting(sim))
+
+
+## **The bow lesson puts your bow in its place** (the review of group E): a player who took
+## Wren's bow off before trying again could never shoot in it, and nothing said why.
+func _ready_the_bow(sim: Sim, inventory: Inventory, drill: String) -> void:
+	if drill != String(DuelRules.BOW) or inventory.in_slot(ItemRules.BOW) != &"":
+		return
+	for item: StringName in inventory.owned:
+		if ItemRules.slot_of(item) == ItemRules.BOW:
+			inventory.equip(item)
+			sim.derive(&"equipped", {"item": String(item), "slot": String(ItemRules.BOW)})
+			return
 
 
 ## An item a fact grants — Wren's bow — arrives the moment the fact is written.

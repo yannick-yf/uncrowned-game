@@ -69,6 +69,10 @@ static func _dress_for_the_photograph(sim: Sim) -> void:
 		if ItemRules.exists(StringName(item)):
 			bag.gain(StringName(item))
 			bag.equip(StringName(item))
+	# A sword in his hand is not also lying on its grave (E7): the find it came from is spent.
+	for find: Dictionary in Places.shared().finds():
+		if bag.has(find["item"] as StringName):
+			sim.facts.add_source(StringName("found:%s" % find["id"]), &"debug")
 
 
 ## Where the game opens, as a pure function of the four things that decide it, so it

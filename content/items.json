@@ -31,9 +31,9 @@
     },
     "hunting_bow": {
       "slot": "bow", "weapon": "bow", "from_fact": "you:the_bow",
-      "layer": "item_bow", "fighting_layer": "item_bow",
-      "draw": {"item_bow": [["bow_in_hand", {"colour": [30, 0.6, 0.5]}]]},
-      "_why": "Wren's spare, handed over as the bow lesson begins - the fact that gave it since T5 is now the item. On the back, and in the hand when it is the weapon in use."
+      "layer": "item_bow", "fighting_layer": "item_bow_hand",
+      "draw": {"item_bow": [["bow_on_back", {"colour": [30, 0.6, 0.5]}]], "item_bow_hand": [["bow_in_hand", {"colour": [30, 0.6, 0.5]}]]},
+      "_why": "Wren's spare, handed over as the bow lesson begins - the fact that gave it since T5 is now the item. On the back (bow_on_back, since the review of group E: it walked in his hand), and in the hand when it is the weapon in use."
     },
     "leather_cap": {
       "slot": "head", "protection": 1, "heavy": false,
@@ -59,7 +59,7 @@
       "draw_recolour": {"shirt": [218, 0.0, 0.14, 0.62]}
     },
     "royal_leggings": {
-      "slot": "legs", "protection": 1, "heavy": true,
+      "slot": "legs", "protection": 2, "heavy": true,
       "layer": "trousers", "recolour": [218, 0.14, 0.12, 0.62]
     }
   },
@@ -67,8 +67,9 @@
   "_start_note": "No weapon: the first sword is picked up by the graves.",
   "_bare_hands_note": "A player with nothing in the weapon slot strikes with his fists: content/duel.json's fists_damage, weaker than the sword's, so a player who walked past the sword is weaker, not stuck.",
   "loot": {
-    "_note": "What a beaten fighter leaves: what you saw on him. A king's guard leaves one piece each, in the order they fall.",
+    "_note": "What a beaten fighter leaves: what you saw on him, keyed by his kind or else his trade (the gatekeeper wears the works' guards' look). A king's guard leaves one piece each, by his seat in the fight: the first the helm, the second the breastplate, the third the leggings. Taken in a fight, it goes into the bag, and on once the fight is over where its slot is free.",
     "works_guard": ["leather_cap", "ochre_gambeson"],
+    "gatekeeper": ["leather_cap", "ochre_gambeson"],
     "works_archer": ["leather_cap"],
     "kings_guard": ["royal_helm", "royal_breastplate", "royal_leggings"]
   }

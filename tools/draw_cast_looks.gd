@@ -671,6 +671,8 @@ static func _wear(fig: Fig, recipe: Dictionary) -> void:
 				_piece_beard(fig, params)
 			"bow_in_hand":
 				_piece_bow_in_hand(fig, params)
+			"bow_on_back":
+				_piece_bow_on_back(fig, params)
 			"cap":
 				_piece_cap(fig, params)
 			"gloves":
@@ -1522,6 +1524,53 @@ static func _piece_bow_in_hand(fig: Fig, params: Dictionary) -> void:
 		if behind and fig.has(sx, y):
 			continue
 		fig.put(sx, y, safe(40, 0.30, 0.78))
+
+
+## **A bow carried on the back, in all four facings** (the review of group E: the player's
+## bow walked in his hand from the front and from behind). From the side, slung as Wren
+## carries hers at rest; from behind, across his back from over his right shoulder to his
+## left hip, over his pack, its string toward his back; from the front, the same bow behind
+## him, so only its two ends show — past his shoulder and below his hip.
+static func _piece_bow_on_back(fig: Fig, params: Dictionary) -> void:
+	var c: Vector3 = vec(params.get("colour"), Vector3(28, 0.60, 0.45))
+	if fig.way == &"left" or fig.way == &"right":
+		_bow_slung(fig, c)
+		return
+	var s: Vector4i = fig.shirt
+	var front: bool = fig.way == &"down"
+	# The same shoulder in the world: his right is the viewer's left from the front.
+	var side: float = -1.0 if front else 1.0
+	var cx: float = (s.x + s.z) / 2.0
+	var half: float = (s.z - s.x) / 2.0
+	var top := Vector2(cx + side * (half + 3.0), float(fig.neck) - 16.0)
+	var bottom := Vector2(cx - side * (half + 1.0), float(s.w) + 14.0)
+	var axis: Vector2 = bottom - top
+	var length: float = axis.length()
+	var along: Vector2 = axis / length
+	# Bowed away from his back: up and out, toward the viewer's right from behind.
+	var out := Vector2(along.y, -along.x) * side
+	var limb := func(x: int, y: int) -> bool:
+		var p: Vector2 = Vector2(x, y) - top
+		var t: float = p.dot(along) / length
+		if t < 0.0 or t > 1.0:
+			return false
+		var off: float = p.dot(out)
+		if absf(off - 9.0 * sin(PI * t)) > 3.2 - absf(t - 0.5) * 1.6:
+			return false
+		return not (front and fig.has(x, y))
+	var box: Rect2i = _box(minf(top.x, bottom.x) - 12.0, top.y - 2.0, maxf(top.x, bottom.x) + 12.0, bottom.y + 2.0)
+	var mask: PackedByteArray = _fill(fig, box, limb,
+		shade(c, Rect2(box.position, box.size), 47, 0.4), 1)
+	for i: int in int(length):
+		var q: Vector2 = top + along * (float(i) + 0.5)
+		var x: int = int(round(q.x))
+		var y: int = int(round(q.y))
+		if x < 0 or y < 0 or x >= fig.w or y >= fig.h or mask[y * fig.w + x] == 1:
+			continue
+		if front and fig.has(x, y):
+			continue
+		fig.put(x, y, safe(40, 0.30, 0.78))
+		fig.set_kind(x, y, K.PIECE)
 
 
 ## A bow carried across the back, seen from the side: behind him from the shoulder to
