@@ -2526,6 +2526,19 @@ order, live recolouring, the head gear's hair mask — in a spatial shader for t
 screens. The player is drawn by it in `view/world3d.gd`. **Check:** with the default
 appearance the game's frames are the same as today's, side by side; both suites green.
 
+> **Built 2026-10-01.** `view3d/layers/paper_doll.gdshaderinc` stacks eleven slots in
+> `PaperDoll.ORDER` — one sampler and one recolouring each, written out rather than in
+> arrays, which not every renderer allows indexed in a loop — and recolours exactly as
+> the recipes do; empty slots are transparent by default. `paper_doll_world` carries the
+> fight's flash and tint, so the player's paint is no longer swapped during a fight;
+> `paper_doll_ghost` is his ghost; `paper_doll_canvas` is for the screens.
+> `view/paper_doll.gd` reads `content/appearance.json` and names what fills each slot
+> (`slots_for`). `World3d._doll_figure` draws the player with it, his frames re-pointed at
+> the layers' layout. **Check:** the same four frames before and after (walking, a blow,
+> the bow in hand, the wake) show the same player; `test_paper_doll` adds the default's
+> slots, a choice recolouring its slot and no other, and the three shaders' slots;
+> `test_world3d`, the player drawn in layers.
+
 ### A4 · Hair styles and beards — a board first
 
 Est. 5 h. Five new hair styles and three beards, painted from his own hair's texture by

@@ -112,3 +112,41 @@ func test_his_hair_is_its_own_layer_and_a_head_is_under_it() -> void:
 					under += 1
 	assert_true(hair_px > 3000, "his hair is a layer of its own: %d pixels" % hair_px)
 	assert_true(under > hair_px / 4, "and a head stands under it: %d of its pixels" % under)
+
+
+func test_the_default_appearance_is_his_traveller_unrecoloured() -> void:
+	var slots: Dictionary = PaperDoll.slots_for(PaperDoll.default_appearance())
+	assert_eq(slots[&"hair"]["part"], &"hair_spiky", "his own hair")
+	for slot: StringName in slots.keys():
+		assert_eq((slots[slot]["recolour"] as Array).size(), 0, "%s shows his own pixels" % slot)
+	assert_false(slots.has(&"beard"), "and no beard")
+	for slot: StringName in slots.keys():
+		assert_true(PaperDoll.ORDER.has(slot), "%s is a slot of the order" % slot)
+
+
+func test_a_choice_recolours_its_slot_and_no_other() -> void:
+	var blond: Dictionary = PaperDoll.default_appearance()
+	blond[&"hair_colour"] = &"blond"
+	blond[&"skin"] = &"dark"
+	blond[&"clothes"] = &"moss"
+	var slots: Dictionary = PaperDoll.slots_for(blond)
+	assert_eq(slots[&"hair"]["recolour"], PaperDoll.recolour_of(&"hair_colour", &"blond"), "the hair, blond")
+	assert_eq(slots[&"skin"]["recolour"], PaperDoll.recolour_of(&"skin", &"dark"), "the skin, dark")
+	assert_eq(slots[&"tunic"]["recolour"], PaperDoll.recolour_of(&"clothes", &"moss"), "the tunic, moss")
+	assert_eq((slots[&"trousers"]["recolour"] as Array).size(), 0, "the trousers untouched")
+	for choice: StringName in PaperDoll.CHOICES:
+		assert_true(PaperDoll.options(choice).size() >= 4, "%s offers its options: %s" % [choice, PaperDoll.options(choice)])
+		assert_eq(PaperDoll.options(choice)[0], PaperDoll.default_appearance()[choice], "%s's first option is his" % choice)
+
+
+func test_the_three_shaders_compile_with_the_slots() -> void:
+	for path: String in [PaperDoll.WORLD_SHADER, PaperDoll.GHOST_SHADER, PaperDoll.CANVAS_SHADER]:
+		var shader: Shader = load(path) as Shader
+		assert_not_null(shader, "%s loads" % path)
+		if shader != null:
+			var names: Array = []
+			for u: Dictionary in shader.get_shader_uniform_list():
+				names.append(String(u["name"]))
+			for i: int in PaperDoll.ORDER.size():
+				assert_true(names.has("doll_l%d" % i) and names.has("doll_r%d" % i), "%s has slot %d" % [path, i])
+			assert_true(names.has("doll_head_mask"), "%s has the head gear's mask" % path)

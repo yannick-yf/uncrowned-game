@@ -105,6 +105,7 @@ func test_the_window_stands_on_his_ground() -> void:
 	# its livery, the king's escort his plate a fifth taller — and the player none.
 	if window.figures_are_his():
 		assert_eq(window.worn("Player"), &"", "the player is the traveller his brother drew")
+		assert_true(window.player_is_a_doll(), "drawn in layers, so what he chose and wears can show (group A)")
 		assert_eq(window.worn("Person_bram"), &"bram", "Bram wears his own")
 		assert_eq(window.worn("Person_wren"), &"wren", "Wren wears her own")
 		assert_eq(window.worn("Person_gatekeeper_1"), &"works_guard", "the gatekeeper wears the works' livery")

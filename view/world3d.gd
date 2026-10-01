@@ -965,6 +965,34 @@ func _figure(look: StringName = &"") -> Node3D:
 	return sprite
 
 
+## **The player, in layers** (group A): his brother's frames re-pointed at the layers' layout,
+## and a material that stacks and colours the parts his appearance names
+## (`PaperDoll.slots_for`). Without the baked layers, his traveller as before.
+var _doll_fighting: bool = false
+
+
+func _doll_figure() -> Node3D:
+	if not PaperDoll.ready() or _frames == null:
+		return _figure()
+	var sprite := _figure() as AnimatedSprite3D
+	if sprite == null:
+		return _figure()
+	sprite.sprite_frames = CastLooks.frames_for(_frames, PaperDoll.sheet(&"body"))
+	sprite.animation = &"idle_down"
+	var paint: ShaderMaterial = PaperDoll.material(PaperDoll.WORLD_SHADER, PaperDoll.slots_for(_player_appearance()))
+	sprite.set_meta(&"doll", paint)
+	sprite.material_override = paint
+	return sprite
+
+
+## What the player chose to look like (A5's store), or his brother's traveller.
+func _player_appearance() -> Dictionary:
+	var held: Object = _sim.store(&"appearance") if _sim != null else null
+	if held != null and held.has_method("chosen"):
+		return held.call("chosen") as Dictionary
+	return PaperDoll.default_appearance()
+
+
 ## A look's frames, paint and sheet, loaded the first time somebody wears it. False for
 ## no look, for a look whose sheet is not there, and without his frames and material.
 func _dress(look: StringName) -> bool:
@@ -991,6 +1019,8 @@ func _dress(look: StringName) -> bool:
 
 ## The paint a figure wears when nothing is happening to it: its look's, or his.
 func _worn(figure: Node3D) -> Material:
+	if figure.has_meta(&"doll"):
+		return figure.get_meta(&"doll") as Material
 	var look: StringName = figure.get_meta(&"look", &"") as StringName
 	return _look_paint.get(look, _figure_material) as Material
 
@@ -1251,7 +1281,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 ## standing when it does not.
 func _sync_player(frame: Dictionary) -> void:
 	if _player == null:
-		_player = _figure()
+		_player = _doll_figure()
 		_player.name = "Player"
 		add_child(_player)
 		_player_ghost = _ghost_of(_player)
@@ -1302,7 +1332,11 @@ func _ghost_of(figure: Node3D) -> AnimatedSprite3D:
 	ghost.modulate = Color(1.0, 1.0, 1.0, GHOST_ALPHA)
 	ghost.render_priority = -1
 	var his := body.material_override as ShaderMaterial
-	if his != null:
+	if body.has_meta(&"doll"):
+		var ghost_paint: ShaderMaterial = PaperDoll.material(PaperDoll.GHOST_SHADER, PaperDoll.slots_for(_player_appearance()))
+		ghost_paint.set_shader_parameter("ghost_alpha", GHOST_ALPHA)
+		ghost.material_override = ghost_paint
+	elif his != null:
 		var shader := Shader.new()
 		shader.code = GHOST_SHADER
 		var paint := ShaderMaterial.new()
@@ -1325,13 +1359,18 @@ func _follow_ghost(figure: Node3D, ghost: AnimatedSprite3D) -> void:
 	# The sheet his figure is drawn from this frame — his, or the fight's paint of it.
 	var worn := body.material_override as ShaderMaterial
 	var paint := ghost.material_override as ShaderMaterial
-	if worn != null and paint != null:
+	if worn != null and paint != null and not body.has_meta(&"doll"):
 		var sheet: Variant = worn.get_shader_parameter("sprite_sheet")
 		if paint.get_shader_parameter("sprite_sheet") != sheet:
 			paint.set_shader_parameter("sprite_sheet", sheet)
 	ghost.flip_h = body.flip_h
 	ghost.offset = body.offset
 	ghost.visible = body.visible
+
+
+## Whether the player is drawn in layers (group A), for the suite.
+func player_is_a_doll() -> bool:
+	return _player != null and _player.has_meta(&"doll")
 
 
 ## Whether the player's ghost stands with him, for the suite.
@@ -2195,16 +2234,25 @@ func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary, key: St
 	var sprite := figure as AnimatedSprite3D
 	if sprite == null or _figure_material == null:
 		return
+	var doll := sprite.get_meta(&"doll", null) as ShaderMaterial
 	if fighting.is_empty():
 		var own: Material = _worn(sprite)
 		if sprite.material_override != own:
 			sprite.material_override = own
+		if doll != null:
+			# **The doll flashes in its own material** (group A): it has the fight's flash
+			# and tint built in, so there is nothing to swap, only a flash to put out.
+			doll.set_shader_parameter("flash", 0.0)
+			doll.set_shader_parameter("tint", Vector3.ONE)
+			_doll_fighting = false
 		return
 	var who: StringName = key if key != &"" else (&"mine" if mine else &"his")
-	var paint: ShaderMaterial = _fight_paint_for(who)
+	var paint: ShaderMaterial = doll if doll != null else _fight_paint_for(who)
+	if doll != null:
+		_doll_fighting = true
 	# **A seat is not a man** (L2): the same seat holds Bram in one fight and a guard in the
 	# next, so the paint is handed this figure's own sheet every time it is worn.
-	var sheet: Texture2D = _sheet_worn(sprite, true)
+	var sheet: Texture2D = _sheet_worn(sprite, true) if doll == null else null
 	if sheet != null and paint.get_shader_parameter("sprite_sheet") != sheet:
 		paint.set_shader_parameter("sprite_sheet", sheet)
 	if sprite.material_override != paint:
@@ -2691,6 +2739,8 @@ func drawn_pixel(name: String) -> float:
 
 func fighters_wear_our_paint() -> bool:
 	var sprite := _player as AnimatedSprite3D
+	if sprite != null and sprite.has_meta(&"doll"):
+		return _doll_fighting
 	return sprite != null and sprite.material_override != null \
 		and sprite.material_override != _worn(sprite)
 
