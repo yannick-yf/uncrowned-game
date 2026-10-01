@@ -2778,6 +2778,51 @@ creation → equipment in play; `CLAUDE.md`, V3 and `POUR_SLOSINIO.md`.
 
 ---
 
+## R — after his play of group E: the bow lesson, and fights the player starts
+
+> Yannick played the demo on the evening of 2026-10-01 (*« on se rapproche de plus en
+> plus d'une démo jouable »*) and answered the four open questions of group E: the hair
+> styles validated for now, the trousers his grey, **his own surcoat in the king's set**
+> (built with R1's commit: the surcoat in the colour chosen, no crown, the iron kept by
+> `PaperDoll.KEEPS_PAINT`), and Force's text kept, the gap written under *Later*. One
+> defect and one feature: **the bow lesson could not be won**, and **the player should be
+> able to start a fight himself**, as in Baldur's Gate 3, simplified. The defect first;
+> the feature's approach is put to him before any code.
+
+### R1 · The bow lesson, given by an archer — **built 2026-10-01**
+
+**What he found:** after the first arrow Bram was at contact, and every step he took Bram
+followed: a bow that cannot be used. **What he asked:** in the bow lesson the opponent
+uses a bow too and keeps her distance, so the player learns to shoot and to move.
+**Check:** a newcomer finishes the bow lesson without particular difficulty.
+
+> **Built.** **Wren gives it** (`content/duel.json`'s bow drill: `first: wren`; Bram's line
+> `fights: wren`). She is the archer of the cast: she keeps three to six tiles from you and
+> shoots too, one point an arrow, and Bram still teaches it and speaks after. Measured from
+> his line, three ways of playing — standing still and shooting every turn, the scripted
+> archer's hand, walking up first: **passed in three turns every time, Wren never nearer
+> than three tiles**. Bram's line, his words after the sword and after the bow, the card
+> and the hints now say *elle*. `test_in_the_bow_lesson_wren_keeps_her_distance_and_shoots_too`.
+> **Not built: dodging.** An arrow lands when it is shot, for everybody (group T), so moving
+> cannot make one miss; a dodge needs an archer who aims a turn ahead. Put to Yannick with
+> R2.
+
+### R2 · Starting a fight yourself — **approach put to Yannick, not built**
+
+Enemies with a zone in which they see you; outside it the player can watch them; an arrow
+or a blow from the player starts the fight; perhaps an advantage for the surprise. The
+approach is in the report of 2026-10-01 and waits for his answer.
+
+---
+
+## Later — known gaps, kept so they are not forgotten
+
+- **Blows by the traits** (Yannick, 2026-10-01). Force's description says *vous frappez
+  fort*, and a blow is five whatever Force is. The text stays: later, how hard a blow lands
+  depends on the traits' values. Not designed yet — with the combat workstream.
+
+---
+
 ## S — the shell
 
 ### S1 · Four traits, a pool of 8 — **built 2026-09-28**

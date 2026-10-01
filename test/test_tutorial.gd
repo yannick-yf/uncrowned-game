@@ -193,7 +193,43 @@ func test_asking_for_the_bow_puts_one_in_your_hands() -> void:
 	var duel: Duel = _duel(sim)
 	assert_true(sim.facts.has(DuelRules.THE_BOW), "and the lesson begins with one")
 	assert_eq(duel.drill, &"bow", "the bow drill")
-	assert_not_null(duel.get_fighter(&"bram"), "with Bram in front of you")
+	assert_not_null(duel.get_fighter(&"wren"), "with Wren in front of you (Yannick, 2026-10-01)")
+	assert_null(duel.get_fighter(&"bram"), "and not Bram, who came to contact and followed")
+
+
+func test_in_the_bow_lesson_wren_keeps_her_distance_and_shoots_too() -> void:
+	# Yannick, 2026-10-01: Bram came to contact after the first arrow and followed every
+	# step. Wren is an archer: she never comes next to you, and a newcomer who only stands
+	# and shoots passes in a few turns.
+	var sim: Sim = Game.build()
+	sim.facts.add_source(&"drilled:sword", &"test")
+	_ask(sim, "drill_bow")
+	var duel: Duel = _duel(sim)
+	var closest: int = 99
+	var her_arrows: int = 0
+	var turns: int = 0
+	for _step: int in 20000:
+		if not duel.on():
+			break
+		var me: DuelFighter = duel.me()
+		var her: DuelFighter = duel.get_fighter(&"wren")
+		if me != null and her != null:
+			closest = mini(closest, DuelRules.apart(me.at, her.at))
+			if duel.waiting_on_player():
+				turns += 1
+				var shoot: bool = DuelRules.reaches(DuelRules.BOW, me.at, her.at)
+				sim.submit(&"duel_turn", {"who": "player", "to_x": me.at.x, "to_y": me.at.y,
+					"action": "strike" if shoot else "wait", "target": "wren" if shoot else "", "weapon": "bow"})
+		sim.advance(1)
+	for event: SimEvent in sim.events.all():
+		if event.type == &"blow_landed" and String(event.data.get("target", "")) == String(DuelRules.PLAYER) \
+				and String(event.data.get("move", "")) == "arrow":
+			her_arrows += 1
+	sim.advance(DuelRules.beat_steps() + 5)
+	assert_true(closest >= DuelRules.bow_min_tiles(), "she never comes next to you: %d tiles at the closest" % closest)
+	assert_true(sim.facts.has(&"drilled:bow"), "standing and shooting passes it")
+	assert_true(turns <= 5, "in a few turns: %d" % turns)
+	assert_true(her_arrows >= 1, "and she shoots too: %d arrows" % her_arrows)
 
 
 func test_shooting_passes_the_bow_drill() -> void:

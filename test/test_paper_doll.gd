@@ -272,3 +272,30 @@ func test_every_cut_but_his_wears_the_skin_without_his_fringe_s_shadow() -> void
 	assert_not_null(bare, "the bare skin is drawn — run tools/draw_player_layers.gd")
 	if bare != null and own != null:
 		assert_eq(bare.get_size(), own.get_size(), "the same sheet, his size")
+
+
+func test_the_king_s_surcoat_on_the_player_is_his_colour_and_the_iron_stays_iron() -> void:
+	# Yannick, 2026-10-01: in the king's set the player looked exactly like a king's guard.
+	# His surcoat takes the colour chosen; the iron keeps its paint, marked in its alpha.
+	var row: Dictionary = ItemRules.row(&"royal_breastplate")
+	assert_eq(String(row.get("recolour", "")), "clothes", "the breastplate is recoloured as the tunic is")
+	var looks: Dictionary = PaperDoll.default_appearance()
+	looks[&"clothes"] = &"wine"
+	var worn: Dictionary = PaperDoll.slots_for(looks, {ItemRules.TORSO: &"royal_breastplate"})
+	assert_eq(worn[&"tunic"]["recolour"], PaperDoll.recolour_of(&"clothes", &"wine"), "in the colour chosen")
+	var path: String = PaperDoll.sheet_path(&"item_royal_breastplate")
+	var img: Image = Image.load_from_file(ProjectSettings.globalize_path(path)) if FileAccess.file_exists(path) else null
+	assert_not_null(img, "the breastplate is drawn — run tools/draw_player_layers.gd")
+	if img == null:
+		return
+	var keeps: int = 0
+	var takes: int = 0
+	for y: int in range(0, img.get_height(), 2):
+		for x: int in range(0, img.get_width(), 2):
+			var a: float = img.get_pixel(x, y).a
+			if a > 0.9:
+				takes += 1
+			elif a > 0.5:
+				keeps += 1
+	assert_true(keeps > 0, "the iron keeps its paint: %d pixels" % keeps)
+	assert_true(takes > 0, "the surcoat takes the colour: %d pixels" % takes)

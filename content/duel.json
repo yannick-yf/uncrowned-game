@@ -128,7 +128,7 @@
       "rounds": 10
     },
     "bow": {
-      "master": "bram",
+      "master": "bram", "first": "wren", "_first": "Wren fights the bow lesson (Yannick, 2026-10-01: Bram came to contact after the first arrow and followed every step, so the lesson could not be won). She is an archer: she keeps her distance and shoots too, and Bram still teaches it and speaks after.",
       "stand_off": 4,
       "damage": 1,
       "goal": "arrows",

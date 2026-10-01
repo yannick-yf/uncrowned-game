@@ -34,6 +34,14 @@ const STYLE_PARTS: Array[StringName] = [
 ]
 
 
+## **A pixel that keeps its paint** under its layer's recolouring, by its alpha (2026-10-01):
+## every pixel of every layer is opaque, so a layer that is mostly the player's colour —
+## the king's surcoat made his — marks the iron that must stay iron at this alpha, and the
+## shader recolours only what is fully opaque. 200 of 255: above the shader's half, below
+## its 0.9.
+const KEEPS_PAINT: float = 200.0 / 255.0
+
+
 ## **His skin without the shadow of his fringe** (the review of group E): worn with every
 ## cut but his own, under which his shading read as an orange line across the forehead.
 const BARE_SKIN: StringName = &"skin_bare"

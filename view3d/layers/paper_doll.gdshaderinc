@@ -92,7 +92,9 @@ vec4 doll_over(vec4 under, sampler2D layer, vec4 r, vec2 uv, bool hidden) {
 		return under;
 	}
 	vec3 rgb = c.rgb;
-	if (r.w > 0.0) {
+	// A pixel below full opacity keeps its paint (`PaperDoll.KEEPS_PAINT`): the iron of a
+	// surcoat that takes the player's colour.
+	if (r.w > 0.0 && c.a > 0.9) {
 #ifdef DOLL_LINEAR
 		rgb = doll_linear(doll_moved(doll_srgb(c.rgb), r));
 #else

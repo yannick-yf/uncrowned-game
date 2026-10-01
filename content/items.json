@@ -55,8 +55,10 @@
     "royal_breastplate": {
       "slot": "torso", "protection": 2, "heavy": true,
       "layer": "item_royal_breastplate",
-      "draw": {"item_royal_breastplate": [["gloves", {"colour": [212, 0.26, 0.62]}], ["surcoat"], ["pauldrons"]]},
-      "draw_recolour": {"shirt": [218, 0.0, 0.14, 0.62]}
+      "draw": {"item_royal_breastplate": [["gloves", {"colour": [212, 0.26, 0.62]}], ["surcoat", {"colour": [213, 0.83, 0.56], "emblem": false}], ["pauldrons"]]},
+      "draw_recolour": {"shirt": [218, 0.0, 0.14, 0.62]},
+      "recolour": "clothes", "own_colour": ["surcoat"],
+      "_own_colour": "Yannick, 2026-10-01: in the king's set the player looked exactly like a king's guard. His surcoat is his own - painted in his tunic's blue, without the crown, and moved to the colour chosen at creation like his tunic; the iron keeps its paint (PaperDoll.KEEPS_PAINT)."
     },
     "royal_leggings": {
       "slot": "legs", "protection": 2, "heavy": true,

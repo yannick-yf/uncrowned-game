@@ -13,6 +13,13 @@ first weapon comes from he offered two answers — Bram hands it over at the les
 weapon lies to be picked up just past the fairy — and the second is taken, §4: a lesson can
 be refused, and a player who refuses it must not walk to the wolves with nothing.
 
+**After his play (2026-10-01, evening)**, on the review's open points: the hair styles are
+*not perfect, validated for now*; **the trousers stay his grey** — only the tunic takes the
+colour, so the legs read apart; **in the king's set the player wears his own surcoat**, in
+the colour chosen and without the crown, so he is not one more king's guard; and Force's
+*vous frappez fort* stays — **blows will depend on the traits later**, a known gap kept in
+`docs/DEMO_TASKS.md`, *Later*.
+
 ---
 
 ## 1. What the screen can show
@@ -45,7 +52,7 @@ is a choice that makes the screen feel padded.
 | **Hair colour** | **8** | Red (his), black, dark brown, chestnut, blond, ash blond, grey, auburn. Pure white is impossible: his shader throws away light greys |
 | **Skin tone** | **5** | From his pale to dark. His face's reddish outline is recoloured with the skin, or dark skins wear a halo |
 | **Beard** | **4** | None, stubble, short, full — in the hair's colour |
-| **Clothes' colour** | **6** | The starting tunic and trousers (block 2's first items), dyed |
+| **Clothes' colour** | **6** | The starting tunic (block 2's first item), dyed; the trousers stay his grey (Yannick, 2026-10-01) |
 
 **The default is his traveller exactly** — red spiky hair, pale skin, no beard, blue tunic —
 so a player who changes nothing is the character the brother drew.
@@ -138,7 +145,7 @@ combat numbers is a design of its own.
 
 ### Where things come from, in the demo
 
-- **At the start**: a cloth tunic and cloth trousers in the colour chosen at creation,
+- **At the start**: a cloth tunic in the colour chosen at creation, his grey cloth trousers,
   and walking boots. **No weapon.**
 - **The first sword lies by the graves, just past the fairy** (Yannick, 2026-10-01): a
   short sword on a fallen villager's grave, picked up with the key that picks anything up.

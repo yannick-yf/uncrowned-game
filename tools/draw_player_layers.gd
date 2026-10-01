@@ -170,7 +170,7 @@ static func item_layers() -> Dictionary:
 		var draw: Dictionary = row.get("draw", {}) as Dictionary
 		for layer: String in draw.keys():
 			out[StringName(layer)] = {"pieces": draw[layer], "recolour": row.get("draw_recolour", {}),
-				"mask": bool(row.get("hides_hair", false))}
+				"mask": bool(row.get("hides_hair", false)), "own": row.get("own_colour", [])}
 	return out
 
 
@@ -186,6 +186,21 @@ static func _items(img: Image, way: StringName, from: Looks.Fig) -> Dictionary:
 		var fig := Looks.Fig.new(dressed, way)
 		Looks._measure(fig, from)
 		Looks._wear(fig, {"recolour": spec["recolour"], "pieces": spec["pieces"]})
+		# **What takes the player's colour, and what keeps its paint** (2026-10-01): an item
+		# recoloured with his clothes — the king's surcoat made his — is drawn again without
+		# those pieces, and every pixel the two drawings share keeps its paint, marked by
+		# `PaperDoll.KEEPS_PAINT` in its alpha so the shader leaves the iron iron.
+		var own: Array = spec["own"] as Array
+		var without: Image = null
+		if not own.is_empty():
+			without = img.duplicate() as Image
+			var bare := Looks.Fig.new(without, way)
+			Looks._measure(bare, from)
+			var kept: Array = []
+			for step: Variant in spec["pieces"] as Array:
+				if not own.has(String((step as Array)[0])):
+					kept.append(step)
+			Looks._wear(bare, {"recolour": spec["recolour"], "pieces": kept})
 		var drawn: Image = Image.create(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
 		drawn.fill(CLEAR)
 		var mask: Image = Image.create(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
@@ -195,6 +210,8 @@ static func _items(img: Image, way: StringName, from: Looks.Fig) -> Dictionary:
 				var was: Color = img.get_pixel(x, y)
 				var now: Color = dressed.get_pixel(x, y)
 				if now.a > 0.0 and (was.a == 0.0 or not now.is_equal_approx(was)):
+					if without != null and without.get_pixel(x, y).is_equal_approx(now):
+						now.a = PaperDoll.KEEPS_PAINT
 					drawn.set_pixel(x, y, now)
 				elif was.a > 0.0 and now.a == 0.0 and y < fig.neck + 8:
 					mask.set_pixel(x, y, Color.WHITE)

@@ -388,8 +388,8 @@
         {"when": "just_failed_a_lesson", "text": "Pas encore. Reprends ton souffle, et on recommence quand tu veux.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after a lesson failed"},
         {"when": "just_passed_magic", "text": "Je n'ai plus rien à t'apprendre. Les Forges sont au nord : remonte la route et passe la rivière. Des loups gardent le pont. Tu sais quoi faire, maintenant.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the farewell after the last lesson, pointing north with no marker (O19)"},
         {"when": "just_passed_bow_without_gift", "text": "Bien. C'est tout ce que je peux t'apprendre. Les Forges sont au nord : remonte la route et passe la rivière. Des loups gardent le pont.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: after the bow, for somebody without the fairy's gift: the farewell"},
-        {"when": "just_passed_bow", "text": "Bien. Tu as tiré sans me laisser t'approcher. Maintenant, ce que la fée t'a donné : montre-le-moi.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
-        {"when": "just_passed_sword", "text": "Bien. Tu approches avant de frapper, c'est tout ce qu'il fallait. Maintenant l'arc : Wren te prête le sien, et moi je viens sur toi.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"},
+        {"when": "just_passed_bow", "text": "Bien. Tu as touché Wren trois fois. Maintenant, ce que la fée t'a donné : montre-le-moi.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the bow to the magic"},
+        {"when": "just_passed_sword", "text": "Bien. Tu approches avant de frapper, c'est tout ce qu'il fallait. Maintenant l'arc : Wren te prête le sien, et elle tire aussi.", "_p2": "O21 review draft (2026-09-29), for Yannick to rewrite: the way from the sword to the bow"},
         {"when": "unarmed", "text": "Tu n'as pas d'épée ? Il y en a une sur une tombe, au cimetière, là où tu t'es réveillé. À mains nues, tu frappes moins fort.", "_p2": "E6 draft (2026-10-01), for P2: his everyday greeting to somebody who owns no sword - last, so a lesson's end speaks first"}
       ],
       "options": [
@@ -416,15 +416,15 @@
         {
           "intent": "drill_bow",
           "text": "L'arc. Montre-moi.",
-          "reply": "Wren te prête son arc de rechange : garde-le. Je vais venir sur toi. Place trois flèches avant que je t'atteigne, et garde tes distances.",
+          "reply": "Wren te prête son arc de rechange : garde-le. C'est elle qui te fait face : elle garde ses distances, et elle tire aussi. Place-lui trois flèches.",
           "requires": "drilled:sword",
-          "fights": "bram",
+          "fights": "wren",
           "gives": "you:the_bow",
           "spar": true,
           "drill": "bow",
           "repeatable": true,
           "hides_after": "drilled:bow",
-          "_p2": "DRAFT wording (O9, redone in T5, 2026-09-29) - for P2. The shape: after the sword, Wren hands you a bow of your own (you:the_bow) and Bram comes at you; three arrows that land before he closes."
+          "_p2": "DRAFT wording (O9, redone in T5, and again 2026-10-01) - for P2. The shape: after the sword, Wren hands you a bow of your own (you:the_bow) and faces you herself, keeping her distance and shooting too (Yannick, 2026-10-01: Bram at contact made it unwinnable); three arrows that land."
         },
         {
           "intent": "drill_magic",
