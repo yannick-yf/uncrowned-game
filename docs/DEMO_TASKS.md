@@ -2686,6 +2686,23 @@ Est. 5 h. Every item of E1 baked as a layer by the tool, from the pieces group L
 the head gear with its hair mask. **Check:** a board of every item worn, three facings,
 close up and at the game's size.
 
+> **Built 2026-10-01.** An item drawn by a piece names it in `content/items.json`
+> (`draw`); `tools/draw_player_layers.gd` dresses his figure in it, frame by frame, and
+> keeps **what changed as the item's layer and what the piece took away from his head as
+> its mask** — so the leather cap and the royal helm hide exactly the hair, ears and
+> outline the looks of group L take away, with no table of their own. Eight sheets: the
+> sword at the belt and in the hand, the bow, the cap and the helm with their masks, the
+> breastplate (his shirt in iron, the surcoat, the pauldrons, gauntlets). The gambeson,
+> the leggings, the cloth and the empty slots are recolourings of his own tunic, trousers
+> and boots. `PaperDoll.slots_for(appearance, worn, in_hand)` dresses the player: the
+> sword comes out of its scabbard and the bow off his back for the length of a fight, and
+> a bow is put away while a sword is out; the head gear's mask now hides the body's and
+> the skin's slots as well as the hair and beard. The window redresses him whenever his
+> bag or his weapon changes; the creation screen shows the start kit. **`UNCROWNED_GEAR`**
+> puts items on him for a photograph (CLAUDE.md). `docs/frames/gear/items.png`,
+> `docs/frames/gear/in_play.png`; `test_paper_doll` holds the layers, the masks and the
+> slots.
+
 ### E5 · The inventory screen
 
 Est. 6 h. **Tab**: the player in the middle by the paper-doll shader, the six slots round

@@ -105,8 +105,11 @@ vec4 doll_over(vec4 under, sampler2D layer, vec4 r, vec2 uv, bool hidden) {
 vec4 doll(vec2 uv) {
 	bool masked = doll_has_mask > 0.5 && texture(doll_head_mask, uv).a > 0.5;
 	vec4 c = vec4(0.0);
-	c = doll_over(c, doll_l0, doll_r0, uv, false);
-	c = doll_over(c, doll_l1, doll_r1, uv, false);
+	// The mask hides what the head gear's piece took away from his head when the item was
+	// baked: hair and beard, and the ears, the outline and the head painted under his hair,
+	// which are the body's and the skin's (E4).
+	c = doll_over(c, doll_l0, doll_r0, uv, masked);
+	c = doll_over(c, doll_l1, doll_r1, uv, masked);
 	c = doll_over(c, doll_l2, doll_r2, uv, false);
 	c = doll_over(c, doll_l3, doll_r3, uv, false);
 	c = doll_over(c, doll_l4, doll_r4, uv, false);

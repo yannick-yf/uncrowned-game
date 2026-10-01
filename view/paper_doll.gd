@@ -78,17 +78,22 @@ static func recolour_of(choice: StringName, option: StringName) -> Array:
 	return []
 
 
-## **What fills each slot of `ORDER`** for an appearance: the part's sheet and how it is
-## recoloured. A slot not named is empty. Gear (group E) will name the head, the weapon
-## and the back, and may put an item where the tunic or the trousers are.
-static func slots_for(appearance: Dictionary) -> Dictionary:
+## **What fills each slot of `ORDER`**: the part's sheet and how it is recoloured, for an
+## appearance (group A) and what he wears (group E). `worn` is the inventory's slots — or
+## `null` for a run never made, which is drawn as before the inventory: his tunic, his
+## trousers, his boots, nothing in his hands. `in_hand` is what a fight has him striking
+## with, `&""` outside one: the sword comes out of its scabbard, and the bow off his back,
+## for the length of the fight, and a bow is put away while a sword is out.
+static func slots_for(appearance: Dictionary, worn: Variant = null, in_hand: StringName = &"") -> Dictionary:
 	var hair_colour: Array = recolour_of(&"hair_colour", appearance.get(&"hair_colour", &"") as StringName)
+	var skin: Array = recolour_of(&"skin", appearance.get(&"skin", &"") as StringName)
+	var clothes: Array = recolour_of(&"clothes", appearance.get(&"clothes", &"") as StringName)
 	var slots: Dictionary = {
 		&"body": {"part": &"body", "recolour": []},
-		&"skin": {"part": &"skin", "recolour": recolour_of(&"skin", appearance.get(&"skin", &"") as StringName)},
+		&"skin": {"part": &"skin", "recolour": skin},
 		&"trousers": {"part": &"trousers", "recolour": []},
 		&"boots": {"part": &"boots", "recolour": []},
-		&"tunic": {"part": &"tunic", "recolour": recolour_of(&"clothes", appearance.get(&"clothes", &"") as StringName)},
+		&"tunic": {"part": &"tunic", "recolour": clothes},
 		&"pack": {"part": &"pack", "recolour": []},
 	}
 	var hair := StringName("hair_" + String(appearance.get(&"hair_style", &"spiky")))
@@ -98,7 +103,66 @@ static func slots_for(appearance: Dictionary) -> Dictionary:
 	var beard := StringName("beard_" + String(appearance.get(&"beard", &"none")))
 	if sheet(beard) != null:
 		slots[&"beard"] = {"part": beard, "recolour": hair_colour}
+	if worn is Dictionary:
+		_wear(slots, worn as Dictionary, in_hand, clothes, skin)
 	return slots
+
+
+## Where each of the inventory's slots is drawn in `ORDER`.
+const DRAWN_IN: Dictionary = {
+	ItemRules.TORSO: &"tunic", ItemRules.LEGS: &"trousers", ItemRules.FEET: &"boots",
+	ItemRules.HEAD: &"head", ItemRules.WEAPON: &"weapon", ItemRules.BOW: &"back",
+}
+
+
+static func _wear(slots: Dictionary, worn: Dictionary, in_hand: StringName, clothes: Array, skin: Array) -> void:
+	var empty: Dictionary = (ItemRules._read().get("empty", {}) as Dictionary)
+	for slot: StringName in ItemRules.SLOTS:
+		var item: StringName = worn.get(slot, &"") as StringName
+		var drawn: StringName = DRAWN_IN[slot] as StringName
+		if item == &"":
+			var bare: Dictionary = empty.get(String(slot), {}) as Dictionary
+			if bare.is_empty():
+				slots.erase(drawn)
+			else:
+				slots[drawn] = {"part": StringName(String(bare.get("layer", ""))),
+					"recolour": _named_recolour(bare.get("recolour", []), clothes, skin)}
+			continue
+		var row: Dictionary = ItemRules.row(item)
+		var layer: String = String(row.get("layer", ""))
+		if in_hand != &"" and ItemRules.weapon_of(item) == in_hand:
+			layer = String(row.get("fighting_layer", layer))
+		elif in_hand != &"" and slot == ItemRules.BOW:
+			# A sword out, the bow is put away.
+			slots.erase(drawn)
+			continue
+		slots[drawn] = {"part": StringName(layer), "recolour": _named_recolour(row.get("recolour", []), clothes, skin)}
+		if bool(row.get("hides_hair", false)):
+			slots[&"head_mask"] = sheet(StringName(layer + "_mask"))
+
+
+## A recolouring as the items' table names it: numbers, or `"clothes"` — the colour chosen
+## at creation — or `"skin"`, for bare feet, his leather moved to the skin chosen.
+static func _named_recolour(named: Variant, clothes: Array, skin: Array) -> Array:
+	if named is Array:
+		return named as Array
+	match String(named):
+		"clothes":
+			return clothes
+		"skin":
+			var bare: Array = [22.0, 0.45, 0.35, 1.75]
+			if skin.size() == 4:
+				bare = [float(skin[0]), 0.45 * float(skin[1]), 0.35, 1.75 * float(skin[3])]
+			return bare
+	return []
+
+
+## The slots a freshly made character wears: his start kit, nothing in his hands.
+static func start_kit_worn() -> Dictionary:
+	var worn: Dictionary = {}
+	for item: StringName in ItemRules.start_kit():
+		worn[ItemRules.slot_of(item)] = item
+	return worn
 
 
 static func sheet(part: StringName) -> Texture2D:

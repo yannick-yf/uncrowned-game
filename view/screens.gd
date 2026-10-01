@@ -44,11 +44,31 @@ func _ready() -> void:
 		var run: Sim = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED, look)
 		SaveFile.write(run)
 		carrying = run
-	elif first == &"play" and not shot.is_empty() and not look.is_empty():
-		# A photograph of somebody who chose a look (A7): a fresh run carrying it, not
-		# written to disk — a photograph is not a save.
+	elif first == &"play" and not shot.is_empty() and (not look.is_empty() or _gear_asked().size() > 0):
+		# A photograph of somebody who chose a look (A7), or carries something (E4): a fresh
+		# run with it, not written to disk — a photograph is not a save.
 		carrying = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED, look)
+		_dress_for_the_photograph(carrying as Sim)
 	_go(first, carrying)
+
+
+## **`UNCROWNED_GEAR=royal_helm,short_sword`** (debug builds only, E4): items put in the
+## bag and worn, for a photograph of the player equipped. Written straight into the store,
+## like `UNCROWNED_TOWN` — one frame for one photograph, not a save-able state.
+static func _gear_asked() -> PackedStringArray:
+	if not OS.has_feature("debug"):
+		return PackedStringArray()
+	return OS.get_environment("UNCROWNED_GEAR").split(",", false)
+
+
+static func _dress_for_the_photograph(sim: Sim) -> void:
+	var bag := sim.store(&"inventory") as Inventory
+	if bag == null:
+		return
+	for item: String in _gear_asked():
+		if ItemRules.exists(StringName(item)):
+			bag.gain(StringName(item))
+			bag.equip(StringName(item))
 
 
 ## Where the game opens, as a pure function of the four things that decide it, so it

@@ -129,7 +129,7 @@ func _sprite(frames: SpriteFrames, scale_by: float) -> AnimatedSprite2D:
 	sprite.offset = Vector2(0.0, -float(frames.get_frame_texture(&"idle_down", 0).get_height()) * 0.5)
 	sprite.scale = Vector2(scale_by, scale_by)
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST if scale_by >= 1.0 else CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.material = PaperDoll.material(PaperDoll.CANVAS_SHADER, PaperDoll.slots_for(_looks))
+	sprite.material = PaperDoll.material(PaperDoll.CANVAS_SHADER, PaperDoll.slots_for(_looks, PaperDoll.start_kit_worn()))
 	add_child(sprite)
 	return sprite
 
@@ -138,7 +138,7 @@ func _sprite(frames: SpriteFrames, scale_by: float) -> AnimatedSprite2D:
 func _dress() -> void:
 	for sprite: AnimatedSprite2D in [_doll, _small]:
 		if sprite != null:
-			PaperDoll.apply(sprite.material as ShaderMaterial, PaperDoll.slots_for(_looks))
+			PaperDoll.apply(sprite.material as ShaderMaterial, PaperDoll.slots_for(_looks, PaperDoll.start_kit_worn()))
 
 
 func _face(way: int) -> void:

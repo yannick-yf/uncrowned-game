@@ -552,9 +552,14 @@ through creation. It is only what the creation event would have carried, and an 
 that does not exist makes it ignored. `UNCROWNED_SCREEN=creation:talents` opens the
 creation's second page.
 
-**All fourteen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
+**`UNCROWNED_GEAR=royal_helm,short_sword`** (2026-10-01, E4) puts items in the player's
+bag and on him for a photograph — the run a shot carrying `UNCROWNED_LOOK` or `_GEAR`
+starts is made, so it begins with the start kit and no sword. Written straight into the
+store, like `UNCROWNED_TOWN`: one frame for one photograph, not a save-able state.
+
+**All fifteen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
 journal's who-is-where, and the `UNCROWNED_` variables of `shot.sh`, `FREE`, `TOWN`,
-`LENS`, `DUEL`, `TALK`, `DID`, `QUICK`, `HAIL`, `FACTS` and `LOOK` — so they are absent from a release
+`LENS`, `DUEL`, `TALK`, `DID`, `QUICK`, `HAIL`, `FACTS`, `LOOK` and `GEAR` — so they are absent from a release
 export. **`M` is the one that is not**: kept as a real feature, it ships. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

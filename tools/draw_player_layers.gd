@@ -44,7 +44,7 @@ func _initialize() -> void:
 	sheet.convert(Image.FORMAT_RGBA8)
 	_room = CastLooks.room_px()
 	var outs: Dictionary = {}
-	for part: StringName in PaperDoll.HIS_PARTS + PaperDoll.STYLE_PARTS:
+	for part: StringName in all_parts():
 		var out: Image = Image.create(sheet.get_width(), sheet.get_height(), false, Image.FORMAT_RGBA8)
 		out.fill(CLEAR)
 		outs[part] = out
@@ -111,9 +111,12 @@ static func _stamp_all(outs: Dictionary, parts: Dictionary, at: Vector2i) -> voi
 static func split_region(sheet: Image, region: Rect2i, way: StringName, room: int) -> Dictionary:
 	var rect: Rect2i = CastLooks.with_room(region, room)
 	var img: Image = Looks._crop(sheet, rect, Rect2i(region.position - rect.position, region.size))
+	var items: Dictionary = _items(img, way, null)
 	var fig := Looks.Fig.new(img, way)
 	Looks._measure(fig, null)
-	return _split(fig)
+	var parts: Dictionary = _split(fig)
+	parts.merge(items)
+	return parts
 
 
 ## One of our fight cells: measured on the idle frame it was built from, as the looks are;
@@ -129,14 +132,75 @@ static func split_cell(sheet: Image, cell: Dictionary) -> Dictionary:
 	var idle := Looks.Fig.new(idle_img, way)
 	Looks._measure(idle, null)
 	if cell["pose"] == &"hurt":
+		var items: Dictionary = _items(idle_img, way, null)
 		var parts: Dictionary = _split(idle)
+		parts.merge(items)
 		for part: StringName in parts.keys():
 			parts[part] = Looks._flinch(parts[part] as Image, at, base.size, way)
 		return parts
 	var img: Image = Looks._crop(sheet, rect, Rect2i(Vector2i.ZERO, rect.size))
+	var cell_items: Dictionary = _items(img, way, idle)
 	var fig := Looks.Fig.new(img, way)
 	Looks._measure(fig, idle)
-	return _split(fig)
+	var whole: Dictionary = _split(fig)
+	whole.merge(cell_items)
+	return whole
+
+
+## Every sheet this tool writes: his parts, the painted styles, and the items' layers and
+## masks (E4).
+static func all_parts() -> Array[StringName]:
+	var out: Array[StringName] = PaperDoll.HIS_PARTS + PaperDoll.STYLE_PARTS
+	var items: Dictionary = item_layers()
+	for layer: StringName in items.keys():
+		out.append(layer)
+		if bool((items[layer] as Dictionary)["mask"]):
+			out.append(StringName(String(layer) + "_mask"))
+	return out
+
+
+## **The items' layers** (E4): each layer an item of `content/items.json` is drawn with,
+## and the pieces of `draw_cast_looks.gd` that draw it — the cap a works' guard wears, the
+## king's guard's helm and plate, a sword at the belt or in the hand, a bow.
+static func item_layers() -> Dictionary:
+	var out: Dictionary = {}
+	for item: StringName in ItemRules.items():
+		var row: Dictionary = ItemRules.row(item)
+		var draw: Dictionary = row.get("draw", {}) as Dictionary
+		for layer: String in draw.keys():
+			out[StringName(layer)] = {"pieces": draw[layer], "recolour": row.get("draw_recolour", {}),
+				"mask": bool(row.get("hides_hair", false))}
+	return out
+
+
+## His figure dressed in each item, against his figure undressed: **what changed is the
+## item's layer, and what the piece took away from his head is its mask** — a helm's hiding
+## of his hair, his ears and their outline, a cap's of his crown.
+static func _items(img: Image, way: StringName, from: Looks.Fig) -> Dictionary:
+	var out: Dictionary = {}
+	var items: Dictionary = item_layers()
+	for layer: StringName in items.keys():
+		var spec: Dictionary = items[layer] as Dictionary
+		var dressed: Image = img.duplicate() as Image
+		var fig := Looks.Fig.new(dressed, way)
+		Looks._measure(fig, from)
+		Looks._wear(fig, {"recolour": spec["recolour"], "pieces": spec["pieces"]})
+		var drawn: Image = Image.create(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
+		drawn.fill(CLEAR)
+		var mask: Image = Image.create(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
+		mask.fill(CLEAR)
+		for y: int in img.get_height():
+			for x: int in img.get_width():
+				var was: Color = img.get_pixel(x, y)
+				var now: Color = dressed.get_pixel(x, y)
+				if now.a > 0.0 and (was.a == 0.0 or not now.is_equal_approx(was)):
+					drawn.set_pixel(x, y, now)
+				elif was.a > 0.0 and now.a == 0.0 and y < fig.neck + 8:
+					mask.set_pixel(x, y, Color.WHITE)
+		out[layer] = drawn
+		if bool(spec["mask"]):
+			out[StringName(String(layer) + "_mask")] = mask
+	return out
 
 
 static func _split(fig: Looks.Fig) -> Dictionary:

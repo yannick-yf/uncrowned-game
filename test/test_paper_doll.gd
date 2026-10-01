@@ -190,3 +190,63 @@ func test_every_style_and_beard_is_drawn_where_it_shows() -> void:
 	for beard: StringName in PaperDoll.options(&"beard"):
 		if beard != &"none":
 			assert_true(PaperDoll.sheet(StringName("beard_" + String(beard))) != null, "the %s beard has its layer" % beard)
+
+
+# ------------------------------------------------------------------- what he wears (E4) ---
+
+func test_every_item_is_drawn_and_every_head_gear_has_its_mask() -> void:
+	var base: Image = _base()
+	for item: StringName in ItemRules.items():
+		var row: Dictionary = ItemRules.row(item)
+		for key: String in ["layer", "fighting_layer"]:
+			if not row.has(key):
+				continue
+			var layer := StringName(String(row[key]))
+			assert_true(PaperDoll.sheet(layer) != null, "%s is drawn in %s" % [item, layer])
+			var img: Image = _part(layer)
+			if img != null and base != null:
+				assert_eq(img.get_size(), base.get_size(), "%s has his sheet's size" % layer)
+		if bool(row.get("hides_hair", false)):
+			assert_true(PaperDoll.sheet(StringName(String(row["layer"]) + "_mask")) != null,
+				"%s hides the hair with a mask" % item)
+
+
+func test_what_he_wears_fills_its_slot() -> void:
+	var his: Dictionary = AppearanceRules.default_appearance()
+	var kit: Dictionary = PaperDoll.start_kit_worn()
+	var dressed: Dictionary = PaperDoll.slots_for(his, kit)
+	assert_eq(dressed[&"tunic"]["part"], &"tunic", "the cloth tunic is his own tunic")
+	assert_eq(dressed[&"tunic"]["recolour"], PaperDoll.recolour_of(&"clothes", his[&"clothes"]),
+		"in the colour chosen at creation")
+	assert_false(dressed.has(&"weapon"), "nothing in his hands at the start")
+	var armed: Dictionary = kit.duplicate()
+	armed[ItemRules.WEAPON] = &"short_sword"
+	armed[ItemRules.BOW] = &"hunting_bow"
+	armed[ItemRules.HEAD] = &"royal_helm"
+	var walking: Dictionary = PaperDoll.slots_for(his, armed)
+	assert_eq(walking[&"weapon"]["part"], &"item_sword_belt", "the sword at his belt, walking")
+	assert_eq(walking[&"back"]["part"], &"item_bow", "the bow on him")
+	assert_eq(walking[&"head"]["part"], &"item_royal_helm", "the helm on his head")
+	assert_true(walking.has(&"head_mask"), "hiding his hair")
+	var fighting: Dictionary = PaperDoll.slots_for(his, armed, DuelRules.SWORD)
+	assert_eq(fighting[&"weapon"]["part"], &"item_sword_hand", "the sword in his hand, fighting with it")
+	assert_false(fighting.has(&"back"), "and the bow put away")
+	var shooting: Dictionary = PaperDoll.slots_for(his, armed, DuelRules.BOW)
+	assert_eq(shooting[&"weapon"]["part"], &"item_sword_belt", "the sword back at the belt, shooting")
+	assert_eq(shooting[&"back"]["part"], &"item_bow", "and the bow in use")
+	var bare: Dictionary = PaperDoll.slots_for(his, {})
+	assert_eq(bare[&"tunic"]["part"], &"tunic", "with nothing on, his linen")
+	assert_true((bare[&"boots"]["recolour"] as Array).size() == 4, "and bare feet")
+	assert_false(PaperDoll.slots_for(his).has(&"weapon"), "a run never made is drawn as before")
+
+
+func test_a_mask_hides_the_head_under_a_helm() -> void:
+	# What the helm's piece took away from his head when it was baked — hair, ears, their
+	# outline, the head painted under his hair — so the body's and the skin's slots too.
+	var code: String = FileAccess.get_file_as_string("res://view3d/layers/paper_doll.gdshaderinc")
+	for i: int in [0, 1, 6, 7]:
+		assert_true(code.contains("c = doll_over(c, doll_l%d, doll_r%d, uv, masked);" % [i, i]),
+			"slot %d hides under the head gear's mask" % i)
+	for i: int in [2, 3, 4, 5, 8, 9, 10]:
+		assert_true(code.contains("c = doll_over(c, doll_l%d, doll_r%d, uv, false);" % [i, i]),
+			"slot %d does not" % i)

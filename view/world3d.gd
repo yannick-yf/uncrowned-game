@@ -979,10 +979,38 @@ func _doll_figure() -> Node3D:
 		return _figure()
 	sprite.sprite_frames = CastLooks.frames_for(_frames, PaperDoll.sheet(&"body"))
 	sprite.animation = &"idle_down"
-	var paint: ShaderMaterial = PaperDoll.material(PaperDoll.WORLD_SHADER, PaperDoll.slots_for(_player_appearance()))
+	var paint: ShaderMaterial = PaperDoll.material(PaperDoll.WORLD_SHADER, _player_slots(&""))
 	sprite.set_meta(&"doll", paint)
 	sprite.material_override = paint
 	return sprite
+
+
+## **What the player is drawn in**: his appearance and what he wears (group E), with his
+## weapon out when a fight has him striking with it.
+func _player_slots(in_hand: StringName) -> Dictionary:
+	var bag := _sim.store(&"inventory") as Inventory if _sim != null else null
+	var worn: Variant = bag.equipped if bag != null and bag.made else null
+	return PaperDoll.slots_for(_player_appearance(), worn, in_hand)
+
+
+## What the slots were last set from, so they are set again only when it changes.
+var _dressed_as: String = ""
+
+
+func _redress_player(fighting: Dictionary) -> void:
+	var doll := _player.get_meta(&"doll", null) as ShaderMaterial if _player != null else null
+	if doll == null:
+		return
+	var in_hand: StringName = StringName(String(fighting.get("my_weapon", ""))) if not fighting.is_empty() else &""
+	var bag := _sim.store(&"inventory") as Inventory if _sim != null else null
+	var key: String = "%s|%s" % [bag.fingerprint() if bag != null else "", in_hand]
+	if key == _dressed_as:
+		return
+	_dressed_as = key
+	var slots: Dictionary = _player_slots(in_hand)
+	PaperDoll.apply(doll, slots)
+	if _player_ghost != null and _player_ghost.material_override is ShaderMaterial:
+		PaperDoll.apply(_player_ghost.material_override as ShaderMaterial, slots)
 
 
 ## What the player chose to look like (A5's store), or his brother's traveller.
@@ -1293,6 +1321,7 @@ func _sync_player(frame: Dictionary) -> void:
 	_player_last = feet
 	_player_placed = true
 	var fighting: Dictionary = frame.get("fight", {}) as Dictionary
+	_redress_player(fighting)
 	if not _fight_pose(_player, fighting, true, facing):
 		if moved > 0.002:
 			_walk_phase = fposmod(_walk_phase + moved / WALK_CYCLE_M, 1.0)
@@ -1334,7 +1363,7 @@ func _ghost_of(figure: Node3D) -> AnimatedSprite3D:
 	ghost.render_priority = -1
 	var his := body.material_override as ShaderMaterial
 	if body.has_meta(&"doll"):
-		var ghost_paint: ShaderMaterial = PaperDoll.material(PaperDoll.GHOST_SHADER, PaperDoll.slots_for(_player_appearance()))
+		var ghost_paint: ShaderMaterial = PaperDoll.material(PaperDoll.GHOST_SHADER, _player_slots(&""))
 		ghost_paint.set_shader_parameter("ghost_alpha", GHOST_ALPHA)
 		ghost.material_override = ghost_paint
 	elif his != null:
