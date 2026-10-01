@@ -47,6 +47,9 @@ const BOW: StringName = &"bow"
 ## **Bare hands** (group E, 2026-10-01): what a player strikes with who has nothing in his
 ## weapon slot. A tile, like the sword, for `fists_damage`.
 const FISTS: StringName = &"fists"
+## **A surprise attack's blow counts this many times** (R3, Yannick 2026-10-01: « dégâts
+## doublés sur la première attaque qui déclenche le combat »).
+const SURPRISE_TIMES: int = 2
 ## **A bow of the player's own**, which Wren gives as the bow drill begins (T5): a fact,
 ## so shooting is gated by having one and by nothing else (invariant 4).
 const THE_BOW: StringName = &"you:the_bow"

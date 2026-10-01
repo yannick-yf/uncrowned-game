@@ -5,7 +5,7 @@
 #   tools/opening_frames.sh /tmp/opening fr en      # the default
 #   ONLY='inventory' tools/opening_frames.sh /tmp/o  # only the frames whose name matches
 #
-# Thirty-eight frames a language, from the title to the works' gate and the fight there, and what
+# Forty frames a language, from the title to the works' gate and the fight there, and what
 # you carry and what it does in play, each through the debug tools CLAUDE.md lists
 # (UNCROWNED_TALK, _AT, _HAIL, _DUEL, _VIEW, _WORLD, _GEAR, _LOOK), then
 # one line per frame: its name and how many SCRIPT ERRORs its run printed — which has to
@@ -82,6 +82,9 @@ for LANG_ID in $LANGS; do
   # step they see you, the '!' over them and the fight where they stood.
   shoot 21_wolves play $ARMED UNCROWNED_AT=306,268
   shoot 21b_wolves_seen play $ARMED UNCROWNED_AT=306,266
+  # Behind them, unseen, a bow on his back (R3): K's prompt, then the arrow, doubled.
+  shoot 21c_wolves_behind play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257
+  shoot 21d_surprise play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257 UNCROWNED_DUEL=ambush:0:25
   shoot 22_works_gate play $ARMED UNCROWNED_AT=317,208
   shoot 23_map map $ARMED
   shoot 24_flat_bake play $ARMED UNCROWNED_VIEW=2d

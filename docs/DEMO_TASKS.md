@@ -2838,11 +2838,24 @@ behind or beside, close enough to touch, none; the packs wander and replay.
 > the road — as W2 meant (*Blackcairn reachable in minute one, at a price*). The two walks
 > about the road's own safety clear the packs first. Frames 21 and 21b.
 
-### R3 · The surprise attack — **next**
+### R3 · The surprise attack — **built 2026-10-01**
 
 From outside an enemy's sight, the player attacks first: **K**, with what he holds — an
 arrow at a pack two to six tiles off, or a blade at an animal beside him. The fight begins
 where everybody stands, the player's blow its first act; **doubled, and it cannot miss**.
+
+> **Built.** `WildSystem.ambush_target` is the one question — a blade (his sword, or his
+> fists) at an animal beside him first, else, with a bow on his back, the nearest in the
+> bow's band; never a pack that sees him, since that is already a fight. The window asks
+> it for the prompt — *K, tirer sur le loup (attaque surprise)* — and submits **`ambush`**;
+> the simulation asks it again and refuses anything else (`ambush_refused`). The fight
+> begins with every animal where it stands and the player first, and **his first turn is
+> the blow**, taken by the very path a keyboard turn takes (`_player_turn_of`), with
+> `Duel.surprise` doubling it once (`DuelRules.SURPRISE_TIMES`); `blow_landed` carries
+> `surprise`, and the fight's HUD floats *Surprise !* over the doubled number. Measured: a
+> sword from behind fells a wolf (ten points) in the one blow; an arrow takes six. In R4 it
+> also cannot miss. `UNCROWNED_DUEL=ambush:0:25` presses K for a photograph; frames 21c
+> and 21d.
 
 ### R4 · The chance to miss — **after R3**
 

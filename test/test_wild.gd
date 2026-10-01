@@ -608,3 +608,101 @@ func test_a_pack_wanders_its_ground_and_turns_and_replays() -> void:
 	assert_true(looks.size() >= 3, "and looks one way and another: %d" % looks.size())
 	assert_eq((Game.replay(sim).store(&"wild") as Wild).fingerprint(), wild.fingerprint(),
 		"the same walk, replayed")
+
+
+# ------------------------------------------- R3, the surprise attack ---
+
+func _behind_pack(sim: Sim, back: int, aside: int) -> Vector2i:
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = (sim.store(&"world") as WorldState).region()
+	var look: Vector2i = wild.looks(0)
+	var side := Vector2i(-look.y, look.x)
+	return wild.now_at(region, 0) - look * back + side * aside
+
+
+func _first_blow(sim: Sim) -> Dictionary:
+	for event: SimEvent in sim.events.all():
+		if event.type == &"blow_landed":
+			return event.data
+	return {}
+
+
+func test_an_arrow_from_where_they_cannot_see_begins_the_fight_doubled() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
+	sim.submit(&"tick_noop", {})
+	sim.advance(1)
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var spot: Vector2i = _behind_pack(sim, 5, 0)
+	assert_true(world.region().is_passable(spot), "behind the pack, five tiles: %s" % spot)
+	world.player_pos = Vector2(spot) + Vector2(0.5, 0.5)
+	sim.advance(3)
+	var duel := sim.store(&"duel") as Duel
+	assert_false(duel.on(), "behind it, nothing has begun")
+	var aim: Dictionary = WildSystem.ambush_target(wild, world.region(), world.player_tile(), sim.store(&"inventory") as Inventory)
+	assert_eq(aim.get("weapon", &""), DuelRules.BOW, "K would shoot: %s" % aim)
+	sim.submit(&"ambush", {"pack": 0})
+	for _step: int in 200:
+		sim.advance(1)
+		if not _first_blow(sim).is_empty():
+			break
+	assert_true(duel.on() or not _first_blow(sim).is_empty(), "the arrow begins the fight")
+	assert_eq(duel.started_by, DuelRules.PLAYER, "begun by you")
+	assert_eq(sim.events.of_type(&"pack_spotted").size(), 0, "and nobody saw you")
+	var blow: Dictionary = _first_blow(sim)
+	assert_eq(String(blow.get("by", "")), String(DuelRules.PLAYER), "the first blow is yours")
+	assert_eq(int(blow.get("damage", 0)), DuelRules.bow_damage() * DuelRules.SURPRISE_TIMES, "doubled")
+	assert_true(bool(blow.get("surprise", false)), "and said to be a surprise")
+
+
+func test_a_blade_from_behind_fells_a_wolf_before_it_turns() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	# Beside the last of the pack, on the side away from where it looks.
+	var animals: Array[Vector2i] = wild.members(region, 0)
+	var last: Vector2i = animals[animals.size() - 1]
+	var spot: Vector2i = last - wild.looks(0)
+	assert_true(region.is_passable(spot) and not animals.has(spot), "a free tile behind it: %s" % spot)
+	world.player_pos = Vector2(spot) + Vector2(0.5, 0.5)
+	sim.advance(3)
+	assert_false((sim.store(&"duel") as Duel).on(), "close enough to touch, unseen")
+	var aim: Dictionary = WildSystem.ambush_target(wild, region, world.player_tile(), sim.store(&"inventory") as Inventory)
+	assert_eq(aim.get("weapon", &""), DuelRules.SWORD, "K would strike with the sword: %s" % aim)
+	sim.submit(&"ambush", {"pack": 0})
+	for _step: int in 200:
+		sim.advance(1)
+		if not _first_blow(sim).is_empty():
+			break
+	var blow: Dictionary = _first_blow(sim)
+	assert_eq(int(blow.get("damage", 0)), DuelRules.strike_damage() * DuelRules.SURPRISE_TIMES, "ten")
+	assert_true(bool(blow.get("felled", false)), "a wolf of ten points, felled by the one blow")
+
+
+func test_no_surprise_where_they_see_you_or_nothing_is_in_reach() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	var inventory := sim.store(&"inventory") as Inventory
+	var lead: Vector2i = wild.now_at(region, 0)
+	assert_true(WildSystem.ambush_target(wild, region, lead + wild.looks(0) * 3, inventory).is_empty(),
+		"in front of them, it is already a fight: nothing to surprise")
+	assert_true(WildSystem.ambush_target(wild, region, lead - wild.looks(0) * 5, inventory).is_empty(),
+		"five tiles behind, a sword reaches nobody, and there is no bow")
+	world.player_pos = Vector2(lead - wild.looks(0) * 5) + Vector2(0.5, 0.5)
+	sim.submit(&"ambush", {"pack": 0})
+	sim.advance(2)
+	assert_false((sim.store(&"duel") as Duel).on(), "K there begins nothing")
+	assert_eq(sim.events.of_type(&"ambush_refused").size(), 1, "and the simulation says so")

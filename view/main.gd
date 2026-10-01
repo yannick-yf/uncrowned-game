@@ -252,6 +252,13 @@ func _ready() -> void:
 	var duelling: String = OS.get_environment("UNCROWNED_DUEL")
 	if OS.has_feature("debug") and duelling != "":
 		var asked: PackedStringArray = duelling.strip_edges().split(":")
+		# `ambush:0:40` presses K at pack 0 from where the player stands, as the key does
+		# (R3), and holds the picture forty steps in.
+		var ambush: bool = asked.size() > 1 and asked[0] == "ambush"
+		if ambush:
+			_sim.submit(&"ambush", {"pack": asked[1].to_int()})
+			_sim.advance(1)
+			asked = asked.slice(1)
 		# `drill:sword` begins a drill of the tutorial as its master's line does (O8).
 		var drill: String = ""
 		if asked.size() > 1 and asked[0] == "drill":
@@ -280,8 +287,9 @@ func _ready() -> void:
 			# And the bow drill a bow of your own, which the line would have handed you (T5).
 			if drill == "bow":
 				_sim.facts.add_source(DuelRules.THE_BOW, &"debug")
-		_sim.submit(&"duel_began", began)
-		_sim.advance(1)
+		if not ambush:
+			_sim.submit(&"duel_began", began)
+			_sim.advance(1)
 		var turns: int = maxi(asked[1].to_int(), 0) if asked.size() > 1 and asked[1].is_valid_int() else 0
 		var playing: DuelPlayer = DuelPlayer.new(StringName(asked[2])) if asked.size() > 2 else null
 		for i: int in turns:
@@ -1287,6 +1295,16 @@ func _read_input() -> void:
 		_journal_open = not _journal_open
 		_draw_journal()
 
+	# **K attacks first, from outside their sight** (R3): the same key that strikes in a
+	# fight. The window only asks; `WildSystem` decides whether the blow is there to strike.
+	if Input.is_action_just_pressed(&"strike"):
+		var aim: Dictionary = _ambush_aim()
+		if not aim.is_empty():
+			if _held_dir != Vector2i.ZERO:
+				_held_dir = Vector2i.ZERO
+				_sim.submit(&"move_intent", {"x": 0, "y": 0})
+			_sim.submit(&"ambush", {"pack": int(aim["pack"])})
+
 	if Input.is_action_just_pressed(&"speak_out"):
 		if _can_warn():
 			_sim.submit(&"tell_town")
@@ -1303,6 +1321,14 @@ func _close_overlays() -> void:
 	if _journal_open:
 		_journal_open = false
 		_draw_journal()
+
+
+## What K would attack outside a fight (R3), the simulation's own answer, or nothing.
+func _ambush_aim() -> Dictionary:
+	if _duel == null or _duel.on() or _world.in_dialogue() or _held_by_the_hail():
+		return {}
+	return WildSystem.ambush_target(_sim.store(&"wild") as Wild, _world.region(), _world.player_tile(),
+		_sim.store(&"inventory") as Inventory)
 
 
 ## **Tab: what you carry** (E5). The map and the journal step aside for it, and the key
@@ -2365,6 +2391,12 @@ func _draw_hud() -> void:
 			# Nothing to do here, but a stall picked clean still says so.
 			if _world.region().nearest_stall(_world.player_tile(), CrimeRules.STALL_REACH) != Region.NOWHERE:
 				rows.append(Text.of(&"prompt.picked_clean"))
+
+	# **K, from where they cannot see you** (R3): its own row, beside E's.
+	var aim: Dictionary = _ambush_aim()
+	if not aim.is_empty():
+		var named: String = Text.of(StringName("beast.%s.the" % String(aim["kind"])))
+		rows.append(Text.of(&"prompt.ambush.shoot" if aim["weapon"] == DuelRules.BOW else &"prompt.ambush.strike", [named]))
 
 	# Its own row, never an `elif`. What you know is available wherever you are
 	# standing, and burying it behind whatever happens to be nearer would make the

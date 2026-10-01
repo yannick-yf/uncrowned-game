@@ -202,6 +202,7 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		duel.reinforce_total = maxi(int(answer.get("total", 1)), 0)
 	duel.said = String(event.data.get("said", ""))
 	duel.said_by = StringName(String(event.data.get("said_by", "")))
+	duel.surprise = false
 	duel.master_at = Duel.NOWHERE
 	if duel.drill != Duel.NOBODY:
 		var master: StringName = DuelRules.drill_master(duel.drill)
@@ -222,6 +223,15 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		"first": String(duel.fighters[duel.turn].who),
 	})
 	_open_turn(sim, duel, world)
+	# **The surprise attack** (R3): the fight was begun by a blow from where nobody saw him,
+	# and that blow is the player's first turn, taken where he stands — doubled, and sure.
+	var opening: Dictionary = event.data.get("opening", {}) as Dictionary
+	if not opening.is_empty() and duel.waiting_on_player():
+		duel.surprise = true
+		var mine_now: DuelFighter = duel.me()
+		_player_turn_of(sim, duel, {"to_x": mine_now.at.x, "to_y": mine_now.at.y,
+			"action": String(DuelRules.STRIKE), "target": String(opening.get("seat", "")),
+			"weapon": String(opening.get("weapon", ""))})
 
 
 ## Who the fight is against: one name, or a list of them. There is no party — the
@@ -298,13 +308,19 @@ func _choose(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 ## and the window only ever offers what the rules allow. An event that arrives when it
 ## is not the player's turn is ignored, which is the same answer on a replay.
 func _player_turn(sim: Sim, duel: Duel, event: SimEvent) -> void:
+	_player_turn_of(sim, duel, event.data)
+
+
+## The player's turn, from what it asks: one door for the keyboard's `duel_turn` and for a
+## surprise attack's opening blow (R3), so the second obeys every rule the first does.
+func _player_turn_of(sim: Sim, duel: Duel, data: Dictionary) -> void:
 	if not duel.waiting_on_player():
 		return
 	var world := sim.store(&"world") as WorldState
 	if world == null:
 		return
 	var mine: DuelFighter = duel.acting_fighter()
-	var wanted := Vector2i(int(event.data.get("to_x", mine.at.x)), int(event.data.get("to_y", mine.at.y)))
+	var wanted := Vector2i(int(data.get("to_x", mine.at.x)), int(data.get("to_y", mine.at.y)))
 	# Nor through a gate that is shut to you (the review of T9): a fight is walked on the
 	# same ground as the world, wards included.
 	var closed: Dictionary = _taken(duel, mine)
@@ -318,19 +334,19 @@ func _player_turn(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	# E): the bow on his back if he asks for it and has one, else what is in his hand — the
 	# sword, or his fists.
 	mine.weapon = inventory.weapon_in_hand() if inventory != null else DuelRules.SWORD
-	if String(event.data.get("weapon", "")) == String(DuelRules.BOW) and inventory != null and inventory.has_bow():
+	if String(data.get("weapon", "")) == String(DuelRules.BOW) and inventory != null and inventory.has_bow():
 		mine.weapon = DuelRules.BOW
 	# **Two actions, and there is no guard** (Yannick, 2026-09-24). Anything that is not
 	# a strike is a wait: a window asking for a third one is a window out of date with
 	# the design, and the fight answers it with the one action that always exists rather
 	# than by dropping the turn.
-	var asked: String = String(event.data.get("action", ""))
+	var asked: String = String(data.get("action", ""))
 	var action: StringName = DuelRules.WAIT
 	if asked == String(DuelRules.STRIKE):
 		action = DuelRules.STRIKE
 	elif asked == String(DuelRules.CAST):
 		action = DuelRules.CAST
-	var at := StringName(String(event.data.get("target", "")))
+	var at := StringName(String(data.get("target", "")))
 	# **The gift, cast** (O10): only by somebody she gave it to, when it is ready, at
 	# somebody within its reach of where the move ends — anything else is a wait.
 	if action == DuelRules.CAST:
@@ -466,7 +482,12 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 	var amount: int = DuelRules.damage_of(who.who, who.weapon)
 	if duel.drill != Duel.NOBODY and not who.is_player():
 		amount = DuelRules.drill_damage(duel.drill)
-	_land(sim, duel, world, who, victim, amount, move)
+	# The surprise attack's blow (R3): twice what it costs, once.
+	var surprised: bool = duel.surprise and who.is_player()
+	if surprised:
+		amount *= DuelRules.SURPRISE_TIMES
+		duel.surprise = false
+	_land(sim, duel, world, who, victim, amount, move, surprised)
 
 
 ## **The one door every hit goes through** (O5, 2026-09-29): a blow, and in time an
@@ -474,7 +495,7 @@ func _strike(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter) -> void:
 ## facing, the felling and the one `blow_landed` the window reads — so nothing that
 ## hurts in a fight can quietly skip a rule the sword obeys.
 func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
-		victim: DuelFighter, amount: int, move: StringName) -> void:
+		victim: DuelFighter, amount: int, move: StringName, surprised: bool = false) -> void:
 	var damage: int = amount
 	# **What he wears takes its share** (group E): each piece's protection off the blow,
 	# never below one — a king's guard's ten is five through full royal plate.
@@ -526,6 +547,7 @@ func _land(sim: Sim, duel: Duel, world: WorldState, who: DuelFighter,
 		"player_hp": mine.hp if mine != null else 0,
 		"apart_mm": DuelRules.millimetres_of(DuelRules.apart(who.at, victim.at)),
 		"felled": DuelRules.is_down(victim.hp),
+		"surprise": surprised,
 	})
 
 

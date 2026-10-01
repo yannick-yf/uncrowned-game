@@ -278,6 +278,10 @@ func _take_blow(blow: Dictionary) -> void:
 		var colour: Color = (MINE if by_me else HIS) if not guarded else Color(0.694, 0.851, 0.804)
 		_floats.append({"text": text, "at": _place(at, not by_me), "born": _now,
 			"colour": colour, "size": Ui.HEADING if (damage >= 2 and not guarded) else Ui.ROW})
+		# **The surprise attack says so** (R3), over the number it doubled.
+		if bool(blow.get("surprise", false)):
+			_floats.append({"text": Text.of(&"fight.surprise"), "at": _place(at, not by_me) + Vector2(0.0, -18.0),
+				"born": _now, "colour": MINE, "size": Ui.ROW})
 	elif kind == "blow_missed":
 		_floats.append({"text": Text.of(&"fight.miss"), "at": _place(at, by_me), "born": _now,
 			"colour": Ui.DIM, "size": Ui.NOTE})

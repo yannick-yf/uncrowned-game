@@ -91,6 +91,10 @@ var master_at: Vector2i = NOWHERE
 ## never on screen at all. The window shows it through the first round.
 var said: String = ""
 var said_by: StringName = NOBODY
+## **The player's first blow comes from where nobody saw him** (R3): doubled, and it cannot
+## miss. Set as a fight begins on an attack from outside an enemy's sight; spent on that
+## blow.
+var surprise: bool = false
 
 
 func on() -> bool:
