@@ -40,7 +40,8 @@ func _ready() -> void:
 	# The quick launch is a fresh run at the floor, saved as Begin saves it, so dying
 	# still puts you back at a fire.
 	if first == &"play" and quick == "1" and shot.is_empty():
-		var run: Sim = Game.begin_run(TraitRules.at_the_floor())
+		var run: Sim = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED,
+			(load("res://view/creation.gd") as GDScript).look_asked())
 		SaveFile.write(run)
 		carrying = run
 	_go(first, carrying)

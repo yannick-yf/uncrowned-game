@@ -34,7 +34,8 @@ func _all_rows() -> Array[Dictionary]:
 
 	var creation: Node = _screen("res://view/creation.gd")
 	creation.call(&"_build")
-	rows.append_array((creation.get(&"_menu") as Menu).rows)
+	rows.append_array((creation.get(&"_look_menu") as Menu).rows)
+	rows.append_array((creation.get(&"_talent_menu") as Menu).rows)
 	creation.free()
 
 	var play: Node = _screen("res://view/main.gd")
@@ -157,7 +158,7 @@ func test_creation_cannot_spend_a_point_it_does_not_have() -> void:
 	# pressing. §11's cap stops it at 5 and the pool stops the rest.
 	for _press: int in 40:
 		creation.call(&"_spend", 1)
-		(creation.get(&"_menu") as Menu).move(1)
+		(creation.get(&"_talent_menu") as Menu).move(1)
 	var levels: Dictionary = creation.get(&"_levels") as Dictionary
 	assert_true(TraitRules.is_legal(levels),
 		"no sequence of presses builds an illegal character: %s" % levels)
@@ -168,14 +169,14 @@ func test_creation_cannot_spend_a_point_it_does_not_have() -> void:
 func test_begin_is_closed_until_the_last_point_is_placed() -> void:
 	var creation: Node = _screen("res://view/creation.gd")
 	creation.call(&"_build")
-	var menu: Menu = creation.get(&"_menu") as Menu
+	var menu: Menu = creation.get(&"_talent_menu") as Menu
 	assert_false(menu.point_at(&"begin"),
 		"with ten points unspent the cursor cannot even reach Begin")
 	for _press: int in TraitRules.POOL:
 		creation.call(&"_spend", 1)
 		if TraitRules.spent(creation.get(&"_levels") as Dictionary) % 4 == 0:
 			menu.move(1)
-	menu = creation.get(&"_menu") as Menu
+	menu = creation.get(&"_talent_menu") as Menu
 	assert_eq(TraitRules.spent(creation.get(&"_levels") as Dictionary), TraitRules.POOL,
 		"ten presses, ten points")
 	assert_true(menu.point_at(&"begin"), "and now Begin is a row you can sit on")
@@ -537,3 +538,48 @@ func test_the_dialogue_box_holds_every_row_it_can_be_given() -> void:
 	assert_true(choices.offset_bottom <= box.offset_bottom - box.offset_top, "and the choices fit inside the box")
 	assert_true(box.offset_bottom <= 360.0, "and the box on the screen")
 	main.free()
+
+
+# ------------------------------------------------------------ what he looks like (A6) ---
+
+func test_the_look_page_turns_every_choice_both_ways_and_round() -> void:
+	var creation: Node = _screen("res://view/creation.gd")
+	creation.call(&"_build")
+	var menu: Menu = creation.get(&"_look_menu") as Menu
+	for choice: StringName in AppearanceRules.ALL:
+		assert_true(menu.point_at(choice), "%s is a row of the first page" % choice)
+		var options: Array[StringName] = AppearanceRules.options(choice)
+		var seen: Dictionary = {}
+		for _press: int in options.size():
+			seen[(creation.call(&"looks") as Dictionary)[choice]] = true
+			creation.call(&"_change", 1)
+		assert_eq(seen.size(), options.size(), "%s: every option reached going right" % choice)
+		assert_eq((creation.call(&"looks") as Dictionary)[choice], options[0], "%s: and round to the first" % choice)
+		creation.call(&"_change", -1)
+		assert_eq((creation.call(&"looks") as Dictionary)[choice], options[options.size() - 1], "%s: left from the first is the last" % choice)
+	creation.free()
+
+
+func test_a_look_chosen_on_the_screen_is_the_run_s() -> void:
+	var creation: Node = _screen("res://view/creation.gd")
+	creation.call(&"_build")
+	var menu: Menu = creation.get(&"_look_menu") as Menu
+	menu.point_at(&"hair_colour")
+	creation.call(&"_change", 1)
+	menu.point_at(&"beard")
+	creation.call(&"_change", -1)
+	var looks: Dictionary = creation.call(&"looks") as Dictionary
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor(), Sim.DEFAULT_SEED, looks)
+	assert_eq((sim.store(&"appearance") as Appearance).chosen(), AppearanceRules.completed(looks),
+		"the run is the person on the screen")
+	assert_ne(looks[&"hair_colour"], AppearanceRules.default_appearance()[&"hair_colour"], "changed from his")
+	creation.free()
+
+
+func test_every_option_has_a_name_in_both_languages() -> void:
+	for language: String in ["en", "fr"]:
+		var known: Array[String] = Text.keys_for(language)
+		for choice: StringName in AppearanceRules.ALL:
+			assert_true(known.has("look.%s" % choice), "%s names the %s row" % [language, choice])
+			for option: StringName in AppearanceRules.options(choice):
+				assert_true(known.has("look.%s.%s" % [choice, option]), "%s names %s %s" % [language, choice, option])

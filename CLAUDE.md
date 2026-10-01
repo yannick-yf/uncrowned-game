@@ -545,9 +545,16 @@ never ships; its tiles are the baked world's.
 men beaten, and the empty gateway and the furnaces' offers after it had no other way to be
 photographed. Like `UNCROWNED_TOWN`, one frame for one photograph, not a save-able state.
 
-**All thirteen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
+**`UNCROWNED_LOOK=hair_style=long,hair_colour=blond`** (2026-10-01, A6) presets what the
+player looks like — on the creation screen for its photograph, and on the run
+`UNCROWNED_QUICK=1` opens — so a non-default player can be photographed without playing
+through creation. It is only what the creation event would have carried, and an option
+that does not exist makes it ignored. `UNCROWNED_SCREEN=creation:talents` opens the
+creation's second page.
+
+**All fourteen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
 journal's who-is-where, and the `UNCROWNED_` variables of `shot.sh`, `FREE`, `TOWN`,
-`LENS`, `DUEL`, `TALK`, `DID`, `QUICK`, `HAIL` and `FACTS` — so they are absent from a release
+`LENS`, `DUEL`, `TALK`, `DID`, `QUICK`, `HAIL`, `FACTS` and `LOOK` — so they are absent from a release
 export. **`M` is the one that is not**: kept as a real feature, it ships. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 

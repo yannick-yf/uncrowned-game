@@ -2591,6 +2591,18 @@ four traits, as today), then Begin. Keyboard throughout, French and English, the
 `Ui` as every other screen. **Check:** frames of both pages in both languages; a choice
 changes the preview on the same frame.
 
+> **Built 2026-10-01.** `view/creation.gd`: page one, **Appearance** — the five choices with
+> arrows either side and, for the colours, a swatch moved exactly as the shader moves it
+> (`PaperDoll.swatch`); *At random*, seeded from the clock, which is the window's; *Next*.
+> The figure on the left is his frames re-pointed at the layers and drawn by the canvas
+> shader at two screen pixels to one of his, walking and turning through his four facings,
+> with the same figure small in a corner at the game's size. Page two, **Talents**, is the
+> pool as before beside the same figure; Escape goes back a page. Begin submits one event
+> carrying both. **`UNCROWNED_LOOK`** presets a look for photographs and for the quick
+> launch (CLAUDE.md). `docs/frames/creation/screen.png`: both pages in both languages.
+> `test_screens`: every choice turns both ways and round; a look chosen on the screen is the
+> run's; every option is named in both languages; the talents' tests on the second menu.
+
 ### A7 · Seen in play
 
 Est. 2 h. The chosen appearance in the world, in a fight, through a save and a load.

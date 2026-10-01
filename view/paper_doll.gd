@@ -132,3 +132,27 @@ static func apply(paint: ShaderMaterial, slots: Dictionary) -> void:
 	var mask: Texture2D = slots.get(&"head_mask", null) as Texture2D
 	paint.set_shader_parameter("doll_head_mask", mask)
 	paint.set_shader_parameter("doll_has_mask", 1.0 if mask != null else 0.0)
+
+
+## **A colour to show beside a choice** on the creation screen: a representative pixel of
+## his — a strand of his hair, his cheek, his shirt — moved by that option exactly as the
+## shader moves it. `Color(0, 0, 0, 0)` for a choice that is not a colour.
+static func swatch(choice: StringName, option: StringName) -> Color:
+	var his: Color
+	match choice:
+		AppearanceRules.HAIR_COLOUR:
+			his = Color8(158, 66, 34)
+		AppearanceRules.SKIN:
+			his = Color8(250, 200, 168)
+		AppearanceRules.CLOTHES:
+			his = Color8(46, 96, 176)
+		_:
+			return Color(0, 0, 0, 0)
+	var r: Array = recolour_of(choice, option)
+	if r.size() != 4:
+		return his
+	var s: float = minf(maxf(his.s * float(r[1]), float(r[2])), 1.0)
+	var v: float = minf(his.v * float(r[3]), 1.0)
+	if v > 0.35 and s < 0.24:
+		s = 0.24
+	return Color.from_hsv(fposmod(float(r[0]), 360.0) / 360.0, s, v)
