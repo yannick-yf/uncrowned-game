@@ -32,6 +32,8 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 	sim.add_store(&"travellers", Travellers.new())
 	sim.add_store(&"allegiance", Allegiance.new())
 	sim.add_store(&"traits", Traits.new())
+	# What the player chose to look like (group A).
+	sim.add_store(&"appearance", Appearance.new())
 	sim.add_store(&"towns", TownState.new())
 	sim.add_store(&"folk", Folk.new())
 	sim.add_store(&"player", PlayerState.new())
@@ -51,11 +53,15 @@ static func build(p_seed: int = Sim.DEFAULT_SEED) -> Sim:
 ## A fresh run with a character: the world built and `create_character` submitted with
 ## these trait levels, as the creation screen does when Begin is pressed. One place, so
 ## the quick start for testing and the real screen make the same first event.
-static func begin_run(levels: Dictionary, p_seed: int = Sim.DEFAULT_SEED) -> Sim:
+static func begin_run(levels: Dictionary, p_seed: int = Sim.DEFAULT_SEED, looks: Dictionary = {}) -> Sim:
 	var sim: Sim = build(p_seed)
 	var data: Dictionary = {}
 	for what: StringName in TraitRules.ALL:
 		data[String(what)] = int(levels.get(what, TraitRules.FLOOR))
+	# The appearance rides on the same event (group A): who you are is chosen once.
+	var whole: Dictionary = AppearanceRules.completed(looks)
+	for choice: StringName in AppearanceRules.ALL:
+		data[String(choice)] = String(whole[choice])
 	sim.submit(&"create_character", data)
 	sim.advance(1)
 	return sim
@@ -140,7 +146,7 @@ static func fresh_stores() -> Dictionary:
 		&"worldtick": WorldTick.new(),
 		&"standing": Standing.new(), &"rumours": Rumours.new(),
 		&"travellers": Travellers.new(),
-		&"allegiance": Allegiance.new(), &"traits": Traits.new(),
+		&"allegiance": Allegiance.new(), &"traits": Traits.new(), &"appearance": Appearance.new(),
 		&"towns": TownState.new(), &"folk": Folk.new(),
 		&"player": PlayerState.new(),
 		&"wild": Wild.new(),

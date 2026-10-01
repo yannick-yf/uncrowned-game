@@ -323,6 +323,7 @@
   "creation.pool": "Points left: {0}",
   "creation.help": "Arrows: spend  |  Enter: begin  |  Esc: back",
   "creation.overspent": "Too many points spent.",
+  "creation.no_such_look": "That look does not exist.",
   "creation.out_of_range": "Between 1 and 5.",
   "creation.begin": "Begin",
   "title.name": "UNCROWNED",

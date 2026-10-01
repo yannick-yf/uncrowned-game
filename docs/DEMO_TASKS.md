@@ -2574,6 +2574,15 @@ Est. 2 h. `create_character` carries the five choices; an `Appearance` store hol
 appearance; a save from before A5 loads as his traveller; an unknown style is refused
 with the traits untouched.
 
+> **Built 2026-10-01.** `core/rules/appearance_rules.gd` reads the options from
+> `content/appearance.json` (the window's `PaperDoll` now asks it rather than reading the
+> table twice); `core/appearance.gd` is the store, registered beside the traits;
+> `CreationSystem` checks the traits and the look before writing either, so a refusal
+> leaves nothing half-made, and says why (`creation.no_such_look`, both languages).
+> `Game.begin_run` takes the look. No save version: an old creation event names none and
+> is his traveller. `test_appearance`: the table's counts, the event carrying the look and
+> replaying it, an old run, a refusal, and the window drawing what was chosen.
+
 ### A6 · The creation screen, redone
 
 Est. 6 h. Two pages: **Appearance** (the five choices, a large preview turning through his

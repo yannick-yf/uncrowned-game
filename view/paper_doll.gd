@@ -43,7 +43,7 @@ const WORLD_SHADER: String = "res://view3d/layers/paper_doll_world.gdshader"
 const GHOST_SHADER: String = "res://view3d/layers/paper_doll_ghost.gdshader"
 const CANVAS_SHADER: String = "res://view3d/layers/paper_doll_canvas.gdshader"
 ## The five choices of the creation screen, in its order.
-const CHOICES: Array[StringName] = [&"hair_style", &"hair_colour", &"skin", &"beard", &"clothes"]
+const CHOICES: Array[StringName] = AppearanceRules.ALL
 
 static var _table: Dictionary = {}
 static var _sheets: Dictionary = {}
@@ -57,37 +57,17 @@ static func _read() -> Dictionary:
 
 
 static func _list_of(choice: StringName) -> String:
-	match choice:
-		&"hair_style":
-			return "hair_styles"
-		&"hair_colour":
-			return "hair_colours"
-		&"skin":
-			return "skin_tones"
-		&"beard":
-			return "beards"
-		&"clothes":
-			return "clothes_colours"
-	return ""
+	return AppearanceRules.list_name(choice)
 
 
 ## The options of one choice, in the order the creation screen offers them.
 static func options(choice: StringName) -> Array[StringName]:
-	var out: Array[StringName] = []
-	var held: Variant = _read().get(_list_of(choice), [])
-	var names: Array = (held as Dictionary).keys() if held is Dictionary else held as Array
-	for name: Variant in names:
-		out.append(StringName(String(name)))
-	return out
+	return AppearanceRules.options(choice)
 
 
 ## His traveller, exactly: what a player who changes nothing looks like.
 static func default_appearance() -> Dictionary:
-	var out: Dictionary = {}
-	var held: Dictionary = _read().get("default", {}) as Dictionary
-	for choice: StringName in CHOICES:
-		out[choice] = StringName(String(held.get(String(choice), "")))
-	return out
+	return AppearanceRules.default_appearance()
 
 
 ## A recolouring from the table, or `[]` for his own pixels.

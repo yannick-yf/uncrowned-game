@@ -323,6 +323,7 @@
   "creation.pool": "Points restants : {0}",
   "creation.help": "Flèches : répartir  |  Entrée : commencer  |  Échap : retour",
   "creation.overspent": "Trop de points dépensés.",
+  "creation.no_such_look": "Cette apparence n'existe pas.",
   "creation.out_of_range": "Entre 1 et 5.",
   "creation.begin": "Commencer",
   "title.name": "UNCROWNED",
