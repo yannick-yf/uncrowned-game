@@ -2505,6 +2505,19 @@ fight cell — plus the shaved head his hair hides. **Tests first:** the default
 stacked, give his traveller **pixel for pixel**; every layer has his sheet's size; no
 pixel of a layer is one his shader throws away.
 
+> **Built 2026-10-01.** `tools/draw_player_layers.gd` (it measures with
+> `draw_cast_looks.gd`'s own functions) writes seven parts into `view3d/layers/`: `body`
+> (his outline and eyes), `skin`, `trousers`, `boots`, `tunic`, `pack` (with its straps
+> and belt) and `hair_spiky`; `view/paper_doll.gd` names them and the order they stack
+> in. **A head under his hair** is painted into `skin` only where his hair was — wide
+> enough to carry his ears, down the sides of his face to the jaw — so his traveller is
+> unchanged and a short cut has a skull to sit on. The palest strands of his hair are
+> told from skin by what surrounds them, and every dark line in his head that is not his
+> face's is his hair's. `test_paper_doll`: his parts stacked are his traveller **pixel for
+> pixel** in four walk frames and three fight cells; a head stands under his hair.
+> `docs/frames/creation/layers.png` shows him restacked and without his hair. Each part
+> sheet is small on disk (70 KB to 800 KB) because each is mostly empty.
+
 ### A3 · The paper-doll shader
 
 Est. 4 h. One compositing function (`view3d/layers/paper_doll.gdshaderinc`) — layers in
