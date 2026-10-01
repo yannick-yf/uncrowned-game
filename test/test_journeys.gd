@@ -144,12 +144,24 @@ func test_the_kettle_actually_divides_the_map() -> void:
 
 # --------------------------------------------------------- the two routes ---
 
+## **The ground, not the wolves** (R2, 2026-10-01). The climb's pack stands beside the
+## King's road — W2 put it there: Blackcairn is reachable in minute one, *at a price*. A
+## pack that only bit what touched it let a walk five tiles off go by; one that sees five
+## tiles ahead (R2) watches the road, as it was meant to. These walks are about the road
+## and the wild themselves, so the packs are cleared first; `test_wild` is about them.
+func _clear_the_packs() -> void:
+	var wild := _sim.store(&"wild") as Wild
+	for which: int in Wild.packs().size():
+		wild.cleared[which] = true
+
+
 func test_walking_the_kings_road_costs_nothing() -> void:
 	# Start on the road rather than wherever the game happens to begin. This used to
 	# lean on the player starting in Brindle; the opening now starts them in the
 	# wood, and a test about whether *the road* is safe should not also be a test
 	# about walking to it.
 	_world.player_pos = _world.region().brindle_centre()
+	_clear_the_packs()
 	var hp: int = _world.player_hp
 	var deaths: int = _world.deaths
 	# Stopping short of the castle gate: the road is safe, but the man standing at
@@ -173,11 +185,13 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 ## map has stopped making its argument. Measured, not assumed: the same walk both
 ## ways, in seconds. `tools/measure_routes.gd` prints the same figures.
 func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
+	_clear_the_packs()
 	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
 	var road_blood: int = _blood_price(WorldState.MAX_HP, 0)
 
 	_sim = Game.build()
 	_world = _sim.store(&"world") as WorldState
+	_clear_the_packs()
 	var wild_seconds: float = _seconds_to_cross(_wild_line())
 	var wild_blood: int = _blood_price(WorldState.MAX_HP, 0)
 

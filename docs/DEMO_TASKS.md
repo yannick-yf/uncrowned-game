@@ -2807,11 +2807,50 @@ uses a bow too and keeps her distance, so the player learns to shoot and to move
 > cannot make one miss; a dodge needs an archer who aims a turn ahead. Put to Yannick with
 > R2.
 
-### R2 · Starting a fight yourself — **approach put to Yannick, not built**
+### R2 · What an enemy sees, and its ground — **built 2026-10-01**
 
-Enemies with a zone in which they see you; outside it the player can watch them; an arrow
-or a blow from the player starts the fight; perhaps an advantage for the surprise. The
-approach is in the report of 2026-10-01 and waits for his answer.
+**His answers** (2026-10-01): a cone of sight in front of each enemy, so a player can come
+up behind or from the side unseen; *« les loups peuvent un peu bouger dans leurs
+territoires, cela rend la mécanique plus dynamique »*; the wolves only for now, but
+**generic** — *« on doit pouvoir l'activer sur un nouveau type d'ennemi sans réécrire la
+logique »* — for every enemy but the towns' people. **Check:** in front and near, a fight;
+behind or beside, close enough to touch, none; the packs wander and replay.
+
+> **Built.** A kind's row in `content/duel.json` says what it sees — `sight`: `tiles`
+> ahead, in a `cone` of degrees — and how far it wanders, `roams`; the wolf sees five
+> tiles in a hundred degrees and wanders three. A kind without them sees only what touches
+> it, as every pack did before. `DuelRules.sees` is the one rule; `WildSystem.seen_by` asks
+> it of every pack every step — **or walked into**, on a tile an animal stands on — and a
+> pack that sees you begins the fight **where it stands, one tile an animal** (the duel's
+> `places`), acting first, with a `pack_spotted` the window answers with Bram's '!' over the
+> first of them. **The packs walk their ground** a tile every 0.8 s, stopping three to ten
+> seconds to look one way and another (`Wild.spot`, `facing`, `goal`, `rest`), on dice made
+> from the run's seed, the pack and the moment — not `sim.rng`, which a pack drawing from
+> twice a second would shift for the whole game. Each pack's first facing is content
+> (`faces` in `places.json`: the bridge's looks down the road toward Brindle). **The
+> window** draws each animal where it stands, eased from tile to tile and turned the way
+> the pack looks, and **its sight on the ground**, a pale fan laid on his terrain, from
+> nine tiles outside its reach. Cost: asked every step, the check was 190 ms an in-game
+> day; a far pack is now looked at only when it could have come into sight (`quiet_until`,
+> a shortcut that changes nothing seen), and the fast suite is back at 26 s. **One thing
+> moved**: the climb's pack stands five tiles from the King's road; biting only what
+> touched it, it let a walk on the road's far side go by, and seeing five tiles it watches
+> the road — as W2 meant (*Blackcairn reachable in minute one, at a price*). The two walks
+> about the road's own safety clear the packs first. Frames 21 and 21b.
+
+### R3 · The surprise attack — **next**
+
+From outside an enemy's sight, the player attacks first: **K**, with what he holds — an
+arrow at a pack two to six tiles off, or a blade at an animal beside him. The fight begins
+where everybody stands, the player's blow its first act; **doubled, and it cannot miss**.
+
+### R4 · The chance to miss — **after R3**
+
+*Chance to hit = 80 % + 5 % × (the attacker's agility − the defender's)*, between 50 % and
+95 % (Yannick, 2026-10-01: *« Parfait »*). The player's agility is his trait (1 to 5); every
+other fighter's is a row of `content/duel.json`. A miss reads *Raté !* over the target; the
+chance shows in the keys' line before the blow; **95 % for the player in the lessons**; the
+fairy's gift and the surprise attack always land. A replay misses the same blows.
 
 ---
 

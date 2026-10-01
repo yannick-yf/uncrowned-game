@@ -38,11 +38,11 @@
   "_cinderworks_gate": "the works' yard gate (G3, 2026-09-21). On the baked world the bake writes this point at the passage of his portail_cour and this row is overlaid; on the 2D map it is the road in front of the tile the old guard stood on, which is a wall there (moved a row south on 2026-09-29, when the anchors began to be checked before they are nudged), so the gatekeeper resolves on both worlds.",
   "_wild_note": "WHERE THE WOOD IS DANGEROUS (W2, 2026-09-25). A pack is an anchor and a count, and it stands where it stands until somebody walks into it. NOTHING HERE CLOSES A ROAD: a player who wants one of these fights it or goes round, and the demo's funnel is made of where the wolves are rather than of any check in core/ (PLAYER_MODEL.md section 8, invariant 4). Taking the funnel out again is W4, and it is editing this list. Anchors were checked against the baked world rather than guessed: road_last_stop was tried first and dropped because it resolves INSIDE Cairnwell, and monsters never stand in a town.",
   "wild": [
-    {"kind": "wolf", "count": 2, "place": "brindle", "offset": [27, -57],
+    {"kind": "wolf", "count": 2, "place": "brindle", "offset": [27, -57], "faces": [0, 1], "_faces": "R2: the way it looks when the game begins - down the road toward Brindle, where the player comes from.",
       "_why": "BEFORE THE BRIDGE, in the middle of the drawn road three tiles short of the deck — on the road and not beside it, because a player follows the road his brother drew and a pack in the grass next to it is walked past (Yannick, 2026-09-26: des loups avant le pont pour l'aciérie). They guard the crossing from the Brindle side, so the river is the thing the fight is fought for. It was first a third of the way out of Brindle, which is the way out to everywhere and six journey tests walked into it; then two thirds, which put it just past the far end of the bridge. TWO, because this is the first real fight after the tutorial and it must be survivable by somebody who has just learnt which key strikes"},
-    {"kind": "wolf", "count": 3, "point": "road_climb", "offset": [0, 0],
+    {"kind": "wolf", "count": 3, "point": "road_climb", "offset": [0, 0], "faces": [1, 1],
       "_why": "The climb, 126 tiles off the demo's road. Three: this is a road the demo does not want a first-time player on, and the difference has to be felt rather than announced."},
-    {"kind": "wolf", "count": 3, "point": "road_muster_junction", "offset": [0, 0],
+    {"kind": "wolf", "count": 3, "point": "road_muster_junction", "offset": [0, 0], "faces": [1, 0],
       "_why": "The junction toward the Muster, 86 tiles off the demo's road. Same reason, same count. Pillar 1 is untouched: the road is open and Blackcairn is reachable in minute one, at a price."}
   ],
   "cast": {

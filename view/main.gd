@@ -825,6 +825,7 @@ func _frame(eye: Vector2) -> Dictionary:
 			if _can_steal() or _can_give_back() or _can_warn() else [],
 		"now": _real_seconds,
 		"hail": _hail_frame(),
+		"spotted": _spotted_frame(),
 	}
 
 
@@ -841,6 +842,22 @@ func _hail_frame() -> Dictionary:
 	var shown: bool = _hail.summoned.is_empty() and (_hail.phase == Hail.SPOTTED \
 		or (_hail.phase == Hail.COMING and age < HailRules.spotted_steps() / float(Sim.STEPS_PER_REAL_SECOND) + HAIL_MARK_LINGERS))
 	return {"who": caller.id, "shown": shown, "age": age}
+
+
+## **A pack that has just seen you** (R2): the first of it in the fight it began, and how
+## long ago, for the '!' over it — up as long as Bram's lingers.
+func _spotted_frame() -> Dictionary:
+	if _duel == null or not _duel.on() or _duel.asked_by != &"the_wood" or _duel.started_by == DuelRules.PLAYER:
+		return {}
+	var events: Array[SimEvent] = _sim.events.all()
+	for i: int in range(events.size() - 1, maxi(events.size() - 400, -1), -1):
+		var event: SimEvent = events[i]
+		if event.type == &"pack_spotted":
+			var age: float = float(_sim.step - event.step) / float(Sim.STEPS_PER_REAL_SECOND)
+			if age > HailRules.spotted_steps() / float(Sim.STEPS_PER_REAL_SECOND) + HAIL_MARK_LINGERS:
+				return {}
+			return {"seat": String(_duel.fighters[1].who) if _duel.fighters.size() > 1 else "", "age": age}
+	return {}
 
 
 ## Every hail written as spent, for a debug frame that stands the player somewhere.

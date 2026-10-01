@@ -131,7 +131,13 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 	var region: Region = world.region()
 	var taken: Dictionary = {mine.at: true}
 	var seats: Dictionary = {}
+	# **Where they stand, when the world says so** (R2): a pack that saw you from five
+	# tiles begins the fight where it stands, one tile an animal, rather than set down a
+	# stride from you — it has the ground between to cover.
+	var places: Array = event.data.get("places", []) as Array
+	var seat_index: int = -1
 	for who: StringName in against:
+		seat_index += 1
 		var him := DuelFighter.new()
 		# **A seat, when the kind repeats.** Three wolves are three fighters; without
 		# this they are one fighter found three times, and a blow aimed at the second
@@ -156,7 +162,14 @@ func _begin(sim: Sim, duel: Duel, event: SimEvent) -> void:
 		# the yard's wall, two tiles off through it, and waited there for ever.
 		var near: bool = npc != null and DuelRules.apart(stands, mine.at) <= DuelRules.tiles_per_turn() \
 			and DuelRules.reachable(mine.at, region, DuelRules.tiles_per_turn() + DuelRules.reach_tiles()).has(stands)
-		if not near:
+		var placed: bool = false
+		if npc == null and seat_index < places.size():
+			var at_place: Array = places[seat_index] as Array
+			var given := Vector2i(int(at_place[0]), int(at_place[1]))
+			if given != mine.at and not taken.has(given):
+				stands = given
+				placed = true
+		if not near and not placed:
 			stands = DuelRules.set_down(mine.at, stands, region, DuelRules.stand_off_tiles(), taken)
 		while taken.has(stands):
 			stands += Vector2i(0, 1)

@@ -105,6 +105,7 @@ static func forget() -> void:
 	_fighters = {}
 	_drills = {}
 	_reinforcements = {}
+	_sights = {}
 
 
 static func number(key: String, fallback: int = 0) -> int:
@@ -210,6 +211,41 @@ static func _about(who: StringName) -> Dictionary:
 	if all.has(trade):
 		return all[trade] as Dictionary
 	return all.get("_default", {}) as Dictionary
+
+
+## **What an enemy of this kind sees** (R2, 2026-10-01): `tiles` ahead of it, in a cone
+## of `cone` degrees round the way it faces — Yannick: *« le joueur peut s'approcher par
+## derrière ou par les côtés sans être repéré »*. A kind whose row says nothing sees only
+## what touches it, which is how every pack behaved before. Any kind of enemy outside the
+## towns takes this by a row in `content/duel.json`, with no logic of its own.
+static func sight_of(who: StringName) -> Dictionary:
+	# Asked every step for every pack (R2): read once a kind, until `forget`.
+	if _sights.has(who):
+		return _sights[who] as Dictionary
+	var row: Dictionary = _about(who).get("sight", {}) as Dictionary
+	var sight: Dictionary = {"tiles": float(row.get("tiles", 1.0)), "cone": float(row.get("cone", 360.0))}
+	_sights[who] = sight
+	return sight
+
+
+static var _sights: Dictionary = {}
+
+
+## How far from its own ground an enemy of this kind wanders, in tiles: 0 stands still.
+static func roams_of(who: StringName) -> int:
+	return int(_about(who).get("roams", 0))
+
+
+## **Whether something at `from`, facing `facing`, sees `to`** with this sight: near
+## enough, and inside the cone. Pure, so the window draws the very cone the rules use.
+static func sees(from: Vector2i, facing: Vector2i, to: Vector2i, sight: Dictionary) -> bool:
+	var gap := Vector2(to - from)
+	if gap.length() > float(sight.get("tiles", 1.0)) + 0.5:
+		return false
+	if gap == Vector2.ZERO or float(sight.get("cone", 360.0)) >= 360.0 or facing == Vector2i.ZERO:
+		return true
+	var half: float = deg_to_rad(float(sight.get("cone", 360.0)) * 0.5)
+	return absf(Vector2(facing).normalized().angle_to(gap.normalized())) <= half + 0.0001
 
 
 ## **A man and not a beast, though nobody the cast names** (T9): a works guard. Killing

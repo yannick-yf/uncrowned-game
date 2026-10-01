@@ -141,6 +141,21 @@ func test_the_window_stands_on_his_ground() -> void:
 			"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},
 			"witnesses": ["maddox", "bell"], "now": 3.2}, 1.0 / 60.0)
 		assert_false(window.find_shown(&"graves_sword"), "and is gone once taken")
+	# **What a pack sees, on the ground** (R2): shown near a pack, a few tiles outside its
+	# reach, and not across the map.
+	if Places.baked() and not Wild.packs().is_empty():
+		var wild := sim.store(&"wild") as Wild
+		var stood: Vector2 = world.player_pos
+		var near_pack: Vector2i = wild.now_at(world.region(), 0) + wild.looks(0) * 7
+		world.player_pos = Vector2(near_pack) + Vector2(0.5, 0.5)
+		window.sync({"player": world.player_pos, "camera": world.player_pos,
+			"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}}, "now": 3.4}, 1.0 / 60.0)
+		assert_true(window.cones_shown() >= 1, "seven tiles in front of a pack, its sight is drawn")
+		world.player_pos = Vector2(292.5, 287.5)
+		window.sync({"player": world.player_pos, "camera": world.player_pos,
+			"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}}, "now": 3.5}, 1.0 / 60.0)
+		assert_eq(window.cones_shown(), 0, "and far from every pack, nothing")
+		world.player_pos = stood
 	# The lens opens with the fight (O6): a wide one is framed wider, never past the cap.
 	window.sync({"player": Vector2(292.5, 287.5), "camera": Vector2(292.5, 287.5),
 		"towns": {&"cinderworks": {"allegiance": 6, "richesse": 0}},

@@ -150,10 +150,12 @@ static func load_from(path: String) -> Places:
 		places._strangers.append(_anchor(entry))
 	for entry: Variant in (root.get("wild", []) as Array):
 		var row: Dictionary = entry as Dictionary
+		var faces: Array = row.get("faces", [0, 1]) as Array
 		places._wild.append({
 			"kind": String(row.get("kind", "wolf")),
 			"count": int(row.get("count", 1)),
 			"anchor": _anchor(entry),
+			"faces": Vector2i(int(faces[0]), int(faces[1])),
 		})
 	for entry: Variant in (root.get("campfires", []) as Array):
 		places._campfires.append(_anchor(entry))

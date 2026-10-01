@@ -1294,6 +1294,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_traffic(road, world)
 	_sync_folk(folk, world)
 	_sync_wild(_sim.store(&"wild") as Wild, world, frame.get("fight", {}) as Dictionary)
+	_sync_pack_mark(frame.get("spotted", {}) as Dictionary)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
@@ -1642,6 +1643,20 @@ const WOLF_DARK: String = "res://view3d/workshop/prototype_3d/materials/styled_d
 ## Standing height to the shoulder, for lifting the model off the ground.
 const WOLF_HEIGHT_M: float = 0.7
 var _wild_blocks: Dictionary = {}
+## Where each animal is drawn, eased toward its tile (R2), by the same id as its block.
+var _wild_drawn: Dictionary = {}
+## Each pack's sight on the ground, and the lead and facing it was built for.
+var _cones: Dictionary = {}
+var _cone_keys: Dictionary = {}
+var _pack_mark: Sprite3D = null
+## How much of the way to its tile an animal is drawn each frame.
+const WILD_EASES: float = 0.08
+## How many tiles beyond its reach a pack's sight begins to show, fading in over four.
+const CONE_SHOWS_WITHIN: float = 9.0
+## The sight's colour and how strong it is at its strongest: a pale warmth, like the fight's
+## floor, so it reads as something the game shows and not something on his ground.
+const SIGHT_TINT: Color = Color(1.0, 0.93, 0.72)
+const SIGHT_ALPHA: float = 0.22
 var _wolf_coat: Material = null
 var _wolf_dark: Material = null
 
@@ -1937,38 +1952,153 @@ func _wolf() -> Node3D:
 func _sync_wild(wild: Wild, world: WorldState, fighting: Dictionary = {}) -> void:
 	if wild == null or world == null:
 		return
-	var standing: Dictionary = wild.standing(world.region())
+	var region: Region = world.region()
 	var seen: Dictionary = {}
 	# The pack in the fight is drawn fighter by fighter below, not standing where it was.
 	var engaged: int = wild.fighting if not fighting.is_empty() else -1
-	for tile: Vector2i in standing.keys():
-		var which: int = int(standing[tile])
-		if which == engaged:
+	for which: int in Wild.packs().size():
+		if wild.cleared.has(which) or which == engaged:
+			_show_cone(which, false)
 			continue
-		var count: int = wild.count_of(which)
-		for one: int in count:
+		# **Each animal where it stands, turned the way the pack looks** (R2): the pack
+		# wanders its ground a tile at a time, and the window eases each one to its tile
+		# rather than hopping it there.
+		var animals: Array[Vector2i] = wild.members(region, which)
+		var look: Vector2i = wild.looks(which)
+		for one: int in animals.size():
 			var id: String = "%d_%d" % [which, one]
 			seen[id] = true
+			var want: Vector2 = Vector2(animals[one]) + Vector2(0.5, 0.5)
 			var block: Node3D = _wild_blocks.get(id, null) as Node3D
 			if block == null:
 				block = _wolf()
 				block.name = "Wild_%s" % id
-				# Turned a little each, from its place in the pack rather than at random,
-				# so three of them do not stand like one wolf pasted three times.
-				block.rotation.y = deg_to_rad(-20.0 + 35.0 * float(one))
 				add_child(block)
 				_wild_blocks[id] = block
-			# Spread along the tile so a pack of three reads as three and not as one
-			# thing standing in the same place three times.
-			var spread: float = (float(one) - float(count - 1) * 0.5) * 0.6
-			var stands: Vector2 = Vector2(tile) + Vector2(0.5 + spread, 0.5)
-			block.position = _feet_of(stands)
+				_wild_drawn[id] = want
+			var drawn: Vector2 = (_wild_drawn.get(id, want) as Vector2).lerp(want, WILD_EASES)
+			_wild_drawn[id] = drawn
+			block.position = _feet_of(drawn)
+			# The model faces +x; a tile's y is the world's z. A little apart each, so three
+			# do not stand like one wolf pasted three times.
+			block.rotation.y = atan2(-float(look.y), float(look.x)) + deg_to_rad(-14.0 + 14.0 * float(one % 3))
+		_sync_cone(which, wild, region, world.player_pos, fighting.is_empty())
 	# A pack that has been killed is gone, not hidden.
 	for id: Variant in _wild_blocks.keys():
 		if not seen.has(id):
 			(_wild_blocks[id] as Node3D).queue_free()
 			_wild_blocks.erase(id)
+			_wild_drawn.erase(id)
 	_sync_beasts(fighting)
+
+
+## **What a pack sees, drawn on the ground** (R2): the cone `WildSystem.seen_by` asks
+## about, laid on his terrain, faint, and only within a few tiles of its edge — Yannick:
+## *« tant que le joueur est en dehors, il peut les observer sans déclencher le combat »*,
+## and he cannot keep out of what he cannot see. Rebuilt only when the pack moves or turns.
+func _sync_cone(which: int, wild: Wild, region: Region, player: Vector2, quiet: bool) -> void:
+	var sight: Dictionary = DuelRules.sight_of(wild.kind_of(which))
+	var lead: Vector2i = wild.now_at(region, which)
+	var tiles: float = float(sight["tiles"])
+	var gap: float = player.distance_to(Vector2(lead) + Vector2(0.5, 0.5))
+	var near: float = clampf((tiles + CONE_SHOWS_WITHIN - gap) / 4.0, 0.0, 1.0)
+	if not quiet or near <= 0.0 or float(sight["cone"]) >= 360.0:
+		_show_cone(which, false)
+		return
+	var cone: MeshInstance3D = _cones.get(which, null) as MeshInstance3D
+	if cone == null:
+		cone = MeshInstance3D.new()
+		cone.name = "Sight_%d" % which
+		var paint := StandardMaterial3D.new()
+		paint.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		paint.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		paint.cull_mode = BaseMaterial3D.CULL_DISABLED
+		paint.render_priority = 2
+		cone.material_override = paint
+		cone.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(cone)
+		_cones[which] = cone
+	var key: String = "%s>%s" % [lead, wild.looks(which)]
+	if _cone_keys.get(which, "") != key:
+		cone.mesh = _cone_mesh(lead, wild.looks(which), sight)
+		_cone_keys[which] = key
+	(cone.material_override as StandardMaterial3D).albedo_color = Color(SIGHT_TINT, SIGHT_ALPHA * near)
+	cone.visible = true
+
+
+func _show_cone(which: int, shown: bool) -> void:
+	var cone: MeshInstance3D = _cones.get(which, null) as MeshInstance3D
+	if cone != null:
+		cone.visible = shown
+
+
+## A fan of the cone's angle and reach, in rings, each vertex set on his ground a hand above
+## it, so it lies on a slope rather than cutting through it.
+func _cone_mesh(lead: Vector2i, look: Vector2i, sight: Dictionary) -> Mesh:
+	var tiles: float = float(sight["tiles"]) + 0.5
+	var half: float = deg_to_rad(float(sight["cone"]) * 0.5)
+	var base: float = Vector2(look).angle()
+	var centre: Vector2 = Vector2(lead) + Vector2(0.5, 0.5)
+	const RINGS: int = 4
+	const FAN: int = 10
+	var points: Array = []
+	for ring: int in RINGS + 1:
+		var row: Array[Vector3] = []
+		for k: int in FAN + 1:
+			var angle: float = base - half + 2.0 * half * float(k) / float(FAN)
+			var at: Vector2 = centre + Vector2.from_angle(angle) * tiles * float(ring) / float(RINGS)
+			row.append(_feet_of(at) + Vector3.UP * 0.07)
+		points.append(row)
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for ring: int in RINGS:
+		var inner: Array[Vector3] = points[ring]
+		var outer: Array[Vector3] = points[ring + 1]
+		for k: int in FAN:
+			tool.add_vertex(inner[k])
+			tool.add_vertex(outer[k])
+			tool.add_vertex(outer[k + 1])
+			tool.add_vertex(inner[k])
+			tool.add_vertex(outer[k + 1])
+			tool.add_vertex(inner[k + 1])
+	return tool.commit()
+
+
+## The '!' over a pack that has just seen you (R2), as Bram's goes over him: over the first
+## animal of the fight it began, for as long as the frame's `spotted` reading is young.
+func _sync_pack_mark(reading: Dictionary) -> void:
+	if _pack_mark == null:
+		_pack_mark = Sprite3D.new()
+		_pack_mark.name = "PackMark"
+		_pack_mark.texture = _bang_texture()
+		_pack_mark.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		_pack_mark.shaded = false
+		_pack_mark.no_depth_test = true
+		_pack_mark.double_sided = true
+		_pack_mark.render_priority = 10
+		_pack_mark.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		add_child(_pack_mark)
+	var seat := StringName(String(reading.get("seat", "")))
+	var shown: bool = not reading.is_empty() and _beast_at.has(seat)
+	_pack_mark.visible = shown
+	if not shown:
+		return
+	var pop: float = hail_pop(float(reading.get("age", 0.0)))
+	_pack_mark.pixel_size = HAIL_MARK_PIXEL * pop
+	_pack_mark.position = _feet_of(_beast_at[seat] as Vector2) + _lens_up * (1.25 + 0.1 * pop)
+
+
+## How many packs' sight is drawn, and whether a pack's '!' is up, for the suite.
+func cones_shown() -> int:
+	var count: int = 0
+	for cone: Variant in _cones.values():
+		if (cone as MeshInstance3D).visible:
+			count += 1
+	return count
+
+
+func pack_mark_shown() -> bool:
+	return _pack_mark != null and _pack_mark.visible
 
 
 ## **Every beast in the fight at its own seat** (O6, 2026-09-29). The two wolves before

@@ -36,7 +36,9 @@ const PATH: String = "user://save.json"
 ## within reach of a furnace all changed, so a run through any of them replays otherwise.
 ## 5 since group E (2026-10-01): the player strikes with what he carries — a run that
 ## fought with fists, or through armour, replays otherwise.
-const VERSION: int = 5
+## 6 since R2 (2026-10-01): the packs see ahead of them and wander their ground — a walk
+## past a pack replays into a fight it never had, or out of one it had.
+const VERSION: int = 6
 ## Where the save is written. `PATH`, except under test: the suite shares `user://`
 ## with the game, and a test that discards its save must not discard the player's (O4).
 static var path: String = PATH

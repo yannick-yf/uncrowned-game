@@ -445,8 +445,10 @@ func _meets(region: Region, wild: Wild, to: Vector2i) -> Array[int]:
 	var route: Array[Vector2i] = Navigation.path(region, from, to, true)
 	var met: Array[int] = []
 	for tile: Vector2i in wild.standing(region).keys():
+		# Met: the walk passes within what the pack can see (R2), whichever way it looks.
+		var sees: float = float(DuelRules.sight_of(wild.kind_of(int(wild.standing(region)[tile])))["tiles"])
 		for step: Vector2i in route:
-			if maxi(absi(step.x - tile.x), absi(step.y - tile.y)) <= WildSystem.REACH_TILES:
+			if Vector2(step - tile).length() <= sees + 0.5:
 				met.append(int(wild.standing(region)[tile]))
 				break
 	return met
@@ -510,3 +512,99 @@ func test_nothing_in_core_asks_whether_the_tutorial_is_finished() -> void:
 						hits.append("%s mentions %s" % [full, word])
 			name = listing.get_next()
 	assert_eq(hits.size(), 0, "nothing in core/ gates on progress:\n  %s" % "\n  ".join(hits))
+
+
+# ------------------------------------------- R2, what a pack sees ---
+
+func test_a_pack_sees_ahead_and_not_behind_or_beside() -> void:
+	# Yannick, 2026-10-01: « le joueur peut s'approcher par derrière ou par les côtés sans
+	# être repéré ». The rule, alone: five tiles ahead in a cone of a hundred degrees.
+	var sight: Dictionary = DuelRules.sight_of(&"wolf")
+	var at := Vector2i(100, 100)
+	var south := Vector2i(0, 1)
+	assert_true(DuelRules.sees(at, south, at + Vector2i(0, 4), sight), "four tiles ahead: seen")
+	assert_true(DuelRules.sees(at, south, at + Vector2i(2, 4), sight), "ahead and a little aside: seen")
+	assert_false(DuelRules.sees(at, south, at + Vector2i(0, 7), sight), "seven ahead: too far, and a bow reaches six")
+	assert_false(DuelRules.sees(at, south, at + Vector2i(0, -1), sight), "right behind: not seen")
+	assert_false(DuelRules.sees(at, south, at + Vector2i(1, 0), sight), "beside: not seen")
+	assert_false(DuelRules.sees(at, south, at + Vector2i(3, 1), sight), "well off to the side: not seen")
+	# A kind that says nothing sees only what touches it: how every pack behaved before.
+	var blind: Dictionary = DuelRules.sight_of(&"nobody_in_the_table")
+	assert_false(DuelRules.sees(at, south, at + Vector2i(0, 2), blind), "a kind with no sight row sees two tiles off: no")
+
+
+func _first_pack(sim: Sim) -> int:
+	return 0 if not Wild.packs().is_empty() else -1
+
+
+func test_walking_up_in_front_of_a_pack_begins_the_fight_where_they_stand() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	var lead: Vector2i = wild.now_at(region, 0)
+	var ahead: Vector2i = lead + wild.looks(0) * 4
+	assert_true(region.is_passable(ahead), "the ground four tiles in front of it can be stood on: %s" % ahead)
+	var animals: Array[Vector2i] = wild.members(region, 0)
+	world.player_pos = Vector2(ahead) + Vector2(0.5, 0.5)
+	sim.advance(2)
+	var duel := sim.store(&"duel") as Duel
+	assert_true(duel.on(), "seen from four tiles: a fight")
+	assert_eq(sim.events.of_type(&"pack_spotted").size(), 1, "and it saw you")
+	var placed: Array[Vector2i] = []
+	for fighter: DuelFighter in duel.fighters:
+		if not fighter.is_player():
+			placed.append(fighter.at)
+	assert_eq(placed, animals, "every animal begins where it stood, not set down beside you")
+	assert_eq(duel.started_by, &"wolf", "and they act first")
+
+
+func test_coming_up_behind_a_pack_is_not_seen() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	var lead: Vector2i = wild.now_at(region, 0)
+	var animals: Array[Vector2i] = wild.members(region, 0)
+	# Beside the leader on the side away from where it looks, on a tile no animal stands on.
+	var behind: Vector2i = lead - wild.looks(0)
+	for offset: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(2, 0), Vector2i(-2, 0)]:
+		if region.is_passable(behind + offset) and not animals.has(behind + offset):
+			behind += offset
+			break
+	assert_false(animals.has(behind), "a tile of its own, behind it: %s" % behind)
+	world.player_pos = Vector2(behind) + Vector2(0.5, 0.5)
+	sim.advance(40)
+	assert_false((sim.store(&"duel") as Duel).on(), "behind it, close enough to touch, and not seen")
+
+
+func test_a_pack_wanders_its_ground_and_turns_and_replays() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	var sim: Sim = Game.build()
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	var region: Region = world.region()
+	world.player_pos = Vector2(world.region().start_centre())
+	var home: Vector2i = wild.at(region, 0)
+	var places: Dictionary = {}
+	var looks: Dictionary = {}
+	for _pace: int in 120:
+		sim.advance(WildSystem.PACE)
+		var here: Vector2i = wild.now_at(region, 0)
+		places[here] = true
+		looks[wild.looks(0)] = true
+		assert_true(maxi(absi(here.x - home.x), absi(here.y - home.y)) <= DuelRules.roams_of(&"wolf"),
+			"never further than its ground: %s from %s" % [here, home])
+		assert_true(region.is_passable(here), "on ground it can stand on")
+	assert_true(places.size() >= 3, "it walks about: %d tiles stood on" % places.size())
+	assert_true(looks.size() >= 3, "and looks one way and another: %d" % looks.size())
+	assert_eq((Game.replay(sim).store(&"wild") as Wild).fingerprint(), wild.fingerprint(),
+		"the same walk, replayed")
