@@ -2964,6 +2964,18 @@ magic, items (empty for now), wait. Left and right turn it, Enter chooses, 1 to 
 shortcuts; an action that cannot be done is greyed with its reason. **U and I go**; O still
 waits. **Check:** frames; every action of the old keys reachable from the wheel.
 
+> **Built 2026-10-03, with N4–N6.** The player's turn is three steps in `view/main.gd` —
+> **where to stand** (arrows), **what to do** (`TURN_WHEEL`), **at whom** (`TURN_TARGET`) —
+> and nothing is sent until the target is confirmed. **K** (or E, Space, Enter) opens the
+> wheel and confirms; **1 to 4** go straight to a segment; **O** still waits; **Escape**
+> goes back one step, and only on the ground opens the pause menu. The wheel
+> (`FightHud._draw_wheel`) is five discs round the player — the blade, the bow, magic,
+> items, wait, clockwise from the top — the one he is on ringed in gold, what cannot be
+> done greyed, and under it what it does or why not (*Pas d'arc*, *Aucun sort*, *Le don se
+> repose ce tour-ci*, *Rien à utiliser pour l'instant*). Icons drawn in code. **U and I are
+> gone** from the keys and the project. The reach drawn round the chosen tile is the one
+> of the action being weighed — the wheel's segment, or the action aimed.
+
 ### N4 · The target
 
 After an action: the foes it reaches from the chosen tile marked on the ground, the others
@@ -2972,14 +2984,39 @@ marked out of reach; left and right (or Tab) go from one to the next; over the o
 wheel. The same outside a fight, for the surprise attack. **Check:** a chosen target is the
 one struck; the numbers shown are the blow's.
 
+> **Built 2026-10-03.** `ActionRules.targets` from the tile chosen; the 3D window rings each
+> foe — gold in reach, a faint ember out of it, the one chosen twice and lit — and the HUD
+> names him with *70 %, 3 dégâts* or *Hors de portée* (kept off the lesson's card). The
+> turn goes to **the foe chosen**, not the first in reach (`test_a_target_chosen_is_the_one_struck`).
+> **Outside a fight**, K from where no pack sees him stops the world and offers every animal
+> his blade or bow reaches (`WildSystem.ambush_targets`, `AmbushOverlay`): the arrows choose,
+> K strikes the one chosen — the `ambush` event now names it — Escape lets it be.
+
 ### N5 · The mouse
 
 Hovering and clicking the wheel and the targets.
+
+> **Built 2026-10-03.** Hovering a segment of the wheel, a foe or an animal to surprise
+> chooses it; a left click confirms; a right click goes back one step. Read in the HUD's
+> own frame (`get_local_mouse_position`), the one the wheel and `screen_of` are drawn in,
+> so the window's stretch from 640×360 is nobody's to undo. Checked on frames with the
+> pointer held by `UNCROWNED_MOUSE` (a debug tool): over the bow, the wheel goes to the bow;
+> over a wolf, he becomes the target.
 
 ### N6 · The tutorial
 
 The three lessons' cards, hints and the keys' line say the wheel and the target.
 **Check:** the whole tutorial played with the new keys, end to end.
+
+> **Built 2026-10-03.** Each lesson is three steps — place yourself (*Flèches : restez à
+> deux cases d'elle ou plus*), *K : ouvrez la roue et choisissez l'arc*, *K : tirez sur
+> elle* — and the hint follows the step he is at: too far or too close, *Vous êtes bien
+> placé. Appuyez sur K pour ouvrir la roue*, where the lesson's action is on the wheel, the
+> wrong action chosen, the target out of reach, or *Elle est à portée. Appuyez sur K pour
+> tirer*. The keys' line says the keys of the step. **The three lessons pass played through
+> the wheel and the target** (`test_the_three_lessons_pass_through_the_wheel_and_the_target`),
+> in a few turns each. There was no controls screen to update: the keys' line and the cards
+> are the game's help. Frames 13c, 13d, 21g–21i, 21c2.
 
 ### N7 · Frames, a review, the letter
 

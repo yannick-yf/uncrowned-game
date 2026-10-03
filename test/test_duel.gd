@@ -916,11 +916,14 @@ func test_the_two_keys_are_bound() -> void:
 	# The third thing missing on 2026-09-19: the fight could not be reached, and if it
 	# had been there was no key to hit anybody with. K and O, as **physical** keycodes,
 	# so the pair sits in the same place on AZERTY and on QWERTY.
-	# And U changes the weapon in your hands (T6), beside I and K.
-	for action: StringName in [&"strike", &"guard", &"cast", &"weapon"]:
+	# Since N3 (2026-10-03) K opens the wheel of actions and confirms, and 1 to 4 are its
+	# shortcuts; U and I, which changed the weapon and cast, are gone.
+	for action: StringName in [&"strike", &"guard", &"option_1", &"option_2", &"option_3", &"option_4"]:
 		assert_true(InputMap.has_action(action), "%s is a key" % action)
 		assert_true(InputMap.action_get_events(action).size() > 0,
 			"%s has something bound to it" % action)
+	for gone: StringName in [&"cast", &"weapon"]:
+		assert_false(InputMap.has_action(gone), "%s is not a key any more" % gone)
 
 
 func test_the_camera_never_turns() -> void:

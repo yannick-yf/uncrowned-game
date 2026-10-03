@@ -5,7 +5,7 @@
 #   tools/opening_frames.sh /tmp/opening fr en      # the default
 #   ONLY='inventory' tools/opening_frames.sh /tmp/o  # only the frames whose name matches
 #
-# Forty-two frames a language, from the title to the works' gate and the fight there, and what
+# Forty-eight frames a language, from the title to the works' gate and the fight there, and what
 # you carry and what it does in play, each through the debug tools CLAUDE.md lists
 # (UNCROWNED_TALK, _AT, _HAIL, _DUEL, _VIEW, _WORLD, _GEAR, _LOOK), then
 # one line per frame: its name and how many SCRIPT ERRORs its run printed — which has to
@@ -71,6 +71,9 @@ for LANG_ID in $LANGS; do
   shoot 12_sword_end play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:sword:700:press
   shoot 13_bow_first play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:47
   shoot 13b_bow_in_hand play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:153:bow
+  # The bow lesson the new way (N6): the wheel on the bow, then Wren aimed at.
+  shoot 13c_bow_wheel play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:47 UNCROWNED_TURN=wheel:ranged
+  shoot 13d_bow_target play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:47 UNCROWNED_TURN=target:ranged:0
   shoot 14_bow_arrow play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:60:bow
   shoot 15_bow_end play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:bow:900:bow
   shoot 16_magic_first play $ARMED UNCROWNED_AT=281,318 UNCROWNED_DUEL=drill:magic:47
@@ -84,10 +87,15 @@ for LANG_ID in $LANGS; do
   shoot 21b_wolves_seen play $ARMED UNCROWNED_AT=306,266
   # Behind them, unseen, a bow on his back (R3): K's prompt, then the arrow, doubled.
   shoot 21c_wolves_behind play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257
+  shoot 21c2_ambush_choice play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257 UNCROWNED_TURN=ambush
   shoot 21d_surprise play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_AT=306,257 UNCROWNED_DUEL=ambush:0:25
   # The chance to miss (R4): a blow the dice made miss, then the chance before the next blow.
   shoot 21e_miss play $ARMED UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf:119:press
   shoot 21f_chance play $ARMED UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf:96:press
+  # The turn's wheel and target (N3, N4), against two wolves, bow and gift in hand.
+  shoot 21g_wheel play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_FACTS=you:the_gift UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf,wolf UNCROWNED_TURN=wheel:ranged
+  shoot 21h_target play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_FACTS=you:the_gift UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf,wolf UNCROWNED_TURN=target:ranged:1
+  shoot 21i_out_of_reach play UNCROWNED_GEAR=short_sword,hunting_bow UNCROWNED_FACTS=you:the_gift UNCROWNED_AT=306,270 UNCROWNED_DUEL=wolf,wolf UNCROWNED_TURN=target:melee:0
   shoot 22_works_gate play $ARMED UNCROWNED_AT=317,208
   shoot 23_map map $ARMED
   shoot 24_flat_bake play $ARMED UNCROWNED_VIEW=2d

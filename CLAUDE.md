@@ -297,9 +297,9 @@ S1 took Attunement and its two terrain tests away; the third since O12 is the 2D
 road into Brindle, which the baked world does not claim). **Three more were things his
 brother had not drawn** — a blow, a beast, a grave — and since the art rule was rewritten
 on 2026-09-30 they are watches and not debts: nothing is owed. The procedural world
-prints **forty-one** DEBT lines (forty-two debts) that say the works' furnaces, its
+prints **forty-two** DEBT lines (forty-three debts) that say the works' furnaces, its
 yard, the wolf packs — where they stand, what they see, how they wander, how they are
-surprised, where they may not go (ten since group R) —
+surprised and chosen, where they may not go (eleven since groups R and N) —
 and the opening's last two stages stand on his map and not on the 2D one, and five OFF lines — the two switches', one saying the 2D map's shore is sand and
 not his cliffs, and two claims about the hail's ground that only his map's layout can
 make.
@@ -575,9 +575,15 @@ item he now carries is spent, so the sword is not also lying on its grave.
 the colon. Written straight into the
 store, like `UNCROWNED_TOWN`: one frame for one photograph, not a save-able state.
 
-**All fifteen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
+**`UNCROWNED_TURN=wheel[:category]`, `target:category[:rank]` or `ambush`** (2026-10-03, N3)
+opens a step of the player's turn for a photograph — the wheel on a segment, an action
+aimed at its n-th foe, or, outside a fight, the choice of whom to surprise. **`UNCROWNED_MOUSE=x,y`**
+holds the pointer at a point of the window (wiggling a pixel so hovering answers it), for a
+photograph of what the mouse does (N5).
+
+**All seventeen in-game tools are gated on `OS.has_feature("debug")`** — `T`, `G`, the
 journal's who-is-where, and the `UNCROWNED_` variables of `shot.sh`, `FREE`, `TOWN`,
-`LENS`, `DUEL`, `TALK`, `DID`, `QUICK`, `HAIL`, `FACTS`, `LOOK` and `GEAR` — so they are absent from a release
+`LENS`, `DUEL`, `TALK`, `DID`, `QUICK`, `HAIL`, `FACTS`, `LOOK`, `GEAR`, `TURN` and `MOUSE` — so they are absent from a release
 export. **`M` is the one that is not**: kept as a real feature, it ships. Anything else of this kind goes behind the same gate and gets listed
 here. A debug tool that is not written down is a debug tool that ships.
 
@@ -647,7 +653,7 @@ reconstruct it from forty commits will get it wrong.
 | **A** | **Built, A1–A7** (2026-10-01): **who you are** — the player's appearance chosen at creation (six hair styles, eight colours, five skins, four beards, six colours of clothes), drawn in layers: his traveller split by `tools/draw_player_layers.gd`, stacked and coloured live by the paper-doll shader (`view3d/layers/`, `view/paper_doll.gd`), the same drawing on the two-page creation screen and in the world. Design and Yannick's answers: `docs/CREATION_AND_GEAR.md` |
 | **E** | **Built, E1–E7** (2026-10-01): **what you carry** — six slots on the same layers, ten items drawn from group L's pieces (`content/items.json`), the start kit and no weapon, **the first sword on a grave** two tiles from where you wake, fists for less without it, Wren's bow an item, a beaten fighter leaving what he wore; armour's protection off every blow and weight a tile a turn (save version 5); **Tab** opens the inventory over a stopped world. A fresh-eyes review walked creation to equipment in play. Yannick played it the same evening: hair styles validated for now, trousers grey, his own surcoat in the king's set |
 | **R** | **Built, R1–R5** (2026-10-01, from his play): **R1 built** — the bow lesson is given by Wren, who keeps her distance and shoots too. **Engaging a fight yourself**, a simplified Baldur's Gate 3, his answers in hand: **R2 built** — enemies outside the towns see in a cone ahead of them and wander their ground (`DuelRules.sight_of`, `roams_of`; the wolves for now); **R3 built** — K from outside their sight, the first blow doubled (`WildSystem.ambush_target`); **R4 built** — every blow may miss by agility (80 % ± 5 a point of difference, 50–95 %, 95 % for the player in the lessons; the gift and the surprise always land), the chance shown before the blow. |
-| **N** | **The work now** (2026-10-03, from his play): the fight's actions as Baldur's Gate 3 has them — **a wheel** (sword, bow, magic, items later) instead of U and I, **an explicit target** with its chance and damage, confirm or cancel, the mouse too; and **the magic lesson repaired** (**N1 built**: E left the fairy after her first line, without her gift). Then **P2**, with Yannick |
+| **N** | **The work now** (2026-10-03, from his play): the fight's actions as Baldur's Gate 3 has them. **N1–N6 built**: the magic lesson repaired (E left the fairy after her first line, without her gift); a generic list of actions (`content/actions.json`, `ActionRules`); **a wheel** round the player (K) instead of U and I; **an explicit target** with its chance and damage, confirm or go back (Escape), in a fight and for the surprise attack; the mouse; the three lessons taught the new way. **N7**: frames, a review. Then **P2**, with Yannick |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

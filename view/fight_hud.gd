@@ -182,7 +182,8 @@ func _lesson(reading: Dictionary) -> Array[Dictionary]:
 				"tone": Ui.INK if bool(step["current"]) else Ui.DIM, "size": Ui.NOTE})
 		# On your turn, what to do from where you stand; otherwise the lesson in a line.
 		var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
-		out.append({"text": Text.of(_hint, [spell_reach]) if _hint != &"" \
+		var needed: String = Text.of(StringName("drill.need.%s" % String(LESSON_ACTION.get(drill, "melee"))))
+		out.append({"text": Text.of(_hint, [spell_reach, needed]) if _hint != &"" \
 			else Text.of(StringName("drill.%s.instruction" % drill)),
 			"tone": MINE if _hint != &"" else Ui.DIM, "size": Ui.NOTE})
 	# And what was said as it began, through the first round (the review of O21): the
@@ -194,22 +195,30 @@ func _lesson(reading: Dictionary) -> Array[Dictionary]:
 	return out
 
 
-## **A lesson's steps** (T8): each names its key, and is done when where you stand and
-## what you hold make it so. The first not done is the one you are on.
+## **A lesson's steps** (T8, redone for the wheel in N6): where to stand, then the wheel and
+## the lesson's action, then the blow at her or him. Each is done when where you stand and
+## what you have chosen make it so; the first not done is the one you are on.
+const LESSON_ACTION: Dictionary = {"sword": "melee", "bow": "ranged", "magic": "magic"}
+
+
 func _steps_of(reading: Dictionary) -> Array[Dictionary]:
+	var drill: String = String(reading.get("drill", ""))
+	if not LESSON_ACTION.has(drill):
+		return []
 	var apart: int = int(reading.get("nearest_apart", 99))
-	var weapon: String = String(reading.get("my_weapon", "sword"))
 	var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
-	var rows: Array[Array] = []
-	match String(reading.get("drill", "")):
+	var placed: bool = false
+	match drill:
 		"sword":
-			rows = [[&"drill.sword.step.close", apart <= DuelRules.reach_tiles()], [&"drill.sword.step.strike", false]]
+			placed = apart <= DuelRules.reach_tiles()
 		"bow":
-			rows = [[&"drill.bow.step.take", weapon == String(DuelRules.BOW)],
-				[&"drill.bow.step.range", apart >= DuelRules.bow_min_tiles() and apart <= DuelRules.bow_reach_tiles()],
-				[&"drill.bow.step.shoot", false]]
+			placed = apart >= DuelRules.bow_min_tiles() and apart <= DuelRules.bow_reach_tiles()
 		"magic":
-			rows = [[&"drill.magic.step.close", apart <= spell_reach], [&"drill.magic.step.cast", false]]
+			placed = apart <= spell_reach
+	var chosen: bool = String(reading.get("turn_mode", "")) == "target" \
+		and String(reading.get("chosen_category", "")) == String(LESSON_ACTION[drill])
+	var rows: Array[Array] = [[StringName("drill.%s.step.close" % drill), placed or chosen],
+		[StringName("drill.%s.step.choose" % drill), chosen], [StringName("drill.%s.step.act" % drill), false]]
 	var out: Array[Dictionary] = []
 	var current_found: bool = false
 	for row: Array in rows:
@@ -220,35 +229,40 @@ func _steps_of(reading: Dictionary) -> Array[Dictionary]:
 	return out
 
 
-## **What to do from where you stand** (T8), on your own turn and in a lesson only: too
-## close for the bow, too far for the sword, the gift resting — or, in reach, the key.
+## **What to do now** (T8, N6), on your own turn and in a lesson only: on the ground, too far
+## or too close, or well placed and K to open the wheel; on the wheel, where the lesson's
+## action is; on the target, the wrong action, out of reach, or K.
 func _hint_of(reading: Dictionary) -> StringName:
 	var drill: String = String(reading.get("drill", ""))
-	if drill == "" or not bool(reading.get("choosing", false)):
+	if not LESSON_ACTION.has(drill) or not bool(reading.get("choosing", false)):
 		return &""
+	var need: String = String(LESSON_ACTION[drill])
+	if drill == "magic" and not bool(reading.get("spell_ready", false)):
+		return &"drill.hint.gift_resting"
+	match String(reading.get("turn_mode", "")):
+		"wheel":
+			return &"drill.hint.confirm" if String(reading.get("wheel_category", "")) == need \
+				else StringName("drill.hint.pick.%s" % need)
+		"target":
+			if String(reading.get("chosen_category", "")) != need:
+				return &"drill.hint.wrong_action"
+			if not bool(reading.get("target_in_reach", false)):
+				return &"drill.hint.target_out_of_reach"
+			return StringName("drill.hint.act.%s" % need)
 	var apart: int = int(reading.get("nearest_apart", 99))
-	var bow: bool = String(reading.get("my_weapon", "sword")) == String(DuelRules.BOW)
 	match drill:
 		"bow":
-			if not bow:
-				if not bool(reading.get("has_bow", false)):
-					return &""
-				return &"drill.hint.take_bow_fists" if String(reading.get("close_weapon", "")) == String(DuelRules.FISTS) \
-					else &"drill.hint.take_bow"
 			if apart < DuelRules.bow_min_tiles():
 				return &"drill.hint.bow_too_close"
 			if apart > DuelRules.bow_reach_tiles():
 				return &"drill.hint.too_far"
-			return &"drill.hint.shoot_now"
 		"magic":
-			if not bool(reading.get("spell_ready", false)):
-				return &"drill.hint.gift_resting"
 			if apart > int(reading.get("spell_reach", DuelRules.spell_reach_tiles())):
 				return &"drill.hint.gift_too_far"
-			return &"drill.hint.cast_now"
-	if apart > DuelRules.reach_tiles():
-		return &"drill.hint.sword_too_far"
-	return &"drill.hint.strike_now"
+		_:
+			if apart > DuelRules.reach_tiles():
+				return &"drill.hint.sword_too_far"
+	return &"drill.hint.open_wheel"
 
 
 func _take_health(side: StringName, hp: int) -> void:
@@ -331,6 +345,7 @@ func _draw() -> void:
 
 	# The lesson, under the bars on the left, each row in its own tone and size, and a long
 	# one broken into rows short of the middle of the screen (T8).
+	_card_rect = Rect2()
 	if not _card.is_empty():
 		var top: float = TOP + PIP.y + 34.0
 		var width: float = size.x * CARD_WIDTH
@@ -341,6 +356,7 @@ func _draw() -> void:
 			for line: String in Ui.wrapped(String(row["text"]), row_size, width):
 				Ui.write_over(self, Vector2(MARGIN, top), line, row_size, tone)
 				top += 16.0 if row_size >= Ui.ROW else 13.0
+		_card_rect = Rect2(Vector2.ZERO, Vector2(MARGIN + width, top))
 	var settling: bool = int(_reading.get("settling", 0)) > 0
 	if _banner != "" and _banner_at >= 0.0:
 		var came: float = clampf((_now - _banner_at) / BANNER_IN_SECONDS, 0.0, 1.0)
@@ -351,6 +367,13 @@ func _draw() -> void:
 		var at := Vector2((size.x - width) * 0.5, size.y * 0.80 + (1.0 - came) * 6.0)
 		Ui.write_over(self, at, _banner, Ui.LARGE, colour)
 	elif not settling:
+		_draw_wheel(size)
+		_draw_target_words()
+		var refused: String = String(_reading.get("refused", ""))
+		if refused != "":
+			var told: Color = Ui.EMBER
+			told.a = _alpha
+			Ui.write_over(self, Vector2((size.x - Ui.width_of(refused, Ui.ROW)) * 0.5, size.y - 46.0), refused, Ui.ROW, told)
 		# **Whose turn it is** (K4). A turn-based fight that does not say so is a fight
 		# the player stands in wondering why nothing is happening.
 		var whose: String = whose_turn()
@@ -363,6 +386,122 @@ func _draw() -> void:
 		colour.a = _alpha * 0.9
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(keys, Ui.NOTE)) * 0.5, size.y - 12.0),
 			keys, Ui.NOTE, colour)
+
+
+## **The wheel of actions** (N3, 2026-10-03, after Baldur's Gate 3's radial menu): round the
+## player, one segment a category clockwise from the top — the blade, the bow, magic, items,
+## wait — each a dark disc with its icon, the one he is on ringed in gold, what cannot be
+## done greyed; under it, what the segment does, or why it cannot. Drawn in the HUD's own
+## panel, gold and ink, with icons drawn here: nothing downloaded.
+## Where the lesson's card was drawn, so the target's words keep off it (N6).
+var _card_rect: Rect2 = Rect2()
+const WHEEL_RADIUS: float = 44.0
+const WHEEL_SLOT: float = 14.0
+## Where the wheel was last drawn, so the mouse can be told which segment it is over (N5).
+var _wheel_centre: Vector2 = Vector2(-1.0, -1.0)
+var _wheel_count: int = 0
+
+
+## **The wheel's segment under a point of the screen**, or -1 (N5).
+func wheel_slot_at(point: Vector2) -> int:
+	if _wheel_count <= 0 or _wheel_centre.x < 0.0:
+		return -1
+	for index: int in _wheel_count:
+		var place: Vector2 = _wheel_centre + Vector2.from_angle(-PI * 0.5 + TAU * float(index) / float(_wheel_count)) * WHEEL_RADIUS
+		if point.distance_to(place) <= WHEEL_SLOT + 4.0:
+			return index
+	return -1
+
+
+func _draw_wheel(size: Vector2) -> void:
+	if String(_reading.get("turn_mode", "")) != "wheel":
+		_wheel_count = 0
+		return
+	var rows: Array = _reading.get("wheel", []) as Array
+	if rows.is_empty():
+		return
+	var centre: Vector2 = _reading.get("my_screen", Vector2(-1.0, -1.0)) as Vector2
+	if centre.x < 0.0:
+		centre = size * 0.5
+	centre.x = clampf(centre.x, WHEEL_RADIUS + 24.0, size.x - WHEEL_RADIUS - 24.0)
+	centre.y = clampf(centre.y, WHEEL_RADIUS + 40.0, size.y - WHEEL_RADIUS - 90.0)
+	var at: int = int(_reading.get("wheel_at", 0))
+	_wheel_centre = centre
+	_wheel_count = rows.size()
+	for index: int in rows.size():
+		var row: Dictionary = rows[index] as Dictionary
+		var angle: float = -PI * 0.5 + TAU * float(index) / float(rows.size())
+		var place: Vector2 = centre + Vector2.from_angle(angle) * WHEEL_RADIUS
+		var lit: bool = index == at
+		var open: bool = bool(row.get("available", false))
+		draw_circle(place, WHEEL_SLOT + (2.0 if lit else 0.0), Color(Ui.PANEL, 0.94 * _alpha))
+		draw_arc(place, WHEEL_SLOT + (2.0 if lit else 0.0), 0.0, TAU, 28,
+			Color(Ui.GOLD if lit else Ui.EDGE, _alpha), 2.0 if lit else 1.0)
+		var ink: Color = Ui.GOLD if lit and open else (Ui.INK if open else Ui.FAINT)
+		draw_icon(self, String(row.get("icon", "")), place, Color(ink, _alpha))
+	# What the segment he is on does, or why it cannot.
+	var chosen: Dictionary = rows[clampi(at, 0, rows.size() - 1)] as Dictionary
+	var label: String = String(chosen.get("label", ""))
+	var under: String = String(chosen.get("detail", "")) if bool(chosen.get("available", false)) \
+		else String(chosen.get("why", ""))
+	var width: float = maxf(Ui.width_of(label, Ui.ROW), Ui.width_of(under, Ui.NOTE)) + 20.0
+	var box := Rect2(Vector2(centre.x - width * 0.5, centre.y + WHEEL_RADIUS + WHEEL_SLOT + 6.0), Vector2(width, 34.0))
+	Ui.panel(self, box, Color(Ui.PANEL, 0.94 * _alpha))
+	Ui.write_over(self, Vector2(box.position.x, box.position.y + 14.0), label, Ui.ROW,
+		Color(Ui.GOLD, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	Ui.write_over(self, Vector2(box.position.x, box.position.y + 28.0), under, Ui.NOTE,
+		Color(Ui.DIM if bool(chosen.get("available", false)) else Ui.EMBER, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+
+
+## **Over the target he is on** (N4): its name, then the chance and the damage — or that the
+## action does not reach it.
+func _draw_target_words() -> void:
+	if String(_reading.get("turn_mode", "")) != "target":
+		return
+	var rows: Array = _reading.get("targets", []) as Array
+	if rows.is_empty():
+		return
+	var row: Dictionary = rows[clampi(int(_reading.get("target_chosen", 0)), 0, rows.size() - 1)] as Dictionary
+	var at: Vector2 = row.get("screen", Vector2(-1.0, -1.0)) as Vector2
+	if at.x < 0.0:
+		return
+	var name: String = String(row.get("name", ""))
+	var reach: bool = bool(row.get("in_reach", false))
+	var odds: String = Text.of(&"target.chance", [int(row.get("chance", 0)), int(row.get("damage", 0))]) if reach \
+		else Text.of(&"target.out_of_reach")
+	var width: float = maxf(Ui.width_of(name, Ui.ROW), Ui.width_of(odds, Ui.NOTE)) + 16.0
+	var box := Rect2(Vector2(at.x - width * 0.5, at.y - 44.0), Vector2(width, 32.0))
+	# Over the lesson's card, it goes under the target's feet instead.
+	if _card_rect.has_area() and box.intersects(_card_rect):
+		box.position.y = at.y + 62.0
+	Ui.panel(self, box, Color(Ui.PANEL, 0.94 * _alpha))
+	Ui.write_over(self, Vector2(box.position.x, box.position.y + 13.0), name, Ui.ROW,
+		Color(Ui.INK, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+	Ui.write_over(self, Vector2(box.position.x, box.position.y + 26.0), odds, Ui.NOTE,
+		Color(Ui.GOLD if reach else Ui.EMBER, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+
+
+## **An action's icon**, drawn in lines a dozen pixels across: a sword, a bow, a spell's
+## star, a flask, an hourglass. Static, so the inventory and any other screen can draw them.
+static func draw_icon(canvas: CanvasItem, icon: String, at: Vector2, ink: Color) -> void:
+	match icon:
+		"sword":
+			canvas.draw_line(at + Vector2(-5.0, 5.0), at + Vector2(6.0, -6.0), ink, 2.0)
+			canvas.draw_line(at + Vector2(-5.0, 0.0), at + Vector2(0.0, 5.0), ink, 2.0)
+			canvas.draw_line(at + Vector2(-7.0, 7.0), at + Vector2(-4.0, 4.0), ink, 2.0)
+		"bow":
+			canvas.draw_arc(at + Vector2(-3.0, 0.0), 8.0, -1.1, 1.1, 12, ink, 2.0)
+			canvas.draw_line(at + Vector2(0.6, -7.1), at + Vector2(0.6, 7.1), ink, 1.0)
+			canvas.draw_line(at + Vector2(-6.0, 0.0), at + Vector2(7.0, 0.0), ink, 1.0)
+		"spell":
+			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(0, -7), at + Vector2(2, -2), at + Vector2(7, 0),
+				at + Vector2(2, 2), at + Vector2(0, 7), at + Vector2(-2, 2), at + Vector2(-7, 0), at + Vector2(-2, -2)]), ink)
+		"flask":
+			canvas.draw_circle(at + Vector2(0.0, 2.5), 4.5, ink)
+			canvas.draw_rect(Rect2(at + Vector2(-1.5, -6.0), Vector2(3.0, 5.0)), ink, true)
+		"wait":
+			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-5, -6), at + Vector2(5, -6), at + Vector2(0, 0)]), ink)
+			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-5, 6), at + Vector2(5, 6), at + Vector2(0, 0)]), ink)
 
 
 ## Ten pips and a name. The remaining health is anchored at the outer edge of the
@@ -467,21 +606,13 @@ func bars_shown() -> int:
 ## **what K does with what you hold**, and what U would put in your hands instead, only
 ## for somebody with a bow of their own (T6 — Yannick could not shoot and nothing said why).
 func keys_line() -> String:
-	var bow: bool = String(_reading.get("my_weapon", "")) == String(DuelRules.BOW)
-	var strike: String = Text.of(&"duel.part.shoot" if bow else &"duel.part.strike")
-	# **The chance it lands, before the blow** (R4), when it would strike somebody.
-	var chance: int = int(_reading.get("hit_chance", -1))
-	if chance >= 0:
-		strike = Text.of(&"duel.chance", [strike, chance])
-	var parts: Array[String] = [Text.of(&"duel.part.move"), strike]
-	if bool(_reading.get("has_bow", false)):
-		var fists: bool = String(_reading.get("close_weapon", "")) == String(DuelRules.FISTS)
-		parts.append(Text.of(&"duel.part.take_bow" if not bow
-			else (&"duel.part.put_bow_away" if fists else &"duel.part.take_sword")))
-	if bool(_reading.get("can_cast", false)):
-		parts.append(Text.of(&"duel.part.spell"))
-	parts.append(Text.of(&"duel.part.wait"))
-	return "        ".join(parts)
+	# **The keys of the step he is at** (N3, N4): where to stand, the wheel, the target.
+	match String(_reading.get("turn_mode", "")):
+		"wheel":
+			return Text.of(&"duel.keys.wheel")
+		"target":
+			return Text.of(&"duel.keys.target")
+	return Text.of(&"duel.keys.move")
 
 
 ## **Whose turn it is, in words** (K4): yours; a beast's or a man's named by his trade

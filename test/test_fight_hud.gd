@@ -209,43 +209,64 @@ func _drill_turn(drill: String, apart: int, weapon: String = "sword") -> Diction
 
 
 func test_each_step_names_its_key_and_is_ticked_when_done() -> void:
-	# T8: Yannick could not shoot and nothing told him why. The bow's lesson is three
-	# steps, each with its key, and the ones done are ticked.
+	# T8, redone for the wheel (N6): place yourself, open the wheel and choose the lesson's
+	# action, then strike — each with its key, the ones done ticked.
 	var hud := FightHud.new()
-	hud.present(_drill_turn("bow", 1, "sword"), 1.0 / 60.0)
+	hud.present(_drill_turn("bow", 1), 1.0 / 60.0)
 	var steps: Array[Dictionary] = hud.lesson_steps()
-	assert_eq(steps.size(), 3, "take the bow, keep your distance, shoot")
-	assert_true(String(steps[0]["text"]).begins_with("U"), "the first names U: '%s'" % steps[0]["text"])
-	assert_false(bool(steps[0]["done"]), "and it is not done while you hold the sword")
+	assert_eq(steps.size(), 3, "keep your distance, choose the bow, shoot")
+	assert_true(String(steps[1]["text"]).begins_with("K"), "the wheel's step names K: '%s'" % steps[1]["text"])
+	assert_false(bool(steps[0]["done"]), "one tile off is too close for a bow")
 	assert_true(bool(steps[0]["current"]), "so it is the step you are on")
-	hud.present(_drill_turn("bow", 3, "bow"), 1.0 / 60.0)
+	var placed: Dictionary = _drill_turn("bow", 3)
+	placed["turn_mode"] = "target"
+	placed["chosen_category"] = "ranged"
+	hud.present(placed, 1.0 / 60.0)
 	steps = hud.lesson_steps()
-	assert_true(bool(steps[0]["done"]) and bool(steps[1]["done"]), "the bow in hand, three tiles off: two done")
-	assert_true(bool(steps[2]["current"]), "and K is next")
+	assert_true(bool(steps[0]["done"]) and bool(steps[1]["done"]), "three tiles off, the bow chosen: two done")
+	assert_true(bool(steps[2]["current"]), "and the shot is next")
 	assert_true(hud.drill_card()[2].begins_with("[x]"), "a done step is ticked: '%s'" % hud.drill_card()[2])
 	hud.free()
 
 
-func test_the_hint_answers_where_you_stand() -> void:
+func test_the_hint_answers_where_you_stand_and_what_you_chose() -> void:
 	var hud := FightHud.new()
+	# On the ground: too far, too close, or well placed and K.
 	var cases: Array[Array] = [
-		["bow", 3, "sword", &"drill.hint.take_bow"],
-		["bow", 1, "bow", &"drill.hint.bow_too_close"],
-		["bow", 9, "bow", &"drill.hint.too_far"],
-		["bow", 4, "bow", &"drill.hint.shoot_now"],
-		["sword", 4, "sword", &"drill.hint.sword_too_far"],
-		["sword", 1, "sword", &"drill.hint.strike_now"],
-		["magic", 6, "sword", &"drill.hint.gift_too_far"],
-		["magic", 2, "sword", &"drill.hint.cast_now"],
+		["bow", 1, "", "", "", &"drill.hint.bow_too_close"],
+		["bow", 9, "", "", "", &"drill.hint.too_far"],
+		["bow", 4, "", "", "", &"drill.hint.open_wheel"],
+		["sword", 4, "", "", "", &"drill.hint.sword_too_far"],
+		["sword", 1, "", "", "", &"drill.hint.open_wheel"],
+		["magic", 6, "", "", "", &"drill.hint.gift_too_far"],
+		# On the wheel: where the lesson's action is, or K on it.
+		["bow", 4, "wheel", "melee", "", &"drill.hint.pick.ranged"],
+		["bow", 4, "wheel", "ranged", "", &"drill.hint.confirm"],
+		["magic", 2, "wheel", "ranged", "", &"drill.hint.pick.magic"],
+		# On the target: the wrong action, or K.
+		["bow", 4, "target", "", "melee", &"drill.hint.wrong_action"],
+		["bow", 4, "target", "", "ranged", &"drill.hint.act.ranged"],
+		["sword", 1, "target", "", "melee", &"drill.hint.act.melee"],
 	]
 	for row: Array in cases:
-		hud.present(_drill_turn(String(row[0]), int(row[1]), String(row[2])), 1.0 / 60.0)
-		assert_eq(hud.hint_key(), row[3] as StringName, "%s, %d tiles, %s in hand" % [row[0], row[1], row[2]])
+		var reading: Dictionary = _drill_turn(String(row[0]), int(row[1]))
+		reading["turn_mode"] = String(row[2])
+		reading["wheel_category"] = String(row[3])
+		reading["chosen_category"] = String(row[4])
+		reading["target_in_reach"] = true
+		hud.present(reading, 1.0 / 60.0)
+		assert_eq(hud.hint_key(), row[5] as StringName, "%s, %d tiles, %s %s%s" % row.slice(0, 5))
+	var aimed_far: Dictionary = _drill_turn("bow", 4)
+	aimed_far["turn_mode"] = "target"
+	aimed_far["chosen_category"] = "ranged"
+	aimed_far["target_in_reach"] = false
+	hud.present(aimed_far, 1.0 / 60.0)
+	assert_eq(hud.hint_key(), &"drill.hint.target_out_of_reach", "aimed at one out of reach")
 	var resting: Dictionary = _drill_turn("magic", 2)
 	resting["spell_ready"] = false
 	hud.present(resting, 1.0 / 60.0)
 	assert_eq(hud.hint_key(), &"drill.hint.gift_resting", "the gift resting")
-	var theirs: Dictionary = _drill_turn("bow", 1, "bow")
+	var theirs: Dictionary = _drill_turn("bow", 1)
 	theirs["choosing"] = false
 	hud.present(theirs, 1.0 / 60.0)
 	assert_eq(hud.hint_key(), &"", "and nothing is advised while it is not your turn")
@@ -291,37 +312,6 @@ func test_a_drill_ends_passed_or_not_yet() -> void:
 	hud.free()
 
 
-func test_the_keys_offer_the_gift_only_to_who_has_it() -> void:
-	var hud := FightHud.new()
-	var reading: Dictionary = _reading(1.0, 100, 15)
-	hud.present(reading, 1.0 / 60.0)
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.strike")), "K strikes")
-	assert_false(hud.keys_line().contains(Text.of(&"duel.part.spell")), "and no spell without the gift")
-	reading["can_cast"] = true
-	hud.present(reading, 1.0 / 60.0)
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.spell")), "with it, I casts")
-	hud.free()
-
-
-func test_the_keys_name_the_weapon_in_your_hands() -> void:
-	# T6: Yannick could not shoot and nothing told him why. The line says what K does with
-	# what you hold, and what U would put in your hands instead.
-	var hud := FightHud.new()
-	var reading: Dictionary = _reading(1.0, 100, 15)
-	hud.present(reading, 1.0 / 60.0)
-	assert_false(hud.keys_line().contains(Text.of(&"duel.part.take_bow")), "no bow of your own, no U")
-	reading["has_bow"] = true
-	reading["my_weapon"] = "sword"
-	hud.present(reading, 1.0 / 60.0)
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.strike")), "the sword in hand: K strikes")
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.take_bow")), "and U takes the bow")
-	reading["my_weapon"] = "bow"
-	hud.present(reading, 1.0 / 60.0)
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.shoot")), "the bow in hand: K shoots")
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.take_sword")), "and U takes the sword back")
-	hud.free()
-
-
 func test_a_felled_player_is_shown_at_nothing() -> void:
 	# The felling blow is paid at the end of the beat, so the store still says one or
 	# two while you are on the ground. The picture says nothing left, because that is
@@ -337,17 +327,23 @@ func test_a_felled_player_is_shown_at_nothing() -> void:
 func test_the_fights_words_exist_in_both_languages() -> void:
 	for key: StringName in [&"fight.you", &"fight.yielded", &"fight.you_left", &"drill.passed", &"drill.failed",
 			&"drill.sword.title", &"drill.sword.instruction", &"drill.sword.goal",
-			&"drill.sword.step.close", &"drill.sword.step.strike", &"drill.bow.step.take", &"drill.bow.step.range",
-			&"drill.bow.step.shoot", &"drill.magic.step.close", &"drill.magic.step.cast",
-			&"drill.hint.take_bow", &"drill.hint.bow_too_close", &"drill.hint.too_far", &"drill.hint.shoot_now",
-			&"drill.hint.sword_too_far", &"drill.hint.strike_now", &"drill.hint.gift_too_far",
-			&"drill.hint.gift_resting", &"drill.hint.cast_now", &"fight.touched",
+			&"drill.sword.step.close", &"drill.sword.step.choose", &"drill.sword.step.act",
+			&"drill.bow.step.close", &"drill.bow.step.choose", &"drill.bow.step.act",
+			&"drill.magic.step.close", &"drill.magic.step.choose", &"drill.magic.step.act",
+			&"drill.need.melee", &"drill.need.ranged", &"drill.need.magic",
+			&"drill.hint.open_wheel", &"drill.hint.pick.melee", &"drill.hint.pick.ranged", &"drill.hint.pick.magic",
+			&"drill.hint.confirm", &"drill.hint.wrong_action", &"drill.hint.target_out_of_reach",
+			&"drill.hint.act.melee", &"drill.hint.act.ranged", &"drill.hint.act.magic",
+			&"drill.hint.bow_too_close", &"drill.hint.too_far",
+			&"drill.hint.sword_too_far", &"drill.hint.gift_too_far",
+			&"drill.hint.gift_resting", &"fight.touched",
 			&"fighter.kings_guard", &"fighter.kings_guard.of", &"fighter.kings_guard.many",
 			&"fighter.works_guard", &"fighter.works_guard.of", &"fighter.works_guard.many",
 			&"fighter.works_archer", &"fighter.works_archer.of", &"fighter.works_archer.many", &"fighter.gatekeeper.of", &"beast.wolf.of",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
-			&"duel.part.move", &"duel.part.strike", &"duel.part.shoot", &"duel.part.take_bow",
-			&"duel.part.take_sword", &"duel.part.spell", &"duel.part.wait",
+			&"duel.keys.move", &"duel.keys.wheel", &"duel.keys.target", &"ambush.title", &"ambush.keys", &"ambush.damage",
+			&"action.why.no_bow", &"action.why.no_spell", &"action.why.resting", &"action.why.no_items",
+			&"target.out_of_reach", &"target.chance",
 			&"drill.magic.title", &"drill.magic.instruction", &"drill.magic.goal", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",
 			&"duel.your_turn", &"duel.his_turn"]:
 		assert_true(Text.has(key), "%s is written" % key)

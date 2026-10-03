@@ -147,8 +147,16 @@ func _ambush(sim: Sim, event: SimEvent) -> void:
 		sim.derive(&"ambush_refused", {"pack": int(event.data.get("pack", -1)), "why": "busy"})
 		return
 	var region: Region = world.region()
-	var aim: Dictionary = ambush_target(wild, region, world.player_tile(), sim.store(&"inventory") as Inventory)
-	if aim.is_empty() or int(aim["pack"]) != int(event.data.get("pack", -1)):
+	# **The animal he chose, with the weapon that reaches it** (N4) — or, asked by pack
+	# alone, the best of them.
+	var aim: Dictionary = {}
+	for one: Dictionary in ambush_targets(wild, region, world.player_tile(), sim.store(&"inventory") as Inventory):
+		if int(one["pack"]) != int(event.data.get("pack", -1)):
+			continue
+		if not event.data.has("animal") or int(one["animal"]) == int(event.data["animal"]):
+			aim = one
+			break
+	if aim.is_empty():
 		sim.derive(&"ambush_refused", {"pack": int(event.data.get("pack", -1))})
 		return
 	var which: int = int(aim["pack"])
@@ -161,31 +169,44 @@ func _ambush(sim: Sim, event: SimEvent) -> void:
 ## nearest animal in the bow's band. Never one whose pack sees him: that is already a fight.
 ## Pure, so the window's prompt and the simulation's answer are the same question.
 static func ambush_target(wild: Wild, region: Region, here: Vector2i, inventory: Inventory) -> Dictionary:
+	var all: Array[Dictionary] = ambush_targets(wild, region, here, inventory)
+	return all[0] if not all.is_empty() else {}
+
+
+## **Every animal K could surprise from here** (N4): each with the weapon that reaches it —
+## his blade beside him, else his bow in its band — where it stands and what the blow would
+## cost it, doubled. A blade's first, then the nearest arrow's, then by pack and animal, so
+## the choice is always offered in the same order.
+static func ambush_targets(wild: Wild, region: Region, here: Vector2i, inventory: Inventory) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
 	if wild == null or region == null:
-		return {}
+		return out
 	var close: StringName = inventory.weapon_in_hand() if inventory != null else DuelRules.SWORD
 	var bow: bool = inventory != null and inventory.has_bow()
-	var best: Dictionary = {}
-	var best_gap: int = 1 << 20
 	for which: int in Wild.packs().size():
 		if wild.cleared.has(which) or seen_by(wild, region, which, here):
 			continue
 		var animals: Array[Vector2i] = wild.members(region, which)
 		for one: int in animals.size():
-			var gap: int = DuelRules.apart(here, animals[one])
 			var weapon: StringName = &""
 			if DuelRules.reaches(close, here, animals[one]):
 				weapon = close
 			elif bow and DuelRules.reaches(DuelRules.BOW, here, animals[one]):
 				weapon = DuelRules.BOW
-			# A blade beside him first, then the nearest arrow.
-			var rank: int = gap if weapon == DuelRules.BOW else -1
-			if weapon != &"" and rank < best_gap:
-				best_gap = rank
-				var kind: StringName = wild.kind_of(which)
-				best = {"pack": which, "animal": one, "weapon": weapon, "kind": kind,
-					"seat": kind if one == 0 else StringName("%s#%d" % [kind, one + 1])}
-	return best
+			if weapon == &"":
+				continue
+			var kind: StringName = wild.kind_of(which)
+			out.append({"pack": which, "animal": one, "weapon": weapon, "kind": kind, "at": animals[one],
+				"seat": kind if one == 0 else StringName("%s#%d" % [kind, one + 1]),
+				"rank": DuelRules.apart(here, animals[one]) if weapon == DuelRules.BOW else -1,
+				"damage": DuelRules.damage_with(weapon) * DuelRules.SURPRISE_TIMES})
+	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a["rank"]) != int(b["rank"]):
+			return int(a["rank"]) < int(b["rank"])
+		if int(a["pack"]) != int(b["pack"]):
+			return int(a["pack"]) < int(b["pack"])
+		return int(a["animal"]) < int(b["animal"]))
+	return out
 
 
 ## **The fight a pack begins**, with every animal where it stands — not set down beside the

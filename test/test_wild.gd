@@ -787,3 +787,28 @@ func test_no_surprise_in_the_middle_of_a_conversation() -> void:
 	sim.advance(2)
 	assert_false((sim.store(&"duel") as Duel).on(), "talking, K begins nothing")
 	assert_eq(sim.events.of_type(&"ambush_refused").size(), 1, "and the simulation says so")
+
+
+func test_a_surprise_goes_to_the_animal_chosen() -> void:
+	if not Places.baked():
+		debt("the packs are anchored to his map; the 2D one stands nothing there")
+		return
+	# N4: outside a fight too, the target is the player's to choose.
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
+	sim.submit(&"tick_noop", {})
+	sim.advance(1)
+	var world := sim.store(&"world") as WorldState
+	var wild := sim.store(&"wild") as Wild
+	world.player_pos = Vector2(_behind_pack(sim, 5, 0)) + Vector2(0.5, 0.5)
+	sim.advance(2)
+	var choice: Array[Dictionary] = WildSystem.ambush_targets(wild, world.region(), world.player_tile(), sim.store(&"inventory") as Inventory)
+	assert_true(choice.size() >= 2, "both animals can be shot from here: %d" % choice.size())
+	var second: Dictionary = choice[1]
+	assert_eq(int(second["damage"]), DuelRules.bow_damage() * DuelRules.SURPRISE_TIMES, "what the blow would cost it, doubled")
+	sim.submit(&"ambush", {"pack": int(second["pack"]), "animal": int(second["animal"])})
+	for _step: int in 200:
+		sim.advance(1)
+		if not _first_blow(sim).is_empty():
+			break
+	assert_eq(String(_first_blow(sim).get("target", "")), String(second["seat"]), "the arrow goes to the one chosen")

@@ -81,6 +81,29 @@ var _duel_cursor_set: bool = false
 ## **The weapon in your hands for this turn** (T6): a proposal like the cursor, chosen with
 ## U and sent with the turn. It opens on what you last struck with.
 var _duel_weapon: StringName = DuelRules.SWORD
+## The player's turn's step (N3, N4): where to stand, what to do, at whom — and the wheel's
+## segment, the action chosen, the target among its foes, and the category he used last.
+var _turn_mode: StringName = &"move"
+var _wheel_at: int = 0
+var _chosen: Dictionary = {}
+var _target_at: int = 0
+var _last_category: StringName = &"melee"
+## Why the last thing asked of the wheel was refused, and when, to say it for a moment.
+var _refused_why: StringName = &""
+var _refused_at: float = -10.0
+## **For a photograph only** (`UNCROWNED_TURN`, N3): the step of his turn to open — `wheel`
+## or `target` — the category, and the target's rank. Debug only, spent on the first turn.
+var _shot_turn: PackedStringArray = PackedStringArray()
+## **Choosing whom to surprise** (N4): the animals K could reach, the one chosen, and the
+## overlay that marks them; empty when no choice is open. The world waits while it is.
+var _ambush_choice: Array[Dictionary] = []
+var _ambush_at: int = 0
+var _ambush_overlay: AmbushOverlay = null
+## **The mouse** (N5): where it was last frame and whether its buttons were down, so a
+## move, a click and a right-click are each read once.
+var _mouse_last: Vector2 = Vector2(-1.0, -1.0)
+var _left_was: bool = false
+var _right_was: bool = false
 ## The tiles whoever is acting can still reach, worked out once per turn rather than
 ## sixty times a second. Keyed by who is acting and where they stand.
 var _duel_moves: Array = []
@@ -301,10 +324,16 @@ func _ready() -> void:
 				_seen_events = _sim.events.size()
 			_sim.advance(1)
 		_held_for_shot = turns > 0 and not OS.get_environment("UNCROWNED_SHOT").is_empty()
+		# `UNCROWNED_TURN=wheel:ranged` or `target:ranged:1`: his turn opened at that step.
+		if OS.get_environment("UNCROWNED_TURN") != "":
+			_shot_turn = OS.get_environment("UNCROWNED_TURN").split(":")
 		_fight_lens = 1.0
 		_snap_lens = true
 		_draw_ring()
 
+	# `UNCROWNED_TURN=ambush`: the choice of whom to surprise, open (N4), for a photograph.
+	if OS.has_feature("debug") and OS.get_environment("UNCROWNED_TURN") == "ambush":
+		call_deferred(&"_open_ambush")
 	# **`UNCROWNED_TOWN=cinderworks:9/7`** — a place's two numbers, set for the frame
 	# `shot.sh` takes, so an outcome can be looked at before there is a quest to play to
 	# it. `place:allegiance/richesse`, comma-separated for more than one. The same debug
@@ -458,6 +487,13 @@ func _duel_frame() -> Dictionary:
 	var held: StringName = _duel_weapon if choosing else mine.weapon
 	# The weapon whose reach is drawn: yours while you choose, whoever acts' otherwise.
 	var ringed: StringName = held if choosing else (acting.weapon if acting != null else DuelRules.SWORD)
+	# **The reach drawn is the action's he is weighing** (N3, N4): the segment the wheel is
+	# on, the action he is aiming, or, on the ground, the one he used last — the gift's three
+	# tiles, a bow's band, a blade's one.
+	var weighed: Dictionary = _weighed(mine) if choosing else {}
+	var aiming_the_gift: bool = weighed.get("kind", &"") == ActionRules.CAST
+	if weighed.get("kind", &"") == ActionRules.STRIKE:
+		ringed = weighed["weapon"] as StringName
 	var reading: Dictionary = {
 		"who": String(him.who),
 		"his_name": _fighter_name(him.who),
@@ -485,13 +521,28 @@ func _duel_frame() -> Dictionary:
 		# What whoever is acting reaches with what they carry — a bow's six, a sword's one —
 		# and on your own turn, with what you have in your hands, round the tile you chose
 		# (T6).
-		"reach_tiles": DuelRules.reach_with(ringed),
-		"min_reach_tiles": DuelRules.bow_min_tiles() if ringed == DuelRules.BOW else 0,
+		# The gift's reach while it is the action aimed (N4), else the weapon's.
+		"reach_tiles": DuelRules.spell_reach_tiles() if aiming_the_gift else DuelRules.reach_with(ringed),
+		"min_reach_tiles": DuelRules.bow_min_tiles() if ringed == DuelRules.BOW and not aiming_the_gift else 0,
 		"reach_at": Vector2(_duel_cursor) + Vector2(0.5, 0.5) if choosing else _duel.drawn_at(acting if acting != null else mine),
 		"my_weapon": String(held),
 		"has_bow": _has_bow(),
-		# The chance K's blow lands, on whoever it would strike from the tile chosen (R4).
-		"hit_chance": _hit_chance(mine) if choosing else -1,
+		# **The turn's step, the wheel and the target** (N3, N4): which step he is at, the
+		# wheel's segments and the one he is on, the foes the action chosen is aimed among —
+		# each with its reach, chance and damage, where to draw its mark and its words — and
+		# the reason the last thing asked was refused, for a moment.
+		"turn_mode": String(_turn_mode) if choosing else "",
+		"wheel": _wheel_reading(mine) if choosing else [],
+		"wheel_at": _wheel_at,
+		"targets": _targets_reading(mine) if choosing and _turn_mode == TURN_TARGET else [],
+		"target_chosen": _target_at,
+		# For the lesson's steps and hint (N6): the segment the wheel is on, the category
+		# chosen, and whether the target chosen is in reach.
+		"wheel_category": String(ActionRules.categories()[_wheel_at]) if choosing and _turn_mode == TURN_WHEEL else "",
+		"chosen_category": String(_chosen.get("category", "")) if choosing and _turn_mode == TURN_TARGET else "",
+		"target_in_reach": _chosen_in_reach(mine) if choosing and _turn_mode == TURN_TARGET else false,
+		"refused": Text.of(_refused_why) if _real_seconds - _refused_at < 2.0 and _refused_why != &"" else "",
+		"my_screen": _three_d.screen_of(my_at, 1.0) if _three_d != null else Vector2(-1.0, -1.0),
 		# What U puts back in his hands from the bow: the sword, or his fists (E).
 		"close_weapon": String(_close_weapon()),
 		# For the lesson's steps and hint (T8): whether you are choosing your turn, and how
@@ -1004,6 +1055,12 @@ func _map_label(dot: Vector2, text: String, frame: Rect2, taken: Array[Rect2], c
 
 func _process(delta: float) -> void:
 	_real_seconds += delta
+	# `UNCROWNED_MOUSE=x,y`: the pointer held at a point of the window, for a photograph of
+	# what hovering does (N5). Debug only.
+	if _debug_available and OS.get_environment("UNCROWNED_MOUSE").contains(","):
+		var held: PackedStringArray = OS.get_environment("UNCROWNED_MOUSE").split(",")
+		# A pixel's wiggle each frame, so it counts as moved and hovering answers it.
+		Input.warp_mouse(Vector2(float(held[0]) + float(Engine.get_process_frames() % 2), float(held[1])))
 	if _paused != null:
 		_read_pause()
 		# Leaving for the title frees this screen inside that call. It is out of the
@@ -1011,6 +1068,9 @@ func _process(delta: float) -> void:
 		# that is no longer anybody's.
 		if not is_inside_tree():
 			return
+	elif not _ambush_choice.is_empty():
+		# The world waits while he chooses whom to surprise, as it waits for the inventory.
+		_read_ambush()
 	elif _inventory != null:
 		# The world waits, as it does for the pause menu; the screen answers its own
 		# changes on the spot (`InventoryScreen.act`). Escape and Tab close it — and so
@@ -1037,7 +1097,7 @@ func _process(delta: float) -> void:
 	# The HUD is a CanvasLayer and therefore draws *over* everything this node draws,
 	# including the map and the pause panel. Anything that takes the whole screen
 	# takes the HUD with it.
-	_hud.visible = _paused == null and not _map_open and _inventory == null
+	_hud.visible = _paused == null and not _map_open and _inventory == null and _ambush_choice.is_empty()
 	# The journal is itself inside the HUD, so only the two readouts drawn over the
 	# world step aside for it.
 	_info.visible = not _journal_open
@@ -1179,7 +1239,8 @@ func _read_input() -> void:
 	if _duel != null and _duel.on():
 		_close_overlays()
 		if Input.is_action_just_pressed(&"back"):
-			_pause_menu()
+			if not _step_back():
+				_pause_menu()
 			return
 		# What you wear is changed before a fight, not in one (`InventorySystem` refuses
 		# it too); the HUD says so for a moment rather than the key doing nothing.
@@ -1306,12 +1367,8 @@ func _read_input() -> void:
 	# **K attacks first, from outside their sight** (R3): the same key that strikes in a
 	# fight. The window only asks; `WildSystem` decides whether the blow is there to strike.
 	if Input.is_action_just_pressed(&"strike"):
-		var aim: Dictionary = _ambush_aim()
-		if not aim.is_empty():
-			if _held_dir != Vector2i.ZERO:
-				_held_dir = Vector2i.ZERO
-				_sim.submit(&"move_intent", {"x": 0, "y": 0})
-			_sim.submit(&"ambush", {"pack": int(aim["pack"])})
+		if not _ambush_aim().is_empty():
+			_open_ambush()
 
 	if Input.is_action_just_pressed(&"speak_out"):
 		if _can_warn():
@@ -1326,9 +1383,83 @@ func _read_input() -> void:
 func _close_overlays() -> void:
 	_map_open = false
 	_close_inventory()
+	_close_ambush()
 	if _journal_open:
 		_journal_open = false
 		_draw_journal()
+
+
+## **K, outside a fight: choose whom to surprise** (N4). The held key is let go in the log,
+## the world waits, and the overlay marks them.
+func _open_ambush() -> void:
+	_ambush_choice = WildSystem.ambush_targets(_sim.store(&"wild") as Wild, _world.region(), _world.player_tile(),
+		_sim.store(&"inventory") as Inventory)
+	if _ambush_choice.is_empty():
+		return
+	if _held_dir != Vector2i.ZERO:
+		_held_dir = Vector2i.ZERO
+		_sim.submit(&"move_intent", {"x": 0, "y": 0})
+	_ambush_at = 0
+	if _ambush_overlay == null and _inventory_layer != null:
+		_ambush_overlay = AmbushOverlay.new()
+		_inventory_layer.add_child(_ambush_overlay)
+	Sound.cue(&"move")
+	_show_ambush()
+
+
+func _close_ambush() -> void:
+	_ambush_choice = []
+	if _ambush_overlay != null:
+		_ambush_overlay.queue_free()
+		_ambush_overlay = null
+
+
+## The arrows go from one to the next; K (E, Space, Enter) attacks the one chosen; Escape
+## lets it be.
+func _read_ambush() -> void:
+	var mouse: Dictionary = _mouse_frame()
+	if _three_d != null:
+		var under: int = _under_the_mouse(_ambush_choice.map(func(one: Dictionary) -> Vector2:
+			return Vector2(one["at"] as Vector2i) + Vector2(0.5, 0.5)), mouse["at"] as Vector2)
+		if under >= 0 and bool(mouse["moved"]):
+			_ambush_at = under
+		if under >= 0 and bool(mouse["click"]):
+			_ambush_at = under
+			var picked: Dictionary = _ambush_choice[_ambush_at]
+			_sim.submit(&"ambush", {"pack": int(picked["pack"]), "animal": int(picked["animal"])})
+			_close_ambush()
+			Sound.cue(&"accept")
+			return
+	if Input.is_action_just_pressed(&"back") or bool(mouse["back"]):
+		Sound.cue(&"cancel")
+		_close_ambush()
+		return
+	if Input.is_action_just_pressed(&"move_right") or Input.is_action_just_pressed(&"move_down") \
+			or Input.is_action_just_pressed(&"inventory"):
+		_ambush_at = posmod(_ambush_at + 1, _ambush_choice.size())
+		Sound.cue(&"move")
+	elif Input.is_action_just_pressed(&"move_left") or Input.is_action_just_pressed(&"move_up"):
+		_ambush_at = posmod(_ambush_at - 1, _ambush_choice.size())
+		Sound.cue(&"move")
+	if _confirm_pressed():
+		var chosen: Dictionary = _ambush_choice[_ambush_at]
+		_sim.submit(&"ambush", {"pack": int(chosen["pack"]), "animal": int(chosen["animal"])})
+		_close_ambush()
+		Sound.cue(&"accept")
+		return
+	_show_ambush()
+
+
+func _show_ambush() -> void:
+	if _ambush_overlay == null:
+		return
+	var rows: Array = []
+	for one: Dictionary in _ambush_choice:
+		var at: Vector2 = Vector2(one["at"] as Vector2i) + Vector2(0.5, 0.5)
+		rows.append({"feet": _three_d.screen_of(at, 0.05) if _three_d != null else Vector2(-1.0, -1.0),
+			"head": _three_d.screen_of(at, 1.5) if _three_d != null else Vector2(-1.0, -1.0),
+			"name": Text.of(StringName("beast.%s" % String(one["kind"]))), "damage": int(one["damage"])})
+	_ambush_overlay.show_rows(rows, _ambush_at)
 
 
 ## What K would attack outside a fight (R3), the simulation's own answer, or nothing.
@@ -1415,6 +1546,7 @@ func _skip_a_day() -> void:
 func _read_duel_input() -> void:
 	if not _duel.waiting_on_player():
 		_duel_cursor_set = false
+		_turn_mode = TURN_MOVE
 		return
 	var mine: DuelFighter = _duel.me()
 	if mine == null:
@@ -1422,7 +1554,138 @@ func _read_duel_input() -> void:
 	if not _duel_cursor_set:
 		_duel_cursor = mine.at
 		_duel_cursor_set = true
-		_duel_weapon = mine.weapon if _has_bow() else _close_weapon()
+		_turn_mode = TURN_MOVE
+		_wheel_at = maxi(ActionRules.categories().find(_last_category), 0)
+		_duel_weapon = _weapon_of_category(mine, _last_category)
+		if OS.has_feature("debug") and not _shot_turn.is_empty():
+			_open_for_the_photograph(mine)
+	var mouse: Dictionary = _mouse_frame()
+	if bool(mouse["back"]) and _step_back():
+		return
+	match _turn_mode:
+		TURN_WHEEL:
+			_mouse_on_wheel(mine, mouse)
+			_read_wheel(mine)
+		TURN_TARGET:
+			_mouse_on_targets(mine, mouse)
+			_read_target(mine)
+		_:
+			_read_move(mine)
+
+
+## **The player's turn, in three steps** (N3, N4, 2026-10-03, after Baldur's Gate 3): where
+## to stand, with the arrows; what to do, on the wheel; at whom, on the target. Nothing is
+## sent until the target is confirmed, and Escape goes back one step — from the wheel to the
+## ground, from the target to the wheel. The fight waits on him throughout: it is turn-based
+## and the world's clock is held, so nothing needs pausing.
+const TURN_MOVE: StringName = &"move"
+const TURN_WHEEL: StringName = &"wheel"
+const TURN_TARGET: StringName = &"target"
+
+
+## **The mouse, this frame** (N5): where it is, whether it moved, a left click and a right
+## click — each read once.
+func _mouse_frame() -> Dictionary:
+	if not is_inside_tree():
+		return {"at": Vector2(-1.0, -1.0), "moved": false, "click": false, "back": false}
+	# Read in the HUD's own frame — the one the wheel, the labels and `screen_of` are drawn in
+	# — so the screen's stretch to the window is nobody's to undo by hand.
+	var at: Vector2 = get_viewport().get_mouse_position()
+	if _ambush_overlay != null:
+		at = _ambush_overlay.get_local_mouse_position()
+	elif _fight_hud != null:
+		at = _fight_hud.get_local_mouse_position()
+	var moved: bool = at.distance_to(_mouse_last) > 0.5
+	_mouse_last = at
+	var left: bool = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	var right: bool = Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+	var click: bool = left and not _left_was
+	var back: bool = right and not _right_was
+	_left_was = left
+	_right_was = right
+	return {"at": at, "moved": moved, "click": click, "back": back}
+
+
+## On the wheel: the segment under the mouse is the one he is on, and a click chooses it.
+func _mouse_on_wheel(mine: DuelFighter, mouse: Dictionary) -> void:
+	if _fight_hud == null:
+		return
+	var slot: int = _fight_hud.wheel_slot_at(mouse["at"] as Vector2)
+	if slot < 0:
+		return
+	if bool(mouse["moved"]) and slot != _wheel_at:
+		_wheel_at = slot
+		Sound.cue(&"move")
+	if bool(mouse["click"]):
+		_wheel_at = slot
+		_choose_category(mine, ActionRules.categories()[slot])
+
+
+## On the targets: the foe under the mouse is the one chosen, and a click strikes him.
+func _mouse_on_targets(mine: DuelFighter, mouse: Dictionary) -> void:
+	if _three_d == null:
+		return
+	var targets: Array[Dictionary] = _targets_now(mine)
+	var under: int = _under_the_mouse(targets.map(func(row: Dictionary) -> Vector2:
+		var foe: DuelFighter = _duel.get_fighter(row["who"] as StringName)
+		return _duel.drawn_at(foe) if foe != null else Vector2(-99.0, -99.0)), mouse["at"] as Vector2)
+	if under < 0:
+		return
+	if bool(mouse["moved"]) and under != _target_at:
+		_target_at = under
+		Sound.cue(&"move")
+	if bool(mouse["click"]):
+		_target_at = under
+		if not bool(targets[under]["in_reach"]):
+			_refuse(&"target.out_of_reach")
+			return
+		_take_turn(_chosen, targets[under]["who"] as StringName)
+
+
+## The one of these tiles whose figure is under a point of the screen, or -1: the point within
+## a figure's half-width of the line from its feet to its head.
+func _under_the_mouse(tiles: Array, point: Vector2) -> int:
+	var best: int = -1
+	var best_gap: float = 26.0
+	for index: int in tiles.size():
+		var at: Vector2 = tiles[index] as Vector2
+		var feet: Vector2 = _three_d.screen_of(at, 0.1)
+		var head: Vector2 = _three_d.screen_of(at, 1.6)
+		var gap: float = Geometry2D.get_closest_point_to_segment(point, feet, head).distance_to(point)
+		if gap < best_gap:
+			best_gap = gap
+			best = index
+	return best
+
+
+## Whether the key that confirms was pressed: K, or E, Space, Enter.
+func _confirm_pressed() -> bool:
+	return Input.is_action_just_pressed(&"strike") or Input.is_action_just_pressed(&"interact")
+
+
+## The number key pressed this frame, 1 to 4, as a category of the wheel, or -1.
+func _shortcut_pressed() -> int:
+	for index: int in mini(4, ActionRules.categories().size()):
+		if Input.is_action_just_pressed(StringName("option_%d" % (index + 1))):
+			return index
+	return -1
+
+
+## `UNCROWNED_TURN`, applied once: the wheel on a category, or a category's target by rank.
+func _open_for_the_photograph(mine: DuelFighter) -> void:
+	var asked: PackedStringArray = _shot_turn
+	_shot_turn = PackedStringArray()
+	var category := StringName(asked[1]) if asked.size() > 1 else _last_category
+	_wheel_at = maxi(ActionRules.categories().find(category), 0)
+	if asked[0] == "target":
+		_choose_category(mine, category)
+		_target_at = asked[2].to_int() if asked.size() > 2 else 0
+	else:
+		_turn_mode = TURN_WHEEL
+
+
+## Step one: where to stand. K opens the wheel; 1 to 4 go straight to an action; O waits.
+func _read_move(mine: DuelFighter) -> void:
 	var dir: Vector2i = _read_direction_pressed()
 	if dir != Vector2i.ZERO:
 		var wanted: Vector2i = _duel_cursor + dir
@@ -1432,18 +1695,136 @@ func _read_duel_input() -> void:
 			if Vector2i((row as Vector2) - Vector2(0.5, 0.5)) == wanted:
 				_duel_cursor = wanted
 				break
-	# **U changes the weapon in your hands** (T6), like the arrows change where you stand:
-	# nothing is sent until the turn is taken.
-	if Input.is_action_just_pressed(&"weapon"):
-		_toggle_weapon()
-	if Input.is_action_just_pressed(&"strike"):
-		_submit_duel_turn(DuelRules.STRIKE)
+	if _confirm_pressed():
+		_turn_mode = TURN_WHEEL
+		Sound.cue(&"move")
 	elif Input.is_action_just_pressed(&"guard"):
-		_submit_duel_turn(DuelRules.WAIT)
-	# **I casts the fairy's gift** (O10), at whoever is nearest within its reach of the
-	# tile chosen. The rules decide whether it can; the key only asks.
-	elif Input.is_action_just_pressed(&"cast") and _sim.facts.has(OpeningRules.GIFT):
-		_submit_duel_turn(DuelRules.CAST)
+		_take_turn({"kind": ActionRules.WAIT}, &"")
+	elif _shortcut_pressed() >= 0:
+		_wheel_at = _shortcut_pressed()
+		_choose_category(mine, ActionRules.categories()[_wheel_at])
+
+
+## Step two: what to do. The arrows turn the wheel; K chooses; Escape goes back to the
+## ground (`_step_back`).
+func _read_wheel(mine: DuelFighter) -> void:
+	var count: int = ActionRules.categories().size()
+	if Input.is_action_just_pressed(&"move_right") or Input.is_action_just_pressed(&"move_down"):
+		_wheel_at = posmod(_wheel_at + 1, count)
+		Sound.cue(&"move")
+	elif Input.is_action_just_pressed(&"move_left") or Input.is_action_just_pressed(&"move_up"):
+		_wheel_at = posmod(_wheel_at - 1, count)
+		Sound.cue(&"move")
+	if _confirm_pressed():
+		_choose_category(mine, ActionRules.categories()[_wheel_at])
+	elif Input.is_action_just_pressed(&"guard"):
+		_take_turn({"kind": ActionRules.WAIT}, &"")
+	elif _shortcut_pressed() >= 0:
+		_wheel_at = _shortcut_pressed()
+		_choose_category(mine, ActionRules.categories()[_wheel_at])
+
+
+## Step three: at whom. The arrows, or Tab, go from one foe to the next — in reach first,
+## then the nearest; K strikes the one chosen, if the action reaches him.
+func _read_target(mine: DuelFighter) -> void:
+	var targets: Array[Dictionary] = _targets_now(mine)
+	if targets.is_empty():
+		_turn_mode = TURN_WHEEL
+		return
+	if Input.is_action_just_pressed(&"move_right") or Input.is_action_just_pressed(&"move_down") \
+			or Input.is_action_just_pressed(&"inventory"):
+		_target_at = posmod(_target_at + 1, targets.size())
+		Sound.cue(&"move")
+	elif Input.is_action_just_pressed(&"move_left") or Input.is_action_just_pressed(&"move_up"):
+		_target_at = posmod(_target_at - 1, targets.size())
+		Sound.cue(&"move")
+	_target_at = clampi(_target_at, 0, targets.size() - 1)
+	if _confirm_pressed():
+		var chosen: Dictionary = targets[_target_at]
+		if not bool(chosen["in_reach"]):
+			_refuse(&"target.out_of_reach")
+			return
+		_take_turn(_chosen, chosen["who"] as StringName)
+
+
+## Escape on the wheel or the target: one step back, not the pause menu. True when it was.
+func _step_back() -> bool:
+	if _duel == null or not _duel.waiting_on_player():
+		return false
+	if _turn_mode == TURN_TARGET:
+		_turn_mode = TURN_WHEEL
+	elif _turn_mode == TURN_WHEEL:
+		_turn_mode = TURN_MOVE
+	else:
+		return false
+	Sound.cue(&"cancel")
+	return true
+
+
+## **A segment of the wheel, chosen**: its action, if it can be done — to its target, or at
+## once for waiting — or the reason it cannot, said for a moment.
+func _choose_category(mine: DuelFighter, category: StringName) -> void:
+	var entry: Dictionary = ActionRules.of_category(_offered_now(mine), category)
+	if entry.is_empty():
+		_refuse(&"action.why.no_items")
+		return
+	if not bool(entry["available"]):
+		_refuse(entry["why"] as StringName)
+		return
+	_last_category = category
+	if entry["kind"] == ActionRules.WAIT:
+		_take_turn(entry, &"")
+		return
+	_chosen = entry
+	if entry["kind"] == ActionRules.STRIKE:
+		_duel_weapon = entry["weapon"] as StringName
+	_target_at = 0
+	_turn_mode = TURN_TARGET
+	Sound.cue(&"accept")
+
+
+func _refuse(why: StringName) -> void:
+	_refused_why = why
+	_refused_at = _real_seconds
+	Sound.cue(&"refused")
+
+
+## What is on the wheel this turn (`ActionRules.offered`).
+func _offered_now(mine: DuelFighter) -> Array[Dictionary]:
+	return ActionRules.offered(_sim.store(&"inventory") as Inventory, _sim.facts, mine, _duel.round_number)
+
+
+## The foes the chosen action is aimed among, from the tile chosen (`ActionRules.targets`).
+func _targets_now(mine: DuelFighter) -> Array[Dictionary]:
+	if _chosen.is_empty():
+		return []
+	return ActionRules.targets(_chosen, _duel_cursor, _duel.foes_of(mine.who), _sim.store(&"traits") as Traits, _duel.drill)
+
+
+## What a category strikes with, for the reach drawn round the cursor before anything is
+## chosen: the bow's band for the bow, else what he holds.
+func _weapon_of_category(mine: DuelFighter, category: StringName) -> StringName:
+	var entry: Dictionary = ActionRules.of_category(_offered_now(mine), category)
+	if not entry.is_empty() and entry["kind"] == ActionRules.STRIKE and bool(entry["available"]):
+		return entry["weapon"] as StringName
+	return _close_weapon()
+
+
+## **The turn, taken**: where he stands, what he does there and at whom — the target he
+## chose, not the first in reach (N4).
+func _take_turn(entry: Dictionary, target: StringName) -> void:
+	var mine: DuelFighter = _duel.me()
+	if mine == null or not _duel.waiting_on_player():
+		return
+	var turn: Dictionary = ActionRules.turn_of(entry)
+	_sim.submit(&"duel_turn", {
+		"who": String(DuelRules.PLAYER), "to_x": _duel_cursor.x, "to_y": _duel_cursor.y,
+		"action": String(turn["action"]), "target": String(target), "weapon": String(turn["weapon"]),
+	})
+	_duel_cursor_set = false
+	_turn_mode = TURN_MOVE
+	_chosen = {}
+	Sound.cue(&"accept")
 
 
 ## Whether you carry a bow of your own (T5) — on your back, in the bow's slot (group E).
@@ -1452,14 +1833,71 @@ func _has_bow() -> bool:
 	return inventory != null and inventory.has_bow()
 
 
-## **The chance K's blow lands** (R4), on the first foe it would strike from the tile the
-## cursor is on with the weapon in hand — the one `_submit_duel_turn` would pick — or -1
-## when it would strike nobody.
-func _hit_chance(mine: DuelFighter) -> int:
-	for foe: DuelFighter in _duel.foes_of(mine.who):
-		if DuelRules.reaches(_duel_weapon, _duel_cursor, foe.at):
-			return DuelRules.hit_chance(DuelRules.PLAYER, foe.who, _sim.store(&"traits") as Traits, _duel.drill)
-	return -1
+## Whether the target chosen is in the chosen action's reach.
+func _chosen_in_reach(mine: DuelFighter) -> bool:
+	var targets: Array[Dictionary] = _targets_now(mine)
+	return not targets.is_empty() and bool(targets[clampi(_target_at, 0, targets.size() - 1)]["in_reach"])
+
+
+## The action whose reach is drawn round the tile chosen: the wheel's segment, the action
+## aimed, or on the ground the category used last.
+func _weighed(mine: DuelFighter) -> Dictionary:
+	if _turn_mode == TURN_TARGET:
+		return _chosen
+	var category: StringName = ActionRules.categories()[_wheel_at] if _turn_mode == TURN_WHEEL else _last_category
+	var entry: Dictionary = ActionRules.of_category(_offered_now(mine), category)
+	return entry if not entry.is_empty() and bool(entry["available"]) else {}
+
+
+## **The wheel, as the HUD draws it** (N3): each category clockwise from the top, with its
+## icon, what it does in words, whether it can be done and, if not, why.
+func _wheel_reading(mine: DuelFighter) -> Array:
+	var out: Array = []
+	var offered: Array[Dictionary] = _offered_now(mine)
+	for category: StringName in ActionRules.categories():
+		var entry: Dictionary = ActionRules.of_category(offered, category)
+		var row: Dictionary = {"category": String(category), "icon": String(ActionRules.icon_of(category)),
+			"label": Text.of(StringName("action.cat.%s" % category)), "detail": "", "available": false,
+			"why": Text.of(&"action.why.no_items")}
+		if not entry.is_empty():
+			row["label"] = _action_name(entry)
+			row["detail"] = _action_detail(entry)
+			row["available"] = bool(entry["available"])
+			row["why"] = Text.of(entry["why"] as StringName) if entry["why"] != &"" else ""
+		out.append(row)
+	return out
+
+
+func _action_name(entry: Dictionary) -> String:
+	if entry["id"] == &"strike":
+		return Text.of(&"action.strike.fists" if entry["weapon"] == DuelRules.FISTS else &"action.strike.sword")
+	return Text.of(StringName("action.%s" % String(entry["id"])))
+
+
+func _action_detail(entry: Dictionary) -> String:
+	match entry["kind"]:
+		ActionRules.STRIKE:
+			if entry["weapon"] == DuelRules.BOW:
+				return Text.of(&"action.detail.bow", [DuelRules.bow_damage(), DuelRules.bow_min_tiles(), DuelRules.bow_reach_tiles()])
+			return Text.of(&"action.detail.blade", [DuelRules.damage_with(entry["weapon"] as StringName)])
+		ActionRules.CAST:
+			return Text.of(&"action.detail.gift", [DuelRules.spell_damage(), DuelRules.spell_reach_tiles()])
+	return Text.of(&"action.detail.wait")
+
+
+## **The foes the action is aimed among** (N4), as the 3D window marks them and the HUD names
+## them: where each is drawn, whether the action reaches him, its chance and damage.
+func _targets_reading(mine: DuelFighter) -> Array:
+	var out: Array = []
+	for row: Dictionary in _targets_now(mine):
+		var foe: DuelFighter = _duel.get_fighter(row["who"] as StringName)
+		if foe == null:
+			continue
+		var drawn: Vector2 = _duel.drawn_at(foe)
+		out.append({"who": String(row["who"]), "name": _fighter_name(foe.who), "at": drawn,
+			"in_reach": bool(row["in_reach"]), "chance": int(row["chance"]), "damage": int(row["damage"]),
+			"screen": _three_d.screen_of(drawn, 1.9) if _three_d != null else Vector2(-1.0, -1.0)})
+	return out
 
 
 ## What he strikes with when it is not the bow: his sword, or his fists without one (E).
@@ -1468,44 +1906,26 @@ func _close_weapon() -> StringName:
 	return inventory.weapon_in_hand() if inventory != null else DuelRules.SWORD
 
 
-## The bow and back to what he holds — the sword, or his fists (the review of group E: from
-## the fists, the first press went to a sword he did not own) — and only that without a bow.
-func _toggle_weapon() -> void:
-	if not _has_bow():
-		_duel_weapon = _close_weapon()
-		return
-	_duel_weapon = DuelRules.BOW if _duel_weapon != DuelRules.BOW else _close_weapon()
-
-
-## **The turn, taken**: where you stand, what you do there, and with what. K strikes, with
-## the weapon in your hands, whoever it reaches from the chosen tile, and waits when it
-## reaches nobody — a bow never reaches the next tile, which is the lesson of standing
-## too close.
+## **A turn asked the old way** — strike, cast or wait, at the first foe the action reaches
+## from the tile chosen. Kept for the suite and the photograph tools, which play by asking
+## for an action rather than by turning a wheel.
 func _submit_duel_turn(asked: StringName) -> void:
 	var mine: DuelFighter = _duel.me()
 	if mine == null or not _duel.waiting_on_player():
 		return
-	var target: StringName = &""
-	var action: StringName = DuelRules.WAIT
+	var entry: Dictionary = {"kind": ActionRules.WAIT}
 	if asked == DuelRules.STRIKE:
-		for foe: DuelFighter in _duel.foes_of(mine.who):
-			if DuelRules.reaches(_duel_weapon, _duel_cursor, foe.at):
-				target = foe.who
-				action = DuelRules.STRIKE
-				break
+		entry = {"kind": ActionRules.STRIKE, "weapon": _duel_weapon}
 	elif asked == DuelRules.CAST:
-		for foe: DuelFighter in _duel.foes_of(mine.who):
-			if DuelRules.can_cast(mine, _duel.round_number, _duel_cursor, foe.at):
-				target = foe.who
-				action = DuelRules.CAST
-				break
-	_sim.submit(&"duel_turn", {
-		"who": String(DuelRules.PLAYER), "to_x": _duel_cursor.x, "to_y": _duel_cursor.y,
-		"action": String(action),
-		"target": String(target),
-		"weapon": String(_duel_weapon),
-	})
-	_duel_cursor_set = false
+		entry = {"kind": ActionRules.CAST}
+	var target: StringName = &""
+	for row: Dictionary in ActionRules.targets(entry, _duel_cursor, _duel.foes_of(mine.who), _sim.store(&"traits") as Traits, _duel.drill):
+		if bool(row["in_reach"]):
+			target = row["who"] as StringName
+			break
+	if target == &"" and entry["kind"] != ActionRules.WAIT:
+		entry = {"kind": ActionRules.WAIT}
+	_take_turn(entry, target)
 
 
 ## The direction pressed *this frame*, for a cursor that steps a tile at a time rather

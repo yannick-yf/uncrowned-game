@@ -388,40 +388,6 @@ func _squared_up_with_bram(has_bow: bool) -> Array:
 	return [sim, play]
 
 
-func test_u_puts_the_bow_in_your_hands_and_the_reading_follows() -> void:
-	# T6: the weapon is chosen on your turn, like where you stand, and the ring the window
-	# draws is the reach of what you hold, round the tile you have chosen.
-	var pair: Array = _squared_up_with_bram(true)
-	var sim: Sim = pair[0]
-	var play: Node = pair[1]
-	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
-	assert_eq(String(reading.get("my_weapon", "")), "sword", "the sword to begin with")
-	assert_true(bool(reading.get("has_bow", false)), "and a bow of your own")
-	play.call(&"_toggle_weapon")
-	reading = play.call(&"_fight_frame") as Dictionary
-	assert_eq(String(reading.get("my_weapon", "")), "bow", "U: the bow")
-	assert_eq(int(reading.get("reach_tiles", 0)), DuelRules.bow_reach_tiles(), "its reach")
-	assert_eq(int(reading.get("min_reach_tiles", 0)), DuelRules.bow_min_tiles(), "and its nearest")
-	assert_true(bool(reading.get("in_reach", false)), "Bram, three tiles off, is in the band")
-	play.call(&"_submit_duel_turn", &"strike")
-	var turns: Array[SimEvent] = sim.events.of_type(&"duel_turn")
-	var last: SimEvent = turns[turns.size() - 1]
-	assert_eq(String(last.data.get("weapon", "")), "bow", "and K shoots with it")
-	assert_eq(String(last.data.get("action", "")), "strike", "at him")
-	play.free()
-
-
-func test_without_a_bow_u_changes_nothing() -> void:
-	var pair: Array = _squared_up_with_bram(false)
-	var play: Node = pair[1]
-	play.call(&"_toggle_weapon")
-	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
-	assert_eq(String(reading.get("my_weapon", "")), "sword", "still the sword")
-	assert_false(bool(reading.get("has_bow", true)), "you have no bow")
-	assert_false(bool(reading.get("in_reach", true)), "and he is out of its reach")
-	play.free()
-
-
 func test_the_tiles_offered_are_the_tiles_the_rules_take() -> void:
 	# The review of T9: in Wren's lesson Bram watches from beside you, the window offered
 	# his tile, and the rules refused it — the turn stayed where it was and the spell became
@@ -745,29 +711,6 @@ func _carried_news(sim: Sim) -> String:
 
 # ------------------------------------------------------------ the review of group E ---
 
-func test_u_with_fists_goes_to_the_bow_and_back_to_the_fists() -> void:
-	# The review: from the fists the first press went to a sword he did not own, and the
-	# keys offered « prendre l'épée ».
-	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
-	sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
-	sim.submit(&"duel_began", {"opponent": "bram", "by": "player", "spar": true})
-	sim.advance(1)
-	var play: Node = _flat_play()
-	play.call(&"begin", sim)
-	play.call(&"_ready")
-	play.set(&"_duel_weapon", DuelRules.FISTS)
-	play.call(&"_toggle_weapon")
-	assert_eq(play.get(&"_duel_weapon") as StringName, DuelRules.BOW, "fists to the bow at once")
-	play.call(&"_toggle_weapon")
-	assert_eq(play.get(&"_duel_weapon") as StringName, DuelRules.FISTS, "and back to the fists, not a sword")
-	var hud := FightHud.new()
-	hud.present({"on": true, "lens": 1.0, "my_weapon": "bow", "has_bow": true, "close_weapon": "fists"}, 0.016)
-	assert_true(hud.keys_line().contains(Text.of(&"duel.part.put_bow_away")), "the bow is put away, not swapped for a sword")
-	assert_false(hud.keys_line().contains(Text.of(&"duel.part.take_sword")), "no sword offered")
-	hud.free()
-	play.free()
-
-
 func test_enter_down_the_look_page_never_lands_on_random() -> void:
 	# The review: Enter on « Tenue » went to « Au hasard », and the next Enter threw away
 	# every choice made.
@@ -816,3 +759,174 @@ func test_without_the_gift_bram_sends_you_back_to_the_fairy() -> void:
 	assert_true(farewell.contains(Cast.shared().get_npc(OpeningRules.FAIRY).prompt_name)
 		or farewell.to_lower().contains("fée") or farewell.to_lower().contains("fairy"),
 		"his farewell to somebody without the gift names her: %s" % farewell)
+
+
+# ------------------------------------------------------------ N3, N4: the wheel and the target ---
+
+func after_each() -> void:
+	DuelRules.forget()
+
+
+func _fighting_wolves(armed: bool) -> Node:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	if armed:
+		(sim.store(&"inventory") as Inventory).gain(&"short_sword")
+		sim.facts.add_source(DuelRules.THE_BOW, &"witnessed")
+		sim.submit(&"tick_noop", {})
+		sim.advance(1)
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = alone_on_the_road()
+	sim.submit(&"duel_began", {"opponents": ["wolf", "wolf"], "by": "player"})
+	sim.advance(1)
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	play.call(&"_read_duel_input")
+	return play
+
+
+func _wheel_row(reading: Dictionary, category: String) -> Dictionary:
+	for row: Variant in reading.get("wheel", []) as Array:
+		if String((row as Dictionary)["category"]) == category:
+			return row as Dictionary
+	return {}
+
+
+func test_the_wheel_offers_what_he_carries_and_greys_the_rest() -> void:
+	var play: Node = _fighting_wolves(false)
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	assert_eq(String(reading["turn_mode"]), "move", "his turn begins where he will stand")
+	assert_eq((reading["wheel"] as Array).size(), ActionRules.categories().size(), "every category on the wheel")
+	assert_eq(String(_wheel_row(reading, "melee")["label"]), Text.of(&"action.strike.fists"), "no sword: his fists")
+	assert_true(bool(_wheel_row(reading, "melee")["available"]), "which he can always use")
+	assert_false(bool(_wheel_row(reading, "ranged")["available"]), "no bow: greyed")
+	assert_eq(String(_wheel_row(reading, "ranged")["why"]), Text.of(&"action.why.no_bow"), "and why")
+	assert_false(bool(_wheel_row(reading, "magic")["available"]), "no gift: greyed")
+	assert_false(bool(_wheel_row(reading, "items")["available"]), "nothing to use yet")
+	# Choosing what cannot be done says why and stays on the wheel.
+	var duel := (play.get(&"_sim") as Sim).store(&"duel") as Duel
+	play.call(&"_choose_category", duel.me(), &"ranged")
+	reading = play.call(&"_fight_frame") as Dictionary
+	assert_eq(String(reading["refused"]), Text.of(&"action.why.no_bow"), "the reason, said")
+	assert_ne(String(reading["turn_mode"]), "target", "and no target to aim at")
+	play.free()
+
+
+func test_a_target_chosen_is_the_one_struck() -> void:
+	# N4: the bow chosen, then the second wolf — not the first in reach — and the arrow goes
+	# to him.
+	sure_hits()
+	var play: Node = _fighting_wolves(true)
+	var sim := play.get(&"_sim") as Sim
+	var duel := sim.store(&"duel") as Duel
+	var mine: DuelFighter = duel.me()
+	# Both wolves in the bow's band from where he stands.
+	var foes: Array[DuelFighter] = duel.foes_of(mine.who)
+	foes[0].at = mine.at + Vector2i(3, 0)
+	foes[1].at = mine.at + Vector2i(0, 4)
+	play.call(&"_choose_category", mine, &"ranged")
+	var reading: Dictionary = play.call(&"_fight_frame") as Dictionary
+	assert_eq(String(reading["turn_mode"]), "target", "the bow chosen: now whom")
+	var targets: Array = reading["targets"] as Array
+	assert_eq(targets.size(), 2, "both wolves are offered")
+	assert_true(bool((targets[0] as Dictionary)["in_reach"]) and bool((targets[1] as Dictionary)["in_reach"]), "both in the bow's band")
+	assert_eq(int((targets[0] as Dictionary)["damage"]), DuelRules.bow_damage(), "an arrow's damage, shown")
+	var second: String = String((targets[1] as Dictionary)["who"])
+	play.set(&"_target_at", 1)
+	play.call(&"_take_turn", play.get(&"_chosen"), StringName(second))
+	var struck: String = ""
+	for _step: int in 400:
+		sim.advance(1)
+		for event: SimEvent in sim.events.all():
+			if event.type == &"blow_landed" and String(event.data.get("by", "")) == "player":
+				struck = String(event.data.get("target", ""))
+		if struck != "":
+			break
+	assert_eq(struck, second, "the arrow went to the one he chose")
+	play.free()
+
+
+func test_escape_goes_back_one_step_and_then_pauses() -> void:
+	var play: Node = _fighting_wolves(true)
+	var duel := (play.get(&"_sim") as Sim).store(&"duel") as Duel
+	play.call(&"_choose_category", duel.me(), &"melee")
+	assert_eq(play.get(&"_turn_mode") as StringName, &"target", "aiming")
+	assert_true(play.call(&"_step_back") as bool, "Escape on the target")
+	assert_eq(play.get(&"_turn_mode") as StringName, &"wheel", "goes back to the wheel")
+	assert_true(play.call(&"_step_back") as bool, "Escape on the wheel")
+	assert_eq(play.get(&"_turn_mode") as StringName, &"move", "goes back to the ground")
+	assert_false(play.call(&"_step_back") as bool, "and Escape on the ground is the pause menu's")
+	play.free()
+
+
+func test_the_keys_line_follows_the_step() -> void:
+	var hud := FightHud.new()
+	for mode: String in ["move", "wheel", "target"]:
+		hud.present({"on": true, "lens": 1.0, "turn_mode": mode}, 0.016)
+		assert_eq(hud.keys_line(), Text.of(StringName("duel.keys.%s" % mode)), "the keys of the %s step" % mode)
+	hud.free()
+
+
+func _play_the_lesson_by_the_wheel(drill: String, category: StringName) -> Dictionary:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	(sim.store(&"inventory") as Inventory).gain(&"short_sword")
+	sim.facts.add_source(OpeningRules.GIFT, &"fairy")
+	sim.facts.add_source(&"hailed:bram", &"test")
+	if drill != "sword":
+		sim.facts.add_source(&"drilled:sword", &"test")
+	if drill == "magic":
+		sim.facts.add_source(&"drilled:bow", &"test")
+	var world := sim.store(&"world") as WorldState
+	world.player_pos = (sim.store(&"cast") as Cast).get_npc(&"bram").centre() + Vector2(0.0, 1.0)
+	sim.submit(&"talk", {"npc": "bram"})
+	sim.advance(2)
+	sim.submit(&"choose_intent", {"intent": "drill_%s" % drill})
+	sim.advance(3)
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var duel := sim.store(&"duel") as Duel
+	var turns: int = 0
+	for _step: int in 40000:
+		if not duel.on():
+			break
+		if duel.waiting_on_player():
+			play.call(&"_read_duel_input")
+			turns += 1
+			var mine: DuelFighter = duel.me()
+			var foe: DuelFighter = duel.foes_of(mine.who)[0]
+			# Where a player stands for this lesson: the tile the turn reaches nearest the
+			# band the lesson wants.
+			var best: Vector2i = mine.at
+			var best_score: int = 1 << 20
+			for row: Variant in play.call(&"_duel_reach", mine) as Array:
+				var tile := Vector2i((row as Vector2) - Vector2(0.5, 0.5))
+				var gap: int = DuelRules.apart(tile, foe.at)
+				var score: int = gap if drill == "sword" else (absi(gap - 3) if drill == "bow" else maxi(gap - DuelRules.spell_reach_tiles(), 0) * 10 - gap)
+				if score < best_score:
+					best_score = score
+					best = tile
+			play.set(&"_duel_cursor", best)
+			play.call(&"_choose_category", mine, category)
+			if play.get(&"_turn_mode") == &"target":
+				var targets: Array[Dictionary] = play.call(&"_targets_now", mine) as Array[Dictionary]
+				if not targets.is_empty() and bool(targets[0]["in_reach"]):
+					play.call(&"_take_turn", play.get(&"_chosen"), targets[0]["who"])
+				else:
+					play.call(&"_take_turn", {"kind": ActionRules.WAIT}, &"")
+			else:
+				# The gift resting: wait, as the hint says.
+				play.call(&"_take_turn", {"kind": ActionRules.WAIT}, &"")
+		sim.advance(1)
+	sim.advance(DuelRules.beat_steps() + 5)
+	play.free()
+	return {"passed": sim.facts.has(StringName("drilled:%s" % drill)), "turns": turns}
+
+
+func test_the_three_lessons_pass_through_the_wheel_and_the_target() -> void:
+	# N6: the tutorial end to end the new way — stand, choose the lesson's action on the
+	# wheel, aim, confirm — as Yannick asked after each step.
+	for row: Array in [["sword", &"melee"], ["bow", &"ranged"], ["magic", &"magic"]]:
+		var played: Dictionary = _play_the_lesson_by_the_wheel(String(row[0]), row[1] as StringName)
+		assert_true(bool(played["passed"]), "the %s lesson passes through the wheel, in %d turns" % [row[0], played["turns"]])
+		assert_true(int(played["turns"]) <= 10, "%s: in a few turns: %d" % [row[0], played["turns"]])

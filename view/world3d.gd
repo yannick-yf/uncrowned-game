@@ -2701,6 +2701,22 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		if nearest > 1:
 			var inside: float = float(nearest) - 0.5
 			_ring(ring_at, inside, inside * 0.70, 0.035, Color(voice.r, voice.g, voice.b, 0.28), 28)
+		# **The targets of the action chosen** (N4): every foe it is aimed among, ringed in
+		# gold when it reaches him and in a faint ember when it does not, and the one chosen
+		# ringed twice and lit.
+		var targets: Array = fighting.get("targets", []) as Array
+		var chosen_at: int = int(fighting.get("target_chosen", 0))
+		for index: int in targets.size():
+			var target: Dictionary = targets[index] as Dictionary
+			var spot: Vector2 = target.get("at", Vector2.ZERO) as Vector2
+			var reach_him: bool = bool(target.get("in_reach", false))
+			var tint: Color = MARK_MINE if reach_him else Color(0.95, 0.42, 0.30)
+			if index == chosen_at:
+				_tile_patch(spot, Color(tint.r, tint.g, tint.b, 0.30))
+				_ring(spot, 0.62, 0.50, 0.08, Color(tint.r, tint.g, tint.b, 0.95), 32)
+				_ring(spot, 0.44, 0.38, 0.04, Color(tint.r, tint.g, tint.b, 0.85), 24)
+			else:
+				_ring(spot, 0.56, 0.49, 0.035, Color(tint.r, tint.g, tint.b, 0.55 if reach_him else 0.35), 28)
 
 	# Feet: where each of them *is*, drawn last so they sit over the field of tiles. On
 	# the beat they widen and take the winner's colour, which is the job the first
@@ -2739,11 +2755,7 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		_duel_telegraph(me, float(fighting.get("my_telegraph", -1.0)),
 			MARK_GUARD if bool(fighting.get("my_casting", false)) else MARK_MINE)
 		_draw_arrow(fighting)
-		# The gift's reach, round the tile you have chosen, while it is ready to cast.
-		if bool(fighting.get("spell_ready", false)) and fighting.has("cursor"):
-			var spell: float = float(fighting.get("spell_reach", 3))
-			_ring(fighting["cursor"] as Vector2, spell, spell * 0.7, 0.04,
-				Color(MARK_GUARD.r, MARK_GUARD.g, MARK_GUARD.b, 0.45), 48)
+		# The gift's reach is the reach drawn above, while it is the action weighed (N3).
 		# The bolt itself, from you to him, on the steps it is out.
 		if bool(fighting.get("my_casting", false)) and String(fighting.get("my_pose", "")) == "attack":
 			var to: Vector2 = fighting.get("target_at", him) as Vector2
