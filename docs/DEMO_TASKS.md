@@ -2908,6 +2908,75 @@ lost at 100; from behind, 10 to 20.
 
 ---
 
+## N — the fight's actions: a wheel, and a target (2026-10-03)
+
+> Yannick played again: *« l'arc n'est toujours pas agréable »* — once U has put the bow in
+> his hands he cannot choose whom he shoots, only press K; **the magic lesson does not
+> work**; and changing weapons with U is impractical. His reference is Baldur's Gate 3:
+> the actions gathered in a bar or a radial wheel, a target chosen explicitly, the chance
+> to hit and the damage shown before the blow, confirm or cancel. **The fight is already
+> turn-based** (K6) and the world's clock is held through it, so the wheel needs no pause:
+> it opens on the player's turn and nothing moves until he confirms. A turn stays **move,
+> then one action**; a bonus action comes with consumable items. Planned with him; drawn
+> by us in the HUD's style, nothing downloaded.
+
+### N1 · The magic lesson, repaired
+
+**What we found**: the lesson passes in three turns when played through the window's own
+code — but **E leaves a conversation**, and the fairy's every line offers *1. Écouter* and
+*2. (ne rien dire et partir), ou E, ou Échap*: a player who opened the talk with E and
+pressed it again to go on left after her first line, without her gift, and then no magic
+lesson is ever offered — Bram's farewell after the bow just said goodbye. **What changes**:
+in a conversation that offers one way on and no other, E (Space, Enter) takes it; and
+Bram's farewell to somebody without the gift sends him back to the fairy. **Check:** the
+fairy's talk followed to the end with E alone gives the gift; the lesson is then offered.
+
+> **Built 2026-10-03.** `main._what_e_does_in_talk`: with one way on, E takes it, and the
+> box says so — *1. Écouter.   (E)* and *2. (ne rien dire et partir), ou Échap*; with more,
+> E leaves as before. Bram's farewell after the bow to somebody without the gift: *La fée
+> qui t'a réveillé avait encore quelque chose à te dire : va l'écouter jusqu'au bout, puis
+> reviens me voir* — and the lesson's line is offered once the gift is his.
+> `test_e_alone_hears_the_fairy_out_and_her_gift_comes`. The second trap — I pressed when
+> the gift rests or is out of reach spent the turn on nothing — goes with the wheel (N3).
+
+### N2 · The actions, in the simulation
+
+A generic list of what the player can do on his turn — the sword or his fists, the bow,
+the gift, items later — by category (`content/actions.json`), and for each, from a tile,
+who it can reach, with what chance and for what damage (`ActionRules`), so the wheel, the
+targeting and the rules read one answer. **Check:** the list follows what he carries and
+knows; every number shown is the one the blow uses.
+
+### N3 · The wheel
+
+**K** (or Space, Enter) opens a wheel round the player on his turn: sword or fists, bow,
+magic, items (empty for now), wait. Left and right turn it, Enter chooses, 1 to 4 are
+shortcuts; an action that cannot be done is greyed with its reason. **U and I go**; O still
+waits. **Check:** frames; every action of the old keys reachable from the wheel.
+
+### N4 · The target
+
+After an action: the foes it reaches from the chosen tile marked on the ground, the others
+marked out of reach; left and right (or Tab) go from one to the next; over the one chosen,
+*Loup — 70 % — 5 dégâts*; Enter confirms the move and the blow, Escape goes back to the
+wheel. The same outside a fight, for the surprise attack. **Check:** a chosen target is the
+one struck; the numbers shown are the blow's.
+
+### N5 · The mouse
+
+Hovering and clicking the wheel and the targets.
+
+### N6 · The tutorial
+
+The three lessons' cards, hints and the keys' line say the wheel and the target.
+**Check:** the whole tutorial played with the new keys, end to end.
+
+### N7 · Frames, a review, the letter
+
+Every screen in both languages; a fresh-eyes review; `CLAUDE.md`, V3.
+
+---
+
 ## Later — known gaps, kept so they are not forgotten
 
 - **More than wolves in the wild** (the review of R): sight and wandering are content for

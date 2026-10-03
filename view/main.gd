@@ -1210,8 +1210,13 @@ func _read_input() -> void:
 		for index: int in _world.options.size():
 			if Input.is_action_just_pressed(StringName("option_%d" % (index + 1))):
 				_sim.submit(&"choose_intent", {"intent": String(_world.options[index].intent)})
-		if Input.is_action_just_pressed(StringName("option_%d" % _exit_slot())) \
-				or Input.is_action_just_pressed(&"interact") \
+		if Input.is_action_just_pressed(&"interact"):
+			var going_on: StringName = _what_e_does_in_talk()
+			if going_on != &"":
+				_sim.submit(&"choose_intent", {"intent": String(going_on)})
+			else:
+				_sim.submit(&"end_talk")
+		elif Input.is_action_just_pressed(StringName("option_%d" % _exit_slot())) \
 				or Input.is_action_just_pressed(&"back"):
 			_sim.submit(&"end_talk")
 		return
@@ -1357,6 +1362,17 @@ func _close_inventory() -> void:
 		return
 	_inventory.queue_free()
 	_inventory = null
+
+
+## **What E does in a conversation** (N1, 2026-10-03): with one way on and no other — the
+## fairy's every « Écouter » — it takes it; otherwise it leaves, as Escape does. E is the
+## key that opened the talk, and a player who pressed it again to go on left the fairy after
+## her first line, without her gift, and never saw the magic lesson. The intent, or nothing
+## for leaving.
+func _what_e_does_in_talk() -> StringName:
+	if _world.options.size() == 1:
+		return _world.options[0].intent
+	return &""
 
 
 ## The slot that leaves the conversation. One function, used by both the keybind
@@ -2360,9 +2376,11 @@ func _draw_hud() -> void:
 		_speaker.text = _world.speaker_name
 		_line.text = _world.current_line
 		var rows: Array[String] = []
+		var e_goes_on: bool = _what_e_does_in_talk() != &""
 		for index: int in _world.options.size():
-			rows.append("%d. %s" % [index + 1, _option_label(_world.options[index])])
-		rows.append(Text.of(&"prompt.exit", [_exit_slot()]))
+			var row: String = "%d. %s" % [index + 1, _option_label(_world.options[index])]
+			rows.append(Text.of(&"prompt.option_e", [row]) if e_goes_on else row)
+		rows.append(Text.of(&"prompt.exit_esc" if e_goes_on else &"prompt.exit", [_exit_slot()]))
 		_choices.text = "\n".join(rows)
 		_prompt.text = ""
 		return

@@ -110,6 +110,8 @@
   "prompt.say": "F, say what you know",
   "prompt.watched": "the watch is standing over it",
   "prompt.exit": "{0}. (say nothing and go), or E, or Esc",
+  "prompt.option_e": "{0}   (E)",
+  "prompt.exit_esc": "{0}. (say nothing and go), or Esc",
   "act.kiln": "E, put out the furnace",
   "act.kiln.douse": "E, put the furnaces out",
   "act.kiln.relight": "E, light the furnaces again",

@@ -779,3 +779,40 @@ func test_enter_down_the_look_page_never_lands_on_random() -> void:
 		creation.call(&"_confirm", menu.chosen())
 	assert_eq(menu.chosen(), &"next", "Enter from the last choice goes to « Suivant »")
 	creation.free()
+
+
+# ------------------------------------------------------------ N1, the magic lesson ---
+
+func test_e_alone_hears_the_fairy_out_and_her_gift_comes() -> void:
+	# N1 (2026-10-03): E left a conversation, and a player who pressed it again to go on
+	# left the fairy after her first line, without her gift — and the magic lesson was never
+	# offered. In a talk with one way on, E now takes it.
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var world := sim.store(&"world") as WorldState
+	sim.submit(&"talk", {"npc": String(OpeningRules.FAIRY)})
+	sim.advance(1)
+	assert_true(world.in_dialogue(), "she speaks")
+	var presses: int = 0
+	for _press: int in 20:
+		if not world.in_dialogue():
+			break
+		var going_on: StringName = play.call(&"_what_e_does_in_talk") as StringName
+		if going_on == &"":
+			sim.submit(&"end_talk")
+		else:
+			sim.submit(&"choose_intent", {"intent": String(going_on)})
+		presses += 1
+		sim.advance(1)
+	assert_true(sim.facts.has(OpeningRules.GIFT), "E alone, %d times, and her gift is yours" % presses)
+	play.free()
+
+
+func test_without_the_gift_bram_sends_you_back_to_the_fairy() -> void:
+	var bram: Npc = Cast.shared().get_npc(&"bram")
+	var farewell: String = bram.alt_greeting_for({&"just_passed_bow_without_gift": true})
+	assert_true(farewell.contains(Cast.shared().get_npc(OpeningRules.FAIRY).prompt_name)
+		or farewell.to_lower().contains("fée") or farewell.to_lower().contains("fairy"),
+		"his farewell to somebody without the gift names her: %s" % farewell)

@@ -110,6 +110,8 @@
   "prompt.say": "F, dire ce que vous savez",
   "prompt.watched": "le guet ne le quitte pas des yeux",
   "prompt.exit": "{0}. (ne rien dire et partir), ou E, ou Échap",
+  "prompt.option_e": "{0}   (E)",
+  "prompt.exit_esc": "{0}. (ne rien dire et partir), ou Échap",
   "act.kiln": "E, éteindre le four",
   "act.kiln.douse": "E, éteindre les fours",
   "act.kiln.relight": "E, rallumer les fours",
