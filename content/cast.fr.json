@@ -9,7 +9,7 @@
     "Bouilloire"
   ],
   "facts": {
-    "you:the_gift": "La fée vous a laissé un peu de ce qui vous a ramené : un sort. En combat, la touche I le lance, de trois cases, un tour sur deux.",
+    "you:the_gift": "La fée vous a laissé un peu de ce qui vous a ramené : un sort. En combat, ouvrez la roue avec K et choisissez le don : il porte à trois cases, un tour sur deux.",
     "muster:pay_fraud": "La quartier-maître Odile, au Rassemblement, signe pour des soldats morts ou qui n'ont jamais existé, et garde la différence.",
     "kettle:ford": "Un gué traverse la Bouilloire en aval du pont, praticable seulement en semaine sèche.",
     "wide_acres:unwatched_stall": "Il y a un étal à Saltmarch devant lequel personne ne se tient, la ville des marais est hors de la route et ne tient pas de vraie garde.",

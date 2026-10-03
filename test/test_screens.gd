@@ -930,3 +930,25 @@ func test_the_three_lessons_pass_through_the_wheel_and_the_target() -> void:
 		var played: Dictionary = _play_the_lesson_by_the_wheel(String(row[0]), row[1] as StringName)
 		assert_true(bool(played["passed"]), "the %s lesson passes through the wheel, in %d turns" % [row[0], played["turns"]])
 		assert_true(int(played["turns"]) <= 10, "%s: in a few turns: %d" % [row[0], played["turns"]])
+
+
+func test_e_never_says_a_weighty_line_for_him() -> void:
+	# The review of N: a talk shrinks, and its last line left was often the weighty one —
+	# with Sena, organising the workers; with Tom, facing him. E only goes on with a line
+	# that hears or asks.
+	var quiet := DialogueOption.new()
+	quiet.intent = &"hear_it"
+	quiet.costs = &"free"
+	assert_true(main_script()._harmless(quiet), "a line that only hears")
+	for field: String in ["causes", "joins", "fights", "drill"]:
+		var weighty := DialogueOption.new()
+		weighty.intent = &"do_it"
+		weighty.set(field, &"something")
+		assert_false(main_script()._harmless(weighty), "not a line that %s" % field)
+	var paid := DialogueOption.new()
+	paid.costs = &"gold"
+	assert_false(main_script()._harmless(paid), "nor one that costs")
+
+
+func main_script() -> GDScript:
+	return load("res://view/main.gd") as GDScript

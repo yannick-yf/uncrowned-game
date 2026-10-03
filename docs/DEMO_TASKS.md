@@ -3022,6 +3022,43 @@ The three lessons' cards, hints and the keys' line say the wheel and the target.
 
 Every screen in both languages; a fresh-eyes review; `CLAUDE.md`, V3.
 
+> **Built 2026-10-03.** A fresh-eyes review walked N1–N6, drove the keys for real and
+> passed the three lessons on keys alone (4, 4 and 3 turns). Its fifteen findings, and
+> what became of each:
+>
+> 1. **E did deeds**: with one line left, E took it — Sena's *organise*, a fight with Tom.
+>    E now goes on only when that line is harmless (no cause, no fight, no gift, no lesson,
+>    no cost: `main._harmless`); otherwise it leaves, as before.
+>    `test_e_never_says_a_weighty_line_for_him`.
+> 2. **A first turn out of everybody's reach went round in circles**, and no hint said O.
+>    When no action reaches anybody from any tile the turn buys, the hint says *Avancez au
+>    plus près, puis O pour finir le tour*; on the wheel, when the action weighed reaches
+>    nobody from the tile chosen, it says so.
+> 3. **The journal still said I casts the gift** — the fact's text rewritten for the wheel.
+> 4. **Tab on the target step refused the inventory** — no refusal on that step.
+> 5. **The sword lesson without a sword said *l'épée*** over a disc that reads *Poings* —
+>    the card and hints name the fists then.
+> 6. **The wheel remembered *Attendre*** — waiting is never remembered, and a lesson opens
+>    on its own action, so the reach drawn from the first turn is the lesson's weapon's.
+> 7. **The refusal overlapped the wheel's box** — it is written inside the box.
+> 8. **The shortcuts were not on the wheel** — each disc carries its number; and off his
+>    turn the keys' line is empty instead of the move keys.
+> 9. **The surprise overlay's edges** — the frame it opens on does not advance, it closes if
+>    a fight begins, and K does nothing while the map is open.
+> 10. **The mouse covered only the wheel and the targets** — it now chooses the tile too:
+>     hover marks the tile under the pointer among those the turn buys, a click opens the
+>     wheel (`World3d.tile_under`). Checked on a frame with `UNCROWNED_MOUSE`: headless never
+>     draws, so the suite cannot.
+> 11. **Items are not a row and nothing else** — true, and now said: the category is there
+>     and drawn empty; an item will need a `use` kind the fight does not know yet, the
+>     work of the consumables. `content/actions.json`'s notes say so, and name the wheel
+>     where it is drawn (`FightHud._draw_wheel`).
+> 12. **Comments that still said U, and an unread reading** (`has_bow`) — rewritten, removed.
+> 13. **Docs that still said U and I** — `COMBAT_V2.md`, `V3.md`, and his brother's page,
+>     which gains a section 17 on the cones and the wheel.
+> 14. **French** — the four lines rewritten as suggested.
+> 15. **The surprise overlay did not name the weapon** — *6 dégâts à l'arc, touche toujours*.
+
 ---
 
 ## Later — known gaps, kept so they are not forgotten

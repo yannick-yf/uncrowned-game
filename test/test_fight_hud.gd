@@ -188,7 +188,13 @@ func test_a_drill_shows_its_lesson_and_how_far_you_are() -> void:
 	var card: PackedStringArray = hud.drill_card()
 	assert_eq(card[0], Text.of(&"drill.sword.title"), "named for its weapon")
 	assert_true(card[1].contains("2 / 3"), "the objective counts: '%s'" % card[1])
-	assert_true(card[card.size() - 1] == Text.of(&"drill.sword.instruction"), "and, off your turn, what to do")
+	assert_eq(card[card.size() - 1], Text.of(&"drill.sword.instruction", [DuelRules.spell_reach_tiles(),
+		Text.of(&"drill.need.melee")]), "and, off your turn, what to do")
+	# Without a sword, the lesson's line names the fists the wheel shows (the frames of N7).
+	reading["close_weapon"] = String(DuelRules.FISTS)
+	hud.present(reading, 1.0 / 60.0)
+	assert_true(hud.drill_card()[hud.drill_card().size() - 1].contains(Text.of(&"drill.need.fists")),
+		"'%s' says the fists" % hud.drill_card()[hud.drill_card().size() - 1])
 	hud.free()
 
 
@@ -202,7 +208,6 @@ func _drill_turn(drill: String, apart: int, weapon: String = "sword") -> Diction
 	reading["choosing"] = true
 	reading["nearest_apart"] = apart
 	reading["my_weapon"] = weapon
-	reading["has_bow"] = drill == "bow"
 	reading["spell_ready"] = true
 	reading["spell_reach"] = DuelRules.spell_reach_tiles()
 	return reading
@@ -341,7 +346,8 @@ func test_the_fights_words_exist_in_both_languages() -> void:
 			&"fighter.works_guard", &"fighter.works_guard.of", &"fighter.works_guard.many",
 			&"fighter.works_archer", &"fighter.works_archer.of", &"fighter.works_archer.many", &"fighter.gatekeeper.of", &"beast.wolf.of",
 			&"drill.bow.title", &"drill.bow.instruction", &"drill.bow.goal",
-			&"duel.keys.move", &"duel.keys.wheel", &"duel.keys.target", &"ambush.title", &"ambush.keys", &"ambush.damage",
+			&"duel.keys.move", &"duel.keys.wheel", &"duel.keys.target", &"ambush.title", &"ambush.keys", &"ambush.damage.sword", &"ambush.damage.fists", &"ambush.damage.bow",
+			&"drill.hint.close_and_wait", &"drill.hint.nobody_from_here", &"drill.need.fists",
 			&"action.why.no_bow", &"action.why.no_spell", &"action.why.resting", &"action.why.no_items",
 			&"target.out_of_reach", &"target.chance",
 			&"drill.magic.title", &"drill.magic.instruction", &"drill.magic.goal", &"fight.blocked", &"fight.miss", &"fight.down", &"fight.you_down",

@@ -8,7 +8,7 @@ extends Node2D
 ## frame with where each one is on the screen; this only draws. In the HUD's gold, ink and
 ## panel, drawn here: nothing downloaded.
 
-## `{feet, head, name, damage}` a candidate, in the order the arrows go through them.
+## `{feet, head, name, damage, weapon}` a candidate, in the order the arrows go through them.
 var rows: Array = []
 var chosen: int = 0
 
@@ -36,7 +36,7 @@ func _draw() -> void:
 	var head: Vector2 = row.get("head", Vector2(-1.0, -1.0)) as Vector2
 	if head.x >= 0.0:
 		var name: String = String(row.get("name", ""))
-		var cost: String = Text.of(&"ambush.damage", [int(row.get("damage", 0))])
+		var cost: String = Text.of(StringName("ambush.damage.%s" % String(row.get("weapon", "sword"))), [int(row.get("damage", 0))])
 		var width: float = maxf(Ui.width_of(name, Ui.ROW), Ui.width_of(cost, Ui.NOTE)) + 16.0
 		var box := Rect2(Vector2(head.x - width * 0.5, head.y - 40.0), Vector2(width, 32.0))
 		Ui.panel(self, box)

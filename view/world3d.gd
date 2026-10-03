@@ -2926,6 +2926,24 @@ func _sync_sparks() -> void:
 
 ## Where a point over the ground lands on the screen, for the HUD to hang a word on.
 ## In the viewport's own pixels, so a figure and the number it just lost line up.
+## **The tile under a point of the screen** (N5), on the ground's height near `near_tiles`:
+## the camera's ray met with that level. `Vector2i(-1, -1)` without a camera or looking up.
+func tile_under(point: Vector2, near_tiles: Vector2) -> Vector2i:
+	if _camera == null:
+		return Vector2i(-1, -1)
+	var origin: Vector3 = _camera.project_ray_origin(point)
+	var way: Vector3 = _camera.project_ray_normal(point)
+	if absf(way.y) < 0.0001:
+		return Vector2i(-1, -1)
+	var level: float = _feet_of(near_tiles).y
+	var reach: float = (level - origin.y) / way.y
+	if reach < 0.0:
+		return Vector2i(-1, -1)
+	var hit: Vector3 = origin + way * reach
+	var tiles: Vector2 = (Vector2(hit.x, hit.z) - _origin_m) / _metres_per_tile
+	return Vector2i(floori(tiles.x), floori(tiles.y))
+
+
 func screen_of(at_tiles: Vector2, height_m: float) -> Vector2:
 	if _camera == null:
 		return Vector2(-1.0, -1.0)

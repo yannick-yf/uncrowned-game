@@ -489,7 +489,8 @@ Le jour où tu dessines une tombe ou un feu de camp, on remplace les nôtres par
 Yannick a joué le tutoriel. Trois changements te concernent.
 
 **Le joueur tire à l'arc.** Wren lui donne un arc pendant l'entraînement, et la touche U
-passe de l'épée à l'arc. Une flèche touche au moment du tir, de deux à six cases. Tu n'as
+passe de l'épée à l'arc (depuis le 2026-10-03, une roue d'actions remplace la touche U :
+voir la section 17). Une flèche touche au moment du tir, de deux à six cases. Tu n'as
 dessiné ni arc ni tir : on réutilise la pose « bras armé » tirée de tes images, et la flèche
 est un trait clair dessiné par nous, en code. Si tu dessines une pose d'arc bandé dans les
 quatre directions, et une flèche, on remplace les nôtres.
@@ -616,3 +617,24 @@ On n'a rien redessiné de tout ça : on a découpé et recoloré.
 pièces d'équipement dans ton style, chacune comme un calque à part, au repos, en marche
 et au combat, dans les quatre directions. Les planches sont dans
 `docs/frames/creation/` et `docs/frames/gear/`.
+
+## 17. Ce que voient les loups, et la roue d'actions du combat (2026-10-02 et 2026-10-03)
+
+Deux changements dessinent des choses à l'écran. Tout est dessiné par nous, en code, avec
+les couleurs du HUD (l'or, l'encre, le fond des panneaux) : rien n'est téléchargé.
+
+**Les loups voient devant eux.** Chaque meute a un cône de vision : une zone claire posée
+sur ton terrain, devant le loup de tête. Si le joueur y entre, la meute l'attaque, et un
+« ! » monte au-dessus d'elle, comme celui de Bram. Si le joueur attaque le premier sans
+avoir été vu, son premier coup fait le double de dégâts.
+
+**Le combat a une roue d'actions.** Avant, la touche K frappait et la touche U changeait
+d'arme. Maintenant, à son tour, le joueur choisit où il se place, puis ouvre une roue :
+épée, arc, magie, objets (vide pour l'instant), attendre. Ensuite il choisit sa cible ;
+le jeu montre ses chances de toucher et les dégâts avant le coup. Les icônes de la roue
+(une épée, un arc, une étincelle, une fiole, un sablier) sont de petits dessins au trait,
+faits en code.
+
+**Ce que tu pourrais dessiner à la place**, si tu veux : ces cinq icônes dans ton style,
+et un anneau de cible posé au sol. Les images : `docs/frames/duel/wheel.png`,
+`target.png` et `cone.png`.

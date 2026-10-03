@@ -104,7 +104,7 @@ Everyone in the fight acts once per round, in a fixed order. On their turn a com
 |---|---|
 | **Strike** | A target on an adjacent tile takes fixed damage |
 | **Wait** | Ends the turn. Sometimes the right move |
-| **Cast** *(2026-09-29)* | The fairy's gift, and only with it: a target within three tiles takes fixed damage; once every other round. Key **I** (§9) |
+| **Cast** *(2026-09-29)* | The fairy's gift, and only with it: a target within three tiles takes fixed damage; once every other round. Key **I** (§9) until group N; since 2026-10-03, the wheel's magic segment |
 | **Aim** *(2026-09-29)* | An archer's: she marks a tile, and when her next turn comes the arrow lands there. Wren's alone, in the bow drill (§9) |
 
 **There is no guard** (Yannick, 2026-09-24): Baldur's Gate 3 has no block button, and
@@ -301,7 +301,7 @@ asked for again. **Nothing in a drill can kill you.** The numbers are
 |---|---|---|
 | **The sword** | 3 blows that land, 10 rounds | Close the distance, then strike (K). He stands off 6 tiles |
 | **The bow** | 3 arrows that land, 10 rounds | Wren hands you a bow of your own and Bram comes at you: keep two tiles or more from him and shoot. After the sword *(redone in T5, 2026-09-29; it was three arrows dodged)* |
-| **Magic** | 2 spells that land, 10 rounds | Cast (I) on Wren from three tiles. After the bow, and only with the fairy's gift |
+| **Magic** | 2 spells that land, 10 rounds | Cast the gift (the wheel's magic segment, since N) on Wren from three tiles. After the bow, and only with the fairy's gift |
 
 **The bow — redone in T5 (2026-09-29).** O9's arrow was aimed at a tile and landed at
 the start of the archer's next turn, so the player's turn in between was a dodge that
@@ -313,8 +313,9 @@ a strike with a bow**: it lands on the archer's own act, like a blow, on whoever
 archer keeps between `bow_keeps_off_tiles` (3) and her reach and shoots. **The weapon is
 the turn's**: the player's `duel_turn` names it, and a bow counts only if he holds one of
 his own (`you:the_bow`, given by Bram's bow line as the drill begins); asked without it,
-it is the sword. `AIM`, `LOOSING` and the announced tiles are gone. **U changes the weapon
-in your hands** on your turn (T6), and the keys line says what K does with it.
+it is the sword. `AIM`, `LOOSING` and the announced tiles are gone. **U changed the weapon
+in your hands** on your turn (T6) until group N (2026-10-03) replaced it with a wheel of
+actions and an explicit target (`docs/DEMO_TASKS.md`, group N).
 
 **The spell.** `CAST` with the fairy's gift (`you:the_gift`): reach 3, damage 5, every
 2 rounds. Only the player has it.

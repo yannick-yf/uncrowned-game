@@ -1,5 +1,5 @@
 {
-  "_note": "WHAT THE PLAYER CAN DO ON HIS TURN (group N, 2026-10-03; Yannick, after Baldur's Gate 3: the actions gathered by category in a wheel, a target chosen explicitly, the chance to hit and the damage shown before the blow). One row an action and one a category, in the wheel's order. A new weapon, spell or item is a row here and nothing else: 'kind' is what the turn does (strike, cast, wait - 'use' for items, later), 'weapon' what it strikes with ('held': the sword in his hand, or his fists; 'bow': the bow on his back), 'needs' what he must carry or know for it to be offered at all. core/rules/action_rules.gd reads it; the wheel (view/action_wheel.gd) draws it.",
+  "_note": "WHAT THE PLAYER CAN DO ON HIS TURN (group N, 2026-10-03; Yannick, after Baldur's Gate 3: the actions gathered by category in a wheel, a target chosen explicitly, the chance to hit and the damage shown before the blow). One row an action and one a category, in the wheel's order. A new weapon or spell is a row here: 'kind' is what the turn does (strike, cast, wait), 'weapon' what it strikes with ('held': the sword in his hand, or his fists; 'bow': the bow on his back), 'needs' what he must carry or know for it to be offered at all. core/rules/action_rules.gd reads it; the wheel is drawn by FightHud._draw_wheel (view/fight_hud.gd).",
   "categories": [
     {"id": "melee", "icon": "sword"},
     {"id": "ranged", "icon": "bow"},
@@ -7,7 +7,7 @@
     {"id": "items", "icon": "flask"},
     {"id": "wait", "icon": "wait"}
   ],
-  "_categories_note": "The wheel's segments, clockwise from the top. 'items' is there before there is an item to put in it: potions come with the inventory's consumables, as a row of 'actions' with kind 'use'.",
+  "_categories_note": "The wheel's segments, clockwise from the top. 'items' is there before there is an item to put in it, and is drawn empty. An item will take more than a row: a 'use' kind, which the fight (DuelRules, DuelSystem) does not know yet, and what it does to whom - the work of the inventory's consumables, later.",
   "actions": [
     {"id": "strike", "category": "melee", "kind": "strike", "weapon": "held"},
     {"id": "shoot", "category": "ranged", "kind": "strike", "weapon": "bow", "needs": "bow"},

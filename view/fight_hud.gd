@@ -182,9 +182,9 @@ func _lesson(reading: Dictionary) -> Array[Dictionary]:
 				"tone": Ui.INK if bool(step["current"]) else Ui.DIM, "size": Ui.NOTE})
 		# On your turn, what to do from where you stand; otherwise the lesson in a line.
 		var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
-		var needed: String = Text.of(StringName("drill.need.%s" % String(LESSON_ACTION.get(drill, "melee"))))
-		out.append({"text": Text.of(_hint, [spell_reach, needed]) if _hint != &"" \
-			else Text.of(StringName("drill.%s.instruction" % drill)),
+		var needed: String = _needed_name(reading)
+		out.append({"text": Text.of(_hint if _hint != &"" else StringName("drill.%s.instruction" % drill),
+			[spell_reach, needed]),
 			"tone": MINE if _hint != &"" else Ui.DIM, "size": Ui.NOTE})
 	# And what was said as it began, through the first round (the review of O21): the
 	# answer to the line that squared you up, which the closing box used to swallow.
@@ -225,8 +225,17 @@ func _steps_of(reading: Dictionary) -> Array[Dictionary]:
 		var done: bool = bool(row[1])
 		var current: bool = not done and not current_found
 		current_found = current_found or current
-		out.append({"text": Text.of(row[0] as StringName, [spell_reach]), "done": done, "current": current})
+		out.append({"text": Text.of(row[0] as StringName, [spell_reach, _needed_name(reading)]), "done": done, "current": current})
 	return out
+
+
+## The lesson's action, named as the wheel names it: the sword, or his fists without one
+## (the review of N: the card said « l'épée » over a disc reading « Poings »).
+static func _needed_name(reading: Dictionary) -> String:
+	var need: String = String(LESSON_ACTION.get(String(reading.get("drill", "")), "melee"))
+	if need == "melee" and String(reading.get("close_weapon", "")) == String(DuelRules.FISTS):
+		return Text.of(&"drill.need.fists")
+	return Text.of(StringName("drill.need.%s" % need))
 
 
 ## **What to do now** (T8, N6), on your own turn and in a lesson only: on the ground, too far
@@ -239,10 +248,13 @@ func _hint_of(reading: Dictionary) -> StringName:
 	var need: String = String(LESSON_ACTION[drill])
 	if drill == "magic" and not bool(reading.get("spell_ready", false)):
 		return &"drill.hint.gift_resting"
+	if not bool(reading.get("reach_this_turn", true)):
+		return &"drill.hint.close_and_wait"
 	match String(reading.get("turn_mode", "")):
 		"wheel":
-			return &"drill.hint.confirm" if String(reading.get("wheel_category", "")) == need \
-				else StringName("drill.hint.pick.%s" % need)
+			if String(reading.get("wheel_category", "")) != need:
+				return StringName("drill.hint.pick.%s" % need)
+			return &"drill.hint.confirm" if bool(reading.get("weighed_reaches", true)) else &"drill.hint.nobody_from_here"
 		"target":
 			if String(reading.get("chosen_category", "")) != need:
 				return &"drill.hint.wrong_action"
@@ -369,7 +381,7 @@ func _draw() -> void:
 	elif not settling:
 		_draw_wheel(size)
 		_draw_target_words()
-		var refused: String = String(_reading.get("refused", ""))
+		var refused: String = String(_reading.get("refused", "")) if String(_reading.get("turn_mode", "")) != "wheel" else ""
 		if refused != "":
 			var told: Color = Ui.EMBER
 			told.a = _alpha
@@ -424,7 +436,7 @@ func _draw_wheel(size: Vector2) -> void:
 	if centre.x < 0.0:
 		centre = size * 0.5
 	centre.x = clampf(centre.x, WHEEL_RADIUS + 24.0, size.x - WHEEL_RADIUS - 24.0)
-	centre.y = clampf(centre.y, WHEEL_RADIUS + 40.0, size.y - WHEEL_RADIUS - 90.0)
+	centre.y = clampf(centre.y, WHEEL_RADIUS + 40.0, size.y - WHEEL_RADIUS - 120.0)
 	var at: int = int(_reading.get("wheel_at", 0))
 	_wheel_centre = centre
 	_wheel_count = rows.size()
@@ -439,18 +451,27 @@ func _draw_wheel(size: Vector2) -> void:
 			Color(Ui.GOLD if lit else Ui.EDGE, _alpha), 2.0 if lit else 1.0)
 		var ink: Color = Ui.GOLD if lit and open else (Ui.INK if open else Ui.FAINT)
 		draw_icon(self, String(row.get("icon", "")), place, Color(ink, _alpha))
+		# The shortcut's number, 1 to 4, at the disc's shoulder (the review of N).
+		if index < 4:
+			Ui.write_over(self, place + Vector2(WHEEL_SLOT * 0.55, -WHEEL_SLOT * 0.55), str(index + 1), Ui.NOTE,
+				Color(Ui.DIM, _alpha))
 	# What the segment he is on does, or why it cannot.
 	var chosen: Dictionary = rows[clampi(at, 0, rows.size() - 1)] as Dictionary
 	var label: String = String(chosen.get("label", ""))
 	var under: String = String(chosen.get("detail", "")) if bool(chosen.get("available", false)) \
 		else String(chosen.get("why", ""))
+	# A refusal is said in the box, where the eye already is (the review of N).
+	var refused: String = String(_reading.get("refused", ""))
+	var told: bool = refused != ""
+	if told:
+		under = refused
 	var width: float = maxf(Ui.width_of(label, Ui.ROW), Ui.width_of(under, Ui.NOTE)) + 20.0
 	var box := Rect2(Vector2(centre.x - width * 0.5, centre.y + WHEEL_RADIUS + WHEEL_SLOT + 6.0), Vector2(width, 34.0))
 	Ui.panel(self, box, Color(Ui.PANEL, 0.94 * _alpha))
 	Ui.write_over(self, Vector2(box.position.x, box.position.y + 14.0), label, Ui.ROW,
 		Color(Ui.GOLD, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
 	Ui.write_over(self, Vector2(box.position.x, box.position.y + 28.0), under, Ui.NOTE,
-		Color(Ui.DIM if bool(chosen.get("available", false)) else Ui.EMBER, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
+		Color(Ui.DIM if bool(chosen.get("available", false)) and not told else Ui.EMBER, _alpha), HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
 
 
 ## **Over the target he is on** (N4): its name, then the chance and the damage — or that the
@@ -602,11 +623,14 @@ func bars_shown() -> int:
 	return 1 + (maxi(_standing_foes().size(), 1) if not _foes().is_empty() else 1)
 
 
-## The keys the fight offers: the gift's among them only for somebody she gave it to, and
-## **what K does with what you hold**, and what U would put in your hands instead, only
-## for somebody with a bow of their own (T6 — Yannick could not shoot and nothing said why).
+## The keys the fight offers, **for the step of the turn he is at** (N3, N4): where to
+## stand, the wheel, the target. T6's line — what K does with what you hold, and what U
+## would put in your hands — went with U.
 func keys_line() -> String:
-	# **The keys of the step he is at** (N3, N4): where to stand, the wheel, the target.
+	# **The keys of the step he is at** (N3, N4): where to stand, the wheel, the target —
+	# and none while it is not his turn (the review of N).
+	if String(_reading.get("turn_mode", "")) == "" and not bool(_reading.get("my_turn", true)):
+		return ""
 	match String(_reading.get("turn_mode", "")):
 		"wheel":
 			return Text.of(&"duel.keys.wheel")
