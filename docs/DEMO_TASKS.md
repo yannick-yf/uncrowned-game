@@ -2947,6 +2947,16 @@ who it can reach, with what chance and for what damage (`ActionRules`), so the w
 targeting and the rules read one answer. **Check:** the list follows what he carries and
 knows; every number shown is the one the blow uses.
 
+> **Built 2026-10-03.** `content/actions.json`: five categories clockwise from the top —
+> melee, ranged, magic, items, wait — and four actions: *strike* with what he holds (the
+> sword, or his fists), *shoot* with the bow (needs one), *the gift* (needs the fairy's),
+> *wait*; items have a category and no row until consumables come. `ActionRules.offered`
+> says what is on the wheel and why an action is greyed (*no bow*, *no spell*, *the gift
+> resting*); `ActionRules.targets` says, from a tile, every foe still up with whether the
+> action reaches him, the chance (`DuelRules.hit_chance`, 100 for the gift) and the damage,
+> in reach first then nearest; `turn_of` is what the turn then asks of the fight.
+> `test_actions`.
+
 ### N3 · The wheel
 
 **K** (or Space, Enter) opens a wheel round the player on his turn: sword or fists, bow,
