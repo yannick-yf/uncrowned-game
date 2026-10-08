@@ -5,7 +5,7 @@
 #   tools/opening_frames.sh /tmp/opening fr en      # the default
 #   ONLY='inventory' tools/opening_frames.sh /tmp/o  # only the frames whose name matches
 #
-# Forty-eight frames a language, from the title to the works' gate and the fight there, and what
+# Fifty-one frames a language, from the title to the works' gate and the fight there, and what
 # you carry and what it does in play, each through the debug tools CLAUDE.md lists
 # (UNCROWNED_TALK, _AT, _HAIL, _DUEL, _VIEW, _WORLD, _GEAR, _LOOK), then
 # one line per frame: its name and how many SCRIPT ERRORs its run printed — which has to
@@ -113,5 +113,10 @@ for LANG_ID in $LANGS; do
   shoot 31_gear_fight play UNCROWNED_AT=281,318 UNCROWNED_GEAR=$PLATE UNCROWNED_DUEL=bram
   shoot 32_loot play UNCROWNED_AT=317,208 UNCROWNED_GEAR=short_sword UNCROWNED_DUEL=works_guard:570:press
   shoot 33_hail_unarmed play UNCROWNED_HAIL=bram:400
+  # The start zone's edge (group Z): the bridge north of Brindle, the wood across the road
+  # north of the Forges, the wood west of Brindle — each with its line.
+  shoot 34_zone_bridge play UNCROWNED_AT=268,278
+  shoot 35_zone_wood play UNCROWNED_AT=313,185
+  shoot 36_zone_west play UNCROWNED_AT=256,318
 done
 echo "frames in $OUT"

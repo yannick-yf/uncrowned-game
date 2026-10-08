@@ -3144,6 +3144,17 @@ Nobody stands in a closure or walks into one — the bridge's guard, the walkers
 routines. At the edge, a line: *Le pont s'est effondré.* / *Le bois est trop serré pour
 passer.* **Check:** a test for each; frames.
 
+> **Built 2026-10-08.** Nobody had to move: the bridge's guard stands on the King's Road's
+> bridge, beyond the zone; a displaced man walks home by `Navigation` and, with no way
+> home, is simply back (`WalkerSystem`); the Forges' workers walk to the cutting face by
+> his bridge to the mine, inside; the road's travellers walk the trunk, outside; a pack's
+> wandering keeps to walkable ground. `test_nobody_stands_where_the_zone_is_closed` holds
+> it: no person, fire, stall, paper, find or pack in a closure. **The edge's line**:
+> within three tiles of a closed tile the prompt adds *Le pont s'est effondré. On ne passe
+> plus par ici.* or *Le bois est trop serré pour passer.* (`main._closed_edge`,
+> `Region.closure_kind_at`); `test_the_zone_edge_says_why_you_go_no_further`. Frames 34–36
+> of `tools/opening_frames.sh`, both languages.
+
 ### Z4 · The tutorial end to end, frames, a review
 
 Both worlds green; the opening photographed in both languages; a fresh-eyes review walks

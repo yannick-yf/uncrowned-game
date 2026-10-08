@@ -2905,6 +2905,11 @@ func _draw_hud() -> void:
 	var sign: String = _sign()
 	if sign != "":
 		rows.append(sign)
+	# **The start zone's edge** (Z3): beside a fallen bridge or one of its woods, why you
+	# go no further, in a line — so the edge is never only a wall.
+	var edge: String = _closed_edge()
+	if edge != "":
+		rows.append(edge)
 
 	# **The prompt says what E does, because both read the same answer** (O2). It used
 	# to offer the fire at the wake while E talked to the fairy: two orderings of the
@@ -3484,6 +3489,21 @@ func _atmosphere() -> String:
 	if _world.fraud_told_to != &"":
 		return Text.of(&"muster.shut")
 	return Text.of(&"muster.queue")
+
+
+## What closes the ground beside the player, in a line (Z3): the bridge fallen in, the
+## wood too thick to pass. Three tiles round him, so it shows as he comes up to it.
+func _closed_edge() -> String:
+	if _world.current_zone != WorldState.OVERWORLD:
+		return ""
+	var region: Region = _world.region()
+	var here: Vector2i = _world.player_tile()
+	for dy: int in range(-3, 4):
+		for dx: int in range(-3, 4):
+			var kind: StringName = region.closure_kind_at(here + Vector2i(dx, dy))
+			if kind != &"":
+				return Text.of(StringName("prompt.closed.%s" % kind))
+	return ""
 
 
 ## The entrance sign, in the place's own words (§15). Propaganda: a claim the player

@@ -146,6 +146,8 @@ var yards: Array[Dictionary] = []
 var closures: Array[Dictionary] = []
 ## Tile -> the id of the closure that shuts it, for the edge's words (Z3).
 var _closed_by: Dictionary = {}
+## Closure id -> its kind: `bridge` or `wood`.
+var _closure_kinds: Dictionary = {}
 ## The places this region was built around — id -> centre — and their footprints.
 ## Set by whoever builds the region: the procedural builder from the statics above,
 ## the bake from the baked places. The kit and the zones read these and never a
@@ -182,12 +184,18 @@ func closure_at(tile: Vector2i) -> StringName:
 	return _closed_by.get(tile, &"") as StringName
 
 
+## The kind of closure that shuts this tile — `bridge`, `wood` — or empty.
+func closure_kind_at(tile: Vector2i) -> StringName:
+	return _closure_kinds.get(closure_at(tile), &"") as StringName
+
+
 ## Shut a closure's tiles: a bridge's deck is river again, a wood is thicket. The one way
 ## a closure reaches the ground, so whatever opens one later undoes exactly this.
 func close(closure: Dictionary) -> void:
 	var kind: StringName = StringName(String(closure.get("kind", "")))
 	var shut: Terrain = Terrain.WATER if kind == &"bridge" else Terrain.THICKET
 	var id: StringName = StringName(String(closure.get("id", "")))
+	_closure_kinds[id] = kind
 	for tile: Vector2i in (closure.get("tiles", []) as Array):
 		if in_bounds(tile):
 			set_terrain(tile, shut)

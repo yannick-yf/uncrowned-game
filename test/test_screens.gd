@@ -292,6 +292,30 @@ func test_the_first_prompt_says_what_e_does() -> void:
 	play.free()
 
 
+## **The start zone's edge says why** (Z3): beside the fallen bridge, its line; at the
+## wood across the road north of the Forges, the wood's; in Brindle, neither.
+func test_the_zone_edge_says_why_you_go_no_further() -> void:
+	if not Places.baked():
+		off("the start zone is the baked world's (group Z)")
+		return
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var world := sim.store(&"world") as WorldState
+	var said: Callable = func(tile: Vector2i) -> String:
+		world.player_pos = Vector2(tile) + Vector2(0.5, 0.5)
+		play.call(&"_draw_hud")
+		return (play.get(&"_prompt") as Label).text
+	var bridge: String = Text.of(&"prompt.closed.bridge")
+	var wood: String = Text.of(&"prompt.closed.wood")
+	assert_true(String(said.call(Vector2i(268, 277))).contains(bridge), "at the bridge's end, the bridge")
+	assert_true(String(said.call(Vector2i(313, 185))).contains(wood), "at the logs across the road north, the wood")
+	var brindle: String = String(said.call(Places.shared().centre(&"brindle")))
+	assert_false(brindle.contains(bridge) or brindle.contains(wood), "in Brindle, neither: '%s'" % brindle)
+	play.free()
+
+
 func test_the_fight_reading_carries_every_fighter() -> void:
 	# **O6.** The reading named one foe, so a second wolf was never drawn where it
 	# fought. Every opponent is in it now, each at the tile the duel draws it on.

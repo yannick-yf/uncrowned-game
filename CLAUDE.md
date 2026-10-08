@@ -310,9 +310,9 @@ on 2026-09-30 they are watches and not debts: nothing is owed. The procedural wo
 prints **forty-two** DEBT lines (forty-three debts) that say the works' furnaces, its
 yard, the wolf packs — where they stand, what they see, how they wander, how they are
 surprised and chosen, where they may not go (eleven since groups R and N) —
-and the opening's last two stages stand on his map and not on the 2D one, and **twelve** OFF lines — the two switches', one saying the 2D map's shore is sand and
+and the opening's last two stages stand on his map and not on the 2D one, and **fourteen** OFF lines — the two switches', one saying the 2D map's shore is sand and
 not his cliffs, two claims about the hail's ground that only his map's layout can
-make, and since group Z four of the bake's claims read on the open world and the three
+make, and since group Z four of the bake's claims read on the open world and the five
 start-zone tests, which are the baked world's.
 
 ### Committing — read this before your first `git commit`
@@ -556,7 +556,7 @@ first, so the screen name may carry the page after a colon — `journal:standing
 `journal:kingdom`, and so on for any page in `_journal_pages`.
 
 **`tools/opening_frames.sh [out_dir] [languages…]`** (2026-09-29, O21) photographs the
-opening for a review: thirty-seven frames a language, on a made run, from the title to the fight at
+opening for a review: fifty-one frames a language, on a made run, from the title to the fight at
 the works' gate, the inventory and the equipment in play (`ONLY=<regex>` takes only the frames whose name matches),
 through the tools above, with one line per frame giving its count of `SCRIPT ERROR`s — 0,
 and then look at them. A shot plays the run on disk and the language is a setting on

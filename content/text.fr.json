@@ -246,6 +246,8 @@
   "doc.cinderworks:ledger": "le registre des Forges",
   "doc.bank:debts": "le livre des dettes",
   "doc.muster:signed_orders": "les ordres signés",
+  "prompt.closed.bridge": "Le pont s'est effondré. On ne passe plus par ici.",
+  "prompt.closed.wood": "Le bois est trop serré pour passer.",
   "prompt.rest": "E, s'asseoir et se reposer",
   "prompt.rest_watched": "une meute rôde trop près pour dormir ici",
   "inventory.title": "INVENTAIRE",

@@ -55,6 +55,33 @@ func test_nothing_beyond_the_zone_can_be_walked_to() -> void:
 		"the zone is about 10,000 tiles: %d" % zone.size())
 
 
+## **Nobody stands in a closure** (Z3): not a person, a fire, a stall, a paper, a find, a
+## pack. A man in a wood would be a conversation that cannot be had.
+func test_nobody_stands_where_the_zone_is_closed() -> void:
+	if not Places.baked():
+		off("the start zone is the baked world's (group Z)")
+		return
+	var region: Region = Region.build_overworld()
+	var checked: int = 0
+	for npc: Npc in Cast.shared().named():
+		if npc.zone != WorldState.OVERWORLD:
+			continue
+		assert_eq(region.closure_at(npc.tile), &"", "%s does not stand in %s" % [npc.id, region.closure_at(npc.tile)])
+		checked += 1
+	for prop: Dictionary in region.props:
+		var kind: StringName = prop["kind"] as StringName
+		if kind in [&"campfire", &"stall"] or prop.has("fact"):
+			assert_eq(region.closure_at(prop["at"] as Vector2i), &"", "the %s at %s is not in a closure" % [kind, prop["at"]])
+			checked += 1
+	for find: Dictionary in Places.shared().finds():
+		var at: Vector2i = region.resolve(find["anchor"] as Dictionary)
+		assert_eq(region.closure_at(at), &"", "the find %s is not in a closure" % find["id"])
+	var wild := Wild.new()
+	for which: int in Wild.packs().size():
+		assert_eq(region.closure_at(wild.at(region, which)), &"", "pack %d does not stand in a closure" % which)
+	assert_true(checked > 20, "%d people and things checked" % checked)
+
+
 ## The closures are a layer over the world, not a rewrite of it: the same file without
 ## them is the open world, so opening the zone one day is taking an entry out.
 func test_the_closures_are_a_layer_over_an_open_world() -> void:
