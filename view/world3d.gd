@@ -414,6 +414,14 @@ var block_count: int = 0
 var campfire_count: int = 0
 var made_count: int = 0
 var wall_count: int = 0
+## The start zone's edge drawn (Z2): his bridges shown without their span, the woods'
+## trees and shrubs, and the logs across the roads that run into a wood.
+var bridges_broken: int = 0
+var closure_trees: int = 0
+var closure_logs: int = 0
+## Every closed tile something of his stands on — a tree, a shrub or a log — so a test can
+## ask that no tile of a wood is a wall nobody sees.
+var closure_planted: Dictionary = {}
 
 
 # ------------------------------------------------------------------ building ---
@@ -442,6 +450,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_build_ground()
 		_build_water()
 	_build_props()
+	_build_closures()
 	_build_floors()
 	_build_walls()
 	_build_fairy()
@@ -581,6 +590,7 @@ func _adopt_his_world() -> void:
 	world.name = "HisWorld"
 	add_child(world)
 	_his = world
+	_break_closed_bridges()
 	_read_bridge_decks()
 	_read_workshop_heat()
 	# His sun and his sky, to be leaned warm or cold by allégeance and by nothing else.
@@ -3208,6 +3218,9 @@ func _read_bridge_decks() -> void:
 	if bridges == null:
 		return
 	for bridge: Node3D in bridges.get_children():
+		# A closed bridge has no deck to stand on (Z2): its span is not drawn.
+		if _closed_bridge_ids().has(String(bridge.name)):
+			continue
 		for child: Node in bridge.get_children():
 			if child is MeshInstance3D and child.name in [&"WornPavingPaving", &"RoadBedEarth",
 					&"DeckPlanksWood", &"ContinuousDeckStone"]:
@@ -3215,6 +3228,203 @@ func _read_bridge_decks() -> void:
 				var transform: Transform3D = bridge.transform * deck.transform
 				_bridge_decks.append({"transform": transform, "inverse": transform.affine_inverse(),
 					"bounds": deck.mesh.get_aabb(), "faces": deck.mesh.get_faces()})
+
+
+## The ids of the bridges the start zone closes (Z1).
+func _closed_bridge_ids() -> Array[String]:
+	var out: Array[String] = []
+	for closure: Dictionary in _region.closures:
+		if String(closure["kind"]) == "bridge":
+			out.append(String(closure["id"]))
+	return out
+
+
+## **A closed bridge, drawn broken** (Z2, 2026-10-08): his abutments, bearings, trestles,
+## piles and cutwaters stand in the river; his deck, girders, rails, parapets and arch are
+## not drawn. His scene is not touched — a node of the copy made invisible, as his guides
+## are — so the bridge stands whole again the day its closure is taken out.
+const BRIDGE_STANDS: Array[String] = ["Abutment", "Bearing", "Pile", "Trestle", "LowerTie",
+	"Cutwater", "Terminal"]
+
+
+func _break_closed_bridges() -> void:
+	var bridges: Node = _his.get_node_or_null("Decor/Franchissements/Ponts")
+	if bridges == null:
+		return
+	for id: String in _closed_bridge_ids():
+		var bridge: Node = bridges.get_node_or_null(NodePath(id))
+		if bridge == null:
+			push_warning("the start zone closes bridge %s, which his map does not have" % id)
+			continue
+		for child: Node in bridge.get_children():
+			if child is MeshInstance3D and not _bridge_stands(String(child.name)):
+				(child as MeshInstance3D).visible = false
+		bridges_broken += 1
+
+
+static func _bridge_stands(piece: String) -> bool:
+	for part: String in BRIDGE_STANDS:
+		if piece.contains(part):
+			return true
+	return false
+
+
+## **The start zone's woods** (Z2): every tile of a wood closure planted with his trees —
+## his firs mostly, spruces, pines, a birch now and then — and his hazels and ferns under
+## them, thickest along the edge; and where one of his roads runs into a wood, his fallen
+## logs across it, so the road visibly ends rather than walking into a wall. All of it his
+## library's pieces, drawn as one MultiMesh a mesh so a thousand trees are a few draws.
+const WOOD_TREES: Array[String] = ["trees/fir_mature.tscn", "trees/fir_mature.tscn",
+	"trees/spruce_slender.tscn", "trees/fir_mature.tscn", "trees/spruce_slender.tscn",
+	"trees/pine_coastal.tscn", "trees/fir_mature.tscn", "trees/birch_twin.tscn"]
+const WOOD_UNDER: Array[String] = ["plants/shrub_hazel.tscn", "plants/fern_fan.tscn"]
+
+
+func _build_closures() -> void:
+	if _his == null:
+		return
+	var woods := Node3D.new()
+	woods.name = "Closures"
+	add_child(woods)
+	var trees: Dictionary = {}
+	var under: Dictionary = {}
+	var logs: Array[Transform3D] = []
+	var stones: Array[Transform3D] = []
+	for closure: Dictionary in _region.closures:
+		if String(closure["kind"]) != "wood":
+			continue
+		var inside: Dictionary = {}
+		for tile: Vector2i in (closure["tiles"] as Array):
+			inside[tile] = true
+		var roads: Dictionary = {}
+		for tile: Vector2i in (closure.get("roads", []) as Array):
+			roads[tile] = true
+		for tile: Vector2i in (closure["tiles"] as Array):
+			var h: int = Art.scatter_hash(tile.x, tile.y)
+			var edge: bool = _wood_edge(tile, inside)
+			if roads.has(tile):
+				closure_planted[tile] = true
+				continue
+			var jitter := Vector2(float(h % 9) - 4.0, float((h / 9) % 9) - 4.0) * 0.06
+			var size: float = 0.85 + 0.4 * float((h / 81) % 10) / 10.0
+			var turn := Basis(Vector3.UP, float(h) * 0.37).scaled(Vector3.ONE * size)
+			var path: String = WOOD_TREES[h % WOOD_TREES.size()]
+			# Along the edge every other tree gives way to a hazel, so the wood's face is a
+			# low green fringe in front of the dark firs, as his own woods meet a meadow.
+			if edge and h % 3 == 0:
+				path = WOOD_UNDER[0]
+				turn = Basis(Vector3.UP, float(h) * 0.37).scaled(Vector3.ONE * 1.4)
+			var placed: Array = trees.get(path, []) as Array
+			placed.append(Transform3D(turn, _feet_of(Vector2(tile) + Vector2(0.5, 0.5) + jitter)))
+			trees[path] = placed
+			closure_planted[tile] = true
+			# **The undergrowth is what says you cannot pass**: his own woods round Brindle are
+			# walkable, trunks over grass, and these are the same trees. So every tile of a
+			# closure is filled to the ground with his hazels, two to a tile, and a fern —
+			# where you see grass between the trees you walk, where you see none you do not.
+			for k: int in 2:
+				var growth: Array = under.get(WOOD_UNDER[0], []) as Array
+				var spot := Vector2(0.25 + 0.5 * float(k), 0.25 + 0.5 * float((h / (3 + k)) % 2))
+				growth.append(Transform3D(Basis(Vector3.UP, float(h) * 1.3 + float(k) * 2.1)
+					.scaled(Vector3.ONE * (1.5 + 0.1 * float((h / 11 + k) % 4))), _feet_of(Vector2(tile) + spot)))
+				under[WOOD_UNDER[0]] = growth
+			if h % 2 == 0:
+				var ferns: Array = under.get(WOOD_UNDER[1], []) as Array
+				ferns.append(Transform3D(Basis(Vector3.UP, float(h) * 0.7).scaled(Vector3.ONE * 1.3),
+					_feet_of(Vector2(tile) + Vector2(0.7, 0.3))))
+				under[WOOD_UNDER[1]] = ferns
+		for group: Array in _clumps(roads.keys()):
+			var centre := Vector2.ZERO
+			for tile: Vector2i in group:
+				centre += Vector2(tile) + Vector2(0.5, 0.5)
+			centre /= float(group.size())
+			var h: int = Art.scatter_hash(int(centre.x * 3.0), int(centre.y * 3.0))
+			for i: int in 3:
+				var spot: Vector2 = centre + Vector2(float(i) - 1.0, float((h + i) % 3) - 1.0) * 0.55
+				logs.append(Transform3D(Basis(Vector3.UP, float(h % 628) / 100.0 + float(i) * 0.5)
+					.scaled(Vector3.ONE * 1.7), _feet_of(spot)))
+			stones.append(Transform3D(Basis(Vector3.UP, float(h)).scaled(Vector3.ONE * 0.6),
+				_feet_of(centre + Vector2(1.1, -0.6))))
+	for path: String in trees.keys():
+		closure_trees += (trees[path] as Array).size()
+		_plant_many(woods, _library_scene(path), trees[path] as Array, path.get_file().get_basename())
+	for path: String in under.keys():
+		_plant_many(woods, _library_scene(path), under[path] as Array, path.get_file().get_basename())
+	closure_logs = logs.size()
+	_plant_many(woods, load(HIS_LOG) as PackedScene if ResourceLoader.exists(HIS_LOG) else null, logs, "fallen_log")
+	_plant_many(woods, load(HIS_STONE) as PackedScene if ResourceLoader.exists(HIS_STONE) else null, stones, "boulder")
+
+
+func _library_scene(path: String) -> PackedScene:
+	var full: String = HIS_LIBRARY + path
+	return load(full) as PackedScene if ResourceLoader.exists(full) else null
+
+
+## Whether a wood's tile has open ground beside it: its edge.
+func _wood_edge(tile: Vector2i, inside: Dictionary) -> bool:
+	for step: Vector2i in Navigation.DIRECTIONS:
+		var beside: Vector2i = tile + step
+		if not inside.has(beside) and _region.in_bounds(beside) and _region.is_passable(beside):
+			return true
+	return false
+
+
+## Tiles in touching groups: each road running into a wood is one group of its tiles.
+static func _clumps(tiles: Array) -> Array:
+	var left: Dictionary = {}
+	for tile: Variant in tiles:
+		left[tile as Vector2i] = true
+	var groups: Array = []
+	var ordered: Array = tiles.duplicate()
+	ordered.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+	for start: Variant in ordered:
+		if not left.has(start):
+			continue
+		var group: Array[Vector2i] = [start as Vector2i]
+		left.erase(start)
+		var head: int = 0
+		while head < group.size():
+			for step: Vector2i in Navigation.DIRECTIONS:
+				var next: Vector2i = group[head] + step
+				if left.has(next):
+					left.erase(next)
+					group.append(next)
+			head += 1
+		groups.append(group)
+	return groups
+
+
+## One of his pieces, many times: a MultiMeshInstance3D for each mesh in it, each mesh
+## kept where his scene puts it and wearing his material. The piece's own scene is only
+## read, never added.
+func _plant_many(parent: Node3D, scene: PackedScene, where: Array, label: String) -> void:
+	if scene == null or where.is_empty():
+		return
+	var template: Node3D = scene.instantiate() as Node3D
+	for found: Node in template.find_children("*", "MeshInstance3D", true, false):
+		var part := found as MeshInstance3D
+		if part.mesh == null:
+			continue
+		var local: Transform3D = Transform3D.IDENTITY
+		var node: Node = part
+		while node != null and node != template:
+			if node is Node3D:
+				local = (node as Node3D).transform * local
+			node = node.get_parent()
+		var many := MultiMesh.new()
+		many.transform_format = MultiMesh.TRANSFORM_3D
+		many.mesh = part.mesh
+		many.instance_count = where.size()
+		for i: int in where.size():
+			many.set_instance_transform(i, (where[i] as Transform3D) * local)
+		var drawn := MultiMeshInstance3D.new()
+		drawn.name = "%s_%s" % [label, part.name]
+		drawn.multimesh = many
+		drawn.material_override = part.material_override if part.material_override != null \
+			else part.get_surface_override_material(0)
+		drawn.cast_shadow = part.cast_shadow
+		parent.add_child(drawn)
+	template.free()
 
 
 ## Keep his delivered furnace and forge effects in step with our ember marks, piece by

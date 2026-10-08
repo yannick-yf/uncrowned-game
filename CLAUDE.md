@@ -192,6 +192,12 @@ below with the fourth.
    sword lying on a grave** (`_lying_sword()` in `view/world3d.gd`), four boxes in his stone,
    wood and dark paints — `test_world3d` fails on any other.
 
+6. **The start zone's edge** (2026-10-08, group Z): nothing drawn — composed. His bridge
+   north of Brindle shown without its span (his nodes hidden in the copy), and two woods
+   planted with his trees, hazels, ferns, fallen logs and a boulder (`_build_closures` in
+   `view/world3d.gd`). The wood is told from his walkable ones by its undergrowth: no
+   grass shows between the trees.
+
 The sheets are **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
 has never lived there — his own sheet is in `prototypes/`.

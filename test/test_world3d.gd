@@ -40,10 +40,40 @@ func test_the_window_stands_on_his_ground() -> void:
 				delivered += 1
 		assert_eq(window.his_props_skipped, delivered, "every delivered mesh replaces its placeholder")
 		assert_true(window.get_node_or_null("HisWorld/Decor/Acierie") != null, "his ironworks scene is present")
+		var closed: Array[String] = []
+		for closure: Dictionary in region.closures:
+			if String(closure["kind"]) == "bridge":
+				closed.append(String(closure["id"]))
 		for bridge: Dictionary in (landscape["meta"] as Dictionary)["crossings"]:
+			if String(bridge["id"]) in closed:
+				continue
 			var centre: Array = bridge["center_xyz"]
 			assert_true(window.height_at(float(centre[0]), float(centre[2])) >= float(centre[1]) - 0.1,
 				"%s carries the walker above the river on its deck" % bridge["id"])
+		# **The start zone's edge is drawn** (Z2): a closed bridge stands without its span,
+		# and every tile of a wood has a piece of his on it — no wall nobody sees.
+		assert_eq(window.bridges_broken, closed.size(), "every closed bridge is drawn broken")
+		for id: String in closed:
+			var bridge: Node = window.get_node_or_null("HisWorld/Decor/Franchissements/Ponts/%s" % id)
+			assert_true(bridge != null, "%s is his bridge" % id)
+			if bridge == null:
+				continue
+			var standing: int = 0
+			for part: Node in bridge.get_children():
+				if part is MeshInstance3D and (part as MeshInstance3D).visible:
+					standing += 1
+					assert_true(World3d._bridge_stands(String(part.name)), "%s: %s is not part of its span" % [id, part.name])
+			assert_true(standing > 0, "%s: its ends and trestles still stand" % id)
+		var bare: int = 0
+		for closure: Dictionary in region.closures:
+			if String(closure["kind"]) != "wood":
+				continue
+			for tile: Vector2i in (closure["tiles"] as Array):
+				if not window.closure_planted.has(tile):
+					bare += 1
+		assert_eq(bare, 0, "every tile of the start zone's woods has his tree, shrub or log on it")
+		assert_true(window.closure_trees > 1000, "the woods are woods: %d of his trees" % window.closure_trees)
+		assert_true(window.closure_logs >= 6, "his logs lie across each road into a wood: %d" % window.closure_logs)
 		assert_true(window.his_kit_count > 20,
 			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
 		assert_true(window.figures_are_his(), "every person is his traveller, not a pack sprite")

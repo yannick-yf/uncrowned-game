@@ -3124,6 +3124,20 @@ every closed tile and an edge that wanders; his fallen logs across each road whe
 enters a wood. **Check:** every closed tile is drawn (`test_bake`'s rule, widened to
 thicket); frames of each closure from inside the zone.
 
+> **Built 2026-10-08.** `World3d._break_closed_bridges`: his `PontBrindle` stands with its
+> abutments, bearings, trestles and piles, its deck, girders and rails not drawn — nodes of
+> the copy made invisible, his scene untouched — and no walker is seated on a deck that is
+> not there. `_build_closures` plants every wood tile with his firs, spruces, pines and a
+> birch now and then, **and fills it to the ground with his hazels, two a tile, and his
+> ferns**: the first frames showed the wood west of Brindle standing inside his own, which
+> is walkable — the same trees, trunks over grass. So the rule a player reads is the
+> undergrowth: grass between the trees, you walk; none, you do not. Where his roads run
+> into a wood, three of his fallen logs and one of his boulders lie across it at the edge.
+> All drawn as one MultiMesh a mesh (about 1,470 trees). Below Brindle the wood meets his
+> cliffs, which close the cape themselves. `test_world3d`: the closed bridge drawn broken
+> and its ends standing, every wood tile with a piece of his on it, more than a thousand
+> trees, the logs. Frames: `docs/frames/zone/`.
+
 ### Z3 · The people, and the edge
 
 Nobody stands in a closure or walks into one — the bridge's guard, the walkers, the

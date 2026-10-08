@@ -638,3 +638,29 @@ faits en code.
 **Ce que tu pourrais dessiner à la place**, si tu veux : ces cinq icônes dans ton style,
 et un anneau de cible posé au sol. Les images : `docs/frames/duel/wheel.png`,
 `target.png` et `cone.png`.
+
+## 18. Une zone de départ fermée : ton pont cassé et deux bois de tes arbres (2026-10-08)
+
+Yannick veut que le joueur de la démo reste entre Brindle et les Forges, comme sur le
+Plateau du Prélude de Zelda. Le château et les autres villages ne sont pas finis. Rien
+n'est supprimé : ils deviennent seulement inaccessibles pour l'instant.
+
+Ta rivière, la mer et tes montagnes ferment déjà presque tout. Pour le reste, nous
+n'avons rien dessiné, nous avons seulement utilisé tes pièces :
+
+- **Le pont au nord de Brindle (`PontBrindle`)** : on ne montre pas son tablier, ses
+  poutres ni ses garde-corps. Ses culées et ses chevalets restent dans l'eau. On a
+  seulement rendu invisibles des nœuds de la copie : ta scène n'est pas modifiée.
+- **Deux bois** : un autour des Forges (à l'ouest et au nord), un à l'ouest de Brindle.
+  Ils sont plantés avec tes sapins, tes épicéas, tes pins, quelques bouleaux, et surtout
+  tes noisetiers et tes fougères au pied, pour qu'on ne voie plus l'herbe. C'est la
+  différence avec tes bois, où l'on marche.
+- **Tes troncs couchés et un de tes rochers** barrent chaque route qui entre dans un de
+  ces bois.
+
+Images : `docs/frames/zone/`.
+
+**Si tu veux faire mieux** : un vrai bras de rivière à la place d'un des bois (ton outil
+creuse le lit et peint les berges, nous ne savons pas le faire proprement), ou une pose de
+pont effondré. Quand la zone s'ouvrira, il suffit d'enlever une ligne dans nos données :
+ton pont réapparaît entier.
