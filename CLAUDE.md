@@ -3,6 +3,10 @@
 An open-world RPG about holding a king to account. The player can walk from Brindle
 to Blackcairn within minutes of starting and attack the king, and will lose.
 Progress comes from power, knowledge and social access — never from a flag.
+**Not in the demo** (Yannick, 2026-10-08): a closed start zone keeps its player between
+Brindle and the Forges, as Breath of the Wild's Great Plateau, while the rest of the map
+is drawn — group Z of `docs/DEMO_TASKS.md`. The open world is the same map without the
+zone's closures (`Region.open_world()`), and the claims about it are still checked there.
 
 **Two sources of truth, and the newer one wins where they overlap.** `docs/SPECS.md`
 was the source of truth and still governs most of what the game is. **The simulation
@@ -194,9 +198,9 @@ below with the fourth.
 
 6. **The start zone's edge** (2026-10-08, group Z): nothing drawn — composed. His bridge
    north of Brindle shown without its span (his nodes hidden in the copy), and two woods
-   planted with his trees, hazels, ferns, fallen logs and a boulder (`_build_closures` in
-   `view/world3d.gd`). The wood is told from his walkable ones by its undergrowth: no
-   grass shows between the trees.
+   planted with his firs, spruces and pines, young ones under them and his hazels on the
+   edge, his fallen logs and a boulder (`_build_closures` in `view/world3d.gd`). The wood
+   is told from his walkable ones by its undergrowth: no grass shows between the trees.
 
 The sheets are **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
@@ -298,11 +302,11 @@ that says how a piece is meant to be used, and the first yard was built without 
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
 commit checks. The current baked run prints **six** DEBT lines — seven debts, one test owing two; the
 run's last line counts debts — for **four** claims, all the map's and the brief's (five
-until T2 deleted the clearing and its ring, 2026-09-29), and **twenty-one** OFF lines:
-three of the switches and the 2D map (four until S1 took Attunement and its two terrain
-tests away; the third since O12 is the 2D map's road into Brindle, which the baked world
-does not claim), and **eighteen since group Z** (2026-10-08) — a claim about the whole map,
-every fire reachable, the walk to Blackcairn, checked on the open world
+until T2 deleted the clearing and its ring, 2026-09-29), and **twenty-two** OFF lines:
+the three it printed before group Z — the switches' and the 2D map's road into Brindle,
+which the baked world does not claim (four until S1 took Attunement and its two terrain
+tests away) — and **nineteen since group Z** (2026-10-08), each a claim about the whole
+map — every fire reachable, the walk to Blackcairn — checked on the open world
 (`TestCase.walk_the_open_world`, `Region.open_world()`) because in play the start zone
 closes it. **Three more were things his
 brother had not drawn** — a blow, a beast, a grave — and since the art rule was rewritten
@@ -310,9 +314,9 @@ on 2026-09-30 they are watches and not debts: nothing is owed. The procedural wo
 prints **forty-two** DEBT lines (forty-three debts) that say the works' furnaces, its
 yard, the wolf packs — where they stand, what they see, how they wander, how they are
 surprised and chosen, where they may not go (eleven since groups R and N) —
-and the opening's last two stages stand on his map and not on the 2D one, and **fourteen** OFF lines — the two switches', one saying the 2D map's shore is sand and
+and the opening's last two stages stand on his map and not on the 2D one, and **sixteen** OFF lines — the two switches', one saying the 2D map's shore is sand and
 not his cliffs, two claims about the hail's ground that only his map's layout can
-make, and since group Z four of the bake's claims read on the open world and the five
+make, and since group Z four of the bake's claims read on the open world and the seven
 start-zone tests, which are the baked world's.
 
 ### Committing — read this before your first `git commit`
@@ -665,6 +669,7 @@ reconstruct it from forty commits will get it wrong.
 | **E** | **Built, E1–E7** (2026-10-01): **what you carry** — six slots on the same layers, ten items drawn from group L's pieces (`content/items.json`), the start kit and no weapon, **the first sword on a grave** two tiles from where you wake, fists for less without it, Wren's bow an item, a beaten fighter leaving what he wore; armour's protection off every blow and weight a tile a turn (save version 5); **Tab** opens the inventory over a stopped world. A fresh-eyes review walked creation to equipment in play. Yannick played it the same evening: hair styles validated for now, trousers grey, his own surcoat in the king's set |
 | **R** | **Built, R1–R5** (2026-10-01, from his play): **R1 built** — the bow lesson is given by Wren, who keeps her distance and shoots too. **Engaging a fight yourself**, a simplified Baldur's Gate 3, his answers in hand: **R2 built** — enemies outside the towns see in a cone ahead of them and wander their ground (`DuelRules.sight_of`, `roams_of`; the wolves for now); **R3 built** — K from outside their sight, the first blow doubled (`WildSystem.ambush_target`); **R4 built** — every blow may miss by agility (80 % ± 5 a point of difference, 50–95 %, 95 % for the player in the lessons; the gift and the surprise always land), the chance shown before the blow. |
 | **N** | **Built, N1–N7** (2026-10-03, from his play): the fight's actions as Baldur's Gate 3 has them. **N1–N6 built**: the magic lesson repaired (E left the fairy after her first line, without her gift); a generic list of actions (`content/actions.json`, `ActionRules`); **a wheel** round the player (K) instead of U and I; **an explicit target** with its chance and damage, confirm or go back (Escape), in a fight and for the surprise attack; the mouse; the three lessons taught the new way. **N7 built**: the opening photographed in both languages; a fresh-eyes review, its fifteen findings fixed — among them E no longer says a weighty last line for him, and the mouse chooses the tile too. **The check is Yannick playing it.** Then **P2**, with Yannick |
+| **Z** | **Built, Z1–Z4** (2026-10-08): **the start zone**, from his request — the demo's player stays between Brindle and the Forges, as Breath of the Wild's Great Plateau; the castle and the other villages stay, out of reach. His river, the sea and his mountains close most of it; the brief closes the rest — his bridge north of Brindle drawn without its span, a wood round the Forges and one west of Brindle, planted with his trees and filled with young ones so no grass shows, his logs across the roads. A layer over the open rows of `region.json` (`closures`), so opening it is taking an entry out; 9,997 tiles, 4 ha. The claims about the whole map are checked on the open world and print `OFF`. A review found no way out; the woods' first planting cost the game nine frames in ten, and was planted again (113–151 frames a second, 132–165 without). **The check is Yannick walking its edge** |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

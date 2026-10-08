@@ -884,12 +884,54 @@ func _band(line: Array[Vector2], low: float, high: float, seed: int) -> Array[Ve
 				if centre.distance_to(closest) <= lerpf(low, high, clampf(wander, 0.0, 1.0)):
 					near[tile] = true
 		along += length
+	# **Nothing across the water** (the review of Z): where the line starts in a river, the
+	# band reaches over it onto the far bank — a patch of wood nobody needs. A piece of the
+	# band is kept only if it touches the line itself; one that does not lies beyond water.
 	var out: Array[Vector2i] = []
-	for tile: Variant in near.keys():
-		out.append(tile as Vector2i)
+	for piece: Array in _pieces(near):
+		var on_line: bool = false
+		for tile: Vector2i in piece:
+			if _near_line(Vector2(tile) + Vector2(0.5, 0.5), line, 0.75):
+				on_line = true
+				break
+		if on_line:
+			out.append_array(piece)
+		else:
+			report.append("closure band: %d tiles beyond the water dropped" % piece.size())
 	out.sort_custom(func(p: Vector2i, q: Vector2i) -> bool:
 		return p.y < q.y or (p.y == q.y and p.x < q.x))
 	return out
+
+
+## The band's tiles in touching pieces, in row order.
+static func _pieces(tiles: Dictionary) -> Array:
+	var left: Dictionary = tiles.duplicate()
+	var ordered: Array = tiles.keys()
+	ordered.sort_custom(func(p: Vector2i, q: Vector2i) -> bool:
+		return p.y < q.y or (p.y == q.y and p.x < q.x))
+	var pieces: Array = []
+	for start: Variant in ordered:
+		if not left.has(start):
+			continue
+		left.erase(start)
+		var piece: Array[Vector2i] = [start as Vector2i]
+		var head: int = 0
+		while head < piece.size():
+			for step: Vector2i in Navigation.DIRECTIONS:
+				var next: Vector2i = piece[head] + step
+				if left.has(next):
+					left.erase(next)
+					piece.append(next)
+			head += 1
+		pieces.append(piece)
+	return pieces
+
+
+static func _near_line(at: Vector2, line: Array[Vector2], within: float) -> bool:
+	for leg: int in line.size() - 1:
+		if at.distance_to(Geometry2D.get_closest_point_to_segment(at, line[leg], line[leg + 1])) <= within:
+			return true
+	return false
 
 
 func _close(tile: Vector2i) -> void:

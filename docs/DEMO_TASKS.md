@@ -249,6 +249,12 @@ none of the four states' lines would make sense in another state.
 > the Cinderworks' forty lines by state** after all (Q6's), and C4 then deletes the old
 > lines they replace. It starts from what T1 records: *the works was built with the wood
 > of the forest the village stood in, and that is why Brindle was destroyed.*
+>
+> **Two lines to look at with the start zone in mind** (the review of Z, 2026-10-08): Wren's
+> *ask_watched* sends the player to Saltmarch, which he cannot reach in the demo; Bram's
+> *remonte la route et passe la rivière* (`content/cast.fr.json`) has two roads north out
+> of Brindle, and the one to the north-west ends at the fallen bridge — the way on is the
+> footbridge to the east.
 
 ### P3 · Abandonment is absence
 
@@ -3099,7 +3105,7 @@ the Forges' gate and its yard, and none of Harrowgate, the Scierie, the castle, 
 Champs, the Muster or Saltmarch; the same file without its closures reaches them all; a
 test that walks beyond the zone prints `OFF` rather than failing.
 
-> **Built 2026-10-08.** `content/bake_brief.json` `closures`: the bridge, and the two woods
+> **Built 2026-10-08** (its numbers as first built; Z4 changed two of them). `content/bake_brief.json` `closures`: the bridge, and the two woods
 > as lines in his metres whose band's half width wanders between 6 and 9 m. The bake
 > (`RegionBake._closures`, last of all) writes them beside the rows — 7 tiles of his deck
 > over the river, 1,014 and 461 tiles of wood, and the 16 and 8 road tiles where a road
@@ -3124,7 +3130,8 @@ every closed tile and an edge that wanders; his fallen logs across each road whe
 enters a wood. **Check:** every closed tile is drawn (`test_bake`'s rule, widened to
 thicket); frames of each closure from inside the zone.
 
-> **Built 2026-10-08.** `World3d._break_closed_bridges`: his `PontBrindle` stands with its
+> **Built 2026-10-08** (the woods planted again in Z4, after the review — see there).
+> `World3d._break_closed_bridges`: his `PontBrindle` stands with its
 > abutments, bearings, trestles and piles, its deck, girders and rails not drawn — nodes of
 > the copy made invisible, his scene untouched — and no walker is seated on a deck that is
 > not there. `_build_closures` plants every wood tile with his firs, spruces, pines and a
@@ -3159,6 +3166,50 @@ passer.* **Check:** a test for each; frames.
 
 Both worlds green; the opening photographed in both languages; a fresh-eyes review walks
 the zone's edge; `CLAUDE.md`, V3 and his brother's page.
+
+> **Built 2026-10-08.** Both worlds green, 847 tests; the opening photographed in both
+> languages, 51 frames each, 34–36 the zone's edge. A fresh-eyes review walked it and
+> found **no way out in play**: the mover's own per-axis steps, the fight's moves and
+> placements, the hail, resting and dying, an old save (refused: the save's key hashes
+> `region.json`) — only the debug tools put the player outside. Its findings, and what
+> became of them:
+>
+> 1. **The woods cost 54 million triangles, never culled.** Measured in the window: 15–16
+>    frames a second where the game ran at 132–165 without them, and 284 million
+>    primitives a frame. Planted again: no birch (37,194 triangles) and no fern; young firs
+>    and spruces of about a thousand as the undergrowth; his hazels (14,160) only on the
+>    edge that faces open ground; nothing low casting a shadow; the instances cut into
+>    squares of 16 tiles, so a square off the screen is not drawn. **Now 113–151 frames a
+>    second, against 132–165 without the woods**, and 1.9–17 million primitives against
+>    1.1–15.6. 1,381 trees in 343 MultiMeshes. The Windows machine is still the unknown.
+> 2. **Logs and a boulder on walkable ground, logs under the crowns.** Laid again on the
+>    road's closed end, square across the way the road runs, with no tall tree beside them.
+> 3. **The check that nobody stands in a closure could not fail**: the world moves people,
+>    fires and papers off closed ground before a test asks. It reads the anchors before
+>    anything moves them now — and `test_anchors` already refused any anchor off open
+>    ground, closures included.
+> 4. **The walkable world's debt spoke of the zone**: read on the open world, it says 82 %
+>    (71,515 of 86,993) — his rivers' debt, as it was.
+> 5. **Checks that left with the open world**: two about the zone instead —
+>    `test_the_demo_is_whole_inside_the_zone` (everything the content stands in Brindle and
+>    the Forges can be walked to) and `test_a_fire_you_can_rest_at_puts_you_back_inside`.
+> 6. **`tools/measure_routes.gd` crashed and `tools/map_criteria.gd` failed** on the closed
+>    world: both read the open world. Criteria 3, 5 and 6 fail there as before group Z —
+>    the open world is the map from before it, and they are the 2D map's rules.
+> 7. **The king's straight-line test still said ok**: it reads the open world and prints
+>    `OFF`.
+> 8. **The HUD counts the tiles to Blackcairn**, which the demo cannot reach: Yannick's to
+>    decide.
+> 9. **Two lines send the player beyond the zone**: noted under P2.
+> 10. **Frame 36 hid the player behind a fir**: taken at (257,318).
+> 11. **Weak checks**: the edge test finds its tiles from the closures and the walk from the
+>     cemetery, not from coordinates.
+> 12. **Wood across the water**: the bake keeps only the pieces of a band that touch its
+>     line — 22 tiles dropped on Brindle's bank, 5 on the far bank. **The zone is 9,997
+>     tiles.**
+> 13. **Docs**: the counts, this note, his brother's page.
+> 14. **Words**: *Les arbres sont trop serrés pour passer.*; *The bridge has collapsed.*;
+>     *The trees are too thick to get through.*
 
 ---
 

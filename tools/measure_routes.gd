@@ -12,6 +12,10 @@ extends SceneTree
 ## unseen, the attuned wild somewhere between.
 
 func _initialize() -> void:
+	# The walk to the castle crosses the start zone's edge (group Z), so it is measured on
+	# the open world — the map as it will be the day the zone opens.
+	Region.walking_the_open_world = true
+	print("(on the open world: in play the start zone closes the way to the castle — group Z)")
 	_report("the King's Road", Region.road_waypoints(), false)
 	_report("the wild", _wild_line(), false)
 	if not Region.TERRAIN_SLOWS_YOU:

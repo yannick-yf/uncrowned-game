@@ -49,6 +49,10 @@ func _band(centre: Vector2i, half: int) -> Dictionary:
 
 
 func _init() -> void:
+	# The criteria are about the whole map, so they read the open world (group Z): in play
+	# the start zone closes the way to everything beyond Brindle and the Forges.
+	Region.walking_the_open_world = true
+	print("(on the open world: in play the start zone closes it — group Z)")
 	var region: Region = Region.build_overworld()
 	print("MAP_SPEC section 9 — the twelve\n")
 

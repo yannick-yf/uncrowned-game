@@ -117,6 +117,6 @@ for LANG_ID in $LANGS; do
   # north of the Forges, the wood west of Brindle — each with its line.
   shoot 34_zone_bridge play UNCROWNED_AT=268,278
   shoot 35_zone_wood play UNCROWNED_AT=313,185
-  shoot 36_zone_west play UNCROWNED_AT=256,318
+  shoot 36_zone_west play UNCROWNED_AT=257,318
 done
 echo "frames in $OUT"

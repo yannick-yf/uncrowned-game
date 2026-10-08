@@ -110,6 +110,9 @@ func test_the_walkable_world_is_one_piece() -> void:
 	# Not literally — the map has islands of grass inside walls that nobody can
 	# reach and nobody needs to. What matters is that the part you can reach is
 	# most of the passable map, so nothing important is stranded in a pocket.
+	# On the open world (the review of Z): in play the start zone is most of what is
+	# not reachable, on purpose, and the debt below is about his rivers.
+	walk_the_open_world("most of the passable map is one piece")
 	var region: Region = _region()
 	var walkable: Dictionary = _the_world_you_can_walk()
 	var passable: int = 0

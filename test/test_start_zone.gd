@@ -56,30 +56,103 @@ func test_nothing_beyond_the_zone_can_be_walked_to() -> void:
 
 
 ## **Nobody stands in a closure** (Z3): not a person, a fire, a stall, a paper, a find, a
-## pack. A man in a wood would be a conversation that cannot be had.
+## hail's ground, a pack — each checked where its anchor puts it, **before anything nudges
+## it** (the review of Z): the cast, the fires and the papers are moved off ground nobody can
+## stand on when the world is built, so asking where they ended up would always pass.
+## `test_anchors` refuses any anchor off open ground; this names the closure it is in.
 func test_nobody_stands_where_the_zone_is_closed() -> void:
 	if not Places.baked():
 		off("the start zone is the baked world's (group Z)")
 		return
 	var region: Region = Region.build_overworld()
+	var places: Places = Places.shared()
+	var anchors: Array = []
+	for id: StringName in places.cast_ids():
+		anchors.append(["cast:%s" % id, places.cast_anchor(id)])
+	for anchor: Dictionary in places.strangers():
+		anchors.append(["a stranger", anchor])
+	for anchor: Dictionary in places.campfires():
+		anchors.append(["a fire", anchor])
+	for anchor: Dictionary in places.stalls():
+		anchors.append(["a stall", anchor])
+	for fact: StringName in DocumentRules.facts():
+		anchors.append(["the papers %s" % fact, places.document(fact)])
+	for anchor: Dictionary in places.hail_anchors():
+		anchors.append(["a hail", anchor])
+	for pack: Dictionary in places.wild():
+		anchors.append(["a pack", pack["anchor"]])
+	for find: Dictionary in places.finds():
+		anchors.append(["the find %s" % find["id"], find["anchor"]])
+	for row: Array in anchors:
+		var at: Vector2i = region.resolve(row[1] as Dictionary)
+		assert_eq(region.closure_at(at), &"", "%s at %s is not in a closure" % [row[0], at])
+	assert_true(anchors.size() > 40, "%d anchors checked" % anchors.size())
+
+
+## **What the demo needs is a walk away** (the review of Z): everything the content stands
+## in Brindle and the Forges — people, fires, stalls, papers, the find on a grave, the
+## hail's ground — can be walked to from the cemetery. The claims about the whole map moved
+## to the open world; these are the ones about the zone.
+func test_the_demo_is_whole_inside_the_zone() -> void:
+	if not Places.baked():
+		off("the start zone is the baked world's (group Z)")
+		return
+	var region: Region = Region.build_overworld()
+	var zone: Dictionary = _zone(region)
+	var places: Places = Places.shared()
+	var anchors: Array = []
+	for id: StringName in places.cast_ids():
+		anchors.append(["cast:%s" % id, places.cast_anchor(id)])
+	for anchor: Dictionary in places.strangers() + places.campfires() + places.stalls() + places.hail_anchors():
+		anchors.append(["%s" % Places.describe(anchor), anchor])
+	for fact: StringName in DocumentRules.facts():
+		anchors.append(["the papers %s" % fact, places.document(fact)])
+	for find: Dictionary in places.finds():
+		anchors.append(["the find %s" % find["id"], find["anchor"]])
 	var checked: int = 0
-	for npc: Npc in Cast.shared().named():
-		if npc.zone != WorldState.OVERWORLD:
+	for row: Array in anchors:
+		var at: Vector2i = region.resolve(row[1] as Dictionary)
+		if not (region.zone_at(at) in [&"brindle", &"cinderworks"]):
 			continue
-		assert_eq(region.closure_at(npc.tile), &"", "%s does not stand in %s" % [npc.id, region.closure_at(npc.tile)])
 		checked += 1
+		assert_true(_beside(zone, at), "%s at %s can be walked to from the cemetery" % [row[0], at])
+	assert_true(checked >= 15, "%d of the demo's people and things checked" % checked)
+
+
+## **A fire you can rest at puts you back inside** (the review of Z): you rest at the first
+## fire within `RecoveryRules.FIRE_REACH` of where you stand, and dying puts you a tile
+## south of it. So every fire within reach of the zone must give back a tile of the zone —
+## a fire across the river within reach of its bank would be a door out.
+func test_a_fire_you_can_rest_at_puts_you_back_inside() -> void:
+	if not Places.baked():
+		off("the start zone is the baked world's (group Z)")
+		return
+	var region: Region = Region.build_overworld()
+	var zone: Dictionary = _zone(region)
+	var usable: Dictionary = {}
 	for prop: Dictionary in region.props:
-		var kind: StringName = prop["kind"] as StringName
-		if kind in [&"campfire", &"stall"] or prop.has("fact"):
-			assert_eq(region.closure_at(prop["at"] as Vector2i), &"", "the %s at %s is not in a closure" % [kind, prop["at"]])
-			checked += 1
-	for find: Dictionary in Places.shared().finds():
-		var at: Vector2i = region.resolve(find["anchor"] as Dictionary)
-		assert_eq(region.closure_at(at), &"", "the find %s is not in a closure" % find["id"])
-	var wild := Wild.new()
-	for which: int in Wild.packs().size():
-		assert_eq(region.closure_at(wild.at(region, which)), &"", "pack %d does not stand in a closure" % which)
-	assert_true(checked > 20, "%d people and things checked" % checked)
+		if (prop["kind"] as StringName) != &"campfire":
+			continue
+		var at: Vector2i = prop["at"] as Vector2i
+		for dy: int in range(-4, 5):
+			for dx: int in range(-4, 5):
+				var tile: Vector2i = at + Vector2i(dx, dy)
+				if zone.has(tile):
+					var fire: Vector2i = region.nearest_campfire(tile, RecoveryRules.FIRE_REACH)
+					if fire != Region.NOWHERE:
+						usable[fire] = true
+	for fire: Variant in usable.keys():
+		var back: Vector2i = (fire as Vector2i) + Vector2i(0, 1)
+		assert_true(zone.has(back), "resting at the fire at %s puts you back at %s, inside" % [fire, back])
+	assert_true(usable.size() >= 3, "the zone has its fires: %d" % usable.size())
+
+
+func _beside(zone: Dictionary, at: Vector2i) -> bool:
+	for dy: int in range(-3, 4):
+		for dx: int in range(-3, 4):
+			if zone.has(at + Vector2i(dx, dy)):
+				return true
+	return false
 
 
 ## The closures are a layer over the world, not a rewrite of it: the same file without

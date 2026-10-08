@@ -649,18 +649,20 @@ Ta rivière, la mer et tes montagnes ferment déjà presque tout. Pour le reste,
 n'avons rien dessiné, nous avons seulement utilisé tes pièces :
 
 - **Le pont au nord de Brindle (`PontBrindle`)** : on ne montre pas son tablier, ses
-  poutres ni ses garde-corps. Ses culées et ses chevalets restent dans l'eau. On a
-  seulement rendu invisibles des nœuds de la copie : ta scène n'est pas modifiée.
+  poutres ni ses garde-corps. Ses culées (ses appuis sur les deux berges) et ses chevalets
+  dans l'eau restent debout. On a seulement rendu invisibles des nœuds de la copie : ta
+  scène n'est pas modifiée.
 - **Deux bois** : un autour des Forges (à l'ouest et au nord), un à l'ouest de Brindle.
-  Ils sont plantés avec tes sapins, tes épicéas, tes pins, quelques bouleaux, et surtout
-  tes noisetiers et tes fougères au pied, pour qu'on ne voie plus l'herbe. C'est la
-  différence avec tes bois, où l'on marche.
-- **Tes troncs couchés et un de tes rochers** barrent chaque route qui entre dans un de
-  ces bois.
+  Ils sont plantés avec tes sapins, tes épicéas et tes pins, avec de jeunes sapins au pied
+  pour qu'on ne voie plus l'herbe, et tes noisetiers en lisière. C'est la différence avec
+  tes bois, où l'on marche. Pas de bouleaux ni de fougères : ton bouleau fait 37 000
+  triangles, et le premier essai faisait tomber le jeu à 15 images par seconde.
+- **Trois de tes troncs couchés, en travers, et un de tes rochers** barrent chaque route
+  qui entre dans un de ces bois.
 
 Images : `docs/frames/zone/`.
 
 **Si tu veux faire mieux** : un vrai bras de rivière à la place d'un des bois (ton outil
 creuse le lit et peint les berges, nous ne savons pas le faire proprement), ou une pose de
-pont effondré. Quand la zone s'ouvrira, il suffit d'enlever une ligne dans nos données :
-ton pont réapparaît entier.
+pont effondré. Quand la zone s'ouvrira, il suffira d'enlever une ligne dans nos données
+et de refaire la carte (une commande) : ton pont réapparaîtra entier.

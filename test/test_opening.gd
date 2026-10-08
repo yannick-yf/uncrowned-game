@@ -225,6 +225,8 @@ func test_the_walk_from_the_graves_into_the_ruins_is_short() -> void:
 func test_the_king_is_still_reachable_from_the_first_minute() -> void:
 	# Pillar 1. Starting in the wood may not put the castle further away than
 	# "minutes, not hours", and the straight line is the number that says so.
+	# Suspended for the demo with the rest of pillar 1 (group Z, the review of Z).
+	walk_the_open_world("pillar 1, the castle minutes from where the player wakes")
 	var region: Region = _region()
 	var seconds: float = region.start_to_blackcairn_tiles() / 6.0
 	assert_true(seconds < 90.0,

@@ -309,8 +309,24 @@ func test_the_zone_edge_says_why_you_go_no_further() -> void:
 		return (play.get(&"_prompt") as Label).text
 	var bridge: String = Text.of(&"prompt.closed.bridge")
 	var wood: String = Text.of(&"prompt.closed.wood")
-	assert_true(String(said.call(Vector2i(268, 277))).contains(bridge), "at the bridge's end, the bridge")
-	assert_true(String(said.call(Vector2i(313, 185))).contains(wood), "at the logs across the road north, the wood")
+	# Where the player can stand nearest each closure, found in the world's terms: the walk
+	# from the cemetery, and the tile of it closest to the bridge's deck, to a road's end in
+	# the wood round the Forges.
+	var region: Region = world.region()
+	var zone: Dictionary = Navigation.reachable(region, Places.shared().point(&"cemetery"))
+	for closure: Dictionary in region.closures:
+		var aim: Array = (closure.get("roads", []) as Array) if String(closure["kind"]) == "wood" \
+			else (closure["tiles"] as Array)
+		if String(closure["id"]) == "bois_de_brindle" or aim.is_empty():
+			continue
+		var target: Vector2i = aim[0] as Vector2i
+		var best: Vector2i = Region.NOWHERE
+		for tile: Variant in zone.keys():
+			if best == Region.NOWHERE or Vector2(tile as Vector2i).distance_to(Vector2(target)) \
+					< Vector2(best).distance_to(Vector2(target)):
+				best = tile as Vector2i
+		var line: String = bridge if String(closure["kind"]) == "bridge" else wood
+		assert_true(String(said.call(best)).contains(line), "beside %s, at %s: '%s'" % [closure["id"], best, line])
 	var brindle: String = String(said.call(Places.shared().centre(&"brindle")))
 	assert_false(brindle.contains(bridge) or brindle.contains(wood), "in Brindle, neither: '%s'" % brindle)
 	play.free()

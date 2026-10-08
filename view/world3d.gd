@@ -3270,14 +3270,24 @@ static func _bridge_stands(piece: String) -> bool:
 
 
 ## **The start zone's woods** (Z2): every tile of a wood closure planted with his trees —
-## his firs mostly, spruces, pines, a birch now and then — and his hazels and ferns under
-## them, thickest along the edge; and where one of his roads runs into a wood, his fallen
-## logs across it, so the road visibly ends rather than walking into a wall. All of it his
-## library's pieces, drawn as one MultiMesh a mesh so a thousand trees are a few draws.
+## his firs mostly, spruces, pines — and young firs and spruces under them, so no grass
+## shows; his hazels along the edge that faces open ground; and where one of his roads runs
+## into a wood, his fallen logs across it, so the road visibly ends rather than walking into
+## a wall. All of it his library's pieces.
+##
+## **What it costs to draw** (the review of Z, measured): the first planting put a hazel —
+## 14,160 triangles — two to a tile, ferns, and a birch of 37,194 now and then, about 54
+## million triangles in one MultiMesh a piece, never culled and casting shadows: 15 frames a
+## second where the game ran at 130 to 165. So: no birch and no fern, young conifers of
+## about a thousand triangles as the undergrowth, hazels only on the edge, nothing low
+## casting a shadow, and the instances cut into squares of `WOOD_CELL` tiles so what is off
+## the screen is not drawn.
 const WOOD_TREES: Array[String] = ["trees/fir_mature.tscn", "trees/fir_mature.tscn",
 	"trees/spruce_slender.tscn", "trees/fir_mature.tscn", "trees/spruce_slender.tscn",
-	"trees/pine_coastal.tscn", "trees/fir_mature.tscn", "trees/birch_twin.tscn"]
-const WOOD_UNDER: Array[String] = ["plants/shrub_hazel.tscn", "plants/fern_fan.tscn"]
+	"trees/pine_coastal.tscn"]
+const WOOD_YOUNG: Array[String] = ["trees/fir_mature.tscn", "trees/spruce_slender.tscn"]
+const WOOD_EDGE: String = "plants/shrub_hazel.tscn"
+const WOOD_CELL: int = 16
 
 
 func _build_closures() -> void:
@@ -3286,10 +3296,9 @@ func _build_closures() -> void:
 	var woods := Node3D.new()
 	woods.name = "Closures"
 	add_child(woods)
-	var trees: Dictionary = {}
-	var under: Dictionary = {}
-	var logs: Array[Transform3D] = []
-	var stones: Array[Transform3D] = []
+	# path -> cell -> transforms; and which paths cast a shadow.
+	var planted: Dictionary = {}
+	var shadows: Dictionary = {}
 	for closure: Dictionary in _region.closures:
 		if String(closure["kind"]) != "wood":
 			continue
@@ -3299,60 +3308,107 @@ func _build_closures() -> void:
 		var roads: Dictionary = {}
 		for tile: Vector2i in (closure.get("roads", []) as Array):
 			roads[tile] = true
+		# The ground kept clear of tall trees round each road's end, so his logs are seen:
+		# the road's edge tiles and the closed road beside them.
+		var kept_low: Dictionary = {}
+		for tile: Vector2i in roads.keys():
+			for dy: int in range(-1, 2):
+				for dx: int in range(-1, 2):
+					kept_low[tile + Vector2i(dx, dy)] = true
 		for tile: Vector2i in (closure["tiles"] as Array):
 			var h: int = Art.scatter_hash(tile.x, tile.y)
-			var edge: bool = _wood_edge(tile, inside)
+			var centre: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
 			if roads.has(tile):
-				closure_planted[tile] = true
 				continue
-			var jitter := Vector2(float(h % 9) - 4.0, float((h / 9) % 9) - 4.0) * 0.06
-			var size: float = 0.85 + 0.4 * float((h / 81) % 10) / 10.0
-			var turn := Basis(Vector3.UP, float(h) * 0.37).scaled(Vector3.ONE * size)
-			var path: String = WOOD_TREES[h % WOOD_TREES.size()]
-			# Along the edge every other tree gives way to a hazel, so the wood's face is a
-			# low green fringe in front of the dark firs, as his own woods meet a meadow.
-			if edge and h % 3 == 0:
-				path = WOOD_UNDER[0]
-				turn = Basis(Vector3.UP, float(h) * 0.37).scaled(Vector3.ONE * 1.4)
-			var placed: Array = trees.get(path, []) as Array
-			placed.append(Transform3D(turn, _feet_of(Vector2(tile) + Vector2(0.5, 0.5) + jitter)))
-			trees[path] = placed
+			if not kept_low.has(tile):
+				var jitter := Vector2(float(h % 9) - 4.0, float((h / 9) % 9) - 4.0) * 0.06
+				var size: float = 0.85 + 0.4 * float((h / 81) % 10) / 10.0
+				_plant_at(planted, WOOD_TREES[h % WOOD_TREES.size()], tile, Transform3D(
+					Basis(Vector3.UP, float(h) * 0.37).scaled(Vector3.ONE * size), _feet_of(centre + jitter)))
+				shadows[WOOD_TREES[h % WOOD_TREES.size()]] = true
+			# **The undergrowth is what says you cannot pass**: his own woods round Brindle
+			# are walkable, trunks over grass, and these are the same trees. So every tile
+			# of a closure is filled to the ground with young firs and spruces.
+			var young: String = WOOD_YOUNG[(h / 5) % WOOD_YOUNG.size()]
+			_plant_at(planted, young, tile, Transform3D(Basis(Vector3.UP, float(h) * 1.3)
+				.scaled(Vector3.ONE * (0.42 + 0.06 * float((h / 13) % 4))),
+				_feet_of(centre + Vector2(0.28 - 0.56 * float(h % 2), 0.25 - 0.5 * float((h / 3) % 2)))), "young")
+			# Along the edge that faces open ground, his hazels: the wood's low green face.
+			if _wood_edge(tile, inside):
+				_plant_at(planted, WOOD_EDGE, tile, Transform3D(Basis(Vector3.UP, float(h) * 0.71)
+					.scaled(Vector3.ONE * 1.6), _feet_of(centre)))
 			closure_planted[tile] = true
-			# **The undergrowth is what says you cannot pass**: his own woods round Brindle are
-			# walkable, trunks over grass, and these are the same trees. So every tile of a
-			# closure is filled to the ground with his hazels, two to a tile, and a fern —
-			# where you see grass between the trees you walk, where you see none you do not.
-			for k: int in 2:
-				var growth: Array = under.get(WOOD_UNDER[0], []) as Array
-				var spot := Vector2(0.25 + 0.5 * float(k), 0.25 + 0.5 * float((h / (3 + k)) % 2))
-				growth.append(Transform3D(Basis(Vector3.UP, float(h) * 1.3 + float(k) * 2.1)
-					.scaled(Vector3.ONE * (1.5 + 0.1 * float((h / 11 + k) % 4))), _feet_of(Vector2(tile) + spot)))
-				under[WOOD_UNDER[0]] = growth
-			if h % 2 == 0:
-				var ferns: Array = under.get(WOOD_UNDER[1], []) as Array
-				ferns.append(Transform3D(Basis(Vector3.UP, float(h) * 0.7).scaled(Vector3.ONE * 1.3),
-					_feet_of(Vector2(tile) + Vector2(0.7, 0.3))))
-				under[WOOD_UNDER[1]] = ferns
-		for group: Array in _clumps(roads.keys()):
-			var centre := Vector2.ZERO
-			for tile: Vector2i in group:
-				centre += Vector2(tile) + Vector2(0.5, 0.5)
-			centre /= float(group.size())
-			var h: int = Art.scatter_hash(int(centre.x * 3.0), int(centre.y * 3.0))
-			for i: int in 3:
-				var spot: Vector2 = centre + Vector2(float(i) - 1.0, float((h + i) % 3) - 1.0) * 0.55
-				logs.append(Transform3D(Basis(Vector3.UP, float(h % 628) / 100.0 + float(i) * 0.5)
-					.scaled(Vector3.ONE * 1.7), _feet_of(spot)))
-			stones.append(Transform3D(Basis(Vector3.UP, float(h)).scaled(Vector3.ONE * 0.6),
-				_feet_of(centre + Vector2(1.1, -0.6))))
-	for path: String in trees.keys():
-		closure_trees += (trees[path] as Array).size()
-		_plant_many(woods, _library_scene(path), trees[path] as Array, path.get_file().get_basename())
-	for path: String in under.keys():
-		_plant_many(woods, _library_scene(path), under[path] as Array, path.get_file().get_basename())
-	closure_logs = logs.size()
-	_plant_many(woods, load(HIS_LOG) as PackedScene if ResourceLoader.exists(HIS_LOG) else null, logs, "fallen_log")
-	_plant_many(woods, load(HIS_STONE) as PackedScene if ResourceLoader.exists(HIS_STONE) else null, stones, "boulder")
+		_lay_logs(planted, inside, roads)
+	for key: String in planted.keys():
+		var path: String = key.get_slice("|", 0)
+		var by_cell: Dictionary = planted[key] as Dictionary
+		var scene: PackedScene = _library_scene(path) if path.begins_with("trees/") or path.begins_with("plants/") \
+			else (load(path) as PackedScene if ResourceLoader.exists(path) else null)
+		for cell: Vector2i in by_cell.keys():
+			var where: Array = by_cell[cell] as Array
+			if path.begins_with("trees/") and key.get_slice("|", 1) == "":
+				closure_trees += where.size()
+			_plant_many(woods, scene, where, "%s%s_%d_%d" % [path.get_file().get_basename(), key.get_slice("|", 1), cell.x, cell.y],
+				shadows.has(path) and key.get_slice("|", 1) == "")
+
+
+## One placement of a piece, filed by piece and by square of the map: what `_plant_many`
+## draws as one MultiMesh, so a square off the screen costs nothing.
+func _plant_at(planted: Dictionary, path: String, tile: Vector2i, where: Transform3D, kind: String = "") -> void:
+	var key: String = "%s|%s" % [path, kind]
+	var by_cell: Dictionary = planted.get(key, {}) as Dictionary
+	var cell := Vector2i(floori(float(tile.x) / float(WOOD_CELL)), floori(float(tile.y) / float(WOOD_CELL)))
+	var list: Array = by_cell.get(cell, []) as Array
+	list.append(where)
+	by_cell[cell] = list
+	planted[key] = by_cell
+
+
+## **His logs across a road where it runs into a wood** (Z2, laid again after the review):
+## at each end of a closed road, three logs lie across it — turned square to the way the
+## road runs, which is from the open ground into the wood — on the closed tiles, and one of
+## his boulders beside them where the ground is closed too. Nothing of it on walkable
+## ground: a log a player walks through is the invisible wall turned inside out.
+func _lay_logs(planted: Dictionary, inside: Dictionary, roads: Dictionary) -> void:
+	for group: Array in _clumps(roads.keys()):
+		var centre := Vector2.ZERO
+		var open_side := Vector2.ZERO
+		var open_count: int = 0
+		for tile: Vector2i in group:
+			centre += Vector2(tile) + Vector2(0.5, 0.5)
+			closure_planted[tile] = true
+			for step: Vector2i in Navigation.DIRECTIONS:
+				var beside: Vector2i = tile + step
+				if not inside.has(beside) and _region.in_bounds(beside) and _region.is_passable(beside):
+					open_side += Vector2(beside) + Vector2(0.5, 0.5)
+					open_count += 1
+		centre /= float(group.size())
+		if open_count == 0:
+			continue
+		# Into the wood: from the open ground the road comes from, through its closed end.
+		var inward: Vector2 = (centre - open_side / float(open_count)).normalized()
+		var across: Vector2 = Vector2(-inward.y, inward.x)
+		# His log is long along its X; turned so X lies across the road.
+		var turn: float = atan2(-across.y, across.x)
+		var h: int = Art.scatter_hash(int(centre.x * 3.0), int(centre.y * 3.0))
+		var spots: Array[Vector2] = [centre + inward * 0.2, centre + inward * 0.75 + across * 0.25,
+			centre + inward * 0.45 - across * 0.35]
+		for i: int in spots.size():
+			var spot: Vector2 = spots[i]
+			if _region.closure_at(Vector2i(spot.floor())) == &"":
+				spot = centre + inward * 0.5
+			var lean: float = deg_to_rad(float((h / (i + 1)) % 15) - 7.0)
+			var where := Transform3D(Basis(Vector3.UP, turn + lean).scaled(Vector3.ONE * 1.6), _feet_of(spot))
+			if i == 1:
+				where.origin.y += 0.35
+			_plant_at(planted, HIS_LOG, Vector2i(spot.floor()), where)
+			closure_logs += 1
+		for side: float in [1.0, -1.0]:
+			var rock: Vector2 = centre + inward * 0.6 + across * side * 1.7
+			if _region.closure_at(Vector2i(rock.floor())) != &"":
+				_plant_at(planted, HIS_STONE, Vector2i(rock.floor()), Transform3D(
+					Basis(Vector3.UP, float(h)).scaled(Vector3.ONE * 0.6), _feet_of(rock)))
+				break
 
 
 func _library_scene(path: String) -> PackedScene:
@@ -3397,7 +3453,7 @@ static func _clumps(tiles: Array) -> Array:
 ## One of his pieces, many times: a MultiMeshInstance3D for each mesh in it, each mesh
 ## kept where his scene puts it and wearing his material. The piece's own scene is only
 ## read, never added.
-func _plant_many(parent: Node3D, scene: PackedScene, where: Array, label: String) -> void:
+func _plant_many(parent: Node3D, scene: PackedScene, where: Array, label: String, shadows: bool = true) -> void:
 	if scene == null or where.is_empty():
 		return
 	var template: Node3D = scene.instantiate() as Node3D
@@ -3422,7 +3478,7 @@ func _plant_many(parent: Node3D, scene: PackedScene, where: Array, label: String
 		drawn.multimesh = many
 		drawn.material_override = part.material_override if part.material_override != null \
 			else part.get_surface_override_material(0)
-		drawn.cast_shadow = part.cast_shadow
+		drawn.cast_shadow = part.cast_shadow if shadows else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		parent.add_child(drawn)
 	template.free()
 
