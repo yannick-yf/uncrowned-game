@@ -65,6 +65,17 @@ func offs() -> PackedStringArray:
 	return _offs
 
 
+## **This test walks the open world** (group Z): the map without the start zone's
+## closures, for a claim about the whole map — every fire reachable, the walk to
+## Blackcairn. From here to the end of the test `Region.build_overworld()` is the open
+## world, and a game built now is played on it; the runner turns it off after the test.
+## On the baked world the claim prints OFF, because in play the zone closes it.
+func walk_the_open_world(claim: String) -> void:
+	Region.walking_the_open_world = true
+	if Places.baked():
+		off("%s — checked on the open world; in play the start zone closes it (group Z)" % claim)
+
+
 func assert_true(condition: bool, message: String = "") -> void:
 	_assertions += 1
 	if not condition:

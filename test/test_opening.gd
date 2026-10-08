@@ -167,7 +167,9 @@ func test_every_shortest_way_out_of_the_graves_walks_into_the_hail() -> void:
 	# ground is dammed and the walk must come out longer, or not at all.
 	var region: Region = _region()
 	var hail: Array[Dictionary] = _the_hail()
-	var goals: Array[Vector2i] = [Region.BRINDLE, Region.BRIDGE]
+	# Brindle, and the way on: the Forges on his map, where the start zone (group Z) keeps
+	# every walk out of the graves — the King's Road's bridge is beyond it.
+	var goals: Array[Vector2i] = [Region.BRINDLE, Places.shared().point(&"cinderworks_gate")]
 	if not Places.baked():
 		# On his map the works lie north through the village; on the 2D map the graves
 		# are west of Brindle, on the way to the bridge, and the walk there never enters it.
@@ -233,6 +235,7 @@ func test_the_king_is_still_reachable_from_the_first_minute() -> void:
 func test_every_zone_is_still_reachable_from_where_the_player_wakes() -> void:
 	# The rule attached to the thicket: it may never be the only thing between the
 	# player and anything. Eight zones, walked from where you wake, over ground.
+	walk_the_open_world("every place reachable from where the player wakes")
 	var region: Region = _region()
 	var open: Dictionary = _reachable(region, where_the_game_starts(), [] as Array[Vector2i])
 	for zone: StringName in Region.ZONE_ORDER:

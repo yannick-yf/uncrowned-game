@@ -43,6 +43,7 @@ func _reach(region: Region, from: Vector2i, dammed: Dictionary) -> Dictionary:
 func test_criterion_1_every_zone_is_reachable_over_ground() -> void:
 	# Checked from where the player wakes rather than from Brindle, which also holds
 	# the rule that thicket may never be the only thing between the player and anything.
+	walk_the_open_world("criterion 1, every place reachable over ground")
 	var region: Region = _region()
 	var open: Dictionary = _reach(region, where_the_game_starts(), {})
 	for zone: StringName in Region.ZONE_ORDER:

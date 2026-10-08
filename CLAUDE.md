@@ -292,17 +292,22 @@ that says how a piece is meant to be used, and the first yard was built without 
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
 commit checks. The current baked run prints **six** DEBT lines — seven debts, one test owing two; the
 run's last line counts debts — for **four** claims, all the map's and the brief's (five
-until T2 deleted the clearing and its ring, 2026-09-29), and three OFF lines (four until
-S1 took Attunement and its two terrain tests away; the third since O12 is the 2D map's
-road into Brindle, which the baked world does not claim). **Three more were things his
+until T2 deleted the clearing and its ring, 2026-09-29), and **twenty-one** OFF lines:
+three of the switches and the 2D map (four until S1 took Attunement and its two terrain
+tests away; the third since O12 is the 2D map's road into Brindle, which the baked world
+does not claim), and **eighteen since group Z** (2026-10-08) — a claim about the whole map,
+every fire reachable, the walk to Blackcairn, checked on the open world
+(`TestCase.walk_the_open_world`, `Region.open_world()`) because in play the start zone
+closes it. **Three more were things his
 brother had not drawn** — a blow, a beast, a grave — and since the art rule was rewritten
 on 2026-09-30 they are watches and not debts: nothing is owed. The procedural world
 prints **forty-two** DEBT lines (forty-three debts) that say the works' furnaces, its
 yard, the wolf packs — where they stand, what they see, how they wander, how they are
 surprised and chosen, where they may not go (eleven since groups R and N) —
-and the opening's last two stages stand on his map and not on the 2D one, and five OFF lines — the two switches', one saying the 2D map's shore is sand and
-not his cliffs, and two claims about the hail's ground that only his map's layout can
-make.
+and the opening's last two stages stand on his map and not on the 2D one, and **twelve** OFF lines — the two switches', one saying the 2D map's shore is sand and
+not his cliffs, two claims about the hail's ground that only his map's layout can
+make, and since group Z four of the bake's claims read on the open world and the three
+start-zone tests, which are the baked world's.
 
 ### Committing — read this before your first `git commit`
 

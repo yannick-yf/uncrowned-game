@@ -21,6 +21,14 @@ func before_each() -> void:
 	_world = _sim.store(&"world") as WorldState
 	_cast = _sim.store(&"cast") as Cast
 	_ticked = _sim.store(&"worldtick") as WorldTick
+
+
+## **A walk out of the start zone is played on the open world** (group Z): these walks go
+## to Harrowgate, the Muster and Blackcairn, which the zone closes in play. The game this
+## test plays is built again on the map without the closures.
+func _on_the_open_world(claim: String) -> void:
+	walk_the_open_world(claim)
+	before_each()
 # ------------------------------------------------------------------ walking ---
 
 func _walk(dir: Vector2i, quarter_seconds: int) -> void:
@@ -116,12 +124,14 @@ func _reachable_from(region: Region, start: Vector2i) -> Dictionary:
 # ------------------------------------------------------- the map holds together ---
 
 func test_every_zone_is_reachable_on_foot_from_brindle() -> void:
+	_on_the_open_world("every place reachable on foot from Brindle")
 	var seen: Dictionary = _reachable_from(_world.region(), Region.BRINDLE)
 	for id: StringName in Region.zone_sites().keys():
 		assert_true(seen.has(Region.zone_sites()[id]), "%s is reachable from Brindle" % id)
 
 
 func test_landmarks_never_close_the_road() -> void:
+	_on_the_open_world("no building across the King's Road")
 	assert_true(_reachable_from(_world.region(), Region.BRINDLE).has(Region.BLACKCAIRN),
 		"a building was put through the King's Road")
 
@@ -156,6 +166,7 @@ func _clear_the_packs() -> void:
 
 
 func test_walking_the_kings_road_costs_nothing() -> void:
+	_on_the_open_world("the King's Road is safe to walk")
 	# Start on the road rather than wherever the game happens to begin. This used to
 	# lean on the player starting in Brindle; the opening now starts them in the
 	# wood, and a test about whether *the road* is safe should not also be a test
@@ -185,6 +196,7 @@ func test_walking_the_kings_road_costs_nothing() -> void:
 ## map has stopped making its argument. Measured, not assumed: the same walk both
 ## ways, in seconds. `tools/measure_routes.gd` prints the same figures.
 func test_the_wild_costs_time_and_the_road_costs_none_of_it() -> void:
+	_on_the_open_world("the road and the wild to Blackcairn")
 	_clear_the_packs()
 	var road_seconds: float = _seconds_to_cross(Region.road_waypoints())
 	var road_blood: int = _blood_price(WorldState.MAX_HP, 0)
@@ -248,6 +260,7 @@ func _wild_line() -> Array[Vector2i]:
 # ------------------------------------------------------------ end to end ---
 
 func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
+	_on_the_open_world("the walk to the king replays")
 	for node: Vector2i in Region.road_route():
 		assert_true(_walk_to(node, _at_pace(120.0)), "walked the road to %s" % node)
 	assert_eq(_world.deaths, 0, "and arrived alive, because the road is safe")
@@ -266,6 +279,7 @@ func test_a_whole_phase_0_run_replays_identically_from_its_log() -> void:
 
 
 func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
+	_on_the_open_world("a theft in Harrowgate replays")
 	# The architectural proof for stage 3. Reputation and rumour are stores like
 	# any other: nothing about them is remembered outside the log, so the same
 	# walk and the same keypress rebuild the same opinion of you in every town.
@@ -309,6 +323,7 @@ func test_a_theft_and_the_story_it_starts_replay_from_the_log() -> void:
 
 
 func test_the_whole_chain_walk_learn_expose_and_the_escort_drops() -> void:
+	_on_the_open_world("the chain through Harrowgate and the Muster")
 	# Somebody who notices things, because the chain goes through Ossa's Wits line.
 	_say(&"create_character", {"intelligence": 4})
 	assert_eq(_ticked.kings_escort(), 10, "before: ten guards stand between me and the king")
@@ -353,6 +368,7 @@ func test_the_world_moves_while_the_player_does_nothing() -> void:
 
 
 func test_the_whole_chain_replays_identically_from_its_log() -> void:
+	_on_the_open_world("the chain replays")
 	# Through Ossa's Wits line again, so this needs the same person the chain test
 	# makes. Creation is an ordinary event, so it replays with everything else —
 	# which is half of what this test is checking.

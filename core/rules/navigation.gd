@@ -202,6 +202,27 @@ static func _can_step(region: Region, tile: Vector2i, step: Vector2i) -> bool:
 
 
 
+## **Every tile a walker can reach from `from`**, by the same steps a path takes — the
+## start zone's check (group Z): one leak in its edge and the answer is the whole map.
+static func reachable(region: Region, from: Vector2i) -> Dictionary:
+	var seen: Dictionary = {}
+	if region == null or not region.is_passable(from):
+		return seen
+	seen[from] = true
+	var frontier: Array[Vector2i] = [from]
+	var head: int = 0
+	while head < frontier.size():
+		var tile: Vector2i = frontier[head]
+		head += 1
+		for step: Vector2i in DIRECTIONS:
+			var next: Vector2i = tile + step
+			if seen.has(next) or not region.in_bounds(next) or not _can_step(region, tile, step):
+				continue
+			seen[next] = true
+			frontier.append(next)
+	return seen
+
+
 static func _unwind(came_from: Dictionary, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 	var out: Array[Vector2i] = [to]
 	var tile: Vector2i = to

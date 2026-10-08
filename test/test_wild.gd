@@ -462,6 +462,9 @@ func test_pillar_one_is_whole_blackcairn_is_reachable_in_minute_one() -> void:
 	if not Places.baked():
 		debt("the packs are anchored to his map; the 2D one stands nothing there")
 		return
+	# **Suspended for the demo** (Yannick, 2026-10-08): the start zone keeps the player
+	# between Brindle and the Forges. Checked on the open world, for the day it opens.
+	walk_the_open_world("pillar 1, Blackcairn a walk from Brindle in minute one")
 	var region: Region = Region.build_overworld()
 	var from: Vector2i = Places.shared().centre(&"brindle")
 	var route: Array[Vector2i] = Navigation.path(region, from, Region.BLACKCAIRN, true)

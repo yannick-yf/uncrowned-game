@@ -3061,6 +3061,82 @@ Every screen in both languages; a fresh-eyes review; `CLAUDE.md`, V3.
 
 ---
 
+## Z — the start zone: Brindle and the Forges, closed (2026-10-08)
+
+> Yannick: the castle and the other villages are still being drawn, so the demo's player
+> must not reach them. As Breath of the Wild's Great Plateau, a **closed start zone** where
+> the tutorial is played and which can be opened later. It holds the cemetery, Brindle, the
+> tutorial, the wolves and the Forges, and nothing beyond — he first wrote *la Scierie*
+> and meant the Forges. The barrier must look natural, nothing is deleted, and there must
+> be no way out by any means.
+>
+> **His river already closes most of it**: north and west of Brindle's bank his river,
+> south the sea, east his mountains. What is open is his bridge north of Brindle (to
+> Harrowgate), the open grass west and north of the Forges (to Harrowgate and the
+> Scierie), and the bank west of Brindle (to the big river's mouth). A new arm of river was
+> weighed and left to his brother: his rivers are dug and their banks painted by his own
+> tool, and one drawn by us would sit on the ground. **His bridge without its deck, and two
+> dense woods of his own trees** — the wood round the Forges chosen from frames, the one
+> west of Brindle on his second look (*« afin que la zone du tuto soit encore plus
+> petite »*). Measured on the bake: **about 10,000 tiles, 4 ha**; the Forges' gate 56 s
+> from the cemetery, the farthest point 68 s. Plan and frames: the scratchpad's `zone/`.
+>
+> **This suspends, for the demo, the opening line of `CLAUDE.md`** — Blackcairn reachable
+> in minute one. Yannick, 2026-10-08: *« afin de faire quelque chose de super propre dans
+> une zone délimitée »*. Opening it later is one entry taken out of the brief; what opens
+> it **in play** must be a fact (invariant 4), never *the tutorial is done*. Two ideas,
+> not built: the Forges' workers repair the bridge once they are on your side; the trunks
+> across the north road are cleared for gold.
+
+### Z1 · The zone in the simulation
+
+The brief names the closures: `PontBrindle` (the deck of his bridge over water), and two
+woods (`bois_des_forges`, `bois_de_brindle`), each a band along a line. The bake writes
+them as **a layer of `region.json`** — the rows keep the open world — and `Region` applies
+them when it reads the file: the deck becomes water again, a wood becomes thicket. The 2D
+map has none. **Check:** from the cemetery a walk reaches Brindle, Bram's post, the wolves,
+the Forges' gate and its yard, and none of Harrowgate, the Scierie, the castle, the Grands
+Champs, the Muster or Saltmarch; the same file without its closures reaches them all; a
+test that walks beyond the zone prints `OFF` rather than failing.
+
+> **Built 2026-10-08.** `content/bake_brief.json` `closures`: the bridge, and the two woods
+> as lines in his metres whose band's half width wanders between 6 and 9 m. The bake
+> (`RegionBake._closures`, last of all) writes them beside the rows — 7 tiles of his deck
+> over the river, 1,014 and 461 tiles of wood, and the 16 and 8 road tiles where a road
+> runs in — each as one line of `x,y` pairs; `RegionBake.read` hands them to
+> `Region.close`, which shuts them and remembers which closure shuts each tile
+> (`closure_at`, for Z3). **The zone measures 9,975 tiles, 4 ha,** from the cemetery, by
+> `Navigation.reachable` — the steps a path takes. `test_start_zone`: what it holds, what
+> it does not, and the file without its closures reaching Harrowgate, Cairnwell and
+> Blackcairn. **Nineteen claims about the whole map** — every fire, stall and person
+> reachable, every bridge of his walkable, the coast's trail, the walk to the king, the
+> old chain through Harrowgate and the Muster — are checked on **the open world**
+> (`Region.open_world()`; `TestCase.walk_the_open_world`, which the runner turns off after
+> each test) and print `OFF`. The graves' hail is now checked on the walks to Brindle and to
+> the Forges, the zone's two ways on, instead of to the King's Road's bridge. Between Z1
+> and Z2 the woods are walls nobody draws: Z2 is the next commit.
+
+### Z2 · The zone on screen
+
+His bridge drawn without its span — his abutments and trestles kept, his deck, girders
+and rails hidden; the woods planted with his firs, spruces, pines and hazels, a tree on
+every closed tile and an edge that wanders; his fallen logs across each road where it
+enters a wood. **Check:** every closed tile is drawn (`test_bake`'s rule, widened to
+thicket); frames of each closure from inside the zone.
+
+### Z3 · The people, and the edge
+
+Nobody stands in a closure or walks into one — the bridge's guard, the walkers, the
+routines. At the edge, a line: *Le pont s'est effondré.* / *Le bois est trop serré pour
+passer.* **Check:** a test for each; frames.
+
+### Z4 · The tutorial end to end, frames, a review
+
+Both worlds green; the opening photographed in both languages; a fresh-eyes review walks
+the zone's edge; `CLAUDE.md`, V3 and his brother's page.
+
+---
+
 ## Later — known gaps, kept so they are not forgotten
 
 - **More than wolves in the wild** (the review of R): sight and wandering are content for

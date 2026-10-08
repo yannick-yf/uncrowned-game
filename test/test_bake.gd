@@ -107,17 +107,24 @@ func test_every_wall_on_his_map_is_something_you_can_see() -> void:
 		for dx: int in size.x:
 			for dy: int in size.y:
 				covered[at + Vector2i(dx, dy)] = true
+	# Thicket only where a closure's wood stands (group Z), which the window plants with
+	# his trees a tile at a time; anywhere else it is the ring nobody saw.
+	var planted: Dictionary = {}
+	for closure: Dictionary in region.closures:
+		if String(closure["kind"]) == "wood":
+			for tile: Vector2i in (closure["tiles"] as Array):
+				planted[tile] = true
 	var thicket: int = 0
 	var bare_walls: int = 0
 	for y: int in region.height:
 		for x: int in region.width:
 			var tile := Vector2i(x, y)
 			var terrain: Region.Terrain = region.terrain_at(tile)
-			if terrain == Region.Terrain.THICKET:
+			if terrain == Region.Terrain.THICKET and not planted.has(tile):
 				thicket += 1
 			elif terrain == Region.Terrain.WALL and not covered.has(tile):
 				bare_walls += 1
-	assert_eq(thicket, 0, "no thicket: the ring is his to plant, and until then the wood is open")
+	assert_eq(thicket, 0, "no thicket but a closure's wood, which the window plants: %d tiles" % thicket)
 	assert_eq(bare_walls, 0, "every wall tile stands under a prop the window draws: %d do not" % bare_walls)
 
 
@@ -176,7 +183,8 @@ func test_his_five_bridges_are_named_walkable_crossings() -> void:
 	var data: Dictionary = _baked()
 	var rivers: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 		RegionBake.WORKSHOP + "planning/river-layout-v2.json")) as Dictionary
-	var region: Region = RegionBake.read(data)
+	var region: Region = RegionBake.read(data, false)
+	off("every bridge of his is walkable — checked on the open world; in play the start zone closes it (group Z)")
 	for bridge: Dictionary in rivers["crossings"]:
 		var id: String = String(bridge["id"])
 		assert_true((data["points"] as Dictionary).has(id), "%s is named by the bake" % id)
@@ -192,7 +200,8 @@ func test_his_five_bridges_are_named_walkable_crossings() -> void:
 
 func test_each_delivered_bridge_joins_its_banks_without_a_detour() -> void:
 	var data: Dictionary = _baked()
-	var region: Region = RegionBake.read(data)
+	var region: Region = RegionBake.read(data, false)
+	off("his bridge north of Brindle joins its banks — checked on the open world; in play the start zone closes it (group Z)")
 	var origin := Vector2(float(data["origin_m"][0]), float(data["origin_m"][1]))
 	var scale_m: float = float(data["metres_per_tile"])
 	for bridge: Dictionary in (RegionBake.read_landscape()["meta"] as Dictionary)["crossings"]:
@@ -225,11 +234,13 @@ func test_the_towns_delivered_door_approaches_are_open() -> void:
 # box the bake reads the ground his own runtime makes — relief stamps, earthworks, the
 # coast's edits, the rock repainted over it all — and not his raw files.
 
-func _brindle_coast() -> Region:
+## The coast below Brindle as his data draws it — `open`, without the start zone's wood
+## west of Brindle, which closes his coastal trail (group Z).
+func _brindle_coast(open: bool = false) -> Region:
 	var data: Dictionary = _baked()
 	if data.is_empty():
 		return null
-	return RegionBake.read(data)
+	return RegionBake.read(data, not open)
 
 
 func test_his_cliffs_south_of_brindle_are_rock() -> void:
@@ -244,7 +255,8 @@ func test_his_cliffs_south_of_brindle_are_rock() -> void:
 
 
 func test_his_coastal_paths_are_road() -> void:
-	var region: Region = _brindle_coast()
+	var region: Region = _brindle_coast(true)
+	off("his coastal trail west of Brindle is road — checked on the open world; in play the start zone closes it (group Z)")
 	if region == null:
 		assert_true(false, "the baked world is there")
 		return
@@ -263,7 +275,8 @@ func test_his_coastal_paths_are_road() -> void:
 func test_the_southern_shore_is_a_pocket_whose_one_way_out_is_his_approach() -> void:
 	# The funnel Yannick asked for, already drawn by his brother: the cove and the cape
 	# below Brindle reach the rest of the world only up his graded approach.
-	var region: Region = _brindle_coast()
+	var region: Region = _brindle_coast(true)
+	off("the cove west of Brindle walks to Brindle — checked on the open world; in play the start zone closes it (group Z)")
 	if region == null:
 		assert_true(false, "the baked world is there")
 		return

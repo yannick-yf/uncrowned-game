@@ -65,6 +65,12 @@ var _built_crossings: bool = false
 ## Every tile one of his delivered bridges laid down, so a road meeting water beside
 ## one is his deck's own raster and a road meeting water anywhere else is a gap.
 var _bridge_tiles: Dictionary = {}
+## Bridge id -> the tiles of its deck that were river before it was laid: what a closed
+## bridge gives back to the water (group Z).
+var _decks_over_water: Dictionary = {}
+## The start zone's closures (group Z): `{id, kind, tiles, line, roads}`, written beside
+## the rows and never into them.
+var closures: Array[Dictionary] = []
 
 
 # ----------------------------------------------------------------- his files ---
@@ -140,6 +146,10 @@ static func bake(
 	# piece may stand along a road and never across one.
 	out._yards(brief, yard_pieces)
 	out._border()
+	# Last of all, and never into the rows: what the brief closes, as a layer over the
+	# open world (group Z). Read from the finished ground, so a wood knows where the roads
+	# run into it and leaves the water and the walls as they are.
+	out._closures(brief)
 	out._summarise()
 	return out
 
@@ -797,6 +807,91 @@ func _border() -> void:
 		_close(Vector2i(width - 1, y))
 
 
+## **The start zone's edge** (group Z, 2026-10-08): the brief's closures. A bridge gives
+## its deck back to the river; a wood takes every tile walkable ground within its band of
+## a line — a band whose half width wanders between the brief's two numbers along the
+## line, so its edge is a wood's edge and not a hedge's — and notes the road tiles where
+## a road runs into it, which is where the window lays his fallen logs.
+func _closures(brief: Dictionary) -> void:
+	for entry: Variant in (brief.get("closures", []) as Array):
+		var row: Dictionary = entry as Dictionary
+		var id: String = String(row.get("id", ""))
+		var kind: String = String(row.get("kind", ""))
+		var out: Dictionary = {"id": id, "kind": kind, "tiles": [] as Array[Vector2i]}
+		if kind == "bridge":
+			var deck: Array = _decks_over_water.get(StringName(id), []) as Array
+			if deck.is_empty():
+				report.append("CLOSURE %s: no bridge of his by that id, or no deck over water — skipped" % id)
+				continue
+			for tile: Variant in deck:
+				(out["tiles"] as Array).append(tile as Vector2i)
+		elif kind == "wood":
+			var line: Array[Vector2] = []
+			for point: Variant in (row.get("line_xz", []) as Array):
+				line.append(Vector2(_tile(point)) + Vector2(0.5, 0.5))
+			var half: Array = row.get("half_m", [6.0, 9.0]) as Array
+			var low: float = float(half[0]) / metres_per_tile
+			var high: float = float(half[1]) / metres_per_tile
+			var tiles: Array[Vector2i] = _band(line, low, high, id.hash())
+			out["tiles"] = tiles
+			var line_out: Array[Vector2i] = []
+			for point: Vector2 in line:
+				line_out.append(Vector2i(point.floor()))
+			out["line"] = line_out
+			var inside: Dictionary = {}
+			for tile: Vector2i in tiles:
+				inside[tile] = true
+			var roads: Array[Vector2i] = []
+			for tile: Vector2i in tiles:
+				if region.terrain_at(tile) != Region.Terrain.ROAD:
+					continue
+				for step: Vector2i in Navigation.DIRECTIONS:
+					var beside: Vector2i = tile + step
+					if not inside.has(beside) and region.in_bounds(beside) and region.is_passable(beside):
+						roads.append(tile)
+						break
+			out["roads"] = roads
+		else:
+			report.append("CLOSURE %s: a kind the bake does not know ('%s') — skipped" % [id, kind])
+			continue
+		report.append("closure %-16s %-6s %4d tiles%s" % [id, kind, (out["tiles"] as Array).size(),
+			", %d where a road runs in" % (out["roads"] as Array).size() if out.has("roads") else ""])
+		closures.append(out)
+
+
+## Every walkable tile within a band of a line whose half width wanders between `low` and
+## `high` tiles along it, in the order the rows run. Water, rock and walls are left be:
+## they close themselves.
+func _band(line: Array[Vector2], low: float, high: float, seed: int) -> Array[Vector2i]:
+	var near: Dictionary = {}
+	var along: float = 0.0
+	var phase: float = float(absi(seed) % 628) / 100.0
+	for leg: int in line.size() - 1:
+		var a: Vector2 = line[leg]
+		var b: Vector2 = line[leg + 1]
+		var length: float = a.distance_to(b)
+		var top_left: Vector2i = Vector2i((a.min(b) - Vector2.ONE * (high + 1.0)).floor())
+		var bottom_right: Vector2i = Vector2i((a.max(b) + Vector2.ONE * (high + 1.0)).ceil())
+		for x: int in range(top_left.x, bottom_right.x + 1):
+			for y: int in range(top_left.y, bottom_right.y + 1):
+				var tile := Vector2i(x, y)
+				if not region.in_bounds(tile) or not region.is_passable(tile):
+					continue
+				var centre: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
+				var closest: Vector2 = Geometry2D.get_closest_point_to_segment(centre, a, b)
+				var s: float = along + a.distance_to(closest)
+				var wander: float = 0.5 + 0.35 * sin(s * 0.23 + phase) + 0.15 * sin(s * 0.61 + phase * 2.0)
+				if centre.distance_to(closest) <= lerpf(low, high, clampf(wander, 0.0, 1.0)):
+					near[tile] = true
+		along += length
+	var out: Array[Vector2i] = []
+	for tile: Variant in near.keys():
+		out.append(tile as Vector2i)
+	out.sort_custom(func(p: Vector2i, q: Vector2i) -> bool:
+		return p.y < q.y or (p.y == q.y and p.x < q.x))
+	return out
+
+
 func _close(tile: Vector2i) -> void:
 	if region.is_passable(tile):
 		region.set_terrain(tile, Region.Terrain.MOUNTAIN)
@@ -939,6 +1034,19 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		for leg: StringName in (spurs[id] as Array):
 			legs.append(String(leg))
 		spurs_out[String(id)] = legs
+	var closures_out: Array = []
+	for closure: Dictionary in closures:
+		var row: Dictionary = {"id": closure["id"], "kind": closure["kind"]}
+		# Tiles as one line of `x,y` pairs: a wood is a thousand of them, and a pair a
+		# line would be six thousand lines of diff for one closure.
+		for key: String in ["tiles", "line", "roads"]:
+			if not closure.has(key):
+				continue
+			var pairs := PackedStringArray()
+			for tile: Vector2i in (closure[key] as Array):
+				pairs.append("%d,%d" % [tile.x, tile.y])
+			row[key] = " ".join(pairs)
+		closures_out.append(row)
 	var crossings_out: Array = []
 	for crossing: Dictionary in crossings:
 		crossings_out.append({"road": crossing["road"],
@@ -959,6 +1067,7 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 		"props": props_out,
 		"wards": wards_out,
 		"yards": yards_out,
+		"closures": closures_out,
 		"rows": rows,
 	}
 
@@ -966,7 +1075,7 @@ func to_dictionary(source: Dictionary) -> Dictionary:
 ## The region in a baked file: its grid, its places as sites and zones, its props.
 ## The content's anchors — stalls, papers, fires — are `Region.load_baked()`'s job,
 ## because they need `Places`.
-static func read(data: Dictionary) -> Region:
+static func read(data: Dictionary, closed: bool = true) -> Region:
 	var w: int = int(data.get("width", 0))
 	var h: int = int(data.get("height", 0))
 	var region := Region.new(maxi(w, 1), maxi(h, 1))
@@ -1012,6 +1121,20 @@ static func read(data: Dictionary) -> Region:
 		region.yards.append({"place": String(row.get("place", "")), "ward": String(row.get("ward", "")),
 			"passage": _pair(row.get("passage", [-1, -1])), "inside": _pair(row.get("inside", [-1, -1])),
 			"floor": floor})
+	# The start zone's closures (group Z), over the open rows — unless the open world is
+	# what was asked for.
+	for entry: Variant in (data.get("closures", []) as Array) if closed else []:
+		var row: Dictionary = entry as Dictionary
+		var closure: Dictionary = {"id": String(row.get("id", "")), "kind": String(row.get("kind", ""))}
+		for key: String in ["tiles", "line", "roads"]:
+			if not row.has(key):
+				continue
+			var tiles: Array[Vector2i] = []
+			for pair: String in String(row[key]).split(" ", false):
+				var xy: PackedStringArray = pair.split(",")
+				tiles.append(Vector2i(int(xy[0]), int(xy[1])))
+			closure[key] = tiles
+		region.close(closure)
 	return region
 
 
@@ -1036,6 +1159,10 @@ func _bridges(landscape: Dictionary, brief: Dictionary) -> void:
 				var tile := Vector2i(x, y)
 				var metres: Vector2 = BakeRules.metres_for(tile, origin_m, metres_per_tile)
 				if region.in_bounds(tile) and metres.distance_to(Geometry2D.get_closest_point_to_segment(metres, from, to)) <= radius:
+					if region.terrain_at(tile) == Region.Terrain.WATER:
+						var over: Array = _decks_over_water.get(id, []) as Array
+						over.append(tile)
+						_decks_over_water[id] = over
 					region.set_terrain(tile, Region.Terrain.ROAD)
 					_bridge_tiles[tile] = true
 	for name: String in (brief.get("points", {}) as Dictionary):

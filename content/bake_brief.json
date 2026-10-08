@@ -129,5 +129,11 @@
       "houses/cottage_fisher": "ruin_house",
       "houses/storehouse": "ruin_house"
     }
-  }
+  },
+  "_closures": "THE START ZONE (group Z, 2026-10-08; docs/DEMO_TASKS.md). Yannick: the castle and the other villages are still being drawn, so the demo's player stays between Brindle and the Forges, as Breath of the Wild's Great Plateau. His river, the sea and his mountains close most of it; these close the rest. Written into region.json as a layer over the open rows and applied when the file is read, so opening the zone one day is taking an entry out (and re-baking). Lines are in his metres; half_m is the band's half width, wandering between the two numbers along the line.",
+  "closures": [
+    {"id": "PontBrindle", "kind": "bridge", "_why": "his cart bridge north of Brindle, the way to Harrowgate. Its deck over the river is closed and the window draws it without its span: his abutments and trestles stand, the deck is gone. Brindle burned; so did its bridge."},
+    {"id": "bois_des_forges", "kind": "wood", "line_xz": [[191, 149], [179, 89], [179, 17], [189, -19], [241, -27], [301, -23]], "half_m": [6, 9], "_why": "west and north of the Forges there is open grass to Harrowgate and to the Scierie, and neither relief nor river. From the Forges' river south of the works, round their west and north, into his mountains: a wood of his own trees too thick to walk through, chosen from frames. His road west and his road north run into it, and his fallen logs lie across both."},
+    {"id": "bois_de_brindle", "kind": "wood", "line_xz": [[113, 179], [117, 217], [117, 285], [121, 309], [117, 337]], "half_m": [6, 9], "_why": "west of Brindle the bank runs open to the big river's mouth. Asked for on his second look, so the tutorial's zone is smaller still: from the river, across the bank and the coast road, into the cliffs."}
+  ]
 }

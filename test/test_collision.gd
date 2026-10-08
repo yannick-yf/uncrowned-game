@@ -52,6 +52,7 @@ func _beside(region: Region, at: Vector2i, walkable: Dictionary) -> bool:
 # ------------------------------------------------------------------ reach ---
 
 func test_every_zone_can_be_entered_and_left() -> void:
+	walk_the_open_world("every place can be walked to")
 	var walkable: Dictionary = _the_world_you_can_walk()
 	for zone: StringName in Region.ZONE_ORDER:
 		assert_true(walkable.has(Region.zone_sites()[zone] as Vector2i),
@@ -61,6 +62,7 @@ func test_every_zone_can_be_entered_and_left() -> void:
 func test_every_fire_can_be_reached() -> void:
 	# You respawn at the last one. A fire you cannot walk back to is a save that
 	# strands you, which is worse than no save at all.
+	walk_the_open_world("every fire can be walked to")
 	var region: Region = _region()
 	var walkable: Dictionary = _the_world_you_can_walk()
 	var fires: int = 0
@@ -76,6 +78,7 @@ func test_every_fire_can_be_reached() -> void:
 func test_nobody_is_standing_somewhere_you_cannot_reach() -> void:
 	# An NPC behind a wall is a conversation that does not exist, and no other test
 	# would notice: they load, they draw, they simply cannot be got to.
+	walk_the_open_world("everybody can be walked to")
 	var region: Region = _region()
 	var walkable: Dictionary = _the_world_you_can_walk()
 	var cast: Cast = Cast.shared()
@@ -87,6 +90,7 @@ func test_nobody_is_standing_somewhere_you_cannot_reach() -> void:
 
 
 func test_every_stall_and_document_can_be_reached() -> void:
+	walk_the_open_world("every stall and paper can be walked to")
 	var region: Region = _region()
 	var walkable: Dictionary = _the_world_you_can_walk()
 	var checked: int = 0

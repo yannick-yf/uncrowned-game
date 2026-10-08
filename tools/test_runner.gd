@@ -74,6 +74,8 @@ func _initialize() -> void:
 			test_case.before_each()
 			test_case.call(method)
 			test_case.after_each()
+			# A test of the whole map walks the open world (group Z); the next one does not.
+			Region.walking_the_open_world = false
 			timings.append([float(Time.get_ticks_usec() - began) / 1000.0, method, file_name])
 			assertions += test_case.assertion_count()
 			ran += 1

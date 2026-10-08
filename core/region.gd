@@ -138,6 +138,14 @@ var wards: Dictionary = {}
 ## tile its floor covers — so the window can draw the threshold and a test can ask where
 ## it is. Empty on the procedural map, which has no yard.
 var yards: Array[Dictionary] = []
+## **The start zone's closures** (group Z, 2026-10-08): one row per thing the brief closes
+## — `{id, kind, tiles}`, a bridge whose deck is water again or a wood too thick to walk
+## through, plus a wood's `line` and the `roads` tiles where a road runs into it. A layer
+## over the baked rows, applied when the file is read (`RegionBake.read`), so the open
+## world is still the file and opening the zone is taking a row out. Empty on the 2D map.
+var closures: Array[Dictionary] = []
+## Tile -> the id of the closure that shuts it, for the edge's words (Z3).
+var _closed_by: Dictionary = {}
 ## The places this region was built around — id -> centre — and their footprints.
 ## Set by whoever builds the region: the procedural builder from the statics above,
 ## the bake from the baked places. The kit and the zones read these and never a
@@ -167,6 +175,24 @@ func terrain_at(tile: Vector2i) -> Terrain:
 func set_terrain(tile: Vector2i, terrain: Terrain) -> void:
 	if in_bounds(tile):
 		_tiles[tile.y * width + tile.x] = terrain
+
+
+## The closure that shuts this tile — a bridge's id or a wood's — or empty.
+func closure_at(tile: Vector2i) -> StringName:
+	return _closed_by.get(tile, &"") as StringName
+
+
+## Shut a closure's tiles: a bridge's deck is river again, a wood is thicket. The one way
+## a closure reaches the ground, so whatever opens one later undoes exactly this.
+func close(closure: Dictionary) -> void:
+	var kind: StringName = StringName(String(closure.get("kind", "")))
+	var shut: Terrain = Terrain.WATER if kind == &"bridge" else Terrain.THICKET
+	var id: StringName = StringName(String(closure.get("id", "")))
+	for tile: Vector2i in (closure.get("tiles", []) as Array):
+		if in_bounds(tile):
+			set_terrain(tile, shut)
+			_closed_by[tile] = id
+	closures.append(closure)
 
 
 func is_passable(tile: Vector2i) -> bool:
@@ -401,10 +427,12 @@ static var _waypoint_cache: Dictionary = {}
 
 
 static func road_waypoints(spacing: int = 5) -> Array[Vector2i]:
-	if _waypoint_cache.has(spacing):
-		return _waypoint_cache[spacing] as Array[Vector2i]
+	# One line per world: the closed one and the open one (group Z).
+	var key: String = "%d:%s" % [spacing, walking_the_open_world]
+	if _waypoint_cache.has(key):
+		return _waypoint_cache[key] as Array[Vector2i]
 	var built: Array[Vector2i] = _road_line(spacing) if Places.baked() else _build_waypoints(spacing)
-	_waypoint_cache[spacing] = built
+	_waypoint_cache[key] = built
 	return built
 
 
@@ -535,9 +563,17 @@ func road_distance() -> float:
 # ------------------------------------------------------------- construction ---
 
 static var _overworld: Region = null
+static var _open_overworld: Region = null
+## **While true, the overworld is the open world** (group Z): a test of the whole map that
+## needs a game played on it — the walk to Blackcairn, the theft in Harrowgate — turns it
+## on through `TestCase.walk_the_open_world`, and the test runner turns it off after every
+## test. Nothing in the game ever sets it.
+static var walking_the_open_world: bool = false
 
 
 static func build_overworld(fresh: bool = false) -> Region:
+	if walking_the_open_world and Places.baked():
+		return load_baked(false) if fresh else open_world()
 	if not fresh and _overworld != null:
 		return _overworld
 	var region: Region = load_baked() if Places.baked() else _build_overworld()
@@ -546,16 +582,29 @@ static func build_overworld(fresh: bool = false) -> Region:
 	return region
 
 
+## **The world without the start zone's closures** (group Z): the map as it will be the
+## day the zone opens — his bridge north of Brindle whole, no wood round the Forges or
+## west of Brindle. The claims about the whole map are checked on it: every fire, stall
+## and person reachable, every bridge of his walkable, Blackcairn a walk from Brindle.
+## The 2D map has no closures, so there it is the overworld.
+static func open_world() -> Region:
+	if not Places.baked():
+		return build_overworld()
+	if _open_overworld == null:
+		_open_overworld = load_baked(false)
+	return _open_overworld
+
+
 ## The world baked from the 3D workshop (MIGRATION_3D §6, M1b): the grid and his
 ## buildings from `content/region.json`, then the same zones and the same content
 ## anchors — stalls, papers, fires — the procedural map gets, resolved against the
 ## baked places. `tools/bake_region.gd` writes the file; nothing here reads his data.
-static func load_baked() -> Region:
+static func load_baked(closed: bool = true) -> Region:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(Places.BAKED_PATH))
 	if not (parsed is Dictionary):
 		push_error("no baked world at %s — run tools/bake_region.gd" % Places.BAKED_PATH)
 		return _build_overworld()
-	var region: Region = RegionBake.read(parsed as Dictionary)
+	var region: Region = RegionBake.read(parsed as Dictionary, closed)
 	region._stamp_stalls()
 	return region
 
