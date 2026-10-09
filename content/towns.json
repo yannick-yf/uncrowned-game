@@ -53,6 +53,8 @@
     "cinderworks": {
       "count": 12,
       "to_point": "working_face",
+      "works_there_seconds": 25,
+      "_works_there": "D14 (2026-10-09): a walker works a while at the cutting face before turning back, so the face has people at it - drawn swinging at the wood.",
       "_why": "The walk out to the cutting face, where the works takes its wood. It stops when the works stops -- and an empty road is the strongest thing the game can say about a town that has died. It is also the link between this quest and the fairy's: the people who walk out there are the ones eating the forest. Chosen over the road to his mine because the cutting face exists on both worlds, and because it means something."
     }
   },

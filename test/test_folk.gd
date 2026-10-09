@@ -66,6 +66,28 @@ func test_they_move() -> void:
 		"and they are further along the road than they were: %.1f tiles" % before.distance_to(after))
 
 
+## **At the face, a while** (D14): a walker who reaches the cutting face works there before
+## turning back, for the time the routine says, and then walks home.
+func test_a_walker_works_a_while_at_the_face() -> void:
+	var sim: Sim = Game.build()
+	var folk := sim.store(&"folk") as Folk
+	var towns := sim.store(&"towns") as TownState
+	towns.set_value(&"cinderworks", TownRules.RICHESSE, TownRules.CEILING)
+	assert_true(Folk.works_there_seconds(&"cinderworks") > 0.0, "the works' routine says how long")
+	var world := sim.store(&"world") as WorldState
+	var route: Array[Vector2] = folk.route_in(world.region(), &"cinderworks")
+	var face: Vector2 = route[route.size() - 1]
+	var seen_working: bool = false
+	var at_face_still: float = 0.0
+	for second: int in 120:
+		sim.advance(Sim.STEPS_PER_REAL_SECOND)
+		for walker: Dictionary in folk.walkers:
+			if float(walker.get("work", 0.0)) > 0.0:
+				seen_working = true
+				assert_true((walker["pos"] as Vector2).distance_to(face) < 0.01, "working at the face itself")
+	assert_true(seen_working, "somebody works at the face within two minutes")
+
+
 func test_nobody_walks_where_no_routine_says_to() -> void:
 	# Only the Cinderworks has a routine today. A place without one has no walkers at
 	# all — not a default population, and not a crash.

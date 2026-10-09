@@ -2253,6 +2253,7 @@ const FIGHT_EYE_NORTH: float = 1.2
 const HAIL_MARK_LINGERS: float = 0.5
 ## How near the start the readout names the cemetery, in tiles (O12).
 const CEMETERY_NAMED_WITHIN: float = 6.0
+const CUTTING_FACE_NAMED_WITHIN: float = 12.0
 ## How fast the fight's framing comes on and goes off. Slow enough to read as a camera
 ## move and not a cut — which is the whole of the decision in `SPECS.md` §10.
 const FIGHT_LENS_SETTLES: float = 3.2
@@ -2840,6 +2841,10 @@ func _place_name() -> String:
 	# Where you woke, among the graves (O12) — at Brindle's edge, so asked first.
 	if Vector2(_world.player_tile()).distance_to(Vector2(Region.START)) <= CEMETERY_NAMED_WITHIN:
 		return Text.of(&"place.cemetery")
+	# The cutting face (D14): where the works fells the wood, named, not "the wild".
+	if Places.shared().has_point(&"working_face") and Vector2(_world.player_tile()).distance_to(
+			Vector2(Places.shared().point(&"working_face"))) <= CUTTING_FACE_NAMED_WITHIN:
+		return Text.of(&"place.cutting_face")
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
 	if Region.is_place(zone):
 		return Text.of(StringName("place.%s" % zone))

@@ -3496,6 +3496,20 @@ round each house varied in size and shape; the blocky, blurry ground mask soften
 Stumps, felled trunks, stacked logs, half-cut trees, sawdust; the workers who walk there
 staying a while. **Check:** frames, and a recorded sequence.
 
+> **Built 2026-10-09.** **Dressed in the bake, so it blocks** (`RegionBake._dress_the_face`,
+> the brief's `cutting_face`): round the working face, on the works' cleared ground only, his
+> stumps (one tile in eight), his fallen logs as felled trunks across two tiles and his
+> woodpiles, by the tile's hash — never on the walkers' way from the works to the face, never
+> within three tiles of the face, never on a road: 24 pieces, each a prop that blocks and is
+> drawn by his library (`kit_library`: `stump`, `felled`). The stumps the meadows had sown
+> there in D8 — walked through — are gone. **The workers work there**: a walker reaching the
+> far end of the works' walk stays the time the routine says (`works_there_seconds`, 25, in
+> `content/towns.json`) before turning back — a change of the simulation, deterministic and
+> in the walk's fingerprint — and the window draws those at work spread round the face,
+> swinging at the wood. **The place has a name**: within twelve tiles of the face the HUD
+> says *la coupe* and not *les terres sauvages*. **Not done**: half-cut trees and sawdust —
+> his library has no tree cut half through. `test_a_walker_works_a_while_at_the_face`.
+
 ### D15 · People drawn through roofs (audit 12)
 
 Roofs hide whoever stands behind them; the player alone gets a discreet outline when

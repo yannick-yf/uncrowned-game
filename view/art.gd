@@ -198,6 +198,11 @@ func _init() -> void:
 		&"crates": [&"camp", Rect2i(0, 16, 48, 32)],
 		&"barrels": [&"camp", Rect2i(0, 0, 48, 16)],
 		&"logs": [&"camp", Rect2i(16, 88, 32, 32)],
+		# The cutting face's stumps and felled trunks (D14): the flat look of the bake only
+		# — the 3D window draws his own stump and log — stands them as the pack's logs, so
+		# the flat look shows no invisible wall.
+		&"stump": [&"camp", Rect2i(16, 88, 32, 32)],
+		&"felled": [&"camp", Rect2i(16, 88, 32, 32)],
 		&"fence": [&"camp", Rect2i(0, 118, 48, 16)],
 		# The works' yard is his `soubassement_2m` since 2026-09-21 (G2), a stone module
 		# the 2D pack has no picture of. The pack's fence stands for it in the flat look

@@ -64,9 +64,10 @@ func on_step(sim: Sim, _step: int) -> void:
 		var route: Array[Vector2] = folk.route_in(world.region(), place)
 		if route.size() < 2:
 			continue
+		var works_there: float = Folk.works_there_seconds(place)
 		for walker: Dictionary in folk.walkers:
 			if (walker["place"] as StringName) == place:
-				_walk(route, walker, seconds)
+				_walk(route, walker, seconds, works_there)
 
 
 ## As many as richesse pays for — the same rule that lights the furnaces, so the two
@@ -97,13 +98,22 @@ func _match_population(world: WorldState, towns: TownState, folk: Folk, place: S
 ## One step along the walk, turning round at either end. The road's own rule, because
 ## somebody walking to the mine and somebody walking the King's Road are the same
 ## problem and should not be two pieces of code that drift apart.
-func _walk(route: Array[Vector2], walker: Dictionary, seconds: float) -> void:
+func _walk(route: Array[Vector2], walker: Dictionary, seconds: float, works_there: float = 0.0) -> void:
+	# **At the face, a while** (D14): a walker who reaches the far end of the walk — the
+	# cutting face — works there before turning back, so the face has people at it.
+	var work: float = float(walker.get("work", 0.0))
+	if work > 0.0:
+		walker["work"] = maxf(work - seconds, 0.0)
+		return
 	var leg: int = int(walker["leg"])
 	var heading: int = int(walker["heading"])
 	var target: int = clampi(leg + heading, 0, route.size() - 1)
 	if target == leg:
 		heading = -heading
 		walker["heading"] = heading
+		if leg == route.size() - 1 and works_there > 0.0:
+			walker["work"] = works_there
+			return
 		target = clampi(leg + heading, 0, route.size() - 1)
 	var to: Vector2 = route[target]
 	var pos: Vector2 = walker["pos"] as Vector2

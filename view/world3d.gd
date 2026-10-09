@@ -251,7 +251,7 @@ const ZOOM_MAX: float = 48.0
 const ZOOM_STEP: float = 2.0
 ## Small things are turned a quarter at a time by their tile, so a row of barrels is
 ## not a row of identical barrels; buildings keep his facing.
-const TURNED_BY_TILE: Array[StringName] = [&"barrels", &"crates", &"logs", &"overgrowth"]
+const TURNED_BY_TILE: Array[StringName] = [&"barrels", &"crates", &"logs", &"overgrowth", &"stump"]
 ## How tall a placeholder block is, by kind, in metres. What his library lacks stands
 ## as a block of its footprint and roughly its height, until he draws it.
 const BLOCK_HEIGHT: Dictionary = {
@@ -2506,6 +2506,19 @@ func _sync_folk(folk: Folk, world: WorldState) -> void:
 				facing = Vector2i(0, 1 if to.y > 0.0 else -1)
 			else:
 				facing = Vector2i(1 if to.x > 0.0 else -1, 0)
+		# **At work at the face** (D14): spread round the face, each on a spot of its own,
+		# swinging at the wood on a beat of its own — drawn so, the walker is where it is.
+		if float(walker.get("work", 0.0)) > 0.0:
+			var a: float = float(id) * 2.399963
+			var spot: Vector2 = pos + Vector2(cos(a), sin(a)) * (1.2 + 0.4 * float(id % 3))
+			var swing: float = fposmod(_now * 0.8 + float(id) * 0.37, 1.0)
+			var toward: Vector2i = _four_way(pos - spot)
+			if swing < 0.35:
+				_fight_pose(figure, {"his_pose": "ready" if swing < 0.18 else "attack"}, false, toward)
+			else:
+				_idle(figure, toward)
+			_foot_figure(figure, spot + Vector2(0.0, 0.5))
+			continue
 		_walk(figure, facing, fposmod((pos.x + pos.y) * _metres_per_tile / WALK_CYCLE_M, 1.0))
 		_foot_figure(figure, pos + Vector2(0.0, 0.5))
 	# Somebody the works no longer sends is not hidden, they are gone.
@@ -4192,12 +4205,11 @@ func _lay_logs(planted: Dictionary, inside: Dictionary, roads: Dictionary) -> vo
 ## painted colour and nothing on it, and the difference showed. So the start zone's grass —
 ## open ground and the brief's woods his window never drew, but not Brindle, which is his,
 ## nor road, town or the works' bare earth — is sown with his tufts, a flower now and then,
-## a small stone, and near the works a stump: denser by a path's edge. His library's
+## a small stone: denser by a path's edge (the stumps are the cutting face's, D14). His library's
 ## pieces, in squares of `WOOD_CELL` tiles, and none of them casting a shadow.
 const MEADOW_TUFT: String = "plants/grass_meadow.tscn"
 const MEADOW_FLOWER: String = "plants/flowers_daisy.tscn"
 const MEADOW_STONE: String = "rocks/boulder_round.tscn"
-const MEADOW_STUMP: String = "props/stump.tscn"
 ## His ironworks ground mask and the metres it covers, as his landscape shader reads them
 ## (`brindle_landscape.gdshader`): red is the works' worn earth. Read, never written.
 const IRONWORKS_MASK: String = "res://prototypes/brindle_3d/assets/landscape/ironworks_ground_mask.png"
@@ -4210,8 +4222,6 @@ func _sow_meadows() -> void:
 	if _his == null or not Places.baked():
 		return
 	var zone: Dictionary = Navigation.reachable(_region, Places.shared().point(&"cemetery"))
-	var works: Vector2 = Vector2(Places.shared().centre(&"cinderworks"))
-	var face: Vector2 = Vector2(Places.shared().point(&"working_face"))
 	var worn: Image = _ironworks_mask()
 	var planted: Dictionary = {}
 	for key: Variant in zone.keys():
@@ -4244,10 +4254,7 @@ func _sow_meadows() -> void:
 		elif roll >= 40 and roll < 42:
 			_plant_at(planted, MEADOW_STONE, tile, Transform3D(Basis(Vector3.UP, float(h) * 2.3)
 				.scaled(Vector3.ONE * (0.18 + 0.05 * float(h % 3))), _feet_of(centre + Vector2(-0.2, 0.15))))
-		elif roll >= 50 and roll < (62 if cleared else 53) \
-				and (cleared or centre.distance_to(works) < 40.0 or centre.distance_to(face) < 18.0):
-			_plant_at(planted, MEADOW_STUMP, tile, Transform3D(Basis(Vector3.UP, float(h) * 0.6)
-				.scaled(Vector3.ONE * 0.9), _feet_of(centre)))
+
 	var meadows := Node3D.new()
 	meadows.name = "Meadows"
 	add_child(meadows)

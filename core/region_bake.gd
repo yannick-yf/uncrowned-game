@@ -135,6 +135,7 @@ static func bake(
 	out._bridges(landscape, brief)
 	out._roads(geography, sectors, brief, routes, town)
 	out._his_paths(his_paths)
+	out._dress_the_face(brief)
 	out._ford()
 	out._buildings(sectors, brief)
 	out._ironworks(town)
@@ -437,6 +438,59 @@ func _beside_his_bridge(tile: Vector2i) -> bool:
 			if _bridge_tiles.has(tile + Vector2i(dx, dy)):
 				return true
 	return false
+
+
+## **The cutting face, dressed** (D14): his stumps, felled trunks and woodpiles on the
+## works' cleared ground round the working face, as props that block — by the tile's hash,
+## so the same bake lays the same stumps. Never on the walkers' way from the works to the
+## face, never next to the face itself, never on a road; and the face must still be a walk
+## from the works afterwards, or nothing is laid at all.
+func _dress_the_face(brief: Dictionary) -> void:
+	var rules: Dictionary = brief.get("cutting_face", {}) as Dictionary
+	if rules.is_empty() or not points.has(&"working_face") or not places.has(&"cinderworks"):
+		return
+	var face: Vector2i = (points[&"working_face"] as Dictionary)["at"] as Vector2i
+	var works: Vector2i = (places[&"cinderworks"] as Dictionary)["centre"] as Vector2i
+	var radius: int = int(rules.get("radius", 13))
+	var laid: Array[Dictionary] = []
+	for y: int in range(face.y - radius, face.y + radius + 1):
+		for x: int in range(face.x - radius, face.x + radius + 1):
+			var tile := Vector2i(x, y)
+			if not region.in_bounds(tile) or region.terrain_at(tile) != Region.Terrain.CLEARED:
+				continue
+			var centre: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
+			if centre.distance_to(Vector2(face)) > float(radius) \
+					or centre.distance_to(Vector2(face)) < float(rules.get("keep_clear", 3)):
+				continue
+			var on_way: Vector2 = Geometry2D.get_closest_point_to_segment(centre, Vector2(works), Vector2(face))
+			if centre.distance_to(on_way) < float(rules.get("corridor", 2)) + 0.5:
+				continue
+			var h: int = Art.scatter_hash(x * 17 + 3, y * 29 + 11) % 100
+			var stumps: int = int(rules.get("stumps_in_100", 12))
+			var felled: int = int(rules.get("felled_in_100", 3))
+			var piles: int = int(rules.get("piles_in_100", 1))
+			if h < stumps:
+				laid.append({"kind": &"stump", "at": tile, "size": Vector2i.ONE})
+			elif h < stumps + felled and region.terrain_at(tile + Vector2i(1, 0)) == Region.Terrain.CLEARED:
+				laid.append({"kind": &"felled", "at": tile, "size": Vector2i(2, 1)})
+			elif h < stumps + felled + piles:
+				laid.append({"kind": &"logs", "at": tile, "size": Vector2i.ONE})
+	var kept: Array[Dictionary] = []
+	var taken: Dictionary = {}
+	for piece: Dictionary in laid:
+		var size: Vector2i = piece["size"] as Vector2i
+		var free: bool = true
+		for dx: int in size.x:
+			if taken.has((piece["at"] as Vector2i) + Vector2i(dx, 0)):
+				free = false
+		if not free:
+			continue
+		for dx: int in size.x:
+			taken[(piece["at"] as Vector2i) + Vector2i(dx, 0)] = true
+		kept.append(piece)
+	for piece: Dictionary in kept:
+		place(piece["kind"] as StringName, piece["at"] as Vector2i, piece["size"] as Vector2i)
+	report.append("cutting face: %d stumps, felled trunks and woodpiles round %s" % [kept.size(), face])
 
 
 ## The ford: a band of wadeable river around the brief's point. Only water turns to

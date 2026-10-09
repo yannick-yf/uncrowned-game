@@ -20,7 +20,7 @@ const PATH: String = "res://content/towns.json"
 
 static var _routines: Dictionary = {}
 
-## {id, place, pos, leg, heading}. A dictionary rather than a class of its own: they
+## {id, place, pos, leg, heading, work}: `work` the seconds left at the face (D14). A dictionary rather than a class of its own: they
 ## carry less than a traveller does, and a traveller carries almost nothing.
 var walkers: Array[Dictionary] = []
 var next_id: int = 1
@@ -40,6 +40,7 @@ static func routines() -> Dictionary:
 		_routines[StringName(id)] = {
 			"count": maxi(int(row.get("count", 0)), 0),
 			"to_point": StringName(String(row.get("to_point", ""))),
+			"works_there_seconds": maxf(float(row.get("works_there_seconds", 0.0)), 0.0),
 		}
 	return _routines
 
@@ -49,6 +50,11 @@ static func places() -> Array[StringName]:
 	for id: StringName in routines().keys():
 		out.append(id)
 	return out
+
+
+## How long a walker works at the far end of the walk before turning back (D14).
+static func works_there_seconds(place: StringName) -> float:
+	return float((routines().get(place, {}) as Dictionary).get("works_there_seconds", 0.0))
 
 
 static func count_in(place: StringName) -> int:
@@ -80,7 +86,7 @@ func in_place(place: StringName) -> int:
 func fingerprint() -> String:
 	var parts := PackedStringArray()
 	for walker: Dictionary in walkers:
-		parts.append("%d:%s:%.2f,%.2f:%d:%d" % [int(walker["id"]), String(walker["place"]),
+		parts.append("%d:%s:%.2f,%.2f:%d:%d:%.2f" % [int(walker["id"]), String(walker["place"]),
 			(walker["pos"] as Vector2).x, (walker["pos"] as Vector2).y,
-			int(walker["leg"]), int(walker["heading"])])
+			int(walker["leg"]), int(walker["heading"]), float(walker.get("work", 0.0))])
 	return "n=%d %s" % [next_id, ";".join(parts)]
