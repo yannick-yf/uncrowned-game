@@ -85,6 +85,12 @@ func test_the_window_stands_on_his_ground() -> void:
 			assert_true(absf(window.sun_elevation() - World3d.SUN_ELEVATION_DEGREES) < 0.01,
 				"the sun is late afternoon's: %.2f" % window.sun_elevation())
 			assert_true(window.ruin_smokes >= 2, "his ruins smoke: %d" % window.ruin_smokes)
+			# **The works' ground, used** (D13): coal stains on his worn earth, on the ground
+			# alone.
+			assert_true(window.stains_laid > 60, "the works' ground is stained: %d" % window.stains_laid)
+			for stain: Node in window.get_node("WorksStains").get_children():
+				assert_eq((stain as Decal).cull_mask, World3d.GROUND_LAYER, "a stain falls on the ground alone")
+				break
 			# **The works at work** (D11): two hands carrying ore to the furnaces.
 			assert_eq(window.works_hands(), 2, "two of the works' hands carry ore")
 			assert_true(window.meadow_pieces > 5000, "the meadows are sown: %d pieces" % window.meadow_pieces)

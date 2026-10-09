@@ -3474,6 +3474,23 @@ His slag, ore and stacked logs on the works' ground; dark coal stains and ruts; 
 round each house varied in size and shape; the blocky, blurry ground mask softened.
 **Check:** frames of the street, the yard and the gate fight.
 
+> **Built 2026-10-09.** **What blurred was his paths, not his mask**: his two path shaders
+> fade a path's edge over most of its width and colour it from a noise stretched over tens
+> of metres, so his road north of the works read as a blurred band and his short yard paths
+> as soft blocks. A copy of each, ours (`PATH_SHARP`, `_sharpen_his_paths`), with his colours
+> and his noise: the edge fades over a fifth of what it did and keeps its ragged grain, and a
+> finer grain is laid over the colour. Every mesh wearing his path material wears it — in
+> Brindle too, so the two places stay alike — including the road ribbons his script lays
+> after his ground is built, which are looked for again in the first frames after each
+> rebuild. **Coal stains** (`_stain_the_works`): where his ironworks mask paints worn earth,
+> soft dark blotches with a ragged edge are projected on the ground (decals), about one tile
+> in eleven and one in three round a furnace; his ground and paths carry a layer of their own
+> (`GROUND_LAYER`) and the stains fall on nothing else — the first test tinted the player and
+> the walls. 135 of them. **Not done**: more of his slag, ore and logs on the ground — a heap
+> must block, so it belongs in the bake and not in the window, and the yard already has his
+> ore heaps, slag and logs; and the houses' dirt discs are his mask's, varied only by the
+> stains that now cross them.
+
 ### D14 · The cutting face (audit 7)
 
 Stumps, felled trunks, stacked logs, half-cut trees, sawdust; the workers who walk there

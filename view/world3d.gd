@@ -470,6 +470,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 	_build_closures()
 	_build_works_hands()
 	_build_atmosphere()
+	_stain_the_works()
 	_sow_meadows()
 	_build_floors()
 	_build_walls()
@@ -622,6 +623,7 @@ func _adopt_his_world() -> void:
 	_late_afternoon()
 	_remember_light()
 	_rouse_ruin_smoke()
+	_sharpen_his_paths()
 	# His site labels are editor guides — a forty-eight-point "Brindle" over the
 	# ruins — and his playtest hides them the moment play starts. They are built when
 	# his terrain rebuilds, a frame later, so they are hidden then; and everything
@@ -631,6 +633,9 @@ func _adopt_his_world() -> void:
 		_his_terrain = terrain as Node3D
 		terrain.connect("rebuilt", _hide_his_guides)
 		terrain.connect("rebuilt", _refoot)
+		# His road ribbons are laid on his ground once it stands, after this, and laid again
+		# whenever it is rebuilt: so the first frames after each rebuild sharpen them again.
+		terrain.connect("rebuilt", func() -> void: _sharpen_left = 31)
 
 
 
@@ -1403,6 +1408,11 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_interact(frame.get("interact", {}) as Dictionary)
 	_sync_works_hands(frame, delta)
 	_sync_atmosphere(frame, delta)
+	if _sharpen_left > 0:
+		_sharpen_left -= 1
+		if _sharpen_left % 10 == 0:
+			_sharpen_his_paths()
+			_mark_the_ground()
 	_hold_the_rock()
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
@@ -3576,6 +3586,154 @@ func _late_afternoon() -> void:
 	if _air != null:
 		var base: Color = _air.ambient_light_color
 		_air.ambient_light_color = Color(base.r * AMBIENT_LATE.r, base.g * AMBIENT_LATE.g, base.b * AMBIENT_LATE.b)
+
+
+## **The works' ground, used** (D13, the audit's 6): the street and the yard were one even
+## brown. Where his ironworks mask paints worn earth, coal and slag stains of ours are laid
+## on it — soft dark blotches with a ragged edge, projected onto the ground (decals), turned
+## and sized by the tile's hash — thicker round the furnaces and the forge. Nothing to walk
+## round: they are colour on his ground.
+var stains_laid: int = 0
+## The render layer only the ground is on, for what is laid on it (D13).
+const GROUND_LAYER: int = 1 << 19
+
+
+## His ground's chunks and road ribbons join `GROUND_LAYER` (keeping their own), so a stain
+## projected on the ground falls on nothing else. Run when his ground is rebuilt.
+func _mark_the_ground() -> void:
+	if _his == null:
+		return
+	var landscape: Node = _his.get_node_or_null("Terrain/Landscape")
+	if landscape != null:
+		for found: Node in landscape.find_children("Surface", "MeshInstance3D", true, false):
+			(found as VisualInstance3D).layers |= GROUND_LAYER
+
+
+func _stain_the_works() -> void:
+	if _his == null or not Places.baked():
+		return
+	var mask: Image = _ironworks_mask()
+	if mask == null:
+		return
+	var blot: Texture2D = _stain_texture()
+	var stains := Node3D.new()
+	stains.name = "WorksStains"
+	add_child(stains)
+	var furnaces: Array[Vector2] = []
+	for prop: Dictionary in _region.props:
+		if (prop["kind"] as StringName) == &"kiln":
+			furnaces.append(Vector2(prop["at"] as Vector2i) + Vector2(0.5, 0.5))
+	var works: Vector2i = Places.shared().centre(&"cinderworks")
+	for y: int in range(works.y - 30, works.y + 31):
+		for x: int in range(works.x - 30, works.x + 31):
+			var centre: Vector2 = Vector2(x, y) + Vector2(0.5, 0.5)
+			if not _worn_earth(mask, centre):
+				continue
+			var near_fire: bool = false
+			for furnace: Vector2 in furnaces:
+				if furnace.distance_to(centre) < 3.0:
+					near_fire = true
+					break
+			var h: int = Art.scatter_hash(x * 13 + 1, y * 7 + 9)
+			if h % 100 >= (34 if near_fire else 9):
+				continue
+			var stain := Decal.new()
+			stain.texture_albedo = blot
+			var size: float = (2.2 + float((h / 100) % 10) * 0.25) * (1.3 if near_fire else 1.0)
+			stain.size = Vector3(size * 1.5, 4.0, size)
+			stain.modulate = Color(0.06, 0.05, 0.04, 0.55 + 0.05 * float((h / 1000) % 5))
+			stain.upper_fade = 0.3
+			stain.lower_fade = 0.3
+			stain.position = _feet_of(centre + Vector2(float(h % 7) - 3.0, float((h / 7) % 7) - 3.0) * 0.08)
+			stain.rotation.y = float(h % 628) / 100.0
+			# Only the ground: his terrain and his paths carry `GROUND_LAYER`, nothing else
+			# does, so a stain never falls on a person, a wall or a tree.
+			stain.cull_mask = GROUND_LAYER
+			stains.add_child(stain)
+			stains_laid += 1
+
+
+## A dark blotch with a ragged edge, made once: a disc whose radius wanders with the angle
+## and whose inside is grained.
+func _stain_texture() -> Texture2D:
+	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y: int in 64:
+		for x: int in 64:
+			var p := Vector2(x + 0.5, y + 0.5) - Vector2(32.0, 32.0)
+			var angle: float = p.angle()
+			var edge: float = 26.0 + 3.5 * sin(angle * 3.0 + 0.7) + 2.5 * sin(angle * 7.0 + 2.1) + 1.5 * sin(angle * 13.0)
+			var inside: float = clampf((edge - p.length()) / 9.0, 0.0, 1.0)
+			var grain: float = float(Art.scatter_hash(x * 3, y * 5) % 100) / 100.0
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, inside * (0.75 + 0.25 * grain)))
+	return ImageTexture.create_from_image(image)
+
+
+## **His paths, sharpened** (D13, the audit's 6): his two path shaders fade a path's edge
+## over most of its width and colour it from a noise stretched over tens of metres, so at
+## the lens's height the Forges' streets read as blurred bands and his short yard paths as
+## soft blocks. A copy of each shader, ours, with his colours and his noise: the edge fades
+## over a fifth of what it did and keeps its ragged grain, and a finer grain is laid over
+## the colour for the distance the game is played at. Every mesh wearing his path material
+## wears the copy, in Brindle as in the Forges, so the two places stay alike.
+const PATH_SHARP: String = """
+shader_type spatial;
+render_mode cull_disabled, depth_prepass_alpha;
+uniform sampler2D ground_noise : filter_linear_mipmap, repeat_enable;
+uniform sampler2D ironworks_ground_mask : filter_linear, repeat_disable;
+uniform bool works_path = false;
+varying vec3 world;
+void vertex() { world = (MODEL_MATRIX * vec4(VERTEX, 1.)).xyz; }
+void fragment() {
+	float broad = texture(ground_noise, world.xz * (works_path ? .034 : .024)).r;
+	float grain = texture(ground_noise, world.xz * (works_path ? .65 : .5)).r;
+	float fine = texture(ground_noise, world.xz * 2.3).r;
+	vec3 earth = mix(vec3(.070, .057, .042), vec3(.14, .112, .082), broad) * (.90 + grain * .18);
+	vec3 col = works_path ? earth : mix(vec3(.26, .21, .13), vec3(.41, .34, .22), broad) * (.92 + grain * .15);
+	if (!works_path) {
+		vec2 town_uv = (world.xz - vec2(182., -13.)) / vec2(104., 108.);
+		float inside = step(0., town_uv.x) * step(0., town_uv.y) * step(town_uv.x, 1.) * step(town_uv.y, 1.);
+		col = mix(col, earth, texture(ironworks_ground_mask, clamp(town_uv, vec2(0.), vec2(1.))).r * inside);
+	}
+	ALBEDO = col * (.90 + fine * .16);
+	ALPHA = smoothstep(.22, .48, COLOR.a - (grain - .5) * .34) * (works_path ? .90 : .95);
+	ROUGHNESS = .98;
+}
+"""
+var paths_sharpened: int = 0
+## Frames left in which to look again for his paths to sharpen (D13).
+var _sharpen_left: int = 31
+
+
+func _sharpen_his_paths() -> void:
+	if _his == null:
+		return
+	var shader := Shader.new()
+	shader.code = PATH_SHARP
+	var copies: Dictionary = {}
+	for found: Node in find_children("*", "MeshInstance3D", true, false):
+		var mesh := found as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		var his_paint: Material = mesh.material_override if mesh.material_override != null \
+			else mesh.mesh.surface_get_material(0)
+		if not (his_paint is ShaderMaterial):
+			continue
+		var source: String = his_paint.resource_path
+		if not (source.ends_with("brindle_path.tres") or source.ends_with("ironworks_path.tres")):
+			continue
+		if not copies.has(source):
+			var paint := ShaderMaterial.new()
+			paint.shader = shader
+			paint.render_priority = his_paint.render_priority
+			paint.set_shader_parameter("ground_noise", (his_paint as ShaderMaterial).get_shader_parameter("ground_noise"))
+			paint.set_shader_parameter("ironworks_ground_mask",
+				(his_paint as ShaderMaterial).get_shader_parameter("ironworks_ground_mask"))
+			paint.set_shader_parameter("works_path", source.ends_with("ironworks_path.tres"))
+			copies[source] = paint
+		if mesh.material_override != copies[source]:
+			mesh.material_override = copies[source] as ShaderMaterial
+			paths_sharpened += 1
+		mesh.layers |= GROUND_LAYER
 
 
 ## **Brindle still smokes** (D12): his ruins carry a residual smoke too thin to be seen from
