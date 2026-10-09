@@ -3431,6 +3431,22 @@ Sparks and embers from the lit furnaces, thicker smoke, a glow that breathes; wo
 between the furnaces and the ore; one striking. **Check:** a recorded sequence of the yard,
 and the frame rate.
 
+> **Built 2026-10-09.** **His furnaces, louder**: his smoke at twice its amount and a little
+> bigger, his furnace glow reaching 1.6 times as far and breathing on two periods of its
+> own; our embers over a furnace fourteen where they were five, bigger and rising higher; and
+> every few seconds, each on its own beat, a puff of six bright sparks leaps from the throat.
+> All his nodes in the copy, his scenes untouched. **People at work**: Harry, the foreman,
+> standing at his post by a lit furnace, stokes it — the arm drawn back, then the blow — on a
+> beat of his own; and **two of the works' hands** (`_build_works_hands`) walk from his ore
+> heaps to the furnace each feeds, tip their load in (the same two frames), and walk back.
+> Furniture that moves, like the crowd: the window draws them and nothing else knows them.
+> They wait while the player is within a tile and a half, so nobody is walked through, and
+> are gone while the furnaces are cold, once the gate is forced (the yard is empty then),
+> and during any fight. **Found on the film**: the first hand's way ran under the sorting
+> shed's roof and hid him; it runs between the two rows of furnaces now. Films of the yard
+> in the scratchpad (`movie_forges3`, `movie_forges4`). **Measured: 134 frames a second in
+the yard**, 126 at the cemetery.
+
 ### D12 · Light and atmosphere (audit 11)
 
 A late-afternoon light by default with longer shadows; a light mist at the cemetery on

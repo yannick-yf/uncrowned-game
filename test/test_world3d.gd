@@ -81,6 +81,8 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(window.cutaway_filled(), "the cutaway is filled with rock, his light unchanged")
 		# The start zone is his map's, so the meadows are sown on his world only.
 		if Places.baked():
+			# **The works at work** (D11): two hands carrying ore to the furnaces.
+			assert_eq(window.works_hands(), 2, "two of the works' hands carry ore")
 			assert_true(window.meadow_pieces > 5000, "the meadows are sown: %d pieces" % window.meadow_pieces)
 			for part: Node in window.get_node("Meadows").get_children():
 				assert_eq((part as GeometryInstance3D).cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF,

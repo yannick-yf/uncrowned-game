@@ -468,6 +468,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_build_water()
 	_build_props()
 	_build_closures()
+	_build_works_hands()
 	_sow_meadows()
 	_build_floors()
 	_build_walls()
@@ -1294,7 +1295,7 @@ func _build_embers() -> void:
 	add_child(hearths)
 	for prop: Dictionary in _region.props:
 		var kind: StringName = prop["kind"] as StringName
-		var count: int = 5 if kind == &"kiln" else (3 if kind == &"campfire" else 0)
+		var count: int = 14 if kind == &"kiln" else (3 if kind == &"campfire" else 0)
 		if count == 0:
 			continue
 		var at: Vector2i = prop["at"] as Vector2i
@@ -1397,6 +1398,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_wild(_sim.store(&"wild") as Wild, world, frame.get("fight", {}) as Dictionary)
 	_sync_pack_mark(frame.get("spotted", {}) as Dictionary)
 	_sync_interact(frame.get("interact", {}) as Dictionary)
+	_sync_works_hands(frame, delta)
 	_hold_the_rock()
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
@@ -1567,12 +1569,128 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 		if hail != null and hail.who == npc.id and hail.phase != Hail.IDLE and hail.phase != Hail.COMING:
 			going = hail.facing
 		_step_the_foe(npc.id, figure, stands_at, going, {})
+		# **The foreman at work** (D11): standing at his post by a lit furnace, he stokes
+		# it — the arm drawn back, then the blow — on a beat of his own.
+		if npc.id == FOREMAN and fighting.is_empty() and walkers != null and not walkers.at.has(npc.id) \
+				and _works_lit():
+			var beat: float = fposmod(_now + 0.4, 1.9)
+			var pose: String = "ready" if beat < 0.35 else ("attack" if beat < 0.6 else "")
+			if pose != "":
+				_fight_pose(figure, {"his_pose": pose}, false, Vector2i(-1, 0))
+			else:
+				_idle(figure, Vector2i(-1, 0))
 		_foot_figure(figure, stands_at)
 		figure.visible = true
 	_fairy.visible = fairy_seen
 	for id: StringName in _people.keys():
 		if not present.has(id):
 			(_people[id] as Node3D).visible = false
+
+
+## **The works' hands** (D11, the audit's 8): the yard had a foreman and two guards and
+## nobody working. Two carriers of the works' look walk between his ore piles and the
+## furnaces nearest them, pause at each end — tipping their load into the furnace with the
+## arm, the blow frame — and walk back. Furniture that moves, as the crowd is: nobody to talk
+## to, drawn by the window and known to nothing else. They stop where they are while the
+## player is within a tile and a half of them, so nobody is walked through; and they are
+## gone while the works' furnaces are cold, once the gate has been forced (the yard is
+## empty then, V), and while anybody is fighting.
+const FOREMAN: StringName = &"harry"
+## Each from an ore heap of his to the furnace it feeds, and the way the furnace lies from
+## there. The first walks between the two rows of furnaces, clear of the sorting shed's
+## roof, which hid it on the first film.
+const HAND_PATHS: Array = [[Vector2(331.4, 208.7), Vector2(325.0, 208.7), Vector2i(0, 1)],
+	[Vector2(329.5, 213.2), Vector2(328.5, 211.6), Vector2i(0, -1)]]
+const HAND_SPEED: float = 1.1
+const HAND_PAUSE: float = 1.2
+var _hands: Array[Dictionary] = []
+var _burning_now: Dictionary = {}
+var hands_shown: int = 0
+
+
+func works_hands() -> int:
+	return _hands.size()
+
+
+func _build_works_hands() -> void:
+	if _his == null or not Places.baked():
+		return
+	for i: int in HAND_PATHS.size():
+		var figure: Node3D = _figure(CastLooks.worker(i + 3))
+		figure.name = "WorksHand_%d" % i
+		figure.visible = false
+		add_child(figure)
+		var path: Array = HAND_PATHS[i] as Array
+		var length: float = (path[0] as Vector2).distance_to(path[1] as Vector2)
+		_hands.append({"figure": figure, "path": path, "length": length, "clock": float(i) * 1.7,
+			"phase": 0.0})
+
+
+## Whether the works burn at all, by last frame's reading of richesse.
+func _works_lit() -> bool:
+	return int(_burning_now.get(&"cinderworks", 1)) > 0
+
+
+func _sync_works_hands(frame: Dictionary, delta: float) -> void:
+	hands_shown = 0
+	if _hands.is_empty():
+		return
+	var forced: bool = _sim != null and _sim.facts.has(SiteRules.FORCED)
+	var shown: bool = _works_lit() and not forced and (frame.get("fight", {}) as Dictionary).is_empty()
+	var player: Vector2 = frame.get("player", Vector2(-99.0, -99.0)) as Vector2
+	for hand: Dictionary in _hands:
+		var figure: Node3D = hand["figure"] as Node3D
+		figure.visible = shown
+		if not shown:
+			continue
+		hands_shown += 1
+		var path: Array = hand["path"] as Array
+		var length: float = float(hand["length"])
+		var walk_time: float = length / HAND_SPEED
+		var loop: float = (walk_time + HAND_PAUSE) * 2.0
+		var at: Vector2 = _hand_at(path, walk_time, float(hand["clock"]), loop)
+		# Nobody walks through the player: within a tile and a half, the hand waits.
+		if at.distance_to(player) > 1.5:
+			hand["clock"] = fposmod(float(hand["clock"]) + delta, loop)
+		var t: float = float(hand["clock"])
+		var to_furnace: Vector2 = path[1] as Vector2 - path[0] as Vector2
+		var facing: Vector2i = _four_way(to_furnace)
+		if t < walk_time:
+			hand["phase"] = fposmod(float(hand["phase"]) + delta * HAND_SPEED / (WALK_CYCLE_M / _metres_per_tile), 1.0)
+			_walk(figure, facing, float(hand["phase"]))
+		elif t < walk_time + HAND_PAUSE:
+			# At the furnace: the load goes in, the arm drawn back then thrown.
+			var into: float = t - walk_time
+			var furnace_way: Vector2i = path[2] as Vector2i if path.size() > 2 else facing
+			if into < 0.75:
+				_fight_pose(figure, {"his_pose": "ready" if into < 0.45 else "attack"}, false, furnace_way)
+			else:
+				_idle(figure, furnace_way)
+		elif t < walk_time * 2.0 + HAND_PAUSE:
+			hand["phase"] = fposmod(float(hand["phase"]) + delta * HAND_SPEED / (WALK_CYCLE_M / _metres_per_tile), 1.0)
+			_walk(figure, _four_way(-to_furnace), float(hand["phase"]))
+		else:
+			_idle(figure, _four_way(-to_furnace))
+		_foot_figure(figure, at)
+
+
+## Where a hand is at `t` seconds into its loop: out to the furnace, a pause, back, a pause.
+static func _hand_at(path: Array, walk_time: float, t: float, _loop: float) -> Vector2:
+	var a: Vector2 = path[0] as Vector2
+	var b: Vector2 = path[1] as Vector2
+	if t < walk_time:
+		return a.lerp(b, t / walk_time)
+	if t < walk_time + HAND_PAUSE:
+		return b
+	if t < walk_time * 2.0 + HAND_PAUSE:
+		return b.lerp(a, (t - walk_time - HAND_PAUSE) / walk_time)
+	return a
+
+
+static func _four_way(way: Vector2) -> Vector2i:
+	if absf(way.x) >= absf(way.y):
+		return Vector2i(int(signf(way.x)), 0)
+	return Vector2i(0, int(signf(way.y)))
 
 
 ## **The people in the fight, by who they are** (O6): each cast member fighting, with
@@ -2504,6 +2622,7 @@ func _sync_embers(frame: Dictionary) -> void:
 		var row: Dictionary = towns.get(place, {}) as Dictionary
 		burning[place] = TownRules.lit_of(int(_kilns_in[place]),
 			int(row.get("richesse", TownRules.CEILING)))
+	_burning_now = burning
 	for group: Dictionary in _workshop_heat:
 		var on: bool = _burns(burning, group)
 		for node: Node3D in (group["nodes"] as Array[Node3D]):
@@ -2512,6 +2631,9 @@ func _sync_embers(frame: Dictionary) -> void:
 				(node as CPUParticles3D).emitting = on
 		for coals: ShaderMaterial in (group["coals"] as Array[ShaderMaterial]):
 			coals.set_shader_parameter("glow_strength", null if on else 0.0)
+		var k: float = float(int(group.get("index", 0)))
+		for glow: OmniLight3D in (group.get("glows", []) as Array):
+			glow.light_energy = 1.25 + 0.45 * sin(now * 2.3 + k * 1.7) + 0.15 * sin(now * 7.1 + k)
 	# A fire's light breathes on two periods of its own, so it flickers rather than pulses.
 	for i: int in _fire_lights.size():
 		var light: OmniLight3D = _fire_lights[i]
@@ -2528,12 +2650,30 @@ func _sync_embers(frame: Dictionary) -> void:
 			dot.visible = lit
 			if not lit:
 				continue
+			# A furnace's last six dots are its puff (D11): every few seconds, on its own
+			# beat, they leap together out of the throat, bright, and are gone in half a
+			# second; the rest drift up as embers do.
+			var kiln: bool = (hearth["kind"] as StringName) == &"kiln"
+			if kiln and i >= dots.size() - 6:
+				var k: int = int(hearth.get("index", 0))
+				var beat: float = fposmod(now + float(k) * 0.9, 2.8)
+				if beat > 0.5:
+					dot.visible = false
+					continue
+				var j: float = float(i - (dots.size() - 6))
+				var t: float = beat / 0.5
+				var angle: float = j * 1.047 + float(k)
+				dot.position = base + Vector3(cos(angle) * 0.5 * t, lift + 0.2, sin(angle) * 0.5 * t) \
+					+ _lens_up * (t * 1.6 - t * t * 0.6)
+				dot.modulate = Color(1.0, 0.85, 0.45, 1.0 - t)
+				dot.pixel_size = 0.04 * (1.0 - t * 0.5)
+				continue
 			var life: float = fposmod(now * (0.34 + float(i) * 0.07) + float(i) * 0.41, 1.0)
-			var rise: float = life * 2.2
+			var rise: float = life * (3.2 if kiln else 2.2)
 			var sway: float = sin((now + float(i) * 2.1) * 1.7) * (0.2 + life * 0.4)
 			dot.position = base + Vector3(sway, lift, 0.0) + _lens_up * rise
-			dot.modulate = Color(colour.r, colour.g, colour.b, 0.75 * (1.0 - life) * (1.0 - life))
-			dot.pixel_size = 0.02 + (1.0 - life) * 0.02
+			dot.modulate = Color(colour.r, colour.g, colour.b, (0.95 if kiln else 0.75) * (1.0 - life) * (1.0 - life))
+			dot.pixel_size = (0.03 if kiln else 0.02) + (1.0 - life) * 0.02
 
 
 ## **Where the lens is pointing from**, given how far into a fight we are: 0 is
@@ -3925,9 +4065,22 @@ func _read_workshop_heat() -> void:
 		var at: Vector2i = prop["at"] as Vector2i
 		var nodes: Array[Node3D] = []
 		var coals: Array[ShaderMaterial] = []
+		var glows: Array[OmniLight3D] = []
 		for child: Node in piece.find_children("*", "", true, false):
 			if child is CPUParticles3D or child is Light3D:
 				nodes.append(child as Node3D)
+			# **His furnaces, louder** (D11): his smoke at twice its amount and a little
+			# bigger, his glow reaching further; the glow breathes in `_sync_embers`. His
+			# nodes in the copy, his scenes untouched.
+			if child is CPUParticles3D and String(child.name).begins_with("Fumee"):
+				var smoke := child as CPUParticles3D
+				smoke.amount = smoke.amount * 2
+				smoke.scale_amount_min *= 1.25
+				smoke.scale_amount_max *= 1.35
+			if child is OmniLight3D:
+				var glow := child as OmniLight3D
+				glow.omni_range = glow.omni_range * 1.6
+				glows.append(glow)
 			elif child is MeshInstance3D and child.name in [&"FurnaceBedEmbers", &"HearthCoalsEmbers"]:
 				var mesh := child as MeshInstance3D
 				var material: ShaderMaterial = (mesh.material_override as ShaderMaterial).duplicate() as ShaderMaterial
@@ -3936,4 +4089,4 @@ func _read_workshop_heat() -> void:
 		if nodes.is_empty() and coals.is_empty():
 			continue
 		_workshop_heat.append({"place": _region.zone_at(at), "nodes": nodes, "coals": coals,
-			"index": int(_kiln_index.get(at, -1))})
+			"index": int(_kiln_index.get(at, -1)), "glows": glows})
