@@ -422,6 +422,8 @@ var closure_logs: int = 0
 ## Every closed tile something of his stands on — a tree, a shrub or a log — so a test can
 ## ask that no tile of a wood is a wall nobody sees.
 var closure_planted: Dictionary = {}
+## The meadows sown (D8): how many of his tufts, flowers, stones and stumps.
+var meadow_pieces: int = 0
 
 
 # ------------------------------------------------------------------ building ---
@@ -451,6 +453,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 		_build_water()
 	_build_props()
 	_build_closures()
+	_sow_meadows()
 	_build_floors()
 	_build_walls()
 	_build_fairy()
@@ -3530,6 +3533,112 @@ func _lay_logs(planted: Dictionary, inside: Dictionary, roads: Dictionary) -> vo
 				_plant_at(planted, HIS_STONE, Vector2i(rock.floor()), Transform3D(
 					Basis(Vector3.UP, float(h)).scaled(Vector3.ONE * 0.6), _feet_of(rock)))
 				break
+
+
+## **The meadows filled** (D8, the audit's 5): round Brindle his own map has grass tufts,
+## flowers and bushes; between the footbridge, the wolves and the Forges the grass was a
+## painted colour and nothing on it, and the difference showed. So the start zone's grass —
+## open ground and the brief's woods his window never drew, but not Brindle, which is his,
+## nor road, town or the works' bare earth — is sown with his tufts, a flower now and then,
+## a small stone, and near the works a stump: denser by a path's edge. His library's
+## pieces, in squares of `WOOD_CELL` tiles, and none of them casting a shadow.
+const MEADOW_TUFT: String = "plants/grass_meadow.tscn"
+const MEADOW_FLOWER: String = "plants/flowers_daisy.tscn"
+const MEADOW_STONE: String = "rocks/boulder_round.tscn"
+const MEADOW_STUMP: String = "props/stump.tscn"
+## His ironworks ground mask and the metres it covers, as his landscape shader reads them
+## (`brindle_landscape.gdshader`): red is the works' worn earth. Read, never written.
+const IRONWORKS_MASK: String = "res://prototypes/brindle_3d/assets/landscape/ironworks_ground_mask.png"
+const IRONWORKS_MASK_BOUNDS: Rect2 = Rect2(182.0, -13.0, 104.0, 108.0)
+## How worn his earth must be for nothing to grow on it.
+const WORN_EARTH: float = 0.22
+
+
+func _sow_meadows() -> void:
+	if _his == null or not Places.baked():
+		return
+	var zone: Dictionary = Navigation.reachable(_region, Places.shared().point(&"cemetery"))
+	var works: Vector2 = Vector2(Places.shared().centre(&"cinderworks"))
+	var face: Vector2 = Vector2(Places.shared().point(&"working_face"))
+	var worn: Image = _ironworks_mask()
+	var planted: Dictionary = {}
+	for key: Variant in zone.keys():
+		var tile: Vector2i = key as Vector2i
+		var kind: Region.Terrain = _region.terrain_at(tile)
+		# The works' cleared ground grows too where his paint leaves it grass — thinner,
+		# and with more stumps, because it is felled ground.
+		var cleared: bool = kind == Region.Terrain.CLEARED
+		if kind != Region.Terrain.WILD and kind != Region.Terrain.FOREST and not cleared:
+			continue
+		if _region.zone_at(tile) == &"brindle":
+			continue
+		var centre: Vector2 = Vector2(tile) + Vector2(0.5, 0.5)
+		if _worn_earth(worn, centre):
+			continue
+		var h: int = Art.scatter_hash(tile.x * 7 + 3, tile.y * 13 + 5)
+		var by_path: bool = _near_kind(tile, Region.Terrain.ROAD, 2)
+		var tufts: int = (2 if by_path else 1) if h % 100 < (85 if by_path else (40 if cleared else 62)) else 0
+		for k: int in tufts:
+			var spot: Vector2 = centre + Vector2(float((h / (3 + k)) % 9) - 4.0, float((h / (7 + k)) % 9) - 4.0) * 0.1
+			_plant_at(planted, MEADOW_TUFT, tile, Transform3D(Basis(Vector3.UP, float(h + k) * 0.9)
+				.scaled(Vector3.ONE * (1.1 + 0.1 * float((h / 11 + k) % 5))), _feet_of(spot)))
+		# Flowers grow in patches, not as a scatter of dots: a patch is a square of the map
+		# the coarse hash picks, and inside it about one tile in four flowers.
+		var patch: bool = Art.scatter_hash(tile.x / 6 + 101, tile.y / 6 + 37) % 100 < 18
+		var roll: int = (h / 100) % 100
+		if not cleared and ((patch and roll < 26) or (not patch and roll < 1)):
+			_plant_at(planted, MEADOW_FLOWER, tile, Transform3D(Basis(Vector3.UP, float(h) * 1.7)
+				.scaled(Vector3.ONE * 1.2), _feet_of(centre + Vector2(0.25, -0.2))))
+		elif roll >= 40 and roll < 42:
+			_plant_at(planted, MEADOW_STONE, tile, Transform3D(Basis(Vector3.UP, float(h) * 2.3)
+				.scaled(Vector3.ONE * (0.18 + 0.05 * float(h % 3))), _feet_of(centre + Vector2(-0.2, 0.15))))
+		elif roll >= 50 and roll < (62 if cleared else 53) \
+				and (cleared or centre.distance_to(works) < 40.0 or centre.distance_to(face) < 18.0):
+			_plant_at(planted, MEADOW_STUMP, tile, Transform3D(Basis(Vector3.UP, float(h) * 0.6)
+				.scaled(Vector3.ONE * 0.9), _feet_of(centre)))
+	var meadows := Node3D.new()
+	meadows.name = "Meadows"
+	add_child(meadows)
+	for key: String in planted.keys():
+		var path: String = key.get_slice("|", 0)
+		var by_cell: Dictionary = planted[key] as Dictionary
+		for cell: Vector2i in by_cell.keys():
+			var where: Array = by_cell[cell] as Array
+			meadow_pieces += where.size()
+			_plant_many(meadows, _library_scene(path), where, "%s_%d_%d" % [path.get_file().get_basename(), cell.x, cell.y], false)
+
+
+## His ironworks ground mask, read from his file as his shader reads it, or null.
+func _ironworks_mask() -> Image:
+	if not FileAccess.file_exists(IRONWORKS_MASK):
+		return null
+	var image := Image.new()
+	if image.load_png_from_buffer(FileAccess.get_file_as_bytes(IRONWORKS_MASK)) != OK:
+		return null
+	return image
+
+
+## Whether his paint makes this point the works' worn earth (the mask's red).
+func _worn_earth(mask: Image, at_tiles: Vector2) -> bool:
+	if mask == null:
+		return false
+	var metres: Vector2 = _origin_m + at_tiles * _metres_per_tile
+	var uv: Vector2 = (metres - IRONWORKS_MASK_BOUNDS.position) / IRONWORKS_MASK_BOUNDS.size
+	if uv.x < 0.0 or uv.y < 0.0 or uv.x > 1.0 or uv.y > 1.0:
+		return false
+	var px := Vector2i(clampi(int(uv.x * float(mask.get_width())), 0, mask.get_width() - 1),
+		clampi(int(uv.y * float(mask.get_height())), 0, mask.get_height() - 1))
+	return mask.get_pixelv(px).r > WORN_EARTH
+
+
+## Whether a tile of `kind` lies within `within` tiles.
+func _near_kind(tile: Vector2i, kind: Region.Terrain, within: int) -> bool:
+	for dy: int in range(-within, within + 1):
+		for dx: int in range(-within, within + 1):
+			var near: Vector2i = tile + Vector2i(dx, dy)
+			if _region.in_bounds(near) and _region.terrain_at(near) == kind:
+				return true
+	return false
 
 
 func _library_scene(path: String) -> PackedScene:

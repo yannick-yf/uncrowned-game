@@ -74,6 +74,14 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_eq(bare, 0, "every tile of the start zone's woods has his tree, shrub or log on it")
 		assert_true(window.closure_trees > 1000, "the woods are woods: %d of his trees" % window.closure_trees)
 		assert_true(window.closure_logs >= 6, "his logs lie across each road into a wood: %d" % window.closure_logs)
+		# **The meadows are sown** (D8): his tufts, flowers, stones and stumps over the start
+		# zone's bare grass, every one drawn without a shadow.
+		# The start zone is his map's, so the meadows are sown on his world only.
+		if Places.baked():
+			assert_true(window.meadow_pieces > 5000, "the meadows are sown: %d pieces" % window.meadow_pieces)
+			for part: Node in window.get_node("Meadows").get_children():
+				assert_eq((part as GeometryInstance3D).cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF,
+					"%s casts no shadow" % part.name)
 		assert_true(window.his_kit_count > 20,
 			"the kit's houses, barns, wells and barrels stand as his library's pieces: %d" % window.his_kit_count)
 		assert_true(window.figures_are_his(), "every person is his traveller, not a pack sprite")

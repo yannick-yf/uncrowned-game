@@ -3357,6 +3357,18 @@ His grass tufts, flowers, stones, stumps and bushes sown over the zone's bare me
 denser along paths and round trees, in squares of 16 tiles like the woods. **Check:**
 frames at the wolves and north of the Forges; the frame rate measured before and after.
 
+> **Built 2026-10-09.** `World3d._sow_meadows`: every tile of the start zone that is open
+> grass, the brief's woods his window never drew, or the works' cleared ground — not Brindle,
+> which is his, nor road or town — gets his grass tufts, two by a path and one elsewhere
+> most of the time; **flowers in patches** (a square of the map in six is a patch, a tile
+> in four flowers in it), never a scatter of dots; a small stone now and then; stumps near
+> the works and on its felled ground. **Nothing grows on his worn earth**: his ironworks
+> ground mask is read as his landscape shader reads it (red is the works' trodden earth),
+> so the dirt round the houses and down the street stays bare. 9,000-odd pieces in squares
+> of 16 tiles, no shadows. **Measured: 120 frames a second with them and without** (by the
+> wolves, at Kell's fire, in the works' street — 117 against 118), 0.6–1.2 million
+> primitives more.
+
 ### D9 · The holes under Brindle (audit 1, and audit 17's cliffs)
 
 Their cause found, then fixed — his coast's dressing restored (the §9b defect of
