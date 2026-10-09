@@ -469,6 +469,7 @@ func build(region: Region, landscape: Dictionary, art: Art, sim: Sim) -> void:
 	_build_props()
 	_build_closures()
 	_build_works_hands()
+	_build_atmosphere()
 	_sow_meadows()
 	_build_floors()
 	_build_walls()
@@ -618,7 +619,9 @@ func _adopt_his_world() -> void:
 	if his_air != null:
 		_air = his_air.environment
 		_fill_the_cutaway()
+	_late_afternoon()
 	_remember_light()
+	_rouse_ruin_smoke()
 	# His site labels are editor guides — a forty-eight-point "Brindle" over the
 	# ruins — and his playtest hides them the moment play starts. They are built when
 	# his terrain rebuilds, a frame later, so they are hidden then; and everything
@@ -1399,6 +1402,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_pack_mark(frame.get("spotted", {}) as Dictionary)
 	_sync_interact(frame.get("interact", {}) as Dictionary)
 	_sync_works_hands(frame, delta)
+	_sync_atmosphere(frame, delta)
 	_hold_the_rock()
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
@@ -3551,6 +3555,161 @@ func _sync_light(frame: Dictionary, delta: float) -> void:
 		_sun.light_energy = _sun_energy_base * lerpf(ENERGY_HOSTILE, ENERGY_LOYAL, _warmth)
 	if _air != null:
 		_air.ambient_light_color = Color(_air_base.r * tint.r, _air_base.g * tint.g, _air_base.b * tint.b)
+
+
+## **The light of late afternoon** (D12, the audit's 11): his sun stood at 55°, full midday
+## over a village that burned. It comes down to 44° on the same bearing — the light still
+## from his top left, the shadows longer — warmer and a touch softer, and his ambient light
+## warmer to match. Before `_remember_light`, so allégeance leans this light and not his.
+const SUN_ELEVATION_DEGREES: float = -44.0
+const SUN_LATE: Color = Color(1.0, 0.86, 0.68)
+const AMBIENT_LATE: Color = Color(1.03, 0.98, 0.90)
+
+
+func _late_afternoon() -> void:
+	if _sun != null:
+		_sun.rotation_degrees.x = SUN_ELEVATION_DEGREES
+		_sun.light_color = SUN_LATE
+		_sun.light_energy = _sun.light_energy * 0.96
+		# Softer edges: lower, his height field's 2 m facets cast their steps in shadow.
+		_sun.shadow_blur = 1.6
+	if _air != null:
+		var base: Color = _air.ambient_light_color
+		_air.ambient_light_color = Color(base.r * AMBIENT_LATE.r, base.g * AMBIENT_LATE.g, base.b * AMBIENT_LATE.b)
+
+
+## **Brindle still smokes** (D12): his ruins carry a residual smoke too thin to be seen from
+## the lens; it is made thicker and taller. His nodes in the copy.
+func _rouse_ruin_smoke() -> void:
+	if _his == null:
+		return
+	for found: Node in _his.find_children("FumeeResiduelle", "CPUParticles3D", true, false):
+		var smoke := found as CPUParticles3D
+		smoke.amount = smoke.amount * 2
+		smoke.lifetime = smoke.lifetime * 1.3
+		smoke.scale_amount_min *= 1.4
+		smoke.scale_amount_max *= 1.6
+		ruin_smokes += 1
+
+
+var ruin_smokes: int = 0
+
+
+## The sun's elevation now, in degrees below the horizon line (D12), for the suite.
+func sun_elevation() -> float:
+	return _sun.rotation_degrees.x if _sun != null else 0.0
+## Ash over Brindle and mist over the graves (D12): soft dots of ours, the ash small and grey
+## and drifting, the mist large, white and faint, lying low.
+var _ash: Array[Sprite3D] = []
+var _mist: Array[MeshInstance3D] = []
+const ASH_COUNT: int = 54
+const MIST_COUNT: int = 14
+var _haze: Texture2D = null
+## The mist lifts with the morning: whole until this hour of the first day, gone two hours on.
+const MIST_LIFTS_AT_HOUR: float = 6.0
+## How drained Brindle's colours are while the player stands in it.
+const BRINDLE_SATURATION: float = 0.8
+var _drained: float = 0.0
+
+
+var _ruins: Array[Vector2] = []
+
+
+func _build_atmosphere() -> void:
+	if not Places.baked():
+		return
+	for prop: Dictionary in _region.props:
+		if (prop["kind"] as StringName) == &"ruin_house" and _region.zone_at(prop["at"] as Vector2i) == &"brindle":
+			_ruins.append(Vector2(prop["at"] as Vector2i) + Vector2(1.0, 1.0))
+	for i: int in ASH_COUNT:
+		var flake: Sprite3D = _dot_sprite()
+		flake.name = "Ash_%d" % i
+		flake.render_priority = 1
+		add_child(flake)
+		_ash.append(flake)
+	# Each puff a sheet lying a metre over the ground, whose edge fades where it meets the
+	# ground or a cliff (proximity fade), so it lies in the hollow instead of cutting lines
+	# across it. Standing sheets, turned to the lens, were tried first and cut the slope.
+	for i: int in MIST_COUNT:
+		var veil := MeshInstance3D.new()
+		veil.name = "Mist_%d" % i
+		var sheet := PlaneMesh.new()
+		sheet.size = Vector2.ONE * (8.0 + 2.5 * float(i % 3))
+		veil.mesh = sheet
+		var paint := StandardMaterial3D.new()
+		paint.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		paint.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		paint.albedo_texture = _soft_haze()
+		paint.proximity_fade_enabled = true
+		paint.proximity_fade_distance = 2.4
+		paint.cull_mode = BaseMaterial3D.CULL_DISABLED
+		paint.render_priority = 1
+		veil.material_override = paint
+		veil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(veil)
+		_mist.append(veil)
+
+
+## A wide soft disc for the mist: 64 pixels and a gaussian fall, so a puff a few metres
+## across shows no edge and no step (the 16-pixel dot showed both).
+func _soft_haze() -> Texture2D:
+	if _haze != null:
+		return _haze
+	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y: int in 64:
+		for x: int in 64:
+			var away: float = Vector2(x + 0.5, y + 0.5).distance_to(Vector2(32.0, 32.0)) / 32.0
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, exp(-away * away * 4.0) * clampf((1.0 - away) * 4.0, 0.0, 1.0)))
+	_haze = ImageTexture.create_from_image(image)
+	return _haze
+
+
+func _sync_atmosphere(frame: Dictionary, delta: float) -> void:
+	var now: float = float(frame.get("now", 0.0))
+	# Ash rises from the ruins themselves, a few flakes over each, drifting with the air.
+	for i: int in _ash.size():
+		var flake: Sprite3D = _ash[i]
+		if _ruins.is_empty():
+			flake.visible = false
+			continue
+		var over: Vector2 = _ruins[i % _ruins.size()]
+		var seed_x: float = float(Art.scatter_hash(i * 7, 3) % 1000) / 1000.0
+		var seed_y: float = float(Art.scatter_hash(5, i * 11) % 1000) / 1000.0
+		var life: float = fposmod(now * (0.07 + 0.04 * seed_x) + seed_y, 1.0)
+		var spot: Vector2 = over + Vector2((seed_x - 0.5) * 2.5, (seed_y - 0.5) * 2.0) \
+			+ Vector2(sin(now * 0.5 + float(i)) * 0.8 + life * 1.6, 0.0)
+		flake.position = _feet_of(spot) + Vector3.UP * (1.2 + life * 5.0)
+		var fade: float = sin(PI * life)
+		flake.modulate = Color(0.78, 0.76, 0.72, 0.85 * fade)
+		flake.pixel_size = 0.016 + 0.010 * seed_x
+	# The morning mist, by the hour of the first day.
+	var tick: int = _sim.tick if _sim != null else 0
+	var hour: float = float(tick % Game.TICKS_PER_IN_GAME_DAY) / 60.0
+	var morning: float = 1.0 - clampf((hour - MIST_LIFTS_AT_HOUR) / 2.0, 0.0, 1.0)
+	if tick >= Game.TICKS_PER_IN_GAME_DAY:
+		morning = 0.0
+	var graves: Vector2 = Vector2(Places.shared().point(&"cemetery")) + Vector2(0.5, 0.5) if Places.baked() else Vector2.ZERO
+	for i: int in _mist.size():
+		var veil: MeshInstance3D = _mist[i]
+		veil.visible = morning > 0.01
+		if not veil.visible:
+			continue
+		var a: float = float(i) * 2.399963
+		var reach: float = 2.0 + float(i % 4) * 1.6
+		# In the hollow south of the graves, toward the cliffs, never up the meadow behind
+		# them — where the ground rises the sheets would meet it along a jagged line.
+		var spot: Vector2 = graves + Vector2(cos(a) * reach * 1.2, 2.0 + absf(sin(a)) * reach * 0.6) \
+			+ Vector2(sin(now * 0.06 + float(i)) * 1.2, 0.0)
+		veil.position = _feet_of(spot) + Vector3.UP * 1.4
+		(veil.material_override as StandardMaterial3D).albedo_color = Color(0.94, 0.96, 0.97,
+			(0.13 + 0.04 * sin(now * 0.4 + float(i))) * morning)
+	# Brindle's colours, a little drained while the player is in it.
+	if _air != null:
+		var at: Vector2 = frame.get("player", Vector2.ZERO) as Vector2
+		var inside: float = 1.0 if _region.zone_at(Vector2i(at.floor())) == &"brindle" else 0.0
+		_drained = lerpf(_drained, inside, clampf(delta * 1.5, 0.0, 1.0))
+		_air.adjustment_enabled = true
+		_air.adjustment_saturation = lerpf(1.0, BRINDLE_SATURATION, _drained)
 
 
 ## What he chose, kept so the tint multiplies it rather than replacing it.

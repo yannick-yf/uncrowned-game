@@ -3453,6 +3453,21 @@ A late-afternoon light by default with longer shadows; a light mist at the cemet
 waking; smoke and ash over Brindle's ruins, its colours a little drained — within his sun
 and sky. **Check:** frames of the cemetery, Brindle and the Forges, before and after.
 
+> **Built 2026-10-09.** **Late afternoon** (`_late_afternoon`): his sun down from 55° to 44°
+> on the same bearing — the light still from his top left — warmer (1, 0.86, 0.68) and a
+> touch softer, its shadows' edges blurred, his ambient light warmed to match; set before
+> allégeance's tint, which leans this light. 36° was tried first: the shadows were long and
+> fine, but his height field's 2 m facets cast their steps along every terrace's edge.
+> **The morning mist** over the graves: soft sheets of ours lying a metre and a half over the
+> ground in the hollow south of the graves, toward the cliffs, fading where they meet the
+> ground (proximity fade) with a 64-pixel soft disc; whole until six in the morning of the
+> first day, gone by eight. Three ways were refused on frames: our 16-pixel dot scaled up
+> (square edges), sheets turned to the lens (they cut the slope along hard lines), and sheets
+> spread over the graves' meadow (a jagged line where the ground rises). **Brindle**: his
+> ruins' residual smoke twice as thick and taller (his nodes in the copy — his shader keeps it
+> discreet), grey ash rising from the ruins, and its colours a fifth less saturated while the
+> player stands in it, eased in and out (the 3D picture only; the HUD keeps its colours).
+
 ### D13 · The Forges' ground (audit 6)
 
 His slag, ore and stacked logs on the works' ground; dark coal stains and ruts; the dirt
