@@ -133,7 +133,6 @@
   "duel.his_turn": "À {0}",
   "hud.regard": ", {0}",
   "hud.escort": "escorte du roi : {0}",
-  "hud.to_blackcairn": "{0} cases jusqu'à Blackcairn",
   "hud.clock": "{0}   -   en route {1}:{2}",
   "prompt.talk": "E, parler à {0}, {1}",
   "prompt.put_back": "E, le remettre",

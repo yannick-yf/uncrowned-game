@@ -31,7 +31,6 @@
   "hud.line": "{0}{1}   -   HP {2}/{3}   -   deaths {4}",
   "hud.regard": ", {0}",
   "hud.escort": "the king's escort: {0}",
-  "hud.to_blackcairn": "{0} tiles to Blackcairn",
   "hud.clock": "{0}   -   walked {1}:{2}",
   "fight.you": "You",
   "fight.armour": "Protection {0}",

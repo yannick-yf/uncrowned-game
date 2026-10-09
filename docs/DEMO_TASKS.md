@@ -3198,8 +3198,10 @@ the zone's edge; `CLAUDE.md`, V3 and his brother's page.
 >    the open world is the map from before it, and they are the 2D map's rules.
 > 7. **The king's straight-line test still said ok**: it reads the open world and prints
 >    `OFF`.
-> 8. **The HUD counts the tiles to Blackcairn**, which the demo cannot reach: Yannick's to
->    decide.
+> 8. **The HUD counts the tiles to Blackcairn**, which the demo cannot reach. Yannick,
+>    2026-10-09: *hide it, for good* — not something the player should be minding, in the
+>    demo or after it. The line is gone from the HUD; `WorldState.tiles_to_blackcairn`
+>    stays for `tools/sim_runner.gd`.
 > 9. **Two lines send the player beyond the zone**: noted under P2.
 > 10. **Frame 36 hid the player behind a fir**: taken at (257,318).
 > 11. **Weak checks**: the edge test finds its tiles from the closures and the walk from the
@@ -3214,6 +3216,11 @@ the zone's edge; `CLAUDE.md`, V3 and his brother's page.
 ---
 
 ## Later — known gaps, kept so they are not forgotten
+
+- **Lines that send the player beyond the start zone** (the review of Z; Yannick,
+  2026-10-09: *with P2*): Wren's *ask_watched* names Saltmarch; Bram's *remonte la route
+  et passe la rivière* has two roads north out of Brindle, one ending at the fallen
+  bridge. Written up under P2.
 
 - **More than wolves in the wild** (the review of R): sight and wandering are content for
   any kind, but the window draws every beast of a pack as a wolf, a pack's prompt needs a

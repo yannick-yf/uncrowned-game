@@ -2859,8 +2859,8 @@ func _draw_hud() -> void:
 		Text.of(&"hud.line", [where, _regard(), _world.player_hp, WorldState.MAX_HP, _world.deaths]),
 		Text.of(&"hud.escort", [_ticked.kings_escort()]),
 	]
-	if _world.current_zone == WorldState.OVERWORLD:
-		lines.append(Text.of(&"hud.to_blackcairn", [int(round(_world.tiles_to_blackcairn()))]))
+	# No count of the tiles to Blackcairn (Yannick, 2026-10-09): not something the player
+	# should be minding, in the demo or after it.
 	lines.append(Text.of(&"hud.clock",
 		[_clock(_sim.tick), walked / 60, "%02d" % (walked % 60)]))
 	lines.append(Text.of(&"hud.language", [Text.locale().to_upper()]))
