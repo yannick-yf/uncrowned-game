@@ -32,6 +32,7 @@ const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
 const JOURNAL_ROWS: int = 9
 ## Room under the pause menu's rows for the two lines saying what leaving costs.
 const PAUSE_NOTE_ROOM: float = 52.0
+const PAUSE_KEYS_ROOM: float = 22.0
 
 var _journal_open: bool = false
 ## Which page of the journal is showing. Kept between openings: a player who was
@@ -175,6 +176,9 @@ var _three_d: World3d = null
 var draws_the_world: bool = true
 @onready var _hud: CanvasLayer = $HUD
 @onready var _info: Label = $HUD/Info
+## The exploration HUD (D2): his health, where he is, the place's title. `_info` is no
+## longer drawn — its column of text is what D2 replaced.
+var _explore_hud: ExploreHud = null
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
 @onready var _line: Label = $HUD/DialogueBox/Line
@@ -219,6 +223,9 @@ func _ready() -> void:
 	_player = _sim.store(&"player") as PlayerState
 	_road = _sim.store(&"travellers") as Travellers
 	_seen_events = _sim.events.size()
+	_explore_hud = ExploreHud.new()
+	_hud.add_child(_explore_hud)
+	_info.visible = false
 	_fight_hud = FightHud.new()
 	_hud.add_child(_fight_hud)
 	_inventory_layer = CanvasLayer.new()
@@ -1109,7 +1116,9 @@ func _process(delta: float) -> void:
 	_hud.visible = _paused == null and not _map_open and _inventory == null and _ambush_choice.is_empty()
 	# The journal is itself inside the HUD, so only the two readouts drawn over the
 	# world step aside for it.
-	_info.visible = not _journal_open
+	_info.visible = false
+	if _explore_hud != null:
+		_explore_hud.visible = not _journal_open
 	_prompt.visible = not _journal_open
 	# Placed even while paused, so the first frame of a run that opens paused is not
 	# a view of the top-left corner of the map.
@@ -1122,7 +1131,8 @@ func _process(delta: float) -> void:
 	_draw_ring()
 	# The exploration readout steps aside for the fight's own: two lines of small text
 	# over two bars of pips is neither.
-	_info.visible = _info.visible and _fight_lens < 0.5
+	if _explore_hud != null:
+		_explore_hud.visible = _explore_hud.visible and _fight_lens < 0.5
 
 	var eye: Vector2 = _camera_at(delta)
 	if _three_d != null:
@@ -2412,12 +2422,17 @@ func _draw_paused() -> void:
 	# sound row to a box measured for four put "quit the game" through the middle of
 	# the sentence explaining what quitting costs.
 	var body: float = float(_paused.rows.size()) * Menu.SPACING
-	var box := Rect2(-position + Vector2(screen.x * 0.5 - 130.0, 96.0),
-		Vector2(260.0, 78.0 + body + PAUSE_NOTE_ROOM))
+	# Wide enough for the keys' line (D2: the keys left the HUD for here).
+	var box := Rect2(-position + Vector2(screen.x * 0.5 - 200.0, 84.0),
+		Vector2(400.0, 78.0 + body + PAUSE_KEYS_ROOM + PAUSE_NOTE_ROOM))
 	Ui.panel(self, box)
 	Ui.write(self, box.position + Vector2(0.0, 30.0), Text.of(&"pause.heading"),
 		Ui.HEADING, Ui.GOLD, HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
-	_paused.draw_on(self, box.position.x + 42.0, box.position.y + 58.0)
+	_paused.draw_on(self, box.position.x + 112.0, box.position.y + 58.0)
+	var keys_y: float = box.position.y + 78.0 + body + 10.0
+	draw_line(Vector2(box.position.x + 24.0, keys_y - 14.0), Vector2(box.end.x - 24.0, keys_y - 14.0), Ui.EDGE, 1.0)
+	Ui.write(self, Vector2(box.position.x, keys_y), Text.of(&"pause.keys"), Ui.NOTE, Ui.SAGE,
+		HORIZONTAL_ALIGNMENT_CENTER, box.size.x)
 	draw_multiline_string(Ui.font(),
 		box.position + Vector2(16.0, box.size.y - PAUSE_NOTE_ROOM + 12.0),
 		Text.of(&"pause.note"), HORIZONTAL_ALIGNMENT_CENTER, box.size.x - 32.0,
@@ -2827,8 +2842,7 @@ func _regard() -> String:
 	var zone: StringName = _world.region().zone_at(_world.player_tile())
 	if zone == &"":
 		return ""
-	return Text.of(&"hud.regard", [Text.of(StringName("regard.%s"
-		% StandingRules.word_for(PlayerRules.regard_in(_player, zone))))])
+	return Text.of(StringName("regard.%s" % StandingRules.word_for(PlayerRules.regard_in(_player, zone))))
 
 
 ## **What E does where you are standing**, in the one order both the key and the prompt
@@ -2853,23 +2867,17 @@ func _what_e_does() -> StringName:
 
 
 func _draw_hud() -> void:
-	var walked: int = int(_real_seconds)
-	var where: String = _place_name()
-	var lines: Array[String] = [
-		Text.of(&"hud.line", [where, _regard(), _world.player_hp, WorldState.MAX_HP, _world.deaths]),
-		Text.of(&"hud.escort", [_ticked.kings_escort()]),
-	]
-	# No count of the tiles to Blackcairn (Yannick, 2026-10-09): not something the player
-	# should be minding, in the demo or after it.
-	lines.append(Text.of(&"hud.clock",
-		[_clock(_sim.tick), walked / 60, "%02d" % (walked % 60)]))
-	lines.append(Text.of(&"hud.language", [Text.locale().to_upper()]))
-	lines.append(Text.of(&"hud.inventory"))
+	# **Only what he needs** (D2): his health, where he is and how it regards him. No
+	# count of the tiles to Blackcairn (Yannick, 2026-10-09), no escort (the journal's),
+	# no clock, no keys (the pause menu's). The debug lines stay behind their gate.
+	var debug: Array[String] = []
 	if _debug_available:
-		lines.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
+		debug.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
 		if _world.unkillable:
-			lines.append("[G] INVULNÉRABLE")
-	_info.text = "\n".join(lines)
+			debug.append("[G] INVULNÉRABLE")
+	if _explore_hud != null:
+		_explore_hud.present({"hp": _world.player_hp, "max_hp": WorldState.MAX_HP, "place": _place_name(),
+			"regard": _regard(), "debug": debug}, _real_seconds)
 
 	_box.visible = _world.in_dialogue()
 	if _world.in_dialogue():

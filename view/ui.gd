@@ -112,6 +112,36 @@ static func write_over(canvas: CanvasItem, at: Vector2, line: String, size: int,
 	canvas.draw_string(font(), at, line, align, width, size, colour)
 
 
+## **A health bar, the one style in the game** (D2, D5): a dark frame, a dark well, the
+## fill coloured from green through gold to ember as it empties, a lighter top row of
+## pixels for a bevel, and — when `ghost` is above `fraction` — the part a blow has just
+## taken, pale, draining. The HUD and every bar of a fight draw through here.
+const BAR_FULL: Color = Color(0.47, 0.74, 0.36)
+const BAR_HALF: Color = Color(0.93, 0.74, 0.30)
+const BAR_LOW: Color = Color(0.86, 0.30, 0.24)
+
+
+static func bar_colour(fraction: float) -> Color:
+	if fraction >= 0.5:
+		return BAR_HALF.lerp(BAR_FULL, (fraction - 0.5) * 2.0)
+	return BAR_LOW.lerp(BAR_HALF, maxf(fraction, 0.0) * 2.0)
+
+
+static func bar(canvas: CanvasItem, rect: Rect2, fraction: float, ghost: float = -1.0) -> void:
+	var inner := rect.grow(-1.0)
+	canvas.draw_rect(rect, Color(0.02, 0.02, 0.03, 0.95), true)
+	canvas.draw_rect(inner, Color(0.16, 0.15, 0.17, 0.95), true)
+	var full: float = clampf(fraction, 0.0, 1.0)
+	if ghost > full:
+		canvas.draw_rect(Rect2(inner.position + Vector2(inner.size.x * full, 0.0),
+			Vector2(inner.size.x * (clampf(ghost, 0.0, 1.0) - full), inner.size.y)), Color(0.96, 0.92, 0.80, 0.75), true)
+	if full > 0.0:
+		var fill: Color = bar_colour(full)
+		canvas.draw_rect(Rect2(inner.position, Vector2(inner.size.x * full, inner.size.y)), fill, true)
+		canvas.draw_rect(Rect2(inner.position, Vector2(inner.size.x * full, 1.0)), fill.lightened(0.35), true)
+	canvas.draw_rect(rect, EDGE, false, 1.0)
+
+
 ## A box to put words in: filled, with a hairline edge.
 static func panel(canvas: CanvasItem, rect: Rect2, fill: Color = PANEL) -> void:
 	canvas.draw_rect(rect, fill, true)

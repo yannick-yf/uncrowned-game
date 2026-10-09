@@ -3272,6 +3272,18 @@ appears on entering and fades, nothing else. The keys move to the pause menu; th
 escort to the journal; the clock goes (it read midnight in full sun). The debug lines stay
 behind the debug gate. **Check:** frames of the HUD in the open, in a town, in a fight.
 
+> **Built 2026-10-09.** `view/explore_hud.gd`: his health as a framed bar with a bevel
+> (`Ui.bar`, the one style D5 gives the fight too) and *PV 100/100* beside it; the place's
+> name under it, a capital first (*Les Forges*); how it regards him on a line of its own,
+> *Ici : inconnu* — beside the name, *le cimetière inconnu* read as though the place were
+> the unknown thing. Entering a place raises its name as a gold title at the top, on a soft
+> dark band, for four seconds (`ExploreHud.title`); the same place again raises nothing.
+> Gone from the HUD: the deaths, the king's escort (the journal says it), the clock, the
+> two keys — **the keys are the pause menu's now**, on a line of their own (*Tab :
+> inventaire · J : journal · M : carte · L : langue*), the panel widened for them. The
+> debug lines sit top right, small; *[G] INVULNÉRABLE* in ember. Hidden in a fight, as the
+> old column was. `test_the_hud_is_his_health_and_where_he_is`.
+
 ### D3 · The fight's grid and the wolves' cone (audit 4)
 
 The tiles a turn buys: a faint tint with a thin edge, the outline of the reachable ground,

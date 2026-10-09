@@ -336,6 +336,27 @@ func test_the_zone_edge_says_why_you_go_no_further() -> void:
 	play.free()
 
 
+## **The HUD is his health and where he is** (D2): no column of text, a title as he
+## enters a place that rises and fades, and the same place again raising no title.
+func test_the_hud_is_his_health_and_where_he_is() -> void:
+	var play: Node = _flat_play()
+	play.call(&"begin", Game.begin_run(TraitRules.at_the_floor()))
+	play.call(&"_ready")
+	play.call(&"_draw_hud")
+	var hud: ExploreHud = play.get(&"_explore_hud") as ExploreHud
+	assert_not_null(hud, "the exploration HUD stands")
+	assert_false((play.get(&"_info") as Label).visible, "the old column of text is gone")
+	var here: String = String(play.call(&"_place_name"))
+	assert_eq(hud.title(), ExploreHud.capitalised(here), "waking, the place's name rises as a title: %s" % here)
+	hud.present({"hp": 100, "max_hp": 100, "place": here}, 100.0)
+	assert_eq(hud.title(), "", "and it has faded a few seconds on")
+	hud.present({"hp": 100, "max_hp": 100, "place": "Brindle"}, 101.0)
+	assert_eq(hud.title(), "Brindle", "a new place raises its own")
+	hud.present({"hp": 100, "max_hp": 100, "place": "Brindle"}, 110.0)
+	assert_eq(hud.title(), "", "and the same place again raises nothing")
+	play.free()
+
+
 func test_the_fight_reading_carries_every_fighter() -> void:
 	# **O6.** The reading named one foe, so a second wolf was never drawn where it
 	# fought. Every opponent is in it now, each at the tile the duel draws it on.
