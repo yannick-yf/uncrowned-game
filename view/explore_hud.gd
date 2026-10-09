@@ -109,6 +109,14 @@ func _draw() -> void:
 		Ui.write(self, Vector2(0.0, y), _title, Ui.HEADING, Color(Ui.GOLD, alpha), HORIZONTAL_ALIGNMENT_CENTER, width)
 		var half: float = Ui.width_of(_title, Ui.HEADING) * 0.5 + 18.0
 		draw_line(Vector2(width * 0.5 - half, y + 8.0), Vector2(width * 0.5 + half, y + 8.0), Color(Ui.EDGE, Ui.EDGE.a * alpha), 1.0)
+	# The key over what E would use (D6): a small dark cap with a gold edge, bobbing a pixel.
+	var key_at: Vector2 = _reading.get("key_at", Vector2(-1.0, -1.0)) as Vector2
+	if key_at.x >= 0.0:
+		var bob: float = roundf(sin(_clock * 4.0))
+		var cap := Rect2(key_at + Vector2(-7.0, -14.0 + bob), Vector2(14.0, 14.0))
+		draw_rect(cap, Color(0.05, 0.05, 0.06, 0.88), true)
+		draw_rect(cap, Ui.GOLD, false, 1.0)
+		Ui.write(self, Vector2(cap.position.x, cap.end.y - 3.0), "E", Ui.ROW, Ui.GOLD, HORIZONTAL_ALIGNMENT_CENTER, cap.size.x)
 	var debug: Array = _reading.get("debug", []) as Array
 	for i: int in debug.size():
 		var line: String = String(debug[i])

@@ -900,7 +900,29 @@ func _frame(eye: Vector2) -> Dictionary:
 		"now": _real_seconds,
 		"hail": _hail_frame(),
 		"spotted": _spotted_frame(),
+		"interact": _interact_frame(),
 	}
+
+
+## **What E would use, shown on the ground** (D6, the audit's 15): the find in reach, the
+## fire to rest at, the papers to take — where it is, in tiles, or nothing. People are left
+## out: a person is plain to see, and the prompt names him.
+func _interact_frame() -> Dictionary:
+	if _world.current_zone != WorldState.OVERWORLD or _world.in_dialogue() or (_duel != null and _duel.on()):
+		return {}
+	match _what_e_does():
+		&"pick_up":
+			for find: Dictionary in Places.shared().finds():
+				if StringName(String(find["id"])) == _find_in_reach():
+					return {"at": Vector2(_world.region().resolve(find["anchor"] as Dictionary)) + Vector2(0.5, 0.5)}
+		&"rest":
+			var fire: Vector2i = _world.region().nearest_campfire(_world.player_tile(), RecoveryRules.FIRE_REACH)
+			return {"at": Vector2(fire) + Vector2(0.5, 0.5)}
+		&"act":
+			if _papers_in_reach():
+				var papers: Dictionary = _world.region().nearest_document(_world.player_tile(), DocumentRules.REACH)
+				return {"at": Vector2(papers["at"] as Vector2i) + Vector2(0.5, 0.5)}
+	return {}
 
 
 ## **The hail's reading** (O17): who is calling, whether the '!' is up and for how long.
@@ -2876,8 +2898,13 @@ func _draw_hud() -> void:
 		if _world.unkillable:
 			debug.append("[G] INVULNÉRABLE")
 	if _explore_hud != null:
+		# The key over what E would use (D6), where the window draws its glow.
+		var interact: Dictionary = _interact_frame()
+		var key_at := Vector2(-1.0, -1.0)
+		if not interact.is_empty() and _three_d != null:
+			key_at = _three_d.screen_of(interact["at"] as Vector2, 1.3)
 		_explore_hud.present({"hp": _world.player_hp, "max_hp": WorldState.MAX_HP, "place": _place_name(),
-			"regard": _regard(), "debug": debug}, _real_seconds)
+			"regard": _regard(), "debug": debug, "key_at": key_at}, _real_seconds)
 
 	_box.visible = _world.in_dialogue()
 	if _world.in_dialogue():

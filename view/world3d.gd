@@ -1305,6 +1305,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_folk(folk, world)
 	_sync_wild(_sim.store(&"wild") as Wild, world, frame.get("fight", {}) as Dictionary)
 	_sync_pack_mark(frame.get("spotted", {}) as Dictionary)
+	_sync_interact(frame.get("interact", {}) as Dictionary)
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)
@@ -2124,6 +2125,51 @@ func _cone_mesh(lead: Vector2i, look: Vector2i, sight: Dictionary) -> Mesh:
 		vertex.call(b + side_way + lift, 1.0)
 		vertex.call(a + side_way + lift, 1.0)
 	return tool.commit()
+
+
+## **A soft gold glow under what E would use** (D6, the audit's 15): the sword on the grave,
+## the fire to rest at, the papers — a disc of light laid on his ground, breathing, so a
+## thing that can be taken is seen before the prompt is read. A radial gradient made here,
+## in the HUD's gold.
+var _glow: MeshInstance3D = null
+var glow_shown: bool = false
+
+
+func _sync_interact(reading: Dictionary) -> void:
+	if reading.is_empty():
+		if _glow != null:
+			_glow.visible = false
+		glow_shown = false
+		return
+	if _glow == null:
+		_glow = MeshInstance3D.new()
+		_glow.name = "InteractGlow"
+		var disc := PlaneMesh.new()
+		disc.size = Vector2.ONE * _metres_per_tile * 1.8
+		_glow.mesh = disc
+		var light := GradientTexture2D.new()
+		light.fill = GradientTexture2D.FILL_RADIAL
+		light.fill_from = Vector2(0.5, 0.5)
+		light.fill_to = Vector2(1.0, 0.5)
+		var fade := Gradient.new()
+		fade.set_color(0, Color(1.0, 0.86, 0.48, 1.0))
+		fade.set_color(1, Color(1.0, 0.86, 0.48, 0.0))
+		light.gradient = fade
+		var paint := StandardMaterial3D.new()
+		paint.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		paint.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		paint.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		paint.albedo_texture = light
+		paint.render_priority = 3
+		_glow.material_override = paint
+		_glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(_glow)
+	var at: Vector2 = reading["at"] as Vector2
+	_glow.position = _feet_of(at) + Vector3.UP * 0.06
+	var breath: float = 0.5 + 0.5 * sin(_now * 3.2)
+	(_glow.material_override as StandardMaterial3D).albedo_color = Color(1.0, 1.0, 1.0, 0.35 + 0.30 * breath)
+	_glow.visible = true
+	glow_shown = true
 
 
 ## The '!' over a pack that has just seen you (R2), as Bram's goes over him: over the first

@@ -357,6 +357,41 @@ func test_the_hud_is_his_health_and_where_he_is() -> void:
 	play.free()
 
 
+## **What E would use is shown** (D6): standing by the sword on its grave, the window is
+## handed its tile for the glow; in the middle of nowhere, nothing.
+func test_what_e_would_use_is_shown_where_it_lies() -> void:
+	var sim: Sim = Game.begin_run(TraitRules.at_the_floor())
+	var play: Node = _flat_play()
+	play.call(&"begin", sim)
+	play.call(&"_ready")
+	var world := sim.store(&"world") as WorldState
+	var region: Region = world.region()
+	var sword: Dictionary = {}
+	for find: Dictionary in Places.shared().finds():
+		sword = find
+	assert_false(sword.is_empty(), "there is a find to stand by")
+	var lies: Vector2i = region.resolve(sword["anchor"] as Dictionary)
+	world.player_pos = Vector2(lies) + Vector2(0.5, 0.5)
+	var shown: Dictionary = play.call(&"_interact_frame") as Dictionary
+	if String(play.call(&"_what_e_does")) == "pick_up":
+		assert_eq(shown.get("at", Vector2.ZERO), Vector2(lies) + Vector2(0.5, 0.5), "the glow is where the sword lies")
+	# And at every fire E would rest at, the glow is that fire's.
+	var rested: int = 0
+	for prop: Dictionary in region.props:
+		if (prop["kind"] as StringName) != &"campfire":
+			continue
+		world.player_pos = Vector2(prop["at"] as Vector2i) + Vector2(0.5, 1.5)
+		if String(play.call(&"_what_e_does")) != "rest":
+			continue
+		rested += 1
+		assert_eq((play.call(&"_interact_frame") as Dictionary).get("at", Vector2.ZERO),
+			Vector2(prop["at"] as Vector2i) + Vector2(0.5, 0.5), "the glow is on the fire at %s" % prop["at"])
+	assert_true(rested >= 3, "fires to rest at: %d" % rested)
+	world.player_pos = Vector2(Places.shared().centre(&"cinderworks")) + Vector2(40.5, 40.5)
+	assert_true((play.call(&"_interact_frame") as Dictionary).is_empty(), "and nothing where nothing lies")
+	play.free()
+
+
 func test_the_fight_reading_carries_every_fighter() -> void:
 	# **O6.** The reading named one foe, so a second wolf was never drawn where it
 	# fought. Every opponent is in it now, each at the tile the duel draws it on.

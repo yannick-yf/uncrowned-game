@@ -3331,6 +3331,13 @@ player's and every foe's alike. **Check:** frames of a fight with several foes.
 A soft pulsing glow on a thing in reach — the sword on the grave, papers, a fire to rest
 at — and its key above it. **Check:** frames at the sword and at a fire.
 
+> **Built 2026-10-09.** `main._interact_frame` says what E would use — a find in reach, a
+> fire to rest at, papers to take — and where; the window lays a disc of gold light on his
+> ground there, breathing (`World3d._sync_interact`, a radial gradient made in code, added
+> over the ground), and the HUD draws a small dark key cap with a gold *E* over it, bobbing a
+> pixel. People are left out: a person is plain to see and the prompt names him. Nothing in
+> a fight or a talk. `test_what_e_would_use_is_shown_where_it_lies`.
+
 ### D7 · One band for the messages (audit 16)
 
 The place's sign, what E does, what was just gained: one discreet band at the bottom, a
