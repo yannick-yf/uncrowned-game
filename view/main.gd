@@ -637,6 +637,17 @@ func _duel_frame() -> Dictionary:
 			"settle_steps": DuelRules.beat_steps(),
 		})
 	reading["fighters"] = fighters
+	# Where everybody in the fight stands on the screen, head to feet, so the lesson's card
+	# fades when one of them is under it (D10).
+	var screens: Array = []
+	if _three_d != null:
+		screens.append(_three_d.screen_of(my_at, 1.0))
+		screens.append(_three_d.screen_of(my_at, 1.8))
+		for row: Variant in fighters:
+			var spot: Vector2 = (row as Dictionary)["at"] as Vector2
+			screens.append(_three_d.screen_of(spot, 1.0))
+			screens.append(_three_d.screen_of(spot, 1.8))
+	reading["screens"] = screens
 	# The fight is framed on all of them, not on the first.
 	if not fighters.is_empty():
 		reading["centre"] = centroid / float(fighters.size() + 1)

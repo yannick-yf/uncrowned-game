@@ -322,6 +322,21 @@ var _mark_material: StandardMaterial3D = null
 var _sparks: Array[Sprite3D] = []
 var _spark_state: Array[Dictionary] = []
 var _spark_next: int = 0
+## **What a blow leaves on the ground** (D10): a ring that widens and fades where it landed,
+## `{at: tiles, born, colour}`, kept a third of a second.
+var _impacts: Array[Dictionary] = []
+const IMPACT_SECONDS: float = 0.35
+## The gift in flight (D10): a ball of the fairy's light and three dots trailing it, and when
+## the cast began, so it flies the same however long the pose is held.
+var _orb: Sprite3D = null
+var _orb_trail: Array[Sprite3D] = []
+var _cast_since: float = -1.0
+## Inside the attack pose, which lasts about a fifth of a second.
+const ORB_SECONDS: float = 0.17
+## The arrow's colours (D10): his wood for the shaft, iron for its head, a pale fletching.
+const ARROW_WOOD: Color = Color(0.42, 0.29, 0.17)
+const ARROW_IRON: Color = Color(0.60, 0.62, 0.66)
+const ARROW_FLETCH: Color = Color(0.92, 0.89, 0.80)
 ## The window's own clock, in seconds of frames drawn. Every effect below is a function
 ## of it and of the simulation's state, never of a timer of its own.
 var _now: float = 0.0
@@ -2615,17 +2630,33 @@ func _take_blows(fighting: Dictionary, blows: Array) -> void:
 				_shake_at = _now
 				_shake_amp = SHAKE_M * 0.3
 			else:
-				_spark_burst(between, MARK_INK, 10 if heavy else 7, 2.6 if heavy else 2.0)
-				_spark_burst(between, MARK_MINE if by_me else MARK_HIS, 5, 1.4)
+				_spark_burst(between, MARK_INK, 14 if heavy else 9, 2.8 if heavy else 2.2)
+				_spark_burst(between, MARK_MINE if by_me else MARK_HIS, 7, 1.6)
+				_impacts.append({"at": _blow_tile(fighting, blow), "born": _now,
+					"colour": MARK_MINE if by_me else MARK_HIS})
 				_shake_at = _now
-				_shake_amp = SHAKE_M * (1.0 if heavy else 0.6)
+				_shake_amp = SHAKE_M * (1.3 if heavy else 0.7)
 		elif kind == &"spell_cast":
 			# The fairy's colour where it lands (O10).
 			var struck_at: Vector3 = _ground(Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5), SWIPE_HEIGHT_M)
-			_spark_burst(struck_at, MARK_GUARD, 12, 2.4)
+			_spark_burst(struck_at, MARK_GUARD, 18, 2.8)
+			_spark_burst(struck_at, MARK_INK, 6, 1.4)
+			_impacts.append({"at": Vector2(float(blow.get("x", 0)), float(blow.get("y", 0))) + Vector2(0.5, 0.5),
+				"born": _now, "colour": MARK_GUARD})
+			_shake_at = _now
+			_shake_amp = SHAKE_M * 0.6
 		elif kind == &"duel_decided":
 			_shake_at = _now
 			_shake_amp = SHAKE_M * 0.5
+
+
+## The tile a blow landed on, for its ring (D10): its own when the blow says, else between.
+func _blow_tile(fighting: Dictionary, blow: Dictionary) -> Vector2:
+	if blow.has("at_x"):
+		return Vector2(float(blow["at_x"]), float(blow["at_y"])) + Vector2(0.5, 0.5)
+	var mine: Vector2 = fighting.get("my_at", Vector2.ZERO) as Vector2
+	var his: Vector2 = fighting.get("at", Vector2.ZERO) as Vector2
+	return mine.lerp(his, 0.5)
 
 
 ## Where a blow meets: between the two of them, hip high — which works whichever of
@@ -2757,6 +2788,19 @@ func _build_arena() -> void:
 	_arena_marks.mesh = _arena_mesh
 	_arena_marks.material_override = _mark_material
 	_arena.add_child(_arena_marks)
+	_orb = _dot_sprite()
+	_orb.name = "GiftOrb"
+	_orb.visible = false
+	_orb.render_priority = 4
+	_orb.pixel_size = 0.10
+	_arena.add_child(_orb)
+	for i: int in 3:
+		var dot: Sprite3D = _dot_sprite()
+		dot.name = "GiftTrail_%d" % i
+		dot.visible = false
+		dot.render_priority = 4
+		_arena.add_child(dot)
+		_orb_trail.append(dot)
 	for i: int in SPARK_POOL:
 		var spark: Sprite3D = _dot_sprite()
 		spark.name = "Spark_%d" % i
@@ -2939,14 +2983,64 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 			MARK_GUARD if bool(fighting.get("my_casting", false)) else MARK_MINE)
 		_draw_arrow(fighting)
 		# The gift's reach is the reach drawn above, while it is the action weighed (N3).
-		# The bolt itself, from you to him, on the steps it is out.
-		if bool(fighting.get("my_casting", false)) and String(fighting.get("my_pose", "")) == "attack":
-			var to: Vector2 = fighting.get("target_at", him) as Vector2
-			_ribbon(PackedVector3Array([_ground(me, SWIPE_HEIGHT_M * 1.2), _ground(to, SWIPE_HEIGHT_M)]),
-				0.14, Color(MARK_GUARD.r, MARK_GUARD.g, MARK_GUARD.b, 0.9))
 	if not bool(fighting.get("my_casting", false)):
 		_duel_swipe(me, fighting.get("target_at", him) as Vector2, fighting, true, MARK_MINE)
+	# The gift itself, from you to him, on the steps it is out: a ball of her light (D10).
+	# Asked every frame, the beat included, so a cast that ends the fight does not leave
+	# its light hanging where the beat found it.
+	_fly_the_gift(fighting, me, him, settling)
+	_draw_impacts()
 	_arena_mesh.surface_end()
+
+
+## The rings blows leave (D10): each widens from a hand to most of a tile and fades.
+func _draw_impacts() -> void:
+	var kept: Array[Dictionary] = []
+	for impact: Dictionary in _impacts:
+		var life: float = (_now - float(impact["born"])) / IMPACT_SECONDS
+		if life < 0.0 or life > 1.0:
+			continue
+		kept.append(impact)
+		var colour: Color = impact["colour"] as Color
+		var radius: float = lerpf(0.18, 0.95, 1.0 - (1.0 - life) * (1.0 - life))
+		_ring(impact["at"] as Vector2, radius, radius * 0.72, lerpf(0.10, 0.03, life),
+			Color(colour.r, colour.g, colour.b, 0.95 * (1.0 - life)), 32)
+	_impacts = kept
+
+
+## **The gift in flight** (D10, the audit's 3): it was a sage ribbon from the caster to the
+## target, there and gone. Now a ball of the fairy's light leaves the caster's hand when the
+## cast goes out and flies, on a low arc, to whoever it is aimed at in `ORB_SECONDS`, three
+## smaller lights trailing it; its burst on landing is `_take_blows`'.
+func _fly_the_gift(fighting: Dictionary, me: Vector2, him: Vector2, settling: bool = false) -> void:
+	if _orb == null:
+		return
+	var casting: bool = not settling and bool(fighting.get("my_casting", false)) \
+		and String(fighting.get("my_pose", "")) == "attack"
+	if not casting:
+		_cast_since = -1.0
+		_orb.visible = false
+		for dot: Sprite3D in _orb_trail:
+			dot.visible = false
+		return
+	if _cast_since < 0.0:
+		_cast_since = _now
+	var to: Vector2 = fighting.get("target_at", him) as Vector2
+	var through: float = clampf((_now - _cast_since) / ORB_SECONDS, 0.0, 1.0)
+	var at_lift: Callable = func(t: float) -> Vector3:
+		return _ground(me.lerp(to, t), SWIPE_HEIGHT_M * 1.3 + 0.6 * sin(PI * t))
+	var breath: float = 0.85 + 0.15 * sin(_now * 40.0)
+	_orb.position = at_lift.call(through)
+	_orb.modulate = Color(MARK_GUARD.r, MARK_GUARD.g, MARK_GUARD.b, 0.95 * (1.0 - through * 0.3))
+	_orb.pixel_size = 0.10 * breath
+	_orb.visible = through < 1.0
+	for i: int in _orb_trail.size():
+		var behind: float = maxf(through - 0.09 * float(i + 1), 0.0)
+		var dot: Sprite3D = _orb_trail[i]
+		dot.position = at_lift.call(behind)
+		dot.modulate = Color(MARK_INK.r, MARK_INK.g, MARK_INK.b, 0.6 - 0.15 * float(i))
+		dot.pixel_size = 0.05 - 0.01 * float(i)
+		dot.visible = through < 1.0 and behind > 0.0
 
 
 ## **The arrow in flight** (O9, T5): a raised ribbon from the archer to whoever she shot,
@@ -2954,17 +3048,44 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 ## it: since T5 nothing is announced.
 func _draw_arrow(fighting: Dictionary) -> void:
 	var arrow: Dictionary = fighting.get("arrow", {}) as Dictionary
-	if not arrow.is_empty():
-		var start: Vector2 = arrow["from"] as Vector2
-		var end: Vector2 = arrow["to"] as Vector2
-		var through: float = clampf(float(arrow["through"]), 0.0, 1.0)
-		var head: Vector2 = start.lerp(end, through)
-		var tail: Vector2 = start.lerp(end, maxf(through - 0.3, 0.0))
-		# A shallow arc, highest half way; long and pale enough to be followed.
-		var lift: float = SWIPE_HEIGHT_M + 0.8 * sin(PI * through)
-		var tail_lift: float = SWIPE_HEIGHT_M + 0.8 * sin(PI * maxf(through - 0.3, 0.0))
-		_ribbon(PackedVector3Array([_ground(tail, tail_lift), _ground(head, lift)]), 0.12,
-			Color(MARK_INK.r, MARK_INK.g, MARK_INK.b, 0.95))
+	if arrow.is_empty():
+		return
+	var start: Vector2 = arrow["from"] as Vector2
+	var end: Vector2 = arrow["to"] as Vector2
+	var through: float = clampf(float(arrow["through"]), 0.0, 1.0)
+	# **An arrow, drawn as one** (D10, the audit's 3): it was a pale ribbon, a laser. Now his
+	# wood for the shaft, an iron head, a pale fletching, on a shallow arc highest half way,
+	# and a faint trail along the arc behind it.
+	var along: Callable = func(t: float) -> Vector3:
+		return _ground(start.lerp(end, t), SWIPE_HEIGHT_M + 0.8 * sin(PI * t))
+	var head: Vector3 = along.call(through)
+	var just_before: Vector3 = along.call(maxf(through - 0.04, 0.0))
+	var way: Vector3 = head - just_before
+	if way.length_squared() < 0.000001:
+		way = along.call(minf(through + 0.04, 1.0)) - head
+	if way.length_squared() < 0.000001:
+		return
+	way = way.normalized()
+	var side: Vector3 = way.cross(Vector3.UP).normalized()
+	var tail: Vector3 = head - way * 1.35
+	# The trail: three fading pieces of the arc behind the fletching.
+	var trail: PackedVector3Array = PackedVector3Array()
+	for k: int in 4:
+		trail.append(along.call(maxf(through - 0.08 - 0.07 * float(k), 0.0)))
+	for k: int in 3:
+		_ribbon(PackedVector3Array([trail[k + 1], trail[k]]), 0.09 - 0.02 * float(k),
+			Color(MARK_INK.r, MARK_INK.g, MARK_INK.b, 0.6 - 0.18 * float(k)))
+	_ribbon(PackedVector3Array([tail, head]), 0.10, ARROW_WOOD)
+	_triangle(head + way * 0.34, head + side * 0.16, head - side * 0.16, ARROW_IRON)
+	for flank: float in [1.0, -1.0]:
+		_triangle(tail + way * 0.30, tail + side * 0.19 * flank, tail + side * 0.05 * flank - way * 0.07, ARROW_FLETCH)
+
+
+## One flat triangle in the marks' mesh, both faces drawn (D10).
+func _triangle(a: Vector3, b: Vector3, c: Vector3, colour: Color) -> void:
+	for point: Vector3 in [a, b, c]:
+		_arena_mesh.surface_set_color(colour)
+		_arena_mesh.surface_add_vertex(point)
 
 
 ## Where whoever is acting stands, when it is one of several foes.
@@ -3128,7 +3249,7 @@ func _sync_sparks() -> void:
 		spark.position = (state["from"] as Vector3) + velocity * age + Vector3.DOWN * 4.0 * age * age
 		var colour: Color = state["colour"] as Color
 		spark.modulate = Color(colour.r, colour.g, colour.b, (1.0 - life) * (1.0 - life))
-		spark.pixel_size = 0.028 * (1.0 - life * 0.6)
+		spark.pixel_size = 0.05 * (1.0 - life * 0.6)
 		spark.visible = true
 
 

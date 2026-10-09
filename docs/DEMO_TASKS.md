@@ -3402,6 +3402,29 @@ fairy's light and a burst. Floating words bigger, outlined, coloured by meaning,
 over the head and fading. **Check:** frames of each, and the trace that says which step a
 blow lands on.
 
+> **Built 2026-10-09.** Much was there already — a white flash and a bruise on whoever is
+> struck, sparks, a jolt of the lens — and too small and too brief to be seen. Checked on
+> films of the lessons (`--write-movie`, 30 frames a second) rather than stills, which fall
+> between such things:
+> - **A blow that lands** throws more and bigger sparks (twice the size) and leaves a ring on
+>   the ground that widens and fades in a third of a second; a heavy one shakes the lens
+>   harder (`_impacts`, `_draw_impacts`).
+> - **The arrow is an arrow**: his wood for a 1.35 m shaft, an iron head, a pale fletching,
+>   on its arc, and a trail behind it (`_draw_arrow`, `_triangle`). It was a pale ribbon.
+> - **The gift is a ball of the fairy's light** that leaves the caster's hand and flies to
+>   whoever it is aimed at inside the cast's pose (0.17 s), three lights trailing it, and
+>   bursts in her colour with a ring and a small shake (`_fly_the_gift`). It was a ribbon.
+>   **Found on the film**: asked only outside the fight's last beat, a cast that ended the
+>   lesson left the ball hanging over the target — it is asked every frame now.
+> - **The words** — damage, *Raté !*, *Surprise !* — are outlined all round in near-black,
+>   damage at the heading's size, a miss in a grey of its own; they rise from just over the
+>   head with an eased lift, hold, and fade in their last third. **Found on the film**: a
+>   word rising 44 pixels at the lessons' framing landed on the face of whoever stood three
+>   tiles north; it rises 22 now.
+> - **The lesson's card fades to a third** when a fighter stands under it — Wren, in the bow
+>   lesson, was hidden by it — and is narrower (`FightHud._card_fade`, the fighters' places
+>   on the screen in the reading's `screens`).
+
 ### D11 · The Forges at work (audit 8)
 
 Sparks and embers from the lit furnaces, thicker smoke, a glow that breathes; workers going

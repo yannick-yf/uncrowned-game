@@ -32,8 +32,10 @@ const MARGIN: float = 10.0
 const TOP: float = 10.0
 const GHOST_SECONDS: float = 0.55
 ## A number hung over the one who took the blow rises and fades in under a second.
-const FLOAT_SECONDS: float = 0.85
-const FLOAT_RISE: float = 24.0
+const FLOAT_SECONDS: float = 1.25
+const FLOAT_RISE: float = 16.0
+## A miss is said in a grey of its own, whoever missed (D10).
+const MISS_GREY: Color = Color(0.80, 0.80, 0.78)
 const BANNER_IN_SECONDS: float = 0.25
 ## How far apart the foes' bars stand when there is more than one (O6).
 const BAR_ROW: float = 30.0
@@ -59,7 +61,7 @@ var _banner_at: float = -1.0
 ## stopped drawing the HUD at the fourth. Empty in any other fight.
 var _card: Array[Dictionary] = []
 ## How far across the screen the card may run before a row is broken (T8).
-const CARD_WIDTH: float = 0.55
+const CARD_WIDTH: float = 0.46
 ## The drill's steps as last worked out: `{text, done, current}`.
 var _steps: Array[Dictionary] = []
 ## The hint's text key, or empty.
@@ -309,7 +311,7 @@ func _take_blow(blow: Dictionary) -> void:
 		# ember when he hits you, so a glance at the colour says whose turn that was.
 		var colour: Color = (MINE if by_me else HIS) if not guarded else Color(0.694, 0.851, 0.804)
 		_floats.append({"text": text, "at": _place(at, not by_me), "born": _now,
-			"colour": colour, "size": Ui.HEADING if (damage >= 2 and not guarded) else Ui.ROW})
+			"colour": colour, "size": Ui.HEADING if (damage > 0 and not guarded) else Ui.ROW})
 		# **The surprise attack says so** (R3), over the number it doubled.
 		if bool(blow.get("surprise", false)):
 			_floats.append({"text": Text.of(&"fight.surprise"), "at": _place(at, not by_me) + Vector2(0.0, -18.0),
@@ -318,7 +320,7 @@ func _take_blow(blow: Dictionary) -> void:
 		# A miss by the dice (R4) is said as loudly as a hit, over whoever it missed.
 		var dice: bool = bool(blow.get("missed", false))
 		_floats.append({"text": Text.of(&"fight.miss"), "at": _place(at, not by_me if dice else by_me), "born": _now,
-			"colour": (MINE if by_me else HIS) if dice else Ui.DIM, "size": Ui.ROW if dice else Ui.NOTE})
+			"colour": MISS_GREY if dice else Ui.DIM, "size": Ui.ROW})
 
 
 ## A screen point to hang a word on, or the bar's corner when the window gave none.
@@ -352,14 +354,24 @@ func _draw() -> void:
 		_draw_bar(StringName(String(row.get("who", ""))), int(row.get("his_max", 10)),
 			String(row.get("name", "")), HIS, true, size, TOP + float(index) * BAR_ROW)
 
+	# **Words over the fight** (D10, the audit's 3): they were small and dark and sat on the
+	# figure. Now they rise from over the head with an eased lift — quick, then settling —
+	# hold, and fade in their last third; outlined all round in near-black so they read on
+	# grass, rock or a roof; damage at the heading's size.
 	for row: Dictionary in _floats:
-		var age: float = (_now - float(row["born"])) / FLOAT_SECONDS
+		var age: float = clampf((_now - float(row["born"])) / FLOAT_SECONDS, 0.0, 1.0)
 		var colour: Color = row["colour"] as Color
-		colour.a = _alpha * (1.0 - age * age)
-		var at: Vector2 = (row["at"] as Vector2) + Vector2(0.0, -FLOAT_RISE * age)
+		colour.a = _alpha * (1.0 if age < 0.66 else 1.0 - (age - 0.66) / 0.34)
+		var lift: float = 1.0 - (1.0 - minf(age * 1.6, 1.0)) * (1.0 - minf(age * 1.6, 1.0))
+		var at: Vector2 = (row["at"] as Vector2) + Vector2(0.0, -6.0 - FLOAT_RISE * lift)
 		var text: String = String(row["text"])
 		var text_size: int = int(row["size"])
-		Ui.write_over(self, at - Vector2(Ui.width_of(text, text_size) * 0.5, 0.0), text, text_size, colour)
+		var left: Vector2 = (at - Vector2(Ui.width_of(text, text_size) * 0.5, 0.0)).round()
+		var ink := Color(0.03, 0.03, 0.04, colour.a * 0.9)
+		for step: Vector2 in [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1),
+				Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(0, 2)]:
+			Ui.write(self, left + step, text, text_size, ink)
+		Ui.write(self, left, text, text_size, colour)
 
 	# The lesson, under the bars on the left, in a panel (D4).
 	_card_rect = Rect2()
@@ -406,6 +418,25 @@ const CARD_LINE: float = 17.0
 
 
 func _draw_card(at: Vector2, width: float) -> Rect2:
+	var shown: float = _alpha
+	_alpha = shown * _card_fade(at, width)
+	var box: Rect2 = _draw_card_rows(at, width)
+	_alpha = shown
+	return box
+
+
+## **A fighter under the card fades it** (D10): the lesson's panel is opaque, and a lesson
+## framed wide can put the one you fight under it. Whoever stands under it — the player or
+## a foe, by where the window drew them — brings it down to a third.
+func _card_fade(at: Vector2, width: float) -> float:
+	var under: Rect2 = Rect2(at, Vector2(width, 150.0)).grow(6.0)
+	for point: Variant in _reading.get("screens", []) as Array:
+		if under.has_point(point as Vector2):
+			return 0.35
+	return 1.0
+
+
+func _draw_card_rows(at: Vector2, width: float) -> Rect2:
 	var inner: float = width - CARD_PAD * 2.0
 	var rows: Array = []
 	var height: float = CARD_PAD
