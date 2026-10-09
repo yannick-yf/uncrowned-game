@@ -601,6 +601,7 @@ func _adopt_his_world() -> void:
 	var his_air := world.get_node_or_null("WorldEnvironment") as WorldEnvironment
 	if his_air != null:
 		_air = his_air.environment
+		_fill_the_cutaway()
 	_remember_light()
 	# His site labels are editor guides — a forty-eight-point "Brindle" over the
 	# ruins — and his playtest hides them the moment play starts. They are built when
@@ -613,6 +614,7 @@ func _adopt_his_world() -> void:
 		terrain.connect("rebuilt", _refoot)
 
 
+
 func _hide_his_guides() -> void:
 	if _his == null:
 		return
@@ -620,6 +622,77 @@ func _hide_his_guides() -> void:
 		var guide: Node3D = _his.get_node_or_null(path) as Node3D
 		if guide != null:
 			guide.visible = false
+
+
+## **The cutaway, filled with rock** (D9, the audit's 1). The camera stands 45 m back on
+## purpose — see `CAMERA_DISTANCE` — so where his sea cliffs south of the graves rise above
+## it, its near plane cuts them open and the player is seen through them. The camera is then
+## inside the rock, and where a line of sight never comes out of it, nothing is hit and his
+## background showed: his sky's pale blue, in flat patches on the first frame of the game —
+## the audit's "holes". His ground has no inside to draw, so the background is made the
+## inside: dark rock, grained, fixed to the world so it does not slide as the camera moves.
+## Only what the screen shows: the reflections his water takes from the background keep his
+## sky's colour (the sky shader's cubemap pass), and his ambient light is a colour of its own,
+## so nothing else changes. Measured on the frames before and after.
+const CUT_ROCK: Color = Color(0.19, 0.18, 0.165)
+const ROCK_INSIDE: String = """
+shader_type sky;
+uniform vec3 above : source_color;
+uniform vec3 rock : source_color;
+uniform vec2 at = vec2(0.0);
+uniform vec2 span = vec2(42.0, 24.0);
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p) {
+	vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+	return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + 1.0), f.x), f.y);
+}
+void sky() {
+	if (AT_CUBEMAP_PASS) {
+		COLOR = above;
+	} else {
+		vec2 p = (SCREEN_UV - 0.5) * span + at;
+		float grain = noise(p * 0.9) * 0.55 + noise(p * 2.7) * 0.30 + noise(p * 7.0) * 0.15;
+		float seams = smoothstep(0.80, 0.97, noise(p * vec2(0.6, 2.2)));
+		COLOR = rock * (0.78 + grain * 0.42) * (1.0 - seams * 0.35);
+	}
+}
+"""
+var _rock_inside: ShaderMaterial = null
+
+
+## Whether the cutaway is filled with rock: what the screen shows behind everything is the
+## rock shader, and his ambient light is still a colour of its own (D9).
+func cutaway_filled() -> bool:
+	return _air != null and _air.background_mode == Environment.BG_SKY and _air.sky != null \
+		and _air.sky.sky_material == _rock_inside and _air.ambient_light_source == Environment.AMBIENT_SOURCE_COLOR
+
+
+func _fill_the_cutaway() -> void:
+	if _air == null:
+		return
+	var shader := Shader.new()
+	shader.code = ROCK_INSIDE
+	_rock_inside = ShaderMaterial.new()
+	_rock_inside.shader = shader
+	_rock_inside.set_shader_parameter("above", _air.background_color)
+	_rock_inside.set_shader_parameter("rock", CUT_ROCK)
+	var sky := Sky.new()
+	sky.sky_material = _rock_inside
+	sky.process_mode = Sky.PROCESS_MODE_QUALITY
+	_air.sky = sky
+	_air.background_mode = Environment.BG_SKY
+	_air.fog_sky_affect = 0.0
+
+
+## Keep the rock's grain on the world: the camera's focus in metres, and how many metres
+## the screen spans, handed to the sky each frame.
+func _hold_the_rock() -> void:
+	if _rock_inside == null or _camera == null:
+		return
+	var screen: Vector2 = get_viewport().get_visible_rect().size if get_viewport() != null else Vector2(640.0, 360.0)
+	var tall: float = _camera.size
+	_rock_inside.set_shader_parameter("span", Vector2(tall * screen.x / maxf(screen.y, 1.0), tall))
+	_rock_inside.set_shader_parameter("at", Vector2(_camera.global_position.x, _camera.global_position.z))
 
 
 ## Stand everything static on his ground again, now that his ground is built.
@@ -1309,6 +1382,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 	_sync_wild(_sim.store(&"wild") as Wild, world, frame.get("fight", {}) as Dictionary)
 	_sync_pack_mark(frame.get("spotted", {}) as Dictionary)
 	_sync_interact(frame.get("interact", {}) as Dictionary)
+	_hold_the_rock()
 	_sync_guards(world, int(frame.get("escort", 0)), int(frame.get("extra_guards", 0)))
 	_sync_props(frame)
 	_sync_marks(cast, frame.get("witnesses", []) as Array)

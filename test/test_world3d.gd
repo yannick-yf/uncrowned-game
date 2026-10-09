@@ -76,6 +76,9 @@ func test_the_window_stands_on_his_ground() -> void:
 		assert_true(window.closure_logs >= 6, "his logs lie across each road into a wood: %d" % window.closure_logs)
 		# **The meadows are sown** (D8): his tufts, flowers, stones and stumps over the start
 		# zone's bare grass, every one drawn without a shadow.
+		# **No sky through the cut cliffs** (D9): behind everything is rock now, and his
+		# ambient light is untouched.
+		assert_true(window.cutaway_filled(), "the cutaway is filled with rock, his light unchanged")
 		# The start zone is his map's, so the meadows are sown on his world only.
 		if Places.baked():
 			assert_true(window.meadow_pieces > 5000, "the meadows are sown: %d pieces" % window.meadow_pieces)

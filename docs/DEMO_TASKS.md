@@ -3376,6 +3376,24 @@ Their cause found, then fixed — his coast's dressing restored (the §9b defect
 stretched faces softened where they show. **Check:** the cemetery's first frame and the
 wide frame of the coast with no background showing through.
 
+> **Built 2026-10-09. They were not holes.** His ground is a whole height field; a probe
+> found nothing over the patches but his ground and his water, and their colour was his
+> background's. **The cause is the camera's cutaway**: it stands 45 m back on purpose
+> (`CAMERA_DISTANCE`, the review of O21 — at 150 m his cliffs south of the graves cover the
+> meadow, the fire and the player), so where those cliffs rise up to 28 m above the
+> graves its near plane cuts them open and the player is seen through them. The camera is
+> then inside the rock, and where a line of sight never comes out of it, nothing is hit and
+> his pale sky showed. Two fixes were tried on frames and refused: the camera at 150 m
+> (whole cliffs, the fire hidden), and his ground's back faces drawn dark (a dark blob over
+> the meadow, which is seen *through* those faces). **The fix**: the background is made
+> the rock's inside — a sky shader of ours, dark grained rock fixed to the world so it does
+> not slide with the camera (`World3d._fill_the_cutaway`, `_hold_the_rock`); his water's
+> reflections keep his sky's colour (the shader's cubemap pass) and his ambient light is a
+> colour of its own, so nothing else changes. The cut now reads as the dark section of the
+> cliff. **What is left of the audit's 17**: the cut's stepped edge is the 2 m grid of his
+> heights against the near plane, and reads as a section's edge now; his rock's stretch on
+> the steepest faces is his landscape shader's and stays — the player never walks there.
+
 ### D10 · The fight's feedback (audit 3)
 
 A blow that lands: a white flash on the target, a spark, a recoil, a small shake for a big
