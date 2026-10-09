@@ -1665,8 +1665,8 @@ const WILD_EASES: float = 0.08
 const CONE_SHOWS_WITHIN: float = 9.0
 ## The sight's colour and how strong it is at its strongest: a pale warmth, like the fight's
 ## floor, so it reads as something the game shows and not something on his ground.
-const SIGHT_TINT: Color = Color(1.0, 0.93, 0.72)
-const SIGHT_ALPHA: float = 0.22
+const SIGHT_TINT: Color = Color(1.0, 0.62, 0.32)
+const SIGHT_ALPHA: float = 0.36
 var _wolf_coat: Material = null
 var _wolf_dark: Material = null
 
@@ -2036,6 +2036,7 @@ func _sync_cone(which: int, wild: Wild, region: Region, player: Vector2, quiet: 
 		paint.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		paint.cull_mode = BaseMaterial3D.CULL_DISABLED
 		paint.render_priority = 2
+		paint.vertex_color_use_as_albedo = true
 		cone.material_override = paint
 		cone.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(cone)
@@ -2061,28 +2062,67 @@ func _cone_mesh(lead: Vector2i, look: Vector2i, sight: Dictionary) -> Mesh:
 	var half: float = deg_to_rad(float(sight["cone"]) * 0.5)
 	var base: float = Vector2(look).angle()
 	var centre: Vector2 = Vector2(lead) + Vector2(0.5, 0.5)
-	const RINGS: int = 4
-	const FAN: int = 10
+	# **A soft fan with an edge you can find** (D3, the audit's 4): the first cone was one
+	# flat colour with hard sides, which read as a debug overlay. Now the fill is strongest
+	# by the pack and lighter toward the end — never gone, because the end is where the
+	# fight begins — its sides fade in over the last tenth, and a fine dashed line marks the
+	# limit itself. The colours are per vertex; the material only carries how near he is.
+	const RINGS: int = 8
+	const FAN: int = 18
 	var points: Array = []
+	var alphas: Array = []
 	for ring: int in RINGS + 1:
 		var row: Array[Vector3] = []
+		var shade: Array[float] = []
+		var out: float = float(ring) / float(RINGS)
 		for k: int in FAN + 1:
-			var angle: float = base - half + 2.0 * half * float(k) / float(FAN)
-			var at: Vector2 = centre + Vector2.from_angle(angle) * tiles * float(ring) / float(RINGS)
+			var across: float = float(k) / float(FAN)
+			var angle: float = base - half + 2.0 * half * across
+			var at: Vector2 = centre + Vector2.from_angle(angle) * tiles * out
 			row.append(_feet_of(at) + Vector3.UP * 0.07)
+			var side: float = clampf(minf(across, 1.0 - across) / 0.1, 0.0, 1.0)
+			shade.append(lerpf(0.68, 0.30, out) * lerpf(0.25, 1.0, side))
 		points.append(row)
+		alphas.append(shade)
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var vertex: Callable = func(at: Vector3, alpha: float) -> void:
+		tool.set_color(Color(1.0, 1.0, 1.0, alpha))
+		tool.add_vertex(at)
 	for ring: int in RINGS:
 		var inner: Array[Vector3] = points[ring]
 		var outer: Array[Vector3] = points[ring + 1]
+		var a_in: Array[float] = alphas[ring]
+		var a_out: Array[float] = alphas[ring + 1]
 		for k: int in FAN:
-			tool.add_vertex(inner[k])
-			tool.add_vertex(outer[k])
-			tool.add_vertex(outer[k + 1])
-			tool.add_vertex(inner[k])
-			tool.add_vertex(outer[k + 1])
-			tool.add_vertex(inner[k + 1])
+			vertex.call(inner[k], a_in[k])
+			vertex.call(outer[k], a_out[k])
+			vertex.call(outer[k + 1], a_out[k + 1])
+			vertex.call(inner[k], a_in[k])
+			vertex.call(outer[k + 1], a_out[k + 1])
+			vertex.call(inner[k + 1], a_in[k + 1])
+	# The limit, dashed: the far arc and both sides, a dash on and a dash off.
+	var edge: Array[Vector3] = []
+	for ring: int in RINGS + 1:
+		edge.append((points[ring] as Array[Vector3])[0])
+	for k: int in range(1, FAN + 1):
+		edge.append((points[RINGS] as Array[Vector3])[k])
+	for ring: int in range(RINGS - 1, -1, -1):
+		edge.append((points[ring] as Array[Vector3])[FAN])
+	for i: int in edge.size() - 1:
+		if i % 2 == 1:
+			continue
+		var a: Vector3 = edge[i]
+		var b: Vector3 = edge[i + 1]
+		var flat: Vector3 = (b - a)
+		var side_way: Vector3 = Vector3(-flat.z, 0.0, flat.x).normalized() * 0.05 * _metres_per_tile
+		var lift := Vector3.UP * 0.01
+		vertex.call(a - side_way + lift, 1.0)
+		vertex.call(b - side_way + lift, 1.0)
+		vertex.call(b + side_way + lift, 1.0)
+		vertex.call(a - side_way + lift, 1.0)
+		vertex.call(b + side_way + lift, 1.0)
+		vertex.call(a + side_way + lift, 1.0)
 	return tool.commit()
 
 
@@ -2693,12 +2733,22 @@ func _draw_duel_marks(fighting: Dictionary) -> void:
 		# are the decision, drawn.
 		var acting: Vector2 = me if mine_acting else _acting_at(fighting, him)
 		var voice: Color = MARK_MINE if mine_acting else MARK_HIS
+		# **The ground a turn reaches, as one shape** (D3, the audit's 4): it was a field of
+		# pale squares that covered the well, the trees and the grass, and read as a tool.
+		# Now a faint veil over the whole of it and a fine line round its edge; the tile he
+		# aims at lit and outlined; a dotted path from him to it.
+		var reachable: Dictionary = {}
 		for row: Variant in fighting.get("moves", []) as Array:
-			_tile_patch(row as Vector2, Color(voice.r, voice.g, voice.b, 0.17))
+			reachable[Vector2i((row as Vector2).floor())] = true
+		for tile: Variant in reachable.keys():
+			_tile_patch(Vector2(tile as Vector2i) + Vector2(0.5, 0.5), Color(voice.r, voice.g, voice.b, 0.07), 0.5)
+			_tile_outline(tile as Vector2i, reachable, Color(voice.r, voice.g, voice.b, 0.62))
 		if fighting.has("cursor"):
-			_tile_patch(fighting["cursor"] as Vector2, Color(voice.r, voice.g, voice.b, 0.42))
-			_ring(fighting["cursor"] as Vector2, 0.46, 0.34, 0.06,
-				Color(voice.r, voice.g, voice.b, 0.95), 24)
+			var aim: Vector2 = fighting["cursor"] as Vector2
+			_tile_patch(aim, Color(voice.r, voice.g, voice.b, 0.26), 0.5)
+			_tile_outline(Vector2i(aim.floor()), {}, Color(voice.r, voice.g, voice.b, 0.95))
+			_path_dots(acting, aim, Color(voice.r, voice.g, voice.b, 0.85))
+			_ring(aim, 0.46, 0.34, 0.06, Color(voice.r, voice.g, voice.b, 0.95), 24)
 		# Reach: round whoever is acting — and on your turn round the tile you chose, with
 		# what you hold (T6) — full when it has somebody in it. A bow's is a band: its
 		# outer ring, and an inner one round the tiles too close to shoot.
@@ -2805,14 +2855,39 @@ func _acting_at(fighting: Dictionary, fallback: Vector2) -> Vector2:
 
 ## One tile of the grid, laid flat on his ground. Slightly inset, so a field of them
 ## reads as tiles and not as one sheet.
-func _tile_patch(centre_tiles: Vector2, colour: Color) -> void:
-	var half: float = 0.42
+func _tile_patch(centre_tiles: Vector2, colour: Color, half: float = 0.42) -> void:
 	_quad(
 		_ground(centre_tiles + Vector2(-half, -half), MARK_LIFT_M * 0.8),
 		_ground(centre_tiles + Vector2(half, -half), MARK_LIFT_M * 0.8),
 		_ground(centre_tiles + Vector2(half, half), MARK_LIFT_M * 0.8),
 		_ground(centre_tiles + Vector2(-half, half), MARK_LIFT_M * 0.8),
 		colour, colour)
+
+
+## The edges of a tile that no tile of `inside` continues: drawn, they are the outline
+## of the shape `inside` makes (D3). With `inside` empty, the whole square.
+func _tile_outline(tile: Vector2i, inside: Dictionary, colour: Color) -> void:
+	var corners: Array[Vector2] = [Vector2(tile), Vector2(tile) + Vector2(1, 0),
+		Vector2(tile) + Vector2(1, 1), Vector2(tile) + Vector2(0, 1)]
+	var beyond: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
+	const WIDTH: float = 0.05
+	for side: int in 4:
+		if inside.has(tile + beyond[side]):
+			continue
+		var a: Vector2 = corners[side]
+		var b: Vector2 = corners[(side + 1) % 4]
+		var inward: Vector2 = -Vector2(beyond[side]) * WIDTH
+		_quad(_ground(a, MARK_LIFT_M), _ground(b, MARK_LIFT_M),
+			_ground(b + inward, MARK_LIFT_M), _ground(a + inward, MARK_LIFT_M), colour, colour)
+
+
+## Small dots from where he stands to the tile he aims at, every half tile (D3).
+func _path_dots(from: Vector2, to: Vector2, colour: Color) -> void:
+	var length: float = from.distance_to(to)
+	var count: int = int(length / 0.5)
+	for i: int in range(1, count):
+		var at: Vector2 = from.lerp(to, float(i) / float(count))
+		_tile_patch(at, colour, 0.06)
 
 
 ## The telegraph, against a fraction the fight worked out rather than against frame

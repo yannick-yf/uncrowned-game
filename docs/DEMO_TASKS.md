@@ -3291,6 +3291,16 @@ the tile aimed at lit, a dotted path. The cone: a gradient that fades toward its
 discreet warm tint, a soft edge, stronger as the player comes near. **Check:** frames of a
 lesson, a wolf fight, the cone.
 
+> **Built 2026-10-09.** `World3d._draw_duel_marks`: the tiles a turn reaches are one shape
+> now — a veil at 7 % and a fine line round its edge (`_tile_outline`), where they were a
+> field of pale squares at 17 % that covered the well and the trees; the tile aimed at is
+> lit and outlined, with a dotted path to it from whoever is acting (`_path_dots`). A tile
+> a fighter stands on is outside the shape, so each fighter stands in a small frame. The
+> cone (`_cone_mesh`): a warm amber instead of a pale cream, eight rings and eighteen
+> spokes of colours per vertex — strongest by the pack, lighter toward the end but never
+> gone, because the end is where the fight starts; its sides fade over their last tenth;
+> **a dashed line marks the limit**. It still grows as the player comes near.
+
 ### D4 · The lesson's panel (audit 10)
 
 The card in a panel of the wheel's style: the step he is on in ink, the others dim, the
