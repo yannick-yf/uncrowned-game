@@ -172,26 +172,30 @@ func _lesson(reading: Dictionary) -> Array[Dictionary]:
 	_steps = _steps_of(reading)
 	_hint = _hint_of(reading)
 	if drill != "":
-		out.append({"text": Text.of(StringName("drill.%s.title" % drill)), "tone": MINE, "size": Ui.ROW})
+		out.append({"text": Text.of(StringName("drill.%s.title" % drill)), "tone": MINE, "size": Ui.ROW,
+			"kind": "title"})
 		out.append({"text": Text.of(StringName("drill.%s.goal" % drill),
-			[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]), "tone": Ui.INK, "size": Ui.ROW})
-		# Each step with its key, ticked when done; the one you are on in ink.
+			[int(reading.get("goal_done", 0)), int(reading.get("goal_of", 0))]), "tone": Ui.INK, "size": Ui.ROW,
+			"kind": "goal"})
+		# Each step with its key, ticked when done; the one you are on in ink. The text keeps
+		# its mark for whoever reads the card as words; the panel draws a box instead (D4).
 		for step: Dictionary in _steps:
 			var mark: String = "[x] " if bool(step["done"]) else "[ ] "
-			out.append({"text": mark + String(step["text"]),
-				"tone": Ui.INK if bool(step["current"]) else Ui.DIM, "size": Ui.NOTE})
-		# On your turn, what to do from where you stand; otherwise the lesson in a line.
-		var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
-		var needed: String = _needed_name(reading)
-		out.append({"text": Text.of(_hint if _hint != &"" else StringName("drill.%s.instruction" % drill),
-			[spell_reach, needed]),
-			"tone": MINE if _hint != &"" else Ui.DIM, "size": Ui.NOTE})
+			out.append({"text": mark + String(step["text"]), "step": String(step["text"]),
+				"done": bool(step["done"]), "current": bool(step["current"]),
+				"tone": Ui.INK if bool(step["current"]) else Ui.DIM, "size": Ui.NOTE, "kind": "step"})
+		# On your turn, what to do from where you stand. Off it, nothing more: the steps say
+		# the lesson, and the line that said it again went with the panel (D4, fewer words).
+		if _hint != &"":
+			var spell_reach: int = int(reading.get("spell_reach", DuelRules.spell_reach_tiles()))
+			out.append({"text": Text.of(_hint, [spell_reach, _needed_name(reading)]), "tone": MINE,
+				"size": Ui.NOTE, "kind": "hint"})
 	# And what was said as it began, through the first round (the review of O21): the
 	# answer to the line that squared you up, which the closing box used to swallow.
 	var said: String = String(reading.get("said", ""))
 	if said != "":
 		out.append({"text": Text.of(&"fight.said", [String(reading.get("said_by", "")), said]),
-			"tone": Ui.DIM, "size": Ui.NOTE})
+			"tone": Ui.DIM, "size": Ui.NOTE, "kind": "said"})
 	return out
 
 
@@ -355,20 +359,10 @@ func _draw() -> void:
 		var text_size: int = int(row["size"])
 		Ui.write_over(self, at - Vector2(Ui.width_of(text, text_size) * 0.5, 0.0), text, text_size, colour)
 
-	# The lesson, under the bars on the left, each row in its own tone and size, and a long
-	# one broken into rows short of the middle of the screen (T8).
+	# The lesson, under the bars on the left, in a panel (D4).
 	_card_rect = Rect2()
 	if not _card.is_empty():
-		var top: float = TOP + PIP.y + 34.0
-		var width: float = size.x * CARD_WIDTH
-		for row: Dictionary in _card:
-			var tone: Color = row["tone"] as Color
-			tone.a *= _alpha
-			var row_size: int = int(row["size"])
-			for line: String in Ui.wrapped(String(row["text"]), row_size, width):
-				Ui.write_over(self, Vector2(MARGIN, top), line, row_size, tone)
-				top += 16.0 if row_size >= Ui.ROW else 13.0
-		_card_rect = Rect2(Vector2.ZERO, Vector2(MARGIN + width, top))
+		_card_rect = _draw_card(Vector2(MARGIN, TOP + PIP.y + 22.0), size.x * CARD_WIDTH)
 	var settling: bool = int(_reading.get("settling", 0)) > 0
 	if _banner != "" and _banner_at >= 0.0:
 		var came: float = clampf((_now - _banner_at) / BANNER_IN_SECONDS, 0.0, 1.0)
@@ -398,6 +392,93 @@ func _draw() -> void:
 		colour.a = _alpha * 0.9
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(keys, Ui.NOTE)) * 0.5, size.y - 12.0),
 			keys, Ui.NOTE, colour)
+
+
+## **The lesson's panel** (D4, the audit's 10): eight rows of small type in four colours,
+## written straight onto the grass and the ruins, read badly. Now a panel of the wheel's
+## style: the title with the count on its right, a rule, the steps with a box each — ticked
+## gold when done, outlined gold for the one he is on, dim for the rest — then the hint in
+## gold and what was said in dim, each under its own rule. Returns where it was drawn.
+const CARD_PAD: float = 8.0
+const CARD_LINE: float = 17.0
+
+
+func _draw_card(at: Vector2, width: float) -> Rect2:
+	var inner: float = width - CARD_PAD * 2.0
+	var rows: Array = []
+	var height: float = CARD_PAD
+	var title: Dictionary = {}
+	var goal: Dictionary = {}
+	for row: Dictionary in _card:
+		match String(row.get("kind", "")):
+			"title":
+				title = row
+				continue
+			"goal":
+				goal = row
+				continue
+	if not title.is_empty():
+		height += CARD_LINE + 6.0
+	var last_kind: String = "title"
+	for row: Dictionary in _card:
+		var kind: String = String(row.get("kind", ""))
+		if kind == "title" or kind == "goal":
+			continue
+		var text: String = String(row.get("step", row["text"]))
+		var indent: float = 14.0 if kind == "step" else 0.0
+		var lines: PackedStringArray = Ui.wrapped(text, int(row["size"]), inner - indent)
+		var rule: bool = kind != last_kind and not (kind == "step" and last_kind == "title")
+		rows.append({"row": row, "lines": lines, "rule": rule or (kind == "step" and last_kind == "title")})
+		height += (6.0 if rule or (kind == "step" and last_kind == "title") else 0.0) + float(lines.size()) * CARD_LINE
+		last_kind = kind
+	height += CARD_PAD - 4.0
+	var box := Rect2(at, Vector2(width, height))
+	var fill: Color = Ui.PANEL
+	fill.a *= 0.92 * _alpha
+	Ui.panel(self, box, fill)
+	var y: float = at.y + CARD_PAD + 12.0
+	if not title.is_empty():
+		var gold: Color = MINE
+		gold.a = _alpha
+		Ui.write(self, Vector2(at.x + CARD_PAD, y), String(title["text"]), Ui.ROW, gold)
+		if not goal.is_empty():
+			var ink: Color = Ui.INK
+			ink.a = _alpha
+			var count: String = String(goal["text"])
+			Ui.write(self, Vector2(box.end.x - CARD_PAD - Ui.width_of(count, Ui.ROW), y), count, Ui.ROW, ink)
+		y += CARD_LINE + 6.0
+	for entry: Dictionary in rows:
+		var row: Dictionary = entry["row"] as Dictionary
+		var kind: String = String(row.get("kind", ""))
+		if bool(entry["rule"]):
+			var edge: Color = Ui.EDGE
+			edge.a *= _alpha
+			draw_line(Vector2(at.x + CARD_PAD, y - 13.0), Vector2(box.end.x - CARD_PAD, y - 13.0), edge, 1.0)
+			y += 6.0
+		var tone: Color = row["tone"] as Color
+		tone.a *= _alpha
+		if kind == "step":
+			_step_box(Vector2(at.x + CARD_PAD, y - 9.0), bool(row.get("done", false)), bool(row.get("current", false)))
+		for line: String in entry["lines"] as PackedStringArray:
+			Ui.write(self, Vector2(at.x + CARD_PAD + (14.0 if kind == "step" else 0.0), y), line, int(row["size"]), tone)
+			y += CARD_LINE
+	return box
+
+
+## A step's box: a gold tick when done, a gold outline for the one he is on, dim otherwise.
+func _step_box(at: Vector2, done: bool, current: bool) -> void:
+	var box := Rect2(at, Vector2(9.0, 9.0))
+	var gold: Color = MINE
+	gold.a = _alpha
+	var dim: Color = Ui.FAINT
+	dim.a = _alpha
+	if done:
+		draw_rect(box, gold, true)
+		var ink: Color = Ui.NIGHT
+		ink.a = _alpha
+		draw_polyline(PackedVector2Array([at + Vector2(2.0, 4.5), at + Vector2(4.0, 6.5), at + Vector2(7.5, 2.5)]), ink, 1.5)
+	else:
+		draw_rect(box, gold if current else dim, false, 1.0)
 
 
 ## **The wheel of actions** (N3, 2026-10-03, after Baldur's Gate 3's radial menu): round the

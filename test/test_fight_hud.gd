@@ -188,13 +188,15 @@ func test_a_drill_shows_its_lesson_and_how_far_you_are() -> void:
 	var card: PackedStringArray = hud.drill_card()
 	assert_eq(card[0], Text.of(&"drill.sword.title"), "named for its weapon")
 	assert_true(card[1].contains("2 / 3"), "the objective counts: '%s'" % card[1])
-	assert_eq(card[card.size() - 1], Text.of(&"drill.sword.instruction", [DuelRules.spell_reach_tiles(),
-		Text.of(&"drill.need.melee")]), "and, off your turn, what to do")
-	# Without a sword, the lesson's line names the fists the wheel shows (the frames of N7).
+	# Off your turn the steps say the lesson; the line that said it again went (D4).
+	assert_true(card[card.size() - 1].begins_with("[ ]") or card[card.size() - 1].begins_with("[x]"),
+		"and, off your turn, the steps end it: '%s'" % card[card.size() - 1])
+	assert_true(" ".join(card).contains(Text.of(&"drill.need.melee")), "naming the sword")
+	# Without a sword, the lesson's step names the fists the wheel shows (the frames of N7).
 	reading["close_weapon"] = String(DuelRules.FISTS)
 	hud.present(reading, 1.0 / 60.0)
-	assert_true(hud.drill_card()[hud.drill_card().size() - 1].contains(Text.of(&"drill.need.fists")),
-		"'%s' says the fists" % hud.drill_card()[hud.drill_card().size() - 1])
+	assert_true(" ".join(hud.drill_card()).contains(Text.of(&"drill.need.fists")),
+		"'%s' says the fists" % " ".join(hud.drill_card()))
 	hud.free()
 
 

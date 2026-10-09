@@ -3306,6 +3306,14 @@ lesson, a wolf fight, the cone.
 The card in a panel of the wheel's style: the step he is on in ink, the others dim, the
 hint under it, fewer words. **Check:** frames of the three lessons, both languages.
 
+> **Built 2026-10-09.** `FightHud._draw_card`: a panel of the wheel's style under the bars —
+> the lesson's name in gold with its count on the right of the same line, a rule, the steps
+> each with a box (a gold tick when done, a gold outline for the one he is on, dim for the
+> rest), then the hint in gold and what was said in dim, each under its own rule. **One line
+> fewer**: off his turn the card used to repeat the lesson in a sentence the steps already
+> say; it is gone (`drill.*.instruction` stays in the texts for P2). The card's rows keep
+> their text and gain a `kind`, so whatever reads the card as words reads the same.
+
 ### D5 · One style of health bar (audit 14)
 
 Framed, coloured from green to red, a ghost bar that drains to show what a blow took — the
