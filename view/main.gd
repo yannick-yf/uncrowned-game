@@ -31,7 +31,7 @@ const MOMENT_STEPS: int = Sim.STEPS_PER_REAL_SECOND * 2
 ## understand.
 const JOURNAL_ROWS: int = 9
 ## Room under the pause menu's rows for the two lines saying what leaving costs.
-const PAUSE_NOTE_ROOM: float = 32.0
+const PAUSE_NOTE_ROOM: float = 52.0
 
 var _journal_open: bool = false
 ## Which page of the journal is showing. Kept between openings: a player who was
@@ -2421,7 +2421,7 @@ func _draw_paused() -> void:
 	draw_multiline_string(Ui.font(),
 		box.position + Vector2(16.0, box.size.y - PAUSE_NOTE_ROOM + 12.0),
 		Text.of(&"pause.note"), HORIZONTAL_ALIGNMENT_CENTER, box.size.x - 32.0,
-		Ui.NOTE, 2, Ui.DIM)
+		Ui.NOTE, 3, Ui.DIM)
 
 
 ## How many of the Muster's tents are still up. Struck in proportion to the army

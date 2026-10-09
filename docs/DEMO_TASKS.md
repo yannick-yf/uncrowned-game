@@ -3251,6 +3251,20 @@ licence (SIL OFL or CC0) kept beside it; one face for the whole game, the same s
 `Ui.NOT_IN_THE_FONT` re-measured. **Check:** every screen photographed in both languages;
 the *i* reads as an *i*; the test that refuses a missing glyph still passes.
 
+> **Built 2026-10-09.** **Pixel Operator** (Jayvee Enaguas, CC0), the 16-pixel cut —
+> `view/fonts/pixel_operator/`, its licence and a provenance note beside it. Two were tried
+> and refused on frames first: **Pixelify Sans** (OFL), whose *B* reads *G* and *5* reads
+> *S* at every size; and **Pixel Operator 8**, whose accented capitals are squeezed to the
+> height of an *E* — *Écouter* read *écouter*, *QUI ÊTES-VOUS* read *QUI êTES-VOUS*. This
+> one carries every character of the shipped text but *§* (never shown); *« » … — Œ Î*
+> included, which the pack's face lacked. **Sizes on its grid**: multiples of eight (the
+> window doubles the canvas, so eight is a font pixel to a screen pixel) — 16 for every
+> line, 24 for headings, 40 for the title; imported with no antialiasing, no hinting, no
+> subpixel positioning. What moved for it: the inventory's two lists widened to their
+> longest line (214 pixels), the doll narrowed between them; the pause menu's note given
+> its third line; the inventory's help line says *colonne* for *changer de colonne*; the
+> dialogue box's test measures a row by the font's own height.
+
 ### D2 · The HUD (audit 2)
 
 Only what the player needs: his health as a framed bar, the place's name as a title that

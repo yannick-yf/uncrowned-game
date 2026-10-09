@@ -9,41 +9,37 @@ extends RefCounted
 ## change and no way to tell they were meant to match. A new screen now starts by
 ## reading this and matches the rest of the game for free.
 ##
-## **The font is the pack's own** (`Ui/Font/NormalFont.ttf`), not Godot's fallback
-## sans. §13's rule is one pack and never a mix, and the pack that drew the tiles also
-## drew a typeface for them — using anything else is exactly the mismatch the rule
-## exists to prevent. It carries the accented Latin the French text needs; what it
-## lacks is listed below and a test refuses to let a line use one.
-
-const PACK: String = Art.PACK
-## The face itself, straight out of the pack and never edited — CC0 allows editing it
-## and the pack stays pristine anyway, so a reader can diff it against the download.
-const SOURCE_FONT: String = "%s/Ui/Font/NormalFont.ttf" % PACK
-## What the game actually draws with: the same face with its word space widened.
-##
-## The pack's space is one pixel at nine and four at forty, roughly a tenth of an em
-## where a quarter is normal, so words ran together — "Nouvellepartie", "Langue:FR".
-## Godot's `spacing_space` is in whole pixels and does not scale with the size, which
-## sounds like it would need one resource per size and does not: the only text in the
-## game above twenty pixels is the word UNCROWNED, and it has no space in it.
+## **The font is Pixel Operator** (Jayvee Enaguas, CC0 — `view/fonts/pixel_operator/`,
+## its licence beside it), chosen in D1 (2026-10-09). The 2D pack's own face read its
+## lowercase *i* as a dot — *ce qui v.t dans le bo.s* — and Yannick asked for a font
+## that looks clean and finished, free-licensed or made. Pixelify Sans was tried first
+## and refused, its *B* reading as *G* and its *5* as *S*; Pixel Operator's 8-pixel cut
+## was refused next, its accented capitals squeezed to the height of an *E*, so *Écouter*
+## read *écouter*. This, the 16-pixel cut, sets every glyph on a grid of sixteen to the
+## em: drawn sharp at every size that is a multiple of eight (the window doubles the
+## 640×360 canvas, so eight is one pixel of the font to one of the screen), and it
+## carries every character the French text uses but one, listed below.
 const FONT: String = "res://view/font.tres"
+## The face itself, and the licence that travels with it (CC0).
+const SOURCE_FONT: String = "res://view/fonts/pixel_operator/PixelOperator.ttf"
+const FONT_LICENCE: String = "res://view/fonts/pixel_operator/LICENSE.txt"
+## The font's grid: a size is sharp when it is a multiple of this.
+const FONT_GRID: int = 8
 
-## The characters the pack's font has no glyph for. Godot falls back to a system font
-## for these, which renders them in the wrong typeface at the wrong weight — visible
-## immediately as one grey character in a line of cream ones. Kept here because a
-## test walks the shipped text and fails on any of them, which is the only way this
-## stays true as lines are written.
-const NOT_IN_THE_FONT: String = "ÎŒœ«»…—·•"
+## The characters the font has no glyph for. Godot falls back to a system font for
+## these, which renders them in the wrong typeface — visible immediately as one grey
+## character in a line of cream ones. A test walks the shipped text and fails on any.
+const NOT_IN_THE_FONT: String = "§"
 
-## Sizes. Pixel fonts want whole numbers and few of them; six sizes across the whole
-## game is a constraint worth keeping, because the seventh is always someone nudging
-## one screen and leaving the rest behind.
+## Sizes, all multiples of eight so every one is sharp (D1). Pixel fonts want few sizes:
+## the three smallest are one size now, and the hierarchy between them is the palette's
+## — gold, ink, dim — rather than a pixel of height the font cannot draw cleanly.
 const HUGE: int = 40
-const LARGE: int = 20
-const HEADING: int = 13
-const ROW: int = 11
-const BODY: int = 10
-const NOTE: int = 9
+const LARGE: int = 24
+const HEADING: int = 24
+const ROW: int = 16
+const BODY: int = 16
+const NOTE: int = 16
 
 ## The palette, lifted from the boxes that were already on screen so nothing shifts.
 const INK: Color = Color(0.94, 0.93, 0.88)

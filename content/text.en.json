@@ -267,7 +267,7 @@
   "inventory.blow_then": "Blow: {0} damage, then {1}",
   "inventory.protection_then": "Total protection: {0}, then {1}",
   "inventory.item_none": "No protection",
-  "inventory.help": "Left, right: change column  |  Up, down: choose  |  Enter: put on or take off  |  Tab: close",
+  "inventory.help": "Left, right: column  |  Up, down: choose  |  Enter: put on or take off  |  Tab: close",
   "inventory.in_fight": "Not during a fight.",
   "hud.inventory": "[Tab] inventory",
   "slot.head": "Head",

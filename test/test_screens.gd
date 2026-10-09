@@ -105,10 +105,14 @@ func test_a_single_row_does_not_pretend_to_move() -> void:
 
 # ---------------------------------------------------------------- the font ---
 
-func test_the_game_draws_in_the_packs_own_typeface() -> void:
-	assert_true(FileAccess.file_exists(Ui.SOURCE_FONT), "the pack's face is where Ui says")
+func test_the_game_draws_in_one_free_typeface_at_sharp_sizes() -> void:
+	# D1 (2026-10-09): Pixel Operator 8, CC0, its licence beside it.
+	assert_true(FileAccess.file_exists(Ui.SOURCE_FONT), "the face is where Ui says")
+	assert_true(FileAccess.get_file_as_string(Ui.FONT_LICENCE).contains("CC0"), "and its licence travels with it")
 	var font: FontVariation = Ui.font() as FontVariation
-	assert_not_null(font, "and the widened version of it loads")
+	assert_not_null(font, "the game's font loads")
+	for size: int in [Ui.HUGE, Ui.LARGE, Ui.HEADING, Ui.ROW, Ui.BODY, Ui.NOTE]:
+		assert_eq(size % Ui.FONT_GRID, 0, "%d is on the font's grid, so it is drawn sharp" % size)
 	assert_eq(font.base_font.resource_path, Ui.SOURCE_FONT,
 		"what the game draws with is that face and not another one")
 	# Two ways to reach it — Labels take it from the project, everything drawn by hand
@@ -537,7 +541,8 @@ func test_the_dialogue_box_holds_every_row_it_can_be_given() -> void:
 	var box: Control = main.get_node("HUD/DialogueBox") as Control
 	var choices: Label = main.get_node("HUD/DialogueBox/Choices") as Label
 	var font_size: int = choices.get_theme_font_size(&"font_size")
-	var row: float = float(font_size) * 1.8
+	# A row is the font's own height at that size, and a little air (D1).
+	var row: float = Ui.font().get_height(font_size) + 2.0
 	assert_true(choices.offset_bottom - choices.offset_top >= row * DialogueRules.MAX_OPTIONS,
 		"%d rows fit the choices: %.0f px for rows of %.0f" % [DialogueRules.MAX_OPTIONS,
 			choices.offset_bottom - choices.offset_top, row])

@@ -14,9 +14,11 @@ extends Node2D
 ## while the screen is open, as it waits for the pause menu. Not during a fight: Tab
 ## does nothing then, and the HUD says why.
 
-const SLOTS: Rect2 = Rect2(16.0, 52.0, 208.0, 256.0)
-const DOLL: Rect2 = Rect2(232.0, 52.0, 176.0, 256.0)
-const BAG: Rect2 = Rect2(416.0, 52.0, 208.0, 256.0)
+## The two lists are as wide as their longest line in the game's font (D1: *Lourd : une
+## case de moins par tour*, 214 pixels); the doll between them keeps what is left.
+const SLOTS: Rect2 = Rect2(8.0, 52.0, 240.0, 256.0)
+const DOLL: Rect2 = Rect2(256.0, 52.0, 128.0, 256.0)
+const BAG: Rect2 = Rect2(392.0, 52.0, 240.0, 256.0)
 const ROW_STEP: float = 20.0
 ## Where a slot's item is written, from the panel's left edge: past the longest slot name.
 const NAME_AT: float = 80.0

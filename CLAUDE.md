@@ -137,8 +137,9 @@ below with the fourth.
   billboard traveller. A sprite of ours keeps his dark outline, his light from the top
   left, his painted grain, and his shader's rule for what is background — a flat fill
   beside his figure reads as somebody else's hand at once.
-- **Nothing of the 2D pack appears, ever** (2026-09-14): it is another style. The HUD's
-  font is the pack's, and an open question.
+- **Nothing of the 2D pack appears, ever** (2026-09-14): it is another style. The font
+  was the pack's until D1 (2026-10-09): it is **Pixel Operator** (CC0, `view/fonts/`, its
+  licence beside it), at sizes that are multiples of eight so every glyph is sharp.
 - **Nothing downloaded.** A third artist's hand is the mix this rule is for; the wolf was
   *made* rather than found for that reason (2026-09-26), and Yannick confirmed it when
   he widened the rule: *« que des dessins faits par toi, pas de dessins téléchargés »*
