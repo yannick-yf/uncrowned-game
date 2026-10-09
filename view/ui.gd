@@ -127,19 +127,36 @@ static func bar_colour(fraction: float) -> Color:
 	return BAR_LOW.lerp(BAR_HALF, maxf(fraction, 0.0) * 2.0)
 
 
-static func bar(canvas: CanvasItem, rect: Rect2, fraction: float, ghost: float = -1.0) -> void:
+## `segments` above zero cuts the well into that many notches, so a small health can still be
+## counted (a wolf's ten); `mirrored` anchors what is left at the right end, so a foe's bar on
+## the right of the screen drains toward the middle as the player's does; `alpha` fades the
+## whole of it with the fight's HUD.
+static func bar(canvas: CanvasItem, rect: Rect2, fraction: float, ghost: float = -1.0,
+		segments: int = 0, mirrored: bool = false, alpha: float = 1.0) -> void:
 	var inner := rect.grow(-1.0)
-	canvas.draw_rect(rect, Color(0.02, 0.02, 0.03, 0.95), true)
-	canvas.draw_rect(inner, Color(0.16, 0.15, 0.17, 0.95), true)
+	canvas.draw_rect(rect, Color(0.02, 0.02, 0.03, 0.95 * alpha), true)
+	canvas.draw_rect(inner, Color(0.16, 0.15, 0.17, 0.95 * alpha), true)
 	var full: float = clampf(fraction, 0.0, 1.0)
+	var span: Callable = func(from: float, to: float) -> Rect2:
+		var a: float = (1.0 - to) if mirrored else from
+		return Rect2(inner.position + Vector2(inner.size.x * a, 0.0), Vector2(inner.size.x * (to - from), inner.size.y))
 	if ghost > full:
-		canvas.draw_rect(Rect2(inner.position + Vector2(inner.size.x * full, 0.0),
-			Vector2(inner.size.x * (clampf(ghost, 0.0, 1.0) - full), inner.size.y)), Color(0.96, 0.92, 0.80, 0.75), true)
+		canvas.draw_rect(span.call(full, clampf(ghost, 0.0, 1.0)), Color(0.96, 0.92, 0.80, 0.75 * alpha), true)
 	if full > 0.0:
 		var fill: Color = bar_colour(full)
-		canvas.draw_rect(Rect2(inner.position, Vector2(inner.size.x * full, inner.size.y)), fill, true)
-		canvas.draw_rect(Rect2(inner.position, Vector2(inner.size.x * full, 1.0)), fill.lightened(0.35), true)
-	canvas.draw_rect(rect, EDGE, false, 1.0)
+		fill.a = alpha
+		var lit: Rect2 = span.call(0.0, full)
+		canvas.draw_rect(lit, fill, true)
+		var top_row: Color = fill.lightened(0.35)
+		top_row.a = alpha
+		canvas.draw_rect(Rect2(lit.position, Vector2(lit.size.x, 1.0)), top_row, true)
+	for notch: int in range(1, segments):
+		var x: float = inner.position.x + inner.size.x * float(notch) / float(segments)
+		canvas.draw_rect(Rect2(Vector2(floorf(x), inner.position.y), Vector2(1.0, inner.size.y)),
+			Color(0.02, 0.02, 0.03, 0.85 * alpha), true)
+	var edge: Color = EDGE
+	edge.a *= alpha
+	canvas.draw_rect(rect, edge, false, 1.0)
 
 
 ## A box to put words in: filled, with a hairline edge.

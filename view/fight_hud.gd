@@ -20,6 +20,8 @@ extends Control
 ## stays lit in ember before it goes dark, which is how a hit reads on the bar.
 const PIP: Vector2 = Vector2(13.0, 6.0)
 const PIP_GAP: float = 2.0
+## A bar's height (D5), a little more than a pip's, for the frame round it.
+const BAR_HEIGHT: float = 8.0
 ## **Above this, health is a bar and not pips** (K4). Ten small integers count from the
 ## sofa; a hundred of them is 1,500 pixels on a 640-wide screen. The second design's
 ## table gives the player a hundred (`content/duel.json`, a development value Yannick
@@ -341,7 +343,7 @@ func _draw() -> void:
 		var tone: Color = Ui.DIM
 		tone.a = _alpha
 		var bar_end: float = MARGIN + float(MAX_PIPS) * (PIP.x + PIP_GAP) - PIP_GAP
-		Ui.write_over(self, Vector2(bar_end - Ui.width_of(armour, Ui.NOTE), TOP + PIP.y + 13.0), armour, Ui.NOTE, tone)
+		Ui.write_over(self, Vector2(bar_end - Ui.width_of(armour, Ui.NOTE), TOP + BAR_HEIGHT + 13.0), armour, Ui.NOTE, tone)
 	var foes: Array[Dictionary] = _standing_foes()
 	if _foes().is_empty():
 		_draw_bar(&"his", int(_reading.get("his_max", 10)), his_name, HIS, true, size)
@@ -362,7 +364,7 @@ func _draw() -> void:
 	# The lesson, under the bars on the left, in a panel (D4).
 	_card_rect = Rect2()
 	if not _card.is_empty():
-		_card_rect = _draw_card(Vector2(MARGIN, TOP + PIP.y + 22.0), size.x * CARD_WIDTH)
+		_card_rect = _draw_card(Vector2(MARGIN, TOP + BAR_HEIGHT + 22.0), size.x * CARD_WIDTH)
 	var settling: bool = int(_reading.get("settling", 0)) > 0
 	if _banner != "" and _banner_at >= 0.0:
 		var came: float = clampf((_now - _banner_at) / BANNER_IN_SECONDS, 0.0, 1.0)
@@ -606,9 +608,12 @@ static func draw_icon(canvas: CanvasItem, icon: String, at: Vector2, ink: Color)
 			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-5, 6), at + Vector2(5, 6), at + Vector2(0, 0)]), ink)
 
 
-## Ten pips and a name. The remaining health is anchored at the outer edge of the
-## screen and the loss appears on the inner side, so both bars drain toward the middle
-## — the genre's convention, kept because it is the one every player already reads.
+## **A health bar and a name** (D5, the audit's 14): the one style of the game (`Ui.bar`),
+## for the player and every foe alike — framed, coloured from green to ember as it empties,
+## and the part a blow has just taken pale for a moment. A small health keeps its notches,
+## so a wolf's ten can still be counted. The remaining health is anchored at the outer edge
+## of the screen and the loss appears on the inner side, so both sides drain toward the
+## middle — the genre's convention, kept because it is the one every player already reads.
 func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, right: bool,
 		size: Vector2, top: float = TOP) -> void:
 	var hp: int = int(_shown.get(side, 0))
@@ -619,70 +624,16 @@ func _draw_bar(side: StringName, max_hp: int, label: String, colour: Color, righ
 			ghost_to = int(drop["from"])
 		else:
 			_drops.erase(side)
-	var lit: Color = Ui.INK
-	lit.a = _alpha
-	var ghost: Color = Ui.EMBER
-	ghost.a = _alpha
-	var gone := Color(0.08, 0.08, 0.10, 0.72 * _alpha)
-	var edge := Color(colour.r, colour.g, colour.b, 0.55 * _alpha)
-	if max_hp > MAX_PIPS:
-		_draw_long_bar(hp, ghost_to, max_hp, label, lit, ghost, gone, edge, right, size, top)
-		return
-	for i: int in max_hp:
-		var x: float = MARGIN + float(i) * (PIP.x + PIP_GAP)
-		if right:
-			x = size.x - MARGIN - PIP.x - float(i) * (PIP.x + PIP_GAP)
-		var rect := Rect2(Vector2(x, top), PIP)
-		var fill: Color = lit if i < hp else (ghost if i < ghost_to else gone)
-		draw_rect(rect, fill, true)
-		draw_rect(rect, edge, false, 1.0)
-	var name_colour: Color = colour
-	name_colour.a = _alpha
-	var width: float = float(max_hp) * (PIP.x + PIP_GAP) - PIP_GAP
-	var name_x: float = MARGIN if not right else size.x - MARGIN - Ui.width_of(label, Ui.ROW)
-	Ui.write_over(self, Vector2(name_x, top + PIP.y + 13.0), label, Ui.ROW, name_colour)
-	if right:
-		return
-	# A hairline under the player's pips only, so the two sides are told apart at a glance.
-	draw_rect(Rect2(Vector2(MARGIN, TOP + PIP.y + 2.0), Vector2(width, 1.0)), edge, true)
-
-
-## **A hundred points, drawn as one bar** (K4). The same footprint ten pips have, the
-## same three tones — lit, the ember of what just went, and dark — and it drains toward
-## the middle of the screen as the pips do. It is not countable, which is the honest
-## thing to say about a hundred of anything: the number beside it is what a player
-## reads, and the length is what they feel.
-func _draw_long_bar(
-	hp: int,
-	ghost_to: int,
-	max_hp: int,
-	label: String,
-	lit: Color,
-	ghost: Color,
-	gone: Color,
-	edge: Color,
-	right: bool,
-	size: Vector2,
-	top: float = TOP,
-) -> void:
+	var most: float = float(maxi(max_hp, 1))
 	var width: float = float(MAX_PIPS) * (PIP.x + PIP_GAP) - PIP_GAP
 	var left: float = MARGIN if not right else size.x - MARGIN - width
-	var share: float = clampf(float(hp) / float(maxi(max_hp, 1)), 0.0, 1.0)
-	var was: float = clampf(float(ghost_to) / float(maxi(max_hp, 1)), 0.0, 1.0)
-	draw_rect(Rect2(Vector2(left, top), Vector2(width, PIP.y)), gone, true)
-	# Both bars drain toward the middle, so the remaining health is anchored at the
-	# outer edge and the loss appears on the inner side — the pips' rule, kept.
-	var lit_x: float = left if not right else left + width * (1.0 - share)
-	var ghost_x: float = left if not right else left + width * (1.0 - was)
-	draw_rect(Rect2(Vector2(ghost_x, top), Vector2(width * was, PIP.y)), ghost, true)
-	draw_rect(Rect2(Vector2(lit_x, top), Vector2(width * share, PIP.y)), lit, true)
-	draw_rect(Rect2(Vector2(left, top), Vector2(width, PIP.y)), edge, false, 1.0)
+	Ui.bar(self, Rect2(Vector2(left, top), Vector2(width, BAR_HEIGHT)), float(hp) / most,
+		float(ghost_to) / most, max_hp if max_hp <= MAX_PIPS else 0, right, _alpha)
 	var reading: String = "%s  %d" % [label, maxi(hp, 0)]
-	var name_colour: Color = Color(edge.r, edge.g, edge.b, _alpha)
+	var name_colour: Color = colour
+	name_colour.a = _alpha
 	var name_x: float = MARGIN if not right else size.x - MARGIN - Ui.width_of(reading, Ui.ROW)
-	Ui.write_over(self, Vector2(name_x, top + PIP.y + 13.0), reading, Ui.ROW, name_colour)
-	if not right:
-		draw_rect(Rect2(Vector2(MARGIN, TOP + PIP.y + 2.0), Vector2(width, 1.0)), edge, true)
+	Ui.write_over(self, Vector2(name_x, top + BAR_HEIGHT + 13.0), reading, Ui.ROW, name_colour)
 
 
 # ------------------------------------------------------------- for the suite ---

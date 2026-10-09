@@ -3319,6 +3319,13 @@ hint under it, fewer words. **Check:** frames of the three lessons, both languag
 Framed, coloured from green to red, a ghost bar that drains to show what a blow took — the
 player's and every foe's alike. **Check:** frames of a fight with several foes.
 
+> **Built 2026-10-09.** `Ui.bar` grew three things — notches (`segments`), a right-anchored
+> fill (`mirrored`) and the fight's fade (`alpha`) — and `FightHud._draw_bar` draws every
+> bar through it: the player's, a person's, a wolf's. The white pips and the white long bar
+> are gone; a health of twelve or less keeps a notch a point, so a wolf's ten still counts;
+> the name carries the number (*Loup 10*) for everybody. A foe's bar still drains toward the
+> middle of the screen.
+
 ### D6 · What can be picked up, shown (audit 15)
 
 A soft pulsing glow on a thing in reach — the sword on the grave, papers, a fire to rest
