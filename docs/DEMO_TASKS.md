@@ -3215,6 +3215,157 @@ the zone's edge; `CLAUDE.md`, V3 and his brother's page.
 
 ---
 
+## D — the demo's look, finished (2026-10-09)
+
+> Yannick asked for an art director's audit of the demo's zone — the cemetery, the
+> tutorial, the wolves, Brindle, the Forges, the river — judged by one question: *would
+> this look clean in a published game?* The audit is the page
+> https://claude.ai/artifact/EEgnS2GCQ1ud9DrtLzSy1s (21 recommendations, with frames). His
+> answer, the same day: **implement all of it**, in the recommended order — the quick wins
+> first, then the holes, the fight's feedback, the Forges at work and the light, then the
+> rest — and **keep it all in a plan so nothing is forgotten**. This is the plan; the
+> audit's numbers are given beside each task (*audit 2*).
+>
+> **Three rulings came with it** (Yannick, 2026-10-09):
+> - **His brother no longer works on the project.** Wherever the audit said *ask his
+>   brother*, we use what he already made or make it ourselves, in his style. His files in
+>   `prototypes/` are still only read: what we make lives beside the window.
+> - **The font**: our choice — a free-licensed font may be downloaded, or we make one; *it
+>   has to look clean and finished*. This is the one exception to *nothing downloaded*,
+>   and its licence travels with it.
+> - **The holes**: find their cause as fast as possible, then fix them.
+>
+> **One change of order, and why**: the font goes first (D1). Every quick win is a piece
+> of interface laid out in it — the HUD, the lesson's panel, the bars, the messages — and a
+> font changed afterwards would mean laying them all out again.
+>
+> **The rule for every task**: his style is the reference (low-poly, his paints, his
+> outline and light), every visual change is photographed before and after, both worlds
+> stay green, and the frame rate is measured where a task adds anything to draw (Z4 found
+> what an unmeasured wood costs).
+
+### D1 · The font (audit 9)
+
+A clean pixel font with readable lowercase and every accent French needs, under a free
+licence (SIL OFL or CC0) kept beside it; one face for the whole game, the same sizes.
+`Ui.NOT_IN_THE_FONT` re-measured. **Check:** every screen photographed in both languages;
+the *i* reads as an *i*; the test that refuses a missing glyph still passes.
+
+### D2 · The HUD (audit 2)
+
+Only what the player needs: his health as a framed bar, the place's name as a title that
+appears on entering and fades, nothing else. The keys move to the pause menu; the king's
+escort to the journal; the clock goes (it read midnight in full sun). The debug lines stay
+behind the debug gate. **Check:** frames of the HUD in the open, in a town, in a fight.
+
+### D3 · The fight's grid and the wolves' cone (audit 4)
+
+The tiles a turn buys: a faint tint with a thin edge, the outline of the reachable ground,
+the tile aimed at lit, a dotted path. The cone: a gradient that fades toward its end, a
+discreet warm tint, a soft edge, stronger as the player comes near. **Check:** frames of a
+lesson, a wolf fight, the cone.
+
+### D4 · The lesson's panel (audit 10)
+
+The card in a panel of the wheel's style: the step he is on in ink, the others dim, the
+hint under it, fewer words. **Check:** frames of the three lessons, both languages.
+
+### D5 · One style of health bar (audit 14)
+
+Framed, coloured from green to red, a ghost bar that drains to show what a blow took — the
+player's and every foe's alike. **Check:** frames of a fight with several foes.
+
+### D6 · What can be picked up, shown (audit 15)
+
+A soft pulsing glow on a thing in reach — the sword on the grave, papers, a fire to rest
+at — and its key above it. **Check:** frames at the sword and at a fire.
+
+### D7 · One band for the messages (audit 16)
+
+The place's sign, what E does, what was just gained: one discreet band at the bottom, a
+line each, fading in and out; a gain shown a moment with its icon. **Check:** frames.
+
+### D8 · The meadows filled (audit 5)
+
+His grass tufts, flowers, stones, stumps and bushes sown over the zone's bare meadows,
+denser along paths and round trees, in squares of 16 tiles like the woods. **Check:**
+frames at the wolves and north of the Forges; the frame rate measured before and after.
+
+### D9 · The holes under Brindle (audit 1, and audit 17's cliffs)
+
+Their cause found, then fixed — his coast's dressing restored (the §9b defect of
+`MIGRATION_3D.md`) or the gaps closed with his granite. The cliffs' stepped edges and
+stretched faces softened where they show. **Check:** the cemetery's first frame and the
+wide frame of the coast with no background showing through.
+
+### D10 · The fight's feedback (audit 3)
+
+A blow that lands: a white flash on the target, a spark, a recoil, a small shake for a big
+one. An arrow drawn in his style on a slight arc with a trail; the gift a ball of the
+fairy's light and a burst. Floating words bigger, outlined, coloured by meaning, rising
+over the head and fading. **Check:** frames of each, and the trace that says which step a
+blow lands on.
+
+### D11 · The Forges at work (audit 8)
+
+Sparks and embers from the lit furnaces, thicker smoke, a glow that breathes; workers going
+between the furnaces and the ore; one striking. **Check:** a recorded sequence of the yard,
+and the frame rate.
+
+### D12 · Light and atmosphere (audit 11)
+
+A late-afternoon light by default with longer shadows; a light mist at the cemetery on
+waking; smoke and ash over Brindle's ruins, its colours a little drained — within his sun
+and sky. **Check:** frames of the cemetery, Brindle and the Forges, before and after.
+
+### D13 · The Forges' ground (audit 6)
+
+His slag, ore and stacked logs on the works' ground; dark coal stains and ruts; the dirt
+round each house varied in size and shape; the blocky, blurry ground mask softened.
+**Check:** frames of the street, the yard and the gate fight.
+
+### D14 · The cutting face (audit 7)
+
+Stumps, felled trunks, stacked logs, half-cut trees, sawdust; the workers who walk there
+staying a while. **Check:** frames, and a recorded sequence.
+
+### D15 · People drawn through roofs (audit 12)
+
+Roofs hide whoever stands behind them; the player alone gets a discreet outline when
+hidden. **Check:** frames behind the well and behind a house of the Forges.
+
+### D16 · Dialogue (audit 13)
+
+A box sized to its words, framed like the inventory, with the speaker's portrait cut from
+his sprites. **Check:** frames of the fairy, Bram and a worker, both languages.
+
+### D17 · The fairy (audit 18)
+
+A small luminous figure in pixel art, wings and a few sparks, floating — still a light,
+with a shape. **Check:** frames of the wake.
+
+### D18 · The wolves (audit 19)
+
+A finer model in his low-poly (muzzle, ears, tail), in his two paints; legs that swing as
+they walk, a leap when they strike. **Check:** frames and a recorded sequence.
+
+### D19 · The title screen (audit 20)
+
+His world behind the menu — Brindle at dusk, the camera gliding — a drawn logo, the menu in
+a panel. **Check:** frames, both languages.
+
+### D20 · The journal (audit 21)
+
+A notebook's layout: tabs for the pages, a title each, a line of welcome on an empty page.
+**Check:** frames of every page.
+
+### D21 · Frames, a review, the docs
+
+The opening in both languages, the frame rate across the zone, a fresh-eyes review walking
+it as a player would, `CLAUDE.md`, V3 and the brother's page.
+
+---
+
 ## Later — known gaps, kept so they are not forgotten
 
 - **Lines that send the player beyond the start zone** (the review of Z; Yannick,
