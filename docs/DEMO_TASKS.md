@@ -3343,6 +3343,14 @@ at — and its key above it. **Check:** frames at the sword and at a fire.
 The place's sign, what E does, what was just gained: one discreet band at the bottom, a
 line each, fading in and out; a gain shown a moment with its icon. **Check:** frames.
 
+> **Built 2026-10-09.** `view/message_band.gd`: the prompt's lines — the sign, what a key
+> would do, what was just gained, why the way is closed — drawn centred in one soft dark
+> band across the bottom that fades up into the picture, fading in when there is something
+> to say and out when there is not. A line that begins with its key (*E, …*, *K, …*,
+> *F, …*) has the key drawn as the gold cap D6 draws over the thing itself. The prompt
+> label keeps the text — what a test reads — and is no longer drawn. **No icon for a gain**:
+> the items have none yet; that waits for the inventory's icons, if they come.
+
 ### D8 · The meadows filled (audit 5)
 
 His grass tufts, flowers, stones, stumps and bushes sown over the zone's bare meadows,

@@ -179,6 +179,8 @@ var draws_the_world: bool = true
 ## The exploration HUD (D2): his health, where he is, the place's title. `_info` is no
 ## longer drawn — its column of text is what D2 replaced.
 var _explore_hud: ExploreHud = null
+## The band the prompt's lines are drawn in (D7); `_prompt` keeps the text and is not drawn.
+var _band: MessageBand = null
 @onready var _box: ColorRect = $HUD/DialogueBox
 @onready var _speaker: Label = $HUD/DialogueBox/Speaker
 @onready var _line: Label = $HUD/DialogueBox/Line
@@ -225,6 +227,8 @@ func _ready() -> void:
 	_seen_events = _sim.events.size()
 	_explore_hud = ExploreHud.new()
 	_hud.add_child(_explore_hud)
+	_band = MessageBand.new()
+	_hud.add_child(_band)
 	_info.visible = false
 	_fight_hud = FightHud.new()
 	_hud.add_child(_fight_hud)
@@ -1141,7 +1145,10 @@ func _process(delta: float) -> void:
 	_info.visible = false
 	if _explore_hud != null:
 		_explore_hud.visible = not _journal_open
-	_prompt.visible = not _journal_open
+	_prompt.visible = false
+	if _band != null:
+		_band.visible = not _journal_open
+		_band.present(_prompt.text, _real_seconds)
 	# Placed even while paused, so the first frame of a run that opens paused is not
 	# a view of the top-left corner of the map.
 	# Eased before the frame is built, so the lens and the ring see the same number on
