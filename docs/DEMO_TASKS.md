@@ -3537,6 +3537,20 @@ hidden. **Check:** frames behind the well and behind a house of the Forges.
 A box sized to its words, framed like the inventory, with the speaker's portrait cut from
 his sprites. **Check:** frames of the fairy, Bram and a worker, both languages.
 
+> **Built 2026-10-10.** `view/talk_box.gd` (`TalkBox`) replaces the scene's dark rectangle and
+> its three labels: a box 560 px wide in the HUD's 640, centred at the bottom, **as tall as
+> its words** — the line and the choices wrapped at the width left beside the face, so the
+> fairy's two lines and two choices take 99 px and Tom's four choices 150, where every talk
+> took 160 — in `Ui.panel`, the inventory's frame. On its left, in the inventory's darker
+> well, **the speaker's face, cut from his own frame**: the look the world dresses him in
+> (`CastLooks.of_person`, as `World3d` asks), his idle frame facing you, its head and
+> shoulders, read by his shader's rule for what is background in linear light as the world
+> reads it — so Bram's grey hair is not taken for the sheet. The fairy, who has no figure
+> yet, is her light (D17 gives her one). Three tests: every line of the cast in both
+> languages, joined with its longest reaction, with all its choices, fits inside its box and
+> leaves the top of the screen; a longer talk is a taller box; a person shows a face and the
+> fairy does not. Frames: `docs/frames/look/D16_dialogue.jpg`.
+
 ### D17 · The fairy (audit 18)
 
 A small luminous figure in pixel art, wings and a few sparks, floating — still a light,

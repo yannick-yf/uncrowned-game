@@ -592,19 +592,61 @@ func test_the_journal_turns_its_pages_and_comes_back_round() -> void:
 
 func test_the_dialogue_box_holds_every_row_it_can_be_given() -> void:
 	# The review of O21: a talk offering three lines plus the way out drew its fourth row
-	# below the box, half off the screen.
-	var main: Node = _flat_play()
-	var box: Control = main.get_node("HUD/DialogueBox") as Control
-	var choices: Label = main.get_node("HUD/DialogueBox/Choices") as Label
-	var font_size: int = choices.get_theme_font_size(&"font_size")
-	# A row is the font's own height at that size, and a little air (D1).
-	var row: float = Ui.font().get_height(font_size) + 2.0
-	assert_true(choices.offset_bottom - choices.offset_top >= row * DialogueRules.MAX_OPTIONS,
-		"%d rows fit the choices: %.0f px for rows of %.0f" % [DialogueRules.MAX_OPTIONS,
-			choices.offset_bottom - choices.offset_top, row])
-	assert_true(choices.offset_bottom <= box.offset_bottom - box.offset_top, "and the choices fit inside the box")
-	assert_true(box.offset_bottom <= 360.0, "and the box on the screen")
-	main.free()
+	# below the box, half off the screen. Since D16 the box is as tall as its words, so the
+	# claim is about every line the cast can say, in both languages, with all its choices.
+	var box := TalkBox.new()
+	var tallest: float = 0.0
+	for language: String in ["en", "fr"]:
+		Text.set_locale(language)
+		Cast.forget()
+		var cast: Cast = Cast.shared()
+		for npc: Npc in cast.named():
+			var rows: Array[String] = []
+			for index: int in mini(npc.options.size(), DialogueRules.MAX_OPTIONS - 1):
+				rows.append("%d. %s (E)" % [index + 1, npc.options[index].text])
+			rows.append(Text.of(&"prompt.exit_esc", ["9"]))
+			for option: DialogueOption in npc.options:
+				var longest: String = option.reply
+				for band: StringName in StandingRules.scale():
+					var joined: String = ProseRules.joined(cast.reaction_for(npc, band), option.reply)
+					if joined.length() > longest.length():
+						longest = joined
+				box.present(npc.display_name, longest, rows, &"", false, 0.0)
+				var at: Rect2 = box.box()
+				tallest = maxf(tallest, at.size.y)
+				var needed: float = float(Ui.wrapped(longest, Ui.BODY, box.text_width()).size() + rows.size()) * TalkBox.LINE
+				assert_true(at.size.y >= needed, "%s %s: every row inside its box" % [language, npc.id])
+	assert_true(box.box().end.y <= 360.0, "the box stands on the screen")
+	assert_true(tallest <= 200.0, "and leaves the top of the screen to the world: at most %.0f px of 360" % tallest)
+	Text.set_locale("en")
+	Cast.forget()
+	box.free()
+
+
+## **Sized to its words** (D16, the audit's 13): two lines and two choices are a small box,
+## not the bottom half of the screen.
+func test_the_dialogue_box_is_as_tall_as_what_it_says() -> void:
+	var box := TalkBox.new()
+	box.present("Bram", "Short.", ["1. Yes.", "2. Leave."] as Array[String], &"", false, 0.0)
+	var short: float = box.box().size.y
+	box.present("Bram", "A line long enough to need three rows of the box, because it goes on, and on, and on, past any width a box could give it in one row or in two.",
+		["1. Yes.", "2. No.", "3. Perhaps.", "4. Leave."] as Array[String], &"", false, 0.0)
+	assert_true(box.box().size.y > short + TalkBox.LINE * 2.0, "a longer talk, a taller box: %.0f then %.0f" % [short, box.box().size.y])
+	assert_true(short < 110.0, "a short one is under a third of the screen: %.0f px" % short)
+	box.free()
+
+
+## **The speaker's face, cut from his own frame** (D16): the look the world dresses him in.
+func test_the_dialogue_box_shows_the_face_of_whoever_speaks() -> void:
+	if not ResourceLoader.exists(World3d.HIS_FRAMES):
+		off("his frames are vendored into view3d/workshop/ (tools/vendor_workshop.sh)")
+		return
+	var box := TalkBox.new()
+	box.present("Bram", "Hello.", ["1. Leave."] as Array[String], &"bram", false, 0.0)
+	assert_true(box.shows_a_face(), "Bram's face in the box")
+	box.present("La fée", "Hello.", ["1. Leave."] as Array[String], &"", true, 0.0)
+	assert_false(box.shows_a_face(), "and the fairy is her light, not a face")
+	box.free()
 
 
 # ------------------------------------------------------------ what he looks like (A6) ---

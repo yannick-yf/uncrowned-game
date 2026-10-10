@@ -181,10 +181,8 @@ var draws_the_world: bool = true
 var _explore_hud: ExploreHud = null
 ## The band the prompt's lines are drawn in (D7); `_prompt` keeps the text and is not drawn.
 var _band: MessageBand = null
-@onready var _box: ColorRect = $HUD/DialogueBox
-@onready var _speaker: Label = $HUD/DialogueBox/Speaker
-@onready var _line: Label = $HUD/DialogueBox/Line
-@onready var _choices: Label = $HUD/DialogueBox/Choices
+## The dialogue box (D16): sized to its words, framed as the inventory, the speaker's face.
+var _talk: TalkBox = null
 @onready var _prompt: Label = $HUD/Prompt
 @onready var _journal_box: ColorRect = $HUD/JournalBox
 @onready var _journal_title: Label = $HUD/JournalBox/Title
@@ -229,6 +227,9 @@ func _ready() -> void:
 	_hud.add_child(_explore_hud)
 	_band = MessageBand.new()
 	_hud.add_child(_band)
+	_talk = TalkBox.new()
+	_talk.visible = false
+	_hud.add_child(_talk)
 	_info.visible = false
 	_fight_hud = FightHud.new()
 	_hud.add_child(_fight_hud)
@@ -2086,6 +2087,14 @@ func _read_direction() -> Vector2i:
 	return dir
 
 
+## The look a speaker's face is cut from: the one the world dresses him in
+## (`CastLooks.of_person`, as `World3d` asks), or nobody for the fairy, who is a light.
+func _face_of(npc: Npc) -> StringName:
+	if npc == null or npc.id == &"fairy":
+		return &""
+	return CastLooks.of_person(npc.id, npc.kind, _world.region().zone_at(npc.tile))
+
+
 func _nearby_npc() -> Npc:
 	var who: Npc = _cast.nearest_to(_world.current_zone, _world.player_pos, Game.TALK_REACH, _walkers)
 	# Somebody who has left is not somebody to prompt about. The simulation refuses
@@ -2929,17 +2938,17 @@ func _draw_hud() -> void:
 		_explore_hud.present({"hp": _world.player_hp, "max_hp": WorldState.MAX_HP, "place": _place_name(),
 			"regard": _regard(), "debug": debug, "key_at": key_at}, _real_seconds)
 
-	_box.visible = _world.in_dialogue()
+	_talk.visible = _world.in_dialogue()
 	if _world.in_dialogue():
-		_speaker.text = _world.speaker_name
-		_line.text = _world.current_line
 		var rows: Array[String] = []
 		var e_goes_on: bool = _what_e_does_in_talk() != &""
 		for index: int in _world.options.size():
 			var row: String = "%d. %s" % [index + 1, _option_label(_world.options[index])]
 			rows.append(Text.of(&"prompt.option_e", [row]) if e_goes_on else row)
 		rows.append(Text.of(&"prompt.exit_esc" if e_goes_on else &"prompt.exit", [_exit_slot()]))
-		_choices.text = "\n".join(rows)
+		var speaker: Npc = _cast.get_npc(_world.talking_to) if _cast != null else null
+		_talk.present(_world.speaker_name, _world.current_line, rows, _face_of(speaker),
+			_world.talking_to == &"fairy", _real_seconds)
 		_prompt.text = ""
 		return
 

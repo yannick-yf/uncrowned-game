@@ -31,40 +31,6 @@ theme_override_constants/shadow_offset_y = 1
 theme_override_constants/shadow_outline_size = 1
 theme_override_font_sizes/font_size = 16
 
-[node name="DialogueBox" type="ColorRect" parent="HUD"]
-visible = false
-offset_left = 8.0
-offset_top = 192.0
-offset_right = 632.0
-offset_bottom = 352.0
-color = Color(0.0784314, 0.0705882, 0.0862745, 0.901961)
-
-[node name="Speaker" type="Label" parent="HUD/DialogueBox"]
-offset_left = 8.0
-offset_top = 4.0
-offset_right = 616.0
-offset_bottom = 20.0
-theme_override_colors/font_color = Color(1, 0.847059, 0.443137, 1)
-theme_override_font_sizes/font_size = 16
-
-[node name="Line" type="Label" parent="HUD/DialogueBox"]
-offset_left = 8.0
-offset_top = 22.0
-offset_right = 616.0
-offset_bottom = 74.0
-theme_override_colors/font_color = Color(0.94, 0.93, 0.88, 1)
-theme_override_font_sizes/font_size = 16
-autowrap_mode = 3
-
-[node name="Choices" type="Label" parent="HUD/DialogueBox"]
-offset_left = 8.0
-offset_top = 78.0
-offset_right = 616.0
-offset_bottom = 156.0
-theme_override_colors/font_color = Color(0.694118, 0.85098, 0.803922, 1)
-theme_override_font_sizes/font_size = 16
-autowrap_mode = 3
-
 [node name="JournalBox" type="ColorRect" parent="HUD"]
 visible = false
 offset_left = 8.0
