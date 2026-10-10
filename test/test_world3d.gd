@@ -179,6 +179,10 @@ func test_the_window_stands_on_his_ground() -> void:
 		if ghost != null:
 			assert_eq(ghost.animation, (ghost.get_parent() as AnimatedSprite3D).animation, "in the pose he stands in")
 			assert_true(ghost.modulate.a < 0.5, "and faint")
+			# Only where something hides him, as a silhouette (D15): the scene's depth says where.
+			var paint := ghost.material_override as ShaderMaterial
+			assert_true(paint != null and paint.shader.code.contains("hint_depth_texture"),
+				"the ghost is drawn only where something stands in front of him")
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
 	# **The first sword lies on a grave** (group E), drawn until it is taken.
 	if window.figures_are_his():

@@ -15,7 +15,8 @@ extends RefCounted
 ## His bridge decks open their crossings, then roads meet their
 ## landings without opening extra water beside them. The ford is a band on the river.
 ## His buildings stand as walls under a prop; the ironworks uses collision polygons
-## extracted by the build tool, so open halls are not closed by their roof bounds. Then **the kit**: every place marked scaffold gets its ground,
+## extracted by the build tool, so open halls are not closed by their roof bounds — and a
+## closed building of his town closes its whole floor, not only its walls (D15). Then **the kit**: every place marked scaffold gets its ground,
 ## streets, landmarks and scenery from `Region.scaffold_place`; a place of his gets the
 ## same only if his data stands no building in it. Then the brief's yards, composed
 ## from his own catalogue (`compose_yards`, G1–G4, 2026-09-21). Last, the border is closed.
@@ -138,7 +139,7 @@ static func bake(
 	out._dress_the_face(brief)
 	out._ford()
 	out._buildings(sectors, brief)
-	out._ironworks(town)
+	out._ironworks(town, brief)
 	out._kit(brief)
 	out._thin_footprints(brief)
 	# After the thinning, never before it: the thinning exists to open the outer ring of
@@ -1278,8 +1279,18 @@ func _bridges(landscape: Dictionary, brief: Dictionary) -> void:
 
 ## His collision shapes, rather than roof-sized boxes, keep open halls walkable.
 ## Geometry is extracted outside core by the build tool (2026-09-15).
-func _ironworks(town: Dictionary) -> void:
-	var items: Array = (town.get("buildings", []) as Array) + (town.get("props", []) as Array)
+##
+## **A building of his town closes its floor too** (D15, 2026-10-09; the audit's 12). His
+## houses' shapes are their walls, so a tile whose centre fell between two walls stayed
+## open: the player could walk half into a house and stand under its roof, and a frame of
+## the Forges showed a man in a roof. So every building's floor — the hull of its shapes —
+## is closed as well, except the few the brief's `closed_buildings` lists as walked under,
+## because his own note for them asks for a way through.
+func _ironworks(town: Dictionary, brief: Dictionary = {}) -> void:
+	var walked_under: Array = (brief.get("closed_buildings", {}) as Dictionary).get("walk_under", []) as Array
+	var buildings: Array = town.get("buildings", []) as Array
+	var items: Array = buildings + (town.get("props", []) as Array)
+	var floors: int = 0
 	for item: Dictionary in items:
 		var centre: Vector2i = _tile(item["xz"])
 		var kind: StringName = &"kiln" if String(item["asset"]).begins_with("bas_fourneau") else StringName(item["asset"])
@@ -1288,10 +1299,12 @@ func _ironworks(town: Dictionary) -> void:
 		var low: Vector2i = centre - Vector2i(reach, reach)
 		var high: Vector2i = centre + Vector2i(reach, reach)
 		var blocked: Array[Vector2i] = []
+		var outline := PackedVector2Array()
 		for raw: Array in item.get("obstacles", []):
 			var polygon := PackedVector2Array()
 			for pair: Array in raw:
 				polygon.append(_metres(pair))
+			outline.append_array(polygon)
 			for x: int in range(low.x, high.x + 1):
 				for y: int in range(low.y, high.y + 1):
 					var tile := Vector2i(x, y)
@@ -1299,6 +1312,16 @@ func _ironworks(town: Dictionary) -> void:
 					if region.in_bounds(tile) and Geometry2D.is_point_in_polygon(metres, polygon):
 						if not blocked.has(tile):
 							blocked.append(tile)
+		if buildings.has(item) and not walked_under.has(String(item["asset"])) and outline.size() >= 3:
+			var hull: PackedVector2Array = Geometry2D.convex_hull(outline)
+			for x: int in range(low.x, high.x + 1):
+				for y: int in range(low.y, high.y + 1):
+					var tile := Vector2i(x, y)
+					var metres: Vector2 = BakeRules.metres_for(tile, origin_m, metres_per_tile)
+					if region.in_bounds(tile) and not blocked.has(tile) \
+							and Geometry2D.is_point_in_polygon(metres, hull):
+						blocked.append(tile)
+						floors += 1
 		var first: Vector2i = centre
 		var last: Vector2i = centre
 		for tile: Vector2i in blocked:
@@ -1309,3 +1332,5 @@ func _ironworks(town: Dictionary) -> void:
 			"his": true, "source_id": item["id"], "scene": item["scene"], "place": "cinderworks"})
 	report.append("ironworks: %d buildings and %d props, collision shapes retained" % [
 		(town.get("buildings", []) as Array).size(), (town.get("props", []) as Array).size()])
+	report.append("ironworks: %d floor tiles closed inside his buildings, %d walked under" % [
+		floors, walked_under.size()])

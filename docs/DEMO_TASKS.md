@@ -3515,6 +3515,23 @@ staying a while. **Check:** frames, and a recorded sequence.
 Roofs hide whoever stands behind them; the player alone gets a discreet outline when
 hidden. **Check:** frames behind the well and behind a house of the Forges.
 
+> **Built 2026-10-09.** **Two causes, two fixes.** *The man in a roof was the player*: his
+> ghost (O21) was drawn in his own colours at a third of himself, everywhere, with no depth
+> test — so behind the well's roof he showed in it, and the audit's frame of the Forges had
+> him standing inside a house. **The ghost now reads the scene's depth** and draws only the
+> pixels of him that something stands in front of, as a silhouette: a cool flat fill and a
+> gold edge one line wide (`paper_doll_ghost.gdshader`, and `GHOST_SHADER` in
+> `view/world3d.gd` for a ghost not in layers). Where he is seen, nothing is added. *And a
+> house could be walked into*: his town's collision shapes are a house's walls, and a tile
+> whose centre fell between two walls stayed open — the player could stand half inside
+> the slate house north of the yard. **Every building of his town now closes the hull of
+> its shapes** (`RegionBake._ironworks`): 81 floor tiles closed, the cart shed alone left
+> walked under, because his catalogue's note asks for a way through it (the brief's
+> `closed_buildings`). The other people need nothing: they are depth-tested, so a roof
+> already hides them. The re-bake changes the world's fingerprint, so a save from before
+> it is refused, as after Z. `test_a_house_of_his_town_closes_its_floor_and_a_shed_walked_under_does_not`;
+> frames `docs/frames/look/D15_behind_roofs.png`.
+
 ### D16 · Dialogue (audit 13)
 
 A box sized to its words, framed like the inventory, with the speaker's portrait cut from

@@ -129,26 +129,40 @@ void fragment() {
 }
 """
 ## **The player's ghost, in the same shader again** (O21): his billboard trick and his
-## rule for what is background, drawn with no depth test and at `ghost_alpha`, so the
-## player shows through a crown or a wall at a third of himself.
+## rule for what is background, drawn with no depth test, so the player shows through a
+## crown or a wall. **Only the hidden part, as a silhouette** (D15): the scene's depth says
+## which of his pixels stand behind something, and only those are drawn, a cool fill with a
+## gold edge — the same as the layers' ghost in `paper_doll_ghost.gdshader`.
 const GHOST_SHADER: String = """
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_test_disabled, blend_mix;
 uniform sampler2D sprite_sheet : source_color, filter_nearest, repeat_disable;
 uniform float ghost_alpha : hint_range(0.0, 1.0) = 0.32;
+uniform sampler2D depth_texture : hint_depth_texture, filter_nearest, repeat_disable;
+uniform vec3 fill_colour : source_color = vec3(0.30, 0.34, 0.44);
+uniform vec3 edge_colour : source_color = vec3(1.0, 0.847, 0.443);
+uniform vec2 texel = vec2(0.0035, 0.0035);
 
 void vertex() {
 	vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
 	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0] * scale.x, INV_VIEW_MATRIX[1] * scale.y, INV_VIEW_MATRIX[2] * scale.z, MODEL_MATRIX[3]);
 }
 
-void fragment() {
-	vec4 ink = texture(sprite_sheet, UV);
+bool background(vec2 uv) {
+	vec4 ink = texture(sprite_sheet, uv);
 	float high = max(ink.r, max(ink.g, ink.b));
 	float low = min(ink.r, min(ink.g, ink.b));
-	if (ink.a < 0.5 || (high > 0.35 && (high - low) / max(high, 0.001) < 0.22)) { discard; }
-	ALBEDO = ink.rgb;
-	ALPHA = ink.a * ghost_alpha;
+	return ink.a < 0.5 || (high > 0.35 && (high - low) / max(high, 0.001) < 0.22);
+}
+
+void fragment() {
+	if (background(UV)) { discard; }
+	float scene = texture(depth_texture, SCREEN_UV).r;
+	if (scene <= FRAGCOORD.z + 0.00002) { discard; }
+	bool edge = background(UV + vec2(texel.x, 0.0)) || background(UV - vec2(texel.x, 0.0))
+		|| background(UV + vec2(0.0, texel.y)) || background(UV - vec2(0.0, texel.y));
+	ALBEDO = edge ? edge_colour : fill_colour;
+	ALPHA = edge ? min(ghost_alpha * 2.8, 0.95) : ghost_alpha * 1.6;
 }
 """
 const CAMERA_SIZE: float = 24.0

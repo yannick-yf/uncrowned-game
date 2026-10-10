@@ -510,3 +510,39 @@ func test_a_point_yards_piece_on_his_trail_is_refused_and_the_trail_stays() -> v
 	assert_eq(bake.region.terrain_at(Vector2i(4, 3)), Region.Terrain.ROAD, "the trail stays trail")
 	assert_eq(bake.region.terrain_at(Vector2i(2, 3)), Region.Terrain.ROAD, "all of it")
 	assert_eq(bake.region.terrain_at(Vector2i(4, 6)), Region.Terrain.WALL, "and a stone off it stands")
+
+
+## **A house of his town closes its floor, not only its walls** (D15, the audit's 12). His
+## shapes for a house are its four walls; a tile whose centre fell between them stayed open,
+## and the player could stand inside the house, under its roof. A building the brief lists
+## as walked under keeps its floor open, because his note asks for a way through it.
+func test_a_house_of_his_town_closes_its_floor_and_a_shed_walked_under_does_not() -> void:
+	var walls: Array = [
+		[[4.2, 4.2], [11.8, 4.2], [11.8, 4.6], [4.2, 4.6]],
+		[[4.2, 11.4], [11.8, 11.4], [11.8, 11.8], [4.2, 11.8]],
+		[[4.2, 4.2], [4.6, 4.2], [4.6, 11.8], [4.2, 11.8]],
+		[[11.4, 4.2], [11.8, 4.2], [11.8, 11.8], [11.4, 11.8]],
+	]
+	var house: Dictionary = {"id": "Maison", "asset": "logis", "scene": "res://x.tscn", "xz": [8.0, 8.0],
+		"size_m": [7.6, 4.0, 7.6], "obstacles": walls}
+	var shed: Dictionary = house.duplicate()
+	shed["id"] = "Hangar"
+	shed["asset"] = "hangar"
+	var floors: Array = []
+	for building: Dictionary in [house, shed]:
+		var bake := RegionBake.new()
+		bake.region = Region.new(8, 8)
+		for x: int in 8:
+			for y: int in 8:
+				bake.region.set_terrain(Vector2i(x, y), Region.Terrain.WILD)
+		bake.origin_m = Vector2.ZERO
+		bake.metres_per_tile = 2.0
+		bake._ironworks({"buildings": [building], "props": []}, {"closed_buildings": {"walk_under": ["hangar"]}})
+		var open: int = 0
+		for x: int in range(2, 6):
+			for y: int in range(2, 6):
+				if bake.region.is_passable(Vector2i(x, y)):
+					open += 1
+		floors.append(open)
+	assert_eq(floors[0], 0, "inside the house's four walls nobody can stand")
+	assert_eq(floors[1], 16, "under the shed listed as walked under, everybody can")
