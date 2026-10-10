@@ -2088,10 +2088,12 @@ func _read_direction() -> Vector2i:
 
 
 ## The look a speaker's face is cut from: the one the world dresses him in
-## (`CastLooks.of_person`, as `World3d` asks), or nobody for the fairy, who is a light.
+## (`CastLooks.of_person`, as `World3d` asks), or the fairy's own figure (D17).
 func _face_of(npc: Npc) -> StringName:
-	if npc == null or npc.id == &"fairy":
+	if npc == null:
 		return &""
+	if npc.id == OpeningRules.FAIRY:
+		return TalkBox.FAIRY
 	return CastLooks.of_person(npc.id, npc.kind, _world.region().zone_at(npc.tile))
 
 
@@ -2948,7 +2950,7 @@ func _draw_hud() -> void:
 		rows.append(Text.of(&"prompt.exit_esc" if e_goes_on else &"prompt.exit", [_exit_slot()]))
 		var speaker: Npc = _cast.get_npc(_world.talking_to) if _cast != null else null
 		_talk.present(_world.speaker_name, _world.current_line, rows, _face_of(speaker),
-			_world.talking_to == &"fairy", _real_seconds)
+			_world.talking_to == OpeningRules.FAIRY, _real_seconds)
 		_prompt.text = ""
 		return
 

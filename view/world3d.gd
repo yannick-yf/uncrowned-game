@@ -414,6 +414,41 @@ var _warmth: float = 0.5
 var _props: Array[Dictionary] = []
 var _fairy: OmniLight3D = null
 var _fairy_glow: Sprite3D = null
+## **The fairy, a light with a shape** (D17, the audit's 18): her figure, drawn by
+## `tools/draw_fairy.gd` in his manner — four frames of one slow beat of her wings, read by
+## his shader's rule — with her glow behind her and a few motes that twinkle round her.
+const FAIRY_SHEET: String = "res://view3d/fairy/fairy_sheet.png"
+const FAIRY_CELL: int = 128
+const FAIRY_FRAMES: int = 4
+## One beat of her wings. Slow: she is dying.
+const FAIRY_BEAT_SECONDS: float = 0.48
+const FAIRY_MOTES: int = 5
+## Half as large again as his density: at a man's scale she is eighteen pixels high on the
+## screen, and her face is lost. Smoothed rather than point-sampled, with the sheet's
+## mipmaps, because her wings' rims are finer than anything of his.
+const FAIRY_SCALE: float = 1.5
+const FAIRY_SHADER: String = """
+shader_type spatial;
+render_mode unshaded, cull_disabled;
+uniform sampler2D sprite_sheet : source_color, filter_linear_mipmap, repeat_disable;
+
+void vertex() {
+	vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0] * scale.x, INV_VIEW_MATRIX[1] * scale.y, INV_VIEW_MATRIX[2] * scale.z, MODEL_MATRIX[3]);
+}
+
+void fragment() {
+	vec4 ink = texture(sprite_sheet, UV);
+	float high = max(ink.r, max(ink.g, ink.b));
+	float low = min(ink.r, min(ink.g, ink.b));
+	if (ink.a < 0.5 || (high > 0.35 && (high - low) / max(high, 0.001) < 0.22)) { discard; }
+	ALBEDO = ink.rgb;
+	ALPHA = ink.a;
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
+}
+"""
+var _fairy_figure: Sprite3D = null
+var _fairy_motes: Array[Sprite3D] = []
 ## The marks over the heads of whoever can see you, and the embers over fires and
 ## kilns — the 2D window's immediate register and its particles, in the window. Drawn
 ## with one soft disc made here, because the pack's art is not allowed in and his has
@@ -1272,10 +1307,60 @@ func _build_fairy() -> void:
 	add_child(_fairy)
 	_fairy_glow = _dot_sprite()
 	_fairy_glow.name = "FairyGlow"
-	_fairy_glow.pixel_size = 0.15
-	_fairy_glow.modulate = Color(0.80, 0.96, 0.82, 0.55)
+	# The mist's wide soft disc and smoothed (D17): the 16-pixel dot drawn this large
+	# showed its steps as a square round her.
+	_fairy_glow.texture = _soft_haze()
+	_fairy_glow.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	_fairy_glow.pixel_size = 0.032
+	_fairy_glow.modulate = Color(0.80, 0.96, 0.82, 0.50)
 	_fairy_glow.visible = false
 	_fairy.add_child(_fairy_glow)
+	if ResourceLoader.exists(FAIRY_SHEET):
+		var sheet: Texture2D = load(FAIRY_SHEET) as Texture2D
+		_fairy_figure = Sprite3D.new()
+		_fairy_figure.name = "FairyFigure"
+		_fairy_figure.texture = sheet
+		_fairy_figure.region_enabled = true
+		_fairy_figure.region_rect = Rect2(0.0, 0.0, FAIRY_CELL, FAIRY_CELL)
+		_fairy_figure.pixel_size = HIS_FIGURE_PIXEL_SIZE * FAIRY_SCALE
+		_fairy_figure.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		_fairy_figure.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+		_fairy_figure.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		var shader := Shader.new()
+		shader.code = FAIRY_SHADER
+		var paint := ShaderMaterial.new()
+		paint.shader = shader
+		paint.set_shader_parameter("sprite_sheet", sheet)
+		_fairy_figure.material_override = paint
+		_fairy.add_child(_fairy_figure)
+	for i: int in FAIRY_MOTES:
+		var mote: Sprite3D = _dot_sprite()
+		mote.name = "FairyMote_%d" % i
+		mote.pixel_size = 0.018
+		mote.modulate = Color(0.92, 1.0, 0.90, 0.0)
+		_fairy.add_child(mote)
+		_fairy_motes.append(mote)
+
+
+## Her wings' beat, her motes, and her glow kept behind her: the glow is a soft disc drawn
+## after her, and at her own depth it would lie over her, so it stands half a metre further
+## along the lens. The camera never turns, so behind is always the same way.
+func _show_the_fairy(now: float) -> void:
+	if _fairy_figure != null:
+		var frame: int = int(now / (FAIRY_BEAT_SECONDS / float(FAIRY_FRAMES))) % FAIRY_FRAMES
+		_fairy_figure.region_rect = Rect2(float(frame * FAIRY_CELL), 0.0, FAIRY_CELL, FAIRY_CELL)
+	if _camera != null:
+		_fairy_glow.global_position = _fairy.global_position - _camera.global_basis.z * 0.5
+	for i: int in _fairy_motes.size():
+		var phase: float = now * (0.55 + float(i) * 0.12) + float(i) * 1.7
+		var mote: Sprite3D = _fairy_motes[i]
+		mote.position = Vector3(cos(phase) * 0.42, 0.05 + sin(phase * 0.7) * 0.32, sin(phase) * 0.15)
+		mote.modulate.a = 0.15 + 0.75 * maxf(0.0, sin(now * 2.1 + float(i) * 1.9))
+
+
+## Whether her figure is drawn, and which frame of her wings, for the suite.
+func fairy_figure() -> Sprite3D:
+	return _fairy_figure
 
 
 ## A 16-pixel soft disc, made once: no art of ours may stand in his world, and his
@@ -1559,7 +1644,8 @@ func _sync_people(cast: Cast, world: WorldState, fighting: Dictionary) -> void:
 			var breath: float = float(Time.get_ticks_msec()) * 0.0011
 			_fairy.position = feet + Vector3.UP * (1.2 + 0.25 * sin(breath))
 			_fairy_glow.visible = true
-			_fairy_glow.pixel_size = 0.13 + 0.03 * sin(breath)
+			_fairy_glow.pixel_size = 0.030 + 0.005 * sin(breath)
+			_show_the_fairy(float(Time.get_ticks_msec()) * 0.001)
 			continue
 		present[npc.id] = true
 		var figure: Node3D = _people.get(npc.id, null) as Node3D

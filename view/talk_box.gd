@@ -7,7 +7,7 @@ extends Control
 ## it says, in the panel the inventory and the pause are drawn in (`Ui.panel`), and on its
 ## left the speaker's face: **cut from his own frame** in the world, his look's sheet read by
 ## the rule his shader uses for what is background, so the face is the figure you walked up
-## to. The fairy, who has no figure, is her light.
+## to. The fairy is her figure (D17) in her light.
 ##
 ## `main` hands it the words each frame; it only decides how they look.
 
@@ -23,6 +23,8 @@ const FACE: Rect2 = Rect2(0.08, 0.04, 0.84, 0.62)
 ## A darker well for the face, as the inventory's for the figure.
 const WELL: Color = Color(0.10, 0.10, 0.11, 0.92)
 const FAIRY_LIGHT: Color = Color(0.80, 0.96, 0.82)
+## The look that stands for her: drawn whole from her own sheet, not cut from his frames.
+const FAIRY: StringName = &"fairy"
 
 ## His rule for what is background, in linear light as the world reads it — so a face is
 ## cut where the figure is cut, and an old man's grey hair is not taken for the sheet.
@@ -64,7 +66,7 @@ func _init() -> void:
 
 
 ## What is said, by whom, and the face: `look` is the speaker's look in `content/looks.json`,
-## `&""` for nobody drawn; `glow` draws the fairy's light in the well instead.
+## `FAIRY` for her, `&""` for nobody drawn; `glow` draws the fairy's light in the well.
 func present(speaker: String, line: String, rows: Array[String], look: StringName, glow: bool, now: float) -> void:
 	_speaker = speaker
 	_line = line
@@ -84,7 +86,7 @@ func _well() -> Rect2:
 
 
 func _place_face() -> void:
-	_face.visible = _face.texture != null and not _glow and (_speaker != "" or _line != "")
+	_face.visible = _face.texture != null and (_speaker != "" or _line != "")
 	if not _face.visible:
 		return
 	var cut: Vector2 = _face.texture.get_size()
@@ -138,6 +140,13 @@ func _choice_rows() -> PackedStringArray:
 ## The speaker's frame facing you, idle, on his look's sheet — the frame the world draws.
 func _dress_face() -> void:
 	_face.texture = null
+	if _look == FAIRY:
+		if ResourceLoader.exists(World3d.FAIRY_SHEET):
+			var her := AtlasTexture.new()
+			her.atlas = load(World3d.FAIRY_SHEET) as Texture2D
+			her.region = Rect2(8.0, 4.0, World3d.FAIRY_CELL - 16.0, World3d.FAIRY_CELL - 16.0)
+			_face.texture = her
+		return
 	if _look == &"" or not ResourceLoader.exists(World3d.HIS_FRAMES):
 		return
 	var path: String = CastLooks.sheet_path(_look)

@@ -3556,6 +3556,23 @@ his sprites. **Check:** frames of the fairy, Bram and a worker, both languages.
 A small luminous figure in pixel art, wings and a few sparks, floating — still a light,
 with a shape. **Check:** frames of the wake.
 
+> **Built 2026-10-10.** `tools/draw_fairy.gd` draws her into `view3d/fairy/fairy_sheet.png`,
+> four cells of 128 px, one slow beat of her wings (up, level, down, level): a pale head under
+> long blond hair — a fringe, a curtain each side, a lock behind one shoulder — a green dress
+> that thins to a wisp where legs would be, two pairs of pale wings with darker veins. **In
+> his manner**: his ink (22, 14, 14) three pixels round each part, his light from the top
+> left, a painted grain hashed from the pixel's place, alpha all or nothing, every colour one
+> his shader keeps. A grown woman's proportions, the head a fifth of her (invariant 10).
+> **In the world** (`World3d._build_fairy`, `_show_the_fairy`) she floats where she floated,
+> her wings beating once every 0.48 s, **shown half as large again as his density and
+> smoothed with the sheet's mipmaps** — at a man's density she was eighteen pixels high and
+> point-sampling lost her face; her glow is the mist's wide soft disc, kept half a metre
+> behind her along the lens so it never lies over her, and five motes twinkle round her. Her
+> light on the ground is as it was. **In the dialogue box** her figure stands in her light
+> (`TalkBox.FAIRY`). The 2D map's window keeps its discs, under that map's own art rule.
+> `test_fairy` (four frames, wings that move, his ink, his alpha, no pixel his shader would
+> throw away); `test_world3d` (she is a figure). Frames: `docs/frames/look/D17_fairy.jpg`.
+
 ### D18 · The wolves (audit 19)
 
 A finer model in his low-poly (muzzle, ears, tail), in his two paints; legs that swing as

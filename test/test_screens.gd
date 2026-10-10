@@ -644,8 +644,8 @@ func test_the_dialogue_box_shows_the_face_of_whoever_speaks() -> void:
 	var box := TalkBox.new()
 	box.present("Bram", "Hello.", ["1. Leave."] as Array[String], &"bram", false, 0.0)
 	assert_true(box.shows_a_face(), "Bram's face in the box")
-	box.present("La fée", "Hello.", ["1. Leave."] as Array[String], &"", true, 0.0)
-	assert_false(box.shows_a_face(), "and the fairy is her light, not a face")
+	box.present("La fée", "Hello.", ["1. Leave."] as Array[String], TalkBox.FAIRY, true, 0.0)
+	assert_eq(box.shows_a_face(), ResourceLoader.exists(World3d.FAIRY_SHEET), "and the fairy is her own figure (D17)")
 	box.free()
 
 

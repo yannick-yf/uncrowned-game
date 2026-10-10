@@ -183,6 +183,10 @@ func test_the_window_stands_on_his_ground() -> void:
 			var paint := ghost.material_override as ShaderMaterial
 			assert_true(paint != null and paint.shader.code.contains("hint_depth_texture"),
 				"the ghost is drawn only where something stands in front of him")
+	# **The fairy has a shape** (D17): her figure in her light, where she floats.
+	if ResourceLoader.exists(World3d.FAIRY_SHEET):
+		var fairy: Sprite3D = window.fairy_figure()
+		assert_true(fairy != null and fairy.is_visible_in_tree(), "the fairy is a figure, floating where she is")
 	assert_eq(window.marks_shown(), 2, "two marks, over the two who can see")
 	# **The first sword lies on a grave** (group E), drawn until it is taken.
 	if window.figures_are_his():
