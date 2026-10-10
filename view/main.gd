@@ -184,9 +184,8 @@ var _band: MessageBand = null
 ## The dialogue box (D16): sized to its words, framed as the inventory, the speaker's face.
 var _talk: TalkBox = null
 @onready var _prompt: Label = $HUD/Prompt
-@onready var _journal_box: ColorRect = $HUD/JournalBox
-@onready var _journal_title: Label = $HUD/JournalBox/Title
-@onready var _journal_body: Label = $HUD/JournalBox/Body
+## The journal, as a notebook (D20).
+var _book: JournalBook = null
 
 
 ## The run to play, handed over by `screens.gd` before this enters the tree.
@@ -230,6 +229,9 @@ func _ready() -> void:
 	_talk = TalkBox.new()
 	_talk.visible = false
 	_hud.add_child(_talk)
+	_book = JournalBook.new()
+	_book.visible = false
+	_hud.add_child(_book)
 	_info.visible = false
 	_fight_hud = FightHud.new()
 	_hud.add_child(_fight_hud)
@@ -3126,7 +3128,8 @@ func _just_happened() -> String:
 ## the player comes here to find out why — which is why this is behind a key rather
 ## than a notification. Push the ambient, pull the attribution.
 func _draw_journal() -> void:
-	_journal_box.visible = _journal_open
+	if _book != null:
+		_book.visible = _journal_open
 	if not _journal_open:
 		_journal_at = -1
 		return
@@ -3141,12 +3144,23 @@ func _draw_journal() -> void:
 		_journal_wanted = &""
 	_journal_page = posmod(_journal_page, pages.size())
 	var page: Dictionary = pages[_journal_page]
-	_journal_title.text = "%s      %s" % [
-		Text.of(&"journal.title", [_clock(_sim.tick)]),
-		Text.of(&"journal.paging", [Text.of(page["name"] as StringName),
-			_journal_page + 1, pages.size()]),
-	]
-	_journal_body.text = "\n".join(page["lines"] as Array[String])
+	var tabs := PackedStringArray()
+	for each: Dictionary in pages:
+		tabs.append(Text.of(StringName(String(each["name"]).replace("journal.", "journal.tab."))))
+	# An empty page says so in its middle (D20): what it has not got yet, and on the first
+	# page a welcome above it.
+	var lines: Array[String] = page["lines"] as Array[String]
+	var empty: String = ""
+	var welcome: String = ""
+	if lines.size() == 1 and lines[0] == Text.of(&"journal.empty"):
+		empty = lines[0]
+		welcome = Text.of(&"journal.welcome")
+	elif lines.size() == 1 and lines[0] == Text.of(&"journal.quests.none"):
+		empty = lines[0].trim_prefix("- ")
+	var keys: Array[Array] = [["< >", Text.of(&"journal.key.turn")], ["J", Text.of(&"journal.key.close")]]
+	if _book != null:
+		_book.present(tabs, _journal_page, JournalBook.heading(Text.of(page["name"] as StringName)),
+			PackedStringArray(lines), _clock(_sim.tick), empty, welcome, keys)
 
 
 ## Turn to the next page, and make the next frame rebuild it.
@@ -3192,7 +3206,10 @@ func _journal_pages() -> Array[Dictionary]:
 
 ## How many lines of the box a string takes once it has wrapped.
 func _rows_for(line: String, width: float, size: int) -> int:
-	return maxi(1, ceili(Ui.width_of(line, size) / width))
+	# A row of the notebook's columns is one row: its cells are each short.
+	if line.contains("\t"):
+		return 1
+	return maxi(1, Ui.wrapped(line, size, width).size())
 
 
 ## As much of the end of a page as the box will hold, and a line saying what was left
@@ -3202,10 +3219,10 @@ func _rows_for(line: String, width: float, size: int) -> int:
 ## The end rather than the start: on every page here the last block is the one being
 ## looked for — the newest deed, the nearest person, the most recent thing learnt.
 func _last_that_fit(blocks: Array[Array]) -> Array[String]:
-	var size: int = _journal_body.get_theme_font_size(&"font_size")
-	var width: float = _journal_body.size.x
+	var size: int = Ui.BODY
+	var width: float = JournalBook.BODY.size.x
 	# One line held back for the count, so saying "and 4 more" cannot itself overflow.
-	var room: int = floori(_journal_body.size.y / Ui.font().get_height(size)) - 1
+	var room: int = JournalBook.lines_held() - 1
 	var kept: Array[Array] = []
 	var used: int = 0
 	for at: int in range(blocks.size() - 1, -1, -1):
@@ -3246,9 +3263,10 @@ func _page_doings() -> Array[Array]:
 func _page_the_king() -> Array[Array]:
 	var blocks: Array[Array] = []
 	for row: Dictionary in EndRules.what_holds_him_up(_ticked, _world, _sim.facts):
-		blocks.append(["- %-30s %5d%s" % [
+		# Three cells, the notebook's columns (D20): the name, the figure, and whose doing.
+		blocks.append(["- %s\t%d\t%s" % [
 			Text.of(row["name_key"] as StringName), int(round(float(row["value"]))),
-			Text.of(&"journal.yours") if float(row["yours"]) > 0.0 else "",
+			Text.of(&"journal.yours").trim_prefix(", ") if float(row["yours"]) > 0.0 else "",
 		]] as Array[String])
 	# What became of the wood, once she has told the player it is happening. Her last
 	# word is "if you can, save us", and without this that is a request the player can
@@ -3430,8 +3448,7 @@ func _page_who() -> Array[Array]:
 			"W" if delta.x < -1.0 else ("E" if delta.x > 1.0 else "")])
 		blocks.append(["- " + Text.of(&"journal.who.row", [
 			npc.display_name,
-			Text.of(StringName("place.short.%s" % _world.region().zone_at(
-				_walkers.where(npc) if _walkers != null else npc.tile))),
+			_place_or_wild(_world.region().zone_at(_walkers.where(npc) if _walkers != null else npc.tile)),
 			int(delta.length()), compass])] as Array[String])
 	return blocks
 
@@ -3496,6 +3513,12 @@ func _journal_because(row: Dictionary) -> String:
 			return Text.of(&"journal.because.you_decided" if bool(row["by_player"])
 				else &"journal.because.turned")
 	return ""
+
+
+## A place's short name, or the wild's when the zone is none (the debug page named a man
+## standing outside every place `place.short.`).
+func _place_or_wild(zone: StringName) -> String:
+	return _short_place(zone) if Region.is_place(zone) else Text.of(&"place.wild")
 
 
 func _short_place(zone: StringName) -> String:

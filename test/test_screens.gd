@@ -593,14 +593,15 @@ func test_no_page_of_the_journal_runs_off_the_bottom_of_the_box() -> void:
 	# it has room for draws the ones that fit and says nothing about the rest. The
 	# journal had outgrown its box some time ago and nobody could have known.
 	var play: Node = _play_screen()
-	var body: Label = play.get_node("HUD/JournalBox/Body") as Label
-	var size: int = body.get_theme_font_size(&"font_size")
-	var fits: int = floori(body.size.y / Ui.font().get_height(size))
-	assert_true(fits >= 15, "the box holds %d lines" % fits)
+	# The notebook's page since D20: its body, at the body's size.
+	var size: int = Ui.BODY
+	var fits: int = JournalBook.lines_held()
+	assert_true(fits >= 15, "the page holds %d lines" % fits)
+	assert_true(JournalBook.LINE >= Ui.font().get_height(size), "a line is at least the font's height")
 	for page: Dictionary in play.call(&"_journal_pages") as Array[Dictionary]:
 		var rows: int = 0
 		for line: String in page["lines"] as Array[String]:
-			rows += maxi(1, ceili(Ui.width_of(line, size) / body.size.x))
+			rows += maxi(1, Ui.wrapped(line, size, JournalBook.BODY.size.x).size())
 		assert_true(rows <= fits,
 			"'%s' is %d rows and %d fit" % [page["name"], rows, fits])
 	play.free()

@@ -83,6 +83,10 @@ static func width_of(line: String, size: int) -> float:
 ## carried a sentence of Bram's that ran off the right of the screen. A word longer than
 ## the width keeps its own row rather than being cut.
 static func wrapped(line: String, size: int, width: float) -> PackedStringArray:
+	# A line that fits is kept as it was written, its spaces and all (D20: the journal's
+	# columns were padded with spaces, and rejoining the words took them away).
+	if line != "" and width_of(line, size) <= width:
+		return PackedStringArray([line])
 	var rows := PackedStringArray()
 	var row: String = ""
 	for word: String in line.split(" ", false):

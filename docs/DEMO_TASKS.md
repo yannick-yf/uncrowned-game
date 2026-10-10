@@ -255,6 +255,10 @@ none of the four states' lines would make sense in another state.
 > *remonte la route et passe la rivière* (`content/cast.fr.json`) has two roads north out
 > of Brindle, and the one to the north-west ends at the fallen bridge — the way on is the
 > footbridge to the east.
+>
+> **New words of group D, for P2 to read** (2026-10-10): the journal's tabs, its name and
+> its welcome on an empty first page (`journal.tab.*`, `journal.book`, `journal.welcome`,
+> D20) — *« Votre carnet. Ce que vous ferez s'écrira ici, et ce que cela aura coûté. »*
 
 ### P3 · Abandonment is absence
 
@@ -3626,6 +3630,24 @@ a panel. **Check:** frames, both languages.
 
 A notebook's layout: tabs for the pages, a title each, a line of welcome on an empty page.
 **Check:** frames of every page.
+
+> **Built 2026-10-10.** `view/journal_book.gd` (`JournalBook`) replaces the dark sheet and its
+> two labels. **A notebook**: the world veiled, a cover in the shared panel, down its left a
+> tab for each page (`journal.tab.*`, short names: *Vos actes*, *Le roi*, *Le royaume*…)
+> under the book's name and the clock, the open tab cut from the page it opens; the page
+> beside them with **its title** — the page's name in sentence case, in gold, a rule under
+> it, its number at the right — its lines, and at its foot **the keys as caps**. A section's
+> own heading (*Blackcairn :*, *QUI TIENT QUOI*) is drawn in the page's second colour; the
+> king's page is **a table** — the name, its figure in a column, *et c'est vous* in gold
+> after it — where its spaces used to be eaten by the wrapping. **An empty page says so in
+> its middle**: on the first page a welcome (*« Votre carnet. Ce que vous ferez s'écrira ici,
+> et ce que cela aura coûté. »*), a small mark, and what it has not got yet; the questions'
+> page its own line. `main` still builds the pages and cuts them to the page's body
+> (`JournalBook.BODY`, fifteen lines); a line that fits is now kept as written by
+> `Ui.wrapped`, spaces and all, and a row is counted as the page draws it. And the debug
+> page no longer names a man in the wild `place.short.`. New words for P2 (the backlog).
+> `test_no_page_of_the_journal_runs_off_the_bottom_of_the_box` reads the notebook's page.
+> Frames, every page, both languages: `docs/frames/look/D20_journal.jpg`.
 
 ### D21 · Frames, a review, the docs
 
