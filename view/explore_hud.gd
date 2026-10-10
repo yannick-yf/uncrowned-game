@@ -41,6 +41,11 @@ func present(reading: Dictionary, now: float) -> void:
 		_last_place = place
 		_title = place
 		_title_since = _clock
+	# **A title waits while somebody calls you** (the review of D): Bram's hail is on
+	# Brindle's edge, so his '!' went up under the village's name. While `hold_title` is
+	# set the title stays at its start, unseen, and rises once the call and the talk are over.
+	if bool(reading.get("hold_title", false)) and _clock - _title_since < TITLE_IN + TITLE_HOLD:
+		_title_since = _clock + 0.001
 	queue_redraw()
 
 

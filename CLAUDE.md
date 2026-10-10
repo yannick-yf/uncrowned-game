@@ -209,6 +209,20 @@ below with the fourth.
    edge, his fallen logs and a boulder (`_build_closures` in `view/world3d.gd`). The wood
    is told from his walkable ones by its undergrowth: no grass shows between the trees.
 
+7. **The demo's finish** (2026-10-09/10, group D, from an art director's audit). Mostly
+   composed from his pieces — his tufts, flowers and stones sown on the bare meadows, his
+   stumps, fallen logs and woodpiles round the cutting face, his works' hands at his
+   furnaces, his own sun lowered to late afternoon — and some ours, each in his manner:
+   **the font** (Pixel Operator, CC0, the one download), **the fairy** (`tools/draw_fairy.gd`,
+   `view3d/fairy/`: a small figure in his ink, light and grain, four frames of her wings),
+   **the wolf, finer** (`_wolf()`: a faceted animal on jointed legs that trots and leaps, in
+   his rock without its moss and his dark), the coal stains on the works' ground (decals),
+   the mist and the ash, the rock drawn inside the camera's cutaway (a sky shader), the
+   fight's rings, arrow and words, the player's silhouette behind a roof, the dialogue's faces **cut from his own frames**, and **the title's picture** —
+   his world at dusk, photographed by `tools/capture_title.gd` (`view3d/title/`), with a
+   crown of ours tipped over after the name. The audit and its 21 points are
+   `docs/DEMO_TASKS.md`'s group D.
+
 The sheets are **not** in `assets/`: that folder is the approved 2D pack's family and
 `tools/asset_validator.gd` rightly refuses a file made of his palette. The 3D world's art
 has never lived there — his own sheet is in `prototypes/`.
@@ -254,6 +268,9 @@ view3d/fight/, view3d/cast/, view3d/layers/  His traveller's sheet with our figh
            sheet per look of the cast, and the player's layers — ours, made by
            tools/draw_fight_frames.gd, tools/draw_cast_looks.gd and tools/draw_player_layers.gd
            (see *Art rule*). Committed; re-run the tool, never edit.
+view3d/fairy/, view3d/title/  The fairy's sheet (tools/draw_fairy.gd) and the title's picture
+           of his world at dusk (tools/capture_title.gd, run with a display, not headless —
+           and again whenever the map changes). Committed; re-run the tool, never edit.
 ```
 
 ## Commands
@@ -309,7 +326,8 @@ that says how a piece is meant to be used, and the first yard was built without 
 `tools/bake_region.gd -- --check` remains the freshness check; both worlds remain the
 commit checks. The current baked run prints **six** DEBT lines — seven debts, one test owing two; the
 run's last line counts debts — for **four** claims, all the map's and the brief's (five
-until T2 deleted the clearing and its ring, 2026-09-29), and **twenty-two** OFF lines:
+until T2 deleted the clearing and its ring, 2026-09-29), and **twenty-two** OFF lines
+(twenty-three claims: one test switches off two):
 the three it printed before group Z — the switches' and the 2D map's road into Brindle,
 which the baked world does not claim (four until S1 took Attunement and its two terrain
 tests away) — and **nineteen since group Z** (2026-10-08), each a claim about the whole
@@ -656,7 +674,7 @@ player is shaped like a town — an allégeance he chooses, a standing per town 
 only with witnessed deeds, and a richesse that is gold. **The town is the unit of
 account**: a theft moves the town it happened in and not the person it happened to.
 
-### Where the work actually stands — 2026-10-01
+### Where the work actually stands — 2026-10-10
 
 The task list is the record; this is the short version, because a session that has to
 reconstruct it from forty commits will get it wrong.
@@ -677,7 +695,7 @@ reconstruct it from forty commits will get it wrong.
 | **R** | **Built, R1–R5** (2026-10-01, from his play): **R1 built** — the bow lesson is given by Wren, who keeps her distance and shoots too. **Engaging a fight yourself**, a simplified Baldur's Gate 3, his answers in hand: **R2 built** — enemies outside the towns see in a cone ahead of them and wander their ground (`DuelRules.sight_of`, `roams_of`; the wolves for now); **R3 built** — K from outside their sight, the first blow doubled (`WildSystem.ambush_target`); **R4 built** — every blow may miss by agility (80 % ± 5 a point of difference, 50–95 %, 95 % for the player in the lessons; the gift and the surprise always land), the chance shown before the blow. |
 | **N** | **Built, N1–N7** (2026-10-03, from his play): the fight's actions as Baldur's Gate 3 has them. **N1–N6 built**: the magic lesson repaired (E left the fairy after her first line, without her gift); a generic list of actions (`content/actions.json`, `ActionRules`); **a wheel** round the player (K) instead of U and I; **an explicit target** with its chance and damage, confirm or go back (Escape), in a fight and for the surprise attack; the mouse; the three lessons taught the new way. **N7 built**: the opening photographed in both languages; a fresh-eyes review, its fifteen findings fixed — among them E no longer says a weighty last line for him, and the mouse chooses the tile too. **The check is Yannick playing it.** Then **P2**, with Yannick |
 | **Z** | **Built, Z1–Z4** (2026-10-08): **the start zone**, from his request — the demo's player stays between Brindle and the Forges, as Breath of the Wild's Great Plateau; the castle and the other villages stay, out of reach. His river, the sea and his mountains close most of it; the brief closes the rest — his bridge north of Brindle drawn without its span, a wood round the Forges and one west of Brindle, planted with his trees and filled with young ones so no grass shows, his logs across the roads. A layer over the open rows of `region.json` (`closures`), so opening it is taking an entry out; 9,997 tiles, 4 ha. The claims about the whole map are checked on the open world and print `OFF`. A review found no way out; the woods' first planting cost the game nine frames in ten, and was planted again (113–151 frames a second, 132–165 without). **The check is Yannick walking its edge** |
-| **D** | **The work now** (2026-10-09): **the demo's look, finished** — an art director's audit of the zone (https://claude.ai/artifact/EEgnS2GCQ1ud9DrtLzSy1s, 21 recommendations), all of it to be built, in order: the font, the quick wins (HUD, grid and cone, the lesson's panel, bars, what can be picked up, the messages, the meadows), then the holes under Brindle, the fight's feedback, the Forges at work, the light, then the rest. D1–D21 in `docs/DEMO_TASKS.md`. Then P2 |
+| **D** | **Built, D1–D21** (2026-10-09/10): **the demo's look, finished** — an art director's audit of the zone (https://claude.ai/artifact/EEgnS2GCQ1ud9DrtLzSy1s, 21 recommendations), all of it built in its order: a sharp pixel font (Pixel Operator, CC0); a HUD cut to health, place and regard; the fight's grid and cone faint, its lesson card a panel, one style of health bar; a glow and a key over what can be picked up; one band for the world's messages; his meadows sown; **no holes under Brindle** (the camera's cutaway, filled with a rock of ours in shadow); the fight's rings, arrow, gift and words; **the Forges at work** (hands carrying ore, a foreman stoking, furnaces breathing); late-afternoon light, a morning mist, Brindle smoking; the works' ground stained and the cutting face dressed; the player's silhouette behind roofs, and houses no longer walked into; the dialogue sized to its words with the speaker's face; the fairy a figure; the wolf a faceted animal that trots and leaps; the title over Brindle at dusk; the journal a notebook. 97–132 frames a second across the zone (M4 Pro). Frames in `docs/frames/look/`. **The check is Yannick playing it.** Then P2 |
 | **S** | **S1 and S2 built** (2026-09-28): four traits, a pool of 8, and the public build opens on the title; **S3 needs a Windows machine nobody has**, and S4 needs a stranger |
 | **C** | **C1 built** (2026-09-28): the LLM layer deleted. **C3's first half built** the same day: one quest, no opinion per person. The rest of C3 — ranks, documents, the three routes, the invariant-7 walk — goes **with C2 and C4, as one change** (Yannick, 2026-09-28). **C2–C4 validated** (2026-09-29, evening), **after P2**. The clearing is deleted (T2) |
 | **P2** | **After group T, with Yannick**: a review and rewrite of every line of the demo — Claude drafts, he validates, French first. It writes the Cinderworks' lines by state (Q6's), and C4 deletes the old ones. O18–O19's drafts stand until then and keep their `_p2` marks |

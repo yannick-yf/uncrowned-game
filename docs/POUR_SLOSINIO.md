@@ -1,7 +1,7 @@
 # Pour slosinio — ce qu'on apprend en branchant la simulation sur ta carte
 
 Écrit en français, pour toi. Mis à jour au fur et à mesure du travail.
-Dernière mise à jour : 2026-09-30 (la nouvelle règle des dessins, et les tenues).
+Dernière mise à jour : 2026-10-10 (la finition de la démo, groupe D).
 
 **Ta liste de tâches, en une page, est à côté : `docs/TACHES_POUR_SLOSINIO.md`** (2026-09-29).
 
@@ -666,3 +666,40 @@ Images : `docs/frames/zone/`.
 creuse le lit et peint les berges, nous ne savons pas le faire proprement), ou une pose de
 pont effondré. Quand la zone s'ouvrira, il suffira d'enlever une ligne dans nos données
 et de refaire la carte (une commande) : ton pont réapparaîtra entier.
+
+## 19. La finition de la démo (groupe D, 2026-10-09 et 10)
+
+Yannick nous a dit que tu ne travailles plus sur le projet. Ce que tu as fait reste la
+base : on l'utilise et on le complète, dans ton style. Une revue de direction artistique de
+la zone de départ a donné 21 points. Tout est fait. Voici ce qui touche à ton travail.
+
+**Avec tes pièces, sans rien dessiner :**
+
+- Les prairies vides sont semées de tes touffes d'herbe, de tes fleurs et de tes pierres.
+- Ton soleil est plus bas : une lumière de fin d'après-midi. Tes ruines de Brindle fument.
+- La coupe (l'endroit où les ouvriers coupent le bois) a tes souches, tes troncs couchés et
+  tes tas de bûches. Les ouvriers y restent un moment avant de repartir.
+- Aux Forges, deux ouvriers portent du minerai à tes fourneaux et le contremaître les
+  attise. Tes fourneaux respirent : leur lueur monte et descend.
+- Le sol de tes maisons des Forges est maintenant fermé. Tes formes de collision étaient
+  les murs seuls, et on pouvait marcher à moitié dans une maison. Seul ton hangar à
+  charrettes reste traversable, comme ta note le demande.
+
+**Fait par nous, dans ta manière :**
+
+- **La fée** est une petite silhouette : cheveux blonds, robe verte, deux paires d'ailes,
+  ton encre, ta lumière d'en haut à gauche (`tools/draw_fairy.gd`, `view3d/fairy/`).
+- **Le loup** n'est plus fait de onze boîtes : un animal à facettes, avec museau, oreilles,
+  queue et pattes articulées. Il trotte et il bondit quand il attaque. Toujours tes deux
+  matières seulement : ta pierre (sans sa mousse) et ton sombre.
+- Des taches de charbon sur le sol des Forges, une brume au sud du cimetière, des cendres.
+- Là où la caméra coupe tes falaises (le plan proche), on voyait ton ciel pâle, comme des
+  trous. On y dessine maintenant une roche à nous, dans l'ombre, fixée au monde.
+- Derrière un toit, le joueur se voit en silhouette (un contour doré).
+- Dans les dialogues, le portrait de celui qui parle est **découpé dans ta propre image**.
+- L'écran titre montre **ton Brindle au crépuscule**, une photo de ta carte qui glisse
+  lentement derrière le menu (`tools/capture_title.gd`). Avant, il montrait des arbres du
+  pack 2D, ce que notre règle interdit.
+- La police est Pixel Operator (licence CC0, sa licence à côté d'elle).
+
+Images : `docs/frames/look/`. Le détail de chaque point : groupe D de `docs/DEMO_TASKS.md`.

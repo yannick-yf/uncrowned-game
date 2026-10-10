@@ -415,3 +415,24 @@ func test_a_beast_is_named_with_its_article_and_a_pack_as_a_pack() -> void:
 	hud.present(pack, 1.0 / 60.0)
 	assert_eq(hud.banner(), Text.of(&"fight.pack_down", [Text.of(&"beast.wolf.many")]), "and two are the wolves")
 	hud.free()
+
+
+## **The lesson's card stands where nobody is** (the review of D): every lesson began with
+## its master under the card's corner, and the card faded to a third over him — the first
+## instruction of the game, unread. With somebody on the left it takes the right, whole.
+func test_the_lesson_card_moves_off_whoever_stands_under_it() -> void:
+	var hud := FightHud.new()
+	# Out of a tree it has no screen to fill: given one, as the game's 640 by 360.
+	hud.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	hud.size = Vector2(640.0, 360.0)
+	var reading: Dictionary = _drill_turn("sword", 4)
+	reading["screens"] = [Vector2(120.0, 90.0)]
+	hud.present(reading, 1.0 / 60.0)
+	var width: float = 640.0 * FightHud.CARD_WIDTH
+	var at: Vector2 = hud.call(&"_card_place", width, 150.0) as Vector2
+	assert_true(at.x > 320.0, "somebody under the left corner: the card goes right (%s)" % at)
+	assert_eq(hud.call(&"_card_fade", at, width, 150.0) as float, 1.0, "and is drawn whole")
+	reading["screens"] = [Vector2(500.0, 200.0)]
+	hud.present(reading, 1.0 / 60.0)
+	assert_true((hud.call(&"_card_place", width, 150.0) as Vector2).x < 100.0, "nobody on the left: it stays there")
+	hud.free()

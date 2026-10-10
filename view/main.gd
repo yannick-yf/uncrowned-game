@@ -833,7 +833,13 @@ func _place_blows(fresh: Array) -> Array:
 			if who == null:
 				who = _duel.foe() if about_him else _duel.me()
 			if who != null:
-				blow["at"] = _three_d.screen_of(_duel.drawn_at(who), 1.9)
+				# Over his head: a man's is 1.9 m up, a wolf's barely one (the review of D —
+				# at a man's height the words over a wolf hung by the player's head).
+				var fighter_kind: StringName = DuelRules.kind_of(who.who)
+				var beast: bool = who != _duel.me() and _cast != null and _cast.get_npc(fighter_kind) == null \
+					and not DuelRules.is_person(fighter_kind)
+				var head: float = 1.1 if beast else 1.9
+				blow["at"] = _three_d.screen_of(_duel.drawn_at(who), head)
 		placed.append(blow)
 	return placed
 
@@ -932,7 +938,10 @@ func _interact_frame() -> Dictionary:
 		&"pick_up":
 			for find: Dictionary in Places.shared().finds():
 				if StringName(String(find["id"])) == _find_in_reach():
-					return {"at": Vector2(_world.region().resolve(find["anchor"] as Dictionary)) + Vector2(0.5, 0.5)}
+					# Higher than over a fire (the review of D): at 1.3 m the cap lay on the
+					# blade it names, and over the head of a player standing at the grave.
+					return {"at": Vector2(_world.region().resolve(find["anchor"] as Dictionary)) + Vector2(0.5, 0.5),
+						"lift": 2.3}
 		&"rest":
 			var fire: Vector2i = _world.region().nearest_campfire(_world.player_tile(), RecoveryRules.FIRE_REACH)
 			return {"at": Vector2(fire) + Vector2(0.5, 0.5)}
@@ -2845,6 +2854,13 @@ func _option_label(option: DialogueOption) -> String:
 	return Text.of(&"option.tagged", [Text.of(key), option.text])
 
 
+## **The day, without its hour**, for the journal (the review of D): the world is lit at late
+## afternoon whatever the clock says, so a page that said *00:01* under that sun told the
+## player two times at once. The day is what a notebook keeps.
+func _day(tick: int) -> String:
+	return Text.of(&"journal.day", [Game.in_game_clock_parts(tick)[0]])
+
+
 ## The clock, in the player's language.
 func _clock(tick: int) -> String:
 	return Text.of(&"clock.day", Game.in_game_clock_parts(tick))
@@ -2930,7 +2946,7 @@ func _draw_hud() -> void:
 	# no clock, no keys (the pause menu's). The debug lines stay behind their gate.
 	var debug: Array[String] = []
 	if _debug_available:
-		debug.append("[T] skip a day%s" % ("   ·   %d skipped" % _skipped_days if _skipped_days > 0 else ""))
+		debug.append(Text.of(&"hud.skip_day") + ("   ·   %d" % _skipped_days if _skipped_days > 0 else ""))
 		if _world.unkillable:
 			debug.append("[G] INVULNÉRABLE")
 	if _explore_hud != null:
@@ -2938,9 +2954,10 @@ func _draw_hud() -> void:
 		var interact: Dictionary = _interact_frame()
 		var key_at := Vector2(-1.0, -1.0)
 		if not interact.is_empty() and _three_d != null:
-			key_at = _three_d.screen_of(interact["at"] as Vector2, 1.3)
+			key_at = _three_d.screen_of(interact["at"] as Vector2, float(interact.get("lift", 1.3)))
 		_explore_hud.present({"hp": _world.player_hp, "max_hp": WorldState.MAX_HP, "place": _place_name(),
-			"regard": _regard(), "debug": debug, "key_at": key_at}, _real_seconds)
+			"regard": _regard(), "debug": debug, "key_at": key_at,
+			"hold_title": (_hail != null and _hail.holds_player()) or _world.in_dialogue()}, _real_seconds)
 
 	_talk.visible = _world.in_dialogue()
 	if _world.in_dialogue():
@@ -3160,7 +3177,7 @@ func _draw_journal() -> void:
 	var keys: Array[Array] = [["< >", Text.of(&"journal.key.turn")], ["J", Text.of(&"journal.key.close")]]
 	if _book != null:
 		_book.present(tabs, _journal_page, JournalBook.heading(Text.of(page["name"] as StringName)),
-			PackedStringArray(lines), _clock(_sim.tick), empty, welcome, keys)
+			PackedStringArray(lines), _day(_sim.tick), empty, welcome, keys)
 
 
 ## Turn to the next page, and make the next frame rebuild it.
@@ -3246,7 +3263,7 @@ func _page_doings() -> Array[Array]:
 	var blocks: Array[Array] = []
 	for row: Dictionary in Journal.entries(_sim.events):
 		var block: Array[String] = [
-			"%s   %s" % [_clock(int(row["tick"])), _journal_line(row)]]
+			"%s   %s" % [_day(int(row["tick"])), _journal_line(row)]]
 		var because: String = _journal_because(row)
 		if because != "":
 			block.append("                  %s" % because)
@@ -3319,7 +3336,7 @@ func _page_kingdom() -> Array[Array]:
 				var who: String = ""
 				if int(row["tick"]) >= 0:
 					who = Text.of(&"journal.kingdom.by_you" if bool(row["by_player"])
-						else &"journal.kingdom.turned", [_clock(int(row["tick"]))])
+						else &"journal.kingdom.turned", [_day(int(row["tick"]))])
 				places.append(Text.of(&"journal.kingdom.place", [
 					_short_place(row["town"] as StringName),
 					Text.of(&"journal.kingdom.free" if bool(row["free"]) else &"journal.kingdom.crown"),
@@ -3399,7 +3416,7 @@ func _page_standing() -> Array[Array]:
 		for move: Dictionary in (row["moves"] as Array[Dictionary]):
 			quiet = false
 			block.append(Text.of(&"journal.standing.because", [
-				_clock(int(move["tick"])),
+				_day(int(move["tick"])),
 				Text.of(StringName("deed.heard.%s" % String(move["deed"]))),
 				"%+d" % int(round(float(move["by"]))),
 			]))

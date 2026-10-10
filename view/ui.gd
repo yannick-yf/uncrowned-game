@@ -163,6 +163,35 @@ static func bar(canvas: CanvasItem, rect: Rect2, fraction: float, ghost: float =
 	canvas.draw_rect(rect, edge, false, 1.0)
 
 
+## **Keys as caps** (the review of D): a line of keys written « K  actions        O  attendre »
+## — a key and what it does two spaces apart, the pairs eight apart — drawn centred on
+## `centre`, each key in a small dark cap edged gold and what it does dim after it, as the
+## message band and the journal draw theirs.
+static func key_row(canvas: CanvasItem, line: String, centre: float, baseline: float, size: int,
+		alpha: float = 1.0) -> void:
+	var pairs: Array[PackedStringArray] = []
+	var width: float = 0.0
+	for group: String in line.split("        ", false):
+		var cut: int = group.find("  ")
+		var pair := PackedStringArray([group.strip_edges(), ""]) if cut < 0 \
+			else PackedStringArray([group.substr(0, cut).strip_edges(), group.substr(cut + 2).strip_edges()])
+		pairs.append(pair)
+		width += _cap_width(pair[0], size) + 5.0 + width_of(pair[1], size) + 18.0
+	var x: float = roundf(centre - (width - 18.0) * 0.5)
+	for pair: PackedStringArray in pairs:
+		var cap := Rect2(Vector2(x, baseline - 12.0), Vector2(_cap_width(pair[0], size), 15.0))
+		canvas.draw_rect(cap, Color(0.05, 0.05, 0.06, 0.88 * alpha), true)
+		canvas.draw_rect(cap, Color(GOLD, 0.8 * alpha), false, 1.0)
+		write(canvas, Vector2(cap.position.x, baseline), pair[0], size, Color(GOLD, alpha), HORIZONTAL_ALIGNMENT_CENTER, cap.size.x)
+		x = cap.end.x + 5.0
+		write_over(canvas, Vector2(x, baseline), pair[1], size, Color(DIM, alpha))
+		x += width_of(pair[1], size) + 18.0
+
+
+static func _cap_width(key: String, size: int) -> float:
+	return maxf(15.0, width_of(key, size) + 8.0)
+
+
 ## A box to put words in: filled, with a hairline edge.
 static func panel(canvas: CanvasItem, rect: Rect2, fill: Color = PANEL) -> void:
 	canvas.draw_rect(rect, fill, true)

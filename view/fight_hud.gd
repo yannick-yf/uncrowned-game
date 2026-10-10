@@ -374,9 +374,10 @@ func _draw() -> void:
 		Ui.write(self, left, text, text_size, colour)
 
 	# The lesson, under the bars on the left, in a panel (D4).
+	var tall: float = _card_rect.size.y if _card_rect.size.y > 0.0 else 150.0
 	_card_rect = Rect2()
 	if not _card.is_empty():
-		_card_rect = _draw_card(Vector2(MARGIN, TOP + BAR_HEIGHT + 22.0), size.x * CARD_WIDTH)
+		_card_rect = _draw_card(_card_place(size.x * CARD_WIDTH, tall), size.x * CARD_WIDTH, tall)
 	var settling: bool = int(_reading.get("settling", 0)) > 0
 	if _banner != "" and _banner_at >= 0.0:
 		var came: float = clampf((_now - _banner_at) / BANNER_IN_SECONDS, 0.0, 1.0)
@@ -402,10 +403,8 @@ func _draw() -> void:
 		Ui.write_over(self, Vector2((size.x - Ui.width_of(whose, Ui.ROW)) * 0.5, size.y - 30.0),
 			whose, Ui.ROW, tone)
 		var keys: String = keys_line()
-		var colour: Color = Ui.DIM
-		colour.a = _alpha * 0.9
-		Ui.write_over(self, Vector2((size.x - Ui.width_of(keys, Ui.NOTE)) * 0.5, size.y - 12.0),
-			keys, Ui.NOTE, colour)
+		if keys != "":
+			Ui.key_row(self, keys, size.x * 0.5, size.y - 11.0, Ui.NOTE, _alpha * 0.95)
 
 
 ## **The lesson's panel** (D4, the audit's 10): eight rows of small type in four colours,
@@ -417,23 +416,41 @@ const CARD_PAD: float = 8.0
 const CARD_LINE: float = 17.0
 
 
-func _draw_card(at: Vector2, width: float) -> Rect2:
+func _draw_card(at: Vector2, width: float, tall: float = 150.0) -> Rect2:
 	var shown: float = _alpha
-	_alpha = shown * _card_fade(at, width)
+	_alpha = shown * _card_fade(at, width, tall)
 	var box: Rect2 = _draw_card_rows(at, width)
 	_alpha = shown
 	return box
 
 
-## **A fighter under the card fades it** (D10): the lesson's panel is opaque, and a lesson
-## framed wide can put the one you fight under it. Whoever stands under it — the player or
-## a foe, by where the window drew them — brings it down to a third.
-func _card_fade(at: Vector2, width: float) -> float:
-	var under: Rect2 = Rect2(at, Vector2(width, 150.0)).grow(6.0)
+## **The card stands where nobody is** (the review of D): every lesson begins with its master
+## under the card's corner, and a card faded to a third over him was grey words on grass —
+## the player's first instruction, unread. So it takes the left, under the bars, unless
+## somebody stands there, and then the right; only with people under both does it fade.
+func _card_place(width: float, tall: float) -> Vector2:
+	var left := Vector2(MARGIN, TOP + BAR_HEIGHT + 22.0)
+	var right := Vector2(size.x - MARGIN - width, left.y)
+	if _under(left, width, tall) == 0:
+		return left
+	if _under(right, width, tall) == 0:
+		return right
+	return left if _under(left, width, tall) <= _under(right, width, tall) else right
+
+
+func _under(at: Vector2, width: float, tall: float) -> int:
+	var area: Rect2 = Rect2(at, Vector2(width, tall)).grow(6.0)
+	var found: int = 0
 	for point: Variant in _reading.get("screens", []) as Array:
-		if under.has_point(point as Vector2):
-			return 0.35
-	return 1.0
+		if area.has_point(point as Vector2):
+			found += 1
+	return found
+
+
+## **A fighter under the card fades it** (D10), when there is nowhere free to put it: down to
+## two thirds, so its words still read.
+func _card_fade(at: Vector2, width: float, tall: float = 150.0) -> float:
+	return 0.66 if _under(at, width, tall) > 0 else 1.0
 
 
 func _draw_card_rows(at: Vector2, width: float) -> Rect2:

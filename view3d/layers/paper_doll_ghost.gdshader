@@ -15,6 +15,10 @@ uniform sampler2D depth_texture : hint_depth_texture, filter_nearest, repeat_dis
 uniform vec3 fill_colour : source_color = vec3(0.30, 0.34, 0.44);
 uniform vec3 edge_colour : source_color = vec3(1.0, 0.847, 0.443);
 uniform vec2 texel = vec2(0.0035, 0.0035);
+// How much nearer the lens something must be to count as hiding him, in the depth
+// buffer's units: a roof, a crown or a bush, not the grass at his feet (the review of D).
+// Set by the window from the camera's range; 0.35 m over its 399.5.
+uniform float hidden_by = 0.000876;
 
 void vertex() {
 	vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
@@ -24,10 +28,10 @@ void vertex() {
 void fragment() {
 	vec4 c = doll(UV);
 	if (doll_background(c)) { discard; }
-	// Reversed depth: a larger value is nearer the lens. Something nearer than this pixel of
-	// him, by more than a hand, hides it; anything else, and he is seen as himself.
+	// Reversed depth: a larger value is nearer the lens. Something well nearer than this
+	// pixel of him hides it; anything else, and he is seen as himself.
 	float scene = texture(depth_texture, SCREEN_UV).r;
-	if (scene <= FRAGCOORD.z + 0.00002) { discard; }
+	if (scene <= FRAGCOORD.z + hidden_by) { discard; }
 	bool edge = doll_background(doll(UV + vec2(texel.x, 0.0))) || doll_background(doll(UV - vec2(texel.x, 0.0)))
 		|| doll_background(doll(UV + vec2(0.0, texel.y))) || doll_background(doll(UV - vec2(0.0, texel.y)));
 	ALBEDO = edge ? edge_colour : fill_colour;

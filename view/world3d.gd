@@ -142,6 +142,7 @@ uniform sampler2D depth_texture : hint_depth_texture, filter_nearest, repeat_dis
 uniform vec3 fill_colour : source_color = vec3(0.30, 0.34, 0.44);
 uniform vec3 edge_colour : source_color = vec3(1.0, 0.847, 0.443);
 uniform vec2 texel = vec2(0.0035, 0.0035);
+uniform float hidden_by = 0.000876;
 
 void vertex() {
 	vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
@@ -158,7 +159,7 @@ bool background(vec2 uv) {
 void fragment() {
 	if (background(UV)) { discard; }
 	float scene = texture(depth_texture, SCREEN_UV).r;
-	if (scene <= FRAGCOORD.z + 0.00002) { discard; }
+	if (scene <= FRAGCOORD.z + hidden_by) { discard; }
 	bool edge = background(UV + vec2(texel.x, 0.0)) || background(UV - vec2(texel.x, 0.0))
 		|| background(UV + vec2(0.0, texel.y)) || background(UV - vec2(0.0, texel.y));
 	ALBEDO = edge ? edge_colour : fill_colour;
@@ -728,7 +729,9 @@ void sky() {
 		vec2 p = (SCREEN_UV - 0.5) * span + at;
 		float grain = noise(p * 0.9) * 0.55 + noise(p * 2.7) * 0.30 + noise(p * 7.0) * 0.15;
 		float seams = smoothstep(0.80, 0.97, noise(p * vec2(0.6, 2.2)));
-		COLOR = rock * (0.78 + grain * 0.42) * (1.0 - seams * 0.35);
+		// In shadow, as the inside of a cliff is: lit as his rock is, it read as a floor (the
+		// review of D).
+		COLOR = rock * (0.78 + grain * 0.42) * (1.0 - seams * 0.35) * 0.58;
 	}
 }
 """
@@ -1571,6 +1574,18 @@ const GHOST_ALPHA: float = 0.32
 var _player_ghost: AnimatedSprite3D = null
 
 
+## **What counts as hiding him** (the review of D): something at least this many metres
+## nearer the lens — a roof, a crown, a bush that covers him — and not the grass at his
+## feet. Tried at 1.5 m, to spare a bush: the bush by the graves' fire then hid him whole,
+## with nothing drawn, which is worse than a silhouette. In the depth buffer's units.
+const GHOST_HIDDEN_BY_M: float = 0.35
+
+
+func _ghost_depth() -> float:
+	var span: float = (_camera.far - _camera.near) if _camera != null else 399.5
+	return GHOST_HIDDEN_BY_M / maxf(span, 1.0)
+
+
 func _ghost_of(figure: Node3D) -> AnimatedSprite3D:
 	var body := figure as AnimatedSprite3D
 	if body == null:
@@ -1590,6 +1605,7 @@ func _ghost_of(figure: Node3D) -> AnimatedSprite3D:
 	if body.has_meta(&"doll"):
 		var ghost_paint: ShaderMaterial = PaperDoll.material(PaperDoll.GHOST_SHADER, _player_slots(&""))
 		ghost_paint.set_shader_parameter("ghost_alpha", GHOST_ALPHA)
+		ghost_paint.set_shader_parameter("hidden_by", _ghost_depth())
 		ghost.material_override = ghost_paint
 	elif his != null:
 		var shader := Shader.new()
@@ -1598,6 +1614,7 @@ func _ghost_of(figure: Node3D) -> AnimatedSprite3D:
 		paint.shader = shader
 		paint.set_shader_parameter("sprite_sheet", his.get_shader_parameter("sprite_sheet"))
 		paint.set_shader_parameter("ghost_alpha", GHOST_ALPHA)
+		paint.set_shader_parameter("hidden_by", _ghost_depth())
 		ghost.material_override = paint
 	ghost.pause()
 	body.add_child(ghost)
@@ -2263,8 +2280,10 @@ const WOLF_STRIDE_TILES: float = 1.1
 const WOLF_SWING_RAD: float = 0.55
 const WOLF_LEAP_M: float = 0.45
 ## Each leg's place in the trot: the diagonal pairs move together.
-const WOLF_LEGS: Array[Vector3] = [Vector3(0.27, 0.46, 0.10), Vector3(0.27, 0.46, -0.10),
-	Vector3(-0.27, 0.46, 0.10), Vector3(-0.27, 0.46, -0.10)]
+## Shorter in the leg and longer in the body than a first try that read as a goat close up
+## (the review of D).
+const WOLF_LEGS: Array[Vector3] = [Vector3(0.28, 0.40, 0.10), Vector3(0.28, 0.40, -0.10),
+	Vector3(-0.30, 0.40, 0.10), Vector3(-0.30, 0.40, -0.10)]
 const WOLF_TROT: Array[float] = [0.0, PI, PI, 0.0]
 
 
@@ -2317,24 +2336,24 @@ func _wolf() -> Node3D:
 	body.name = "Body"
 	wolf.add_child(body)
 	var along: float = -PI * 0.5
-	_wolf_limb(body, 0.74, 0.13, 0.17, 7, Vector3(-0.02, 0.53, 0.0), along, false)        # body, the chest end wider
-	_wolf_limb(body, 0.24, 0.20, 0.18, 7, Vector3(0.25, 0.53, 0.0), along, false)         # the chest's ruff
+	_wolf_limb(body, 0.80, 0.13, 0.17, 7, Vector3(-0.03, 0.47, 0.0), along, false)        # body, the chest end wider
+	_wolf_limb(body, 0.24, 0.20, 0.18, 7, Vector3(0.26, 0.47, 0.0), along, false)         # the chest's ruff
 	var back := BoxMesh.new()
 	back.size = Vector3(0.50, 0.05, 0.19)
-	_wolf_piece(body, back, Vector3(-0.06, 0.675, 0.0), Vector3.ZERO, true)               # the dark of the back
-	_wolf_limb(body, 0.24, 0.12, 0.10, 6, Vector3(0.42, 0.67, 0.0), along + 0.95, false)  # neck
-	_wolf_limb(body, 0.20, 0.115, 0.10, 6, Vector3(0.56, 0.76, 0.0), along, false)        # head
-	_wolf_limb(body, 0.20, 0.075, 0.042, 4, Vector3(0.74, 0.725, 0.0), along, true, PI * 0.25)  # snout
+	_wolf_piece(body, back, Vector3(-0.07, 0.615, 0.0), Vector3.ZERO, true)               # the dark of the back
+	_wolf_limb(body, 0.24, 0.12, 0.10, 6, Vector3(0.44, 0.59, 0.0), along + 0.75, false)  # neck
+	_wolf_limb(body, 0.20, 0.115, 0.10, 6, Vector3(0.59, 0.68, 0.0), along, false)        # head
+	_wolf_limb(body, 0.20, 0.075, 0.042, 4, Vector3(0.77, 0.645, 0.0), along, true, PI * 0.25)  # snout
 	var nose := BoxMesh.new()
 	nose.size = Vector3(0.04, 0.045, 0.05)
-	_wolf_piece(body, nose, Vector3(0.845, 0.735, 0.0), Vector3.ZERO, true)
+	_wolf_piece(body, nose, Vector3(0.875, 0.655, 0.0), Vector3.ZERO, true)
 	for side: float in [1.0, -1.0]:
 		var ear := PrismMesh.new()
-		ear.size = Vector3(0.085, 0.12, 0.04)
-		_wolf_piece(body, ear, Vector3(0.54, 0.90, 0.065 * side), Vector3(0.0, 0.0, -0.15), true)
+		ear.size = Vector3(0.075, 0.10, 0.04)
+		_wolf_piece(body, ear, Vector3(0.56, 0.81, 0.065 * side), Vector3(0.0, 0.0, -0.40), true)
 	var tail := Node3D.new()
 	tail.name = "Tail"
-	tail.position = Vector3(-0.38, 0.60, 0.0)
+	tail.position = Vector3(-0.42, 0.54, 0.0)
 	tail.rotation.z = deg_to_rad(-62.0)
 	body.add_child(tail)
 	_wolf_limb(tail, 0.38, 0.035, 0.065, 6, Vector3(0.0, -0.19, 0.0), PI, true)
@@ -2343,10 +2362,10 @@ func _wolf() -> Node3D:
 		joint.name = "Leg_%d" % i
 		joint.position = WOLF_LEGS[i]
 		wolf.add_child(joint)
-		_wolf_limb(joint, 0.44, 0.035, 0.06, 5, Vector3(0.0, -0.22, 0.0), 0.0, false)
+		_wolf_limb(joint, 0.38, 0.035, 0.06, 5, Vector3(0.0, -0.19, 0.0), 0.0, false)
 		var paw := BoxMesh.new()
 		paw.size = Vector3(0.09, 0.04, 0.065)
-		_wolf_piece(joint, paw, Vector3(0.02, -0.44, 0.0), Vector3.ZERO, true)
+		_wolf_piece(joint, paw, Vector3(0.02, -0.38, 0.0), Vector3.ZERO, true)
 	wolf.set_meta(&"stride", 0.0)
 	wolf.set_meta(&"swing", 0.0)
 	return wolf
@@ -3157,12 +3176,16 @@ func _build_arena() -> void:
 	_arena_floor = MeshInstance3D.new()
 	_arena_floor.name = "Floor"
 	_arena_floor.material_override = _mark_material
+	# The veil and the marks are paint on the ground: they cast nothing (the review of D —
+	# their quads threw tile-sized dark squares on the grass under the fight's veil).
+	_arena_floor.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_arena.add_child(_arena_floor)
 	_arena_mesh = ImmediateMesh.new()
 	_arena_marks = MeshInstance3D.new()
 	_arena_marks.name = "Marks"
 	_arena_marks.mesh = _arena_mesh
 	_arena_marks.material_override = _mark_material
+	_arena_marks.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_arena.add_child(_arena_marks)
 	_orb = _dot_sprite()
 	_orb.name = "GiftOrb"
@@ -3960,6 +3983,8 @@ void fragment() {
 }
 """
 var paths_sharpened: int = 0
+## A path of his shorter than this, in metres, is left as he drew it.
+const SHORT_PATH_M: float = 12.0
 ## Frames left in which to look again for his paths to sharpen (D13).
 var _sharpen_left: int = 31
 
@@ -3980,6 +4005,13 @@ func _sharpen_his_paths() -> void:
 			continue
 		var source: String = his_paint.resource_path
 		if not (source.ends_with("brindle_path.tres") or source.ends_with("ironworks_path.tres")):
+			continue
+		# His short paths — a few metres from a street to a door — keep his soft edge (the
+		# review of D): sharpened, their square ends read as pale rectangles pasted on the
+		# Forges' street.
+		var span: Vector3 = mesh.get_aabb().size * mesh.global_transform.basis.get_scale() if mesh.is_inside_tree() \
+			else mesh.get_aabb().size
+		if maxf(span.x, span.z) < SHORT_PATH_M:
 			continue
 		if not copies.has(source):
 			var paint := ShaderMaterial.new()
@@ -4491,16 +4523,19 @@ func _sow_meadows() -> void:
 			var spot: Vector2 = centre + Vector2(float((h / (3 + k)) % 9) - 4.0, float((h / (7 + k)) % 9) - 4.0) * 0.1
 			_plant_at(planted, MEADOW_TUFT, tile, Transform3D(Basis(Vector3.UP, float(h + k) * 0.9)
 				.scaled(Vector3.ONE * (1.1 + 0.1 * float((h / 11 + k) % 5))), _feet_of(spot)))
-		# Flowers grow in patches, not as a scatter of dots: a patch is a square of the map
-		# the coarse hash picks, and inside it about one tile in four flowers.
-		var patch: bool = Art.scatter_hash(tile.x / 6 + 101, tile.y / 6 + 37) % 100 < 18
-		var roll: int = (h / 100) % 100
-		if not cleared and ((patch and roll < 26) or (not patch and roll < 1)):
+		# Flowers grow in patches, not as a scatter of dots: a patch is where a smooth noise
+		# over the map runs high, so its edge wanders (the review of D: square patches and a
+		# flower at the same corner of every tile read as a grid), and inside it about one
+		# tile in four flowers, each somewhere in its tile.
+		var roll: int = Art.scatter_hash(tile.x * 31 + 17, tile.y * 17 + 91) % 100
+		var h2: int = Art.scatter_hash(tile.x * 13 + 7, tile.y * 29 + 3)
+		var spot: Vector2 = centre + Vector2(float(h2 % 13) - 6.0, float((h2 / 13) % 13) - 6.0) * 0.065
+		if not cleared and ((_flower_patch(tile) and roll < 27) or roll < 1):
 			_plant_at(planted, MEADOW_FLOWER, tile, Transform3D(Basis(Vector3.UP, float(h) * 1.7)
-				.scaled(Vector3.ONE * 1.2), _feet_of(centre + Vector2(0.25, -0.2))))
+				.scaled(Vector3.ONE * (1.0 + 0.1 * float(h2 % 4))), _feet_of(spot)))
 		elif roll >= 40 and roll < 42:
 			_plant_at(planted, MEADOW_STONE, tile, Transform3D(Basis(Vector3.UP, float(h) * 2.3)
-				.scaled(Vector3.ONE * (0.18 + 0.05 * float(h % 3))), _feet_of(centre + Vector2(-0.2, 0.15))))
+				.scaled(Vector3.ONE * (0.18 + 0.05 * float(h % 3))), _feet_of(spot)))
 
 	var meadows := Node3D.new()
 	meadows.name = "Meadows"
@@ -4512,6 +4547,21 @@ func _sow_meadows() -> void:
 			var where: Array = by_cell[cell] as Array
 			meadow_pieces += where.size()
 			_plant_many(meadows, _library_scene(path), where, "%s_%d_%d" % [path.get_file().get_basename(), cell.x, cell.y], false)
+
+
+## Whether a tile lies in a patch of flowers: a value noise on a lattice five tiles apart,
+## eased between its points, above a threshold — a patch with a wandering edge.
+func _flower_patch(tile: Vector2i) -> bool:
+	var g: Vector2 = Vector2(tile) / 5.0
+	var x0: int = floori(g.x)
+	var y0: int = floori(g.y)
+	var f: Vector2 = g - Vector2(x0, y0)
+	f = f * f * (Vector2(3.0, 3.0) - 2.0 * f)
+	var at: Callable = func(x: int, y: int) -> float:
+		return float(Art.scatter_hash(x + 101, y + 37) % 100) / 100.0
+	var top: float = lerpf(at.call(x0, y0), at.call(x0 + 1, y0), f.x)
+	var low: float = lerpf(at.call(x0, y0 + 1), at.call(x0 + 1, y0 + 1), f.x)
+	return lerpf(top, low, f.y) > 0.72
 
 
 ## His ironworks ground mask, read from his file as his shader reads it, or null.

@@ -259,6 +259,10 @@ none of the four states' lines would make sense in another state.
 > **New words of group D, for P2 to read** (2026-10-10): the journal's tabs, its name and
 > its welcome on an empty first page (`journal.tab.*`, `journal.book`, `journal.welcome`,
 > D20) — *« Votre carnet. Ce que vous ferez s'écrira ici, et ce que cela aura coûté. »*
+> And from the review of D: *parler à la fée, ce qui vit dans le bois* (the prompt);
+> *Pourquoi frapper un poteau ?*, offered in the sword lesson where there is no post;
+> *Nowhere has heard anything about you.*; *Arrows: share out*; and the HUD's *Ici :
+> inconnu*, which can read as "this place is unknown" when it means "nobody here knows you".
 
 ### P3 · Abandonment is absence
 
@@ -3653,6 +3657,42 @@ A notebook's layout: tabs for the pages, a title each, a line of welcome on an e
 
 The opening in both languages, the frame rate across the zone, a fresh-eyes review walking
 it as a player would, `CLAUDE.md`, V3 and the brother's page.
+
+> **Built 2026-10-10.** **The opening**: 51 frames a language, 102, no `SCRIPT ERROR` in any.
+> **The frame rate** (vsync off, 400 frames, M4 Pro): the graves 132, the fire 127, Brindle
+> 107, the wood west of Brindle 108, the fallen bridge 123, the wolves 97, the Forges' gate
+> 106, north of the Forges 113 — none under 97. **A fresh-eyes review** walked the 102 frames
+> and the code: eleven points, these fixed —
+> 1. **The lesson's card** faded to a third over the master who starts every lesson under its
+>    corner: the first instruction, grey on grass. It now stands on the side where nobody is
+>    (`FightHud._card_place`) and fades to two thirds only with people under both sides.
+> 2. **The flowers stood on a grid** — square patches, one flower at the same corner of every
+>    tile. Patches follow a smooth noise now, and each flower and stone stands somewhere in
+>    its tile.
+> 3. **Dark squares under the fight's veil**: its quads cast shadows. They cast none now.
+> 4. **Bram's '!' rose under Brindle's title**: a place's title waits while a hail or a talk
+>    is on (`hold_title`), and rises after.
+> 5. **The E cap lay on the sword** it names: over a find it stands 2.3 m up, not 1.3.
+> 6. **Three times of day at once**: the journal said *00:01* under the late sun. It keeps
+>    the day only (*jour 1*).
+> 7. **Pale rectangles on the Forges' street**: his short paths to the doors, sharpened in
+>    D13, read as pasted. A path of his under 12 m keeps his soft edge.
+> 8. **The cutaway read as a brown floor**: the rock's inside is drawn in shadow now. The
+>    player's silhouette counts as hidden only what is 0.35 m nearer the lens — not the
+>    grass at his feet; tried at 1.5 m to spare a bush, the bush by the graves' fire hid him
+>    whole, which is worse.
+> 9. **The surprise's words hung by the player's head**: a blow's words hang over a wolf's
+>    head at 1.1 m, over a man's at 1.9.
+> 10. **Smaller**: the fight's keys are caps, as the band's and the journal's (`Ui.key_row`);
+>    the inventory's two *Protection : 1* say which is the total and which the piece; the
+>    fight's *Protection : 5* has its colon; the debug line is French in French; the wolf is
+>    longer and lower, its ears laid back — close up it read as a goat.
+> 11. **The docs** say the cutaway is a rock of ours, not his.
+>
+> **Left, and said**: the pause, creation and inventory still write their keys as text; the
+> HUD has no backing behind *PV* over a bright fire; the mist is a morning mist under a
+> late sun. And four lines for P2 (the backlog). `docs/V3.md` *The look, finished*,
+> `docs/POUR_SLOSINIO.md` §19, and `CLAUDE.md` row D.
 
 ---
 
