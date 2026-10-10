@@ -354,6 +354,8 @@ const ARROW_FLETCH: Color = Color(0.92, 0.89, 0.80)
 ## The window's own clock, in seconds of frames drawn. Every effect below is a function
 ## of it and of the simulation's state, never of a timer of its own.
 var _now: float = 0.0
+## The last frame's length, for what eases by the frame (the wolves' trot, D18).
+var _frame_delta: float = 0.0
 ## Per fighter — `&"mine"` and `&"his"` — when they were last hit and how, for the
 ## flash and the bruise; and the shader material each wears while fighting.
 var _struck: Dictionary = {}
@@ -765,7 +767,9 @@ func _hold_the_rock() -> void:
 	var screen: Vector2 = get_viewport().get_visible_rect().size if get_viewport() != null else Vector2(640.0, 360.0)
 	var tall: float = _camera.size
 	_rock_inside.set_shader_parameter("span", Vector2(tall * screen.x / maxf(screen.y, 1.0), tall))
-	_rock_inside.set_shader_parameter("at", Vector2(_camera.global_position.x, _camera.global_position.z))
+	# Outside the tree (the suite's windows) the camera's own place is its place in the world.
+	var focus: Vector3 = _camera.global_position if _camera.is_inside_tree() else _camera.position
+	_rock_inside.set_shader_parameter("at", Vector2(focus.x, focus.z))
 
 
 ## Stand everything static on his ground again, now that his ground is built.
@@ -1157,7 +1161,7 @@ var _dressed_as: String = ""
 
 
 func _redress_player(fighting: Dictionary) -> void:
-	var doll := _player.get_meta(&"doll", null) as ShaderMaterial if _player != null else null
+	var doll := _player.get_meta(&"doll") as ShaderMaterial if _player != null and _player.has_meta(&"doll") else null
 	if doll == null:
 		return
 	var in_hand: StringName = StringName(String(fighting.get("my_weapon", ""))) if not fighting.is_empty() else &""
@@ -1350,7 +1354,8 @@ func _show_the_fairy(now: float) -> void:
 		var frame: int = int(now / (FAIRY_BEAT_SECONDS / float(FAIRY_FRAMES))) % FAIRY_FRAMES
 		_fairy_figure.region_rect = Rect2(float(frame * FAIRY_CELL), 0.0, FAIRY_CELL, FAIRY_CELL)
 	if _camera != null:
-		_fairy_glow.global_position = _fairy.global_position - _camera.global_basis.z * 0.5
+		# The glow is hers and the camera the window's, neither turned: local is world.
+		_fairy_glow.position = -_camera.basis.z * 0.5
 	for i: int in _fairy_motes.size():
 		var phase: float = now * (0.55 + float(i) * 0.12) + float(i) * 1.7
 		var mote: Sprite3D = _fairy_motes[i]
@@ -1490,6 +1495,7 @@ func sync(frame: Dictionary, delta: float) -> void:
 		_snap_wanted = -1.0
 	_aim_lens(float(frame.get("fight_lens", 0.0)))
 	_now += delta
+	_frame_delta = delta
 	var world := _sim.store(&"world") as WorldState
 	var cast := _sim.store(&"cast") as Cast
 	var road := _sim.store(&"travellers") as Travellers
@@ -2247,41 +2253,134 @@ func _lying_sword() -> Node3D:
 	return sword
 
 
-## One part of the wolf: a box of a size, at a place, in one of the two materials.
-func _wolf_part(parent: Node3D, size: Vector3, at: Vector3, dark: bool,
-		tilt_deg: float = 0.0) -> void:
-	var box := BoxMesh.new()
-	box.size = size
+## **The wolf, finer** (D18, the audit's 19): eleven boxes read as rocks at play height and
+## slid without a step. Now a faceted animal in the same two paints — a tapering body, a
+## chest, a neck, a head, a snout and its nose, ears, a tail that hangs and wags, four legs
+## on joints — whose legs swing as it goes and which leaps when it strikes. His coat is his
+## `styled_rock` without its moss (a wolf with moss on its back read as a stone again), his
+## `styled_dark` for the back, the snout, the ears, the paws and the tail. Facing +x.
+const WOLF_STRIDE_TILES: float = 1.1
+const WOLF_SWING_RAD: float = 0.55
+const WOLF_LEAP_M: float = 0.45
+## Each leg's place in the trot: the diagonal pairs move together.
+const WOLF_LEGS: Array[Vector3] = [Vector3(0.27, 0.46, 0.10), Vector3(0.27, 0.46, -0.10),
+	Vector3(-0.27, 0.46, 0.10), Vector3(-0.27, 0.46, -0.10)]
+const WOLF_TROT: Array[float] = [0.0, PI, PI, 0.0]
+
+
+## A faceted piece: a primitive's triangles drawn apart, so every face is flat, as his props'.
+func _faceted(mesh: PrimitiveMesh) -> Mesh:
+	var tool := SurfaceTool.new()
+	tool.create_from(mesh, 0)
+	tool.deindex()
+	tool.generate_normals()
+	return tool.commit()
+
+
+## A tapering piece of the wolf along its own y: `from` and `to` radii, `sides` facets.
+func _wolf_limb(parent: Node3D, length: float, from: float, to: float, sides: int, at: Vector3,
+		turn_z: float, dark: bool, turn_x: float = 0.0) -> MeshInstance3D:
+	var cylinder := CylinderMesh.new()
+	cylinder.height = length
+	cylinder.bottom_radius = from
+	cylinder.top_radius = to
+	cylinder.radial_segments = sides
+	cylinder.rings = 1
+	return _wolf_piece(parent, cylinder, at, Vector3(turn_x, 0.0, turn_z), dark)
+
+
+func _wolf_piece(parent: Node3D, mesh: PrimitiveMesh, at: Vector3, turn: Vector3, dark: bool) -> MeshInstance3D:
 	var part := MeshInstance3D.new()
-	part.mesh = box
+	part.mesh = _faceted(mesh)
 	part.position = at
-	part.rotation.z = deg_to_rad(tilt_deg)
+	part.rotation = turn
 	var mat: Material = _wolf_dark if dark else _wolf_coat
 	part.material_override = mat if mat != null else _plain_grey()
 	parent.add_child(part)
+	return part
 
 
-## A wolf, facing +x, standing on its own origin. Eleven boxes: body, chest, head,
-## muzzle, two ears, four legs and a tail. Low-poly on purpose — his trees and his fences
-## are faceted, and a smooth animal among them would be the odd one out.
+## A wolf, facing +x, standing on its own origin: `Body` carries all of it but the legs and
+## leans and rises in a leap; `Leg_0`..`Leg_3` are joints at the hips and shoulders; `Tail`
+## is a joint at the rump.
 func _wolf() -> Node3D:
 	if _wolf_coat == null and ResourceLoader.exists(WOLF_COAT):
-		_wolf_coat = load(WOLF_COAT) as Material
+		var his := load(WOLF_COAT) as ShaderMaterial
+		if his != null:
+			var coat := his.duplicate() as ShaderMaterial
+			coat.set_shader_parameter("moss_amount", 0.0)
+			_wolf_coat = coat
 	if _wolf_dark == null and ResourceLoader.exists(WOLF_DARK):
 		_wolf_dark = load(WOLF_DARK) as Material
 	var wolf := Node3D.new()
-	_wolf_part(wolf, Vector3(0.80, 0.34, 0.34), Vector3(0.0, 0.50, 0.0), false)      # body
-	_wolf_part(wolf, Vector3(0.80, 0.08, 0.30), Vector3(0.0, 0.69, 0.0), true)       # back
-	_wolf_part(wolf, Vector3(0.30, 0.40, 0.36), Vector3(0.34, 0.52, 0.0), false)     # chest
-	_wolf_part(wolf, Vector3(0.30, 0.26, 0.26), Vector3(0.56, 0.66, 0.0), false)     # head
-	_wolf_part(wolf, Vector3(0.20, 0.12, 0.14), Vector3(0.76, 0.60, 0.0), true)      # muzzle
-	_wolf_part(wolf, Vector3(0.07, 0.13, 0.06), Vector3(0.52, 0.84, 0.08), true)     # ear
-	_wolf_part(wolf, Vector3(0.07, 0.13, 0.06), Vector3(0.52, 0.84, -0.08), true)    # ear
-	for x: float in [0.28, -0.28]:
-		for z: float in [0.11, -0.11]:
-			_wolf_part(wolf, Vector3(0.09, 0.36, 0.09), Vector3(x, 0.18, z), false)   # legs
-	_wolf_part(wolf, Vector3(0.40, 0.09, 0.09), Vector3(-0.56, 0.52, 0.0), true, -28.0)  # tail
+	var body := Node3D.new()
+	body.name = "Body"
+	wolf.add_child(body)
+	var along: float = -PI * 0.5
+	_wolf_limb(body, 0.74, 0.13, 0.17, 7, Vector3(-0.02, 0.53, 0.0), along, false)        # body, the chest end wider
+	_wolf_limb(body, 0.24, 0.20, 0.18, 7, Vector3(0.25, 0.53, 0.0), along, false)         # the chest's ruff
+	var back := BoxMesh.new()
+	back.size = Vector3(0.50, 0.05, 0.19)
+	_wolf_piece(body, back, Vector3(-0.06, 0.675, 0.0), Vector3.ZERO, true)               # the dark of the back
+	_wolf_limb(body, 0.24, 0.12, 0.10, 6, Vector3(0.42, 0.67, 0.0), along + 0.95, false)  # neck
+	_wolf_limb(body, 0.20, 0.115, 0.10, 6, Vector3(0.56, 0.76, 0.0), along, false)        # head
+	_wolf_limb(body, 0.20, 0.075, 0.042, 4, Vector3(0.74, 0.725, 0.0), along, true, PI * 0.25)  # snout
+	var nose := BoxMesh.new()
+	nose.size = Vector3(0.04, 0.045, 0.05)
+	_wolf_piece(body, nose, Vector3(0.845, 0.735, 0.0), Vector3.ZERO, true)
+	for side: float in [1.0, -1.0]:
+		var ear := PrismMesh.new()
+		ear.size = Vector3(0.085, 0.12, 0.04)
+		_wolf_piece(body, ear, Vector3(0.54, 0.90, 0.065 * side), Vector3(0.0, 0.0, -0.15), true)
+	var tail := Node3D.new()
+	tail.name = "Tail"
+	tail.position = Vector3(-0.38, 0.60, 0.0)
+	tail.rotation.z = deg_to_rad(-62.0)
+	body.add_child(tail)
+	_wolf_limb(tail, 0.38, 0.035, 0.065, 6, Vector3(0.0, -0.19, 0.0), PI, true)
+	for i: int in WOLF_LEGS.size():
+		var joint := Node3D.new()
+		joint.name = "Leg_%d" % i
+		joint.position = WOLF_LEGS[i]
+		wolf.add_child(joint)
+		_wolf_limb(joint, 0.44, 0.035, 0.06, 5, Vector3(0.0, -0.22, 0.0), 0.0, false)
+		var paw := BoxMesh.new()
+		paw.size = Vector3(0.09, 0.04, 0.065)
+		_wolf_piece(joint, paw, Vector3(0.02, -0.44, 0.0), Vector3.ZERO, true)
+	wolf.set_meta(&"stride", 0.0)
+	wolf.set_meta(&"swing", 0.0)
 	return wolf
+
+
+## **A wolf in motion** (D18): `moved` is how far it was drawn this frame, in tiles — its legs
+## trot by it, the diagonal pairs together, and come to rest when it stops; its tail wags on
+## its own clock. In a fight, `dip` gathers it low before a blow and `lunge` is the blow: it
+## leaps, up and forward, its forelegs reaching and its hind legs pushing.
+func _animate_wolf(wolf: Node3D, moved: float, delta: float, lunge: float = 0.0, dip: float = 0.0) -> void:
+	var body := wolf.get_node_or_null(^"Body") as Node3D
+	if body == null:
+		return
+	var stride: float = float(wolf.get_meta(&"stride", 0.0)) + moved / WOLF_STRIDE_TILES * TAU
+	var going: float = clampf(moved / maxf(delta, 0.001) / 2.0, 0.0, 1.0)
+	var swing: float = lerpf(float(wolf.get_meta(&"swing", 0.0)), going, clampf(delta * 8.0, 0.0, 1.0))
+	wolf.set_meta(&"stride", fposmod(stride, TAU))
+	wolf.set_meta(&"swing", swing)
+	var leap: float = maxf(lunge, 0.0)
+	var gather: float = clampf(dip, 0.0, 1.0)
+	for i: int in WOLF_LEGS.size():
+		var joint := wolf.get_node_or_null(NodePath("Leg_%d" % i)) as Node3D
+		if joint == null:
+			continue
+		var front: bool = WOLF_LEGS[i].x > 0.0
+		var trot: float = sin(stride + WOLF_TROT[i]) * WOLF_SWING_RAD * swing
+		joint.rotation.z = lerpf(trot, 0.75 if front else -0.65, leap)
+		joint.position.y = WOLF_LEGS[i].y - 0.06 * gather
+	body.position.y = absf(sin(stride)) * 0.025 * swing - 0.08 * gather + WOLF_LEAP_M * sin(leap * PI * 0.5)
+	body.rotation.z = 0.12 * gather - 0.18 * leap
+	var tail := body.get_node_or_null(^"Tail") as Node3D
+	if tail != null:
+		tail.rotation.y = sin(_now * (3.0 + 4.0 * swing) + float(wolf.get_instance_id() % 7)) * 0.22
+		tail.rotation.z = deg_to_rad(-62.0 + 18.0 * leap)
 
 
 func _sync_wild(wild: Wild, world: WorldState, fighting: Dictionary = {}) -> void:
@@ -2311,9 +2410,11 @@ func _sync_wild(wild: Wild, world: WorldState, fighting: Dictionary = {}) -> voi
 				add_child(block)
 				_wild_blocks[id] = block
 				_wild_drawn[id] = want
-			var drawn: Vector2 = (_wild_drawn.get(id, want) as Vector2).lerp(want, WILD_EASES)
+			var was: Vector2 = _wild_drawn.get(id, want) as Vector2
+			var drawn: Vector2 = was.lerp(want, WILD_EASES)
 			_wild_drawn[id] = drawn
 			block.position = _feet_of(drawn)
+			_animate_wolf(block, drawn.distance_to(was), _frame_delta)
 			# The model faces +x; a tile's y is the world's z. A little apart each, so three
 			# do not stand like one wolf pasted three times.
 			block.rotation.y = _beast_turn(Vector2(look), one)
@@ -2571,9 +2672,16 @@ func _sync_beasts(fighting: Dictionary) -> void:
 			add_child(beast)
 			_beasts[seat] = beast
 		_beast_at[seat] = at
-		beast.position = _feet_of(at + _offset_of(entry, false))
+		var stands: Vector2 = at + _offset_of(entry, false)
+		var last: Vector2 = beast.get_meta(&"drawn", stands) as Vector2
+		beast.set_meta(&"drawn", stands)
+		beast.position = _feet_of(stands)
 		var face: Vector2 = entry.get("his_face", Vector2(1, 0)) as Vector2
 		beast.rotation.y = _beast_turn(face, 0)
+		# The lunge's own shift is the leap, not a walk: only the tile it stands on trots it.
+		var walked: float = 0.0 if not is_zero_approx(float(entry.get("his_lunge", 0.0))) else stands.distance_to(last)
+		_animate_wolf(beast, walked, _frame_delta, float(entry.get("his_lunge", 0.0)),
+			float(entry.get("his_dip", 0.0)))
 		beast.visible = not bool(entry.get("his_down", false))
 	for seat: Variant in _beasts.keys():
 		if not here.has(seat):
@@ -2943,7 +3051,8 @@ func _wear_fight_paint(figure: Node3D, mine: bool, fighting: Dictionary, key: St
 	var sprite := figure as AnimatedSprite3D
 	if sprite == null or _figure_material == null:
 		return
-	var doll := sprite.get_meta(&"doll", null) as ShaderMaterial
+	# `get_meta` takes a null default for no default, and complains: ask first.
+	var doll := sprite.get_meta(&"doll") as ShaderMaterial if sprite.has_meta(&"doll") else null
 	if fighting.is_empty():
 		var own: Material = _worn(sprite)
 		if sprite.material_override != own:
@@ -3577,6 +3686,24 @@ func beast_shown(seat: StringName) -> bool:
 
 func beast_at(seat: StringName) -> Vector2:
 	return _beast_at.get(seat, Vector2(-1, -1)) as Vector2
+
+
+## How high a fight's beast is carried above its feet this frame — its leap (D18) — and
+## the paints it wears, for the suite.
+func beast_lift(seat: StringName) -> float:
+	var beast: Node3D = _beasts.get(seat, null) as Node3D
+	var body: Node3D = beast.get_node_or_null(^"Body") as Node3D if beast != null else null
+	return body.position.y if body != null else 0.0
+
+
+func beast_paints(seat: StringName) -> Array[Material]:
+	var out: Array[Material] = []
+	var beast: Node3D = _beasts.get(seat, null) as Node3D
+	if beast == null:
+		return out
+	for part: Node in beast.find_children("*", "MeshInstance3D", true, false):
+		out.append((part as MeshInstance3D).material_override)
+	return out
 
 
 ## Which look a figure is drawn in (L2), by its node's name — `Player`, `Person_bram`,

@@ -3578,6 +3578,26 @@ with a shape. **Check:** frames of the wake.
 A finer model in his low-poly (muzzle, ears, tail), in his two paints; legs that swing as
 they walk, a leap when they strike. **Check:** frames and a recorded sequence.
 
+> **Built 2026-10-10.** `World3d._wolf()` is a faceted animal now, not eleven boxes: a body
+> that tapers from the chest to the hips, a ruff, a neck, a six-sided head, a four-sided
+> snout and its nose, two ears, a tail on a joint at the rump, four legs on joints at the
+> shoulders and hips with their paws — every primitive's triangles drawn apart
+> (`_faceted`), so each face is flat as his props' are. **Two paints, his**: his
+> `styled_rock` for the coat **without its moss** (a duplicate with `moss_amount` at 0 — a
+> wolf with moss on its back read as a stone again) and his `styled_dark` for the back,
+> the snout, the ears, the paws and the tail. **In motion** (`_animate_wolf`): the legs trot
+> by how far the wolf was drawn this frame, the diagonal pairs together, and come to rest
+> when it stops; the tail wags on its own clock; in a fight it **gathers low** through the
+> wind-up (`his_dip`) and **leaps** at the blow (`his_lunge`): up 0.45 m and forward, its
+> forelegs reaching and its hind legs pushing. Frames and a sequence: the pack walking (a
+> film at 10 frames a second), the blow step by step (steps 140 to 164 of `wolf:…:press`):
+> `docs/frames/look/D18_wolves.jpg`. `test_world3d`: every piece wears his rock or his
+> dark, and the wolf rises more than 0.3 m at the blow. **And three engine complaints the
+> suite printed, gone** — the fairy's glow and the rock behind the cutaway read world
+> positions outside the tree, and `get_meta(…, null)` asks for no default (2,265 lines of
+> `ERROR` in a full run down to 608, which are his particles told to emit in a window that
+> is not in a tree, and harmless).
+
 ### D19 · The title screen (audit 20)
 
 His world behind the menu — Brindle at dusk, the camera gliding — a drawn logo, the menu in

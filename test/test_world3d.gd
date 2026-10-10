@@ -361,6 +361,21 @@ func test_the_window_stands_on_his_ground() -> void:
 	assert_true(window.beast_shown(&"wolf"), "the first wolf is drawn")
 	assert_eq(window.beast_at(&"wolf"), Vector2(284.5, 315.5), "on its own tile")
 	assert_false(window.beast_shown(&"wolf#2"), "and the one that is down is not drawn standing")
+	# **The wolf, finer** (D18): a faceted animal in his two paints only — his rock without
+	# its moss, his dark — that leaps when it strikes.
+	if window.his_present():
+		var paints: Array[Material] = window.beast_paints(&"wolf")
+		assert_true(paints.size() >= 15, "a wolf of %d pieces" % paints.size())
+		var coat: ShaderMaterial = load(World3d.WOLF_COAT) as ShaderMaterial
+		for paint: Material in paints:
+			var his_dark: bool = paint != null and paint.resource_path == World3d.WOLF_DARK
+			var his_coat: bool = paint is ShaderMaterial and (paint as ShaderMaterial).shader == coat.shader \
+				and float((paint as ShaderMaterial).get_shader_parameter("moss_amount")) == 0.0
+			assert_true(his_dark or his_coat, "every piece of the wolf wears his rock or his dark")
+		var resting: float = window.beast_lift(&"wolf")
+		first["his_lunge"] = 1.0
+		window.sync(pack_frame, 1.0 / 60.0)
+		assert_true(window.beast_lift(&"wolf") > resting + 0.3, "and it leaps at the blow: %.2f m" % window.beast_lift(&"wolf"))
 	window.sync(over, 1.0 / 60.0)
 	assert_false(window.beast_shown(&"wolf"), "the fight's wolves go with the fight")
 
