@@ -215,6 +215,33 @@ func _opens(debug: bool, screen: String = "", shot: String = "", quick: String =
 	return screens.call(&"first_screen", debug, screen, shot, quick) as StringName
 
 
+## **His world behind the menu** (D19, the audit's 20): Brindle at dusk, gliding, and never
+## off the edge of the picture; nothing of the 2D pack's trees; the menu in its panel.
+func test_the_title_glides_over_his_world_at_dusk() -> void:
+	if not ResourceLoader.exists("res://view3d/title/brindle_dusk.jpg"):
+		off("the title's picture is captured by tools/capture_title.gd")
+		return
+	var title: Node = _screen("res://view/title.gd")
+	title.call(&"_build_backdrop")
+	title.call(&"_build")
+	assert_true(title.call(&"shows_his_world") as bool, "Brindle at dusk stands behind the menu")
+	assert_eq(title.get(&"_art"), null, "and nothing of the 2D pack")
+	var backdrop: Sprite2D = title.get_node(^"Backdrop") as Sprite2D
+	var size: Vector2 = backdrop.texture.get_size()
+	var seen: Dictionary = {}
+	for second: int in range(0, 96, 6):
+		title.set(&"_elapsed", float(second))
+		title.call(&"_glide")
+		var shown: Rect2 = backdrop.region_rect
+		assert_true(shown.position.x >= 0.0 and shown.position.y >= 0.0 and shown.end.x <= size.x + 0.01
+			and shown.end.y <= size.y + 0.01, "at %d s the glide stays on the picture: %s" % [second, shown])
+		seen[shown.position.round()] = true
+	assert_true(seen.size() >= 10, "and it moves: %d places in a loop" % seen.size())
+	var box: Rect2 = title.call(&"menu_box") as Rect2
+	assert_true(box.position.y > 150.0 and box.end.y < 340.0, "the menu's panel stands under the name and above the hint: %s" % box)
+	title.free()
+
+
 func test_the_public_build_opens_on_the_title() -> void:
 	# **S2, 2026-09-28.** The demo opens on creation, so the public build passes through
 	# the title and never drops a stranger into the world at the floor of every trait.

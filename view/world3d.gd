@@ -3828,6 +3828,26 @@ func _late_afternoon() -> void:
 		_air.ambient_light_color = Color(base.r * AMBIENT_LATE.r, base.g * AMBIENT_LATE.g, base.b * AMBIENT_LATE.b)
 
 
+## **Dusk, for the title** (D19, the audit's 20): the sun low and red over Brindle, the air
+## blue and dimmer, so its fires and its smoke read. Only `tools/capture_title.gd` asks for
+## it: the title shows his world at dusk as a picture taken of it, not a world built behind
+## the menu, which would cost the title two and a half seconds and the game a second world.
+const SUN_DUSK_DEGREES: float = -21.0
+const SUN_DUSK: Color = Color(1.0, 0.54, 0.32)
+const AMBIENT_DUSK: Color = Color(0.74, 0.78, 1.0)
+
+
+func dusk() -> void:
+	if _sun != null:
+		_sun.rotation_degrees.x = SUN_DUSK_DEGREES
+		_sun.light_color = SUN_DUSK
+		_sun.light_energy = _sun.light_energy * 0.92
+	if _air != null:
+		var base: Color = _air.ambient_light_color
+		_air.ambient_light_color = Color(base.r * AMBIENT_DUSK.r, base.g * AMBIENT_DUSK.g, base.b * AMBIENT_DUSK.b)
+		_air.ambient_light_energy = _air.ambient_light_energy * 0.80
+
+
 ## **The works' ground, used** (D13, the audit's 6): the street and the yard were one even
 ## brown. Where his ironworks mask paints worn earth, coal and slag stains of ours are laid
 ## on it — soft dark blotches with a ragged edge, projected onto the ground (decals), turned

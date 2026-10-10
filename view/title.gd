@@ -1,14 +1,17 @@
 extends Node2D
 
-## The first screen: a night, a treeline, and four things you can do.
+## The first screen: **his world at dusk, gliding behind the menu** (D19, the audit's 20).
+##
+## It was a night sky and a treeline of the 2D pack's trees — the one pack the art rule says
+## never appears — and nothing of the world the game is played in. Now it is Brindle at dusk,
+## photographed from his world by `tools/capture_title.gd` (`view3d/title/brindle_dusk.jpg`),
+## drifting slowly as a camera would over it, graded toward evening, with ash rising over
+## it; the game's name drawn over a fallen crown; and the menu in the panel every other
+## screen uses. Without the picture (a clone that has not captured it) the night stays.
 ##
 ## It is drawn rather than laid out, for the same reason the world is — one `_draw`
 ## with the numbers visible beats a scene tree of anchored `Control`s whose positions
-## live in a file nobody reads. Everything on it comes out of the approved pack: the
-## trees are the Thornwood's own sprite in silhouette, and the lights above them are
-## the fairies, drawn exactly as the opening draws them.
-##
-## The picture is the game's argument in one frame: the wood, at night, still there.
+## live in a file nobody reads.
 
 signal chose(what: StringName, carrying: Variant)
 
@@ -17,18 +20,36 @@ signal chose(what: StringName, carrying: Variant)
 const SKY_TOP: Color = Color(0.055, 0.075, 0.125)
 const SKY_LOW: Color = Color(0.025, 0.045, 0.050)
 
-const TREE: Rect2i = Rect2i(32, 0, 32, 32)
-const SCRUB: Rect2i = Rect2i(0, 0, 32, 32)
-## Two ranks of trees. The far one is smaller, higher and lighter; the near one runs
-## off the bottom of the screen. Two is enough for depth and cheap enough to redraw
-## every frame.
-const FAR: Color = Color(0.062, 0.086, 0.076)
-const NEAR: Color = Color(0.016, 0.032, 0.026)
+const PICTURE: String = "res://view3d/title/brindle_dusk.jpg"
+## How large the picture is drawn: a 2560-pixel picture over 960 of the 640 units, so a
+## third of it is off the screen to glide into.
+const PICTURE_SCALE: float = 0.375
+## One slow loop of the glide, in seconds, and how far of the room it uses.
+const GLIDE_SECONDS: float = 96.0
+const GLIDE_REACH: Vector2 = Vector2(0.42, 0.36)
+## Evening on his daylight: shadows toward blue, lights toward ember, a little dimmer.
+const GRADE_SHADER: String = """
+shader_type canvas_item;
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	float lum = dot(c.rgb, vec3(0.299, 0.587, 0.114));
+	vec3 cool = vec3(0.74, 0.80, 1.0);
+	vec3 warm = vec3(1.10, 0.93, 0.78);
+	c.rgb *= mix(cool, warm, smoothstep(0.12, 0.50, lum)) * 0.88;
+	COLOR = vec4(c.rgb, 1.0);
+}
+"""
+const ASH_FLAKES: int = 34
 
-const MENU_LEFT: float = 262.0
-const MENU_TOP: float = 214.0
+const MENU_TOP: float = 230.0
+## The menu's panel: as wide as its widest row and the caret, centred.
+const MENU_PAD: Vector2 = Vector2(22.0, 10.0)
+const LOGO_Y: float = 96.0
+const LOGO_SIZE: int = 48
+const BOLD_FONT: String = "res://view/fonts/pixel_operator/PixelOperator-Bold.ttf"
 
-var _art: Art = null
+var _backdrop: Sprite2D = null
+var _bold: Font = null
 var _menu: Menu = Menu.new()
 ## The menu asking whether a run in progress may be thrown away, or null when it is
 ## not being asked. A second menu rather than a mode flag on the first: the question
@@ -39,7 +60,7 @@ var _elapsed: float = 0.0
 
 
 func _ready() -> void:
-	_art = Art.new()
+	_build_backdrop()
 	_build()
 	Sound.play_music_now(Sound.MUSIC_TITLE)
 	set_process(true)
@@ -63,8 +84,49 @@ func _build() -> void:
 
 func _process(delta: float) -> void:
 	_elapsed += delta
+	_glide()
 	_read_input()
 	queue_redraw()
+
+
+## The picture of his world, under everything this node draws.
+func _build_backdrop() -> void:
+	if ResourceLoader.exists(BOLD_FONT):
+		_bold = load(BOLD_FONT) as Font
+	if not ResourceLoader.exists(PICTURE):
+		return
+	_backdrop = Sprite2D.new()
+	_backdrop.name = "Backdrop"
+	_backdrop.texture = load(PICTURE) as Texture2D
+	_backdrop.centered = false
+	_backdrop.region_enabled = true
+	_backdrop.scale = Vector2(PICTURE_SCALE, PICTURE_SCALE)
+	_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	_backdrop.z_index = -1
+	var shader := Shader.new()
+	shader.code = GRADE_SHADER
+	var grade := ShaderMaterial.new()
+	grade.shader = shader
+	_backdrop.material = grade
+	add_child(_backdrop)
+	_glide()
+
+
+## A slow loop over the picture, as a camera gliding over Brindle would draw it.
+func _glide() -> void:
+	if _backdrop == null or _backdrop.texture == null:
+		return
+	var screen: Vector2 = get_viewport_rect().size if is_inside_tree() else Vector2(640.0, 360.0)
+	var shown: Vector2 = screen / PICTURE_SCALE
+	var room: Vector2 = (_backdrop.texture.get_size() - shown).max(Vector2.ZERO)
+	var turn: float = TAU * _elapsed / GLIDE_SECONDS
+	var at: Vector2 = room * 0.5 + room * 0.5 * Vector2(cos(turn) * GLIDE_REACH.x * 2.0, sin(turn * 2.0) * GLIDE_REACH.y)
+	_backdrop.region_rect = Rect2(at.clamp(Vector2.ZERO, room), shown)
+
+
+## Whether his world stands behind the menu, for the suite.
+func shows_his_world() -> bool:
+	return _backdrop != null and _backdrop.texture != null
 
 
 func _sound_word() -> StringName:
@@ -129,14 +191,14 @@ func _ask() -> void:
 
 func _draw() -> void:
 	var screen: Vector2 = get_viewport_rect().size
-	Ui.sky(self, Rect2(Vector2.ZERO, screen), SKY_TOP, SKY_LOW)
-	_draw_stars(screen)
-	_draw_treeline(screen)
-	_draw_fairies(screen)
+	if not shows_his_world():
+		Ui.sky(self, Rect2(Vector2.ZERO, screen), SKY_TOP, SKY_LOW)
+		_draw_stars(screen)
+	_draw_veil(screen)
+	_draw_ash(screen)
 	_draw_name(screen)
-
-	_menu.draw_on(self, MENU_LEFT, MENU_TOP)
-	Ui.write_over(self, Vector2(0.0, screen.y - 12.0), Text.of(&"title.hint"), Ui.NOTE,
+	_draw_menu(screen)
+	Ui.write_over(self, Vector2(0.0, screen.y - 10.0), Text.of(&"title.hint"), Ui.NOTE,
 		Ui.FAINT, HORIZONTAL_ALIGNMENT_CENTER, screen.x)
 
 	if _asking != null:
@@ -155,63 +217,114 @@ func _draw_stars(screen: Vector2) -> void:
 		draw_circle(at.round(), 1.0, Color(0.86, 0.92, 1.0, twinkle))
 
 
-func _draw_treeline(screen: Vector2) -> void:
-	var nature: Texture2D = _art.atlas(&"nature")
-	if nature == null:
-		return
-	# Far rank, then near, so the near one overlaps.
-	for rank: int in 2:
-		var far: bool = rank == 0
-		var step: float = 17.0 if far else 24.0
-		# The near rank runs off the bottom of the screen rather than standing on it,
-		# and its tops reach above the far rank's feet. The first version left a strip
-		# of sky between the two, which read as a stripe rather than as distance.
-		var base: float = screen.y - (32.0 if far else -10.0)
-		var tint: Color = FAR if far else NEAR
-		var column: int = 0
-		var x: float = -step
-		while x < screen.x + step:
-			var roll: int = Art.scatter_hash(column * 5 + rank * 97, rank * 31)
-			# Height varies more than position does. Trees at one height read as a
-			# hedge; trees at one x-spacing do not read as anything at all.
-			var size: float = (22.0 if far else 40.0) + float(roll % 7) * (2.0 if far else 3.0)
-			var lift: float = float(roll % 13) - 6.0 if far else float(roll % 9) - 4.0
-			var source: Rect2i = SCRUB if roll % 11 == 0 else TREE
-			draw_texture_rect_region(nature,
-				Rect2(Vector2(x, base - size + lift).round(), Vector2(size, size)),
-				Rect2(source), tint)
-			x += step
-			column += 1
+## Dark at the top for the name, dark at the bottom for the hint, and the edges closed in,
+## so the words stand on the picture without a box round each.
+func _draw_veil(screen: Vector2) -> void:
+	var dark := Color(0.02, 0.025, 0.04, 0.78)
+	var clear := Color(0.02, 0.025, 0.04, 0.0)
+	draw_polygon(PackedVector2Array([Vector2(0.0, 0.0), Vector2(screen.x, 0.0),
+		Vector2(screen.x, 170.0), Vector2(0.0, 170.0)]), PackedColorArray([dark, dark, clear, clear]))
+	draw_polygon(PackedVector2Array([Vector2(0.0, screen.y - 60.0), Vector2(screen.x, screen.y - 60.0),
+		Vector2(screen.x, screen.y), Vector2(0.0, screen.y)]), PackedColorArray([clear, clear, dark, dark]))
+	var side := Color(0.02, 0.025, 0.04, 0.55)
+	for left: bool in [true, false]:
+		var edge: float = 0.0 if left else screen.x
+		var inner: float = 90.0 if left else screen.x - 90.0
+		draw_polygon(PackedVector2Array([Vector2(edge, 0.0), Vector2(inner, 0.0), Vector2(inner, screen.y),
+			Vector2(edge, screen.y)]), PackedColorArray([side, clear, clear, side]))
 
 
-## Three of them, over the wood, on their own clocks — the same light the opening
-## puts beside you when you wake. They are the only thing on the screen that moves.
-func _draw_fairies(screen: Vector2) -> void:
-	var homes: Array[Vector2] = [
-		Vector2(screen.x * 0.16, screen.y - 96.0),
-		Vector2(screen.x * 0.78, screen.y - 118.0),
-		Vector2(screen.x * 0.53, screen.y - 78.0),
-	]
-	for index: int in homes.size():
-		var phase: float = _elapsed * (0.21 + float(index) * 0.05) + float(index) * 2.3
-		var centre: Vector2 = homes[index] + Vector2(
-			cos(phase) * 26.0, sin(phase * 0.8) * 11.0)
-		var breath: float = 0.82 + 0.18 * sin(_elapsed * 1.1 + float(index))
-		for ring: int in 3:
-			draw_circle(centre, (11.0 - float(ring) * 3.2) * breath,
-				Color(0.78, 0.94, 0.80, 0.05 + float(ring) * 0.06))
-		draw_circle(centre, 1.4, Color(0.90, 1.0, 0.88, 0.55))
+## Ash rising over the ruins and an ember or two, each on its own clock, so the picture
+## breathes: the one thing a photograph of smoke cannot do.
+func _draw_ash(screen: Vector2) -> void:
+	for i: int in ASH_FLAKES:
+		var speed: float = 6.0 + float(Art.scatter_hash(i, 17) % 9)
+		var rise: float = fposmod(_elapsed * speed + float(Art.scatter_hash(i * 3, 5)), screen.y + 40.0)
+		var x: float = float(Art.scatter_hash(i * 11, 23)) / 999.0 * screen.x + sin(_elapsed * 0.4 + float(i)) * 14.0
+		var at := Vector2(x, screen.y + 20.0 - rise)
+		var ember: bool = i % 9 == 0
+		var fade: float = clampf(rise / 80.0, 0.0, 1.0) * clampf((screen.y + 40.0 - rise) / 120.0, 0.0, 1.0)
+		var colour: Color = Color(1.0, 0.55, 0.25, 0.75 * fade) if ember else Color(0.86, 0.84, 0.80, 0.30 * fade)
+		draw_rect(Rect2(at.round(), Vector2(1.0, 1.0)), colour, true)
 
 
+## **The name, drawn** (D19): his game's name in the bold cut, inked as his figures are
+## outlined, over a crown that has fallen on its side — the argument of the game in one mark.
 func _draw_name(screen: Vector2) -> void:
-	var middle: float = screen.x * 0.5
-	Ui.write_over(self, Vector2(0.0, 118.0), Text.of(&"title.name"), Ui.HUGE, Ui.INK,
-		HORIZONTAL_ALIGNMENT_CENTER, screen.x)
-	var rule: float = Ui.width_of(Text.of(&"title.name"), Ui.HUGE) * 0.5 + 10.0
-	draw_line(Vector2(middle - rule, 128.0), Vector2(middle + rule, 128.0),
-		Color(0.75, 0.70, 0.55, 0.35), 1.0)
-	Ui.write_over(self, Vector2(0.0, 150.0), Text.of(&"title.subtitle"), Ui.NOTE,
-		Ui.DIM, HORIZONTAL_ALIGNMENT_CENTER, screen.x)
+	# The name stands a little left of the middle, so the name and the crown after it are
+	# centred together.
+	var middle: float = screen.x * 0.5 - 24.0
+	var name: String = Text.of(&"title.name")
+	var font: Font = _bold if _bold != null else Ui.font()
+	var width: float = font.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, LOGO_SIZE).x
+	var left: float = roundf(middle - width * 0.5)
+	font.draw_string_outline(get_canvas_item(), Vector2(left, LOGO_Y + 2.0), name, HORIZONTAL_ALIGNMENT_LEFT,
+		-1, LOGO_SIZE, 6, Color(0.0, 0.0, 0.0, 0.55))
+	font.draw_string_outline(get_canvas_item(), Vector2(left, LOGO_Y), name, HORIZONTAL_ALIGNMENT_LEFT,
+		-1, LOGO_SIZE, 4, CROWN_INK)
+	font.draw_string(get_canvas_item(), Vector2(left, LOGO_Y), name, HORIZONTAL_ALIGNMENT_LEFT, -1, LOGO_SIZE,
+		Color(0.96, 0.92, 0.80))
+	# The rule runs on under the crown, which lies tipped over on it past the name's end, one
+	# corner of its band on the line and its broken point beside it.
+	var rule: float = width * 0.5 + 72.0
+	draw_line(Vector2(middle + 24.0 - rule, LOGO_Y + 12.0), Vector2(middle + 24.0 + rule, LOGO_Y + 12.0),
+		Color(Ui.GOLD, 0.55), 1.0)
+	_draw_fallen_crown(Vector2(roundf(middle + width * 0.5 + 32.0), LOGO_Y + 12.0 - CROWN_FOOT))
+	Ui.write_over(self, Vector2(0.0, LOGO_Y + 32.0), Text.of(&"title.subtitle"), Ui.NOTE,
+		Ui.INK, HORIZONTAL_ALIGNMENT_CENTER, screen.x)
+
+
+const CROWN_INK: Color = Color(0.086, 0.055, 0.055)
+## How far below its centre the tipped crown's lowest corner falls, so it can rest on a line.
+const CROWN_FOOT: float = 21.0
+const CROWN_GOLD: Color = Color(0.93, 0.74, 0.30)
+const CROWN_LIGHT: Color = Color(1.0, 0.88, 0.52)
+
+
+## A crown tipped over, a point of it broken off and lying beside it: polygons in his ink
+## and a gold lit from the top left.
+func _draw_fallen_crown(at: Vector2) -> void:
+	var turn: float = deg_to_rad(34.0)
+	var shape := PackedVector2Array([Vector2(-18, 8), Vector2(-18, -4), Vector2(-12, 2), Vector2(-6, -10),
+		Vector2(0, 0), Vector2(5, -7), Vector2(9, 1), Vector2(18, -4), Vector2(18, 8)])
+	var placed := PackedVector2Array()
+	for point: Vector2 in shape:
+		placed.append(at + (point * 1.25).rotated(turn))
+	var outline := PackedVector2Array(placed)
+	outline.append(placed[0])
+	var lit := PackedColorArray()
+	for point: Vector2 in placed:
+		lit.append(CROWN_LIGHT.lerp(CROWN_GOLD, clampf((point.x - at.x + 18.0) / 36.0 + (point.y - at.y + 10.0) / 40.0, 0.0, 1.0)))
+	draw_polygon(placed, lit)
+	draw_polyline(outline, CROWN_INK, 2.0)
+	# Its band, and the point that broke off, lying at its foot.
+	draw_line(at + (Vector2(-18, 4) * 1.25).rotated(turn), at + (Vector2(18, 4) * 1.25).rotated(turn), CROWN_INK, 2.0)
+	var shard := PackedVector2Array([at + Vector2(24, CROWN_FOOT), at + Vector2(29, CROWN_FOOT - 6.0),
+		at + Vector2(33, CROWN_FOOT)])
+	draw_polygon(shard, PackedColorArray([CROWN_LIGHT, CROWN_GOLD, CROWN_GOLD]))
+	var shard_edge := PackedVector2Array(shard)
+	shard_edge.append(shard[0])
+	draw_polyline(shard_edge, CROWN_INK, 2.0)
+
+
+## The menu in the panel every screen uses, centred under the name.
+func _draw_menu(screen: Vector2) -> void:
+	var widest: float = 0.0
+	for index: int in _menu.rows.size():
+		widest = maxf(widest, Ui.width_of(_menu.label(index), Ui.ROW))
+	var box := Rect2(Vector2(roundf(screen.x * 0.5 - widest * 0.5) - MENU_PAD.x, MENU_TOP - 14.0 - MENU_PAD.y),
+		Vector2(widest + MENU_PAD.x * 2.0, float(_menu.rows.size()) * Menu.SPACING + MENU_PAD.y * 2.0 - 2.0))
+	Ui.panel(self, box)
+	_menu.draw_on(self, box.position.x + MENU_PAD.x, MENU_TOP)
+
+
+## Where the menu's panel stands, for the suite.
+func menu_box() -> Rect2:
+	var widest: float = 0.0
+	for index: int in _menu.rows.size():
+		widest = maxf(widest, Ui.width_of(_menu.label(index), Ui.ROW))
+	return Rect2(Vector2(320.0 - widest * 0.5 - MENU_PAD.x, MENU_TOP - 14.0 - MENU_PAD.y),
+		Vector2(widest + MENU_PAD.x * 2.0, float(_menu.rows.size()) * Menu.SPACING + MENU_PAD.y * 2.0 - 2.0))
 
 
 func _draw_question(screen: Vector2) -> void:

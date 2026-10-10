@@ -3603,6 +3603,25 @@ they walk, a leap when they strike. **Check:** frames and a recorded sequence.
 His world behind the menu — Brindle at dusk, the camera gliding — a drawn logo, the menu in
 a panel. **Check:** frames, both languages.
 
+> **Built 2026-10-10.** The title drew a night sky over a treeline of **the 2D pack's trees** —
+> the one pack the art rule says never appears. Now: **Brindle at dusk**, a picture of his
+> world taken by `tools/capture_title.gd` (`view3d/title/brindle_dusk.jpg`, 2560 × 1440): the
+> window built as the game builds it, with the cast in it and the player far off, lit by
+> `World3d.dusk()` (the sun at 21°, red, the air blue and dimmer), framed 42 m tall over the
+> ruins, the well and the crossing roads. **A picture and not a world**: building his world
+> behind the menu costs 2.6 s before the title shows and a second world when the game starts;
+> his camera is orthographic, so gliding over a picture of it is what a gliding camera shows.
+> The title draws it at 0.375 (mipmapped), **gliding** on a 96-second loop that never leaves
+> its edge, graded toward evening (shadows blue, lights ember), veiled dark at the top, the
+> bottom and the sides, with ash and a few embers rising over it — what a photograph of smoke
+> cannot do. **The name, drawn**: the bold cut of the game's font at 48, inked, and a crown
+> **tipped over on the rule after it**, a broken point beside it. **The menu in the panel**
+> every screen uses. Without the picture (a clone that has not captured it) the night stays,
+> without the pack's trees. Re-run the capture when the map changes. `test_screens`: his world
+> stands behind the menu, the glide stays on the picture and moves, the menu's panel stands
+> between the name and the hint. Frames: `docs/frames/look/D19_title.jpg` (before, after, both
+> languages).
+
 ### D20 · The journal (audit 21)
 
 A notebook's layout: tabs for the pages, a title each, a line of welcome on an empty page.
